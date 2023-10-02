@@ -1,0 +1,210 @@
+{
+    "name": "scene",
+    "objects": [
+        {
+            "type": "CAMERA",
+            "name": "Camera",
+            "transform": {
+                "translation": [
+                    7.358891487121582,
+                    -6.925790786743164,
+                    4.958309173583984
+                ],
+                "rotation": [
+                    63.559303283691406,
+                    -2.664711473698844e-06,
+                    46.69194793701172
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Rock07",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    29.0,
+                    1.0,
+                    68.1105728149414
+                ]
+            },
+            "file_name": "RockBlock",
+            "gimmick_name": "NoGimmick"
+        },
+        {
+            "type": "MESH",
+            "name": "Rock07.001",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -142.0,
+                    49.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    32.0,
+                    1.0,
+                    45.0
+                ]
+            },
+            "file_name": "RockBlock",
+            "gimmick_name": "NoGimmick"
+        },
+        {
+            "type": "MESH",
+            "name": "Rock07.002",
+            "transform": {
+                "translation": [
+                    89.0,
+                    -4.0,
+                    49.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "scaling": [
+                    29.0,
+                    1.0,
+                    42.0
+                ]
+            },
+            "file_name": "RockBlock",
+            "gimmick_name": "NoGimmick"
+        },
+        {
+            "type": "MESH",
+            "name": "Rock07.003",
+            "transform": {
+                "translation": [
+                    -125.0,
+                    -4.0,
+                    49.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "scaling": [
+                    32.0,
+                    1.0,
+                    43.0
+                ]
+            },
+            "file_name": "RockBlock",
+            "gimmick_name": "NoGimmick"
+        },
+        {
+            "type": "MESH",
+            "name": "Rock07.004",
+            "transform": {
+                "translation": [
+                    0.0,
+                    137.0,
+                    49.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    37.0,
+                    1.0,
+                    43.0
+                ]
+            },
+            "file_name": "RockBlock",
+            "gimmick_name": "NoGimmick"
+        },
+        {
+            "type": "MESH",
+            "name": "CaveRockPack1_High3",
+            "transform": {
+                "translation": [
+                    12.95944881439209,
+                    36.569122314453125,
+                    17.115219116210938
+                ],
+                "rotation": [
+                    -0.0,
+                    179.99998474121094,
+                    -0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "CaveRock",
+            "gimmick_name": "NoGimmick"
+        },
+        {
+            "type": "MESH",
+            "name": "CaveRockPack1_High3.001",
+            "transform": {
+                "translation": [
+                    22.871047973632812,
+                    41.87748336791992,
+                    17.115219116210938
+                ],
+                "rotation": [
+                    -0.0,
+                    179.99998474121094,
+                    -0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "CaveRock",
+            "gimmick_name": "NoGimmick"
+        },
+        {
+            "type": "MESH",
+            "name": "CaveRockPack1_High3.002",
+            "transform": {
+                "translation": [
+                    -56.56610870361328,
+                    36.569122314453125,
+                    17.115219116210938
+                ],
+                "rotation": [
+                    -0.0,
+                    179.99998474121094,
+                    -0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "CaveRock",
+            "gimmick_name": "NoGimmick"
+        }
+    ]
+}
