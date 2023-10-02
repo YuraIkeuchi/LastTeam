@@ -324,6 +324,9 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp">
       <Filter>gamesystem\stageobj</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\actor\GameMode.cpp">
+      <Filter>gamesystem\actor\GameMode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -610,6 +613,9 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h">
       <Filter>gamesystem\stageobj</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\actor\GameMode.h">
+      <Filter>gamesystem\actor\GameMode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
@@ -823,6 +829,9 @@
     </Filter>
     <Filter Include="gamesystem\stageobj">
       <UniqueIdentifier>{948cd9b5-f644-402e-8823-d5105c7a0886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\actor\GameMode">
+      <UniqueIdentifier>{f909b9e8-9d87-4545-9e77-b64e13a9982f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

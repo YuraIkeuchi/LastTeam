@@ -166,6 +166,7 @@
     <ClCompile Include="SourceCode\gamesystem\actor\ClearSceneActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\EditorSceneActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\EndRollActor.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\actor\GameMode.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\GameOverSceneActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\FirstStageActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\LoadSceneActor.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="SourceCode\gamesystem\actor\ClearSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\EditorSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\EndRollActor.h" />
+    <ClInclude Include="SourceCode\gamesystem\actor\GameMode.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\GameOverSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\FirstStageActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\LoadSceneActor.h" />

@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Easing.h"
 #include "Collision.h"
+#include "GameMode.h"
 Player* Player::GetInstance()
 {
 	static Player instance;
@@ -43,6 +44,38 @@ void Player::InitState(const XMFLOAT3& pos) {
 //更新処理
 void Player::Update()
 {
+	if (GameMode::GetInstance()->GetGameTurn() == TURN_BATTLE) {
+		Move();
+	}
+	Obj_SetParam();
+}
+//VECTOR
+XMFLOAT3 Player::MoveVECTOR(XMVECTOR v, float angle)
+{
+	XMMATRIX rot2 = {};
+	rot2 = XMMatrixRotationY(XMConvertToRadians(angle));
+	v = XMVector3TransformNormal(v, rot2);
+	XMFLOAT3 pos = { v.m128_f32[0], v.m128_f32[1], v.m128_f32[2] };
+	return pos;
+}
+//描画
+void Player::Draw(DirectXCommon* dxCommon)
+{
+	Obj_Draw();
+}
+
+//ImGui
+void Player::ImGuiDraw() {
+	ImGui::Begin("Player");
+	ImGui::Text("NowWidth:%d", m_NowWidth);
+	ImGui::Text("NowHeight:%d", m_NowHeight);
+	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::Text("PosZ:%f", m_Position.z);
+	ImGui::End();
+}
+
+//移動
+void Player::Move() {
 	XMFLOAT3 rot = m_Rotation;
 
 	Input* input = Input::GetInstance();
@@ -97,29 +130,4 @@ void Player::Update()
 
 	m_NowHeight = (int)(m_PanelPos.z);
 	m_NowWidth = (int)(m_PanelPos.x);
-	Obj_SetParam();
-}
-//VECTOR
-XMFLOAT3 Player::MoveVECTOR(XMVECTOR v, float angle)
-{
-	XMMATRIX rot2 = {};
-	rot2 = XMMatrixRotationY(XMConvertToRadians(angle));
-	v = XMVector3TransformNormal(v, rot2);
-	XMFLOAT3 pos = { v.m128_f32[0], v.m128_f32[1], v.m128_f32[2] };
-	return pos;
-}
-//描画
-void Player::Draw(DirectXCommon* dxCommon)
-{
-	Obj_Draw();
-}
-
-//ImGui
-void Player::ImGuiDraw() {
-	ImGui::Begin("Player");
-	ImGui::Text("NowWidth:%d", m_NowWidth);
-	ImGui::Text("NowHeight:%d", m_NowHeight);
-	ImGui::Text("PosX:%f", m_Position.x);
-	ImGui::Text("PosZ:%f", m_Position.z);
-	ImGui::End();
 }

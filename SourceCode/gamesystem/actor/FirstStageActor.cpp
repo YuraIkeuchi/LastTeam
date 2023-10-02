@@ -6,6 +6,7 @@
 #include "StagePanel.h"
 #include "Helper.h"
 #include "FPSManager.h"
+#include "GameMode.h"
 void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, LightGroup* lightgroup) {
 	dxCommon->SetFullScreen(true);
 	//共通の初期化
@@ -48,6 +49,8 @@ void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, L
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
 
+	//ゲームモード
+	GameMode::GetInstance()->Initialize();
 	////敵
 	//for (int i = 0; i < enemy.size(); i++) {
 	//	enemy[i].reset(new NormalEnemy());
@@ -147,4 +150,5 @@ void FirstStageActor::ImGuiDraw() {
 	Player::GetInstance()->ImGuiDraw();
 	//FPSManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
+	GameMode::GetInstance()->ImGuiDraw();
 }

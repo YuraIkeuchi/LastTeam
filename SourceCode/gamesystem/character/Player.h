@@ -20,6 +20,7 @@ public:
 	//ImGui
 	void ImGuiDraw();
 	
+	void Move();
 private:
 	XMFLOAT3 MoveVECTOR(XMVECTOR v, float angle);
 private:
