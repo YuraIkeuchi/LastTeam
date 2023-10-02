@@ -3,6 +3,7 @@
 #include "ParticleEmitter.h"
 #include "ImageManager.h"
 #include "Player.h"
+#include "StagePanel.h"
 #include "Helper.h"
 #include "FPSManager.h"
 void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, LightGroup* lightgroup) {
@@ -43,11 +44,15 @@ void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, L
 	Player::GetInstance()->InitState({ 0.0f,0.0f,0.0f });
 	Player::GetInstance()->Initialize();
 
-	//敵
-	for (int i = 0; i < enemy.size(); i++) {
-		enemy[i].reset(new NormalEnemy());
-		enemy[i]->Initialize();
-	}
+	//ステージの床
+	StagePanel::GetInstance()->LoadResource();
+	StagePanel::GetInstance()->Initialize();
+
+	////敵
+	//for (int i = 0; i < enemy.size(); i++) {
+	//	enemy[i].reset(new NormalEnemy());
+	//	enemy[i]->Initialize();
+	//}
 
 	//テクスチャ
 	tex.reset(IKETexture::Create(ImageManager::MAGIC, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
@@ -73,9 +78,10 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	m_AddOffset.x = 0.001f;
 	ground->SetAddOffset(m_AddOffset.x);
 	Player::GetInstance()->Update();
-	for (int i = 0; i < enemy.size(); i++) {
+	StagePanel::GetInstance()->Update();
+	/*for (int i = 0; i < enemy.size(); i++) {
 		enemy[i]->Update();
-	}
+	}*/
 	tex->Update();
 }
 
@@ -110,12 +116,13 @@ void FirstStageActor::FrontDraw(DirectXCommon* dxCommon) {
 //ポストエフェクトかかる
 void FirstStageActor::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
-	ground->Draw();
-	skydome->Draw();
+	//skydome->Draw();
+	//ground->Draw();
+	StagePanel::GetInstance()->Draw(dxCommon);
 	//Player::GetInstance()->Draw(dxCommon);
-	for (int i = 0; i < enemy.size(); i++) {
-		enemy[i]->Draw(dxCommon);
-	}
+	//for (int i = 0; i < enemy.size(); i++) {
+	//	enemy[i]->Draw(dxCommon);
+	//}
 	IKEObject3d::PostDraw();
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
@@ -143,4 +150,5 @@ void FirstStageActor::ImGuiDraw() {
 
 	Player::GetInstance()->ImGuiDraw();
 	FPSManager::GetInstance()->ImGuiDraw();
+	StagePanel::GetInstance()->ImGuiDraw();
 }
