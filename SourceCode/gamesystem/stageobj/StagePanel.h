@@ -29,6 +29,7 @@ public:
 	array<array<XMFLOAT3, PANEL_HEIGHT>, PANEL_WIDTH> m_Position;
 	array<array<XMFLOAT4, PANEL_HEIGHT>, PANEL_WIDTH> m_Color;
 
+
 	int m_SelectHeight = 0;
 	int m_SelectWidth = 0;
 };

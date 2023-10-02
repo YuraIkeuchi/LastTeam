@@ -2,7 +2,7 @@
 #include "CsvLoader.h"
 #include "Helper.h"
 #include "Input.h"
-#include "Easing.h"
+#include "Player.h"
 StagePanel* StagePanel::GetInstance()
 {
 	static StagePanel instance;
@@ -16,7 +16,7 @@ void StagePanel::LoadResource() {
 			m_Object[i][j].reset(new IKEObject3d());
 			m_Object[i][j]->Initialize();
 			m_Object[i][j]->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
-			m_Object[i][j]->SetScale({ 2.f,0.5f,2.f });
+			m_Object[i][j]->SetScale({ 2.f,0.1f,2.f });
 		}
 	}
 }
@@ -25,7 +25,7 @@ bool StagePanel::Initialize()
 {
 	for (size_t i = 0; i < PANEL_HEIGHT; i++) {
 		for (size_t j = 0; j < PANEL_WIDTH; j++) {
-			m_Position[i][j] = { (2.0f * i) + (-3.0f),0.0f,(-2.0f * j)};
+			m_Position[i][j] = { (2.0f * i),0.0f,(2.0f * j)};
 			m_Color[i][j] = { 1.0f,1.0f,1.0f,1.0f };
 		}
 	}
@@ -38,7 +38,7 @@ void StagePanel::Update()
 {
 	for (size_t i = 0; i < PANEL_HEIGHT; i++) {
 		for (size_t j = 0; j < PANEL_WIDTH; j++) {
-			if (m_SelectHeight == i && m_SelectWidth == j) {
+			if (Player::GetInstance()->GetNowHeight() == j && Player::GetInstance()->GetNowWidth() == i) {
 				m_Color[i][j] = { 0.8f,0.8f,0.0f,1.0f };
 			}
 			else {

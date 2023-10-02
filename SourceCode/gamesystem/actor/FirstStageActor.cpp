@@ -41,7 +41,7 @@ void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, L
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ 0.0f,0.0f,0.0f });
+	Player::GetInstance()->InitState({ 3.0f,1.0f,3.0f });
 	Player::GetInstance()->Initialize();
 
 	//ステージの床
@@ -119,14 +119,14 @@ void FirstStageActor::BackDraw(DirectXCommon* dxCommon) {
 	//skydome->Draw();
 	//ground->Draw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	//Player::GetInstance()->Draw(dxCommon);
+	Player::GetInstance()->Draw(dxCommon);
 	//for (int i = 0; i < enemy.size(); i++) {
 	//	enemy[i]->Draw(dxCommon);
 	//}
 	IKEObject3d::PostDraw();
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	tex->Draw();
+	//tex->Draw();
 	IKETexture::PostDraw();
 }
 //導入しーんの更新
@@ -143,12 +143,8 @@ void FirstStageActor::FinishUpdate(DebugCamera* camera) {
 }
 
 void FirstStageActor::ImGuiDraw() {
-	ImGui::Begin("FIRST");
-	ImGui::Text("GroundNum:%d",ground->GetVertexNum());
-	ImGui::Text("SkydomeNum:%d", skydome->GetVertexNum());
-	ImGui::End();
-
+	
 	Player::GetInstance()->ImGuiDraw();
-	FPSManager::GetInstance()->ImGuiDraw();
+	//FPSManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
 }

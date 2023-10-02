@@ -16,7 +16,7 @@ void Player::LoadResource() {
 	m_Object->Initialize();
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
 	m_Object->SetScale({ 2.f,2.f,2.f });
-	m_Object->SetPosition({ 0.0f,0.0f,0.0f });
+	m_Object->SetPosition({ 0.0f,2.0f,0.0f });
 	m_Object->VertexCheck();
 }
 //初期化
@@ -35,6 +35,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 	m_Position = pos;
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
+	m_Scale = { 0.5f,0.5f,0.5 };
 	//移動処理用
 	velocity /= 5.0f;
 }
@@ -43,6 +44,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 void Player::Update()
 {
 	XMFLOAT3 rot = m_Rotation;
+
 	Input* input = Input::GetInstance();
 	float StickX = input->GetLeftControllerX();
 	float StickY = input->GetLeftControllerY();
@@ -78,15 +80,23 @@ void Player::Update()
 		rot.y = angle + atan2f(StickX, StickY) * (PI_180 / PI);
 
 		//プレイヤーの回転角を取る
-		m_Rotation = { rot.x, rot.y, rot.z };
+		m_MoveRot = { rot.x, rot.y, rot.z };
 
 		XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f };
-		XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(m_Rotation.y));
+		XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(m_MoveRot.y));
 		move = XMVector3TransformNormal(move, matRot);
 
 		m_Position.x += move.m128_f32[0] * m_AddSpeed;
 		m_Position.z += move.m128_f32[2] * m_AddSpeed;
 	}
+	m_Rotation = { m_MoveRot.x,m_MoveRot.y + 180.0f,m_MoveRot.z };
+
+	//プレイヤーの現在マスを取得する
+	m_PanelPos.z = m_Position.z / 1.5f;
+	m_PanelPos.x = m_Position.x / 1.5f;
+
+	m_NowHeight = (int)(m_PanelPos.z);
+	m_NowWidth = (int)(m_PanelPos.x);
 	Obj_SetParam();
 }
 //VECTOR
@@ -107,6 +117,9 @@ void Player::Draw(DirectXCommon* dxCommon)
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("AddPower:%f", m_AddSpeed);
+	ImGui::Text("NowWidth:%d", m_NowWidth);
+	ImGui::Text("NowHeight:%d", m_NowHeight);
+	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::Text("PosZ:%f", m_Position.z);
 	ImGui::End();
 }

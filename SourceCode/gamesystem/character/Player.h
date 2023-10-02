@@ -25,6 +25,9 @@ private:
 private:
 	void LoadCSV();
 
+public:
+	const int GetNowHeight() { return m_NowHeight; }
+	const int GetNowWidth() { return m_NowWidth; }
 private:
 	//移動方向指定用
 	float angle = 0.0f;
@@ -32,4 +35,10 @@ private:
 	float velocity;
 	//移動加算値
 	float m_AddSpeed;
+	XMFLOAT3 m_MoveRot = {};
+
+	//プレイヤーの現在位置
+	XMFLOAT3 m_PanelPos = {};
+	int m_NowHeight = {};
+	int m_NowWidth = {};
 };
