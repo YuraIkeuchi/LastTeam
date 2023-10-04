@@ -70,6 +70,7 @@ void FirstStageActor::Finalize() {
 }
 
 void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, LightGroup* lightgroup) {
+	Input* input = Input::GetInstance();
 	//関数ポインタで状態管理
 	(this->*stateTable[static_cast<size_t>(m_SceneState)])(camera);
 
@@ -86,6 +87,24 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 		enemy[i]->Update();
 	}*/
 	tex->Update();
+
+	//パネル生成
+	if ((input->TriggerButton(input->B))) {
+		BirthAct("Attack");
+	}	else if ((input->TriggerButton(input->A))) {
+		BirthAct("Guard");
+	}	else if ((input->TriggerButton(input->X))) {
+		BirthAct("Skill");
+	}
+
+	for (auto i = 0; i < act.size(); i++) {
+		if (act[i] == nullptr)continue;
+		act[i]->Update();
+
+		if (!act[i]->GetAlive()) {
+			act.erase(cbegin(act) + i);
+		}
+	}
 }
 
 void FirstStageActor::Draw(DirectXCommon* dxCommon) {
@@ -119,17 +138,18 @@ void FirstStageActor::FrontDraw(DirectXCommon* dxCommon) {
 //ポストエフェクトかかる
 void FirstStageActor::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
-	//skydome->Draw();
-	//ground->Draw();
 	StagePanel::GetInstance()->Draw(dxCommon);
 	Player::GetInstance()->Draw(dxCommon);
 	//for (int i = 0; i < enemy.size(); i++) {
 	//	enemy[i]->Draw(dxCommon);
 	//}
+	for (auto i = 0; i < act.size(); i++) {
+		if (act[i] == nullptr)continue;
+		act[i]->Draw(dxCommon);
+	}
 	IKEObject3d::PostDraw();
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	//tex->Draw();
 	IKETexture::PostDraw();
 }
 //導入しーんの更新
@@ -140,15 +160,35 @@ void FirstStageActor::IntroUpdate(DebugCamera* camera) {
 void FirstStageActor::MainUpdate(DebugCamera* camera) {
 
 }
-
+//クリア後の更新
 void FirstStageActor::FinishUpdate(DebugCamera* camera) {
 	Input* input = Input::GetInstance();
 }
-
+//ImGui
 void FirstStageActor::ImGuiDraw() {
-	
 	Player::GetInstance()->ImGuiDraw();
-	//FPSManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
 	GameMode::GetInstance()->ImGuiDraw();
+	for (auto i = 0; i < act.size(); i++) {
+		if (act[i] == nullptr)continue;
+		//act[i]->ImGuiDraw();
+	}
+}
+//行動パネルの設置
+void FirstStageActor::BirthAct(string Type) {
+	InterAction* newAction = nullptr;
+	//タグの名前で生成する行動を変更する
+	if (Type == "Attack") {
+		newAction = new AttackAction();
+	}
+	else if (Type == "Guard") {
+		newAction = new GuardAction();
+	}
+	else if (Type == "Skill") {
+		newAction = new SkillAction();
+	}
+
+	newAction->Initialize();
+	newAction->SetPosition({ StagePanel::GetInstance()->GetSelectPos().x,0.5f,StagePanel::GetInstance()->GetSelectPos().z });
+	act.emplace_back(newAction);
 }

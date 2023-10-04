@@ -44,6 +44,8 @@ void StagePanel::Update()
 		BattleUpdate();
 	}
 
+	//セレクトしているものの座標
+	m_SelectPos = m_Position[m_SelectWidth][m_SelectHeight];
 }
 
 //描画
@@ -61,8 +63,8 @@ void StagePanel::Draw(DirectXCommon* dxCommon)
 //ImGui
 void StagePanel::ImGuiDraw() {
 	ImGui::Begin("Panel");
-	ImGui::SliderInt("Width", &m_SelectHeight, 0, PANEL_HEIGHT - 1);
-	ImGui::SliderInt("Height", &m_SelectWidth, 0, PANEL_WIDTH - 1);
+	ImGui::Text("SelePosX:%f", m_SelectPos.x);
+	ImGui::Text("SelePosZ:%f", m_SelectPos.z);
 	ImGui::End();
 }
 

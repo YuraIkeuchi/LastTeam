@@ -19,9 +19,11 @@ public:
 	void Draw(DirectXCommon* dxCommon)override;
 	//ImGui
 	void ImGuiDraw();
-	
-	void Move();
+	//行動力を入手する
+	void AddAct(string Tag);
 private:
+	//動き
+	void Move();
 	XMFLOAT3 MoveVECTOR(XMVECTOR v, float angle);
 private:
 	void LoadCSV();
@@ -29,6 +31,8 @@ private:
 public:
 	const int GetNowHeight() { return m_NowHeight; }
 	const int GetNowWidth() { return m_NowWidth; }
+private:
+	static const int ACT_PATTERN = 3;
 private:
 	//移動方向指定用
 	float angle = 0.0f;
@@ -42,4 +46,12 @@ private:
 	XMFLOAT3 m_PanelPos = {};
 	int m_NowHeight = {};
 	int m_NowWidth = {};
+
+	int m_ActCount[ACT_PATTERN] = {};
+
+	enum ActType {
+		ACT_ATTACK,
+		ACT_GUARD,
+		ACT_SKILL
+	};
 };

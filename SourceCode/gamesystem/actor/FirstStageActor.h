@@ -3,9 +3,9 @@
 #include"BossText.h"
 #include "MessageWindow.h"
 #include "NormalEnemy.h"
-#include<windows.h>
-#include<vector>
-#include <array>
+#include "AttackAction.h"
+#include "GuardAction.h"
+#include "SkillAction.h"
 class FirstStageActor :public BaseActor
 {
 public:
@@ -26,6 +26,7 @@ private:
 
 	void ImGuiDraw();
 
+	void BirthAct(string Type);
 private:
 	unique_ptr<IKEObject3d> ground;
 	IKEModel* model;
@@ -34,5 +35,7 @@ private:
 
 	unique_ptr<InterEnemy> enemy;
 	unique_ptr<IKETexture> tex;
+
+	vector<unique_ptr<InterAction>> act;
 };
 

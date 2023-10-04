@@ -67,10 +67,9 @@ void Player::Draw(DirectXCommon* dxCommon)
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("NowWidth:%d", m_NowWidth);
-	ImGui::Text("NowHeight:%d", m_NowHeight);
-	ImGui::Text("PosX:%f", m_Position.x);
-	ImGui::Text("PosZ:%f", m_Position.z);
+	ImGui::Text("Attack:%d", m_ActCount[ACT_ATTACK]);
+	ImGui::Text("Guard:%d", m_ActCount[ACT_GUARD]);
+	ImGui::Text("Skill:%d", m_ActCount[ACT_SKILL]);
 	ImGui::End();
 }
 
@@ -130,4 +129,19 @@ void Player::Move() {
 
 	m_NowHeight = (int)(m_PanelPos.z);
 	m_NowWidth = (int)(m_PanelPos.x);
+}
+//行動力を入手
+void Player::AddAct(string Tag) {
+	if (Tag == "Attack") {
+		m_ActCount[ACT_ATTACK]++;
+	}
+	else if (Tag == "Guard") {
+		m_ActCount[ACT_GUARD]++;
+	}
+	else if (Tag == "Skill") {
+		m_ActCount[ACT_SKILL]++;
+	}
+	else {
+		assert(0);
+	}
 }
