@@ -21,5 +21,11 @@ void GameMode::ImGuiDraw() {
 	else {
 		ImGui::Text("Battle");
 	}
+	if (ImGui::Button("SETMODE", ImVec2(50, 50))) {
+		m_GameTurn = TURN_SET;
+	}
+	if (ImGui::Button("BUTTLEMODE", ImVec2(50, 50))) {
+		m_GameTurn = TURN_BATTLE;
+	}
 	ImGui::End();
 }
