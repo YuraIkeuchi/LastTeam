@@ -327,6 +327,18 @@
     <ClCompile Include="SourceCode\gamesystem\actor\GameMode.cpp">
       <Filter>gamesystem\actor\GameMode</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\InterAction.cpp">
+      <Filter>gamesystem\charactor\Player\Action\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\AttackAction.cpp">
+      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\GuardAction.cpp">
+      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\SkillAction.cpp">
+      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -616,6 +628,18 @@
     <ClInclude Include="SourceCode\gamesystem\actor\GameMode.h">
       <Filter>gamesystem\actor\GameMode</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\InterAction.h">
+      <Filter>gamesystem\charactor\Player\Action\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\AttackAction.h">
+      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\GuardAction.h">
+      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\SkillAction.h">
+      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
@@ -832,6 +856,15 @@
     </Filter>
     <Filter Include="gamesystem\actor\GameMode">
       <UniqueIdentifier>{f909b9e8-9d87-4545-9e77-b64e13a9982f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\charactor\Player\Action">
+      <UniqueIdentifier>{0e056448-e030-4c9b-b767-5aeaa7c57e66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\charactor\Player\Action\Base">
+      <UniqueIdentifier>{78b29469-8eda-4ad8-a299-a9a8d64b09bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\charactor\Player\Action\Other">
+      <UniqueIdentifier>{94571bd5-0fa5-4b93-a379-c858e3ab4270}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
