@@ -7,27 +7,16 @@
 #include "Easing.h"
 //ÉÇÉfÉãì«Ç›çûÇ›
 NormalEnemy::NormalEnemy() {
-	
-}
-//èâä˙âª
-bool NormalEnemy::Initialize() {
-
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
-	m_Object->SetScale({ 2.f,2.f,2.f });
-	m_Object->SetPosition({ 0.0f,0.0f,20.0f });
-	m_Object->SetColor({ 1.0f,0.0f,0.0,1.0f });
-	m_Object->VertexCheck();
-	m_Scale = { 0.5f,0.5f,0.5f };
-	m_Rotation = { 0.0f,90.0f,0.0f };
-
-	XMFLOAT3 m_RandPos = {};
-	m_RandPos.x = static_cast<float>(Helper::GetInstance()->GetRanNum(-15, 15));
-	m_RandPos.y = static_cast<float>(Helper::GetInstance()->GetRanNum(0, 20));
-	m_RandPos.z = static_cast<float>(Helper::GetInstance()->GetRanNum(-10, 20));
-	m_Position = m_RandPos;
-
+}
+//èâä˙âª
+bool NormalEnemy::Initialize() {
+	m_Position = { 4.5f, 1.0f, 4.5f };
+	m_Rotation = { 0.0f,0.0f,0.0f };
+	m_Color = { 1.0f,0.0f,0.5f,1.0f };
+	m_Scale = { 0.5f,0.5f,0.5 };
 	return true;
 }
 
