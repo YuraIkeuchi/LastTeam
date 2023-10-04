@@ -51,11 +51,10 @@ void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, L
 
 	//ゲームモード
 	GameMode::GetInstance()->Initialize();
-	////敵
-	//for (int i = 0; i < enemy.size(); i++) {
-	//	enemy[i].reset(new NormalEnemy());
-	//	enemy[i]->Initialize();
-	//}
+
+	//敵
+	enemy.reset(new NormalEnemy());
+	enemy->Initialize();
 
 	//テクスチャ
 	tex.reset(IKETexture::Create(ImageManager::MAGIC, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
@@ -83,9 +82,7 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	ground->SetAddOffset(m_AddOffset.x);
 	Player::GetInstance()->Update();
 	StagePanel::GetInstance()->Update();
-	/*for (int i = 0; i < enemy.size(); i++) {
-		enemy[i]->Update();
-	}*/
+	enemy->Update();
 	tex->Update();
 
 	//パネル生成
@@ -140,9 +137,7 @@ void FirstStageActor::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
 	Player::GetInstance()->Draw(dxCommon);
-	//for (int i = 0; i < enemy.size(); i++) {
-	//	enemy[i]->Draw(dxCommon);
-	//}
+	enemy->Draw(dxCommon);
 	for (auto i = 0; i < act.size(); i++) {
 		if (act[i] == nullptr)continue;
 		act[i]->Draw(dxCommon);
@@ -167,7 +162,7 @@ void FirstStageActor::FinishUpdate(DebugCamera* camera) {
 //ImGui
 void FirstStageActor::ImGuiDraw() {
 	Player::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
 	GameMode::GetInstance()->ImGuiDraw();
 	for (auto i = 0; i < act.size(); i++) {
 		if (act[i] == nullptr)continue;

@@ -70,6 +70,8 @@ void Player::ImGuiDraw() {
 	ImGui::Text("Attack:%d", m_ActCount[ACT_ATTACK]);
 	ImGui::Text("Guard:%d", m_ActCount[ACT_GUARD]);
 	ImGui::Text("Skill:%d", m_ActCount[ACT_SKILL]);
+	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::Text("PosZ:%f", m_Position.z);
 	ImGui::End();
 }
 
@@ -122,6 +124,10 @@ void Player::Move() {
 		m_Position.z += move.m128_f32[2] * m_AddSpeed;
 	}
 	m_Rotation = { m_MoveRot.x,m_MoveRot.y + 180.0f,m_MoveRot.z };
+
+	//リミット制限
+	Helper::GetInstance()->Clamp(m_Position.x, -0.5f, 6.5f);
+	Helper::GetInstance()->Clamp(m_Position.z, -0.5f, 6.5f);
 
 	//プレイヤーの現在マスを取得する
 	m_PanelPos.z = m_Position.z / 1.5f;
