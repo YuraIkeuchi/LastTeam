@@ -100,6 +100,10 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	for (auto i = 0; i < act.size(); i++) {
 		if (act[i] == nullptr)continue;
 		act[i]->Update();
+
+		if (!act[i]->GetAlive()) {
+			act.erase(cbegin(act) + i);
+		}
 	}
 }
 
@@ -156,20 +160,18 @@ void FirstStageActor::IntroUpdate(DebugCamera* camera) {
 void FirstStageActor::MainUpdate(DebugCamera* camera) {
 
 }
-
+//クリア後の更新
 void FirstStageActor::FinishUpdate(DebugCamera* camera) {
 	Input* input = Input::GetInstance();
 }
-
+//ImGui
 void FirstStageActor::ImGuiDraw() {
-	
 	Player::GetInstance()->ImGuiDraw();
-	//FPSManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
 	GameMode::GetInstance()->ImGuiDraw();
 	for (auto i = 0; i < act.size(); i++) {
 		if (act[i] == nullptr)continue;
-		act[i]->ImGuiDraw();
+		//act[i]->ImGuiDraw();
 	}
 }
 //行動パネルの設置

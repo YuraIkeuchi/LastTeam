@@ -22,6 +22,7 @@ void InterAction::Collide()
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, m_Radius, Player::GetInstance()->GetPosition().x, Player::GetInstance()->GetPosition().z, m_Radius) &&
 		(m_Alive))
 	{
+		Player::GetInstance()->AddAct(m_Tag);
 		m_Alive = false;
 	}
 }
