@@ -12,7 +12,7 @@ GuardAction::GuardAction() {
 //èâä˙âª
 bool GuardAction::Initialize() {
 	m_Position = {};
-	m_Scale = { 1.0f,1.0f,1.0f };
+	m_Scale = { 0.5f,0.5f,0.5f };
 	m_Color = { 0.0f,1.0f,0.3f,1.0f };
 	m_Alive = true;
 	m_Tag = "Guard";
@@ -33,7 +33,10 @@ void GuardAction::EffecttexDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void GuardAction::ImGui_Origin() {
-
+	ImGui::Begin("Guard");
+	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::Text("PosZ:%f", m_Position.z);
+	ImGui::End();
 }
 //É|Å[ÉY
 void GuardAction::Pause() {

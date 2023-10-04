@@ -12,7 +12,7 @@ AttackAction::AttackAction() {
 //èâä˙âª
 bool AttackAction::Initialize() {
 	m_Position = {};
-	m_Scale = { 1.0f,1.0f,1.0f };
+	m_Scale = { 0.5f,0.5f,0.5f };
 	m_Color = { 1.0f,0.3f,0.0f,1.0f };
 	m_Alive = true;
 	m_Tag = "Attack";
@@ -33,7 +33,10 @@ void AttackAction::EffecttexDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void AttackAction::ImGui_Origin() {
-
+	ImGui::Begin("Attack");
+	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::Text("PosZ:%f", m_Position.z);
+	ImGui::End();
 }
 //É|Å[ÉY
 void AttackAction::Pause() {

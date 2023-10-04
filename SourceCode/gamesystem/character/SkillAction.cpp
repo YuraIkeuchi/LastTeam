@@ -12,7 +12,7 @@ SkillAction::SkillAction() {
 //èâä˙âª
 bool SkillAction::Initialize() {
 	m_Position = {};
-	m_Scale = { 1.0f,1.0f,1.0f };
+	m_Scale = { 0.5f,0.5f,0.5f };
 	m_Color = { 0.3f,0.0f,1.0f,1.0f };
 	m_Alive = true;
 	m_Tag = "Skill";
@@ -33,7 +33,10 @@ void SkillAction::EffecttexDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void SkillAction::ImGui_Origin() {
-
+	ImGui::Begin("Skill");
+	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::Text("PosZ:%f", m_Position.z);
+	ImGui::End();
 }
 //É|Å[ÉY
 void SkillAction::Pause() {

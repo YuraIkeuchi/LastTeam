@@ -4,12 +4,11 @@
 #include "DirectXCommon.h"
 #include "PostEffect.h"
 #include "ParticleManager.h"
-#include "VolumManager.h"
 #include "CameraWork.h"
 #include "SceneChanger.h"
 #include"Font.h"
 #include<SceneSave.h>
-
+#include<vector>
 using namespace std;         //  名前空間指定
 //Actorクラスの既定
 class BaseActor

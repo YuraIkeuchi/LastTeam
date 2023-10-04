@@ -28,7 +28,11 @@ public:
 	void Draw(DirectXCommon* dxCommon);
 	//ImGui
 	void ImGuiDraw();
+public:
+	//gettersetter
+	const XMFLOAT3& GetSelectPos() { return m_SelectPos; }
 
+	void SetSelectPos(const XMFLOAT3& position) { m_SelectPos = position; }
 public:
 	array<array<unique_ptr<IKEObject3d>, PANEL_HEIGHT>, PANEL_WIDTH> m_Object;
 
@@ -47,4 +51,5 @@ public:
 	};
 
 	int m_Timer[DIR_MAX] = {};
+	XMFLOAT3 m_SelectPos = {};
 };
