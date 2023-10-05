@@ -63,7 +63,7 @@ void NormalEnemy::Finalize() {
 }
 //’Ç]
 void NormalEnemy::Follow() {
-	Helper::GetInstance()->FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.1f);
+	Helper::GetInstance()->FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
 }
 //‰~‰^“®
 void NormalEnemy::Circle() {
@@ -86,5 +86,10 @@ void NormalEnemy::MoveSin() {
 
 }
 void NormalEnemy::Inter() {
-
+	coolTimer++;
+	coolTimer=clamp(coolTimer,0, kIntervalMax);
+	if (coolTimer==kIntervalMax) {
+		_charaState = STATE_FOLLOW;
+		coolTimer = 0;
+	}
 }

@@ -19,6 +19,7 @@ public:
 	enum texName
 	{
 		FEED,
+		SKILLUI,
 	};
 	//テクスチャの名前
 	enum tex2dName

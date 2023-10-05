@@ -9,6 +9,8 @@ ImageManager* ImageManager::GetInstance()
 //スプライトの読み込み
 void ImageManager::StartLoad2D()
 {
+	IKESprite::LoadTexture(SKILLUI, L"Resources/2d/objicon/skill.png");
+
 }
 
 //非同期処理で読み込むスプライト

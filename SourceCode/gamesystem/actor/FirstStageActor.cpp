@@ -63,6 +63,8 @@ void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, L
 	tex->SetScale({ 0.5f,0.5f,0.5f });
 	tex->SetIsBillboard(true);
 	tex->SetColor({ 1.0f,0.0,0.0f,1.0f });
+
+	ui=IKESprite::Create(ImageManager::SKILLUI, { 1000,460 });
 }
 
 void FirstStageActor::Finalize() {
@@ -130,7 +132,8 @@ void FirstStageActor::Draw(DirectXCommon* dxCommon) {
 }
 //ポストエフェクトかからない
 void FirstStageActor::FrontDraw(DirectXCommon* dxCommon) {
-
+	IKESprite::PreDraw();
+	ui->Draw();
 }
 //ポストエフェクトかかる
 void FirstStageActor::BackDraw(DirectXCommon* dxCommon) {

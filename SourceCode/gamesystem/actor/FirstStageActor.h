@@ -36,6 +36,7 @@ private:
 	unique_ptr<InterEnemy> enemy;
 	unique_ptr<IKETexture> tex;
 
+	unique_ptr<IKESprite> ui=nullptr;
 	vector<unique_ptr<InterAction>> act;
 };
 

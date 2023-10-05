@@ -14,7 +14,10 @@ protected:
 public://getter setter
 
 protected:
-
+	//クールタイム
+	int coolTimer = 0;
+	//コマンド間隔
+	int kIntervalMax = 120;
 public:
 	//virtual ~InterEnemy() = default;
 
