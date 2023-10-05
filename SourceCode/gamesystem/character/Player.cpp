@@ -29,7 +29,7 @@ bool Player::Initialize()
 }
 //CSV読み込み
 void Player::LoadCSV() {
-	m_AddSpeed = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "speed2")));
+	m_AddSpeed = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "speed")));
 }
 //ステータスの初期化
 void Player::InitState(const XMFLOAT3& pos) {
@@ -67,11 +67,10 @@ void Player::Draw(DirectXCommon* dxCommon)
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("Attack:%d", m_ActCount[ACT_ATTACK]);
-	ImGui::Text("Guard:%d", m_ActCount[ACT_GUARD]);
-	ImGui::Text("Skill:%d", m_ActCount[ACT_SKILL]);
 	ImGui::Text("PosX:%f", m_Position.x);
 	ImGui::Text("PosZ:%f", m_Position.z);
+	ImGui::Text("PosZ2:%d", m_NowHeight);
+	ImGui::Text("PosX2:%d", m_NowWidth);
 	ImGui::End();
 }
 
@@ -126,18 +125,12 @@ void Player::Move() {
 	m_Rotation = { m_MoveRot.x,m_MoveRot.y + 180.0f,m_MoveRot.z };
 
 	//リミット制限
-	Helper::GetInstance()->Clamp(m_Position.x, -0.5f, 6.5f);
-	Helper::GetInstance()->Clamp(m_Position.z, -0.5f, 6.5f);
+	Helper::GetInstance()->Clamp(m_Position.x, -0.5f, 6.3f);
+	Helper::GetInstance()->Clamp(m_Position.z, -0.5f, 6.3f);
 
-	//プレイヤーの現在マスを取得する
-	m_PanelPos.z = m_Position.z / 1.5f;
-	m_PanelPos.x = m_Position.x / 1.5f;
-
-	m_NowHeight = (int)(m_PanelPos.z);
-	m_NowWidth = (int)(m_PanelPos.x);
 }
 //行動力を入手
-void Player::AddAct(string Tag) {
+void Player::AddAct(const string& Tag) {
 	if (Tag == "Attack") {
 		m_ActCount[ACT_ATTACK]++;
 	}

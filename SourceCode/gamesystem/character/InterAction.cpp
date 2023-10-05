@@ -1,6 +1,7 @@
 #include "InterAction.h"
 #include "Player.h"
 #include "Collision.h"
+#include "StagePanel.h"
 //更新
 void InterAction::Update() {
 	//各行動
@@ -15,14 +16,16 @@ void InterAction::ImGuiDraw() {
 	if (!this) { return; }
 	ImGui_Origin();
 }
-//プレイヤーとボスの当たり判定
+//プレイヤーとパネルの当たり判定
 void InterAction::Collide()
 {
 	//ラッシュ中判定あり
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, m_Radius, Player::GetInstance()->GetPosition().x, Player::GetInstance()->GetPosition().z, m_Radius) &&
 		(m_Alive))
 	{
+		//プレイヤーの行動数を増やしパネルを戻す
 		Player::GetInstance()->AddAct(m_Tag);
+		StagePanel::GetInstance()->DeletePanel();
 		m_Alive = false;
 	}
 }

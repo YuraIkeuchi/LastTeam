@@ -20,7 +20,7 @@ public:
 	//ImGui
 	void ImGuiDraw();
 	//行動力を入手する
-	void AddAct(string Tag);
+	void AddAct(const string& Tag);
 private:
 	//動き
 	void Move();
