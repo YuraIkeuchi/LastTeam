@@ -26,7 +26,7 @@ private:
 
 	void ImGuiDraw();
 
-	void BirthAct(string Type);
+	void BirthAct(const string& Type);
 private:
 	unique_ptr<IKEObject3d> ground;
 	IKEModel* model;

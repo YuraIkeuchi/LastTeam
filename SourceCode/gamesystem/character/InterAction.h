@@ -40,6 +40,6 @@ public:
 	bool GetAlive() { return m_Alive; }
 protected:
 	string m_Tag;
-	float m_Radius = 0.5f;
+	float m_Radius = 0.35f;
 	bool m_Alive = true;
 };

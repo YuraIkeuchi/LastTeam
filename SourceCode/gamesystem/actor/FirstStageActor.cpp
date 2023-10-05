@@ -84,16 +84,21 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	ground->SetAddOffset(m_AddOffset.x);
 	Player::GetInstance()->Update();
 	StagePanel::GetInstance()->Update();
+	GameMode::GetInstance()->Update();
 	enemy->Update();
 	tex->Update();
 
 	//パネル生成
-	if ((input->TriggerButton(input->B))) {
-		BirthAct("Attack");
-	}	else if ((input->TriggerButton(input->A))) {
-		BirthAct("Guard");
-	}	else if ((input->TriggerButton(input->X))) {
-		BirthAct("Skill");
+	if ((GameMode::GetInstance()->GetGameTurn() == TURN_SET) &&(StagePanel::GetInstance()->GetCanSet())) {
+		if ((input->TriggerButton(input->B))) {
+			BirthAct("Attack");
+		}
+		else if ((input->TriggerButton(input->A))) {
+			BirthAct("Guard");
+		}
+		else if ((input->TriggerButton(input->X))) {
+			BirthAct("Skill");
+		}
 	}
 
 	for (auto i = 0; i < act.size(); i++) {
@@ -165,7 +170,7 @@ void FirstStageActor::FinishUpdate(DebugCamera* camera) {
 //ImGui
 void FirstStageActor::ImGuiDraw() {
 	Player::GetInstance()->ImGuiDraw();
-	//StagePanel::GetInstance()->ImGuiDraw();
+	StagePanel::GetInstance()->ImGuiDraw();
 	GameMode::GetInstance()->ImGuiDraw();
 	for (auto i = 0; i < act.size(); i++) {
 		if (act[i] == nullptr)continue;
@@ -173,7 +178,7 @@ void FirstStageActor::ImGuiDraw() {
 	}
 }
 //行動パネルの設置
-void FirstStageActor::BirthAct(string Type) {
+void FirstStageActor::BirthAct(const string& Type) {
 	InterAction* newAction = nullptr;
 	//タグの名前で生成する行動を変更する
 	if (Type == "Attack") {
@@ -185,8 +190,8 @@ void FirstStageActor::BirthAct(string Type) {
 	else if (Type == "Skill") {
 		newAction = new SkillAction();
 	}
-
 	newAction->Initialize();
 	newAction->SetPosition({ StagePanel::GetInstance()->GetSelectPos().x,0.5f,StagePanel::GetInstance()->GetSelectPos().z });
 	act.emplace_back(newAction);
+	StagePanel::GetInstance()->PanelChange(Type);
 }

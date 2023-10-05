@@ -11,7 +11,8 @@ public:
 public:
 	//‰Šú‰»
 	bool Initialize();
-	
+	//XV
+	void Update();
 	void ImGuiDraw();
 public:
 	//getter setter

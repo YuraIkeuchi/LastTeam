@@ -622,9 +622,6 @@
     <ClInclude Include="SourceCode\gamesystem\character\NormalEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h">
-      <Filter>gamesystem\stageobj</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\actor\GameMode.h">
       <Filter>gamesystem\actor\GameMode</Filter>
     </ClInclude>
@@ -639,6 +636,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\SkillAction.h">
       <Filter>gamesystem\charactor\Player\Action\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h">
+      <Filter>gamesystem\stageobj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

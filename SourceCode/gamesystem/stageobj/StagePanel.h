@@ -1,5 +1,6 @@
 #pragma once
 #include "ObjCommon.h"
+#include "CollisionPrimitive.h"
 #include <any>
 #include <array>
 using namespace DirectX;
@@ -20,29 +21,37 @@ public:
 	bool Initialize();
 	//更新
 	void Update();
-	//バトル中の更新
-	void BattleUpdate();
-	//スキルセットの更新
-	void SetUpdate();
 	//描画
 	void Draw(DirectXCommon* dxCommon);
 	//ImGui
 	void ImGuiDraw();
+
+	//パネルの変更
+	void PanelChange(const string& Tag);
+	//パネルを戻す
+	void DeletePanel();
+private:
+	//バトル中の更新
+	void BattleUpdate();
+	//スキルセットの更新
+	void SetUpdate();
+	void Collide();
 public:
 	//gettersetter
 	const XMFLOAT3& GetSelectPos() { return m_SelectPos; }
+	const bool GetCanSet() { return m_CanSet; }
 
 	void SetSelectPos(const XMFLOAT3& position) { m_SelectPos = position; }
-public:
-	array<array<unique_ptr<IKEObject3d>, PANEL_HEIGHT>, PANEL_WIDTH> m_Object;
+private:
+	unique_ptr<IKEObject3d> m_Object[PANEL_WIDTH][PANEL_HEIGHT];
+	XMFLOAT3 m_Position[PANEL_WIDTH][PANEL_HEIGHT] = {};
+	XMFLOAT4 m_Color[PANEL_WIDTH][PANEL_HEIGHT] = {};
 
-	array<array<XMFLOAT3, PANEL_HEIGHT>, PANEL_WIDTH> m_Position;
-	array<array<XMFLOAT4, PANEL_HEIGHT>, PANEL_WIDTH> m_Color;
-
-
+	//マスの位置
 	int m_SelectHeight = 0;
 	int m_SelectWidth = 0;
 
+	//方向
 	enum SelectDir {
 		DIR_UP,
 		DIR_DOWN,
@@ -50,6 +59,24 @@ public:
 		DIR_LEFT
 	};
 
-	int m_Timer[DIR_MAX] = {};
+	//各方向入力フレーム
+	array<int, DIR_MAX> m_Timer;
+
 	XMFLOAT3 m_SelectPos = {};
+
+	//パネルの種類
+	enum PanelType {
+		NO_PANEL,
+		ATTACK_PANEL,
+		GUARD_PANEL,
+		SKILL_PANEL,
+	};
+
+	int m_PanelType[PANEL_WIDTH][PANEL_HEIGHT] = {};
+	bool m_PanelHit[PANEL_WIDTH][PANEL_HEIGHT];
+	
+	//パネルを置けるかどうか
+	bool m_CanSet = false;
+
+	OBB m_OBB1 = {}, m_OBB2 = {};
 };

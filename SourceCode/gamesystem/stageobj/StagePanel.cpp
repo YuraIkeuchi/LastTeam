@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Player.h"
 #include "GameMode.h"
+#include "Collision.h"
 StagePanel* StagePanel::GetInstance()
 {
 	static StagePanel instance;
@@ -12,8 +13,8 @@ StagePanel* StagePanel::GetInstance()
 }
 //リソース読み込み
 void StagePanel::LoadResource() {
-	for (size_t i = 0; i < PANEL_HEIGHT; i++) {
-		for (size_t j = 0; j < PANEL_WIDTH; j++) {
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			m_Object[i][j].reset(new IKEObject3d());
 			m_Object[i][j]->Initialize();
 			m_Object[i][j]->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
@@ -24,12 +25,17 @@ void StagePanel::LoadResource() {
 //初期化
 bool StagePanel::Initialize()
 {
-	for (size_t i = 0; i < PANEL_HEIGHT; i++) {
-		for (size_t j = 0; j < PANEL_WIDTH; j++) {
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			m_Position[i][j] = { (2.0f * i),0.0f,(2.0f * j)};
 			m_Color[i][j] = { 1.0f,1.0f,1.0f,1.0f };
+			m_PanelType[i][j] = NO_PANEL;
+			m_PanelHit[i][j] = false;
 		}
 	}
+	m_SelectHeight = 0;
+	m_SelectWidth = 0;
+
 	//CSV読み込み
 	return true;
 }
@@ -52,8 +58,8 @@ void StagePanel::Update()
 void StagePanel::Draw(DirectXCommon* dxCommon)
 {
 	IKEObject3d::PreDraw();
-	for (size_t i = 0; i < PANEL_HEIGHT; i++) {
-		for (size_t j = 0; j < PANEL_WIDTH; j++) {
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			m_Object[i][j]->Draw();
 		}
 	}
@@ -62,10 +68,16 @@ void StagePanel::Draw(DirectXCommon* dxCommon)
 
 //ImGui
 void StagePanel::ImGuiDraw() {
-	ImGui::Begin("Panel");
-	ImGui::Text("SelePosX:%f", m_SelectPos.x);
-	ImGui::Text("SelePosZ:%f", m_SelectPos.z);
-	ImGui::End();
+	//ImGui::Begin("Panel");
+	//ImGui::Text("Can:%d", m_CanSet);
+	//ImGui::Text("Height:%d", m_SelectHeight);
+	//ImGui::Text("Width:%d", m_SelectWidth);
+	//for (int i = 0; i < PANEL_WIDTH; i++) {
+	//	for (int j = 0; j < PANEL_HEIGHT; j++) {
+	//		ImGui::Text("PanelType[%d][%d]:%d", i, j, m_PanelType[i][j]);
+	//	}
+	//}
+	//ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
@@ -115,35 +127,97 @@ void StagePanel::SetUpdate() {
 	}
 
 	//選択マスの色が変わる
-	for (size_t i = 0; i < PANEL_HEIGHT; i++) {
-		for (size_t j = 0; j < PANEL_WIDTH; j++) {
-			if (m_SelectHeight == j && m_SelectWidth == i) {
-				m_Color[i][j] = { 0.8f,0.8f,0.0f,1.0f };
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			if (m_PanelType[i][j] == NO_PANEL) {
+				if (m_SelectHeight == j && m_SelectWidth == i) {
+					m_Color[i][j] = { 0.8f,0.8f,0.0f,1.0f };
+				}
+				else {
+					m_Color[i][j] = { 1.0f,1.0f,1.0f,1.0f };
+				}
 			}
 			else {
-				m_Color[i][j] = { 1.0f,1.0f,1.0f,1.0f };
+				m_Color[i][j] = { 0.5f,0.5f,0.5f,1.0f };
 			}
 			m_Object[i][j]->Update();
 			m_Object[i][j]->SetPosition(m_Position[i][j]);
 			m_Object[i][j]->SetColor(m_Color[i][j]);
 		}
 	}
+
+	//パネルを置けるかどうかをチェックする
+	if ((m_PanelType[m_SelectWidth][m_SelectHeight] == NO_PANEL) && !m_PanelHit[m_SelectWidth][m_SelectHeight]) {
+		m_CanSet = true;
+	}
+	else {
+		m_CanSet = false;
+	}
 }
 
 //バトルの更新
 void StagePanel::BattleUpdate() {
 	//プレイヤーが居るマスが黄色くなる
-	for (size_t i = 0; i < PANEL_HEIGHT; i++) {
-		for (size_t j = 0; j < PANEL_WIDTH; j++) {
-			if (Player::GetInstance()->GetNowHeight() == j && Player::GetInstance()->GetNowWidth() == i) {
-				m_Color[i][j] = { 0.8f,0.8f,0.0f,1.0f };
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			if (!m_PanelHit[i][j]) {
+				if (m_PanelType[i][j] == NO_PANEL) {
+					m_Color[i][j] = { 1.0f,1.0f,1.0f,1.0f };
+				}
+				else {
+					m_Color[i][j] = { 0.5f,0.5f,0.5f,1.0f };
+				}
 			}
 			else {
-				m_Color[i][j] = { 1.0f,1.0f,1.0f,1.0f };
+				m_Color[i][j] = { 0.8f,0.8f,0.0f,1.0f };
 			}
 			m_Object[i][j]->Update();
 			m_Object[i][j]->SetPosition(m_Position[i][j]);
 			m_Object[i][j]->SetColor(m_Color[i][j]);
+		}
+	}
+
+	Collide();
+}
+//パネルの変更
+void StagePanel::PanelChange(const string& Tag) {
+	//パネル状況によって色が変わる
+	if (Tag == "Attack") {
+		m_PanelType[m_SelectWidth][m_SelectHeight] = ATTACK_PANEL;
+	}
+	else if (Tag == "Guard") {
+		m_PanelType[m_SelectWidth][m_SelectHeight] = GUARD_PANEL;
+	}
+	else if (Tag == "Skill") {
+		m_PanelType[m_SelectWidth][m_SelectHeight] = SKILL_PANEL;
+	}
+}
+//パネルの除去
+void StagePanel::DeletePanel() {
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			if (m_PanelHit[i][j]) {
+				m_PanelType[i][j] = NO_PANEL;
+			}
+		}
+	}
+}
+
+void StagePanel::Collide() {
+	m_OBB1.SetParam_Pos(Player::GetInstance()->GetPosition());
+	m_OBB1.SetParam_Rot(Player::GetInstance()->GetMatrot());
+	m_OBB1.SetParam_Scl(Player::GetInstance()->GetScale());
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			m_OBB2.SetParam_Pos({ m_Object[i][j]->GetPosition().x,1.0f,m_Object[i][j]->GetPosition().z });
+			m_OBB2.SetParam_Rot(m_Object[i][j]->GetMatrot());
+			m_OBB2.SetParam_Scl({0.5f,1.0f,0.5f});
+			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
+				m_PanelHit[i][j] = true;
+			}
+			else {
+				m_PanelHit[i][j] = false;
+			}
 		}
 	}
 }
