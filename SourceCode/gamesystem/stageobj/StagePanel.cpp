@@ -207,6 +207,7 @@ void StagePanel::Collide() {
 	}
 }
 
+
 void StagePanel::RandomPanel(int num) {
 	for (int i = 0; i < num; i++) {
 		bool isSet = false;

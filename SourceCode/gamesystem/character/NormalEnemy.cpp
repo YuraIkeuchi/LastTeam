@@ -13,7 +13,8 @@ NormalEnemy::NormalEnemy() {
 }
 //‰Šú‰»
 bool NormalEnemy::Initialize() {
-	m_Position = { 4.5f, 1.0f, 4.5f };
+
+	m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5 };
@@ -22,9 +23,8 @@ bool NormalEnemy::Initialize() {
 
 void (NormalEnemy::* NormalEnemy::stateTable[])() = {
 	&NormalEnemy::Inter,//“®‚«‚Ì‡ŠÔ
-	&NormalEnemy::Follow,//’Ç]
-	&NormalEnemy::Circle,//‰~‰^“®
-	&NormalEnemy::MoveSin,//Sin”g
+	&NormalEnemy::Attack,//“®‚«‚Ì‡ŠÔ
+
 };
 
 //s“®
@@ -39,57 +39,30 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void NormalEnemy::ImGui_Origin() {
-	ImGui::Begin("Enemy");
-	if (ImGui::RadioButton("FOLLOW", &_charaState)) {
-		_charaState = STATE_FOLLOW;
-	}
-	else if (ImGui::RadioButton("CIRCLE", &_charaState)) {
-		m_StartPos = m_Position;
-		m_CircleScale = 0.0f;
-		m_CircleSpeed = 0.0f;
-		_charaState = STATE_CIRCLE;
-	}
-	else if (ImGui::RadioButton("SIN", &_charaState)) {
-		_charaState = STATE_SIN;
-	}
-	else if (ImGui::RadioButton("INTER", &_charaState)) {
-		_charaState = STATE_INTER;
-	}
-	ImGui::End();
 }
 //ŠJ•ú
 void NormalEnemy::Finalize() {
 
 }
 //’Ç]
-void NormalEnemy::Follow() {
-	Helper::GetInstance()->FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
-}
-//‰~‰^“®
-void NormalEnemy::Circle() {
+//void NormalEnemy::Follow() {
+//	Helper::GetInstance()->FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
+//}
 
-	m_CircleSpeed += 0.5f;
-	if (m_CircleScale < 7.0f) {
-		m_CircleScale += 0.3f;
-	}
-
-	m_AfterPos = Helper::GetInstance()->CircleMove(m_StartPos, m_CircleScale, m_CircleSpeed);
-
-	m_Position = {
-		Ease(In,Cubic,0.2f,m_Position.x,m_AfterPos.x),
-		m_Position.y,
-		Ease(In,Cubic,0.2f,m_Position.z,m_AfterPos.z),
-	};
-}
-//
-void NormalEnemy::MoveSin() {
-
-}
 void NormalEnemy::Inter() {
 	coolTimer++;
-	coolTimer=clamp(coolTimer,0, kIntervalMax);
-	if (coolTimer==kIntervalMax) {
+	coolTimer = clamp(coolTimer, 0, kIntervalMax);
+	if (coolTimer == kIntervalMax) {
 		//_charaState = STATE_FOLLOW;
 		coolTimer = 0;
+	}
+}
+
+void NormalEnemy::Attack() {
+
+	m_Position.x -= 0.05f;
+	if (m_Position.x < -10.f) {
+		_charaState = STATE_INTER;
+		m_Position = randPanelPos();
 	}
 }

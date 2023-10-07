@@ -55,7 +55,9 @@ private:
 	void Collide();
 public:
 	//gettersetter
-
+	XMFLOAT3 SetPositon(int width, int height) {
+		return panels[width][height].position;
+	}
 private:
 	//ƒpƒlƒ‹
 	Panel panels[PANEL_WIDTH][PANEL_HEIGHT];

@@ -2,7 +2,7 @@
 #include"BaseActor.h"
 #include"BossText.h"
 #include "MessageWindow.h"
-#include "NormalEnemy.h"
+#include "EnemyManager.h"
 class FirstStageActor :public BaseActor
 {
 public:
@@ -22,15 +22,14 @@ private:
 	void FinishUpdate(DebugCamera* camera)override;		//撃破シーン
 
 	void ImGuiDraw();
-
-	void BirthAct(const string& Type);
 private:
 	unique_ptr<IKEObject3d> ground;
-	IKEModel* model;
 	unique_ptr<IKEObject3d> skydome;
 	XMFLOAT2 m_AddOffset = {};
 
-	unique_ptr<InterEnemy> enemy;
+
+	unique_ptr<EnemyManager> enemyManager = nullptr;
+
 	unique_ptr<IKETexture> tex;
 
 	unique_ptr<IKESprite> ui=nullptr;

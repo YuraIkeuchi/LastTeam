@@ -53,8 +53,8 @@ void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, L
 	GameMode::GetInstance()->Initialize();
 
 	//敵
-	enemy.reset(new NormalEnemy());
-	enemy->Initialize();
+	enemyManager = std::make_unique<EnemyManager>();
+	enemyManager->Initialize();
 
 	//テクスチャ
 	tex.reset(IKETexture::Create(ImageManager::MAGIC, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
@@ -64,7 +64,6 @@ void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, L
 	tex->SetIsBillboard(true);
 	tex->SetColor({ 1.0f,0.0,0.0f,1.0f });
 
-	ui=IKESprite::Create(ImageManager::SKILLUI, { 1000,460 });
 }
 
 void FirstStageActor::Finalize() {
@@ -85,7 +84,7 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	Player::GetInstance()->Update();
 	StagePanel::GetInstance()->Update();
 	GameMode::GetInstance()->Update();
-	enemy->Update();
+	enemyManager->Update();
 	tex->Update();
 }
 
@@ -115,16 +114,15 @@ void FirstStageActor::Draw(DirectXCommon* dxCommon) {
 }
 //ポストエフェクトかからない
 void FirstStageActor::FrontDraw(DirectXCommon* dxCommon) {
-	IKESprite::PreDraw();
-	ui->Draw();
 }
 //ポストエフェクトかかる
 void FirstStageActor::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
 	Player::GetInstance()->Draw(dxCommon);
-	enemy->Draw(dxCommon);
 	IKEObject3d::PostDraw();
+
+	enemyManager->Draw(dxCommon);
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	IKETexture::PostDraw();

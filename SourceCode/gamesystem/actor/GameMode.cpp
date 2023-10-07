@@ -21,10 +21,12 @@ void GameMode::Update() {
 	Input* input = Input::GetInstance();
 	if ((input->TriggerButton(input->LB))) {
 		m_GameTurn = TURN_SET;
+		isStart = false;
 		m_GameF = 0;
 		m_GameTimer = 0;
 	} else if ((input->TriggerButton(input->RB))) {
 		m_GameTurn = TURN_BATTLE;
+		isStart = false;
 		m_GameF = 0;
 		m_GameTimer = 0;
 	}
@@ -45,4 +47,12 @@ void GameMode::ImGuiDraw() {
 		m_GameTurn = TURN_BATTLE;
 	}
 	ImGui::End();
+}
+
+bool GameMode::BattleStart() {
+	if(isStart){ return false; }
+	if(m_GameTurn!= TURN_BATTLE){ return false; }
+	if (m_GameTimer != 2) { return false; }
+	isStart = true;
+	return true;
 }

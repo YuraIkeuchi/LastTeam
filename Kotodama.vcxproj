@@ -109,7 +109,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Font.cpp" />
@@ -174,6 +173,7 @@
     <ClCompile Include="SourceCode\gamesystem\actor\TitleSceneActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\TutorialSceneActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\AttackAction.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\GuardAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterBoss.cpp" />
@@ -205,7 +205,6 @@
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="SourceCode\engine\2d\DebugText.h" />
     <ClInclude Include="SourceCode\engine\2d\Feed.h" />
     <ClInclude Include="SourceCode\engine\2d\Font.h" />
@@ -277,6 +276,7 @@
     <ClInclude Include="SourceCode\gamesystem\actor\TitleSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\TutorialSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\character\AttackAction.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\GuardAction.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterBoss.h" />

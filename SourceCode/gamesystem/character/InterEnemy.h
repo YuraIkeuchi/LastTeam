@@ -10,17 +10,25 @@ protected:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
-
-public://getter setter
+protected:
+	XMFLOAT3 randPanelPos();
 
 protected:
+	//キャラの状態
+	enum CharaState {
+		STATE_INTER,
+		STATE_ATTACK,
+	};
+	int _charaState = STATE_INTER;
 	//クールタイム
 	int coolTimer = 0;
 	//コマンド間隔
 	int kIntervalMax = 120;
+public://getter setter
+	void SetState(int state) {_charaState = state;}
+
 public:
 	//virtual ~InterEnemy() = default;
-
 	/// <summary>
 	/// 初期化
 	/// </summary>

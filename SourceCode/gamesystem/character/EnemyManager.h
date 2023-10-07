@@ -1,6 +1,7 @@
 #pragma once
 #include"InterEnemy.h"
-
+#include<list>
+#include<memory>
 
 class EnemyManager {
 public:
@@ -8,11 +9,12 @@ public:
 	~EnemyManager();
 
 	void Initialize();
+	void BattleUpdate();
 	void Update();
-	void Draw();
+	void Draw(DirectXCommon* dxCommon);
 
 	void SetCount();
 private:
-	//unique_ptr<>
+	std::list<unique_ptr<InterEnemy>> enemys;
 };
 

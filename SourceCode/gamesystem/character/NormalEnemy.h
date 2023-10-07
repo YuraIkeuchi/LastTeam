@@ -12,25 +12,12 @@ public:
 
 	void Draw(DirectXCommon* dxCommon) override;//•`‰æ
 private:
-	//ƒLƒƒƒ‰‚Ìó‘Ô
-	enum CharaState
-	{
-		STATE_INTER,
-		STATE_FOLLOW,
-		STATE_CIRCLE,
-		STATE_SIN,
-	};
-
 	//ŠÖ”ƒ|ƒCƒ“ƒ^
 	static void(NormalEnemy::* stateTable[])();
 
-	int _charaState = STATE_INTER;
-
 private:
 	void Inter();//‘Ò‹@
-	void Circle();//‰~‰^“®
-	void Follow();//’Ç]
-	void MoveSin();//sin”g
+	void Attack();
 protected:
 
 private:
