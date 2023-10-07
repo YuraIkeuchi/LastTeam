@@ -18,6 +18,7 @@ private:
 private:
 	void Inter();//‘Ò‹@
 	void Attack();
+	void Standby();
 protected:
 
 private:

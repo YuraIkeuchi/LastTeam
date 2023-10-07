@@ -23,6 +23,7 @@ private:
 		ATTACK_PANEL,
 		GUARD_PANEL,
 		SKILL_PANEL,
+		DAMAGE_PANNEL,
 	};
 	//ƒpƒlƒ‹
 	struct Panel {

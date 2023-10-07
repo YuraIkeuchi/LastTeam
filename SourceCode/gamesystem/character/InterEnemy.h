@@ -1,5 +1,13 @@
 #pragma once
 #include "ObjCommon.h"
+
+
+//キャラの状態
+enum CharaState {
+	STATE_INTER,
+	STATE_ATTACK,
+	STATE_STANDBY,
+};
 //敵基底
 class InterEnemy :
 	public ObjCommon {
@@ -14,11 +22,7 @@ protected:
 	XMFLOAT3 randPanelPos();
 
 protected:
-	//キャラの状態
-	enum CharaState {
-		STATE_INTER,
-		STATE_ATTACK,
-	};
+
 	int _charaState = STATE_INTER;
 	//クールタイム
 	int coolTimer = 0;
@@ -26,7 +30,7 @@ protected:
 	int kIntervalMax = 120;
 public://getter setter
 	void SetState(int state) {_charaState = state;}
-
+	int GetState() { return _charaState; };
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>
