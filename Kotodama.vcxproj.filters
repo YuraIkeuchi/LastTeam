@@ -339,6 +339,9 @@
     <ClCompile Include="SourceCode\gamesystem\character\SkillAction.cpp">
       <Filter>gamesystem\charactor\Player\Action\Other</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>gamesystem\charactor\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -639,6 +642,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h">
       <Filter>gamesystem\stageobj</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
+      <Filter>gamesystem\charactor\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

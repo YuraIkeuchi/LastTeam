@@ -3,9 +3,6 @@
 #include"BossText.h"
 #include "MessageWindow.h"
 #include "NormalEnemy.h"
-#include "AttackAction.h"
-#include "GuardAction.h"
-#include "SkillAction.h"
 class FirstStageActor :public BaseActor
 {
 public:
@@ -37,6 +34,6 @@ private:
 	unique_ptr<IKETexture> tex;
 
 	unique_ptr<IKESprite> ui=nullptr;
-	vector<unique_ptr<InterAction>> act;
+
 };
 

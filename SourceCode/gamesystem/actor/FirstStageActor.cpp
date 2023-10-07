@@ -42,7 +42,7 @@ void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, L
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ 3.0f,1.0f,3.0f });
+	Player::GetInstance()->InitState({ -5.0f,1.0f,0.0f });
 	Player::GetInstance()->Initialize();
 
 	//ステージの床
@@ -87,28 +87,6 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	GameMode::GetInstance()->Update();
 	enemy->Update();
 	tex->Update();
-
-	//パネル生成
-	if ((GameMode::GetInstance()->GetGameTurn() == TURN_SET) &&(StagePanel::GetInstance()->GetCanSet())) {
-		if ((input->TriggerButton(input->B))) {
-			BirthAct("Attack");
-		}
-		else if ((input->TriggerButton(input->A))) {
-			BirthAct("Guard");
-		}
-		else if ((input->TriggerButton(input->X))) {
-			BirthAct("Skill");
-		}
-	}
-
-	for (auto i = 0; i < act.size(); i++) {
-		if (act[i] == nullptr)continue;
-		act[i]->Update();
-
-		if (!act[i]->GetAlive()) {
-			act.erase(cbegin(act) + i);
-		}
-	}
 }
 
 void FirstStageActor::Draw(DirectXCommon* dxCommon) {
@@ -146,10 +124,6 @@ void FirstStageActor::BackDraw(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->Draw(dxCommon);
 	Player::GetInstance()->Draw(dxCommon);
 	enemy->Draw(dxCommon);
-	for (auto i = 0; i < act.size(); i++) {
-		if (act[i] == nullptr)continue;
-		act[i]->Draw(dxCommon);
-	}
 	IKEObject3d::PostDraw();
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
@@ -173,26 +147,4 @@ void FirstStageActor::ImGuiDraw() {
 	Player::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
 	GameMode::GetInstance()->ImGuiDraw();
-	for (auto i = 0; i < act.size(); i++) {
-		if (act[i] == nullptr)continue;
-		//act[i]->ImGuiDraw();
-	}
-}
-//行動パネルの設置
-void FirstStageActor::BirthAct(const string& Type) {
-	InterAction* newAction = nullptr;
-	//タグの名前で生成する行動を変更する
-	if (Type == "Attack") {
-		newAction = new AttackAction();
-	}
-	else if (Type == "Guard") {
-		newAction = new GuardAction();
-	}
-	else if (Type == "Skill") {
-		newAction = new SkillAction();
-	}
-	newAction->Initialize();
-	newAction->SetPosition({ StagePanel::GetInstance()->GetSelectPos().x,0.5f,StagePanel::GetInstance()->GetSelectPos().z });
-	act.emplace_back(newAction);
-	StagePanel::GetInstance()->PanelChange(Type);
 }

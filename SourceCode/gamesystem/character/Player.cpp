@@ -125,7 +125,7 @@ void Player::Move() {
 	m_Rotation = { m_MoveRot.x,m_MoveRot.y + 180.0f,m_MoveRot.z };
 
 	//リミット制限
-	Helper::GetInstance()->Clamp(m_Position.x, -7.3f, -1.3f);
+	Helper::GetInstance()->Clamp(m_Position.x, -7.5f, -1.3f);
 	Helper::GetInstance()->Clamp(m_Position.z, -0.5f, 6.3f);
 
 }
