@@ -11,10 +11,20 @@ void CameraWork::SplineSet() {
 }
 //XV
 void CameraWork::Update(DebugCamera* camera) {
-	camera->SetEye({ 3.0f,10.0f,2.9f });
-	camera->SetTarget({ 3.0f,0.0f,3.0f });
+	camera->SetEye(eye_);
+	camera->SetTarget(target_);
+
 	camera->Update();
 }
 void CameraWork::ImGuiDraw() {
+
+	ImGui::Begin("camera");
+	ImGui::InputFloat("eye_x",&eye_.x,-100.f,100.f);
+	ImGui::InputFloat("eye_y",&eye_.y,-100.f,100.f);
+	ImGui::InputFloat("eye_z",&eye_.z,-100.f,100.f);
+	ImGui::InputFloat("target_x", &target_.x, -100.f, 100.f);
+	ImGui::InputFloat("target_y", &target_.y, -100.f, 100.f);
+	ImGui::InputFloat("target_z", &target_.z, -100.f, 100.f);
+	ImGui::End();
 
 }

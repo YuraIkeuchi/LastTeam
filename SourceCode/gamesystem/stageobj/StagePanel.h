@@ -12,7 +12,7 @@ public:
 
 private:
 	static const int PANEL_HEIGHT = 4;
-	static const int PANEL_WIDTH = 4;
+	static const int PANEL_WIDTH = 8;
 
 	static const int DIR_MAX = 4;
 public:

@@ -27,7 +27,7 @@ bool StagePanel::Initialize()
 {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			m_Position[i][j] = { (2.0f * i),0.0f,(2.0f * j)};
+			m_Position[i][j] = { (2.0f * i)-(PANEL_HEIGHT*2.0f),0.0f,(2.0f * j)};
 			m_Color[i][j] = { 1.0f,1.0f,1.0f,1.0f };
 			m_PanelType[i][j] = NO_PANEL;
 			m_PanelHit[i][j] = false;

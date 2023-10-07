@@ -89,7 +89,7 @@ void NormalEnemy::Inter() {
 	coolTimer++;
 	coolTimer=clamp(coolTimer,0, kIntervalMax);
 	if (coolTimer==kIntervalMax) {
-		_charaState = STATE_FOLLOW;
+		//_charaState = STATE_FOLLOW;
 		coolTimer = 0;
 	}
 }

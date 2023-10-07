@@ -17,6 +17,10 @@ private:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 
+private:
+	XMFLOAT3 eye_ = { 0.f,10.f,-3.f };
+
+	XMFLOAT3 target_ = { 0.f,4.f,0.f };
 public:
 	CameraWork(XMFLOAT3 eye = { 2.0f, 30.0f, 2.0f }, XMFLOAT3 target = { 2.0f, 0.0f, 3.0f });
 	void SplineSet();
