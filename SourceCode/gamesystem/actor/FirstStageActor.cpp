@@ -84,6 +84,7 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	Player::GetInstance()->Update();
 	StagePanel::GetInstance()->Update();
 	GameMode::GetInstance()->Update();
+	ParticleEmitter::GetInstance()->Update();
 	enemyManager->Update();
 	tex->Update();
 }
@@ -114,6 +115,7 @@ void FirstStageActor::Draw(DirectXCommon* dxCommon) {
 }
 //ポストエフェクトかからない
 void FirstStageActor::FrontDraw(DirectXCommon* dxCommon) {
+	ParticleEmitter::GetInstance()->FlontDrawAll();
 }
 //ポストエフェクトかかる
 void FirstStageActor::BackDraw(DirectXCommon* dxCommon) {
@@ -145,4 +147,5 @@ void FirstStageActor::ImGuiDraw() {
 	Player::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
 	GameMode::GetInstance()->ImGuiDraw();
+	enemyManager->ImGuiDraw();
 }

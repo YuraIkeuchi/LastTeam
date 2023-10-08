@@ -24,7 +24,7 @@ public:
 
 	const int GetGameTimer() { return m_GameTimer; }
 private:
-	int m_GameTurn = TURN_SET;
+	int m_GameTurn = TURN_BATTLE;
 	bool isStart = false;
 	int m_GameF = 0;
 	int m_GameTimer = 0;
