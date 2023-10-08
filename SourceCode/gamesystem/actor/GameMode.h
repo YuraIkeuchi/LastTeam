@@ -3,6 +3,7 @@
 enum GameTurn {
 	TURN_SET,
 	TURN_BATTLE,
+	TURN_ATTACK,
 };
 class GameMode {
 public:

@@ -70,7 +70,6 @@ void NormalEnemy::Attack() {
 	if (m_Position.x < -10.f) {
 		_charaState = STATE_STANDBY;
 		m_Position = randPanelPos();
-		Player::GetInstance()->AttackTarget(m_Position);
 	}
 }
 

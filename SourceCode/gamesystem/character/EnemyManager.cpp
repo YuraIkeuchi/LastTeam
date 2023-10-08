@@ -2,6 +2,7 @@
 #include "NormalEnemy.h"
 #include <GameMode.h>
 #include <StagePanel.h>
+#include <Player.h>
 
 
 EnemyManager::EnemyManager() {
@@ -35,8 +36,9 @@ void EnemyManager::BattleUpdate() {
 		if (enemy->GetState() != STATE_STANDBY) { break; }
 		for (unique_ptr<InterEnemy>& enemy : enemys) {
 			enemy->SetState(STATE_INTER);
+			Player::GetInstance()->AttackTarget(enemy->GetPosition());
 		}
-		GameMode::GetInstance()->SetGameTurn(TURN_SET);
+		GameMode::GetInstance()->SetGameTurn(TURN_ATTACK);
 	}
 
 }

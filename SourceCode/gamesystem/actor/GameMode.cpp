@@ -37,8 +37,10 @@ void GameMode::ImGuiDraw() {
 	ImGui::DragInt("TIME", &m_GameTimer, 0, 1000);
 	if (m_GameTurn == TURN_SET) {
 		ImGui::Text("SET");
-	} else {
+	} else if(m_GameTurn == TURN_BATTLE){
 		ImGui::Text("Battle");
+	} else {
+		ImGui::Text("ATTACK");
 	}
 	if (ImGui::Button("SETMODE", ImVec2(50, 50))) {
 		m_GameTurn = TURN_SET;
