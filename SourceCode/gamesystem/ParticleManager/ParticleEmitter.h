@@ -34,12 +34,10 @@ public: //メンバ関数
 	//描画
 	void FlontDrawAll();
 
-	void DeathDrawAll();
-	//壁のパーティクルの描画
-	void BackDrawAll();
 	//エフェクト
 	void FireEffect(const int life,const XMFLOAT3& pos,const float startscale, const float endscale,const XMFLOAT4& startcolor,const XMFLOAT4& endcolor);
-
+	//ダメージエフェクト
+	void Break(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const float Gravity, float divi);
 	void AllDelete();
 private: //メンバ関数
 	/// <summary>

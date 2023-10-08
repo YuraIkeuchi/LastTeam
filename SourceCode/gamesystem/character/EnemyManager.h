@@ -14,6 +14,8 @@ public:
 	void Draw(DirectXCommon* dxCommon);
 
 	void SetCount();
+
+	void ImGuiDraw();
 private:
 	std::list<unique_ptr<InterEnemy>> enemys;
 };

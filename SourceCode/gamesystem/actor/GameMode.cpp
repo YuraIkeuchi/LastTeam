@@ -8,7 +8,7 @@ GameMode* GameMode::GetInstance() {
 }
 
 bool GameMode::Initialize() {
-	m_GameTurn = TURN_SET;
+	m_GameTurn = TURN_BATTLE;
 	return true;
 }
 //çXêV
