@@ -28,6 +28,12 @@ protected:
 	int coolTimer = 0;
 	//コマンド間隔
 	int kIntervalMax = 120;
+	//HP
+	float m_HP = {};
+	//敵のダメージ判定のインターバル
+	int m_DamegeTimer = {};
+	//当たり判定の半径
+	float m_Radius = 1.0f;
 public://getter setter
 	void SetState(int state) {_charaState = state;}
 	int GetState() { return _charaState; };
@@ -56,4 +62,9 @@ public:
 	void ImGuiDraw();
 
 	virtual void ImGui_Origin() = 0;
+
+private:
+	void BirthParticle();
+protected:
+	void Collide();
 };

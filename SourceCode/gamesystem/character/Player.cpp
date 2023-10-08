@@ -40,13 +40,17 @@ void Player::InitState(const XMFLOAT3& pos) {
 	//移動処理用
 	velocity /= 5.0f;
 }
-
+//状態遷移
+/*CharaStateのState並び順に合わせる*/
+void (Player::* Player::stateTable[])() = {
+	&Player::Move,//移動
+	&Player::Attack,//攻撃
+};
 //更新処理
 void Player::Update()
 {
-	if (GameMode::GetInstance()->GetGameTurn() == TURN_BATTLE) {
-		Move();
-	}
+	//状態移行(charastateに合わせる)
+	(this->*stateTable[_charaState])();
 	Obj_SetParam();
 }
 //VECTOR
@@ -67,10 +71,9 @@ void Player::Draw(DirectXCommon* dxCommon)
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("PosX:%f", m_Position.x);
-	ImGui::Text("PosZ:%f", m_Position.z);
-	ImGui::Text("PosZ2:%d", m_NowHeight);
-	ImGui::Text("PosX2:%d", m_NowWidth);
+	ImGui::Text("Attack:%d", m_ActCount[ACT_ATTACK]);
+	ImGui::Text("Guard:%d", m_ActCount[ACT_GUARD]);
+	ImGui::Text("Skill:%d", m_ActCount[ACT_SKILL]);
 	ImGui::End();
 }
 
@@ -118,16 +121,51 @@ void Player::Move() {
 		XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f };
 		XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(m_MoveRot.y));
 		move = XMVector3TransformNormal(move, matRot);
-
-		m_Position.x += move.m128_f32[0] * m_AddSpeed;
-		m_Position.z += move.m128_f32[2] * m_AddSpeed;
+		if (GameMode::GetInstance()->GetGameTurn() == TURN_BATTLE) {
+			m_Position.x += move.m128_f32[0] * m_AddSpeed;
+			m_Position.z += move.m128_f32[2] * m_AddSpeed;
+		}
 	}
 	m_Rotation = { m_MoveRot.x,m_MoveRot.y + 180.0f,m_MoveRot.z };
 
 	//リミット制限
 	Helper::GetInstance()->Clamp(m_Position.x, -7.5f, -1.3f);
 	Helper::GetInstance()->Clamp(m_Position.z, -0.5f, 6.3f);
-
+}
+void Player::Attack() {
+	const float l_AddFrame = 0.05f;
+	const int l_CoolMax = 30;
+	//攻撃のパネルを取った分だけ攻撃する
+	if (m_AttackCount != m_ActCount[ACT_ATTACK]) {
+		if (_AttackState == ATTACK_ENEMY) {
+			if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
+				m_Frame = {};
+				m_Position = m_ReturnPos;
+				_AttackState = ATTACK_INTER;
+				m_AttackCount++;
+			}
+			m_Position = {
+			Ease(In,Cubic,m_Frame,m_Position.x,m_TargetPos.x),
+			Ease(In,Cubic,m_Frame,m_Position.y,m_TargetPos.y),
+			Ease(In,Cubic,m_Frame,m_Position.z,m_TargetPos.z),
+			};
+		}
+		//攻撃後のクールタイム
+		else {
+			if (Helper::GetInstance()->CheckMin(m_CoolTime, l_CoolMax, 1)) {
+				_AttackState = ATTACK_ENEMY;
+				m_CoolTime = {};
+			}
+		}
+	}
+	else {	//攻撃終了
+		_charaState = STATE_MOVE;
+		m_AttackCount = {};
+		m_CoolTime = {};
+		for (int i = 0; i < ACT_PATTERN; i++) {
+			m_ActCount[i] = {};
+		}
+	}
 }
 //行動力を入手
 void Player::AddAct(const string& Tag) {
@@ -143,4 +181,10 @@ void Player::AddAct(const string& Tag) {
 	else {
 		assert(0);
 	}
+}
+//攻撃先指定
+void Player::AttackTarget(const XMFLOAT3& pos) {
+	_charaState = STATE_ATTACK;
+	m_TargetPos = pos;
+	m_ReturnPos = m_Position;
 }

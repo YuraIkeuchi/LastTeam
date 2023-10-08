@@ -18,6 +18,7 @@ bool NormalEnemy::Initialize() {
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5 };
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
 	return true;
 }
 
@@ -32,6 +33,8 @@ void NormalEnemy::Action() {
 	(this->*stateTable[_charaState])();
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
+	//“–‚½‚è”»’è
+	Collide();
 }
 //•`‰æ
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
@@ -39,6 +42,10 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void NormalEnemy::ImGui_Origin() {
+	ImGui::Begin("Enemy");
+	ImGui::Text("HP:%f", m_HP);
+	ImGui::Text("DamegeTimer:%d", m_DamegeTimer);
+	ImGui::End();
 }
 //ŠJ•ú
 void NormalEnemy::Finalize() {
@@ -59,11 +66,11 @@ void NormalEnemy::Inter() {
 }
 
 void NormalEnemy::Attack() {
-
 	m_Position.x -= 0.05f;
 	if (m_Position.x < -10.f) {
 		_charaState = STATE_STANDBY;
 		m_Position = randPanelPos();
+		Player::GetInstance()->AttackTarget(m_Position);
 	}
 }
 

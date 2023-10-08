@@ -29,12 +29,7 @@ void ParticleEmitter::IntroDraw() {
 void ParticleEmitter::FlontDrawAll() {
 	circleParticle->Draw(AddBlendType);
 }
-
-void ParticleEmitter::DeathDrawAll() {
-}
-void ParticleEmitter::BackDrawAll() {
-}
-
+//炎のパーティクル
 void ParticleEmitter::FireEffect(const int life, const XMFLOAT3& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor)
 {
 	XMFLOAT3 pos = l_pos;
@@ -45,6 +40,30 @@ void ParticleEmitter::FireEffect(const int life, const XMFLOAT3& l_pos, const fl
 	vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 
 	circleParticle->Add(life, { pos.x,pos.y,pos.z }, vel, {}, startscale, endscale, startcolor, endcolor,{});
+}
+
+//ダメージ時のエフェクト
+void ParticleEmitter::Break(const int life, const XMFLOAT3& pos, const float startscale, const float endscale,
+	const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const float Gravity, float divi) {
+	const int l_Division = 80;
+	float l_AddPowerY = 0.0f;
+	//乱数の範囲(-50から50)
+	mt19937 mt{ std::random_device{}() };
+	uniform_int_distribution<int> l_bounddist(-50, 50);
+
+	XMFLOAT3 l_pos = pos;
+
+	XMFLOAT3 vel{};
+
+	vel = {
+		(float)(l_bounddist(mt)) / l_Division,
+		(float)(l_bounddist(mt)) / l_Division,
+		(float)(l_bounddist(mt)) / l_Division,
+	};
+
+	vel.y += l_AddPowerY;
+
+	circleParticle->Add(life, l_pos, vel, {}, startscale, endscale, startcolor, endcolor, Gravity, divi);
 }
 
 void ParticleEmitter::AllDelete()

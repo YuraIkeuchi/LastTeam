@@ -58,3 +58,9 @@ void EnemyManager::Draw(DirectXCommon* dxCommon) {
 
 void EnemyManager::SetCount() {
 }
+
+void EnemyManager::ImGuiDraw() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->ImGuiDraw();
+	}
+}
