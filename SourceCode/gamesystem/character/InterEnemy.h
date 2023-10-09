@@ -34,8 +34,16 @@ protected:
 	int m_DamegeTimer = {};
 	//“–‚½‚è”»’è‚Ì”¼Œa
 	float m_Radius = 1.0f;
+
+	struct PanelProb {
+		int AttackProb = 50;
+		int SkillProb = 25;
+		int GuardProb = 25;
+
+	};
+
 public://getter setter
-	void SetState(int state) {_charaState = state;}
+	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
 public:
 	//virtual ~InterEnemy() = default;

@@ -66,7 +66,7 @@ void NormalEnemy::Inter() {
 }
 
 void NormalEnemy::Attack() {
-	m_Position.x -= 0.05f;
+	m_Position.x -= 0.07f;
 	if (m_Position.x < -10.f) {
 		_charaState = STATE_STANDBY;
 		m_Position = randPanelPos();
