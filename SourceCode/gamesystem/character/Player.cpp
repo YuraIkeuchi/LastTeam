@@ -3,7 +3,7 @@
 #include "Helper.h"
 #include "Input.h"
 #include "Easing.h"
-#include "Collision.h"
+#include "ParticleEmitter.h"
 #include "GameMode.h"
 Player* Player::GetInstance()
 {
@@ -58,7 +58,13 @@ void Player::Update()
 		if (actui[i] == nullptr)continue;
 		actui[i]->SetActCount(i);
 		actui[i]->Update();
+
+		if (!actui[i]->GetAlive()) {
+			actui.erase(cbegin(actui) + i);
+		}
 	}
+
+	BirthParticle();
 }
 //VECTOR
 XMFLOAT3 Player::MoveVECTOR(XMVECTOR v, float angle)
@@ -86,6 +92,7 @@ void Player::ActUIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("Count:%d", m_AllActCount);
+	ImGui::Text("Timer:%d", m_Timer);
 	for (int i = 0; i < m_Act.size(); i++) {
 		ImGui::Text("Act[%d]:%d", i, m_Act[i]);
 	}
@@ -209,7 +216,7 @@ void Player::Attack() {
 				m_AllActCount--;
 				m_ActCount[ACT_ATTACK]--;
 				m_Act.erase(m_Act.begin());
-				actui.erase(actui.begin());
+				actui[0]->SetUse(true);
 			}
 		}
 	}
@@ -222,7 +229,7 @@ void Player::Guard() {
 		m_AllActCount--;
 		m_Timer = {};
 		m_ActCount[ACT_GUARD]--;
-		actui.erase(actui.begin());
+		actui[0]->SetUse(true);
 	}
 }
 //スキル
@@ -233,7 +240,7 @@ void Player::SkillAct() {
 		m_AllActCount--;
 		m_Timer = {};
 		m_ActCount[ACT_SKILL]--;
-		actui.erase(actui.begin());
+		actui[0]->SetUse(true);
 	}
 }
 //行動力を入手
@@ -271,4 +278,16 @@ void Player::BirthActUI(const string& Tag) {
 	newactUi->Initialize();
 	newactUi->InitState(m_AllActCount,Tag);
 	actui.emplace_back(newactUi);
+}
+void Player::BirthParticle() {
+	if (m_AllActCount != 0) {
+		if (m_Act[0] == ACT_ATTACK) {
+			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 1.0f,0.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
+		}	else if (m_Act[0] == ACT_GUARD) {
+			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 0.0f,0.0f,1.0f,1.0f }, { 0.0f,0.0f,1.0f,1.0f });
+		}
+		else if (m_Act[0] == ACT_SKILL) {
+			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 0.0f,1.0f,0.0f,1.0f }, { 0.0f,1.0f,0.0f,1.0f });
+		}
+	}
 }

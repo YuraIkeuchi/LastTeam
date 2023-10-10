@@ -51,6 +51,8 @@ private:
 	XMFLOAT3 MoveVECTOR(XMVECTOR v, float angle);
 	//行動UIの生成
 	void BirthActUI(const string& Tag);
+	//パーティクル
+	void BirthParticle();
 private:
 	void LoadCSV();
 

@@ -1,7 +1,8 @@
 #include "ActionUI.h"
 #include "ImageManager.h"
 #include "Easing.h"
-#include "Player.h"
+#include <Player.h>
+#include <Helper.h>
 ActionUI::ActionUI() {
 	const int texCount = TEX_MAX;
 	const float l_Width_Cut = 64.0f;
@@ -22,6 +23,9 @@ ActionUI::ActionUI() {
 //初期化
 void ActionUI::Initialize() {
 	m_Position = { (32.0f + ((m_ActCount - 1) * 64.0f)),800.0f };
+	m_Use = false;
+	m_Frame = {};
+	m_Alive = true;
 }
 //ステータス初期化
 void ActionUI::InitState(const int ActCount,const string& Tag) {
@@ -41,9 +45,9 @@ void ActionUI::InitState(const int ActCount,const string& Tag) {
 }
 //更新
 void ActionUI::Update() {
-	m_Position.x = Ease(In,Cubic,0.5f,m_Position.x,(32.0f + ((m_ActCount) * 64.0f)));
-	m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 690.0f);
-
+	UiMove();
+	
+	tex[m_ActType]->SetColor(m_Color);
 	tex[m_ActType]->SetPosition(m_Position);
 }
 //描画
@@ -59,4 +63,19 @@ void ActionUI::ImGuiDraw() {
 	ImGui::Text("Count:%d", m_ActCount);
 	//ImGui::Text("PosY:%f", m_Position.y);
 	ImGui::End();
+}
+//UIの動き
+void ActionUI::UiMove() {
+	const float l_AddFrame = 0.1f;
+	m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (32.0f + ((m_ActCount) * 64.0f)));
+	if (!m_Use) {
+		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 690.0f);
+	}
+	else {
+		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
+			m_Alive = false;
+		}
+		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 630.0f);
+		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
+	}
 }
