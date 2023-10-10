@@ -16,6 +16,9 @@ public:
 	void SetCount();
 
 	void ImGuiDraw();
+
+	//“G‚Ì€–Sˆ—
+	bool BossDestroy();
 private:
 	std::list<unique_ptr<InterEnemy>> enemys;
 };

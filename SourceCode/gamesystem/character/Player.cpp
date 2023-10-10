@@ -23,8 +23,7 @@ void Player::LoadResource() {
 //初期化
 bool Player::Initialize()
 {
-	//要素の全削除は一旦ここで
-	actui.clear();
+
 	LoadCSV();
 	//CSV読み込み
 	return true;
@@ -39,8 +38,26 @@ void Player::InitState(const XMFLOAT3& pos) {
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5 };
+	_charaState = STATE_MOVE;
 	//移動処理用
 	velocity /= 5.0f;
+	//for (int i = 0; ACT_PATTERN; i++) {
+	//	m_ActCount[i] = {};
+	//}
+
+	//攻撃先
+	m_TargetPos = {};
+	//戻り先
+	m_ReturnPos = {};
+	//イージング
+	m_Frame = {};
+	m_CoolTime = {};
+	_AttackState = ATTACK_ENEMY;
+	m_AllActCount = {};
+	m_Timer = {};
+	//要素の全削除は一旦ここで
+	actui.clear();
+	m_Act.clear();
 }
 //状態遷移
 /*CharaStateのState並び順に合わせる*/
@@ -92,10 +109,6 @@ void Player::ActUIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("Count:%d", m_AllActCount);
-	ImGui::Text("Timer:%d", m_Timer);
-	for (int i = 0; i < m_Act.size(); i++) {
-		ImGui::Text("Act[%d]:%d", i, m_Act[i]);
-	}
 	if (m_Act.size() != 0) {
 		if (m_Act[0] == ACT_ATTACK) {
 			ImGui::Text("Attack");
@@ -113,8 +126,6 @@ void Player::ImGuiDraw() {
 		if (actui[i] == nullptr)continue;
 		actui[i]->ImGuiDraw();
 	}
-
-	
 }
 
 //移動
@@ -173,6 +184,7 @@ void Player::Move() {
 	Helper::GetInstance()->Clamp(m_Position.z, -0.5f, 6.3f);
 }
 void Player::SpecialAct() {
+	//0番目の要素から行動を決める
 	if (m_AllActCount != 0) {
 		if (m_Act[0] == ACT_ATTACK) {
 			Attack();
@@ -214,7 +226,6 @@ void Player::Attack() {
 				m_CoolTime = {};
 				m_Timer = {};
 				m_AllActCount--;
-				m_ActCount[ACT_ATTACK]--;
 				m_Act.erase(m_Act.begin());
 				actui[0]->SetUse(true);
 			}
@@ -228,7 +239,6 @@ void Player::Guard() {
 		m_Act.erase(m_Act.begin());
 		m_AllActCount--;
 		m_Timer = {};
-		m_ActCount[ACT_GUARD]--;
 		actui[0]->SetUse(true);
 	}
 }
@@ -239,22 +249,18 @@ void Player::SkillAct() {
 		m_Act.erase(m_Act.begin());
 		m_AllActCount--;
 		m_Timer = {};
-		m_ActCount[ACT_SKILL]--;
 		actui[0]->SetUse(true);
 	}
 }
 //行動力を入手
 void Player::AddAct(const string& Tag) {
 	if (Tag == "Attack") {
-		m_ActCount[ACT_ATTACK]++;
 		m_Act.push_back(ACT_ATTACK);
 	}
 	else if (Tag == "Guard") {
-		m_ActCount[ACT_GUARD]++;
 		m_Act.push_back(ACT_GUARD);
 	}
 	else if (Tag == "Skill") {
-		m_ActCount[ACT_SKILL]++;
 		m_Act.push_back(ACT_SKILL);
 	}
 	else {

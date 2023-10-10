@@ -32,7 +32,7 @@ protected:
 	float m_Radius = 1.0f;
 public://getter setter
 	void SetState(int state) {_charaState = state;}
-
+	const float GetHP() { return m_HP; }
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>

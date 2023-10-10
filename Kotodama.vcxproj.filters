@@ -327,9 +327,6 @@
     <ClCompile Include="SourceCode\gamesystem\actor\GameMode.cpp">
       <Filter>gamesystem\actor\GameMode</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp">
-      <Filter>gamesystem\charactor\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\AttackAction.cpp">
       <Filter>gamesystem\Action\ActionPanel</Filter>
     </ClCompile>
@@ -344,6 +341,9 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp">
       <Filter>gamesystem\Action\ActionUI</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp">
+      <Filter>gamesystem\charactor\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -634,9 +634,6 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h">
       <Filter>gamesystem\stageobj</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h">
-      <Filter>gamesystem\charactor\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\AttackAction.h">
       <Filter>gamesystem\Action\ActionPanel</Filter>
     </ClInclude>
@@ -651,6 +648,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h">
       <Filter>gamesystem\Action\ActionUI</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h">
+      <Filter>gamesystem\charactor\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

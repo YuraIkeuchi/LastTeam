@@ -23,16 +23,11 @@ private:
 
 	void ImGuiDraw();
 private:
-	unique_ptr<IKEObject3d> ground;
-	unique_ptr<IKEObject3d> skydome;
 	XMFLOAT2 m_AddOffset = {};
 
 
 	unique_ptr<EnemyManager> enemyManager = nullptr;
 
-	unique_ptr<IKETexture> tex;
-
 	unique_ptr<IKESprite> ui=nullptr;
-
 };
 

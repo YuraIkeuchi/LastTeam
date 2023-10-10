@@ -97,8 +97,6 @@ private:
 	XMFLOAT3 m_TargetPos = {};
 	//戻り先
 	XMFLOAT3 m_ReturnPos = {};
-	//攻撃回数
-	int m_AttackCount = {};
 	//イージング
 	float m_Frame = {};
 	int m_CoolTime = {};
