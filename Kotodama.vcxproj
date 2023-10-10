@@ -60,7 +60,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(ProjectDir)SourceCode;$(ProjectDir)SourceCode\engine;$(ProjectDir)SourceCode\engine\3d;$(ProjectDir)SourceCode\engine\2d;$(ProjectDir)SourceCode\engine\audio;$(ProjectDir)SourceCode\engine\input;$(ProjectDir)SourceCode\engine\camera;$(ProjectDir)SourceCode\engine\enginebase;$(ProjectDir)SourceCode\engine\light;$(ProjectDir)SourceCode\engine\FpsManager;$(ProjectDir)SourceCode\engine\imgui;$(ProjectDir)SourceCode\engine\math;$(ProjectDir)SourceCode\engine\collision;$(ProjectDir)SourceCode\engine\ease;$(ProjectDir)SourceCode\gamesystem;$(ProjectDir)SourceCode\gamesystem\editor;$(ProjectDir)SourceCode\gamesystem\ParticleManager;$(ProjectDir)SourceCode\gamesystem\scene;$(SolutionDir)DirectXTex\include;$(ProjectDir)SourceCode\gamesystem\gamecamera;$(ProjectDir)SourceCode\gamesystem\Common;$(ProjectDir)SourceCode\gamesystem\scenetext;$(ProjectDir)SourceCode\gamesystem\character;$(ProjectDir)SourceCode\gamesystem\MessageWindow;$(ProjectDir)SourceCode\gamesystem\actor;$(ProjectDir)SourceCode\gamesystem\text;$(ProjectDir)SourceCode\engine\helper;$(ProjectDir)SourceCode\engine\shake;$(ProjectDir)SourceCode\gamesystem\stageobj</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(ProjectDir)SourceCode;$(ProjectDir)SourceCode\engine;$(ProjectDir)SourceCode\engine\3d;$(ProjectDir)SourceCode\engine\2d;$(ProjectDir)SourceCode\engine\audio;$(ProjectDir)SourceCode\engine\input;$(ProjectDir)SourceCode\engine\camera;$(ProjectDir)SourceCode\engine\enginebase;$(ProjectDir)SourceCode\engine\light;$(ProjectDir)SourceCode\engine\FpsManager;$(ProjectDir)SourceCode\engine\imgui;$(ProjectDir)SourceCode\engine\math;$(ProjectDir)SourceCode\engine\collision;$(ProjectDir)SourceCode\engine\ease;$(ProjectDir)SourceCode\gamesystem;$(ProjectDir)SourceCode\gamesystem\editor;$(ProjectDir)SourceCode\gamesystem\ParticleManager;$(ProjectDir)SourceCode\gamesystem\scene;$(SolutionDir)DirectXTex\include;$(ProjectDir)SourceCode\gamesystem\gamecamera;$(ProjectDir)SourceCode\gamesystem\Common;$(ProjectDir)SourceCode\gamesystem\scenetext;$(ProjectDir)SourceCode\gamesystem\character;$(ProjectDir)SourceCode\gamesystem\MessageWindow;$(ProjectDir)SourceCode\gamesystem\actor;$(ProjectDir)SourceCode\gamesystem\text;$(ProjectDir)SourceCode\engine\helper;$(ProjectDir)SourceCode\engine\shake;$(ProjectDir)SourceCode\gamesystem\stageobj;$(ProjectDir)SourceCode\gamesystem\ActionPanel</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -84,7 +84,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(ProjectDir)SourceCode;$(ProjectDir)SourceCode\engine;$(ProjectDir)SourceCode\engine\3d;$(ProjectDir)SourceCode\engine\2d;$(ProjectDir)SourceCode\engine\audio;$(ProjectDir)SourceCode\engine\input;$(ProjectDir)SourceCode\engine\camera;$(ProjectDir)SourceCode\engine\enginebase;$(ProjectDir)SourceCode\engine\light;$(ProjectDir)SourceCode\engine\FpsManager;$(ProjectDir)SourceCode\engine\imgui;$(ProjectDir)SourceCode\engine\math;$(ProjectDir)SourceCode\engine\collision;$(ProjectDir)SourceCode\engine\ease;$(ProjectDir)SourceCode\gamesystem;$(ProjectDir)SourceCode\gamesystem\editor;$(ProjectDir)SourceCode\gamesystem\ParticleManager;$(ProjectDir)SourceCode\gamesystem\scene;$(SolutionDir)DirectXTex\include;$(ProjectDir)SourceCode\gamesystem\gamecamera;$(ProjectDir)SourceCode\gamesystem\Common;$(ProjectDir)SourceCode\gamesystem\scenetext;$(ProjectDir)SourceCode\gamesystem\character;$(ProjectDir)SourceCode\gamesystem\MessageWindow;$(ProjectDir)SourceCode\gamesystem\actor;$(ProjectDir)SourceCode\gamesystem\text;$(ProjectDir)SourceCode\engine\helper;$(ProjectDir)SourceCode\engine\shake;$(ProjectDir)SourceCode\gamesystem\stageobj</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(ProjectDir)SourceCode;$(ProjectDir)SourceCode\engine;$(ProjectDir)SourceCode\engine\3d;$(ProjectDir)SourceCode\engine\2d;$(ProjectDir)SourceCode\engine\audio;$(ProjectDir)SourceCode\engine\input;$(ProjectDir)SourceCode\engine\camera;$(ProjectDir)SourceCode\engine\enginebase;$(ProjectDir)SourceCode\engine\light;$(ProjectDir)SourceCode\engine\FpsManager;$(ProjectDir)SourceCode\engine\imgui;$(ProjectDir)SourceCode\engine\math;$(ProjectDir)SourceCode\engine\collision;$(ProjectDir)SourceCode\engine\ease;$(ProjectDir)SourceCode\gamesystem;$(ProjectDir)SourceCode\gamesystem\editor;$(ProjectDir)SourceCode\gamesystem\ParticleManager;$(ProjectDir)SourceCode\gamesystem\scene;$(SolutionDir)DirectXTex\include;$(ProjectDir)SourceCode\gamesystem\gamecamera;$(ProjectDir)SourceCode\gamesystem\Common;$(ProjectDir)SourceCode\gamesystem\scenetext;$(ProjectDir)SourceCode\gamesystem\character;$(ProjectDir)SourceCode\gamesystem\MessageWindow;$(ProjectDir)SourceCode\gamesystem\actor;$(ProjectDir)SourceCode\gamesystem\text;$(ProjectDir)SourceCode\engine\helper;$(ProjectDir)SourceCode\engine\shake;$(ProjectDir)SourceCode\gamesystem\stageobj;$(ProjectDir)SourceCode\gamesystem\ActionPanel</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -162,6 +162,11 @@
     <ClCompile Include="SourceCode\engine\math\Quaternion.cpp" />
     <ClCompile Include="SourceCode\engine\math\Vector3.cpp" />
     <ClCompile Include="SourceCode\engine\shake\Shake.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\AttackAction.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\GuardAction.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\BaseActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\ClearSceneActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\EditorSceneActor.cpp" />
@@ -172,15 +177,11 @@
     <ClCompile Include="SourceCode\gamesystem\actor\LoadSceneActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\TitleSceneActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\TutorialSceneActor.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\AttackAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\GuardAction.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\InterAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterBoss.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\NormalEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\Player.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\SkillAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\gamecamera\CameraWork.cpp" />
     <ClCompile Include="SourceCode\gamesystem\MessageWindow\MessageWindow.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.cpp" />
@@ -265,6 +266,11 @@
     <ClInclude Include="SourceCode\engine\math\Quaternion.h" />
     <ClInclude Include="SourceCode\engine\math\Vector3.h" />
     <ClInclude Include="SourceCode\engine\shake\Shake.h" />
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\AttackAction.h" />
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\GuardAction.h" />
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h" />
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\BaseActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\ClearSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\EditorSceneActor.h" />
@@ -275,15 +281,11 @@
     <ClInclude Include="SourceCode\gamesystem\actor\LoadSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\TitleSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\TutorialSceneActor.h" />
-    <ClInclude Include="SourceCode\gamesystem\character\AttackAction.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
-    <ClInclude Include="SourceCode\gamesystem\character\GuardAction.h" />
-    <ClInclude Include="SourceCode\gamesystem\character\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterBoss.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\NormalEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\Player.h" />
-    <ClInclude Include="SourceCode\gamesystem\character\SkillAction.h" />
     <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h" />
     <ClInclude Include="SourceCode\gamesystem\MessageWindow\MessageWindow.h" />
     <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.h" />

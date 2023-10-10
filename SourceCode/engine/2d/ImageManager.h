@@ -20,6 +20,7 @@ public:
 	{
 		FEED,
 		SKILLUI,
+		ACTIONUI,
 	};
 	//テクスチャの名前
 	enum tex2dName

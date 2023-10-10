@@ -1,8 +1,15 @@
 ﻿#pragma once
 #include "ObjCommon.h"
 #include <any>
+#include "ActionUI.h"
+#include <list>
 using namespace DirectX;
-
+//行動の種類
+enum ActType {
+	ACT_ATTACK,
+	ACT_GUARD,
+	ACT_SKILL
+};
 class Player :public ObjCommon
 {
 public:
@@ -19,6 +26,8 @@ public:
 	void Update()override;
 	//描画
 	void Draw(DirectXCommon* dxCommon)override;
+	//行動UIの描画(あんまり良くないが一旦ここで)
+	void ActUIDraw();
 	//ImGui
 	void ImGuiDraw();
 	//行動力を入手する
@@ -28,8 +37,22 @@ public:
 private:
 	//動き
 	void Move();
+	//行動
+	void SpecialAct();
+	//行動の選択
+	//void ChoiceAct();
+	//攻撃
 	void Attack();
+	//防御
+	void Guard();
+	//スキルの行動
+	void SkillAct();
+	//移動
 	XMFLOAT3 MoveVECTOR(XMVECTOR v, float angle);
+	//行動UIの生成
+	void BirthActUI(const string& Tag);
+	//パーティクル
+	void BirthParticle();
 private:
 	void LoadCSV();
 
@@ -37,6 +60,7 @@ public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }
 	const int GetNowWidth() { return m_NowWidth; }
+	const int GetAllActCount() { return m_AllActCount; }
 	const int GetCharaState() { return _charaState; }
 
 private:
@@ -46,7 +70,7 @@ public:
 	enum CharaState
 	{
 		STATE_MOVE,
-		STATE_ATTACK
+		STATE_ACTION
 	};
 private:
 	
@@ -66,19 +90,13 @@ private:
 
 	//各行動回数
 	int m_ActCount[ACT_PATTERN] = {};
-	//行動の種類
-	enum ActType {
-		ACT_ATTACK,
-		ACT_GUARD,
-		ACT_SKILL
-	};
 
+	//全行動回数
+	int m_AllActCount = {};
 	//攻撃先
 	XMFLOAT3 m_TargetPos = {};
 	//戻り先
 	XMFLOAT3 m_ReturnPos = {};
-	//攻撃回数
-	int m_AttackCount = {};
 	//イージング
 	float m_Frame = {};
 	int m_CoolTime = {};
@@ -87,4 +105,11 @@ private:
 		ATTACK_ENEMY,
 		ATTACK_INTER,
 	}_AttackState = ATTACK_ENEMY;
+	
+	//行動のUI
+	vector<unique_ptr<ActionUI>> actui;
+	//行動先
+	vector<int> m_Act;
+
+	int m_Timer = {};
 };

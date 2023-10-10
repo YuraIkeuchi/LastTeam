@@ -3,7 +3,7 @@
 #include "Helper.h"
 #include "Input.h"
 #include "Easing.h"
-#include "Collision.h"
+#include "ParticleEmitter.h"
 #include "GameMode.h"
 Player* Player::GetInstance()
 {
@@ -23,6 +23,7 @@ void Player::LoadResource() {
 //初期化
 bool Player::Initialize()
 {
+
 	LoadCSV();
 	//CSV読み込み
 	return true;
@@ -37,14 +38,32 @@ void Player::InitState(const XMFLOAT3& pos) {
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5 };
+	_charaState = STATE_MOVE;
 	//移動処理用
 	velocity /= 5.0f;
+	//for (int i = 0; ACT_PATTERN; i++) {
+	//	m_ActCount[i] = {};
+	//}
+
+	//攻撃先
+	m_TargetPos = {};
+	//戻り先
+	m_ReturnPos = {};
+	//イージング
+	m_Frame = {};
+	m_CoolTime = {};
+	_AttackState = ATTACK_ENEMY;
+	m_AllActCount = {};
+	m_Timer = {};
+	//要素の全削除は一旦ここで
+	actui.clear();
+	m_Act.clear();
 }
 //状態遷移
 /*CharaStateのState並び順に合わせる*/
 void (Player::* Player::stateTable[])() = {
 	&Player::Move,//移動
-	&Player::Attack,//攻撃
+	&Player::SpecialAct,//特別な行動
 };
 //更新処理
 void Player::Update()
@@ -52,6 +71,17 @@ void Player::Update()
 	//状態移行(charastateに合わせる)
 	(this->*stateTable[_charaState])();
 	Obj_SetParam();
+	for (auto i = 0; i < actui.size(); i++) {
+		if (actui[i] == nullptr)continue;
+		actui[i]->SetActCount(i);
+		actui[i]->Update();
+
+		if (!actui[i]->GetAlive()) {
+			actui.erase(cbegin(actui) + i);
+		}
+	}
+
+	BirthParticle();
 }
 //VECTOR
 XMFLOAT3 Player::MoveVECTOR(XMVECTOR v, float angle)
@@ -67,14 +97,35 @@ void Player::Draw(DirectXCommon* dxCommon)
 {
 	Obj_Draw();
 }
-
+void Player::ActUIDraw() {
+	IKESprite::PreDraw();
+	for (auto i = 0; i < actui.size(); i++) {
+		if (actui[i] == nullptr)continue;
+		actui[i]->Draw();
+	}
+	IKESprite::PostDraw();
+}
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("Attack:%d", m_ActCount[ACT_ATTACK]);
-	ImGui::Text("Guard:%d", m_ActCount[ACT_GUARD]);
-	ImGui::Text("Skill:%d", m_ActCount[ACT_SKILL]);
+	ImGui::Text("Count:%d", m_AllActCount);
+	if (m_Act.size() != 0) {
+		if (m_Act[0] == ACT_ATTACK) {
+			ImGui::Text("Attack");
+		}
+		else if (m_Act[0] == ACT_GUARD) {
+			ImGui::Text("Guard");
+		}
+		else if (m_Act[0] == ACT_SKILL) {
+			ImGui::Text("Skill");
+		}
+	}
 	ImGui::End();
+
+	for (auto i = 0; i < actui.size(); i++) {
+		if (actui[i] == nullptr)continue;
+		actui[i]->ImGuiDraw();
+	}
 }
 
 //移動
@@ -132,17 +183,35 @@ void Player::Move() {
 	Helper::GetInstance()->Clamp(m_Position.x, -7.5f, -1.3f);
 	Helper::GetInstance()->Clamp(m_Position.z, -0.5f, 6.3f);
 }
+void Player::SpecialAct() {
+	//0番目の要素から行動を決める
+	if (m_AllActCount != 0) {
+		if (m_Act[0] == ACT_ATTACK) {
+			Attack();
+		}
+		else if (m_Act[0] == ACT_GUARD) {
+			Guard();
+		}
+		else if (m_Act[0] == ACT_SKILL) {
+			SkillAct();
+		}
+	}
+	else {
+		_charaState = STATE_MOVE;
+	}
+}
+//攻撃
 void Player::Attack() {
 	const float l_AddFrame = 0.05f;
-	const int l_CoolMax = 30;
+	const int l_CoolMax = 10;
 	//攻撃のパネルを取った分だけ攻撃する
-	if (m_AttackCount != m_ActCount[ACT_ATTACK]) {
+	m_Timer++;
+	if (m_Timer >= 30) {
 		if (_AttackState == ATTACK_ENEMY) {
 			if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
 				m_Frame = {};
 				m_Position = m_ReturnPos;
 				_AttackState = ATTACK_INTER;
-				m_AttackCount++;
 			}
 			m_Position = {
 			Ease(In,Cubic,m_Frame,m_Position.x,m_TargetPos.x),
@@ -155,36 +224,76 @@ void Player::Attack() {
 			if (Helper::GetInstance()->CheckMin(m_CoolTime, l_CoolMax, 1)) {
 				_AttackState = ATTACK_ENEMY;
 				m_CoolTime = {};
+				m_Timer = {};
+				m_AllActCount--;
+				m_Act.erase(m_Act.begin());
+				actui[0]->SetUse(true);
 			}
 		}
 	}
-	else {	//攻撃終了
-		_charaState = STATE_MOVE;
-		m_AttackCount = {};
-		m_CoolTime = {};
-		for (int i = 0; i < ACT_PATTERN; i++) {
-			m_ActCount[i] = {};
-		}
+}
+//防御
+void Player::Guard() {
+	m_Timer++;
+	if (m_Timer == 100) {
+		m_Act.erase(m_Act.begin());
+		m_AllActCount--;
+		m_Timer = {};
+		actui[0]->SetUse(true);
+	}
+}
+//スキル
+void Player::SkillAct() {
+	m_Timer++;
+	if (m_Timer == 100) {
+		m_Act.erase(m_Act.begin());
+		m_AllActCount--;
+		m_Timer = {};
+		actui[0]->SetUse(true);
 	}
 }
 //行動力を入手
 void Player::AddAct(const string& Tag) {
 	if (Tag == "Attack") {
-		m_ActCount[ACT_ATTACK]++;
+		m_Act.push_back(ACT_ATTACK);
 	}
 	else if (Tag == "Guard") {
-		m_ActCount[ACT_GUARD]++;
+		m_Act.push_back(ACT_GUARD);
 	}
 	else if (Tag == "Skill") {
-		m_ActCount[ACT_SKILL]++;
+		m_Act.push_back(ACT_SKILL);
 	}
 	else {
 		assert(0);
 	}
+
+	m_AllActCount++;
+	BirthActUI(Tag);
 }
 //攻撃先指定
 void Player::AttackTarget(const XMFLOAT3& pos) {
-	_charaState = STATE_ATTACK;
+	_charaState = STATE_ACTION;
 	m_TargetPos = pos;
 	m_ReturnPos = m_Position;
+}
+//行動UIの生成
+void Player::BirthActUI(const string& Tag) {
+	//アクションのセット
+	ActionUI* newactUi = nullptr;
+	newactUi = new ActionUI();
+	newactUi->Initialize();
+	newactUi->InitState(m_AllActCount,Tag);
+	actui.emplace_back(newactUi);
+}
+void Player::BirthParticle() {
+	if (m_AllActCount != 0) {
+		if (m_Act[0] == ACT_ATTACK) {
+			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 1.0f,0.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
+		}	else if (m_Act[0] == ACT_GUARD) {
+			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 0.0f,0.0f,1.0f,1.0f }, { 0.0f,0.0f,1.0f,1.0f });
+		}
+		else if (m_Act[0] == ACT_SKILL) {
+			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 0.0f,1.0f,0.0f,1.0f }, { 0.0f,1.0f,0.0f,1.0f });
+		}
+	}
 }

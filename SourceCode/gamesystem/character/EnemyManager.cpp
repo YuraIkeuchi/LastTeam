@@ -53,3 +53,16 @@ void EnemyManager::ImGuiDraw() {
 		enemy->ImGuiDraw();
 	}
 }
+
+//“G‚Ì€–Sˆ’u
+bool EnemyManager::BossDestroy() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		if (enemy->GetHP() <= 0.0f) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	return false;
+}

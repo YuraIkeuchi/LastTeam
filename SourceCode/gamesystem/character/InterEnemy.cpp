@@ -31,7 +31,7 @@ void InterEnemy::Collide() {
 	if (m_DamegeTimer != 0) { return; }
 	if (Player::GetInstance()->GetCharaState() != STATE_ATTACK) { return; }
 	if (Collision::SphereCollision(Player::GetInstance()->GetPosition(), m_Radius, m_Position, m_Radius)) {
-		m_HP -= 1.0f;
+		m_HP -= 5.0f;
 		m_DamegeTimer = 40;
 		BirthParticle();
 	}
