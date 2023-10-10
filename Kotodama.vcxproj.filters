@@ -327,20 +327,23 @@
     <ClCompile Include="SourceCode\gamesystem\actor\GameMode.cpp">
       <Filter>gamesystem\actor\GameMode</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\InterAction.cpp">
-      <Filter>gamesystem\charactor\Player\Action\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\AttackAction.cpp">
-      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\GuardAction.cpp">
-      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\SkillAction.cpp">
-      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp">
       <Filter>gamesystem\charactor\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\AttackAction.cpp">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\GuardAction.cpp">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp">
+      <Filter>gamesystem\Action\ActionUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -628,23 +631,26 @@
     <ClInclude Include="SourceCode\gamesystem\actor\GameMode.h">
       <Filter>gamesystem\actor\GameMode</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\InterAction.h">
-      <Filter>gamesystem\charactor\Player\Action\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\AttackAction.h">
-      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\GuardAction.h">
-      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\SkillAction.h">
-      <Filter>gamesystem\charactor\Player\Action\Other</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h">
       <Filter>gamesystem\stageobj</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h">
       <Filter>gamesystem\charactor\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\AttackAction.h">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\GuardAction.h">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h">
+      <Filter>gamesystem\Action\ActionUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -863,14 +869,14 @@
     <Filter Include="gamesystem\actor\GameMode">
       <UniqueIdentifier>{f909b9e8-9d87-4545-9e77-b64e13a9982f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\charactor\Player\Action">
-      <UniqueIdentifier>{0e056448-e030-4c9b-b767-5aeaa7c57e66}</UniqueIdentifier>
+    <Filter Include="gamesystem\Action">
+      <UniqueIdentifier>{07c1802c-029d-43cc-8a38-5a0d58c8e0f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\charactor\Player\Action\Base">
-      <UniqueIdentifier>{78b29469-8eda-4ad8-a299-a9a8d64b09bd}</UniqueIdentifier>
+    <Filter Include="gamesystem\Action\ActionPanel">
+      <UniqueIdentifier>{186ef124-8ceb-43f1-9153-23a5bdceb0c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\charactor\Player\Action\Other">
-      <UniqueIdentifier>{94571bd5-0fa5-4b93-a379-c858e3ab4270}</UniqueIdentifier>
+    <Filter Include="gamesystem\Action\ActionUI">
+      <UniqueIdentifier>{76f14ccb-8a04-4823-91ff-fceb3ab6f837}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
