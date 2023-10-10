@@ -2,6 +2,7 @@
 #include "ObjCommon.h"
 #include <any>
 #include "ActionUI.h"
+#include <list>
 using namespace DirectX;
 //行動の種類
 enum ActType {
@@ -36,8 +37,16 @@ public:
 private:
 	//動き
 	void Move();
+	//行動
+	void SpecialAct();
+	//行動の選択
+	//void ChoiceAct();
 	//攻撃
 	void Attack();
+	//防御
+	void Guard();
+	//スキルの行動
+	void SkillAct();
 	//移動
 	XMFLOAT3 MoveVECTOR(XMVECTOR v, float angle);
 	//行動UIの生成
@@ -59,7 +68,7 @@ public:
 	enum CharaState
 	{
 		STATE_MOVE,
-		STATE_ATTACK
+		STATE_ACTION
 	};
 private:
 	
@@ -97,5 +106,10 @@ private:
 		ATTACK_INTER,
 	}_AttackState = ATTACK_ENEMY;
 	
+	//行動のUI
 	vector<unique_ptr<ActionUI>> actui;
+	//行動先
+	vector<int> m_Act;
+
+	int m_Timer = {};
 };

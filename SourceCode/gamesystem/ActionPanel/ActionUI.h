@@ -26,6 +26,9 @@ public:
 	void Draw();
 	//ImGui
 	void ImGuiDraw();
+public:
+	//gettersetter 
+	void SetActCount(const int ActCount) { m_ActCount = ActCount; }
 private:
 	static const int TEX_MAX = 3;
 private:

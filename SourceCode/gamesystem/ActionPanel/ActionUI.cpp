@@ -21,7 +21,7 @@ ActionUI::ActionUI() {
 }
 //初期化
 void ActionUI::Initialize() {
-	m_Position = { -100.0f,800.0f };
+	m_Position = { (32.0f + ((m_ActCount - 1) * 64.0f)),800.0f };
 }
 //ステータス初期化
 void ActionUI::InitState(const int ActCount,const string& Tag) {
@@ -41,7 +41,7 @@ void ActionUI::InitState(const int ActCount,const string& Tag) {
 }
 //更新
 void ActionUI::Update() {
-	m_Position.x = (32.0f + ((m_ActCount - 1) * 64.0f));
+	m_Position.x = Ease(In,Cubic,0.5f,m_Position.x,(32.0f + ((m_ActCount) * 64.0f)));
 	m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 690.0f);
 
 	tex[m_ActType]->SetPosition(m_Position);
@@ -56,6 +56,7 @@ void ActionUI::Draw() {
 void ActionUI::ImGuiDraw() {
 	ImGui::Begin("ActUI");
 	ImGui::Text("PosX:%f", m_Position.x);
-	ImGui::Text("PosY:%f", m_Position.y);
+	ImGui::Text("Count:%d", m_ActCount);
+	//ImGui::Text("PosY:%f", m_Position.y);
 	ImGui::End();
 }
