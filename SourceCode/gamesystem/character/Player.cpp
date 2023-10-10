@@ -23,6 +23,8 @@ void Player::LoadResource() {
 //初期化
 bool Player::Initialize()
 {
+	//要素の全削除は一旦ここで
+	actui.clear();
 	LoadCSV();
 	//CSV読み込み
 	return true;
@@ -52,6 +54,10 @@ void Player::Update()
 	//状態移行(charastateに合わせる)
 	(this->*stateTable[_charaState])();
 	Obj_SetParam();
+	for (auto i = 0; i < actui.size(); i++) {
+		if (actui[i] == nullptr)continue;
+		actui[i]->Update();
+	}
 }
 //VECTOR
 XMFLOAT3 Player::MoveVECTOR(XMVECTOR v, float angle)
@@ -67,7 +73,14 @@ void Player::Draw(DirectXCommon* dxCommon)
 {
 	Obj_Draw();
 }
-
+void Player::ActUIDraw() {
+	IKESprite::PreDraw();
+	for (auto i = 0; i < actui.size(); i++) {
+		if (actui[i] == nullptr)continue;
+		actui[i]->Draw();
+	}
+	IKESprite::PostDraw();
+}
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
@@ -75,6 +88,11 @@ void Player::ImGuiDraw() {
 	ImGui::Text("Guard:%d", m_ActCount[ACT_GUARD]);
 	ImGui::Text("Skill:%d", m_ActCount[ACT_SKILL]);
 	ImGui::End();
+
+	for (auto i = 0; i < actui.size(); i++) {
+		if (actui[i] == nullptr)continue;
+		actui[i]->ImGuiDraw();
+	}
 }
 
 //移動
@@ -181,10 +199,21 @@ void Player::AddAct(const string& Tag) {
 	else {
 		assert(0);
 	}
+	m_AllActCount++;
+	BirthActUI(Tag);
 }
 //攻撃先指定
 void Player::AttackTarget(const XMFLOAT3& pos) {
 	_charaState = STATE_ATTACK;
 	m_TargetPos = pos;
 	m_ReturnPos = m_Position;
+}
+//行動UIの生成
+void Player::BirthActUI(const string& Tag) {
+	//アクションのセット
+	ActionUI* newactUi = nullptr;
+	newactUi = new ActionUI();
+	newactUi->Initialize();
+	newactUi->InitState(m_AllActCount,Tag);
+	actui.emplace_back(newactUi);
 }

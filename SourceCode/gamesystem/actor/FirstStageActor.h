@@ -3,7 +3,6 @@
 #include"BossText.h"
 #include "MessageWindow.h"
 #include "EnemyManager.h"
-#include "ActionUI.h"
 class FirstStageActor :public BaseActor
 {
 public:
@@ -26,7 +25,6 @@ private:
 private:
 	unique_ptr<IKEObject3d> ground;
 	unique_ptr<IKEObject3d> skydome;
-	unique_ptr<ActionUI> actui;
 	XMFLOAT2 m_AddOffset = {};
 
 

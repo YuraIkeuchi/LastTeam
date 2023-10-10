@@ -18,6 +18,8 @@ public:
 
 	//初期化
 	void Initialize();
+	//ステータスセット
+	void InitState(const int ActCount, const string& Tag);
 	//更新
 	void Update();
 	//描画
@@ -28,4 +30,9 @@ private:
 	static const int TEX_MAX = 3;
 private:
 	array<unique_ptr<IKESprite>,TEX_MAX> tex;
+
+	XMFLOAT2 m_Position = {};
+	int m_ActCount = {};
+
+	int m_ActType = {};
 };

@@ -56,9 +56,6 @@ void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, L
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
 
-	//行動のUI
-	actui = make_unique<ActionUI>();
-	actui->Initialize();
 	//テクスチャ
 	tex.reset(IKETexture::Create(ImageManager::MAGIC, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
 	tex->TextureCreate();
@@ -90,7 +87,6 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	ParticleEmitter::GetInstance()->Update();
 	enemyManager->Update();
 	tex->Update();
-	actui->Update();
 }
 
 void FirstStageActor::Draw(DirectXCommon* dxCommon) {
@@ -120,7 +116,7 @@ void FirstStageActor::Draw(DirectXCommon* dxCommon) {
 //ポストエフェクトかからない
 void FirstStageActor::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
-	actui->Draw();
+	Player::GetInstance()->ActUIDraw();
 }
 //ポストエフェクトかかる
 void FirstStageActor::BackDraw(DirectXCommon* dxCommon) {
