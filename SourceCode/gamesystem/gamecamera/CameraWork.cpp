@@ -26,5 +26,4 @@ void CameraWork::ImGuiDraw() {
 	ImGui::InputFloat("target_y", &target_.y, -100.f, 100.f);
 	ImGui::InputFloat("target_z", &target_.z, -100.f, 100.f);
 	ImGui::End();
-
 }
