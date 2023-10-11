@@ -2,7 +2,7 @@
 #include "ObjCommon.h"
 #include <memory>
 #include <IKESprite.h>
-
+#include <array>
 using namespace std;         //  名前空間指定
 //敵基底
 class InterEnemy :
@@ -16,9 +16,20 @@ protected:
 	using XMMATRIX = DirectX::XMMATRIX;
 protected:
 	XMFLOAT3 randPanelPos();
+protected:
+	static const int NUMBER_MAX = 10;
 
 protected:
+	//HPの表示
 	unique_ptr<IKESprite> hptex;
+	//Hpの表示(とりあえず三桁)
+	array<unique_ptr<IKESprite>, NUMBER_MAX> HP_First;
+	array<unique_ptr<IKESprite>, NUMBER_MAX> HP_Second;
+	array<unique_ptr<IKESprite>, NUMBER_MAX> HP_Third;
+
+	XMFLOAT2 m_FirstPos = { 1000.0f,50.0f };
+	XMFLOAT2 m_SecondPos = { 1000.0f,50.0f };
+	XMFLOAT2 m_ThirdPos = { 1000.0f,50.0f };
 	//キャラの状態
 	enum CharaState {
 		STATE_INTER,
@@ -43,6 +54,12 @@ protected:
 	XMMATRIX m_MatView = {};
 	XMMATRIX m_MatProjection = {};
 	XMMATRIX m_MatPort = {};
+
+	//数値化したHP表示のための変数
+	int m_FirstNumber = 0;//一桁目
+	int m_SecondNumber = 0;//二桁め
+	int m_ThirdNumber = 0;//三桁め
+	int m_InterHP = {};//整数にしたHP
 public://getter setter
 	void SetState(int state) {_charaState = state;}
 	const float GetHP() { return m_HP; }
@@ -82,6 +99,10 @@ private:
 	float HpPercent();
 	//スプライトを敵座標に出す
 	void WorldDivision();
+	//UIのためのHPの管理
+	void HPManage();
+	//割合を返す
+	int getDigits(int value, int m, int n);
 protected:
 	void Collide();
 };

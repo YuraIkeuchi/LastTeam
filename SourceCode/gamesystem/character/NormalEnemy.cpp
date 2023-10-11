@@ -13,6 +13,38 @@ NormalEnemy::NormalEnemy() {
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	const int NumberCount = NUMBER_MAX;
+	const float l_Width_Cut = 64.0f;
+	const float l_Height_Cut = 64.0f;
+
+	for (int i = 0; i < HP_First.size(); i++) {
+		//Ç–Ç∆ÇØÇΩñ⁄
+		HP_First[i] = IKESprite::Create(ImageManager::HPNUMBERUI, { 0.0f,0.0f });
+		int number_index_y = i / NumberCount;
+		int number_index_x = i % NumberCount;
+		HP_First[i]->SetTextureRect(
+			{ static_cast<float>(number_index_x) * l_Width_Cut, static_cast<float>(number_index_y) * l_Height_Cut },
+			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
+		HP_First[i]->SetAnchorPoint({ 0.5f,0.5f });
+		HP_First[i]->SetSize({ l_Width_Cut,l_Height_Cut });
+		HP_First[i]->SetScale(0.3f);
+		//ìÒåÖÇﬂ
+		HP_Second[i] = IKESprite::Create(ImageManager::HPNUMBERUI, { 0.0f,0.0f });
+		HP_Second[i]->SetTextureRect(
+			{ static_cast<float>(number_index_x) * l_Width_Cut, static_cast<float>(number_index_y) * l_Height_Cut },
+			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
+		HP_Second[i]->SetAnchorPoint({ 0.5f,0.5f });
+		HP_Second[i]->SetSize({ l_Width_Cut,l_Height_Cut });
+		HP_Second[i]->SetScale(0.3f);
+		//éOåÖñ⁄
+		HP_Third[i] = IKESprite::Create(ImageManager::HPNUMBERUI, { 0.0f,0.0f });
+		HP_Third[i]->SetTextureRect(
+			{ static_cast<float>(number_index_x) * l_Width_Cut, static_cast<float>(number_index_y) * l_Height_Cut },
+			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
+		HP_Third[i]->SetAnchorPoint({ 0.5f,0.5f });
+		HP_Third[i]->SetSize({ l_Width_Cut,l_Height_Cut });
+		HP_Third[i]->SetScale(0.3f);
+	}
 }
 //èâä˙âª
 bool NormalEnemy::Initialize() {
@@ -47,7 +79,7 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 //ImGuiï`âÊ
 void NormalEnemy::ImGui_Origin() {
 	ImGui::Begin("Enemy");
-	ImGui::Text("HP:%f", m_HP);
+	ImGui::Text("HP:%d", m_InterHP);
 	ImGui::Text("DamegeTimer:%d", m_DamegeTimer);
 	ImGui::End();
 }
