@@ -5,11 +5,14 @@
 #include "CsvLoader.h"
 #include "Helper.h"
 #include "Easing.h"
+#include "ImageManager.h"
 //ÉÇÉfÉãì«Ç›çûÇ›
 NormalEnemy::NormalEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	//HPII
+	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 }
 //èâä˙âª
 bool NormalEnemy::Initialize() {
@@ -19,6 +22,7 @@ bool NormalEnemy::Initialize() {
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5 };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
+	m_MaxHP = m_HP;
 	return true;
 }
 

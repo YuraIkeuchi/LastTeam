@@ -11,6 +11,7 @@ void ImageManager::StartLoad2D()
 {
 	IKESprite::LoadTexture(SKILLUI, L"Resources/2d/objicon/skill.png");
 	IKESprite::LoadTexture(ACTIONUI, L"Resources/2d/objicon/action.png");
+	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 }
 
 //非同期処理で読み込むスプライト

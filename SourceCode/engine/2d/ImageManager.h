@@ -21,6 +21,7 @@ public:
 		FEED,
 		SKILLUI,
 		ACTIONUI,
+		ENEMYHPUI,
 	};
 	//テクスチャの名前
 	enum tex2dName

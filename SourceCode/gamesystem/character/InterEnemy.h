@@ -1,5 +1,9 @@
 #pragma once
 #include "ObjCommon.h"
+#include <memory>
+#include <IKESprite.h>
+
+using namespace std;         //  名前空間指定
 //敵基底
 class InterEnemy :
 	public ObjCommon {
@@ -14,6 +18,7 @@ protected:
 	XMFLOAT3 randPanelPos();
 
 protected:
+	unique_ptr<IKESprite> hptex;
 	//キャラの状態
 	enum CharaState {
 		STATE_INTER,
@@ -26,10 +31,18 @@ protected:
 	int kIntervalMax = 120;
 	//HP
 	float m_HP = {};
+	float m_MaxHP = {};
 	//敵のダメージ判定のインターバル
 	int m_DamegeTimer = {};
 	//当たり判定の半径
 	float m_Radius = 1.0f;
+
+	//HPのUIに使う変数
+	XMFLOAT2 m_HPPos = { 1000.0f,50.0f };
+	XMFLOAT2 m_HPSize = {100.0f,30.0f};
+	XMMATRIX m_MatView = {};
+	XMMATRIX m_MatProjection = {};
+	XMMATRIX m_MatPort = {};
 public://getter setter
 	void SetState(int state) {_charaState = state;}
 	const float GetHP() { return m_HP; }
@@ -59,8 +72,16 @@ public:
 
 	virtual void ImGui_Origin() = 0;
 
+	void UIDraw();
+
+	//カメラのデータをゲットする
+	void GetData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort);
 private:
 	void BirthParticle();
+	//HPの割合を求める
+	float HpPercent();
+	//スプライトを敵座標に出す
+	void WorldDivision();
 protected:
 	void Collide();
 };

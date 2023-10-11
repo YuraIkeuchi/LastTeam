@@ -55,7 +55,7 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	GameMode::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	enemyManager->Update();
-
+	enemyManager->GetCameraData(camera->GetViewMatrix(), camera->GetProjectionMatrix(), camera->GetViewPort());
 	//敵を倒したらシーン以降(仮)
 	if (enemyManager->BossDestroy()) {
 		SceneManager::GetInstance()->ChangeScene("TITLE");
@@ -90,6 +90,7 @@ void FirstStageActor::Draw(DirectXCommon* dxCommon) {
 void FirstStageActor::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	Player::GetInstance()->ActUIDraw();
+	enemyManager->UIDraw();
 }
 //ポストエフェクトかかる
 void FirstStageActor::BackDraw(DirectXCommon* dxCommon) {

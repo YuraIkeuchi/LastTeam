@@ -53,7 +53,12 @@ void EnemyManager::ImGuiDraw() {
 		enemy->ImGuiDraw();
 	}
 }
-
+//UI‚Ì•`‰æ
+void EnemyManager::UIDraw() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->UIDraw();
+	}
+}
 //“G‚Ì€–Sˆ’u
 bool EnemyManager::BossDestroy() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
@@ -65,4 +70,10 @@ bool EnemyManager::BossDestroy() {
 		}
 	}
 	return false;
+}
+
+void EnemyManager::GetCameraData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort) {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->GetData(matView, matProjection, matPort);
+	}
 }
