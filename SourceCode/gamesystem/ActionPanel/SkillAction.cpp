@@ -13,7 +13,7 @@ SkillAction::SkillAction() {
 bool SkillAction::Initialize() {
 	m_Position = {};
 	m_Scale = { 0.5f,0.5f,0.5f };
-	m_Color = { 0.3f,0.0f,1.0f,1.0f };
+	m_Color = { 0.0f, 1.0f, 0.3f, 1.0f };
 	m_Alive = true;
 	m_Tag = "Skill";
 	return true;

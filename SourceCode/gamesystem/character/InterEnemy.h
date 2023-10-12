@@ -1,5 +1,9 @@
 #pragma once
 #include "ObjCommon.h"
+#include <memory>
+#include <IKESprite.h>
+#include <array>
+using namespace std;         //  名前空間指定
 
 
 //キャラの状態
@@ -20,9 +24,21 @@ protected:
 	using XMMATRIX = DirectX::XMMATRIX;
 protected:
 	XMFLOAT3 randPanelPos();
+protected:
+	static const int NUMBER_MAX = 10;
 
 protected:
+	//HPの表示
+	unique_ptr<IKESprite> hptex;
+	//Hpの表示(とりあえず三桁)
+	array<unique_ptr<IKESprite>, NUMBER_MAX> HP_First;
+	array<unique_ptr<IKESprite>, NUMBER_MAX> HP_Second;
+	array<unique_ptr<IKESprite>, NUMBER_MAX> HP_Third;
 
+	XMFLOAT2 m_FirstPos = { 1000.0f,50.0f };
+	XMFLOAT2 m_SecondPos = { 1000.0f,50.0f };
+	XMFLOAT2 m_ThirdPos = { 1000.0f,50.0f };
+	
 	int _charaState = STATE_INTER;
 	//クールタイム
 	int coolTimer = 0;
@@ -30,6 +46,7 @@ protected:
 	int kIntervalMax = 120;
 	//HP
 	float m_HP = {};
+	float m_MaxHP = {};
 	//敵のダメージ判定のインターバル
 	int m_DamegeTimer = {};
 	//当たり判定の半径
@@ -42,9 +59,23 @@ protected:
 
 	};
 
+
+	//HPのUIに使う変数
+	XMFLOAT2 m_HPPos = { 1000.0f,50.0f };
+	XMFLOAT2 m_HPSize = {100.0f,30.0f};
+	XMMATRIX m_MatView = {};
+	XMMATRIX m_MatProjection = {};
+	XMMATRIX m_MatPort = {};
+
+	//数値化したHP表示のための変数
+	int m_FirstNumber = 0;//一桁目
+	int m_SecondNumber = 0;//二桁め
+	int m_ThirdNumber = 0;//三桁め
+	int m_InterHP = {};//整数にしたHP
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
+	const float GetHP() { return m_HP; }
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>
@@ -71,8 +102,20 @@ public:
 
 	virtual void ImGui_Origin() = 0;
 
+	void UIDraw();
+
+	//カメラのデータをゲットする
+	void GetData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort);
 private:
 	void BirthParticle();
+	//HPの割合を求める
+	float HpPercent();
+	//スプライトを敵座標に出す
+	void WorldDivision();
+	//UIのためのHPの管理
+	void HPManage();
+	//割合を返す
+	int getDigits(int value, int m, int n);
 protected:
 	void Collide();
 };

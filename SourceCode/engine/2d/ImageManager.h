@@ -20,6 +20,9 @@ public:
 	{
 		FEED,
 		SKILLUI,
+		ACTIONUI,
+		ENEMYHPUI,
+		HPNUMBERUI,
 	};
 	//テクスチャの名前
 	enum tex2dName

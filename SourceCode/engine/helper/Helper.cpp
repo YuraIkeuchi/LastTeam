@@ -61,7 +61,7 @@ float Helper::GetPercent(const float amount, const float num)
 }
 //2D->3D変換に使う(スプライトの座標をプレイヤーのワールド座標に表示したりするのに使う)
 //座標系が明確でない場合->行列から計算->W除算
-Helper::XMVECTOR Helper::WDivision(const XMVECTOR& pos, const XMMATRIX& mat, const bool sub)
+Helper::XMVECTOR Helper::WDivision2(const XMVECTOR& pos, const XMMATRIX& mat, const bool sub)
 {
 	float x, y, z, w;
 
