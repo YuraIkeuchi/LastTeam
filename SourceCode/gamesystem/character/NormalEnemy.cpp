@@ -71,6 +71,7 @@ void NormalEnemy::Action() {
 	Obj_SetParam();
 	//“–‚½‚è”»’è
 	Collide();
+	Player::GetInstance()->AttackTarget(m_Position);
 }
 //•`‰æ
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
@@ -106,6 +107,5 @@ void NormalEnemy::Attack() {
 	if (m_Position.x < -10.f) {
 		_charaState = STATE_INTER;
 		m_Position = randPanelPos();
-		Player::GetInstance()->AttackTarget(m_Position);
 	}
 }
