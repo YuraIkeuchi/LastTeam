@@ -9,12 +9,14 @@
 
 using namespace DirectX;
 using namespace std;
+
+static const int PANEL_HEIGHT = 4;
+static const int PANEL_WIDTH = 8;
 class StagePanel {
 public:
 	static StagePanel* GetInstance();
 private:
-	static const int PANEL_HEIGHT = 4;
-	static const int PANEL_WIDTH = 8;
+	
 	static const int DIR_MAX = 4;
 
 	//ƒpƒlƒ‹‚ÌŽí—Þ

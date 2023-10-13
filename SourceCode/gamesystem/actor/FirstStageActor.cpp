@@ -23,7 +23,7 @@ void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, L
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -5.0f,1.0f,0.0f });
+	Player::GetInstance()->InitState({ -8.0f,1.0f,0.0f });
 	Player::GetInstance()->Initialize();
 
 	//ステージの床

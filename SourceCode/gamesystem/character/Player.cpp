@@ -5,6 +5,7 @@
 #include "Easing.h"
 #include "ParticleEmitter.h"
 #include "GameMode.h"
+#include "StagePanel.h"
 Player* Player::GetInstance()
 {
 	static Player instance;
@@ -41,10 +42,6 @@ void Player::InitState(const XMFLOAT3& pos) {
 	_charaState = STATE_MOVE;
 	//移動処理用
 	velocity /= 5.0f;
-	//for (int i = 0; ACT_PATTERN; i++) {
-	//	m_ActCount[i] = {};
-	//}
-
 	//攻撃先
 	m_TargetPos = {};
 	//戻り先
@@ -54,7 +51,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 	m_CoolTime = {};
 	_AttackState = ATTACK_ENEMY;
 	m_AllActCount = {};
-	m_Timer = {};
+	m_AttackTimer = {};
 	//要素の全削除は一旦ここで
 	actui.clear();
 	m_Act.clear();
@@ -83,15 +80,6 @@ void Player::Update()
 
 	BirthParticle();
 }
-//VECTOR
-XMFLOAT3 Player::MoveVECTOR(XMVECTOR v, float angle)
-{
-	XMMATRIX rot2 = {};
-	rot2 = XMMatrixRotationY(XMConvertToRadians(angle));
-	v = XMVector3TransformNormal(v, rot2);
-	XMFLOAT3 pos = { v.m128_f32[0], v.m128_f32[1], v.m128_f32[2] };
-	return pos;
-}
 //描画
 void Player::Draw(DirectXCommon* dxCommon)
 {
@@ -108,80 +96,107 @@ void Player::ActUIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("Count:%d", m_AllActCount);
-	if (m_Act.size() != 0) {
-		if (m_Act[0] == ACT_ATTACK) {
-			ImGui::Text("Attack");
-		}
-		else if (m_Act[0] == ACT_GUARD) {
-			ImGui::Text("Guard");
-		}
-		else if (m_Act[0] == ACT_SKILL) {
-			ImGui::Text("Skill");
-		}
-	}
+	/*ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSZ:%f", m_Position.z);*/
+	ImGui::Text("NowWidth:%d", m_NowWidth);
 	ImGui::End();
 
-	for (auto i = 0; i < actui.size(); i++) {
-		if (actui[i] == nullptr)continue;
-		actui[i]->ImGuiDraw();
-	}
+	//for (auto i = 0; i < actui.size(); i++) {
+	//	if (actui[i] == nullptr)continue;
+	//	actui[i]->ImGuiDraw();
+	//}
 }
 
 //移動
 void Player::Move() {
-	XMFLOAT3 rot = m_Rotation;
+	const int l_TargetTimer = 10;
+	const float l_Velocity = 2.0f;
 
-	Input* input = Input::GetInstance();
-	float StickX = input->GetLeftControllerX();
-	float StickY = input->GetLeftControllerY();
-	const float STICK_MAX = 32768.0f;
-	if (input->TiltPushStick(Input::L_UP, 0.0f) ||
-		input->TiltPushStick(Input::L_DOWN, 0.0f) ||
-		input->TiltPushStick(Input::L_RIGHT, 0.0f) ||
-		input->TiltPushStick(Input::L_LEFT, 0.0f))
-	{
-		//上入力
-		if (input->TiltPushStick(Input::L_UP, 0.0f))
-			XMFLOAT3 vecvel = MoveVECTOR(XMVECTOR{ 0, 0, velocity, 0 }, angle);
-
-		//下入力
-		if (input->TiltPushStick(Input::L_DOWN, 0.0f))
-			XMFLOAT3 vecvel = MoveVECTOR(XMVECTOR{ 0, 0, -velocity, 0 }, angle);
-
-		//右入力
-		if (input->TiltPushStick(Input::L_RIGHT, 0.0f))
-			XMFLOAT3 vecvel = MoveVECTOR(XMVECTOR{ velocity, 0, 0, 0 }, angle);
-
-		//左入力
-		if (input->TiltPushStick(Input::L_LEFT, 0.0f))
-			XMFLOAT3 vecvel = MoveVECTOR(XMVECTOR{ -velocity, 0, 0, 0 }, angle);
-
-		const float rnd_vel = 0.1f;
-
-		XMFLOAT3 vel{};
-
-		vel.x = static_cast<float>(rand()) / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.y = static_cast<float>(rand()) / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.z = static_cast<float>(rand()) / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		rot.y = angle + atan2f(StickX, StickY) * (PI_180 / PI);
-
-		//プレイヤーの回転角を取る
-		m_MoveRot = { rot.x, rot.y, rot.z };
-
-		XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f };
-		XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(m_MoveRot.y));
-		move = XMVector3TransformNormal(move, matRot);
-		if (GameMode::GetInstance()->GetGameTurn() == TURN_BATTLE) {
-			m_Position.x += move.m128_f32[0] * m_AddSpeed;
-			m_Position.z += move.m128_f32[2] * m_AddSpeed;
+	//ボタンでマスを移動する
+	if (input->PushButton(input->UP) ||
+		input->PushButton(input->DOWN) ||
+		input->PushButton(input->RIGHT) ||
+		input->PushButton(input->LEFT)) {
+		if (input->PushButton(input->UP)) {
+			m_InputTimer[DIR_UP]++;
+		}
+		else if (input->PushButton(input->DOWN)) {
+			m_InputTimer[DIR_DOWN]++;
+		}
+		else if (input->PushButton(input->RIGHT)) {
+			m_InputTimer[DIR_RIGHT]++;
+		}
+		else if (input->PushButton(input->LEFT)) {
+			m_InputTimer[DIR_LEFT]++;
 		}
 	}
-	m_Rotation = { m_MoveRot.x,m_MoveRot.y + 180.0f,m_MoveRot.z };
+	else {			//離した瞬間
+		if (m_LimitCount == 0) {
+			if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
+				m_NowHeight++;
+				m_InputTimer[DIR_UP] = {};
+				m_Position.z += l_Velocity;
+			}
+			else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
+				m_NowHeight--;
+				m_InputTimer[DIR_DOWN] = {};
+				m_Position.z -= l_Velocity;
+			}
+			else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
+				m_NowWidth++;
+				m_InputTimer[DIR_RIGHT] = {};
+				m_Position.x += l_Velocity;
+			}
+			else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
+				m_NowWidth--;
+				m_InputTimer[DIR_LEFT] = {};
+				m_Position.x -= l_Velocity;
+			}
+		}
+		for (int i = 0; i < DIR_MAX; i++) {
+			m_InputTimer[i] = {};
+		}
+		m_LimitCount = {};
+	}
 
-	//リミット制限
-	Helper::GetInstance()->Clamp(m_Position.x, -7.5f, -1.3f);
-	Helper::GetInstance()->Clamp(m_Position.z, -0.5f, 6.3f);
+	//一定フレーム立つと選択マス移動
+	if (m_InputTimer[DIR_UP] == l_TargetTimer) {
+		if (m_NowHeight < PANEL_HEIGHT - 1) {
+			m_NowHeight++;
+			m_LimitCount++;
+			m_Position.z += l_Velocity;
+		}
+		m_InputTimer[DIR_UP] = {};
+	}
+	else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
+		if (m_NowHeight > 0) {
+			m_NowHeight--;
+			m_LimitCount++;
+			m_Position.z -= l_Velocity;
+		}
+		m_InputTimer[DIR_DOWN] = {};
+	}
+	else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
+		if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
+			m_NowWidth++;
+			m_LimitCount++;
+			m_Position.x += l_Velocity;
+		}
+		m_InputTimer[DIR_RIGHT] = {};
+	}
+	else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
+		if (m_NowWidth > 0) {
+			m_NowWidth--;
+			m_LimitCount++;
+			m_Position.x -= l_Velocity;
+		}
+		m_InputTimer[DIR_LEFT] = {};
+	}
+
+	if (input->TriggerButton(input->A) && m_AllActCount != 0) {
+		m_ReturnPos = m_Position;
+		_charaState = STATE_ACTION;
+	}
 }
 void Player::SpecialAct() {
 	//0番目の要素から行動を決める
@@ -196,22 +211,19 @@ void Player::SpecialAct() {
 			SkillAct();
 		}
 	}
-	else {
-		_charaState = STATE_MOVE;
-	}
 }
 //攻撃
 void Player::Attack() {
 	const float l_AddFrame = 0.05f;
 	const int l_CoolMax = 10;
 	//攻撃のパネルを取った分だけ攻撃する
-	m_Timer++;
-	if (m_Timer >= 30) {
+	m_AttackTimer++;
+	if (m_AttackTimer >= 30) {
 		if (_AttackState == ATTACK_ENEMY) {
 			if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
 				m_Frame = {};
-				m_Position = m_ReturnPos;
 				_AttackState = ATTACK_INTER;
+				m_Position = m_ReturnPos;
 			}
 			m_Position = {
 			Ease(In,Cubic,m_Frame,m_Position.x,m_TargetPos.x),
@@ -224,32 +236,23 @@ void Player::Attack() {
 			if (Helper::GetInstance()->CheckMin(m_CoolTime, l_CoolMax, 1)) {
 				_AttackState = ATTACK_ENEMY;
 				m_CoolTime = {};
-				m_Timer = {};
-				m_AllActCount--;
-				m_Act.erase(m_Act.begin());
-				actui[0]->SetUse(true);
+				FinishAct();
 			}
 		}
 	}
 }
 //防御
 void Player::Guard() {
-	m_Timer++;
-	if (m_Timer == 100) {
-		m_Act.erase(m_Act.begin());
-		m_AllActCount--;
-		m_Timer = {};
-		actui[0]->SetUse(true);
+	m_AttackTimer++;
+	if (m_AttackTimer == 50) {
+		FinishAct();
 	}
 }
 //スキル
 void Player::SkillAct() {
-	m_Timer++;
-	if (m_Timer == 100) {
-		m_Act.erase(m_Act.begin());
-		m_AllActCount--;
-		m_Timer = {};
-		actui[0]->SetUse(true);
+	m_AttackTimer++;
+	if (m_AttackTimer == 50) {
+		FinishAct();
 	}
 }
 //行動力を入手
@@ -272,9 +275,7 @@ void Player::AddAct(const string& Tag) {
 }
 //攻撃先指定
 void Player::AttackTarget(const XMFLOAT3& pos) {
-	_charaState = STATE_ACTION;
 	m_TargetPos = pos;
-	m_ReturnPos = m_Position;
 }
 //行動UIの生成
 void Player::BirthActUI(const string& Tag) {
@@ -296,4 +297,12 @@ void Player::BirthParticle() {
 			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 0.0f,1.0f,0.0f,1.0f }, { 0.0f,1.0f,0.0f,1.0f });
 		}
 	}
+}
+//行動の終了
+void Player::FinishAct() {
+	m_Act.erase(m_Act.begin());
+	m_AllActCount--;
+	m_AttackTimer = {};
+	actui[0]->SetUse(true);
+	_charaState = STATE_MOVE;
 }

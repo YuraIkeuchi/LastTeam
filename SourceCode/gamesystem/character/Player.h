@@ -3,6 +3,7 @@
 #include <any>
 #include "ActionUI.h"
 #include <list>
+#include <Input.h>
 using namespace DirectX;
 //行動の種類
 enum ActType {
@@ -47,12 +48,17 @@ private:
 	void Guard();
 	//スキルの行動
 	void SkillAct();
-	//移動
-	XMFLOAT3 MoveVECTOR(XMVECTOR v, float angle);
 	//行動UIの生成
 	void BirthActUI(const string& Tag);
 	//パーティクル
 	void BirthParticle();
+	//行動の終了
+	void FinishAct();
+	
+	////押し続けているボタンキー取得
+	//bool CheckButton(Input::XBOX Button,int& Timer);
+	////ボタンを離した瞬間
+	//bool LetCheckButton(Input::XBOX Button, int& Timer);
 private:
 	void LoadCSV();
 
@@ -65,6 +71,7 @@ public:
 
 private:
 	static const int ACT_PATTERN = 3;
+	static const int DIR_MAX = 4;
 public:
 	//キャラの状態
 	enum CharaState
@@ -73,7 +80,8 @@ public:
 		STATE_ACTION
 	};
 private:
-	
+	Input* input = Input::GetInstance();
+
 	int _charaState = STATE_MOVE;
 	//移動方向指定用
 	float angle = 0.0f;
@@ -110,6 +118,19 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 	//行動先
 	vector<int> m_Act;
+	int m_AttackTimer = {};
 
-	int m_Timer = {};
+	//入力フレーム
+	int m_LimitCount = {};
+
+	//方向
+	enum SelectDir {
+		DIR_UP,
+		DIR_DOWN,
+		DIR_RIGHT,
+		DIR_LEFT
+	};
+
+	//各方向入力フレーム
+	array<int, DIR_MAX> m_InputTimer;
 };

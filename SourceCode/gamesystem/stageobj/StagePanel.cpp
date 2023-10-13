@@ -71,16 +71,10 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
-	//ImGui::Begin("Panel");
-	//ImGui::Text("Can:%d", m_CanSet);
-	//ImGui::Text("Height:%d", m_SelectHeight);
-	//ImGui::Text("Width:%d", m_SelectWidth);
-	//for (int i = 0; i < PANEL_WIDTH; i++) {
-	//	for (int j = 0; j < PANEL_HEIGHT; j++) {
-	//		ImGui::Text("PanelType[%d][%d]:%d", i, j, m_PanelType[i][j]);
-	//	}
-	//}
-	//ImGui::End();
+	ImGui::Begin("Panel");
+	ImGui::Text("POSX:%f", panels[0][0].position.x);
+	ImGui::Text("POSZ:%f", panels[0][0].position.z);
+	ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
@@ -222,6 +216,7 @@ void StagePanel::RandomPanel(int num) {
 				isSet = true;
 			}
 		}
+		//これは変えなくていい
 		int r_type= Helper::GetInstance()->GetRanNum(1, 3);
 		
 		panels[width][height].type = r_type;

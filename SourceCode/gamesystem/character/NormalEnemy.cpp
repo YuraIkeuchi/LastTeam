@@ -71,6 +71,7 @@ void NormalEnemy::Action() {
 	Obj_SetParam();
 	//“–‚½‚è”»’è
 	Collide();
+	Player::GetInstance()->AttackTarget(m_Position);
 }
 //•`‰æ
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
