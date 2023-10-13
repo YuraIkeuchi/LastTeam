@@ -23,6 +23,9 @@ public:
 		ACTIONUI,
 		ENEMYHPUI,
 		HPNUMBERUI,
+		MAPSCREEN,
+		MAP_NORMAL,
+		MAP_BOSS,
 	};
 	//テクスチャの名前
 	enum tex2dName

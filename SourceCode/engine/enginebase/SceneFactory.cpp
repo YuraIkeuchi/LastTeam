@@ -7,6 +7,7 @@
 #include "EditorScene.h"
 #include "TutorialScene.h"
 #include "EndRollScene.h"
+#include "MapScene.h"
 BaseScene* SceneFactory::CreateScene(const std::string& sceneName) {
 	//éüÇÃÉVÅ[ÉìÇÃçÏê¨
 	BaseScene* newScene = nullptr;
@@ -33,6 +34,8 @@ BaseScene* SceneFactory::CreateScene(const std::string& sceneName) {
 	}
 	else if (sceneName == "ENDROLL") {
 		newScene = new EndRollScene();
+	} else if(sceneName=="MAP") {
+		newScene = new MapScene();
 	}
 	return newScene;
 }

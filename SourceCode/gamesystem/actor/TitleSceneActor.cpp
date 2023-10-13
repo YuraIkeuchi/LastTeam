@@ -21,6 +21,9 @@ void TitleSceneActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	if ((input->TriggerButton(input->B))) {
 		SceneManager::GetInstance()->ChangeScene("FIRSTSTAGE");
 	}
+ 	if (input->TriggerKey(DIK_SPACE)) {
+		SceneManager::GetInstance()->ChangeScene("MAP");
+	}
 }
 //描画
 void TitleSceneActor::Draw(DirectXCommon* dxCommon) {

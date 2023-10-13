@@ -13,6 +13,10 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ACTIONUI, L"Resources/2d/objicon/action.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 	IKESprite::LoadTexture(HPNUMBERUI, L"Resources/2d/objicon/Num.png");
+	IKESprite::LoadTexture(MAPSCREEN, L"Resources/2d/sceneback/mapscreen.jpg");
+	IKESprite::LoadTexture(MAP_NORMAL, L"Resources/2d/objicon/map_01.png");
+	IKESprite::LoadTexture(MAP_BOSS, L"Resources/2d/objicon/map_02.png");
+
 }
 
 //非同期処理で読み込むスプライト

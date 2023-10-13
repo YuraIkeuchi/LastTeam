@@ -109,6 +109,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MapSceneActor.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Font.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\GameoverScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\IkeGame.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\LoadScene.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\scene\MapScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\SceneChanger.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\SceneManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\SceneSave.cpp" />
@@ -279,6 +281,7 @@
     <ClInclude Include="SourceCode\gamesystem\actor\GameOverSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\FirstStageActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\LoadSceneActor.h" />
+    <ClInclude Include="SourceCode\gamesystem\actor\MapSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\TitleSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\TutorialSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
@@ -300,6 +303,7 @@
     <ClInclude Include="SourceCode\gamesystem\scene\GameoverScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\IkeGame.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\LoadScene.h" />
+    <ClInclude Include="SourceCode\gamesystem\scene\MapScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\SceneChanger.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\SceneManager.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\SceneSave.h" />
