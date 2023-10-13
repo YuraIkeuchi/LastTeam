@@ -24,7 +24,9 @@ public:
 		ENEMYHPUI,
 		HPNUMBERUI,
 		MAPSCREEN,
+		MAP_START,
 		MAP_NORMAL,
+		MAP_HEAL,
 		MAP_BOSS,
 	};
 	//テクスチャの名前

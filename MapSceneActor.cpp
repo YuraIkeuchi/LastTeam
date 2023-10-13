@@ -6,20 +6,30 @@ void MapSceneActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, Lig
 	dxCommon->SetFullScreen(true);
 	UI ui[Max];
 	ui[Screen].sprite = IKESprite::Create(ImageManager::MAPSCREEN, { 0,0 });
-	ui[Screen].pos = { 0,0 };
-	ui[Screen].size={1280.f,720.f};
+	ui[Screen].pos = { 640,360 };
+	ui[Screen].size = { 1280.f,720.f };
+
+	ui[StartMAP].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
+	ui[StartMAP].pos = basePos;
+	ui[StartMAP].size = { 128.f,128.f };
+
 
 	ui[NormalMAP].sprite = IKESprite::Create(ImageManager::MAP_NORMAL, { 0,0 });
-	ui[NormalMAP].pos = { 40,360 };
-	ui[NormalMAP].size = { 256.f,256.f };
+	ui[NormalMAP].pos = { basePos.x + interbal.x ,basePos.y };
+	ui[NormalMAP].size = { 128.f,128.f };
 
 	ui[BossMAP].sprite = IKESprite::Create(ImageManager::MAP_BOSS, { 0,0 });
-	ui[BossMAP].pos = { 640,360 };
-	ui[BossMAP].size = { 256.f,256.f };
+	ui[BossMAP].pos = { basePos.x + interbal.x,basePos.y - interbal.y };
+	ui[BossMAP].size = { 128.f,128.f };
+
+	ui[HealMAP].sprite = IKESprite::Create(ImageManager::MAP_HEAL, { 0,0 });
+	ui[HealMAP].pos = { basePos.x + interbal.x,basePos.y + interbal.y };
+	ui[HealMAP].size = { 128.f,128.f };
 
 
-
-	for (int i = 0; i < Max;i++) {
+	for (int i = Screen; i < Max; i++) {
+		if (i != Screen) { ui[i].isPannel = true; }
+		ui[i].sprite->SetAnchorPoint({ 0.5f,0.5f });
 		UIs.push_back(std::move(ui[i]));
 	}
 
@@ -30,11 +40,26 @@ void MapSceneActor::Finalize() {
 }
 
 void MapSceneActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, LightGroup* lightgroup) {
+	if (Input::GetInstance()->Pushkey(DIK_D)) {
+		scroll.x+=5;
+	}
+	if (Input::GetInstance()->Pushkey(DIK_A)) {
+		scroll.x-= 5;
+	}	if (Input::GetInstance()->Pushkey(DIK_W)) {
+		scroll.y-= 5;
+	}	if (Input::GetInstance()->Pushkey(DIK_S)) {
+		scroll.y+= 5;
+	}
+
 	for (UI& ui : UIs) {
-		ui.sprite->SetPosition(ui.pos);
+		if (ui.isPannel) {
+			ui.sprite->SetPosition({ ui.pos.x + scroll.x, ui.pos.y + scroll.y});
+		} else {
+			ui.sprite->SetPosition(ui.pos);
+		}
 		ui.sprite->SetSize(ui.size);
 	}
-	
+
 }
 
 void MapSceneActor::Draw(DirectXCommon* dxCommon) {
