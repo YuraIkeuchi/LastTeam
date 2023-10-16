@@ -7,7 +7,9 @@
 XMFLOAT3 InterEnemy::randPanelPos() {
 	int width = Helper::GetInstance()->GetRanNum(4, 7);
 	int height = Helper::GetInstance()->GetRanNum(4, 7);
-	return StagePanel::GetInstance()->SetPositon(width, height);;
+	m_NowHeight = 2;
+	m_NowWidth = 4;
+	return StagePanel::GetInstance()->SetPositon(m_NowWidth, m_NowHeight);
 }
 //初期化
 bool InterEnemy::Initialize() {
@@ -47,13 +49,16 @@ void InterEnemy::UIDraw() {
 	IKESprite::PostDraw();
 }
 //当たり判定
-void InterEnemy::Collide() {
-	if (m_DamegeTimer != 0) { return; }
-	if (Player::GetInstance()->GetCharaState() != STATE_ATTACK) { return; }
-	if (Collision::SphereCollision(Player::GetInstance()->GetPosition(), m_Radius, m_Position, m_Radius)) {
-		m_HP -= 5.0f;
-		m_DamegeTimer = 40;
-		BirthParticle();
+void InterEnemy::Collide(vector<AttackArea*>area) {
+	//if (m_DamegeTimer != 0) { return; }
+	//if (Player::GetInstance()->GetCharaState() != STATE_ATTACK) { return; }
+	for (AttackArea* _area : area) {
+		if (Collision::SphereCollision(_area->GetPosition(), m_Radius, m_Position, m_Radius) && !_area->GetHit()) {
+			m_HP -= 5.0f;
+			m_DamegeTimer = 40;
+			BirthParticle();
+			_area->SetHit(true);
+		}
 	}
 }
 //パーティクル

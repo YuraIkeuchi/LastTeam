@@ -36,6 +36,9 @@ public:
 	//gettersetter
 	const bool GetHit() { return m_Hit; }
 	const bool GetAlive() { return m_Alive; }
+
+	const int GetNowWidth() { return m_NowWidth; }
+	const int GetNowHeight() { return m_NowHeight; }
 	void SetHit(const bool Hit) { m_Hit = Hit; }
 private:
 	//¶‘¶ŠÖŒW
@@ -44,4 +47,7 @@ private:
 
 	//ƒqƒbƒg‚µ‚½‚©‚Ç‚¤‚©
 	bool m_Hit = false;
+
+	int m_NowWidth = {};
+	int m_NowHeight = {};
 };

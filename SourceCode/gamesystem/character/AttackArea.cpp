@@ -17,16 +17,18 @@ bool AttackArea::Initialize() {
 //ステータス初期化
 void AttackArea::InitState(const int width, const int height) {
 	m_Position = SetPanelPos(width, height);
+	m_NowWidth = width, m_NowHeight = height;
 	m_Scale = { 2.0f,0.1f,2.0f };
 	m_Position.y = 0.1f;
 	m_Color = { 1.0f,0.3f,0.0f,1.0f };
 	m_Alive = true;
+	m_Hit = false;
 	m_AliveTimer = {};
 }
 
 //更新
 void AttackArea::Update() {
-	const int l_TargetTimer = 20;
+	const int l_TargetTimer = 200;
 
 	if (Helper::GetInstance()->CheckMin(m_AliveTimer, l_TargetTimer, 1)) {
 		m_Alive = false;
@@ -42,6 +44,7 @@ void AttackArea::Draw(DirectXCommon* dxCommon) {
 void AttackArea::ImGuiDraw() {
 	ImGui::Begin("Area");
 	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::End();
 }
 //パネルの位置に置く

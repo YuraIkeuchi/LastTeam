@@ -300,5 +300,5 @@ void Player::BirthArea() {
 	newarea = new AttackArea();
 	newarea->Initialize();
 	newarea->InitState(m_NowWidth + 1, m_NowHeight);
-	attackarea.emplace_back(newarea);
+	attackarea.push_back(newarea);
 }

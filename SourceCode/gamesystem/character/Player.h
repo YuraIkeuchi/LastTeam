@@ -71,6 +71,8 @@ public:
 	const int GetAllActCount() { return m_AllActCount; }
 	const int GetCharaState() { return _charaState; }
 
+	vector<AttackArea*>GetAttackArea() { return attackarea; }
+
 private:
 	static const int ACT_PATTERN = 3;
 	static const int DIR_MAX = 4;
@@ -119,7 +121,7 @@ private:
 	//行動のUI
 	vector<unique_ptr<ActionUI>> actui;
 	//攻撃エリア
-	vector<unique_ptr<AttackArea>> attackarea;
+	vector<AttackArea*> attackarea;
 	//行動先
 	vector<int> m_Act;
 	int m_AttackTimer = {};
