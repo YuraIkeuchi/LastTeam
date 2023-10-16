@@ -351,6 +351,9 @@
     <ClCompile Include="MapSceneActor.cpp">
       <Filter>gamesystem\actor\mapScene</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
+      <Filter>gamesystem\charactor\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -663,6 +666,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\actor\MapSceneActor.h">
       <Filter>gamesystem\actor\mapScene</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
+      <Filter>gamesystem\charactor\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

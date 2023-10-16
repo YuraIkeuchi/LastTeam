@@ -2,6 +2,7 @@
 #include "ObjCommon.h"
 #include <any>
 #include "ActionUI.h"
+#include "AttackArea.h"
 #include <list>
 #include <Input.h>
 using namespace DirectX;
@@ -54,7 +55,8 @@ private:
 	void BirthParticle();
 	//行動の終了
 	void FinishAct();
-	
+	//攻撃エリアの描画
+	void BirthArea();
 	////押し続けているボタンキー取得
 	//bool CheckButton(Input::XBOX Button,int& Timer);
 	////ボタンを離した瞬間
@@ -116,6 +118,8 @@ private:
 	
 	//行動のUI
 	vector<unique_ptr<ActionUI>> actui;
+	//攻撃エリア
+	vector<unique_ptr<AttackArea>> attackarea;
 	//行動先
 	vector<int> m_Act;
 	int m_AttackTimer = {};
