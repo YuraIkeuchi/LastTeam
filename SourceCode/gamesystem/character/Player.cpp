@@ -111,6 +111,15 @@ void Player::ActUIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("NowWidth:%d", m_NowWidth);
+	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
+		_SkillType = SKILL_NORMAL;
+	}
+	if (ImGui::Button("STRONGSKILL", ImVec2(50, 50))) {
+		_SkillType = SKILL_STRONG;
+	}
+	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
+		_SkillType = SKILL_SPECIAL;
+	}
 	ImGui::End();
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
@@ -232,14 +241,14 @@ void Player::Attack() {
 //防御
 void Player::Guard() {
 	m_AttackTimer++;
-	if (m_AttackTimer == 50) {
+	if (m_AttackTimer == 5) {
 		FinishAct();
 	}
 }
 //スキル
 void Player::SkillAct() {
 	m_AttackTimer++;
-	if (m_AttackTimer == 50) {
+	if (m_AttackTimer == 5) {
 		FinishAct();
 	}
 }
@@ -294,11 +303,46 @@ void Player::FinishAct() {
 	actui[0]->SetUse(true);
 	_charaState = STATE_MOVE;
 }
-//攻撃エリアの描画
+//攻撃エリアの描画(無理やり処理)
 void Player::BirthArea() {
-	AttackArea* newarea = nullptr;
-	newarea = new AttackArea();
-	newarea->Initialize();
-	newarea->InitState(m_NowWidth + 1, m_NowHeight);
-	attackarea.push_back(newarea);
+	int l_BirthNumX = {};//パネルのマックス数
+
+	int l_BirthCountX = {};
+	int l_BirthCountZ = {};
+	
+	if (_SkillType == SKILL_NORMAL) {		//普通に一個右
+		l_BirthCountX = m_NowWidth + 1;
+		AttackArea* newarea = nullptr;
+		newarea = new AttackArea();
+		newarea->Initialize();
+		newarea->InitState(l_BirthCountX, m_NowHeight);
+		attackarea.push_back(newarea);
+	}
+	else if (_SkillType == SKILL_STRONG) {		//プレイヤーの一から右一列全部
+		l_BirthNumX = PANEL_WIDTH - (m_NowWidth + 1);
+		for (int i = 0; i < l_BirthNumX; i++) {
+			l_BirthCountX = (m_NowWidth + 1) + i;
+			AttackArea* newarea = nullptr;
+			newarea = new AttackArea();
+			newarea->Initialize();
+			newarea->InitState(l_BirthCountX, m_NowHeight);
+			attackarea.push_back(newarea);
+		}
+	}
+	else {				//プレイヤーから3 * 2のマス
+		for (int j = 0; j < 3; j++) {
+			l_BirthCountZ = (m_NowHeight - 1) + j;
+			if (l_BirthCountZ < 0 || l_BirthCountZ > 3) {
+				continue;
+			}
+			for (int i = 0; i < 2; i++) {
+				l_BirthCountX = (m_NowWidth + 1) + i;
+				AttackArea* newarea = nullptr;
+				newarea = new AttackArea();
+				newarea->Initialize();
+				newarea->InitState(l_BirthCountX, l_BirthCountZ);
+				attackarea.push_back(newarea);
+			}
+		}
+	}
 }

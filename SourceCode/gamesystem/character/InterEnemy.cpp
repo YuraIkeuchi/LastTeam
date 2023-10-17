@@ -7,7 +7,7 @@
 XMFLOAT3 InterEnemy::randPanelPos() {
 	int width = Helper::GetInstance()->GetRanNum(4, 7);
 	int height = Helper::GetInstance()->GetRanNum(4, 7);
-	m_NowHeight = 2;
+	m_NowHeight = 3;
 	m_NowWidth = 4;
 	return StagePanel::GetInstance()->SetPositon(m_NowWidth, m_NowHeight);
 }

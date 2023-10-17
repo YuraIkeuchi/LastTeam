@@ -139,4 +139,10 @@ private:
 
 	//各方向入力フレーム
 	array<int, DIR_MAX> m_InputTimer;
+
+	enum SkillType {
+		SKILL_NORMAL,
+		SKILL_STRONG,
+		SKILL_SPECIAL
+	}_SkillType = SKILL_NORMAL;
 };

@@ -44,7 +44,7 @@ void AttackArea::Draw(DirectXCommon* dxCommon) {
 void AttackArea::ImGuiDraw() {
 	ImGui::Begin("Area");
 	ImGui::Text("POSX:%f", m_Position.x);
-	ImGui::Text("POSZ:%f", m_Position.z);
+	//ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::End();
 }
 //パネルの位置に置く
