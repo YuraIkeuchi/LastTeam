@@ -2,6 +2,7 @@
 #include "ObjCommon.h"
 #include "CollisionPrimitive.h"
 #include <string>
+#include <IKETexture.h>
 using namespace std;         //  –¼‘O‹óŠÔŽw’è
 
 class InterAction :
@@ -40,6 +41,9 @@ public:
 	bool GetAlive() { return m_Alive; }
 protected:
 	string m_Tag;
+	unique_ptr<IKETexture> m_Pannel = nullptr;
+	XMFLOAT3 m_PannelScale = {0.15f,0.15f,0.15f};
+	XMFLOAT3 m_PannelRot = { 90.0f,0.0f,0.0f };
 	float m_Radius = 0.35f;
 	bool m_Alive = true;
 };

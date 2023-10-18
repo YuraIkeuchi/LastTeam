@@ -71,79 +71,10 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
-	ImGui::Begin("Panel");
-	ImGui::Text("POSX:%f", panels[0][0].position.x);
-	ImGui::Text("POSZ:%f", panels[0][0].position.z);
-	ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
 void StagePanel::SetUpdate() {
-	const int l_TimerMax = 10;
-	Input* input = Input::GetInstance();
-	//スティックでマスを選ぶ
-	if (input->TiltPushStick(Input::L_UP, 0.0f) ||
-		input->TiltPushStick(Input::L_DOWN, 0.0f) ||
-		input->TiltPushStick(Input::L_RIGHT, 0.0f) ||
-		input->TiltPushStick(Input::L_LEFT, 0.0f)) {
-		if (input->TiltPushStick(Input::L_UP, 0.0f) && m_SelectHeight < PANEL_HEIGHT - 1) {
-			m_Timer[DIR_UP]++;
-		} else if (input->TiltPushStick(Input::L_DOWN, 0.0f) && m_SelectHeight > 0) {
-			m_Timer[DIR_DOWN]++;
-		} else if (input->TiltPushStick(Input::L_RIGHT, 0.0f) && m_SelectWidth < PANEL_WIDTH - 1) {
-			m_Timer[DIR_RIGHT]++;
-		} else if (input->TiltPushStick(Input::L_LEFT, 0.0f) && m_SelectWidth > 0) {
-			m_Timer[DIR_LEFT]++;
-		}
-	} else {
-		for (int i = 0; i < DIR_MAX; i++) {
-			m_Timer[i] = {};
-		}
-	}
-
-	//一定フレーム立つと選択マス移動
-	if (m_Timer[DIR_UP] == l_TimerMax) {
-		m_SelectHeight++;
-		m_Timer[DIR_UP] = {};
-	} else if (m_Timer[DIR_DOWN] == l_TimerMax) {
-		m_SelectHeight--;
-		m_Timer[DIR_DOWN] = {};
-	} else if (m_Timer[DIR_RIGHT] == l_TimerMax) {
-		m_SelectWidth++;
-		m_Timer[DIR_RIGHT] = {};
-	} else if (m_Timer[DIR_LEFT] == l_TimerMax) {
-		m_SelectWidth--;
-		m_Timer[DIR_LEFT] = {};
-	}
-
-	//選択マスの色が変わる
-	for (int i = 0; i < PANEL_WIDTH; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			if (panels[i][j].type == NO_PANEL) {
-				if (m_SelectHeight == j && m_SelectWidth == i) {
-					panels[i][j].color = { 0.8f,0.8f,0.0f,1.0f };
-				} else {
-					panels[i][j].color = { 1.0f,1.0f,1.0f,1.0f };
-				}
-			} else {
-				panels[i][j].color = { 0.5f,0.5f,0.5f,1.0f };
-			}
-			panels[i][j].object->Update();
-			panels[i][j].object->SetPosition(panels[i][j].position);
-			panels[i][j].object->SetColor(panels[i][j].color);
-		}
-	}
-
-	//セレクトしているものの座標
-//m_SelectPos = panels[m_SelectWidth][m_SelectHeight].position;
-
-	//パネルを置けるかどうかをチェックする
-	//if ((panels[m_SelectWidth][m_SelectHeight].type == NO_PANEL) &&
-	//	!panels[m_SelectWidth][m_SelectHeight].isHit) {
-	//	m_CanSet = true;
-	//} else {
-	//	m_CanSet = false;
-	//}
 }
 
 //バトルの更新
@@ -208,6 +139,7 @@ void StagePanel::RandomPanel(int num) {
 		//乱数の設定
 		int width = Helper::GetInstance()->GetRanNum(0, 3);
 		int height = Helper::GetInstance()->GetRanNum(0, 3);
+		//パネル探索（開いてるのが3追加の場合書いてない）
 		while (!isSet) {
 			if (panels[width][height].type!= NO_PANEL) {
 				width = Helper::GetInstance()->GetRanNum(0, 3);
