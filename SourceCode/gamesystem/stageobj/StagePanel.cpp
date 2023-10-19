@@ -5,6 +5,9 @@
 #include "Player.h"
 #include "GameMode.h"
 #include "Collision.h"
+#include "ImageManager.h"
+#include <Easing.h>
+
 StagePanel* StagePanel::GetInstance() {
 	static StagePanel instance;
 
@@ -34,6 +37,10 @@ bool StagePanel::Initialize() {
 	m_SelectHeight = 0;
 	m_SelectWidth = 0;
 	actions.clear();
+	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	skillUI->SetSize(basesize);
+	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
+	gaugeUI->SetSize({ basesize.x,0.f });
 	//CSV読み込み
 	return true;
 }
@@ -41,9 +48,22 @@ bool StagePanel::Initialize() {
 //更新処理
 void StagePanel::Update() {
 	//if (GameMode::GetInstance()->GetGameTurn() == TURN_BATTLE) {
-		BattleUpdate();
+	BattleUpdate();
 	//}
-
+	{
+		gaugeCount++;
+		if (gaugeCount == kGaugeCountMax) {
+			actions.clear();
+			ResetPanel();
+			//パネル置く数
+			int panel_num = 3;
+			RandomPanel(panel_num);
+			gaugeCount = 0;
+		}
+		float per = (gaugeCount / kGaugeCountMax);
+		float size = Ease(In,Quad,0.5f, gaugeUI->GetSize().y,basesize.y * per);
+		gaugeUI->SetSize({ basesize.x,size });
+	}
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Update();
@@ -56,6 +76,10 @@ void StagePanel::Update() {
 
 //描画
 void StagePanel::Draw(DirectXCommon* dxCommon) {
+	IKESprite::PreDraw();
+	skillUI->Draw();
+	gaugeUI->Draw();
+	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
@@ -141,7 +165,7 @@ void StagePanel::RandomPanel(int num) {
 		int height = Helper::GetInstance()->GetRanNum(0, 3);
 		//パネル探索（開いてるのが3追加の場合書いてない）
 		while (!isSet) {
-			if (panels[width][height].type!= NO_PANEL) {
+			if (panels[width][height].type != NO_PANEL) {
 				width = Helper::GetInstance()->GetRanNum(0, 3);
 				height = Helper::GetInstance()->GetRanNum(0, 3);
 			} else {
@@ -149,8 +173,8 @@ void StagePanel::RandomPanel(int num) {
 			}
 		}
 		//これは変えなくていい
-		int r_type= Helper::GetInstance()->GetRanNum(1, 3);
-		
+		int r_type = Helper::GetInstance()->GetRanNum(1, 3);
+
 		panels[width][height].type = r_type;
 		//アクションのセット
 		InterAction* newAction = nullptr;
@@ -170,9 +194,21 @@ void StagePanel::RandomPanel(int num) {
 		newAction->Initialize();
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
-		
+
 		panels[width][height].object->Update();
 		panels[width][height].object->SetPosition(panels[width][height].position);
 		panels[width][height].object->SetColor(panels[width][height].color);
 	}
+}
+
+void StagePanel::ResetPanel() {
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			panels[i][j].color = { 1,1,1,1 };
+			panels[i][j].isHit = false;
+			panels[i][j].type = NO_PANEL;
+		}
+	}
+
+
 }

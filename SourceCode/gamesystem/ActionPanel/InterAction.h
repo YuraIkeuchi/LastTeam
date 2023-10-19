@@ -5,6 +5,7 @@
 #include <IKETexture.h>
 using namespace std;         //  –¼‘O‹óŠÔŽw’è
 
+
 class InterAction :
 	public ObjCommon {
 protected:

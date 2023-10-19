@@ -28,6 +28,7 @@ public:
 		MAP_NORMAL,
 		MAP_HEAL,
 		MAP_BOSS,
+		GAUGE,
 	};
 	//テクスチャの名前
 	enum tex2dName
