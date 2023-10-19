@@ -53,7 +53,9 @@ void StagePanel::Update() {
 	{
 		gaugeCount++;
 		if (gaugeCount == kGaugeCountMax) {
-			actions.clear();
+			for (auto i = 0; i < actions.size(); i++) {
+				actions[i]->SetState(STATE_VANISH);
+			}
 			ResetPanel();
 			//パネル置く数
 			int panel_num = 3;
@@ -175,7 +177,7 @@ void StagePanel::RandomPanel(int num) {
 		//これは変えなくていい
 		int r_type = Helper::GetInstance()->GetRanNum(1, 3);
 
-		panels[width][height].type = r_type;
+		panels[width][height].type = SKILL_PANEL;
 		//アクションのセット
 		InterAction* newAction = nullptr;
 		switch (panels[width][height].type) {

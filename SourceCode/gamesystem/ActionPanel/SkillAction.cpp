@@ -24,14 +24,7 @@ bool SkillAction::Initialize() {
 }
 //s“®
 void SkillAction::Action() {
-	{
-		m_PannelRot.y += 0.3f;
-		m_Pannel->SetPosition({ m_Position.x,m_Position.y + 0.1f,m_Position.z });
-		m_Pannel->SetScale(m_PannelScale);
-		m_Pannel->SetRotation(m_PannelRot);
-		m_Pannel->SetColor(m_Color);
-		m_Pannel->Update();
-	}
+	(this->*stateTable[_state])();
 	Obj_SetParam();
 	Collide();
 }

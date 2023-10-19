@@ -4,7 +4,11 @@
 #include <string>
 #include <IKETexture.h>
 using namespace std;         //  名前空間指定
-
+enum State {
+	STATE_SPAWN = 0,
+	STATE_ALIVE,
+	STATE_VANISH,
+};
 
 class InterAction :
 	public ObjCommon {
@@ -40,6 +44,8 @@ protected:
 public:
 	//gettersetter
 	bool GetAlive() { return m_Alive; }
+	void SetState(int state) { _state= state; }
+
 protected:
 	string m_Tag;
 	unique_ptr<IKETexture> m_Pannel = nullptr;
@@ -47,4 +53,16 @@ protected:
 	XMFLOAT3 m_PannelRot = { 90.0f,0.0f,0.0f };
 	float m_Radius = 0.35f;
 	bool m_Alive = true;
+
+	float m_VanishFrame = 0.f;
+	float kVanishMax = 45.f;
+	//関数ポインタ
+	static void(InterAction::* stateTable[])();
+	int _state = STATE_SPAWN;
+
+private:
+	void Spawn();//待機
+	void Alive();
+	void Vanish();
+
 };
