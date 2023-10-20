@@ -100,21 +100,21 @@ void InterEnemy::WorldDivision() {
 
 	//数値化したHP(ひとけた目)
 	XMVECTOR texHPFirst;
-	texHPFirst = { m_Position.x + 0.3f, m_Position.y, m_Position.z - 0.55f };
+	texHPFirst = { m_Position.x + 0.6f, m_Position.y, m_Position.z - 0.55f };
 	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatView, false);
 	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatProjection, true);
 	texHPFirst = Helper::GetInstance()->WDivision(texHPFirst, false);
 	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatPort, false);
 	//二桁め
 	XMVECTOR texHPSecond;
-	texHPSecond = { m_Position.x + 0.1f, m_Position.y, m_Position.z - 0.55f };
+	texHPSecond = { m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f };
 	texHPSecond = Helper::GetInstance()->PosDivi(texHPSecond, m_MatView, false);
 	texHPSecond = Helper::GetInstance()->PosDivi(texHPSecond, m_MatProjection, true);
 	texHPSecond = Helper::GetInstance()->WDivision(texHPSecond, false);
 	texHPSecond = Helper::GetInstance()->PosDivi(texHPSecond, m_MatPort, false);
 	//三桁め
 	XMVECTOR texHPThird;
-	texHPThird = { m_Position.x - 0.1f, m_Position.y, m_Position.z - 0.55f };
+	texHPThird = { m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.55f };
 	texHPThird = Helper::GetInstance()->PosDivi(texHPThird, m_MatView, false);
 	texHPThird = Helper::GetInstance()->PosDivi(texHPThird, m_MatProjection, true);
 	texHPThird = Helper::GetInstance()->WDivision(texHPThird, false);

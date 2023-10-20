@@ -64,7 +64,7 @@ void StagePanel::Update() {
 			gaugeCount = 0;
 		}
 		float per = (gaugeCount / kGaugeCountMax);
-		float size = Ease(In,Quad,0.5f, gaugeUI->GetSize().y,basesize.y * per);
+		float size = Ease(In, Quad, 0.5f, gaugeUI->GetSize().y, basesize.y * per);
 		gaugeUI->SetSize({ basesize.x,size });
 	}
 	for (auto i = 0; i < actions.size(); i++) {
@@ -166,14 +166,37 @@ void StagePanel::Collide() {
 
 
 void StagePanel::RandomPanel(int num) {
+	int freeNum = 0;
+	int p_height = Player::GetInstance()->GetNowHeight();
+	int p_width = Player::GetInstance()->GetNowWidth();
+
+	for (int i = 0; i < PANEL_WIDTH/2; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			if (panels[i][j].type != NO_PANEL ||
+				(i == p_width && j == p_height)) {
+				continue;
+			}
+			freeNum++;
+		}
+	}
+	if (freeNum == 0) {
+		return;
+	}
+	if (freeNum < num) {
+		num = freeNum;
+	}
+
 	for (int i = 0; i < num; i++) {
 		bool isSet = false;
 		//乱数の設定
 		int width = Helper::GetInstance()->GetRanNum(0, 3);
 		int height = Helper::GetInstance()->GetRanNum(0, 3);
+
 		//パネル探索（開いてるのが3追加の場合書いてない）
+
 		while (!isSet) {
-			if (panels[width][height].type != NO_PANEL) {
+			if (panels[width][height].type != NO_PANEL ||
+				(width == p_width && height == p_height)) {
 				width = Helper::GetInstance()->GetRanNum(0, 3);
 				height = Helper::GetInstance()->GetRanNum(0, 3);
 			} else {
