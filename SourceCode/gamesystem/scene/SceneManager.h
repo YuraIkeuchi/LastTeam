@@ -2,6 +2,7 @@
 #include "BaseScene.h"
 #include "AbstractSceneFactory.h"
 #include <string>
+#include <stack>
 #include <memory>
 #include <future>
 //シーン管理
@@ -31,8 +32,11 @@ public:
 	bool GetLoad() { return  m_Load; }
 
 private:
-	//今のシーン
-	BaseScene* scene_ = nullptr;
+	// シーンスタック
+	std::stack<BaseScene *> scene_stack_;
+
+	////今のシーン
+	//BaseScene* scene_ = nullptr;
 	//次のシーン
 	BaseScene* nextScene_ = nullptr;
 

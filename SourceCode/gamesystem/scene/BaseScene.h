@@ -37,6 +37,7 @@ public:
 	void BaseInitialize(DirectXCommon* dxCommon);
 
 public:
+
 	//アクタークラス
 	unique_ptr<BaseActor> actor;
 	///ゲームシーン用

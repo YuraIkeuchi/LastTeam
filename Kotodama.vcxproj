@@ -130,6 +130,14 @@
     <ClCompile Include="SourceCode\engine\audio\Audio.cpp" />
     <ClCompile Include="SourceCode\engine\audio\AudioManager.cpp" />
     <ClCompile Include="SourceCode\engine\audio\VolumManager.cpp" />
+    <ClCompile Include="SourceCode\engine\BehaviorTree\ActionNode.cpp" />
+    <ClCompile Include="SourceCode\engine\BehaviorTree\BehaviorTree.cpp" />
+    <ClCompile Include="SourceCode\engine\BehaviorTree\CompositeNode.cpp" />
+    <ClCompile Include="SourceCode\engine\BehaviorTree\ConditionalNode.cpp" />
+    <ClCompile Include="SourceCode\engine\BehaviorTree\Node.cpp" />
+    <ClCompile Include="SourceCode\engine\BehaviorTree\Repeater.cpp" />
+    <ClCompile Include="SourceCode\engine\BehaviorTree\Selector.cpp" />
+    <ClCompile Include="SourceCode\engine\BehaviorTree\Sequencer.cpp" />
     <ClCompile Include="SourceCode\engine\camera\Camera.cpp" />
     <ClCompile Include="SourceCode\engine\camera\DebugCamera.cpp" />
     <ClCompile Include="SourceCode\engine\camera\ShadowCamera.cpp" />
@@ -153,6 +161,8 @@
     <ClCompile Include="SourceCode\engine\enginebase\WinApp.cpp" />
     <ClCompile Include="SourceCode\engine\enginebase\XorShift.cpp" />
     <ClCompile Include="SourceCode\engine\FpsManager\FPSManager.cpp" />
+    <ClCompile Include="SourceCode\engine\GameObject\GameObject.cpp" />
+    <ClCompile Include="SourceCode\engine\GameObject\GameObjectManager.cpp" />
     <ClCompile Include="SourceCode\engine\helper\Helper.cpp" />
     <ClCompile Include="SourceCode\engine\helper\Spline.cpp" />
     <ClCompile Include="SourceCode\engine\input\Input.cpp" />
@@ -228,6 +238,14 @@
     <ClInclude Include="SourceCode\engine\audio\Audio.h" />
     <ClInclude Include="SourceCode\engine\audio\AudioManager.h" />
     <ClInclude Include="SourceCode\engine\audio\VolumManager.h" />
+    <ClInclude Include="SourceCode\engine\BehaviorTree\ActionNode.h" />
+    <ClInclude Include="SourceCode\engine\BehaviorTree\BehaviorTree.h" />
+    <ClInclude Include="SourceCode\engine\BehaviorTree\CompositeNode.h" />
+    <ClInclude Include="SourceCode\engine\BehaviorTree\ConditionalNode.h" />
+    <ClInclude Include="SourceCode\engine\BehaviorTree\Node.h" />
+    <ClInclude Include="SourceCode\engine\BehaviorTree\Repeater.h" />
+    <ClInclude Include="SourceCode\engine\BehaviorTree\Selector.h" />
+    <ClInclude Include="SourceCode\engine\BehaviorTree\Sequencer.h" />
     <ClInclude Include="SourceCode\engine\camera\Camera.h" />
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h" />
     <ClInclude Include="SourceCode\engine\camera\ShadowCamera.h" />
@@ -255,6 +273,8 @@
     <ClInclude Include="SourceCode\engine\enginebase\WinApp.h" />
     <ClInclude Include="SourceCode\engine\enginebase\XorShift.h" />
     <ClInclude Include="SourceCode\engine\FpsManager\FPSManager.h" />
+    <ClInclude Include="SourceCode\engine\GameObject\GameObject.h" />
+    <ClInclude Include="SourceCode\engine\GameObject\GameObjectManager.h" />
     <ClInclude Include="SourceCode\engine\helper\Helper.h" />
     <ClInclude Include="SourceCode\engine\helper\Spline.h" />
     <ClInclude Include="SourceCode\engine\helper\VariableCommon.h" />
@@ -267,6 +287,7 @@
     <ClInclude Include="SourceCode\engine\math\Matrix4.h" />
     <ClInclude Include="SourceCode\engine\math\Quaternion.h" />
     <ClInclude Include="SourceCode\engine\math\Vector3.h" />
+    <ClInclude Include="SourceCode\engine\Property.h" />
     <ClInclude Include="SourceCode\engine\shake\Shake.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\AttackAction.h" />

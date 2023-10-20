@@ -351,6 +351,36 @@
     <ClCompile Include="MapSceneActor.cpp">
       <Filter>gamesystem\actor\mapScene</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\engine\BehaviorTree\ActionNode.cpp">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\engine\BehaviorTree\BehaviorTree.cpp">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\engine\BehaviorTree\CompositeNode.cpp">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\engine\BehaviorTree\ConditionalNode.cpp">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\engine\BehaviorTree\Node.cpp">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\engine\BehaviorTree\Repeater.cpp">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\engine\BehaviorTree\Selector.cpp">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\engine\BehaviorTree\Sequencer.cpp">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\engine\GameObject\GameObject.cpp">
+      <Filter>engine\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\engine\GameObject\GameObjectManager.cpp">
+      <Filter>engine\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -664,6 +694,39 @@
     <ClInclude Include="SourceCode\gamesystem\actor\MapSceneActor.h">
       <Filter>gamesystem\actor\mapScene</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\engine\BehaviorTree\ActionNode.h">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\BehaviorTree\BehaviorTree.h">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\BehaviorTree\CompositeNode.h">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\BehaviorTree\ConditionalNode.h">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\BehaviorTree\Node.h">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\BehaviorTree\Repeater.h">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\BehaviorTree\Selector.h">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\BehaviorTree\Sequencer.h">
+      <Filter>engine\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\Property.h">
+      <Filter>engine\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\GameObject\GameObject.h">
+      <Filter>engine\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\GameObject\GameObjectManager.h">
+      <Filter>engine\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
@@ -892,6 +955,18 @@
     </Filter>
     <Filter Include="gamesystem\scene\mapScene">
       <UniqueIdentifier>{77f0cdcf-6c68-4f05-80b6-3919d533d6a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\BehaviorTree">
+      <UniqueIdentifier>{28ba1403-e4fe-4228-a5ca-d796a408fd2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\Property">
+      <UniqueIdentifier>{597d592a-e640-4b0d-99bb-b366786fc161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\GameObject">
+      <UniqueIdentifier>{8ddb1a66-1384-4613-8972-0b34b5a7ccd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\scene\GameObjectManager">
+      <UniqueIdentifier>{3686100c-2ca3-4974-adcf-d0a058369ab8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

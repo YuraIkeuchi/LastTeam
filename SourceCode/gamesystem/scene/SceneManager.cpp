@@ -5,9 +5,15 @@
 
 #include<cassert>
 void SceneManager::Finalize() {
-	//最後のシーンの終了と開放
-	scene_->Finalize();
-	delete scene_;
+	while (!scene_stack_.empty())
+	{
+		scene_stack_.top()->Finalize();
+		scene_stack_.pop();
+	}
+
+	////最後のシーンの終了と開放
+	//scene_->Finalize();
+	//delete scene_;
 }
 
 SceneManager* SceneManager::GetInstance() {
@@ -18,14 +24,26 @@ SceneManager* SceneManager::GetInstance() {
 void SceneManager::Update(DirectXCommon* dxCommon) {
 	//シーン切り替えがあるかどうか
 	if (nextScene_) {
-		//旧シーンの終了
-		if (scene_) {
-			scene_->Finalize();
-			delete scene_;
+		// シーンスタックにデータがあれば終了処理
+		if (!scene_stack_.empty())
+		{
+			scene_stack_.top()->Finalize();
+			scene_stack_.pop();	// スタックからポップ
 		}
-		scene_ = nextScene_;
+
+		scene_stack_.push(nextScene_);
 		nextScene_ = nullptr;
-		scene_->Initialize(dxCommon);
+		scene_stack_.top()->Initialize(dxCommon);
+
+		////旧シーンの終了
+		//if (scene_) {
+
+		//	scene_->Finalize();
+		//	delete scene_;
+		//}
+		//scene_ = nextScene_;
+		//nextScene_ = nullptr;
+		//scene_->Initialize(dxCommon);
 	}
 	//ローディング
 	if (m_Load == true) {
@@ -48,11 +66,13 @@ void SceneManager::Update(DirectXCommon* dxCommon) {
 			break;
 		}
 	}
-	scene_->Update(dxCommon);
+	scene_stack_.top()->Update(dxCommon);
+	//scene_->Update(dxCommon);
 }
 
 void SceneManager::Draw(DirectXCommon* dxCommon) {
-	scene_->Draw(dxCommon);
+	scene_stack_.top()->Draw(dxCommon);
+	//scene_->Draw(dxCommon);
 }
 
 void SceneManager::ChangeScene(const std::string& sceneName) {
