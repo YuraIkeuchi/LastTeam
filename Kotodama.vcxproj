@@ -199,7 +199,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\ClearScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\EditorScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\EndRollScene.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\scene\FirstStage.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\scene\BattleScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\Framework.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\GameoverScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\IkeGame.cpp" />
@@ -313,7 +313,7 @@
     <ClInclude Include="SourceCode\gamesystem\scene\ClearScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\EditorScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\EndRollScene.h" />
-    <ClInclude Include="SourceCode\gamesystem\scene\FirstStage.h" />
+    <ClInclude Include="SourceCode\gamesystem\scene\BattleScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\Framework.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\GameoverScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\IkeGame.h" />

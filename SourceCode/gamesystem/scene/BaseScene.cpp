@@ -10,7 +10,7 @@ BaseScene::BaseScene()
 }
 
 //共通の初期化
-void BaseScene::BaseInitialize(DirectXCommon* dxCommon) {
+void BaseScene::BaseInitialize(DirectXCommon* dxCommon, XMFLOAT3 eye, XMFLOAT3 target) {
 	// デバイスをセット
 	IKEFBXObject3d::SetDevice(dxCommon->GetDev());
 	// グラフィックスパイプライン生成
@@ -32,4 +32,13 @@ void BaseScene::BaseInitialize(DirectXCommon* dxCommon) {
 	lightGroup->SetDirLightActive(0, true);
 	lightGroup->SetDirLightActive(1, true);
 	lightGroup->SetDirLightActive(2, true);
+
+	//ポストエフェクトの初期化
+	//(普通)
+	postEffect = make_unique<PostEffect>();
+	postEffect->Initialize();
+	//ポストエフェクトのファイル指定
+	postEffect->CreateGraphicsPipeline(L"Resources/Shaders/PostEffectTestVS.hlsl", L"Resources/Shaders/PostEffectTestPS.hlsl");
+
+	camerawork = make_unique<CameraWork>(eye, target);
 }
