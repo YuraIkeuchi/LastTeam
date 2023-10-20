@@ -381,6 +381,9 @@
     <ClCompile Include="SourceCode\engine\GameObject\GameObjectManager.cpp">
       <Filter>engine\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
+      <Filter>gamesystem\charactor\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -726,6 +729,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\engine\GameObject\GameObjectManager.h">
       <Filter>engine\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
+      <Filter>gamesystem\charactor\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

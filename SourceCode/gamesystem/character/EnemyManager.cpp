@@ -24,9 +24,6 @@ void EnemyManager::Initialize() {
 void EnemyManager::BattleUpdate() {
 	//バトルから2秒後にパネルと敵の行動開始
 	if (GameMode::GetInstance()->BattleStart()) {
-		//パネル置く数
-		int panel_num = 3;
-		StagePanel::GetInstance()->RandomPanel(panel_num);
 		for (unique_ptr<InterEnemy>& enemy : enemys) {
 			enemy->SetState(STATE_ATTACK);
 		}
