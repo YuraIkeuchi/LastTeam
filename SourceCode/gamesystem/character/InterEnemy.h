@@ -1,5 +1,6 @@
 #pragma once
 #include "ObjCommon.h"
+#include "AttackArea.h"
 #include <memory>
 #include <IKESprite.h>
 #include <array>
@@ -50,7 +51,7 @@ protected:
 	//敵のダメージ判定のインターバル
 	int m_DamegeTimer = {};
 	//当たり判定の半径
-	float m_Radius = 1.0f;
+	float m_Radius = 0.5f;
 
 	struct PanelProb {
 		int AttackProb = 50;
@@ -59,6 +60,8 @@ protected:
 
 	};
 
+	int m_NowWidth = {};
+	int m_NowHeight = {};
 
 	//HPのUIに使う変数
 	XMFLOAT2 m_HPPos = { 1000.0f,50.0f };
@@ -117,5 +120,5 @@ private:
 	//割合を返す
 	int getDigits(int value, int m, int n);
 protected:
-	void Collide();
+	void Collide(vector<AttackArea*>area);
 };

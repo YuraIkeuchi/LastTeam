@@ -70,7 +70,8 @@ void NormalEnemy::Action() {
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//“–‚½‚è”»’è
-	Collide();
+	vector<AttackArea*> _AttackArea = Player::GetInstance()->GetAttackArea();
+	Collide(_AttackArea);
 	Player::GetInstance()->AttackTarget(m_Position);
 }
 //•`‰æ
@@ -80,8 +81,8 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 //ImGui•`‰æ
 void NormalEnemy::ImGui_Origin() {
 	ImGui::Begin("Enemy");
-	ImGui::Text("HP:%d", m_InterHP);
-	ImGui::Text("DamegeTimer:%d", m_DamegeTimer);
+	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::End();
 }
 //ŠJ•ú

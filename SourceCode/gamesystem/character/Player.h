@@ -2,6 +2,7 @@
 #include "ObjCommon.h"
 #include <any>
 #include "ActionUI.h"
+#include "AttackArea.h"
 #include <list>
 #include <Input.h>
 using namespace DirectX;
@@ -54,7 +55,8 @@ private:
 	void BirthParticle();
 	//行動の終了
 	void FinishAct();
-	
+	//攻撃エリアの描画
+	void BirthArea();
 	////押し続けているボタンキー取得
 	//bool CheckButton(Input::XBOX Button,int& Timer);
 	////ボタンを離した瞬間
@@ -68,6 +70,8 @@ public:
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetAllActCount() { return m_AllActCount; }
 	const int GetCharaState() { return _charaState; }
+
+	vector<AttackArea*>GetAttackArea() { return attackarea; }
 
 private:
 	static const int ACT_PATTERN = 3;
@@ -116,6 +120,8 @@ private:
 	
 	//行動のUI
 	vector<unique_ptr<ActionUI>> actui;
+	//攻撃エリア
+	vector<AttackArea*> attackarea;
 	//行動先
 	vector<int> m_Act;
 	int m_AttackTimer = {};
@@ -133,4 +139,10 @@ private:
 
 	//各方向入力フレーム
 	array<int, DIR_MAX> m_InputTimer;
+
+	enum SkillType {
+		SKILL_NORMAL,
+		SKILL_STRONG,
+		SKILL_SPECIAL
+	}_SkillType = SKILL_NORMAL;
 };
