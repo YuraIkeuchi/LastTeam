@@ -5,6 +5,9 @@
 #include "Player.h"
 #include "GameMode.h"
 #include "Collision.h"
+#include "ImageManager.h"
+#include <Easing.h>
+
 StagePanel* StagePanel::GetInstance() {
 	static StagePanel instance;
 
@@ -34,6 +37,10 @@ bool StagePanel::Initialize() {
 	m_SelectHeight = 0;
 	m_SelectWidth = 0;
 	actions.clear();
+	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	skillUI->SetSize(basesize);
+	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
+	gaugeUI->SetSize({ basesize.x,0.f });
 	//CSV読み込み
 	return true;
 }
@@ -41,9 +48,24 @@ bool StagePanel::Initialize() {
 //更新処理
 void StagePanel::Update() {
 	//if (GameMode::GetInstance()->GetGameTurn() == TURN_BATTLE) {
-		BattleUpdate();
+	BattleUpdate();
 	//}
-
+	{
+		gaugeCount++;
+		if (gaugeCount == kGaugeCountMax) {
+			for (auto i = 0; i < actions.size(); i++) {
+				actions[i]->SetState(STATE_VANISH);
+			}
+			ResetPanel();
+			//パネル置く数
+			int panel_num = 3;
+			RandomPanel(panel_num);
+			gaugeCount = 0;
+		}
+		float per = (gaugeCount / kGaugeCountMax);
+		float size = Ease(In,Quad,0.5f, gaugeUI->GetSize().y,basesize.y * per);
+		gaugeUI->SetSize({ basesize.x,size });
+	}
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Update();
@@ -56,6 +78,10 @@ void StagePanel::Update() {
 
 //描画
 void StagePanel::Draw(DirectXCommon* dxCommon) {
+	IKESprite::PreDraw();
+	skillUI->Draw();
+	gaugeUI->Draw();
+	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
@@ -71,79 +97,10 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
-	ImGui::Begin("Panel");
-	ImGui::Text("POSX:%f", panels[0][0].position.x);
-	ImGui::Text("POSZ:%f", panels[0][0].position.z);
-	ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
 void StagePanel::SetUpdate() {
-	const int l_TimerMax = 10;
-	Input* input = Input::GetInstance();
-	//スティックでマスを選ぶ
-	if (input->TiltPushStick(Input::L_UP, 0.0f) ||
-		input->TiltPushStick(Input::L_DOWN, 0.0f) ||
-		input->TiltPushStick(Input::L_RIGHT, 0.0f) ||
-		input->TiltPushStick(Input::L_LEFT, 0.0f)) {
-		if (input->TiltPushStick(Input::L_UP, 0.0f) && m_SelectHeight < PANEL_HEIGHT - 1) {
-			m_Timer[DIR_UP]++;
-		} else if (input->TiltPushStick(Input::L_DOWN, 0.0f) && m_SelectHeight > 0) {
-			m_Timer[DIR_DOWN]++;
-		} else if (input->TiltPushStick(Input::L_RIGHT, 0.0f) && m_SelectWidth < PANEL_WIDTH - 1) {
-			m_Timer[DIR_RIGHT]++;
-		} else if (input->TiltPushStick(Input::L_LEFT, 0.0f) && m_SelectWidth > 0) {
-			m_Timer[DIR_LEFT]++;
-		}
-	} else {
-		for (int i = 0; i < DIR_MAX; i++) {
-			m_Timer[i] = {};
-		}
-	}
-
-	//一定フレーム立つと選択マス移動
-	if (m_Timer[DIR_UP] == l_TimerMax) {
-		m_SelectHeight++;
-		m_Timer[DIR_UP] = {};
-	} else if (m_Timer[DIR_DOWN] == l_TimerMax) {
-		m_SelectHeight--;
-		m_Timer[DIR_DOWN] = {};
-	} else if (m_Timer[DIR_RIGHT] == l_TimerMax) {
-		m_SelectWidth++;
-		m_Timer[DIR_RIGHT] = {};
-	} else if (m_Timer[DIR_LEFT] == l_TimerMax) {
-		m_SelectWidth--;
-		m_Timer[DIR_LEFT] = {};
-	}
-
-	//選択マスの色が変わる
-	for (int i = 0; i < PANEL_WIDTH; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			if (panels[i][j].type == NO_PANEL) {
-				if (m_SelectHeight == j && m_SelectWidth == i) {
-					panels[i][j].color = { 0.8f,0.8f,0.0f,1.0f };
-				} else {
-					panels[i][j].color = { 1.0f,1.0f,1.0f,1.0f };
-				}
-			} else {
-				panels[i][j].color = { 0.5f,0.5f,0.5f,1.0f };
-			}
-			panels[i][j].object->Update();
-			panels[i][j].object->SetPosition(panels[i][j].position);
-			panels[i][j].object->SetColor(panels[i][j].color);
-		}
-	}
-
-	//セレクトしているものの座標
-//m_SelectPos = panels[m_SelectWidth][m_SelectHeight].position;
-
-	//パネルを置けるかどうかをチェックする
-	//if ((panels[m_SelectWidth][m_SelectHeight].type == NO_PANEL) &&
-	//	!panels[m_SelectWidth][m_SelectHeight].isHit) {
-	//	m_CanSet = true;
-	//} else {
-	//	m_CanSet = false;
-	//}
 }
 
 //バトルの更新
@@ -208,8 +165,9 @@ void StagePanel::RandomPanel(int num) {
 		//乱数の設定
 		int width = Helper::GetInstance()->GetRanNum(0, 3);
 		int height = Helper::GetInstance()->GetRanNum(0, 3);
+		//パネル探索（開いてるのが3追加の場合書いてない）
 		while (!isSet) {
-			if (panels[width][height].type!= NO_PANEL) {
+			if (panels[width][height].type != NO_PANEL) {
 				width = Helper::GetInstance()->GetRanNum(0, 3);
 				height = Helper::GetInstance()->GetRanNum(0, 3);
 			} else {
@@ -217,9 +175,9 @@ void StagePanel::RandomPanel(int num) {
 			}
 		}
 		//これは変えなくていい
-		int r_type= Helper::GetInstance()->GetRanNum(1, 3);
-		
-		panels[width][height].type = r_type;
+		int r_type = Helper::GetInstance()->GetRanNum(1, 3);
+
+		panels[width][height].type = SKILL_PANEL;
 		//アクションのセット
 		InterAction* newAction = nullptr;
 		switch (panels[width][height].type) {
@@ -238,9 +196,21 @@ void StagePanel::RandomPanel(int num) {
 		newAction->Initialize();
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
-		
+
 		panels[width][height].object->Update();
 		panels[width][height].object->SetPosition(panels[width][height].position);
 		panels[width][height].object->SetColor(panels[width][height].color);
 	}
+}
+
+void StagePanel::ResetPanel() {
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			panels[i][j].color = { 1,1,1,1 };
+			panels[i][j].isHit = false;
+			panels[i][j].type = NO_PANEL;
+		}
+	}
+
+
 }

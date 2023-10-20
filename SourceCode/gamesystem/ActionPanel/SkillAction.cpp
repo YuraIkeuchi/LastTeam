@@ -1,13 +1,17 @@
 #include "SkillAction.h"
 #include "ModelManager.h"
 #include "ParticleEmitter.h"
+#include "ImageManager.h"
 
 //読み込み
 SkillAction::SkillAction() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
-	//m_Object->SetScale({ 2.f,0.1f,2.f });
+	//m_Object->SetScale({ 2.f,0.1f,2.f });	
+	m_Pannel.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	m_Pannel->TextureCreate();
+	m_Pannel->Initialize();
 }
 //初期化
 bool SkillAction::Initialize() {
@@ -20,11 +24,15 @@ bool SkillAction::Initialize() {
 }
 //行動
 void SkillAction::Action() {
+	(this->*stateTable[_state])();
 	Obj_SetParam();
 	Collide();
 }
 //描画
 void SkillAction::Draw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon,0);
+	m_Pannel->Draw();
+	IKETexture::PostDraw();
 	Obj_Draw();
 }
 //エフェクト描画

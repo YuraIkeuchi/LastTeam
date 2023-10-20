@@ -6,6 +6,7 @@
 #include "SkillAction.h"
 #include <any>
 #include <array>
+#include "IKESprite.h"
 
 using namespace DirectX;
 using namespace std;
@@ -50,6 +51,7 @@ public:
 	void DeletePanel();
 
 	void RandomPanel(int num);
+	void ResetPanel();
 private:
 	//バトル中の更新
 	void BattleUpdate();
@@ -66,6 +68,14 @@ private:
 	Panel panels[PANEL_WIDTH][PANEL_HEIGHT];
 	//スキル
 	vector<unique_ptr<InterAction>> actions;
+
+
+	unique_ptr<IKESprite> skillUI = nullptr;
+	unique_ptr<IKESprite> gaugeUI = nullptr;
+
+	XMFLOAT2 basesize = {45.f,400.f};
+	float kGaugeCountMax = 600;
+	float gaugeCount = 0;
 
 	//マスの位置
 	int m_SelectHeight = 0;

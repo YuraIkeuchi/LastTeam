@@ -70,7 +70,6 @@ public: // 静的メンバ関数
 
 	/// 描画後処理
 	static void PostDraw();
-	static void PostDraw2(DirectXCommon* dxcomn);
 	//テクスチャ生成
 	static IKETexture* Create(UINT texNumber, const XMFLOAT3& position, const XMFLOAT3& size, const XMFLOAT4& color);
 	/// 視点座標の取得
@@ -95,11 +94,6 @@ public: // 静的メンバ関数
 
 	/// ベクトルによる移動
 	static void CameraMoveVector(const XMFLOAT3& move);
-
-	/// スプライト生成
-	static IKETexture* Create(UINT texNumber, const XMFLOAT2& position, const XMFLOAT4& color = { 1, 1, 1, 1 },
-		const XMFLOAT2& anchorpoint = { 0.0f, 0.0f }, bool isFlipX = false, bool isFlipY = false);
-
 
 private: // 静的メンバ変数
 	static const int srvCount = 213;
@@ -169,8 +163,6 @@ private: // 静的メンバ関数
 	static bool AlphaInitializeGraphicsPipeline();
 	static bool AddInitializeGraphicsPipeline();
 	static bool SubInitializeGraphicsPipeline();
-	/// モデル作成
-	static void CreateModel();
 	void TransferVertices();
 	/// ビュー行列を更新
 	static void UpdateViewMatrix();
