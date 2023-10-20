@@ -71,8 +71,10 @@ void InterAction::Alive() {
 
 void InterAction::Vanish() {
 
-	float Psca = Ease(In,Elastic, m_VanishFrame,0.15f,0.f);
-	float sca = Ease(In, Elastic, m_VanishFrame, 0.5f, 0.f);
+	float Psca = Ease(In,Quad, m_VanishFrame,0.15f,0.f);
+	float sca = Ease(In, Quad, m_VanishFrame, 0.5f, 0.f);
+	
+	m_Position.y = Ease(In, Quad, m_VanishFrame, 0.0f, -3.0f);
 	m_PannelScale = { Psca,Psca,Psca };
 	m_Scale= { sca,sca,sca };
 	m_PannelRot.y += 0.6f;
