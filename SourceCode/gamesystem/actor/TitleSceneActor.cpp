@@ -24,10 +24,10 @@ void TitleSceneActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	camerawork->Update(camera);
 	Input* input = Input::GetInstance();
 	if ((input->TriggerButton(input->B))) {
-		SceneManager::GetInstance()->ChangeScene(std::make_shared<FirstStage>());
+		SceneManager::GetInstance()->ChangeScene<FirstStage>();
 	}
  	if (input->TriggerKey(DIK_SPACE)) {
-		SceneManager::GetInstance()->ChangeScene(std::make_shared<MapScene>());
+		SceneManager::GetInstance()->ChangeScene<MapScene>();
 	}
 }
 //描画

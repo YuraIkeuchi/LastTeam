@@ -138,9 +138,6 @@
     <ClCompile Include="SourceCode\engine\collision\TouchableObject.cpp">
       <Filter>engine\collision</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\engine\enginebase\AbstractSceneFactory.cpp">
-      <Filter>engine\enginebase</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\engine\enginebase\CsvLoader.cpp">
       <Filter>engine\enginebase</Filter>
     </ClCompile>
@@ -154,9 +151,6 @@
       <Filter>engine\enginebase</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\engine\enginebase\OpenBrowser.cpp">
-      <Filter>engine\enginebase</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\engine\enginebase\SceneFactory.cpp">
       <Filter>engine\enginebase</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\engine\enginebase\WinApp.cpp">
@@ -378,6 +372,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClCompile>
+    <ClCompile Include="GamePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -470,9 +465,6 @@
     <ClInclude Include="SourceCode\engine\collision\TouchableObject.h">
       <Filter>engine\collision</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\engine\enginebase\AbstractSceneFactory.h">
-      <Filter>engine\enginebase</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\engine\enginebase\CsvLoader.h">
       <Filter>engine\enginebase</Filter>
     </ClInclude>
@@ -483,9 +475,6 @@
       <Filter>engine\enginebase</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\enginebase\OpenBrowser.h">
-      <Filter>engine\enginebase</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\engine\enginebase\SceneFactory.h">
       <Filter>engine\enginebase</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\enginebase\WinApp.h">
@@ -721,6 +710,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClInclude>
+    <ClInclude Include="GamePlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">

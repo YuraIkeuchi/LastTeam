@@ -1,6 +1,5 @@
 #pragma once
 #include "BaseScene.h"
-#include "AbstractSceneFactory.h"
 #include <string>
 #include <stack>
 #include <memory>
@@ -21,14 +20,25 @@ public:
 	//開放
 	void Finalize();
 
-	//　次シーン予約(class指定)
-	template<class SceneClass>
-	void ChangeScene(std::shared_ptr<SceneClass> sceneClass);
+	/// <summary>
+	///　次シーン予約(class指定)
+	/// </summary>
+	/// <typeparam name="SceneClass">追加したいシーン</typeparam>
+	/// <typeparam name="...Parameter">引数など</typeparam>
+	template<class SceneClass,class... Parameter>
+	void ChangeScene(Parameter... pram);
+
 	// シーン破棄予約
 	void PopScene();
 
 	// 非同期ロード
 	void AsyncLoad();
+
+	/// <summary>
+	/// シーントップゲッタ
+	/// </summary>
+	/// <returns></returns>
+	std::shared_ptr<BaseScene> GetTopScene() { return scene_stack_.top(); }
 
 public:
 	//getter setter
@@ -74,9 +84,9 @@ private:
 	}scene_change_type_;
 };
 
-template<class SceneClass>
-inline void SceneManager::ChangeScene(std::shared_ptr<SceneClass> sceneClass)
+template<class SceneClass,class... Parameter>
+inline void SceneManager::ChangeScene(Parameter ...pram)
 {
 	scene_change_type_ = SceneChangeType::kPush;
-	nextScene_ = sceneClass;
+	nextScene_ = std::make_shared<SceneClass>(pram...);
 }

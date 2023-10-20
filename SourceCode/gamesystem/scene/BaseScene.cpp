@@ -4,6 +4,11 @@
 #include "ParticleEmitter.h"
 #include "Helper.h"
 
+BaseScene::BaseScene()
+{
+	game_object_manager_ = std::make_shared<GameObjectManager>();
+}
+
 //共通の初期化
 void BaseScene::BaseInitialize(DirectXCommon* dxCommon) {
 	// デバイスをセット

@@ -86,7 +86,6 @@ void Framework::Finalize()
 	LightGroup::Finalize();
 	SceneManager::GetInstance()->Finalize();
 	input->GetInstance()->Finalize();
-	delete sceneFactory_;
 	dxcommon->Finalize();
 	//dxcommon->Reset();
 	delete dxcommon;

@@ -109,6 +109,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GamePlayer.cpp" />
     <ClCompile Include="MapSceneActor.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
@@ -151,13 +152,11 @@
     <ClCompile Include="SourceCode\engine\collision\SphereCollider.cpp" />
     <ClCompile Include="SourceCode\engine\collision\TouchableObject.cpp" />
     <ClCompile Include="SourceCode\engine\ease\Easing.cpp" />
-    <ClCompile Include="SourceCode\engine\enginebase\AbstractSceneFactory.cpp" />
     <ClCompile Include="SourceCode\engine\enginebase\CsvLoader.cpp" />
     <ClCompile Include="SourceCode\engine\enginebase\DirectXCommon.cpp" />
     <ClCompile Include="SourceCode\engine\enginebase\JsonLoader.cpp" />
     <ClCompile Include="SourceCode\engine\enginebase\main.cpp" />
     <ClCompile Include="SourceCode\engine\enginebase\OpenBrowser.cpp" />
-    <ClCompile Include="SourceCode\engine\enginebase\SceneFactory.cpp" />
     <ClCompile Include="SourceCode\engine\enginebase\WinApp.cpp" />
     <ClCompile Include="SourceCode\engine\enginebase\XorShift.cpp" />
     <ClCompile Include="SourceCode\engine\FpsManager\FPSManager.cpp" />
@@ -217,6 +216,7 @@
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GamePlayer.h" />
     <ClInclude Include="SourceCode\engine\2d\DebugText.h" />
     <ClInclude Include="SourceCode\engine\2d\Feed.h" />
     <ClInclude Include="SourceCode\engine\2d\Font.h" />
@@ -262,13 +262,11 @@
     <ClInclude Include="SourceCode\engine\collision\SphereCollider.h" />
     <ClInclude Include="SourceCode\engine\collision\TouchableObject.h" />
     <ClInclude Include="SourceCode\engine\ease\Easing.h" />
-    <ClInclude Include="SourceCode\engine\enginebase\AbstractSceneFactory.h" />
     <ClInclude Include="SourceCode\engine\enginebase\CsvLoader.h" />
     <ClInclude Include="SourceCode\engine\enginebase\DirectXCommon.h" />
     <ClInclude Include="SourceCode\engine\enginebase\JsonLoader.h" />
     <ClInclude Include="SourceCode\engine\enginebase\OpenBrowser.h" />
     <ClInclude Include="SourceCode\engine\enginebase\resource.h" />
-    <ClInclude Include="SourceCode\engine\enginebase\SceneFactory.h" />
     <ClInclude Include="SourceCode\engine\enginebase\WinApp.h" />
     <ClInclude Include="SourceCode\engine\enginebase\XorShift.h" />
     <ClInclude Include="SourceCode\engine\FpsManager\FPSManager.h" />

@@ -1,11 +1,14 @@
 #pragma once
+#include <vector>
+#include <memory>
+
 #include "DebugCamera.h"
 #include "LightGroup.h"
 #include "DirectXCommon.h"
 #include "PostEffect.h"
 #include "BaseActor.h"
-#include <vector>
-#include <memory>
+#include "GameObject/GameObjectManager.h"
+
 using namespace std;         //  名前空間指定
 //前方宣言
 class SceneManager;
@@ -22,6 +25,8 @@ protected:
 
 
 public:
+	// コンストラクタ
+	BaseScene();
 	//仮想デストラクタ
 	virtual ~BaseScene() = default;
 
@@ -36,8 +41,11 @@ public:
 	//共通初期化
 	void BaseInitialize(DirectXCommon* dxCommon);
 
-public:
+	weak_ptr<GameObjectManager>GetGameObjectManager() { return game_object_manager_; }
 
+public:
+	// ゲームオブジェクトマネージャ
+	shared_ptr<GameObjectManager> game_object_manager_;
 	//アクタークラス
 	unique_ptr<BaseActor> actor;
 	///ゲームシーン用
