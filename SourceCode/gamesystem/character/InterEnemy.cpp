@@ -57,8 +57,14 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 	//if (m_DamegeTimer != 0) { return; }
 	//if (Player::GetInstance()->GetCharaState() != STATE_ATTACK) { return; }
 	for (AttackArea* _area : area) {
-		if (Collision::SphereCollision(_area->GetPosition(), m_Radius, m_Position, m_Radius) && !_area->GetHit()) {
-			m_HP -= 5.0f;
+		if (Collision::SphereCollision(_area->GetPosition(), m_Radius, m_Position, m_Radius) &&
+			!_area->GetHit()) {
+			float damage = 5.0f;
+			if (_charaState == STATE_ATTACK && !Player::GetInstance()->GetIsCounter()) {
+				Player::GetInstance()->SetIsCounter(true);
+				damage *= 2.0f;
+			}
+			m_HP -= damage;
 			m_DamegeTimer = 40;
 			BirthParticle();
 			_area->SetHit(true);

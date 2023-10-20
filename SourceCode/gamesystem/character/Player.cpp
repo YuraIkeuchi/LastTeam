@@ -114,6 +114,7 @@ void Player::ActUIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("NowWidth:%d", m_NowWidth);
+	ImGui::Text(isCounter ? "CLEAR" : "NONE");
 	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_NORMAL;
 	}
@@ -123,8 +124,6 @@ void Player::ImGuiDraw() {
 	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_SPECIAL;
 	}
-	ImGui::Text("POSX:%f", m_Position.x);
-	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::End();
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
