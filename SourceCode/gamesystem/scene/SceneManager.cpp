@@ -22,29 +22,33 @@ SceneManager* SceneManager::GetInstance() {
 }
 
 void SceneManager::Update(DirectXCommon* dxCommon) {
-	//シーン切り替えがあるかどうか
-	if (nextScene_) {
+	// シーン追加
+	if (scene_change_type_ == SceneChangeType::kPush) {
 		// シーンスタックにデータがあれば終了処理
 		if (!scene_stack_.empty())
 		{
 			scene_stack_.top()->Finalize();
-			scene_stack_.pop();	// スタックからポップ
 		}
 
+		// Scene追加
 		scene_stack_.push(nextScene_);
-		nextScene_ = nullptr;
 		scene_stack_.top()->Initialize(dxCommon);
-
-		////旧シーンの終了
-		//if (scene_) {
-
-		//	scene_->Finalize();
-		//	delete scene_;
-		//}
-		//scene_ = nextScene_;
-		//nextScene_ = nullptr;
-		//scene_->Initialize(dxCommon);
+		// シーン遷移用処理初期化
+		scene_change_type_ = SceneChangeType::kNon;
+		nextScene_ = nullptr;
 	}
+	// シーン破棄
+	else if (scene_change_type_ == SceneChangeType::kPop)
+	{
+		// シーン破棄
+		scene_stack_.top()->Finalize();
+		scene_stack_.pop();
+
+		// シーン遷移用処理初期化
+		scene_change_type_ = SceneChangeType::kNon;
+	}
+
+
 	//ローディング
 	if (m_Load == true) {
 		switch (m_loadType)
@@ -75,12 +79,12 @@ void SceneManager::Draw(DirectXCommon* dxCommon) {
 	//scene_->Draw(dxCommon);
 }
 
-void SceneManager::ChangeScene(const std::string& sceneName) {
-	assert(sceneFactory_);
-	//次のシーン生成
-	nextScene_ = sceneFactory_->CreateScene(sceneName);
-}
 
+
+void SceneManager::PopScene()
+{
+	scene_change_type_ = SceneChangeType::kPop;
+}
 
 void SceneManager::AsyncLoad()
 {

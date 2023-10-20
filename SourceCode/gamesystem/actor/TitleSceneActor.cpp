@@ -3,6 +3,11 @@
 #include "ImageManager.h"
 #include "ParticleEmitter.h"
 #include "SceneManager.h"
+
+// 遷移しうるシーン
+#include "FirstStage.h"
+#include "MapScene.h"
+
 //初期化
 void TitleSceneActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, LightGroup* lightgroup) {
 	//共通の初期化
@@ -19,10 +24,10 @@ void TitleSceneActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	camerawork->Update(camera);
 	Input* input = Input::GetInstance();
 	if ((input->TriggerButton(input->B))) {
-		SceneManager::GetInstance()->ChangeScene("FIRSTSTAGE");
+		SceneManager::GetInstance()->ChangeScene(std::make_shared<FirstStage>());
 	}
  	if (input->TriggerKey(DIK_SPACE)) {
-		SceneManager::GetInstance()->ChangeScene("MAP");
+		SceneManager::GetInstance()->ChangeScene(std::make_shared<MapScene>());
 	}
 }
 //描画

@@ -5,11 +5,15 @@
 #include <stack>
 #include <memory>
 #include <future>
+
 //シーン管理
 class SceneManager
 {
 public:
+
+public:
 	static SceneManager* GetInstance();
+
 	//更新
 	void Update(DirectXCommon* dxCommon);
 	/// 描画
@@ -17,11 +21,11 @@ public:
 	//開放
 	void Finalize();
 
-public:
-	//次シーン予約
-	void ChangeScene(const std::string& sceneName);
-
-	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { sceneFactory_ = sceneFactory; }
+	//　次シーン予約(class指定)
+	template<class SceneClass>
+	void ChangeScene(std::shared_ptr<SceneClass> sceneClass);
+	// シーン破棄予約
+	void PopScene();
 
 	// 非同期ロード
 	void AsyncLoad();
@@ -33,14 +37,11 @@ public:
 
 private:
 	// シーンスタック
-	std::stack<BaseScene *> scene_stack_;
+	std::stack<std::shared_ptr<BaseScene>> scene_stack_;
 
-	////今のシーン
-	//BaseScene* scene_ = nullptr;
 	//次のシーン
-	BaseScene* nextScene_ = nullptr;
+	std::shared_ptr<BaseScene> nextScene_ = nullptr;
 
-	AbstractSceneFactory* sceneFactory_ = nullptr;
 
 	~SceneManager() = default;
 	SceneManager() = default;
@@ -55,6 +56,7 @@ private:
 	bool m_Load = false;
 	// スレッド間で使用する共有リソースを排他制御する
 	std::mutex isLoadedMutex = {};
+
 	//ロードのタイプ
 	enum LoadType
 	{
@@ -62,4 +64,19 @@ private:
 		LoadStart,
 		LoadEnd
 	};
+
+	// シーン遷移管理用
+	enum class SceneChangeType
+	{
+		kNon,
+		kPush,
+		kPop
+	}scene_change_type_;
 };
+
+template<class SceneClass>
+inline void SceneManager::ChangeScene(std::shared_ptr<SceneClass> sceneClass)
+{
+	scene_change_type_ = SceneChangeType::kPush;
+	nextScene_ = sceneClass;
+}

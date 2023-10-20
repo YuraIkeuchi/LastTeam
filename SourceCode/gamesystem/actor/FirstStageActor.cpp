@@ -5,6 +5,9 @@
 #include "Helper.h"
 #include "GameMode.h"
 #include "SceneManager.h"
+
+#include "TitleScene.h"
+
 void FirstStageActor::Initialize(DirectXCommon* dxCommon, DebugCamera* camera, LightGroup* lightgroup) {
 	dxCommon->SetFullScreen(true);
 	//共通の初期化
@@ -58,7 +61,7 @@ void FirstStageActor::Update(DirectXCommon* dxCommon, DebugCamera* camera, Light
 	enemyManager->GetCameraData(camera->GetViewMatrix(), camera->GetProjectionMatrix(), camera->GetViewPort());
 	//敵を倒したらシーン以降(仮)
 	if (enemyManager->BossDestroy()) {
-		SceneManager::GetInstance()->ChangeScene("TITLE");
+		SceneManager::GetInstance()->PopScene();
 	}
 }
 
