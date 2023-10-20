@@ -28,7 +28,7 @@ void AttackArea::InitState(const int width, const int height) {
 
 //XV
 void AttackArea::Update() {
-	const int l_TargetTimer = 200;
+	const int l_TargetTimer = 10;
 
 	if (Helper::GetInstance()->CheckMin(m_AliveTimer, l_TargetTimer, 1)) {
 		m_Alive = false;
