@@ -115,7 +115,12 @@ void StagePanel::BattleUpdate() {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			if (!panels[i][j].isHit) {
 				if (panels[i][j].type == NO_PANEL) {
-					panels[i][j].color = { 1.0f,1.0f,1.0f,1.0f };
+					if (!panels[i][j].isEnemyHit) {
+						panels[i][j].color = { 1.0f,1.0f,1.0f,1.0f };
+					}
+					else {
+						panels[i][j].color = { 0.5f,0.0f,0.0f,1.0f };
+					}
 				} else {
 					panels[i][j].color = { 0.5f,0.5f,0.5f,1.0f };
 				}
@@ -206,6 +211,25 @@ void StagePanel::ResetPanel() {
 			panels[i][j].type = NO_PANEL;
 		}
 	}
+}
 
-
+void StagePanel::SetEnemyHit(IKEObject3d* obj,int& wight, int& height) {
+	m_OBB1.SetParam_Pos(obj->GetPosition());
+	m_OBB1.SetParam_Rot(obj->GetMatrot());
+	m_OBB1.SetParam_Scl(obj->GetScale());
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			m_OBB2.SetParam_Pos(panels[i][j].position);
+			m_OBB2.SetParam_Rot(panels[i][j].object->GetMatrot());
+			m_OBB2.SetParam_Scl({ 0.5f,1.0f,0.5f });
+			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
+				panels[i][j].isEnemyHit = true;
+				wight = i;
+				height = j;
+			}
+			else {
+				panels[i][j].isEnemyHit = false;
+			}
+		}
+	}
 }
