@@ -33,8 +33,8 @@ void ActionUI::InitState(const int ActCount,const string& Tag) {
 	if (Tag == "Attack") {
 		m_ActType = ACT_ATTACK;
 	}
-	else if (Tag == "Guard") {
-		m_ActType = ACT_SKILL;
+	else if (Tag == "Skill") {
+		m_ActType = ACT_ATTACK;
 	}
 	else if (Tag == "Skill") {
 		m_ActType = ACT_GUARD;
