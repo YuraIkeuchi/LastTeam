@@ -118,9 +118,9 @@ void FirstStageActor::FinishUpdate(DebugCamera* camera) {
 }
 //ImGui
 void FirstStageActor::ImGuiDraw() {
-	camerawork->ImGuiDraw();
+	//camerawork->ImGuiDraw();
 	Player::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
-	GameMode::GetInstance()->ImGuiDraw();
+	//GameMode::GetInstance()->ImGuiDraw();
 	enemyManager->ImGuiDraw();
 }
