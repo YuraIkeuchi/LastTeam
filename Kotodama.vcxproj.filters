@@ -237,7 +237,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\ClearScene.cpp">
       <Filter>gamesystem\scene\Clear</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\scene\FirstStage.cpp">
+    <ClCompile Include="SourceCode\gamesystem\scene\BattleScene.cpp">
       <Filter>gamesystem\scene\Play\First</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\LoadScene.cpp">
@@ -566,7 +566,7 @@
     <ClInclude Include="SourceCode\gamesystem\scene\ClearScene.h">
       <Filter>gamesystem\scene\Clear</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scene\FirstStage.h">
+    <ClInclude Include="SourceCode\gamesystem\scene\BattleScene.h">
       <Filter>gamesystem\scene\Play\First</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\LoadScene.h">
