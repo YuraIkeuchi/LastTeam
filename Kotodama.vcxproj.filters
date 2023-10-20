@@ -327,12 +327,6 @@
     <ClCompile Include="SourceCode\gamesystem\actor\GameMode.cpp">
       <Filter>gamesystem\actor\GameMode</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\ActionPanel\AttackAction.cpp">
-      <Filter>gamesystem\Action\ActionPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\ActionPanel\GuardAction.cpp">
-      <Filter>gamesystem\Action\ActionPanel</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp">
       <Filter>gamesystem\Action\ActionPanel</Filter>
     </ClCompile>
@@ -672,12 +666,6 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h">
       <Filter>gamesystem\stageobj</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\ActionPanel\AttackAction.h">
-      <Filter>gamesystem\Action\ActionPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\ActionPanel\GuardAction.h">
-      <Filter>gamesystem\Action\ActionPanel</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h">
       <Filter>gamesystem\Action\ActionPanel</Filter>

@@ -181,12 +181,6 @@ void StagePanel::RandomPanel(int num) {
 		//アクションのセット
 		InterAction* newAction = nullptr;
 		switch (panels[width][height].type) {
-		case ATTACK_PANEL:
-			newAction = new AttackAction();
-			break;
-		case GUARD_PANEL:
-			newAction = new GuardAction();
-			break;
 		case SKILL_PANEL:
 			newAction = new SkillAction();
 			break;

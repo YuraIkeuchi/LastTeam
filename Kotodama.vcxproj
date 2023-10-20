@@ -174,8 +174,6 @@
     <ClCompile Include="SourceCode\engine\math\Vector3.cpp" />
     <ClCompile Include="SourceCode\engine\shake\Shake.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\ActionPanel\AttackAction.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\ActionPanel\GuardAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\actor\BaseActor.cpp" />
@@ -291,8 +289,6 @@
     <ClInclude Include="SourceCode\engine\Property.h" />
     <ClInclude Include="SourceCode\engine\shake\Shake.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
-    <ClInclude Include="SourceCode\gamesystem\ActionPanel\AttackAction.h" />
-    <ClInclude Include="SourceCode\gamesystem\ActionPanel\GuardAction.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\BaseActor.h" />

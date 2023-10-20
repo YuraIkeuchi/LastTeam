@@ -228,7 +228,7 @@ void Player::SpecialAct() {
 			Guard();
 		}
 		else if (m_Act[0] == ACT_SKILL) {
-			SkillAct();
+			Attack();
 		}
 	}
 }

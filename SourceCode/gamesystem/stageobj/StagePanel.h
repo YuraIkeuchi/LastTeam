@@ -1,8 +1,6 @@
 #pragma once
 #include "ObjCommon.h"
 #include "CollisionPrimitive.h"
-#include "AttackAction.h"
-#include "GuardAction.h"
 #include "SkillAction.h"
 #include <any>
 #include <array>
@@ -74,7 +72,7 @@ private:
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 
 	XMFLOAT2 basesize = {45.f,400.f};
-	float kGaugeCountMax = 600;
+	float kGaugeCountMax = 180;
 	float gaugeCount = 0;
 
 	//ƒ}ƒX‚ÌˆÊ’u
