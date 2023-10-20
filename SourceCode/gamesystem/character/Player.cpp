@@ -4,8 +4,8 @@
 #include "Input.h"
 #include "Easing.h"
 #include "ParticleEmitter.h"
-#include "GameMode.h"
 #include "StagePanel.h"
+#include "Audio.h"
 Player* Player::GetInstance()
 {
 	static Player instance;
@@ -52,6 +52,9 @@ void Player::InitState(const XMFLOAT3& pos) {
 	_AttackState = ATTACK_ENEMY;
 	m_AllActCount = {};
 	m_AttackTimer = {};
+	m_NowHeight = {};
+	m_NowWidth = {};
+
 	//要素の全削除は一旦ここで
 	actui.clear();
 	m_Act.clear();
@@ -111,6 +114,7 @@ void Player::ActUIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("NowWidth:%d", m_NowWidth);
+	ImGui::Text(isCounter ? "CLEAR" : "NONE");
 	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_NORMAL;
 	}
@@ -120,6 +124,8 @@ void Player::ImGuiDraw() {
 	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_SPECIAL;
 	}
+
+
 	ImGui::End();
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
@@ -213,9 +219,10 @@ void Player::Move() {
 		m_InputTimer[DIR_LEFT] = {};
 	}
 
-	if (input->TriggerButton(input->A) && m_AllActCount != 0) {
+	if (input->TriggerButton(input->A) && m_AllActCount != 0 && !actui[0]->GetUse()) {
 		m_ReturnPos = m_Position;
 		_charaState = STATE_ACTION;
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
 	}
 }
 void Player::SpecialAct() {
@@ -282,6 +289,8 @@ void Player::BirthActUI(const string& Tag) {
 	newactUi->Initialize();
 	newactUi->InitState(m_AllActCount,Tag);
 	actui.emplace_back(newactUi);
+
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);
 }
 void Player::BirthParticle() {
 	if (m_AllActCount != 0) {

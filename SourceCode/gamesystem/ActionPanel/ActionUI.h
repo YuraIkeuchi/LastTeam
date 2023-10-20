@@ -31,6 +31,7 @@ public:
 public:
 	//gettersetter 
 	const bool GetAlive() { return m_Alive; }
+	const bool GetUse() { return m_Use; }
 	void SetActCount(const int ActCount) { m_ActCount = ActCount; }
 	void SetUse(const bool Use) { m_Use = Use; }
 

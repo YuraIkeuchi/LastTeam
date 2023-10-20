@@ -41,6 +41,7 @@ bool StagePanel::Initialize() {
 	skillUI->SetSize(basesize);
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
+	RandomPanel(3);
 	//CSV“Ç‚İ‚İ
 	return true;
 }
