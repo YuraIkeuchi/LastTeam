@@ -372,7 +372,6 @@
     <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClCompile>
-    <ClCompile Include="GamePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -710,7 +709,6 @@
     <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClInclude>
-    <ClInclude Include="GamePlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
