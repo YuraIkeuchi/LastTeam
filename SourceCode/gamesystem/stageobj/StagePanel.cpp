@@ -41,6 +41,7 @@ bool StagePanel::Initialize() {
 	skillUI->SetSize(basesize);
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
+	RandomPanel(3);
 	//CSV読み込み
 	return true;
 }
@@ -63,7 +64,7 @@ void StagePanel::Update() {
 			gaugeCount = 0;
 		}
 		float per = (gaugeCount / kGaugeCountMax);
-		float size = Ease(In,Quad,0.5f, gaugeUI->GetSize().y,basesize.y * per);
+		float size = Ease(In, Quad, 0.5f, gaugeUI->GetSize().y, basesize.y * per);
 		gaugeUI->SetSize({ basesize.x,size });
 	}
 	for (auto i = 0; i < actions.size(); i++) {
@@ -114,7 +115,12 @@ void StagePanel::BattleUpdate() {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			if (!panels[i][j].isHit) {
 				if (panels[i][j].type == NO_PANEL) {
-					panels[i][j].color = { 1.0f,1.0f,1.0f,1.0f };
+					if (!panels[i][j].isEnemyHit) {
+						panels[i][j].color = { 1.0f,1.0f,1.0f,1.0f };
+					}
+					else {
+						panels[i][j].color = { 0.5f,0.0f,0.0f,1.0f };
+					}
 				} else {
 					panels[i][j].color = { 0.5f,0.5f,0.5f,1.0f };
 				}
@@ -160,14 +166,37 @@ void StagePanel::Collide() {
 
 
 void StagePanel::RandomPanel(int num) {
+	int freeNum = 0;
+	int p_height = Player::GetInstance()->GetNowHeight();
+	int p_width = Player::GetInstance()->GetNowWidth();
+
+	for (int i = 0; i < PANEL_WIDTH/2; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			if (panels[i][j].type != NO_PANEL ||
+				(i == p_width && j == p_height)) {
+				continue;
+			}
+			freeNum++;
+		}
+	}
+	if (freeNum == 0) {
+		return;
+	}
+	if (freeNum < num) {
+		num = freeNum;
+	}
+
 	for (int i = 0; i < num; i++) {
 		bool isSet = false;
 		//乱数の設定
 		int width = Helper::GetInstance()->GetRanNum(0, 3);
 		int height = Helper::GetInstance()->GetRanNum(0, 3);
+
 		//パネル探索（開いてるのが3追加の場合書いてない）
+
 		while (!isSet) {
-			if (panels[width][height].type != NO_PANEL) {
+			if (panels[width][height].type != NO_PANEL ||
+				(width == p_width && height == p_height)) {
 				width = Helper::GetInstance()->GetRanNum(0, 3);
 				height = Helper::GetInstance()->GetRanNum(0, 3);
 			} else {
@@ -205,6 +234,25 @@ void StagePanel::ResetPanel() {
 			panels[i][j].type = NO_PANEL;
 		}
 	}
+}
 
-
+void StagePanel::SetEnemyHit(IKEObject3d* obj,int& wight, int& height) {
+	m_OBB1.SetParam_Pos(obj->GetPosition());
+	m_OBB1.SetParam_Rot(obj->GetMatrot());
+	m_OBB1.SetParam_Scl(obj->GetScale());
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			m_OBB2.SetParam_Pos(panels[i][j].position);
+			m_OBB2.SetParam_Rot(panels[i][j].object->GetMatrot());
+			m_OBB2.SetParam_Scl({ 0.5f,1.0f,0.5f });
+			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
+				panels[i][j].isEnemyHit = true;
+				wight = i;
+				height = j;
+			}
+			else {
+				panels[i][j].isEnemyHit = false;
+			}
+		}
+	}
 }

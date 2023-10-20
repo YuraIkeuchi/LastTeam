@@ -27,7 +27,7 @@ NormalEnemy::NormalEnemy() {
 			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
 		HP_First[i]->SetAnchorPoint({ 0.5f,0.5f });
 		HP_First[i]->SetSize({ l_Width_Cut,l_Height_Cut });
-		HP_First[i]->SetScale(0.3f);
+		HP_First[i]->SetScale(0.5f);
 		//ìÒåÖÇﬂ
 		HP_Second[i] = IKESprite::Create(ImageManager::HPNUMBERUI, { 0.0f,0.0f });
 		HP_Second[i]->SetTextureRect(
@@ -35,7 +35,7 @@ NormalEnemy::NormalEnemy() {
 			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
 		HP_Second[i]->SetAnchorPoint({ 0.5f,0.5f });
 		HP_Second[i]->SetSize({ l_Width_Cut,l_Height_Cut });
-		HP_Second[i]->SetScale(0.3f);
+		HP_Second[i]->SetScale(0.5f);
 		//éOåÖñ⁄
 		HP_Third[i] = IKESprite::Create(ImageManager::HPNUMBERUI, { 0.0f,0.0f });
 		HP_Third[i]->SetTextureRect(
@@ -43,7 +43,7 @@ NormalEnemy::NormalEnemy() {
 			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
 		HP_Third[i]->SetAnchorPoint({ 0.5f,0.5f });
 		HP_Third[i]->SetSize({ l_Width_Cut,l_Height_Cut });
-		HP_Third[i]->SetScale(0.3f);
+		HP_Third[i]->SetScale(0.5f);
 	}
 }
 //èâä˙âª
@@ -83,6 +83,8 @@ void NormalEnemy::ImGui_Origin() {
 	ImGui::Begin("Enemy");
 	ImGui::Text("POSX:%f", m_Position.x);
 	ImGui::Text("POSZ:%f", m_Position.z);
+	ImGui::Text("Width:%d", m_NowWidth);
+	ImGui::Text("Height:%d", m_NowHeight);
 	ImGui::End();
 }
 //äJï˙

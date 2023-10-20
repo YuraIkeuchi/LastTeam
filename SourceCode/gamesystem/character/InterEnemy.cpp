@@ -6,9 +6,9 @@
 #include <ParticleEmitter.h>
 XMFLOAT3 InterEnemy::randPanelPos() {
 	int width = Helper::GetInstance()->GetRanNum(4, 7);
-	int height = Helper::GetInstance()->GetRanNum(4, 7);
-	m_NowHeight = 3;
-	m_NowWidth = 4;
+	int height = Helper::GetInstance()->GetRanNum(0, 3);
+	m_NowHeight = height;
+	m_NowWidth = width;
 	return StagePanel::GetInstance()->SetPositon(m_NowWidth, m_NowHeight);
 }
 //初期化
@@ -17,8 +17,12 @@ bool InterEnemy::Initialize() {
 }
 //更新
 void InterEnemy::Update() {
+	const int l_BasePanelCount = 4;
 	Helper::GetInstance()->CheckMax(m_DamegeTimer, 0, -1);
+	//表示用のHP
 	m_InterHP = (int)(m_HP);
+	//敵のマスを取得する
+	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(),m_NowWidth,m_NowHeight);
 	//各行動
 	Action();
 	//数値化したHP
@@ -53,8 +57,14 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 	//if (m_DamegeTimer != 0) { return; }
 	//if (Player::GetInstance()->GetCharaState() != STATE_ATTACK) { return; }
 	for (AttackArea* _area : area) {
-		if (Collision::SphereCollision(_area->GetPosition(), m_Radius, m_Position, m_Radius) && !_area->GetHit()) {
-			m_HP -= 5.0f;
+		if (Collision::SphereCollision(_area->GetPosition(), m_Radius, m_Position, m_Radius) &&
+			!_area->GetHit()) {
+			float damage = 5.0f;
+			if (_charaState == STATE_ATTACK && !Player::GetInstance()->GetIsCounter()) {
+				Player::GetInstance()->SetIsCounter(true);
+				damage *= 2.0f;
+			}
+			m_HP -= damage;
 			m_DamegeTimer = 40;
 			BirthParticle();
 			_area->SetHit(true);
@@ -90,21 +100,21 @@ void InterEnemy::WorldDivision() {
 
 	//数値化したHP(ひとけた目)
 	XMVECTOR texHPFirst;
-	texHPFirst = { m_Position.x + 0.3f, m_Position.y, m_Position.z - 0.55f };
+	texHPFirst = { m_Position.x + 0.6f, m_Position.y, m_Position.z - 0.55f };
 	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatView, false);
 	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatProjection, true);
 	texHPFirst = Helper::GetInstance()->WDivision(texHPFirst, false);
 	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatPort, false);
 	//二桁め
 	XMVECTOR texHPSecond;
-	texHPSecond = { m_Position.x + 0.1f, m_Position.y, m_Position.z - 0.55f };
+	texHPSecond = { m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f };
 	texHPSecond = Helper::GetInstance()->PosDivi(texHPSecond, m_MatView, false);
 	texHPSecond = Helper::GetInstance()->PosDivi(texHPSecond, m_MatProjection, true);
 	texHPSecond = Helper::GetInstance()->WDivision(texHPSecond, false);
 	texHPSecond = Helper::GetInstance()->PosDivi(texHPSecond, m_MatPort, false);
 	//三桁め
 	XMVECTOR texHPThird;
-	texHPThird = { m_Position.x - 0.1f, m_Position.y, m_Position.z - 0.55f };
+	texHPThird = { m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.55f };
 	texHPThird = Helper::GetInstance()->PosDivi(texHPThird, m_MatView, false);
 	texHPThird = Helper::GetInstance()->PosDivi(texHPThird, m_MatProjection, true);
 	texHPThird = Helper::GetInstance()->WDivision(texHPThird, false);
