@@ -71,6 +71,8 @@ public:
 	const int GetAllActCount() { return m_AllActCount; }
 	const int GetCharaState() { return _charaState; }
 
+	const bool GetIsCounter() { return isCounter; }
+	void SetIsCounter(const bool isCounter) { this->isCounter = isCounter; }
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
 
 private:
@@ -120,6 +122,8 @@ private:
 	
 	//行動のUI
 	vector<unique_ptr<ActionUI>> actui;
+	
+	bool isCounter = false;
 	//攻撃エリア
 	vector<AttackArea*> attackarea;
 	//行動先
