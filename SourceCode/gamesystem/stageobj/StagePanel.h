@@ -33,6 +33,7 @@ private:
 		XMFLOAT4 color = { 1,1,1,1 };
 		int type = NO_PANEL;
 		bool isHit = false;
+		bool isEnemyHit = false;
 	};
 
 public:
@@ -50,17 +51,21 @@ public:
 
 	void RandomPanel(int num);
 	void ResetPanel();
+	//色変更
+	void SetEnemyHit(IKEObject3d* obj,int& wight, int& height);
 private:
 	//バトル中の更新
 	void BattleUpdate();
 	//スキルセットの更新
 	void SetUpdate();
 	void Collide();
+
 public:
 	//gettersetter
 	XMFLOAT3 SetPositon(int width, int height) {
 		return panels[width][height].position;
 	}
+
 private:
 	//パネル
 	Panel panels[PANEL_WIDTH][PANEL_HEIGHT];

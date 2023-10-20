@@ -83,6 +83,8 @@ void NormalEnemy::ImGui_Origin() {
 	ImGui::Begin("Enemy");
 	ImGui::Text("POSX:%f", m_Position.x);
 	ImGui::Text("POSZ:%f", m_Position.z);
+	ImGui::Text("Width:%d", m_NowWidth);
+	ImGui::Text("Height:%d", m_NowHeight);
 	ImGui::End();
 }
 //ŠJ•ú

@@ -6,9 +6,9 @@
 #include <ParticleEmitter.h>
 XMFLOAT3 InterEnemy::randPanelPos() {
 	int width = Helper::GetInstance()->GetRanNum(4, 7);
-	int height = Helper::GetInstance()->GetRanNum(4, 7);
-	m_NowHeight = 3;
-	m_NowWidth = 4;
+	int height = Helper::GetInstance()->GetRanNum(0, 3);
+	m_NowHeight = height;
+	m_NowWidth = width;
 	return StagePanel::GetInstance()->SetPositon(m_NowWidth, m_NowHeight);
 }
 //初期化
@@ -17,8 +17,12 @@ bool InterEnemy::Initialize() {
 }
 //更新
 void InterEnemy::Update() {
+	const int l_BasePanelCount = 4;
 	Helper::GetInstance()->CheckMax(m_DamegeTimer, 0, -1);
+	//表示用のHP
 	m_InterHP = (int)(m_HP);
+	//敵のマスを取得する
+	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(),m_NowWidth,m_NowHeight);
 	//各行動
 	Action();
 	//数値化したHP

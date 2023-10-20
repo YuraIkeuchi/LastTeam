@@ -124,15 +124,12 @@ void Player::ImGuiDraw() {
 	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_SPECIAL;
 	}
-
-
 	ImGui::End();
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
 		attackarea[i]->ImGuiDraw();
 	}
 }
-
 //移動
 void Player::Move() {
 	const int l_TargetTimer = 10;
