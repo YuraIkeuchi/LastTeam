@@ -336,7 +336,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\MapScene.cpp">
       <Filter>gamesystem\scene\mapScene</Filter>
     </ClCompile>
-    <ClCompile Include="MapSceneActor.cpp">
+    <ClCompile Include="SourceCode\gamesystem\scene\MapSceneActor.cpp">
       <Filter>gamesystem\actor\mapScene</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\engine\BehaviorTree\ActionNode.cpp">
