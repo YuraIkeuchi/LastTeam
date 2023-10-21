@@ -145,6 +145,8 @@ void MapScene::MapCreate() {
 void MapScene::ImGuiDraw() {
 	ImGui::Begin("Map");
 	ImGui::Text("%f", framePos.x);
+	ImGui::Text("%f", eFrame);
+
 	ImGui::End();
 }
 
@@ -170,6 +172,7 @@ void MapScene::Move() {
 
 	if (input->TiltStick(input->L_RIGHT)) {
 		if (moved) { return; }
+		if (nowMap == UIs.max_size()-1) { return; }
 		nowMap++;
 		moved = true;
 	}
@@ -190,8 +193,19 @@ void MapScene::Move() {
 		}
 		framePos.x = Ease(In, Quad, mov_frame, UIs[oldMap].pos.x, UIs[nowMap].pos.x);
 		framePos.y = Ease(In, Quad, mov_frame, UIs[oldMap].pos.y, UIs[nowMap].pos.y);
-		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowMap].pos.x/2);
+		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowMap].pos.x / 2);
 	}
+	if (Helper::GetInstance()->FrameCheck(eFrame, eAdd)) {
+		eAdd *= -1.0f;
+		eFrame = 0.99f;
+	}
+	if (eFrame == 0.0f) {
+		eAdd *= -1.0f;
+	}
+	XMFLOAT2 size = frame->GetSize();
+	size.x = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
+	size.y = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
+	frame->SetSize(size);
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
 	scroll.x += vel;
 	scroll.x = clamp(scroll.x, -3000.f, 340.f);

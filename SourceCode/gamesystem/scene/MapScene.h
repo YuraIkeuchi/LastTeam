@@ -72,6 +72,9 @@ private:
 	float kMoveFrame = 10.0f;
 
 
+	float eFrame = 0;
+	float eAdd = 0.01f;
+
 	int oldMap = 0;
 	int nowMap = 0;
 	XMFLOAT2 framePos= basePos[0];
