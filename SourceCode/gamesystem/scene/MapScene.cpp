@@ -3,6 +3,12 @@
 #include <Helper.h>
 #include "CsvLoader.h"
 #include <sstream>
+
+#include "SceneManager.h"
+
+//遷移しうるシーン
+#include "BattleScene.h"
+
 void MapScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
@@ -12,7 +18,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	screen->SetSize({ 1280.f,720.f });
 
 	UIs[StartMAP].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
-	UIs[StartMAP].pos = basePos[0];
+	UIs[StartMAP].pos = homePos;
 	UIs[StartMAP].size = { 128.f,128.f };
 	UIs[StartMAP].sprite->SetAnchorPoint({ 0.5f,0.5f });
 
@@ -100,6 +106,8 @@ MapScene::UI MapScene::RandPannel() {
 void MapScene::MapCreate() {
 	string csv_ = "Resources/csv/map.csv";
 	int r_num = Helper::GetInstance()->GetRanNum(0, 3);
+	r_num = 3;
+	
 	//mapのあとに数字をくっつける
 	std::stringstream ss;
 	ss << "map" << r_num;
@@ -113,15 +121,14 @@ void MapScene::MapCreate() {
 	for (int i = 0; i < Len; ++i) {
 		dungeons[i] = (int)(dungeon[i] - '0');
 	}
-	int nowSpawn = 1;
+	XMFLOAT2 _basePos = { homePos.x + interbal.x,homePos.y };
 	for (int i = 0; i < Len; ++i) {
 		//この+1はスタートを除く
-		XMFLOAT2 _basePos = basePos[i + 1];
 		switch (dungeons[i]) {
 		case 1:
-			UIs[nowSpawn] = RandPannel();
-			UIs[nowSpawn].pos = _basePos;
-			nowSpawn++;
+			UIs[nowUiNum] = RandPannel();
+			UIs[nowUiNum].pos = _basePos;
+			nowUiNum++;
 			break;
 		case 2: {
 			XMFLOAT2 b_pos[2] = {
@@ -129,15 +136,28 @@ void MapScene::MapCreate() {
 			{ _basePos.x, _basePos.y + interbal.y } };
 
 			for (int i = 0; i < 2; i++) {
-				UIs[nowSpawn] = RandPannel();
-				UIs[nowSpawn].pos = b_pos[i];
-				nowSpawn++;
+				UIs[nowUiNum] = RandPannel();
+				UIs[nowUiNum].pos = b_pos[i];
+				nowUiNum++;
+			}
+			break;
+		}
+		case 3: {
+			XMFLOAT2 b_pos[3] = {
+		{_basePos.x, _basePos.y - interbal.y},
+		{_basePos.x, _basePos.y},
+		{_basePos.x, _basePos.y + interbal.y }};
+			for (int i = 0; i < 3; i++) {
+				UIs[nowUiNum] = RandPannel();
+				UIs[nowUiNum].pos = b_pos[i];
+				nowUiNum++;
 			}
 			break;
 		}
 		default:
 			break;
 		}
+		_basePos.x += interbal.x;
 	}
 
 }
@@ -174,7 +194,7 @@ void MapScene::Move() {
 
 	if (input->TiltStick(input->L_RIGHT)) {
 		if (moved) { return; }
-		if (nowMap == UIs.max_size()-1) { return; }
+		if (nowMap == nowUiNum - 1) { return; }
 		nowMap++;
 		moved = true;
 	}
@@ -184,7 +204,10 @@ void MapScene::Move() {
 		nowMap--;
 		moved = true;
 	}
+	if ((input->TriggerButton(input->B))) {
+		SceneManager::GetInstance()->ChangeScene<BattleScene>();
 
+	}
 
 	if (moved) {
 		if (Helper::GetInstance()->FrameCheck(mov_frame, 1 / kMoveFrame)) {

@@ -53,16 +53,9 @@ private:
 
 
 	array<UI, 20> UIs;
-	XMFLOAT2 basePos[7] = {
-		{340.f,360.f},
-		{640.f,360.f},
-		{940.f,360.f},
-		{1240.0f,360.f},
-		{1540.0f,360.f},
-		{1840.0f,360.f},
-		{2140.0f,360.f},
-	};
-	XMFLOAT2 interbal = { 300.f,200.f };
+
+	XMFLOAT2 homePos = { 340.f,360.f };
+	XMFLOAT2 interbal = { 300.f,250.f };
 	XMFLOAT2 scroll = { 0,0 };
 	int vel = 10;
 
@@ -75,8 +68,11 @@ private:
 	float eFrame = 0;
 	float eAdd = 0.01f;
 
+
+	int nowUiNum = 1;
+
 	int oldMap = 0;
 	int nowMap = 0;
-	XMFLOAT2 framePos= basePos[0];
+	XMFLOAT2 framePos= homePos;
 };
 
