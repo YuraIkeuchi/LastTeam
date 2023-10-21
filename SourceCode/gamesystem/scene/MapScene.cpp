@@ -12,10 +12,10 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	screen->SetSize({ 1280.f,720.f });
 
 
-	UIs[Tutorial].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
-	UIs[Tutorial].pos = basePos[0];
-	UIs[Tutorial].size = { 128.f,128.f };
-	UIs[Tutorial].sprite->SetAnchorPoint({ 0.5f,0.5f });
+	UIs[StartMAP].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
+	UIs[StartMAP].pos = basePos[0];
+	UIs[StartMAP].size = { 128.f,128.f };
+	UIs[StartMAP].sprite->SetAnchorPoint({ 0.5f,0.5f });
 
 	MapCreate();
 
@@ -26,23 +26,13 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
-	if (Input::GetInstance()->Pushkey(DIK_D)) {
-		scroll.x += 5;
-	}
-	if (Input::GetInstance()->Pushkey(DIK_A)) {
-		scroll.x -= 5;
-	}	if (Input::GetInstance()->Pushkey(DIK_W)) {
-		scroll.y -= 5;
-	}	if (Input::GetInstance()->Pushkey(DIK_S)) {
-		scroll.y += 5;
-	}
 
+	Move();
 	for (UI& ui : UIs) {
 		if (!ui.sprite) { continue; }
 		ui.sprite->SetPosition({ ui.pos.x + scroll.x, ui.pos.y + scroll.y });
 		ui.sprite->SetSize(ui.size);
 	}
-
 }
 
 void MapScene::Draw(DirectXCommon* dxCommon) {
@@ -55,8 +45,7 @@ void MapScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PreDraw();
 		postEffect->Draw(dxCommon->GetCmdList());
 		dxCommon->PostDraw();
-	}
-	else {
+	} else {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		postEffect->Draw(dxCommon->GetCmdList());
 		postEffect->PostDrawScene(dxCommon->GetCmdList());
@@ -82,8 +71,6 @@ void MapScene::BackDraw(DirectXCommon* dxCommon) {
 }
 
 MapScene::UI MapScene::RandPannel() {
-
-
 	int min = ImageManager::MAP_NORMAL;
 	int max = ImageManager::MAP_BOSS;
 	int r = Helper::GetInstance()->GetRanNum(min, max);
@@ -92,12 +79,10 @@ MapScene::UI MapScene::RandPannel() {
 	if (r == min) {
 		itr.sprite = IKESprite::Create(ImageManager::MAP_NORMAL, { 0,0 });
 		itr.Tag = BATTLE;
-	}
-	else if (r == max) {
+	} else if (r == max) {
 		itr.sprite = IKESprite::Create(ImageManager::MAP_BOSS, { 0,0 });
 		itr.Tag = BOSS;
-	}
-	else {
+	} else {
 		itr.sprite = IKESprite::Create(ImageManager::MAP_HEAL, { 0,0 });
 		itr.Tag = HEAL;
 
@@ -110,21 +95,19 @@ MapScene::UI MapScene::RandPannel() {
 
 void MapScene::MapCreate() {
 	string csv_ = "Resources/csv/map.csv";
-	dungeon.resize(1);
-	int r_num=Helper::GetInstance()->GetRanNum(0,3);
+	int r_num = Helper::GetInstance()->GetRanNum(0, 3);
+	//map‚Ì‚ ‚Æ‚É”š‚ğ‚­‚Á‚Â‚¯‚é
 	std::stringstream ss;
-	ss << "map"<< r_num;
+	ss << "map" << r_num;
 	std::string r_map = ss.str();
-	
 	//w’è‚µ‚ÄƒQƒbƒg‚·‚é
 	LoadCSV::LoadCsvParam_String(csv_, dungeon, r_map);
 	//‚¯‚½‚·‚¤‚µ‚ã‚Æ‚­‚·‚é
-	int Len = (int)dungeon[0].length();
-
+	int Len = (int)dungeon.length();
 	dungeons.resize(Len);
 	//1•¶š‚¸‚ÂŠi”[
 	for (int i = 0; i < Len; ++i) {
-		dungeons[i] = (int)(dungeon[0][i] - '0');
+		dungeons[i] = (int)(dungeon[i] - '0');
 	}
 	int nowSpawn = 1;
 	for (int i = 0; i < Len; ++i) {
@@ -158,6 +141,30 @@ void MapScene::MapCreate() {
 
 
 void MapScene::ImGuiDraw() {
+}
+
+void MapScene::Move() {
+	Input* input = Input::GetInstance();
+	if (Input::GetInstance()->Pushkey(DIK_D)) {
+		scroll.x += 5;
+	}
+	if (Input::GetInstance()->Pushkey(DIK_A)) {
+		scroll.x -= 5;
+	}	if (Input::GetInstance()->Pushkey(DIK_W)) {
+		scroll.y -= 5;
+	}	if (Input::GetInstance()->Pushkey(DIK_S)) {
+		scroll.y += 5;
+	}
+
+	int vel = 0;
+	if (input->PushButton(input->LB)) {
+		vel = -10;
+	} else if (input->PushButton(input->RB)) {
+		vel = 10;
+	}
+
+	scroll.x += vel;
+	scroll.x = clamp(scroll.x, -3000.f, 340.f);
 }
 
 void MapScene::Finalize() {

@@ -11,7 +11,6 @@ public:
 	void Draw(DirectXCommon* dxCommon) override;
 	//ŠJ•ú
 	void Finalize() override;
-
 private:
 	/// •`‰æ
 	void FrontDraw(DirectXCommon* dxCommon);
@@ -31,6 +30,7 @@ private:
 
 	void ImGuiDraw();
 
+	void Move();
 private:
 	enum {
 		StartMAP = 0,
@@ -40,24 +40,17 @@ private:
 		Max
 	};
 	enum {
-		Tutorial = 0,
-		FirstChoice = 3,
-		SecondChoice = 8,
-		ThirdChoice = 15,
-		MaxCHOICE,
-	};
-	enum {
 		BATTLE = 1,
 		BOSS,
 		HEAL,
 	};
 
-	vector<string> dungeon;
+	string dungeon;
 	vector<int> dungeons;
-	//map<int, string> randMaps;
+
 	unique_ptr<IKESprite>screen = nullptr;
 
-	array<UI, MaxCHOICE> UIs;
+	array<UI, 20> UIs;
 	XMFLOAT2 basePos[7] = {
 		{340.f,360.f},
 		{640.f,360.f},
@@ -66,10 +59,9 @@ private:
 		{1540.0f,360.f},
 		{1840.0f,360.f},
 		{2140.0f,360.f},
-
-
 	};
 	XMFLOAT2 interbal = { 300.f,200.f };
 	XMFLOAT2 scroll = { 0,0 };
+	int vel = 10;
 };
 

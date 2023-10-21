@@ -22,6 +22,9 @@ namespace LoadCSV
 	void LoadCsvParam_String(std::string FileName, std::vector<std::string>& obj, std::string LoadName);
 	void LoadCsvParam_Float(std::string FileName, std::vector<float>& obj, std::string LoadName);
 	void LoadCsvParam_Int(std::string FileName, std::vector<int>& obj, std::string LoadName);
+
+	void LoadCsvParam_String(std::string FileName, std::string& obj, std::string LoadName);
+
 }
 
 
