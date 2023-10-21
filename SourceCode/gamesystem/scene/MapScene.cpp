@@ -1,6 +1,8 @@
 #include "MapScene.h"
 #include <ImageManager.h>
 #include <Helper.h>
+#include "CsvLoader.h"
+
 void MapScene::Initialize(DirectXCommon* dxCommon) {
 	//‹¤’Ê‚Ì‰Šú‰»
 	BaseInitialize(dxCommon);
@@ -15,28 +17,8 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	UIs[Tutorial].size = { 128.f,128.f };
 	UIs[Tutorial].sprite->SetAnchorPoint({ 0.5f,0.5f });
 
-	for (auto i = 0; i < (FirstChoice - Tutorial); i++) {
-		UIs[i + 1] = RandPannel();
-		UIs[i + 1].pos = { basePos[1].x,basePos[1].y + (interbal.y * i) };
-		UIs[i + 1].size = { 128.f,128.f };
-		UIs[i + 1].sprite->SetAnchorPoint({ 0.5f,0.5f });
-	}
-	int j = 0;
-	for (int i = FirstChoice; i < SecondChoice; i++) {
-		UIs[i + 1] = RandPannel();
-		UIs[i + 1].pos = { basePos[2].x,basePos[2].y + (interbal.y * j) };
-		UIs[i + 1].size = { 128.f,128.f };
-		UIs[i + 1].sprite->SetAnchorPoint({ 0.5f,0.5f });
-		j++;
-	}
-	int k = 0;
-	for (int i = SecondChoice; i < ThirdChoice; i++) {
-		UIs[i + 1] = RandPannel();
-		UIs[i + 1].pos = { basePos[3].x,basePos[3].y + (interbal.y * k) };
-		UIs[i + 1].size = { 128.f,128.f };
-		UIs[i + 1].sprite->SetAnchorPoint({ 0.5f,0.5f });
-		k++;
-	}
+
+	MapCreate();
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
@@ -118,6 +100,34 @@ MapScene::UI MapScene::RandPannel() {
 	}
 
 	return itr;
+}
+
+void MapScene::MapCreate() {
+	string csv_ = "Resources/csv/map.csv";
+	dungeon.resize(1);
+	//Žw’è‚µ‚ÄƒQƒbƒg‚·‚é
+	LoadCSV::LoadCsvParam_String(csv_, dungeon, "map");
+	//‚¯‚½‚·‚¤‚µ‚ã‚Æ‚­‚·‚é
+
+	int Len = (int)dungeon[0].length();
+
+	dungeons.resize(dungeon[0].length());
+	
+
+	for (int i = 0; i < Len; ++i) {
+
+		dungeons[i] = (int)(dungeon[0][i] - '0');  //str[i]@‚ÍcharŒ^‚È‚Ì‚Åchar¨int‚Ö•ÏŠ·
+
+	}
+
+	//for (int i = 0; i < Len;i++) {
+	//	int n = 100;
+	//	int s=dungeon % n;
+	//	s++;
+	//}
+
+	int a = 0;
+	a++;
 }
 
 

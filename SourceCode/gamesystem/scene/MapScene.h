@@ -27,6 +27,8 @@ private:
 
 	UI  RandPannel();
 
+	void MapCreate();
+
 	void ImGuiDraw();
 
 private:
@@ -50,7 +52,9 @@ private:
 		HEAL,
 	};
 
-
+	vector<string> dungeon;
+	vector<int> dungeons;
+	//map<int, string> randMaps;
 	unique_ptr<IKESprite>screen = nullptr;
 
 	array<UI, MaxCHOICE> UIs;
