@@ -17,8 +17,12 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	UIs[Tutorial].size = { 128.f,128.f };
 	UIs[Tutorial].sprite->SetAnchorPoint({ 0.5f,0.5f });
 
-
 	MapCreate();
+
+
+
+
+
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
@@ -108,26 +112,37 @@ void MapScene::MapCreate() {
 	//Žw’è‚µ‚ÄƒQƒbƒg‚·‚é
 	LoadCSV::LoadCsvParam_String(csv_, dungeon, "map");
 	//‚¯‚½‚·‚¤‚µ‚ã‚Æ‚­‚·‚é
-
 	int Len = (int)dungeon[0].length();
 
-	dungeons.resize(dungeon[0].length());
-	
-
+	dungeons.resize(Len);
+	//1•¶Žš‚¸‚ÂŠi”[
 	for (int i = 0; i < Len; ++i) {
-
-		dungeons[i] = (int)(dungeon[0][i] - '0');  //str[i]@‚ÍcharŒ^‚È‚Ì‚Åchar¨int‚Ö•ÏŠ·
-
+		dungeons[i] = (int)(dungeon[0][i] - '0');
+	}
+	for (int i = 0; i < 2;i++) {
+		switch (dungeons[i]) {
+		case 1:
+			UIs[1] = RandPannel();
+			UIs[1].pos = basePos[1];
+			UIs[1].size = { 128.f,128.f };
+			UIs[1].sprite->SetAnchorPoint({ 0.5f,0.5f });
+			break;
+		case 2:
+			UIs[2] = RandPannel();
+			UIs[2].pos = { basePos[2].x, basePos[2].y- interbal.y};
+			UIs[2].size = { 128.f,128.f };
+			UIs[2].sprite->SetAnchorPoint({ 0.5f,0.5f });
+			
+			UIs[3] = RandPannel();
+			UIs[3].pos = { basePos[2].x, basePos[2].y + interbal.y };
+			UIs[3].size = { 128.f,128.f };
+			UIs[3].sprite->SetAnchorPoint({ 0.5f,0.5f });
+			break;
+		default:
+			break;
+		}
 	}
 
-	//for (int i = 0; i < Len;i++) {
-	//	int n = 100;
-	//	int s=dungeon % n;
-	//	s++;
-	//}
-
-	int a = 0;
-	a++;
 }
 
 

@@ -60,8 +60,8 @@ private:
 	array<UI, MaxCHOICE> UIs;
 	XMFLOAT2 basePos[5] = {
 		{340.f,360.f},
-		{640.f,160.f},
-		{940.f,-40.f},
+		{640.f,360.f},
+		{940.f,360.f},
 		{1240.0f,-240.f},
 		{1540.0f,-560.f}
 	};
