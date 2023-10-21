@@ -49,6 +49,8 @@ private:
 	vector<int> dungeons;
 
 	unique_ptr<IKESprite>screen = nullptr;
+	unique_ptr<IKESprite> frame = nullptr;
+
 
 	array<UI, 20> UIs;
 	XMFLOAT2 basePos[7] = {
@@ -63,5 +65,15 @@ private:
 	XMFLOAT2 interbal = { 300.f,200.f };
 	XMFLOAT2 scroll = { 0,0 };
 	int vel = 10;
+
+
+	bool moved = false;
+	float mov_frame = 0.0f;
+	float kMoveFrame = 10.0f;
+
+
+	int oldMap = 0;
+	int nowMap = 0;
+	XMFLOAT2 framePos= basePos[0];
 };
 

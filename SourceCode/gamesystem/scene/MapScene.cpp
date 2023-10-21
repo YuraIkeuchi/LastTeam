@@ -11,18 +11,17 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	screen = IKESprite::Create(ImageManager::MAPSCREEN, { 0,0 });
 	screen->SetSize({ 1280.f,720.f });
 
-
 	UIs[StartMAP].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
 	UIs[StartMAP].pos = basePos[0];
 	UIs[StartMAP].size = { 128.f,128.f };
 	UIs[StartMAP].sprite->SetAnchorPoint({ 0.5f,0.5f });
 
+	frame = IKESprite::Create(ImageManager::MAP_FRAME, { 0,0 });
+	frame->SetPosition(framePos);
+	frame->SetSize({ 128.f,128.f });
+	frame->SetAnchorPoint({ 0.5f,0.5f });
+
 	MapCreate();
-
-
-
-
-
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
@@ -44,6 +43,7 @@ void MapScene::Draw(DirectXCommon* dxCommon) {
 		postEffect->PostDrawScene(dxCommon->GetCmdList());
 		dxCommon->PreDraw();
 		postEffect->Draw(dxCommon->GetCmdList());
+		ImGuiDraw();
 		dxCommon->PostDraw();
 	} else {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
@@ -52,6 +52,7 @@ void MapScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PreDraw();
 		BackDraw(dxCommon);
 		FrontDraw(dxCommon);
+		ImGuiDraw();
 		dxCommon->PostDraw();
 	}
 
@@ -65,6 +66,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 		if (!ui.sprite) { continue; }
 		ui.sprite->Draw();
 	}
+	frame->Draw();
 }
 
 void MapScene::BackDraw(DirectXCommon* dxCommon) {
@@ -141,6 +143,9 @@ void MapScene::MapCreate() {
 
 
 void MapScene::ImGuiDraw() {
+	ImGui::Begin("Map");
+	ImGui::Text("%f", framePos.x);
+	ImGui::End();
 }
 
 void MapScene::Move() {
@@ -163,6 +168,31 @@ void MapScene::Move() {
 		vel = 10;
 	}
 
+	if (input->TiltStick(input->L_RIGHT)) {
+		if (moved) { return; }
+		nowMap++;
+		moved = true;
+	}
+	if (input->TiltStick(input->L_LEFT)) {
+		if (moved) { return; }
+		if (nowMap == 0) { return; }
+		nowMap--;
+		moved = true;
+	}
+
+
+	if (moved) {
+		if (Helper::GetInstance()->FrameCheck(mov_frame, 1 / kMoveFrame)) {
+			moved = false;
+			oldMap = nowMap;
+			mov_frame = 0.0f;
+			return;
+		}
+		framePos.x = Ease(In, Quad, mov_frame, UIs[oldMap].pos.x, UIs[nowMap].pos.x);
+		framePos.y = Ease(In, Quad, mov_frame, UIs[oldMap].pos.y, UIs[nowMap].pos.y);
+		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowMap].pos.x/2);
+	}
+	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
 	scroll.x += vel;
 	scroll.x = clamp(scroll.x, -3000.f, 340.f);
 }
