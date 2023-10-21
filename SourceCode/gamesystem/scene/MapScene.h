@@ -58,12 +58,16 @@ private:
 	unique_ptr<IKESprite>screen = nullptr;
 
 	array<UI, MaxCHOICE> UIs;
-	XMFLOAT2 basePos[5] = {
+	XMFLOAT2 basePos[7] = {
 		{340.f,360.f},
 		{640.f,360.f},
 		{940.f,360.f},
-		{1240.0f,-240.f},
-		{1540.0f,-560.f}
+		{1240.0f,360.f},
+		{1540.0f,360.f},
+		{1840.0f,360.f},
+		{2140.0f,360.f},
+
+
 	};
 	XMFLOAT2 interbal = { 300.f,200.f };
 	XMFLOAT2 scroll = { 0,0 };

@@ -2,7 +2,7 @@
 #include <ImageManager.h>
 #include <Helper.h>
 #include "CsvLoader.h"
-
+#include <sstream>
 void MapScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
@@ -102,6 +102,8 @@ MapScene::UI MapScene::RandPannel() {
 		itr.Tag = HEAL;
 
 	}
+	itr.size = { 128.f,128.f };
+	itr.sprite->SetAnchorPoint({ 0.5f,0.5f });
 
 	return itr;
 }
@@ -109,8 +111,13 @@ MapScene::UI MapScene::RandPannel() {
 void MapScene::MapCreate() {
 	string csv_ = "Resources/csv/map.csv";
 	dungeon.resize(1);
+	int r_num=Helper::GetInstance()->GetRanNum(0,3);
+	std::stringstream ss;
+	ss << "map"<< r_num;
+	std::string r_map = ss.str();
+	
 	//指定してゲットする
-	LoadCSV::LoadCsvParam_String(csv_, dungeon, "map");
+	LoadCSV::LoadCsvParam_String(csv_, dungeon, r_map);
 	//けたすうしゅとくする
 	int Len = (int)dungeon[0].length();
 
@@ -119,25 +126,28 @@ void MapScene::MapCreate() {
 	for (int i = 0; i < Len; ++i) {
 		dungeons[i] = (int)(dungeon[0][i] - '0');
 	}
-	for (int i = 0; i < 2;i++) {
+	int nowSpawn = 1;
+	for (int i = 0; i < Len; ++i) {
+		//この+1はスタートを除く
+		XMFLOAT2 _basePos = basePos[i + 1];
 		switch (dungeons[i]) {
 		case 1:
-			UIs[1] = RandPannel();
-			UIs[1].pos = basePos[1];
-			UIs[1].size = { 128.f,128.f };
-			UIs[1].sprite->SetAnchorPoint({ 0.5f,0.5f });
+			UIs[nowSpawn] = RandPannel();
+			UIs[nowSpawn].pos = _basePos;
+			nowSpawn++;
 			break;
-		case 2:
-			UIs[2] = RandPannel();
-			UIs[2].pos = { basePos[2].x, basePos[2].y- interbal.y};
-			UIs[2].size = { 128.f,128.f };
-			UIs[2].sprite->SetAnchorPoint({ 0.5f,0.5f });
-			
-			UIs[3] = RandPannel();
-			UIs[3].pos = { basePos[2].x, basePos[2].y + interbal.y };
-			UIs[3].size = { 128.f,128.f };
-			UIs[3].sprite->SetAnchorPoint({ 0.5f,0.5f });
+		case 2: {
+			XMFLOAT2 b_pos[2] = {
+				{_basePos.x, _basePos.y - interbal.y},
+			{ _basePos.x, _basePos.y + interbal.y } };
+
+			for (int i = 0; i < 2; i++) {
+				UIs[nowSpawn] = RandPannel();
+				UIs[nowSpawn].pos = b_pos[i];
+				nowSpawn++;
+			}
 			break;
+		}
 		default:
 			break;
 		}
