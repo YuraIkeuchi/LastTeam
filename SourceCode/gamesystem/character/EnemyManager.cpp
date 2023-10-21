@@ -45,6 +45,15 @@ void EnemyManager::Update() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->Update();
 	}
+
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		if (enemy->GetState() == STATE_ATTACK) {			//ˆê’UUŒ‚ˆÈŠO‚ÍŽæ‚ç‚È‚¢
+			Player::GetInstance()->SetGrazePos(enemy->GetPosition());
+		}
+		else {
+			Player::GetInstance()->SetGrazePos({1000.0f,0.0f,0.0f});
+		}
+	}
 }
 
 void EnemyManager::Draw(DirectXCommon* dxCommon) {

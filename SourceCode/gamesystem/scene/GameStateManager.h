@@ -16,6 +16,7 @@ public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
 	const float GetPosScore() { return m_PosScore; }
+	const float GetGrazeScore() { return m_GrazeScore; }
 
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }

@@ -73,6 +73,7 @@ public:
 
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
 
+	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 private:
 	static const int ACT_PATTERN = 3;
 	static const int DIR_MAX = 4;
@@ -87,10 +88,6 @@ private:
 	Input* input = Input::GetInstance();
 
 	int _charaState = STATE_MOVE;
-	//移動方向指定用
-	float angle = 0.0f;
-	//歩きまたは走り状態
-	float velocity;
 	//移動加算値
 	float m_AddSpeed;
 	XMFLOAT3 m_MoveRot = {};
@@ -99,7 +96,7 @@ private:
 	XMFLOAT3 m_PanelPos = {};
 	int m_NowHeight = {};
 	int m_NowWidth = {};
-
+	
 	//各行動回数
 	int m_ActCount[ACT_PATTERN] = {};
 
@@ -140,4 +137,9 @@ private:
 		SKILL_STRONG,
 		SKILL_SPECIAL
 	}_SkillType = SKILL_NORMAL;
+
+	//グレイス用の変数
+	float m_Length = {};
+	float m_GrazeScore = {};
+	XMFLOAT3 m_GrazePos = {};
 };
