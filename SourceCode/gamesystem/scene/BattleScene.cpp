@@ -4,6 +4,7 @@
 #include <StagePanel.h>
 #include <GameMode.h>
 #include <SceneManager.h>
+#include <GameStateManager.h>
 //‰Šú‰»
 void BattleScene::Initialize(DirectXCommon* dxCommon)
 {
@@ -27,6 +28,9 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//ƒQ[ƒ€ƒ‚[ƒh
 	GameMode::GetInstance()->Initialize();
 
+	//ƒQ[ƒ€‚Ìó‘Ô
+	GameStateManager::GetInstance()->Initialize();
+
 	//“G
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
@@ -44,6 +48,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	Player::GetInstance()->Update();
 	StagePanel::GetInstance()->Update();
 	GameMode::GetInstance()->Update();
+	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	enemyManager->Update();
 	enemyManager->GetCameraData(camera->GetViewMatrix(), camera->GetProjectionMatrix(), camera->GetViewPort());
@@ -103,6 +108,7 @@ void BattleScene::ImGuiDraw() {
 	StagePanel::GetInstance()->ImGuiDraw();
 	//GameMode::GetInstance()->ImGuiDraw();
 	enemyManager->ImGuiDraw();
+	GameStateManager::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

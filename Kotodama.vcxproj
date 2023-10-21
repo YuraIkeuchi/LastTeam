@@ -202,6 +202,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\BattleScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\Framework.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\GameoverScene.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\scene\GameStateManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\IkeGame.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\LoadScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\MapScene.cpp" />
@@ -316,6 +317,7 @@
     <ClInclude Include="SourceCode\gamesystem\scene\BattleScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\Framework.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\GameoverScene.h" />
+    <ClInclude Include="SourceCode\gamesystem\scene\GameStateManager.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\IkeGame.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\LoadScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\MapScene.h" />

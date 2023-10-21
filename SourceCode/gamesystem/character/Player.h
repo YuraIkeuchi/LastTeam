@@ -71,8 +71,6 @@ public:
 	const int GetAllActCount() { return m_AllActCount; }
 	const int GetCharaState() { return _charaState; }
 
-	const bool GetIsCounter() { return isCounter; }
-	void SetIsCounter(const bool isCounter) { this->isCounter = isCounter; }
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
 
 private:
@@ -115,20 +113,13 @@ private:
 	float m_Frame = {};
 	int m_CoolTime = {};
 
-	enum AttackState {
-		ATTACK_ENEMY,
-		ATTACK_INTER,
-	}_AttackState = ATTACK_ENEMY;
-	
 	//行動のUI
 	vector<unique_ptr<ActionUI>> actui;
-	
-	bool isCounter = false;
+
 	//攻撃エリア
 	vector<AttackArea*> attackarea;
 	//行動先
 	vector<int> m_Act;
-	int m_AttackTimer = {};
 
 	//入力フレーム
 	int m_LimitCount = {};

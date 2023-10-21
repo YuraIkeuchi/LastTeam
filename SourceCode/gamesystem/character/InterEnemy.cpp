@@ -3,6 +3,7 @@
 #include <Helper.h>
 #include <Player.h>
 #include <StagePanel.h>
+#include <GameStateManager.h>
 #include <ParticleEmitter.h>
 XMFLOAT3 InterEnemy::randPanelPos() {
 	int width = Helper::GetInstance()->GetRanNum(4, 7);
@@ -60,8 +61,8 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 		if (Collision::SphereCollision(_area->GetPosition(), m_Radius, m_Position, m_Radius) &&
 			!_area->GetHit()) {
 			float damage = 5.0f;
-			if (_charaState == STATE_ATTACK && !Player::GetInstance()->GetIsCounter()) {
-				Player::GetInstance()->SetIsCounter(true);
+			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
+				GameStateManager::GetInstance()->SetCounter(true);
 				damage *= 2.0f;
 			}
 			m_HP -= damage;

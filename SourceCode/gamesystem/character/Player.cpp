@@ -1,11 +1,11 @@
 ﻿#include "Player.h"
 #include "CsvLoader.h"
-#include "Helper.h"
+#include <Helper.h>
 #include "Input.h"
-#include "Easing.h"
 #include "ParticleEmitter.h"
-#include "StagePanel.h"
 #include "Audio.h"
+#include <GameStateManager.h>
+#include <StagePanel.h>
 Player* Player::GetInstance()
 {
 	static Player instance;
@@ -49,9 +49,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 	//イージング
 	m_Frame = {};
 	m_CoolTime = {};
-	_AttackState = ATTACK_ENEMY;
 	m_AllActCount = {};
-	m_AttackTimer = {};
 	m_NowHeight = {};
 	m_NowWidth = {};
 
@@ -92,6 +90,9 @@ void Player::Update()
 	}
 
 	BirthParticle();
+
+	//プレイヤーの位置からスコアを加算する
+	GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
 }
 //描画
 void Player::Draw(DirectXCommon* dxCommon)
@@ -114,7 +115,6 @@ void Player::ActUIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("NowWidth:%d", m_NowWidth);
-	ImGui::Text(isCounter ? "CLEAR" : "NONE");
 	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_NORMAL;
 	}
@@ -244,17 +244,17 @@ void Player::Attack() {
 }
 //防御
 void Player::Guard() {
-	m_AttackTimer++;
-	if (m_AttackTimer == 5) {
-		FinishAct();
-	}
+	//m_AttackTimer++;
+	//if (m_AttackTimer == 5) {
+	//	FinishAct();
+	//}
 }
 //スキル
 void Player::SkillAct() {
-	m_AttackTimer++;
-	if (m_AttackTimer == 5) {
-		FinishAct();
-	}
+	//m_AttackTimer++;
+	//if (m_AttackTimer == 5) {
+	//	FinishAct();
+	//}
 }
 //行動力を入手
 void Player::AddAct(const string& Tag) {
@@ -305,7 +305,6 @@ void Player::BirthParticle() {
 void Player::FinishAct() {
 	m_Act.erase(m_Act.begin());
 	m_AllActCount--;
-	m_AttackTimer = {};
 	actui[0]->SetUse(true);
 	_charaState = STATE_MOVE;
 }
