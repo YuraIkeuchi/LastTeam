@@ -372,6 +372,9 @@
     <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\engine\2d\FontManager.cpp">
+      <Filter>gamesystem\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -708,6 +711,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
       <Filter>gamesystem\charactor\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\2d\FontManager.h">
+      <Filter>gamesystem\Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,9 +14,9 @@ private:
 	};
 	struct Conversation
 	{
-		Font* FirstFont;
-		Font* SecondFont;
-		Font* ThirdFont;
+		unique_ptr<Font> FirstFont;
+		unique_ptr<Font> SecondFont;
+		unique_ptr<Font> ThirdFont;
 	};
 
 public:
@@ -55,10 +55,8 @@ private:
 	void CreateWord(TITLE name, wchar_t* tex1, wchar_t* tex2 = L" ", wchar_t* tex3 = L" ");
 	//
 	Word SetWord(wchar_t* tex1, wchar_t* tex2, wchar_t* tex3);
-	//
-	Conversation CreateConversation(Word word);
 
-	void CreateCon(Conversation con, Word word);
+	void CreateCon(Conversation& con, Word word);
 private:
 	std::map<TextManager::TITLE, Word> wordlist_;
 
