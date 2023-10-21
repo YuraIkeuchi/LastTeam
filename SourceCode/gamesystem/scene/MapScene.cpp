@@ -32,6 +32,8 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 		ui.sprite->SetPosition({ ui.pos.x + scroll.x, ui.pos.y + scroll.y });
 		ui.sprite->SetSize(ui.size);
 	}
+	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
+
 }
 
 void MapScene::Draw(DirectXCommon* dxCommon) {
@@ -206,7 +208,6 @@ void MapScene::Move() {
 	size.x = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
 	size.y = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
 	frame->SetSize(size);
-	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
 	scroll.x += vel;
 	scroll.x = clamp(scroll.x, -3000.f, 340.f);
 }
