@@ -5,6 +5,7 @@
 #include <GameMode.h>
 #include <SceneManager.h>
 #include <GameStateManager.h>
+#include <SceneChanger.h>
 //初期化
 void BattleScene::Initialize(DirectXCommon* dxCommon)
 {
@@ -50,6 +51,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	GameMode::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
+	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
 	enemyManager->GetCameraData(camera->GetViewMatrix(), camera->GetProjectionMatrix(), camera->GetViewPort());
 	//敵を倒したらシーン以降(仮)
@@ -88,6 +90,7 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	Player::GetInstance()->ActUIDraw();
 	enemyManager->UIDraw();
+	SceneChanger::GetInstance()->Draw();
 }
 //ポストエフェクトかかる
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
@@ -109,6 +112,7 @@ void BattleScene::ImGuiDraw() {
 	//GameMode::GetInstance()->ImGuiDraw();
 	enemyManager->ImGuiDraw();
 	GameStateManager::GetInstance()->ImGuiDraw();
+	SceneChanger::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

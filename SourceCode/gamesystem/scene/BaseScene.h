@@ -87,7 +87,8 @@ public:
 	unique_ptr<PostEffect> postEffect = nullptr;
 	unique_ptr<CameraWork> camerawork;
 	bool PlayPostEffect = false;
-	unique_ptr<SceneChanger> sceneChanger_ = nullptr;
+	//ゲームループしたかどうか
+	static bool s_GameLoop;
 	//シーンでの遷移
 	//SceneState m_SceneState = SceneState::IntroState;
 };
