@@ -56,7 +56,12 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	enemyManager->GetCameraData(camera->GetViewMatrix(), camera->GetProjectionMatrix(), camera->GetViewPort());
 	//“G‚ð“|‚µ‚½‚çƒV[ƒ“ˆÈ~(‰¼)
 	if (enemyManager->BossDestroy()) {
+		SceneChanger::GetInstance()->SetChangeStart(true);
+	}
+
+	if (SceneChanger::GetInstance()->GetChange()) {
 		SceneManager::GetInstance()->PopScene();
+		SceneChanger::GetInstance()->SetChange(false);
 	}
 }
 

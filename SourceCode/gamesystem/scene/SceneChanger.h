@@ -35,6 +35,11 @@ public:
 	void ImGuiDraw();
 
 private:
+	static void (SceneChanger::* stateTable[])();
+
+	void FeedChange();
+	void WideChange();
+private:
 	static const int DOOR_NUM = 2;
 public:
 	const bool GetChange() { return m_Change; }
@@ -42,6 +47,13 @@ public:
 	void SetChange(const bool Change) { m_Change = Change; }
 	void SetChangeStart(const bool ChangeStart) { m_ChangeStart = ChangeStart; }
 private:
+	//シーンチェンジのタイプ
+	enum ChangeType {
+		CHANGE_FEED,
+		CHANGE_WIDE,
+	}_ChangeType = CHANGE_FEED;
+
+	//普通のフェード用
 	unique_ptr<IKESprite> change;
 	float m_Frame = {};
 
@@ -49,11 +61,25 @@ private:
 	bool m_Change = false;
 	int m_ChangeTimer = {};
 
-	enum FEEDSTATE {
-		FEED_START,
-		FEED_FINISH
-	}_FeedState;
-
 	XMFLOAT4 m_Color = { 1.0f,1.0f,1.0f,0.0f };
 	float m_AfterAlpha = {};
+
+	//広がるよう
+	const float width = WinApp::window_width;
+	const float height = WinApp::window_height;
+	vector<std::unique_ptr<IKESprite>> change2;
+	const int base_size = 80;
+	const int width_num = (int)width / base_size;
+	const int height_num = (int)height / base_size;
+	
+	XMFLOAT2 m_WideSize = {};
+	float m_AfterSize = {};
+	//シーンチェンジ状態
+	enum CHANGESTATE {
+		CHANGE_START,
+		CHANGE_FINISH
+	}_ChangeState;
+
+public:
+
 };
