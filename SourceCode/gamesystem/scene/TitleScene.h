@@ -20,4 +20,8 @@ private:
 
 private:
 	unique_ptr<TitleText> text_;
+	enum SceneType {
+		PLAY,
+		MAP
+	}_SceneType = PLAY;
 };

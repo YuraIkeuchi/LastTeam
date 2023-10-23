@@ -175,16 +175,6 @@
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\actor\BaseActor.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\actor\ClearSceneActor.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\actor\EditorSceneActor.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\actor\EndRollActor.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\actor\GameMode.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\actor\GameOverSceneActor.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\actor\FirstStageActor.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\actor\LoadSceneActor.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\actor\TitleSceneActor.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\actor\TutorialSceneActor.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterBoss.cpp" />
@@ -205,6 +195,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\BattleScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\Framework.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\GameoverScene.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\scene\GameStateManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\IkeGame.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\LoadScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\MapScene.cpp" />
@@ -214,6 +205,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\TitleScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\TutorialScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\Text.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
   </ItemGroup>
@@ -291,17 +283,7 @@
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\BaseActor.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\ClearSceneActor.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\EditorSceneActor.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\EndRollActor.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\GameMode.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\GameOverSceneActor.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\FirstStageActor.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\LoadSceneActor.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\MapSceneActor.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\TitleSceneActor.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\TutorialSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterBoss.h" />
@@ -322,6 +304,7 @@
     <ClInclude Include="SourceCode\gamesystem\scene\BattleScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\Framework.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\GameoverScene.h" />
+    <ClInclude Include="SourceCode\gamesystem\scene\GameStateManager.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\IkeGame.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\LoadScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\MapScene.h" />
@@ -331,6 +314,7 @@
     <ClInclude Include="SourceCode\gamesystem\scene\TitleScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\TutorialScene.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h" />
+    <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\Text.h" />
     <ClInclude Include="SourceCode\gamesystem\text\TextManager.h" />
   </ItemGroup>

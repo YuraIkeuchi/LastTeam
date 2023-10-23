@@ -1,6 +1,5 @@
 #include "EnemyManager.h"
 #include "NormalEnemy.h"
-#include <GameMode.h>
 #include <StagePanel.h>
 #include <Player.h>
 
@@ -22,20 +21,12 @@ void EnemyManager::Initialize() {
 }
 
 void EnemyManager::BattleUpdate() {
-	//バトルから2秒後にパネルと敵の行動開始
-	if (GameMode::GetInstance()->BattleStart()) {
-		for (unique_ptr<InterEnemy>& enemy : enemys) {
-			enemy->SetState(STATE_ATTACK);
-		}
-	}
 	//すべての敵の行動が終わったr
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		if (enemy->GetState() != STATE_STANDBY) { break; }
 		for (unique_ptr<InterEnemy>& enemy : enemys) {
 			enemy->SetState(STATE_INTER);
-			Player::GetInstance()->AttackTarget(enemy->GetPosition());
 		}
-		GameMode::GetInstance()->SetGameTurn(TURN_ATTACK);
 	}
 
 }
@@ -44,6 +35,15 @@ void EnemyManager::Update() {
 	BattleUpdate();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->Update();
+	}
+
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		if (enemy->GetState() == STATE_ATTACK) {			//一旦攻撃以外は取らない
+			Player::GetInstance()->SetGrazePos(enemy->GetPosition());
+		}
+		else {
+			Player::GetInstance()->SetGrazePos({1000.0f,0.0f,0.0f});
+		}
 	}
 }
 

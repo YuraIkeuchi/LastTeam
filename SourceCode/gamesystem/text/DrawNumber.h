@@ -1,0 +1,49 @@
+#pragma once
+#include "IKESprite.h"
+#include <vector>
+#include <DirectXMath.h>
+#include <array>
+#include <memory>
+using namespace DirectX;
+using namespace std;
+
+/// 数字描画クラス
+class DrawNumber
+{
+protected: // エイリアス
+	// Microsoft::WRL::を省略
+	template <class T>
+	using ComPtr = Microsoft::WRL::ComPtr<T>;
+	// DirectX::を省略
+	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
+	using XMMATRIX = DirectX::XMMATRIX;
+public:
+	DrawNumber();
+	//初期化
+	void Initialize();
+	//更新
+	void Update();
+	//描画
+	void Draw();
+	//数字の指定とか座標とか
+	void SetExplain(const int Number,const XMFLOAT3& pos);
+	//変換の場合カメラデータをもらう
+	void GetCameraData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort);
+private:
+private:
+	static const int NUMBER_MAX = 10;
+private:
+	//Hpの表示(とりあえず三桁)
+	array<unique_ptr<IKESprite>, NUMBER_MAX> _Number;
+	XMFLOAT2 m_NumberPos = { 0.0f,0.0f };
+
+	//カメラデータのため
+	XMMATRIX m_MatView = {};
+	XMMATRIX m_MatProjection = {};
+	XMMATRIX m_MatPort = {};
+
+	//描画する数字
+	int m_Number = {};
+};
