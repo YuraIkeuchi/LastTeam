@@ -1,0 +1,15 @@
+#include "AttackSkill.h"
+
+void AttackSkill::Create(const std::string name, int ID, float latency, float invocatingTime, float restraintTime, int rarity, int popRate, float damege, XMFLOAT2 range, XMFLOAT2 distance)
+{
+	this->name = name;
+	this->ID = ID;
+	this->latency = latency;
+	this->invocatingTime = invocatingTime;
+	this->restraintTime = restraintTime;
+	this->rarity = rarity;
+	this->popRate = popRate;
+	this->damege = damege;
+	this->range = range;
+	this->distance = distance;
+}

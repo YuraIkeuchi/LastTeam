@@ -372,6 +372,9 @@
     <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\SkillBase.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -709,6 +712,9 @@
     <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">

@@ -4,6 +4,8 @@
 #include <StagePanel.h>
 #include <GameMode.h>
 #include <SceneManager.h>
+#include "SkillManager.h"
+
 //初期化
 void BattleScene::Initialize(DirectXCommon* dxCommon)
 {
@@ -30,6 +32,9 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
+
+	//スキル
+	SkillManager::GetInstance()->Initialize();
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
