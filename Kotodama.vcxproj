@@ -212,6 +212,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\TitleScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\TutorialScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\Text.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
   </ItemGroup>
@@ -327,6 +328,7 @@
     <ClInclude Include="SourceCode\gamesystem\scene\TitleScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\TutorialScene.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h" />
+    <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\Text.h" />
     <ClInclude Include="SourceCode\gamesystem\text\TextManager.h" />
   </ItemGroup>

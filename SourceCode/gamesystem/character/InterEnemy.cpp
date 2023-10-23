@@ -26,6 +26,9 @@ void InterEnemy::Update() {
 	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(),m_NowWidth,m_NowHeight);
 	//各行動
 	Action();
+	for (auto i = 0; i < _drawnumber.size(); i++) {
+		_drawnumber[i]->Update();
+	}
 	//数値化したHP
 	HPManage();
 	//UIをワールド座標に変換する
@@ -46,11 +49,11 @@ void InterEnemy::UIDraw() {
 	//HPバー
 	hptex->Draw();
 	//HP(数字)
-	HP_First[m_FirstNumber]->Draw();
+	_drawnumber[FIRST_DIGHT]->Draw();
 	if (m_InterHP >= 10)
-		HP_Second[m_SecondNumber]->Draw();
+		_drawnumber[SECOND_DIGHT]->Draw();
 	if (m_InterHP >= 100)
-		HP_Third[m_ThirdNumber]->Draw();
+		_drawnumber[THIRD_DIGHT]->Draw();
 	IKESprite::PostDraw();
 }
 //当たり判定
@@ -99,49 +102,26 @@ void InterEnemy::WorldDivision() {
 
 	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 
-	//数値化したHP(ひとけた目)
-	XMVECTOR texHPFirst;
-	texHPFirst = { m_Position.x + 0.6f, m_Position.y, m_Position.z - 0.55f };
-	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatView, false);
-	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatProjection, true);
-	texHPFirst = Helper::GetInstance()->WDivision(texHPFirst, false);
-	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatPort, false);
-	//二桁め
-	XMVECTOR texHPSecond;
-	texHPSecond = { m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f };
-	texHPSecond = Helper::GetInstance()->PosDivi(texHPSecond, m_MatView, false);
-	texHPSecond = Helper::GetInstance()->PosDivi(texHPSecond, m_MatProjection, true);
-	texHPSecond = Helper::GetInstance()->WDivision(texHPSecond, false);
-	texHPSecond = Helper::GetInstance()->PosDivi(texHPSecond, m_MatPort, false);
-	//三桁め
-	XMVECTOR texHPThird;
-	texHPThird = { m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.55f };
-	texHPThird = Helper::GetInstance()->PosDivi(texHPThird, m_MatView, false);
-	texHPThird = Helper::GetInstance()->PosDivi(texHPThird, m_MatProjection, true);
-	texHPThird = Helper::GetInstance()->WDivision(texHPThird, false);
-	texHPThird = Helper::GetInstance()->PosDivi(texHPThird, m_MatPort, false);
-
-	m_FirstPos = { texHPFirst.m128_f32[0],texHPFirst.m128_f32[1] };
-	m_SecondPos = { texHPSecond.m128_f32[0],texHPSecond.m128_f32[1] };
-	m_ThirdPos = { texHPThird.m128_f32[0],texHPThird.m128_f32[1] };
+	//描画する数字と座標をここでセットする
+	_drawnumber[FIRST_DIGHT]->SetExplain(m_FirstNumber, { m_Position.x + 0.6f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[SECOND_DIGHT]->SetExplain(m_SecondNumber, { m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[THIRD_DIGHT]->SetExplain(m_ThirdNumber, { m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.55f });
 }
 //カメラデータを取得
 void InterEnemy::GetData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort) {
 	m_MatView = matView;
 	m_MatProjection = matProjection;
 	m_MatPort = matPort;
+
+	for (auto i = 0; i < _drawnumber.size(); i++) {
+		_drawnumber[i]->GetCameraData(m_MatView,m_MatProjection,m_MatPort);
+	}
 }
 //UIのためのHP管理
 void InterEnemy::HPManage() {
 	m_FirstNumber = getDigits(m_InterHP, 0, 0);
 	m_SecondNumber = getDigits(m_InterHP, 1, 1);
 	m_ThirdNumber = getDigits(m_InterHP, 2, 2);
-
-	for (int i = 0; i < HP_First.size(); i++) {
-		HP_First[i]->SetPosition(m_FirstPos);
-		HP_Second[i]->SetPosition(m_SecondPos);
-		HP_Third[i]->SetPosition(m_ThirdPos);
-	}
 }
 //割合を求める
 int InterEnemy::getDigits(int value, int m, int n) {
