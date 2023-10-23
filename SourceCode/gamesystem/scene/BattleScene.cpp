@@ -2,8 +2,9 @@
 #include <Player.h>
 #include <ParticleEmitter.h>
 #include <StagePanel.h>
-#include <GameMode.h>
 #include <SceneManager.h>
+#include <GameStateManager.h>
+#include <SceneChanger.h>
 //初期化
 void BattleScene::Initialize(DirectXCommon* dxCommon)
 {
@@ -24,8 +25,8 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
 
-	//ゲームモード
-	GameMode::GetInstance()->Initialize();
+	//ゲームの状態
+	GameStateManager::GetInstance()->Initialize();
 
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
@@ -43,13 +44,19 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	lightGroup->Update();
 	Player::GetInstance()->Update();
 	StagePanel::GetInstance()->Update();
-	GameMode::GetInstance()->Update();
+	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
+	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
 	enemyManager->GetCameraData(camera->GetViewMatrix(), camera->GetProjectionMatrix(), camera->GetViewPort());
 	//敵を倒したらシーン以降(仮)
 	if (enemyManager->BossDestroy()) {
+		SceneChanger::GetInstance()->SetChangeStart(true);
+	}
+
+	if (SceneChanger::GetInstance()->GetChange()) {
 		SceneManager::GetInstance()->PopScene();
+		SceneChanger::GetInstance()->SetChange(false);
 	}
 }
 
@@ -81,14 +88,16 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 //ポストエフェクトかからない
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
-	Player::GetInstance()->ActUIDraw();
+	GameStateManager::GetInstance()->ActUIDraw();
 	enemyManager->UIDraw();
+	SceneChanger::GetInstance()->Draw();
 }
 //ポストエフェクトかかる
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
 	Player::GetInstance()->Draw(dxCommon);
+	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
 	enemyManager->Draw(dxCommon);
@@ -98,11 +107,8 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	//camerawork->ImGuiDraw();
-	Player::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
-	//GameMode::GetInstance()->ImGuiDraw();
-	enemyManager->ImGuiDraw();
+	GameStateManager::GetInstance()->ImGuiDraw();
+	SceneChanger::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

@@ -3,7 +3,6 @@
 #include "Helper.h"
 #include "Input.h"
 #include "Player.h"
-#include "GameMode.h"
 #include "Collision.h"
 #include "ImageManager.h"
 #include <Easing.h>

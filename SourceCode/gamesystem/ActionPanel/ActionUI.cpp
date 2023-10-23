@@ -1,7 +1,7 @@
 #include "ActionUI.h"
 #include "ImageManager.h"
 #include "Easing.h"
-#include <Player.h>
+#include <GameStateManager.h>
 #include <Helper.h>
 ActionUI::ActionUI() {
 	const int texCount = TEX_MAX;

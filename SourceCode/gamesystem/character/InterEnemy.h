@@ -1,6 +1,7 @@
 #pragma once
 #include "ObjCommon.h"
 #include "AttackArea.h"
+#include "DrawNumber.h"
 #include <memory>
 #include <IKESprite.h>
 #include <array>
@@ -26,19 +27,20 @@ protected:
 protected:
 	XMFLOAT3 randPanelPos();
 protected:
-	static const int NUMBER_MAX = 10;
+	//三桁表示まで
+	static const int NUMBER_MAX = 3;
 
 protected:
+	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
+
+	//桁数
+	enum DightType {
+		FIRST_DIGHT,
+		SECOND_DIGHT,
+		THIRD_DIGHT
+	};
 	//HPの表示
 	unique_ptr<IKESprite> hptex;
-	//Hpの表示(とりあえず三桁)
-	array<unique_ptr<IKESprite>, NUMBER_MAX> HP_First;
-	array<unique_ptr<IKESprite>, NUMBER_MAX> HP_Second;
-	array<unique_ptr<IKESprite>, NUMBER_MAX> HP_Third;
-
-	XMFLOAT2 m_FirstPos = { 1000.0f,50.0f };
-	XMFLOAT2 m_SecondPos = { 1000.0f,50.0f };
-	XMFLOAT2 m_ThirdPos = { 1000.0f,50.0f };
 	
 	int _charaState = STATE_INTER;
 	//クールタイム
@@ -57,9 +59,9 @@ protected:
 		int AttackProb = 50;
 		int SkillProb = 25;
 		int GuardProb = 25;
-
 	};
 
+	//現在のマス番号
 	int m_NowWidth = {};
 	int m_NowHeight = {};
 
