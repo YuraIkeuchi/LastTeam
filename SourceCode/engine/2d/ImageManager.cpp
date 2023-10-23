@@ -9,6 +9,7 @@ ImageManager* ImageManager::GetInstance()
 //スプライトの読み込み
 void ImageManager::StartLoad2D()
 {
+	IKESprite::LoadTexture(FEED, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(SKILLUI, L"Resources/2d/objicon/skill.png");
 	IKESprite::LoadTexture(ACTIONUI, L"Resources/2d/objicon/action.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");

@@ -3,7 +3,7 @@
 #include "VariableCommon.h"
 #include "ParticleEmitter.h"
 #include "Helper.h"
-
+bool BaseScene::s_GameLoop = false;
 BaseScene::BaseScene()
 {
 	game_object_manager_ = std::make_shared<GameObjectManager>();
