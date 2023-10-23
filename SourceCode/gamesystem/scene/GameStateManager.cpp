@@ -66,7 +66,7 @@ void GameStateManager::Update() {
 		}
 	}
 
-
+	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A) && m_AllActCount != 0 && !actui[0]->GetUse()) {
 		UseSkill();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
@@ -107,7 +107,7 @@ void GameStateManager::ActUIDraw() {
 	}
 	IKESprite::PostDraw();
 }
-//行動力を入手
+//スキルを入手(InterActionCPPで使ってます)
 void GameStateManager::AddSkill(const string& Tag) {
 	if (Tag == "Attack") {
 		m_Act.push_back(ACT_ATTACK);
@@ -122,13 +122,13 @@ void GameStateManager::AddSkill(const string& Tag) {
 		assert(0);
 	}
 
+	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
-	BirthActUI(Tag);
+	BirthActUI(Tag);//UIも増えるよ
 }
-
-//行動UIの生成
+//スキルUIの生成
 void GameStateManager::BirthActUI(const string& Tag) {
-	//アクションのセット
+	//アクションUIのセット
 	ActionUI* newactUi = nullptr;
 	newactUi = new ActionUI();
 	newactUi->Initialize();
