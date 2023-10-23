@@ -110,7 +110,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp" />
-    <ClCompile Include="MapSceneActor.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Font.cpp" />
@@ -214,6 +213,7 @@
     <ClInclude Include="SourceCode\engine\2d\DebugText.h" />
     <ClInclude Include="SourceCode\engine\2d\Feed.h" />
     <ClInclude Include="SourceCode\engine\2d\Font.h" />
+    <ClInclude Include="SourceCode\engine\2d\FontManager.h" />
     <ClInclude Include="SourceCode\engine\2d\IKESprite.h" />
     <ClInclude Include="SourceCode\engine\2d\IKETexture.h" />
     <ClInclude Include="SourceCode\engine\2d\ImageManager.h" />
