@@ -36,10 +36,6 @@ bool StagePanel::Initialize() {
 	m_SelectHeight = 0;
 	m_SelectWidth = 0;
 	actions.clear();
-	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
-	skillUI->SetSize(basesize);
-	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
-	gaugeUI->SetSize({ basesize.x,0.f });
 	RandomPanel(3);
 	//CSV“Ç‚Ýž‚Ý
 	return true;
@@ -50,22 +46,6 @@ void StagePanel::Update() {
 	//if (GameMode::GetInstance()->GetGameTurn() == TURN_BATTLE) {
 	BattleUpdate();
 	//}
-	{
-		gaugeCount++;
-		if (gaugeCount == kGaugeCountMax) {
-			for (auto i = 0; i < actions.size(); i++) {
-				actions[i]->SetState(STATE_VANISH);
-			}
-			ResetPanel();
-			//ƒpƒlƒ‹’u‚­”
-			int panel_num = 3;
-			RandomPanel(panel_num);
-			gaugeCount = 0;
-		}
-		float per = (gaugeCount / kGaugeCountMax);
-		float size = Ease(In, Quad, 0.5f, gaugeUI->GetSize().y, basesize.y * per);
-		gaugeUI->SetSize({ basesize.x,size });
-	}
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Update();
@@ -78,10 +58,6 @@ void StagePanel::Update() {
 
 //•`‰æ
 void StagePanel::Draw(DirectXCommon* dxCommon) {
-	IKESprite::PreDraw();
-	skillUI->Draw();
-	gaugeUI->Draw();
-	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
@@ -232,6 +208,12 @@ void StagePanel::ResetPanel() {
 			panels[i][j].isHit = false;
 			panels[i][j].type = NO_PANEL;
 		}
+	}
+}
+
+void StagePanel::ResetAction() {
+	for (auto i = 0; i < actions.size(); i++) {
+		actions[i]->SetState(STATE_VANISH);
 	}
 }
 

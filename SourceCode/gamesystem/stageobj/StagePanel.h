@@ -51,6 +51,7 @@ public:
 
 	void RandomPanel(int num);
 	void ResetPanel();
+	void ResetAction();
 	//色変更
 	void SetEnemyHit(IKEObject3d* obj,int& wight, int& height);
 private:
@@ -72,13 +73,6 @@ private:
 	//スキル
 	vector<unique_ptr<InterAction>> actions;
 
-
-	unique_ptr<IKESprite> skillUI = nullptr;
-	unique_ptr<IKESprite> gaugeUI = nullptr;
-
-	XMFLOAT2 basesize = {45.f,400.f};
-	float kGaugeCountMax = 180;
-	float gaugeCount = 0;
 
 	//マスの位置
 	int m_SelectHeight = 0;
