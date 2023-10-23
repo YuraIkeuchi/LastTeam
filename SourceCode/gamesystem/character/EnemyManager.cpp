@@ -26,7 +26,6 @@ void EnemyManager::BattleUpdate() {
 		if (enemy->GetState() != STATE_STANDBY) { break; }
 		for (unique_ptr<InterEnemy>& enemy : enemys) {
 			enemy->SetState(STATE_INTER);
-			Player::GetInstance()->AttackTarget(enemy->GetPosition());
 		}
 	}
 

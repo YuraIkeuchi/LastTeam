@@ -47,20 +47,14 @@ void Player::InitState(const XMFLOAT3& pos) {
 	//イージング
 	m_Frame = {};
 	m_CoolTime = {};
-	m_AllActCount = {};
 	m_NowHeight = {};
 	m_NowWidth = {};
 
-	//要素の全削除は一旦ここで
-	actui.clear();
-	m_Act.clear();
-	attackarea.clear();
 }
 //状態遷移
 /*CharaStateのState並び順に合わせる*/
 void (Player::* Player::stateTable[])() = {
 	&Player::Move,//移動
-	&Player::SpecialAct,//特別な行動
 };
 //更新処理
 void Player::Update()
@@ -70,25 +64,7 @@ void Player::Update()
 	//状態移行(charastateに合わせる)
 	(this->*stateTable[_charaState])();
 	Obj_SetParam();
-	for (auto i = 0; i < actui.size(); i++) {
-		if (actui[i] == nullptr)continue;
-		actui[i]->SetActCount(i);
-		actui[i]->Update();
-
-		if (!actui[i]->GetAlive()) {
-			actui.erase(cbegin(actui) + i);
-		}
-	}
-
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->Update();
-
-		if (!attackarea[i]->GetAlive()) {
-			attackarea.erase(cbegin(attackarea) + i);
-		}
-	}
-
+	
 	BirthParticle();
 
 	//グレイズ用にスコアを計算する
@@ -98,38 +74,19 @@ void Player::Update()
 	Helper::GetInstance()->Clamp(m_GrazeScore, 0.0f, l_GrazeMax);
 	//プレイヤーの位置からスコアを加算する
 	GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
+	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 }
 //描画
 void Player::Draw(DirectXCommon* dxCommon)
 {
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->Draw(dxCommon);
-	}
+
 	Obj_Draw();
-}
-void Player::ActUIDraw() {
-	IKESprite::PreDraw();
-	for (auto i = 0; i < actui.size(); i++) {
-		if (actui[i] == nullptr)continue;
-		actui[i]->Draw();
-	}
-	IKESprite::PostDraw();
 }
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("Length:%f", m_Length);
 	ImGui::Text("GrazeScore:%f", m_GrazeScore);
-	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
-		_SkillType = SKILL_NORMAL;
-	}
-	if (ImGui::Button("STRONGSKILL", ImVec2(50, 50))) {
-		_SkillType = SKILL_STRONG;
-	}
-	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
-		_SkillType = SKILL_SPECIAL;
-	}
 	ImGui::End();
 }
 //移動
@@ -226,138 +183,7 @@ void Player::Move() {
 		m_InputTimer[DIR_LEFT] = {};
 	}
 
-	if (input->TriggerButton(input->A) && m_AllActCount != 0 && !actui[0]->GetUse()) {
-		m_ReturnPos = m_Position;
-		_charaState = STATE_ACTION;
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
-	}
 }
-void Player::SpecialAct() {
-	//0番目の要素から行動を決める
-	if (m_AllActCount != 0) {
-		if (m_Act[0] == ACT_ATTACK) {
-			Attack();
-		}
-		else if (m_Act[0] == ACT_GUARD) {
-			Guard();
-		}
-		else if (m_Act[0] == ACT_SKILL) {
-			Attack();
-		}
-	}
-}
-//攻撃
-void Player::Attack() {
-	m_CoolTime = {};
-	BirthArea();
-	FinishAct();
-}
-//防御
-void Player::Guard() {
-	//m_AttackTimer++;
-	//if (m_AttackTimer == 5) {
-	//	FinishAct();
-	//}
-}
-//スキル
-void Player::SkillAct() {
-	//m_AttackTimer++;
-	//if (m_AttackTimer == 5) {
-	//	FinishAct();
-	//}
-}
-//行動力を入手
-void Player::AddAct(const string& Tag) {
-	if (Tag == "Attack") {
-		m_Act.push_back(ACT_ATTACK);
-	}
-	else if (Tag == "Guard") {
-		m_Act.push_back(ACT_GUARD);
-	}
-	else if (Tag == "Skill") {
-		m_Act.push_back(ACT_SKILL);
-	}
-	else {
-		assert(0);
-	}
 
-	m_AllActCount++;
-	BirthActUI(Tag);
-}
-//攻撃先指定
-void Player::AttackTarget(const XMFLOAT3& pos) {
-	m_TargetPos = pos;
-}
-//行動UIの生成
-void Player::BirthActUI(const string& Tag) {
-	//アクションのセット
-	ActionUI* newactUi = nullptr;
-	newactUi = new ActionUI();
-	newactUi->Initialize();
-	newactUi->InitState(m_AllActCount,Tag);
-	actui.emplace_back(newactUi);
-
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);
-}
 void Player::BirthParticle() {
-	if (m_AllActCount != 0) {
-		if (m_Act[0] == ACT_ATTACK) {
-			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 1.0f,0.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
-		}	else if (m_Act[0] == ACT_GUARD) {
-			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 0.0f,0.0f,1.0f,1.0f }, { 0.0f,0.0f,1.0f,1.0f });
-		}
-		else if (m_Act[0] == ACT_SKILL) {
-			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 0.0f,1.0f,0.0f,1.0f }, { 0.0f,1.0f,0.0f,1.0f });
-		}
-	}
-}
-//行動の終了
-void Player::FinishAct() {
-	m_Act.erase(m_Act.begin());
-	m_AllActCount--;
-	actui[0]->SetUse(true);
-	_charaState = STATE_MOVE;
-}
-//攻撃エリアの描画(無理やり処理)
-void Player::BirthArea() {
-	int l_BirthNumX = {};//パネルのマックス数
-
-	int l_BirthCountX = {};
-	int l_BirthCountZ = {};
-	
-	if (_SkillType == SKILL_NORMAL) {		//普通に一個右
-		l_BirthCountX = m_NowWidth + 1;
-		AttackArea* newarea = nullptr;
-		newarea = new AttackArea();
-		newarea->Initialize();
-		newarea->InitState(l_BirthCountX, m_NowHeight);
-		attackarea.push_back(newarea);
-	}
-	else if (_SkillType == SKILL_STRONG) {		//プレイヤーの一から右一列全部
-		l_BirthNumX = PANEL_WIDTH - (m_NowWidth + 1);
-		for (int i = 0; i < l_BirthNumX; i++) {
-			l_BirthCountX = (m_NowWidth + 1) + i;
-			AttackArea* newarea = nullptr;
-			newarea = new AttackArea();
-			newarea->Initialize();
-			newarea->InitState(l_BirthCountX, m_NowHeight);
-			attackarea.push_back(newarea);
-		}
-	}
-	else {				//プレイヤーから3 * 2のマス
-		for (int j = 0; j < 3; j++) {
-			l_BirthCountZ = (m_NowHeight - 1) + j;
-			if (l_BirthCountZ < 0 || l_BirthCountZ > 3) {
-				continue;
-			}
-			for (int i = 0; i < 2; i++) {
-				l_BirthCountX = (m_NowWidth + 1) + i;
-				AttackArea* newarea = nullptr;
-				newarea = new AttackArea();
-				newarea->Initialize();
-				newarea->InitState(l_BirthCountX, l_BirthCountZ);
-				attackarea.push_back(newarea);
-			}
-		}
-	}
 }

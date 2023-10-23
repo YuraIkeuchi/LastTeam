@@ -88,7 +88,7 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 //ポストエフェクトかからない
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
-	Player::GetInstance()->ActUIDraw();
+	GameStateManager::GetInstance()->ActUIDraw();
 	enemyManager->UIDraw();
 	SceneChanger::GetInstance()->Draw();
 }
@@ -97,6 +97,7 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
 	Player::GetInstance()->Draw(dxCommon);
+	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
 	enemyManager->Draw(dxCommon);

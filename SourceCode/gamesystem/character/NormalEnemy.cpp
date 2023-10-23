@@ -6,6 +6,7 @@
 #include "Helper.h"
 #include "Easing.h"
 #include "ImageManager.h"
+#include <GameStateManager.h>
 //ƒ‚ƒfƒ‹“Ç‚İ‚İ
 NormalEnemy::NormalEnemy() {
 	m_Object.reset(new IKEObject3d());
@@ -43,9 +44,8 @@ void NormalEnemy::Action() {
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//“–‚½‚è”»’è
-	vector<AttackArea*> _AttackArea = Player::GetInstance()->GetAttackArea();
+	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);
-	Player::GetInstance()->AttackTarget(m_Position);
 }
 //•`‰æ
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
