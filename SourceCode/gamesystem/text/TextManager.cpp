@@ -13,18 +13,18 @@ TextManager* TextManager::GetInstance()
 
 void TextManager::Create(DirectXCommon* dxcomon)
 {
-	conversation_.FirstFont = new Font();
-	conversation_.SecondFont = new Font();
-	conversation_.ThirdFont = new Font();
+	conversation_.FirstFont = make_unique<Font>();
+	conversation_.SecondFont = make_unique<Font>();
+	conversation_.ThirdFont = make_unique<Font>();
 	conversation_.FirstFont->LoadFont(dxcomon);
 	conversation_.SecondFont->LoadFont(dxcomon);
 	conversation_.ThirdFont->LoadFont(dxcomon);
 	conversation_.FirstFont->SetColor(color_);
 	conversation_.SecondFont->SetColor(color_);
 	conversation_.ThirdFont->SetColor(color_);
-	old_conversation_.FirstFont = new Font();
-	old_conversation_.SecondFont = new Font();
-	old_conversation_.ThirdFont = new Font();
+	old_conversation_.FirstFont = make_unique<Font>();
+	old_conversation_.SecondFont= make_unique<Font>();
+	old_conversation_.ThirdFont = make_unique<Font>();
 	old_conversation_.FirstFont->LoadFont(dxcomon);
 	old_conversation_.SecondFont->LoadFont(dxcomon);
 	old_conversation_.ThirdFont->LoadFont(dxcomon);
@@ -189,7 +189,7 @@ void TextManager::NoneText()
 //	return temp;*/
 //}
 
-void TextManager::CreateCon(Conversation con, Word word)
+void TextManager::CreateCon(Conversation& con, Word word)
 {
 	con.FirstFont->SetString(word.FirstWord);
 	con.SecondFont->SetString(word.SecondWord);

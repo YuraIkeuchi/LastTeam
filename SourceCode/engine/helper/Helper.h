@@ -62,7 +62,8 @@ public:
 public:
 	//割合を返す
 	float GetPercent(const float amount, const float num);
-
+	//数字の桁数を返す
+	int GetDigit(int n);
 	//座標系が明確な場合->そのまま計算->W除算
 	XMVECTOR WDivision(const XMVECTOR& pos, const bool sub);
 	//2D->3D変換に使う(スプライトの座標をプレイヤーのワールド座標に表示したりするのに使う)

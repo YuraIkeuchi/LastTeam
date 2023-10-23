@@ -336,15 +336,6 @@
     <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\scene\GameStateManager.cpp">
-      <Filter>gamesystem\scene\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\scene\TitleScene.cpp">
-      <Filter>gamesystem\scene\Title</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp">
-      <Filter>gamesystem\Text</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -648,15 +639,6 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
       <Filter>gamesystem\charactor\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scene\GameStateManager.h">
-      <Filter>gamesystem\scene\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scene\TitleScene.h">
-      <Filter>gamesystem\scene\Title</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h">
-      <Filter>gamesystem\Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
