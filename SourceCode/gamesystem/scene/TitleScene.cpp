@@ -18,17 +18,36 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	text_ = make_unique<TitleText>();
 	text_->Initialize(dxCommon);
 	text_->SelectText(TextManager::FIRST);
+	if (!s_GameLoop) {
+		SceneChanger::GetInstance()->Initialize();
+		s_GameLoop = true;
+	}
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
 	camerawork->Update(camera);
 	Input* input = Input::GetInstance();
-	if ((input->TriggerButton(input->B))) {
-		SceneManager::GetInstance()->ChangeScene<BattleScene>();
+	if ((input->TriggerButton(input->B))) {			//バトル
+		SceneChanger::GetInstance()->SetChangeStart(true);
+		_SceneType = PLAY;
+	
 	}
-	if (input->TriggerKey(DIK_SPACE)) {
-		SceneManager::GetInstance()->ChangeScene<MapScene>();
+	if (input->TriggerKey(DIK_SPACE)) {			//マップ
+		SceneChanger::GetInstance()->SetChangeStart(true);
+		_SceneType = MAP;
 	}
+
+	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
+		if (_SceneType == PLAY) {
+			SceneManager::GetInstance()->ChangeScene<BattleScene>();
+		}
+		else {
+			SceneManager::GetInstance()->ChangeScene<MapScene>();
+		}
+		SceneChanger::GetInstance()->SetChange(false);
+	}
+
+	SceneChanger::GetInstance()->Update();
 }
 //描画
 void TitleScene::Draw(DirectXCommon* dxCommon) {
@@ -60,6 +79,10 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	text_->SpriteDraw(dxCommon);
 	IKESprite::PostDraw();
+	IKESprite::PreDraw();
+	SceneChanger::GetInstance()->Draw();
+	IKESprite::PostDraw();
+
 }
 //背面描画
 void TitleScene::BackDraw(DirectXCommon* dxCommon) {
@@ -69,6 +92,7 @@ void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	ImGui::Begin("TITLE");
 	ImGui::Text("Title");
 	ImGui::End();
+	SceneChanger::GetInstance()->ImGuiDraw();
 }
 //解放
 void TitleScene::Finalize() {

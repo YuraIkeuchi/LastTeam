@@ -4,6 +4,7 @@
 #include "StagePanel.h"
 #include <Easing.h>
 #include "Helper.h"
+#include <GameStateManager.h>
 
 void (InterAction::* InterAction::stateTable[])() = {
 	&InterAction::Spawn,//動きの合間
@@ -32,7 +33,7 @@ void InterAction::Collide()
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, m_Radius, Player::GetInstance()->GetPosition().x, Player::GetInstance()->GetPosition().z, m_Radius) &&
 		(m_Alive)){
 		//プレイヤーの行動数を増やしパネルを戻す
-		Player::GetInstance()->AddAct(m_Tag);
+		GameStateManager::GetInstance()->AddSkill(m_Tag);
 		StagePanel::GetInstance()->DeletePanel();
 		m_Alive = false;
 	}

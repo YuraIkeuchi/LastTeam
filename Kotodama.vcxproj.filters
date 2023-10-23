@@ -192,30 +192,6 @@
     <ClCompile Include="SourceCode\engine\shake\Shake.cpp">
       <Filter>engine\shake</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\actor\BaseActor.cpp">
-      <Filter>gamesystem\actor\base</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\actor\ClearSceneActor.cpp">
-      <Filter>gamesystem\actor\Clear</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\actor\EditorSceneActor.cpp">
-      <Filter>gamesystem\actor\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\actor\FirstStageActor.cpp">
-      <Filter>gamesystem\actor\First</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\actor\GameOverSceneActor.cpp">
-      <Filter>gamesystem\actor\GameOver</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\actor\LoadSceneActor.cpp">
-      <Filter>gamesystem\actor\Load</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\actor\TitleSceneActor.cpp">
-      <Filter>gamesystem\actor\Title</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\actor\TutorialSceneActor.cpp">
-      <Filter>gamesystem\actor\Tutorial</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Base</Filter>
     </ClCompile>
@@ -264,9 +240,6 @@
     <ClCompile Include="SourceCode\gamesystem\scene\SceneChanger.cpp">
       <Filter>gamesystem\scene\Base</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\scene\TitleScene.cpp">
-      <Filter>gamesystem\scene\Base</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp">
       <Filter>engine\2d\Text</Filter>
     </ClCompile>
@@ -300,9 +273,6 @@
     <ClCompile Include="SourceCode\engine\audio\AudioManager.cpp">
       <Filter>engine\audio</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\actor\EndRollActor.cpp">
-      <Filter>gamesystem\actor\EndRoll</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\EndRollScene.cpp">
       <Filter>gamesystem\scene\EndRoll</Filter>
     </ClCompile>
@@ -317,9 +287,6 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp">
       <Filter>gamesystem\stageobj</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\actor\GameMode.cpp">
-      <Filter>gamesystem\actor\GameMode</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp">
       <Filter>gamesystem\Action\ActionPanel</Filter>
@@ -336,9 +303,12 @@
     <ClCompile Include="SourceCode\gamesystem\scene\MapScene.cpp">
       <Filter>gamesystem\scene\mapScene</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="SourceCode\gamesystem\scene\MapSceneActor.cpp">
       <Filter>gamesystem\actor\mapScene</Filter>
     </ClCompile>
+=======
+>>>>>>> main
     <ClCompile Include="SourceCode\engine\BehaviorTree\ActionNode.cpp">
       <Filter>engine\BehaviorTree</Filter>
     </ClCompile>
@@ -372,7 +342,17 @@
     <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="SourceCode\engine\2d\FontManager.cpp">
+=======
+    <ClCompile Include="SourceCode\gamesystem\scene\GameStateManager.cpp">
+      <Filter>gamesystem\scene\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\scene\TitleScene.cpp">
+      <Filter>gamesystem\scene\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp">
+>>>>>>> main
       <Filter>gamesystem\Text</Filter>
     </ClCompile>
   </ItemGroup>
@@ -527,27 +507,6 @@
     <ClInclude Include="SourceCode\engine\shake\Shake.h">
       <Filter>engine\shake</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\BaseActor.h">
-      <Filter>gamesystem\actor\base</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\ClearSceneActor.h">
-      <Filter>gamesystem\actor\Clear</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\EditorSceneActor.h">
-      <Filter>gamesystem\actor\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\FirstStageActor.h">
-      <Filter>gamesystem\actor\First</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\LoadSceneActor.h">
-      <Filter>gamesystem\actor\Load</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\TitleSceneActor.h">
-      <Filter>gamesystem\actor\Title</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\TutorialSceneActor.h">
-      <Filter>gamesystem\actor\Tutorial</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Base</Filter>
     </ClInclude>
@@ -593,9 +552,6 @@
     <ClInclude Include="SourceCode\gamesystem\scene\SceneChanger.h">
       <Filter>gamesystem\scene\Base</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scene\TitleScene.h">
-      <Filter>gamesystem\scene\Base</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\engine\2d\DebugText.h">
       <Filter>engine\2d\Text</Filter>
     </ClInclude>
@@ -637,9 +593,6 @@
     <ClInclude Include="SourceCode\gamesystem\scene\GameoverScene.h">
       <Filter>gamesystem\scene\GameOver</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\EndRollActor.h">
-      <Filter>gamesystem\actor\EndRoll</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\EndRollScene.h">
       <Filter>gamesystem\scene\EndRoll</Filter>
     </ClInclude>
@@ -651,9 +604,6 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\NormalEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\GameMode.h">
-      <Filter>gamesystem\actor\GameMode</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h">
       <Filter>gamesystem\stageobj</Filter>
@@ -672,9 +622,6 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\MapScene.h">
       <Filter>gamesystem\scene\mapScene</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\MapSceneActor.h">
-      <Filter>gamesystem\actor\mapScene</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\BehaviorTree\ActionNode.h">
       <Filter>engine\BehaviorTree</Filter>
@@ -712,7 +659,17 @@
     <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="SourceCode\engine\2d\FontManager.h">
+=======
+    <ClInclude Include="SourceCode\gamesystem\scene\GameStateManager.h">
+      <Filter>gamesystem\scene\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\scene\TitleScene.h">
+      <Filter>gamesystem\scene\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h">
+>>>>>>> main
       <Filter>gamesystem\Text</Filter>
     </ClInclude>
   </ItemGroup>
@@ -809,30 +766,6 @@
     <Filter Include="gamesystem\particle">
       <UniqueIdentifier>{48e0eb1e-cc91-487d-b504-f2487da18d23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\actor">
-      <UniqueIdentifier>{edde5480-c975-4eca-948f-fe2653c0f8ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\actor\Title">
-      <UniqueIdentifier>{5af2863b-3ba7-43d0-8af6-c80a4857c26d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\actor\First">
-      <UniqueIdentifier>{fa61032d-4f4a-4a3c-9c38-04f689f943d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\actor\Clear">
-      <UniqueIdentifier>{efe2e365-d30a-4505-b5d5-528fde6317a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\actor\GameOver">
-      <UniqueIdentifier>{4344d989-a893-4320-acf7-b0d498cdda98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\actor\Load">
-      <UniqueIdentifier>{b8e087c7-283d-4afa-8824-90271ef9c155}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\actor\base">
-      <UniqueIdentifier>{225f0f43-5504-4e78-8266-422bf3fed8d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\actor\Editor">
-      <UniqueIdentifier>{85768e82-404b-4006-8830-94be69724e06}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gamesystem\charactor">
       <UniqueIdentifier>{a5258f31-e579-4fec-90bb-f219e9bc837e}</UniqueIdentifier>
     </Filter>
@@ -847,9 +780,6 @@
     </Filter>
     <Filter Include="gamesystem\charactor\Player">
       <UniqueIdentifier>{67cc1ef3-c531-4952-b181-9f7044af6c4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\actor\Tutorial">
-      <UniqueIdentifier>{4654ff1e-0f15-48f3-b61d-9335e76f4bcc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{5157e7cf-15cd-4c09-bd21-31621f90b40b}</UniqueIdentifier>
@@ -880,9 +810,6 @@
     </Filter>
     <Filter Include="gamesystem\charactor\Boss\Base">
       <UniqueIdentifier>{cddcc7b5-f579-4ffb-bf7a-fc05ad2ee680}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\actor\EndRoll">
-      <UniqueIdentifier>{5b69fce5-8103-43e3-9b8f-575410ec7418}</UniqueIdentifier>
     </Filter>
     <Filter Include="gamesystem\scene">
       <UniqueIdentifier>{88dffa51-41c6-421c-ae0e-d8f4ba011bb3}</UniqueIdentifier>
@@ -926,9 +853,6 @@
     <Filter Include="gamesystem\stageobj">
       <UniqueIdentifier>{948cd9b5-f644-402e-8823-d5105c7a0886}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\actor\GameMode">
-      <UniqueIdentifier>{f909b9e8-9d87-4545-9e77-b64e13a9982f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gamesystem\Action">
       <UniqueIdentifier>{07c1802c-029d-43cc-8a38-5a0d58c8e0f6}</UniqueIdentifier>
     </Filter>
@@ -937,9 +861,6 @@
     </Filter>
     <Filter Include="gamesystem\Action\ActionUI">
       <UniqueIdentifier>{76f14ccb-8a04-4823-91ff-fceb3ab6f837}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\actor\mapScene">
-      <UniqueIdentifier>{b0e3bb02-22cb-4239-89d0-e8233ddb1940}</UniqueIdentifier>
     </Filter>
     <Filter Include="gamesystem\scene\mapScene">
       <UniqueIdentifier>{77f0cdcf-6c68-4f05-80b6-3919d533d6a6}</UniqueIdentifier>
@@ -955,6 +876,9 @@
     </Filter>
     <Filter Include="gamesystem\scene\GameObjectManager">
       <UniqueIdentifier>{3686100c-2ca3-4974-adcf-d0a058369ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\scene\Title">
+      <UniqueIdentifier>{cc4aceb2-09d8-4bbe-871e-290767de9806}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
