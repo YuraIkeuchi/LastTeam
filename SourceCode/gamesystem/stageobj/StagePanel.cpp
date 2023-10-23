@@ -112,20 +112,12 @@ void StagePanel::BattleUpdate() {
 	//プレイヤーが居るマスが黄色くなる
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			if (!panels[i][j].isHit) {
 				if (panels[i][j].type == NO_PANEL) {
-					if (!panels[i][j].isEnemyHit) {
-						panels[i][j].color = { 1.0f,1.0f,1.0f,1.0f };
-					}
-					else {
-						panels[i][j].color = { 0.5f,0.0f,0.0f,1.0f };
-					}
-				} else {
+					panels[i][j].color = ChangeColor(i, j);
+				}
+				else {
 					panels[i][j].color = { 0.5f,0.5f,0.5f,1.0f };
 				}
-			} else {
-				panels[i][j].color = { 0.8f,0.8f,0.0f,1.0f };
-			}
 			panels[i][j].object->Update();
 			panels[i][j].object->SetPosition(panels[i][j].position);
 			panels[i][j].object->SetColor(panels[i][j].color);
@@ -234,7 +226,7 @@ void StagePanel::ResetPanel() {
 		}
 	}
 }
-
+//敵のをパネルの当たり判定
 void StagePanel::SetEnemyHit(IKEObject3d* obj,int& wight, int& height) {
 	m_OBB1.SetParam_Pos(obj->GetPosition());
 	m_OBB1.SetParam_Rot(obj->GetMatrot());
@@ -254,4 +246,26 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj,int& wight, int& height) {
 			}
 		}
 	}
+}
+//パネルの色を決める
+XMFLOAT4 StagePanel::ChangeColor(const int Weight, const int Height) {
+	XMFLOAT4 color;
+	if (Weight % 2 == 0) {
+		if (Height % 2 == 0) {
+			color = { 1.0f,0.9f,0.7f,1.0f };
+		}
+		else {
+			color = { 0.5f,0.3f,0.1f,1.0f };
+		}
+	}
+	else {
+		if (Height % 2 != 0) {
+			color = { 1.0f,0.9f,0.7f,1.0f };
+		}
+		else {
+			color = { 0.5f,0.3f,0.1f,1.0f };
+		}
+	}
+
+	return color;
 }
