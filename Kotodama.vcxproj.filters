@@ -279,9 +279,6 @@
     <ClCompile Include="SourceCode\gamesystem\MessageWindow\MessageWindow.cpp">
       <Filter>gamesystem\Text</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\scenetext\TitleText.cpp">
-      <Filter>gamesystem\scenetext\Title</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\NormalEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
@@ -345,6 +342,9 @@
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp">
       <Filter>gamesystem\Text</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\SkillBase.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -589,9 +589,6 @@
     <ClInclude Include="SourceCode\gamesystem\MessageWindow\MessageWindow.h">
       <Filter>gamesystem\Text</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scenetext\TitleText.h">
-      <Filter>gamesystem\scenetext\Title</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\NormalEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
@@ -658,6 +655,10 @@
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h">
       <Filter>gamesystem\Text</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h" />
+    <ClInclude Include="SourceCode\engine\2d\FontManager.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
@@ -829,9 +830,6 @@
     </Filter>
     <Filter Include="gamesystem\scenetext">
       <UniqueIdentifier>{9eaf1084-af68-4c0b-ae15-27a98f530e85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\scenetext\Title">
-      <UniqueIdentifier>{459fc31c-7be8-4acf-96da-257822af3bfd}</UniqueIdentifier>
     </Filter>
     <Filter Include="gamesystem\charactor\Enemy\Other">
       <UniqueIdentifier>{1ffa4f48-0455-458c-b71a-9647e9a620dc}</UniqueIdentifier>

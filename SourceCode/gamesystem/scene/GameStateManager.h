@@ -41,7 +41,8 @@ private:
 	void UseSkill();
 	//行動の終了
 	void FinishAct();
-
+	//
+	void GaugeUpdate();
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -64,6 +65,11 @@ private:
 
 	//行動のUI
 	vector<unique_ptr<ActionUI>> actui;
+
+	unique_ptr<IKESprite> skillUI = nullptr;
+	unique_ptr<IKESprite> gaugeUI = nullptr;
+
+	XMFLOAT2 basesize = { 45.f,400.f };
 
 	//攻撃エリア
 	vector<AttackArea*> attackarea;
@@ -92,5 +98,9 @@ private:
 		SKILL_STRONG,
 		SKILL_SPECIAL
 	}_SkillType = SKILL_NORMAL;
+	//ゲージ
+	float m_GaugeCount = 0;
+	//ゲージマックス
+	float kGaugeCountMax = 180;
 
 };

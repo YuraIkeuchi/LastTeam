@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseScene.h"
-#include "TitleText.h"
+#include "TextManager.h"
 /// タイトルシーン
 class TitleScene : public BaseScene {
 public:
