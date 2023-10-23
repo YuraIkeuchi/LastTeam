@@ -46,12 +46,16 @@ public:
 	const bool GetChangeStart() { return m_ChangeStart; }
 	void SetChange(const bool Change) { m_Change = Change; }
 	void SetChangeStart(const bool ChangeStart) { m_ChangeStart = ChangeStart; }
+
+private:
+	static const int HEIGHT_NUM = 9;
+	static const int WIDTH_NUM = 16;
 private:
 	//シーンチェンジのタイプ
 	enum ChangeType {
 		CHANGE_FEED,
 		CHANGE_WIDE,
-	}_ChangeType = CHANGE_FEED;
+	}_ChangeType = CHANGE_WIDE;
 
 	//普通のフェード用
 	unique_ptr<IKESprite> change;
@@ -67,10 +71,10 @@ private:
 	//広がるよう
 	const float width = WinApp::window_width;
 	const float height = WinApp::window_height;
-	vector<std::unique_ptr<IKESprite>> change2;
 	const int base_size = 80;
-	const int width_num = (int)width / base_size;
-	const int height_num = (int)height / base_size;
+
+	unique_ptr<IKESprite> change2[WIDTH_NUM][HEIGHT_NUM];
+	XMFLOAT4 m_Color2[WIDTH_NUM][HEIGHT_NUM];
 	
 	XMFLOAT2 m_WideSize = {};
 	float m_AfterSize = {};

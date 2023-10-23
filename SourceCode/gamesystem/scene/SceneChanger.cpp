@@ -20,17 +20,12 @@ void SceneChanger::Initialize() {
 	_ChangeState = CHANGE_START;
 	m_AfterAlpha = 1.0f;
 
-	for (auto i = 0; i < width_num; i++) {
-		for (auto j = 0; j < height_num; j++) {
-			std::unique_ptr<IKESprite> newSprite;
-			newSprite = IKESprite::Create(ImageManager::FEED, { 0,0 });
-			newSprite->SetAnchorPoint({ 0.5f,0.5f });
-			newSprite->SetPosition({ (float)(i * base_size) + base_size / 2,(float)(j * base_size) + base_size / 2 });
-			newSprite->SetSize({ 0,0 });
-			DirectX::XMFLOAT4 col = { 0.f,0.f,0.f,1 };
-			newSprite->SetColor(col);
-
-			change2.push_back(std::move(newSprite));
+	for (auto i = 0; i < WIDTH_NUM; i++) {
+		for (auto j = 0; j < HEIGHT_NUM; j++) {
+			change2[i][j] = IKESprite::Create(ImageManager::FEED, { 0,0 });
+			change2[i][j]->SetAnchorPoint({ 0.5f,0.5f });
+			change2[i][j]->SetPosition({ (float)(i * base_size) + base_size / 2,(float)(j * base_size) + base_size / 2 });
+			change2[i][j]->SetSize({ 0,0 });
 		}
 	}
 
@@ -42,9 +37,11 @@ void SceneChanger::Update() {
 	(this->*stateTable[_ChangeType])();
 	change->SetColor(m_Color);
 
-	for (std::unique_ptr<IKESprite>& sprite : change2) {
-		sprite->SetSize(m_WideSize);
-		sprite->SetColor(m_Color);
+	for (auto i = 0; i < WIDTH_NUM; i++) {
+		for (auto j = 0; j < HEIGHT_NUM; j++) {
+			change2[i][j]->SetSize(m_WideSize);
+			change2[i][j]->SetColor(m_Color2[i][j]);
+		}
 	}
 }
 void SceneChanger::InitializeOver() {
@@ -54,8 +51,10 @@ void SceneChanger::Draw() {
 		change->Draw();
 	}
 	else {
-		for (std::unique_ptr<IKESprite>& sprite : change2) {
-			sprite->Draw();
+		for (auto i = 0; i < WIDTH_NUM; i++) {
+			for (auto j = 0; j < HEIGHT_NUM; j++) {
+				change2[i][j]->Draw();
+			}
 		}
 	}
 }
@@ -127,4 +126,25 @@ void SceneChanger::WideChange() {
 
 	m_WideSize = { Ease(In, Cubic, m_Frame, m_WideSize.x, m_AfterSize),
 			Ease(In, Cubic, m_Frame, m_WideSize.y, m_AfterSize)};
+
+	for (auto i = 0; i < WIDTH_NUM; i++) {
+		for (auto j = 0; j < HEIGHT_NUM; j++) {
+			if (i % 2 == 0) {
+				if (j % 2 == 0) {
+					m_Color2[i][j] = { 0.8f,0.8f,0.8f,1.0f };
+				}
+				else {
+					m_Color2[i][j] = { 0.3f,0.3f,0.3f,1.0f };
+				}
+			}
+			else {
+				if (j % 2 != 0) {
+					m_Color2[i][j] = { 0.8f,0.8f,0.8f,1.0f };
+				}
+				else {
+					m_Color2[i][j] = { 0.3f,0.3f,0.3f,1.0f };
+				}
+			}
+		}
+	}
 }
