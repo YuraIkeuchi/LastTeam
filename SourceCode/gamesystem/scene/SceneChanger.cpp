@@ -124,8 +124,8 @@ void SceneChanger::WideChange() {
 		}
 	}
 
-	m_WideSize = { Ease(In, Cubic, m_Frame, m_WideSize.x, m_AfterSize),
-			Ease(In, Cubic, m_Frame, m_WideSize.y, m_AfterSize)};
+	m_WideSize = { Ease(In, Quad, m_Frame, m_WideSize.x, m_AfterSize),
+			Ease(In, Quad, m_Frame, m_WideSize.y, m_AfterSize)};
 
 	for (auto i = 0; i < WIDTH_NUM; i++) {
 		for (auto j = 0; j < HEIGHT_NUM; j++) {

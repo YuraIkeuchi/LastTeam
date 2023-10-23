@@ -4,7 +4,6 @@
 #include "LightGroup.h"
 #include "DirectXCommon.h"
 #include "PostEffect.h"
-#include "BaseActor.h"
 #include "GameObject/GameObjectManager.h"
 #include "ParticleManager.h"
 #include "CameraWork.h"

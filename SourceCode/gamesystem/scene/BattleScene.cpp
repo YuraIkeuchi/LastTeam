@@ -2,7 +2,6 @@
 #include <Player.h>
 #include <ParticleEmitter.h>
 #include <StagePanel.h>
-#include <GameMode.h>
 #include <SceneManager.h>
 #include <GameStateManager.h>
 #include <SceneChanger.h>
@@ -26,9 +25,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
 
-	//ƒQ[ƒ€ƒ‚[ƒh
-	GameMode::GetInstance()->Initialize();
-
 	//ƒQ[ƒ€‚Ìó‘Ô
 	GameStateManager::GetInstance()->Initialize();
 
@@ -48,7 +44,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	lightGroup->Update();
 	Player::GetInstance()->Update();
 	StagePanel::GetInstance()->Update();
-	GameMode::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
@@ -111,11 +106,6 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	//camerawork->ImGuiDraw();
-	Player::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
-	//GameMode::GetInstance()->ImGuiDraw();
-	enemyManager->ImGuiDraw();
 	GameStateManager::GetInstance()->ImGuiDraw();
 	SceneChanger::GetInstance()->ImGuiDraw();
 }

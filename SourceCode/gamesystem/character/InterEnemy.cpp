@@ -62,7 +62,7 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 	//if (Player::GetInstance()->GetCharaState() != STATE_ATTACK) { return; }
 	for (AttackArea* _area : area) {
 		if (Collision::SphereCollision(_area->GetPosition(), m_Radius, m_Position, m_Radius) &&
-			!_area->GetHit()) {
+			!_area->GetHit() && (m_HP > 0.0f)) {
 			float damage = 5.0f;
 			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
 				GameStateManager::GetInstance()->SetCounter(true);
