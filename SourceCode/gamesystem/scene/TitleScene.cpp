@@ -15,9 +15,9 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
 
-	text_ = make_unique<TitleText>();
+	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
-	text_->SelectText(TextManager::FIRST);
+	text_->SetConversation(TextManager::FIRST);
 	if (!s_GameLoop) {
 		SceneChanger::GetInstance()->Initialize();
 		s_GameLoop = true;
@@ -77,7 +77,7 @@ void TitleScene::Draw(DirectXCommon* dxCommon) {
 void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	//完全に前に書くスプライト
 	IKESprite::PreDraw();
-	text_->SpriteDraw(dxCommon);
+	text_->TestDraw(dxCommon);
 	IKESprite::PostDraw();
 	IKESprite::PreDraw();
 	SceneChanger::GetInstance()->Draw();

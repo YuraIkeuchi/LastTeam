@@ -19,7 +19,7 @@ private:
 	void FrontDraw(DirectXCommon* dxCommon);
 
 private:
-	unique_ptr<TitleText> text_;
+	unique_ptr<TextManager> text_;
 	enum SceneType {
 		PLAY,
 		MAP
