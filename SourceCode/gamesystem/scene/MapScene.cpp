@@ -106,7 +106,6 @@ MapScene::UI MapScene::RandPannel() {
 void MapScene::MapCreate() {
 	string csv_ = "Resources/csv/map.csv";
 	int r_num = Helper::GetInstance()->GetRanNum(0, 3);
-	r_num = 3;
 	
 	//map‚Ì‚ ‚Æ‚É”š‚ğ‚­‚Á‚Â‚¯‚é
 	std::stringstream ss;
