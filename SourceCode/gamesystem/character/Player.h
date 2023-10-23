@@ -1,9 +1,10 @@
 ﻿#pragma once
 #include "ObjCommon.h"
-#include <any>
-#include <list>
+#include <IKESprite.h>
+#include <memory>
 #include <Input.h>
 #include <array>
+#include "DrawNumber.h"
 using namespace DirectX;
 
 class Player :public ObjCommon
@@ -22,7 +23,8 @@ public:
 	void Update()override;
 	//描画
 	void Draw(DirectXCommon* dxCommon)override;
-
+	//UI用
+	void UIDraw();
 	//ImGui
 	void ImGuiDraw();
 
@@ -32,7 +34,8 @@ private:
 
 	//パーティクル
 	void BirthParticle();
-
+	//HPの割合を求める
+	float HpPercent();
 private:
 	void LoadCSV();
 
@@ -44,6 +47,8 @@ public:
 
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 private:
+	//三桁表示まで
+	static const int NUMBER_MAX = 3;
 
 	static const int DIR_MAX = 4;
 public:
@@ -93,4 +98,22 @@ private:
 	float m_Length = {};
 	float m_GrazeScore = {};
 	XMFLOAT3 m_GrazePos = {};
+
+	//HPの表示
+	unique_ptr<IKESprite> hptex;
+	float m_HP = {};
+	float m_MaxHP = {};
+	//数値化したHP表示のための変数
+	array<int, NUMBER_MAX> m_DigitNumber;
+	int m_InterHP = {};//整数にしたHP
+
+	XMFLOAT2 m_HPPos = { 100.0f,580.0f };
+	XMFLOAT2 m_HPSize = { 400.0f,40.0f };
+	//桁数
+	enum DightType {
+		FIRST_DIGHT,
+		SECOND_DIGHT,
+		THIRD_DIGHT
+	};
+	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
 };

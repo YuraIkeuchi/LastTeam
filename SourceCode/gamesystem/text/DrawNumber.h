@@ -28,16 +28,19 @@ public:
 	//描画
 	void Draw();
 	//数字の指定とか座標とか
-	void SetExplain(const int Number,const XMFLOAT3& pos);
+	void SetExplain(const XMFLOAT3& pos);
 	//変換の場合カメラデータをもらう
 	void GetCameraData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort);
+public:
+	void SetPosition(const XMFLOAT2& Position) { m_Position = Position; }
+	void SetNumber(const int Number) { m_Number = Number; }
 private:
 private:
 	static const int NUMBER_MAX = 10;
 private:
 	//Hpの表示(とりあえず三桁)
 	array<unique_ptr<IKESprite>, NUMBER_MAX> _Number;
-	XMFLOAT2 m_NumberPos = { 0.0f,0.0f };
+	XMFLOAT2 m_Position = { 0.0f,0.0f };
 
 	//カメラデータのため
 	XMMATRIX m_MatView = {};
