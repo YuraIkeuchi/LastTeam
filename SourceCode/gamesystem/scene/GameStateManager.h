@@ -5,6 +5,7 @@
 #include <memory>
 #include "ActionUI.h"
 #include "AttackArea.h"
+#include "SkillBase.h"
 using namespace DirectX;
 using namespace std;
 //行動の種類
@@ -43,6 +44,7 @@ private:
 	void FinishAct();
 	//
 	void GaugeUpdate();
+	void AddSkillID(vector<SkillBase*>bullet);
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -75,6 +77,8 @@ private:
 	vector<AttackArea*> attackarea;
 	//行動先
 	vector<int> m_Act;
+	//手に入れたID
+	vector<int> ID;
 
 	//カウンター
 	bool m_Counter = false;

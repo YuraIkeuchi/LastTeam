@@ -25,6 +25,11 @@ public:
 	/// <param name="popRate">出現ランク</param>
 	void Create(const std::string name, int ID, float latency = 0.0f, float invocatingTime = 0.0f, float restraintTime = 0.0f, int rarity = 1, int popRate = 1);
 
+	virtual void ImGui_Origin() = 0;
+	void ImGuiDraw();
+public:
+	//getter setter
+	const int GetID() { return ID; }
 protected:
 	//スキル名
 	std::string name = "NoName";

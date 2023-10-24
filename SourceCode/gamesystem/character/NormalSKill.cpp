@@ -1,6 +1,6 @@
-#include "AttackSkill.h"
+#include "NormalSkill.h"
 #include "imgui.h"
-void AttackSkill::Create(const std::string name, int ID, float latency, float invocatingTime, float restraintTime, int rarity, int popRate, float damege, XMFLOAT2 range, XMFLOAT2 distance)
+void NormalSkill::Create(const std::string name, int ID, float latency, float invocatingTime, float restraintTime, int rarity, int popRate, float damege, XMFLOAT2 range, XMFLOAT2 distance)
 {
 	this->name = name;
 	this->ID = ID;
@@ -14,8 +14,8 @@ void AttackSkill::Create(const std::string name, int ID, float latency, float in
 	this->distance = distance;
 }
 
-void AttackSkill::ImGui_Origin() {
-	ImGui::Begin("Attack");
+void NormalSkill::ImGui_Origin() {
+	ImGui::Begin("Normal");
 	ImGui::Text("ID:%d", ID);
 	ImGui::End();
 }
