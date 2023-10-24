@@ -1,5 +1,5 @@
 #include "SkillBase.h"
-
+#include "imgui.h"
 void SkillBase::Create(const std::string name, int ID, float latency, float invocatingTime, float restraintTime, int rarity, int popRate)
 {
 	this->name = name;
@@ -9,4 +9,8 @@ void SkillBase::Create(const std::string name, int ID, float latency, float invo
 	this->restraintTime = restraintTime;
 	this->rarity = rarity;
 	this->popRate = popRate; 
+}
+
+void SkillBase::ImGuiDraw() {
+	ImGui_Origin();
 }

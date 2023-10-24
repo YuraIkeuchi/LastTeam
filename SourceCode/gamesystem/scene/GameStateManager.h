@@ -30,13 +30,13 @@ public:
 	//プレイヤーの現在位置
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
-	void AddSkill(const string& Tag);
+	void AddSkill(const int ID);
 private:
 	
 	//攻撃エリアの生成
 	void BirthArea();
 	//行動UIの生成
-	void BirthActUI(const string& Tag);
+	void BirthActUI(const int ID);
 	//スキルの使用
 	void UseSkill();
 	//行動の終了
@@ -57,6 +57,12 @@ public:
 private:
 	static const int ACT_PATTERN = 3;
 private:
+
+	struct ActState {
+		int ActID;
+	};
+
+	vector<ActState> m_Act;
 	//各行動回数
 	int m_ActCount[ACT_PATTERN] = {};
 
@@ -73,8 +79,6 @@ private:
 
 	//攻撃エリア
 	vector<AttackArea*> attackarea;
-	//行動先
-	vector<int> m_Act;
 
 	//カウンター
 	bool m_Counter = false;

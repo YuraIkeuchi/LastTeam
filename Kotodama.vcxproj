@@ -180,6 +180,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\NormalEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\Passive.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\NormalSKill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\Player.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\SkillBase.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp" />
@@ -289,6 +290,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\NormalEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\Passive.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\NormalSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\character\Player.h" />
     <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h" />
     <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h" />

@@ -2,6 +2,7 @@
 #include "IKESprite.h"
 #include <memory>
 #include <array>
+#include "DrawNumber.h"
 using namespace std;         //  名前空間指定
 
 class ActionUI {
@@ -19,7 +20,7 @@ public:
 	//初期化
 	void Initialize();
 	//ステータスセット
-	void InitState(const int ActCount, const string& Tag);
+	void InitState(const int ActCount);
 	//更新
 	void Update();
 	//UIの動き
@@ -34,11 +35,12 @@ public:
 	const bool GetUse() { return m_Use; }
 	void SetActCount(const int ActCount) { m_ActCount = ActCount; }
 	void SetUse(const bool Use) { m_Use = Use; }
+	void SetID(const int ID) { m_ID = ID; }
 
 private:
 	static const int TEX_MAX = 3;
 private:
-	array<unique_ptr<IKESprite>,TEX_MAX> tex;
+	unique_ptr<IKESprite> tex;
 
 	XMFLOAT2 m_Position = {};
 	XMFLOAT4 m_Color = { 1.0f,1.0f,1.0f,1.0f };
@@ -48,4 +50,7 @@ private:
 	bool m_Use = false;
 	float m_Frame = {};
 	bool m_Alive = true;
+
+	int m_ID = {};
+	unique_ptr<DrawNumber> _drawnumber;
 };
