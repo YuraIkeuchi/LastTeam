@@ -214,7 +214,7 @@
       <Filter>gamesystem\scene\Clear</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\BattleScene.cpp">
-      <Filter>gamesystem\scene\Play\First</Filter>
+      <Filter>gamesystem\scene\Play\Battle</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\LoadScene.cpp">
       <Filter>gamesystem\scene\Load</Filter>
@@ -519,7 +519,7 @@
       <Filter>gamesystem\scene\Clear</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\BattleScene.h">
-      <Filter>gamesystem\scene\Play\First</Filter>
+      <Filter>gamesystem\scene\Play\Battle</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\LoadScene.h">
       <Filter>gamesystem\scene\Load</Filter>
@@ -819,9 +819,6 @@
     <Filter Include="gamesystem\scene\Play">
       <UniqueIdentifier>{888ff33b-a6a2-41a2-8358-dcc9d4477e5f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\scene\Play\First">
-      <UniqueIdentifier>{a4f89e05-04e6-49a8-918a-b14a5ea09be7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gamesystem\scene\GameOver">
       <UniqueIdentifier>{8340f8aa-fee7-47d7-9c77-10fd67ad1f22}</UniqueIdentifier>
     </Filter>
@@ -863,6 +860,9 @@
     </Filter>
     <Filter Include="gamesystem\scene\Title">
       <UniqueIdentifier>{cc4aceb2-09d8-4bbe-871e-290767de9806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\scene\Play\Battle">
+      <UniqueIdentifier>{a4f89e05-04e6-49a8-918a-b14a5ea09be7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

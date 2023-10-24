@@ -96,6 +96,7 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	GameStateManager::GetInstance()->ActUIDraw();
 	enemyManager->UIDraw();
 	SceneChanger::GetInstance()->Draw();
+	Player::GetInstance()->UIDraw();
 }
 //ポストエフェクトかかる
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
@@ -114,6 +115,7 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
 	SceneChanger::GetInstance()->ImGuiDraw();
+	Player::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

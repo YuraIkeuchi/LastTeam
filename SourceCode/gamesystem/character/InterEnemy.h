@@ -73,9 +73,7 @@ protected:
 	XMMATRIX m_MatPort = {};
 
 	//”’l‰»‚µ‚½HP•\¦‚Ì‚½‚ß‚Ì•Ï”
-	int m_FirstNumber = 0;//ˆêŒ…–Ú
-	int m_SecondNumber = 0;//“ñŒ…‚ß
-	int m_ThirdNumber = 0;//OŒ…‚ß
+	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//®”‚É‚µ‚½HP
 public://getter setter
 	void SetState(int state) { _charaState = state; }
@@ -119,8 +117,6 @@ private:
 	void WorldDivision();
 	//UI‚Ì‚½‚ß‚ÌHP‚ÌŠÇ—
 	void HPManage();
-	//Š„‡‚ğ•Ô‚·
-	int getDigits(int value, int m, int n);
 protected:
 	void Collide(vector<AttackArea*>area);
 };

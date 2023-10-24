@@ -25,12 +25,12 @@ DrawNumber::DrawNumber() {
 //初期化
 void DrawNumber::Initialize() {
 	m_Number = {};
-	m_NumberPos = {};
+	m_Position = {};
 }
 //更新
 void DrawNumber::Update() {
 	for (int i = 0; i < _Number.size(); i++) {
-		_Number[i]->SetPosition(m_NumberPos);
+		_Number[i]->SetPosition(m_Position);
 	}
 }
 //描画
@@ -38,7 +38,7 @@ void DrawNumber::Draw() {
 	_Number[m_Number]->Draw();
 }
 //数字とか座標の設定
-void DrawNumber::SetExplain(const int Number,const XMFLOAT3& pos) {
+void DrawNumber::SetExplain(const XMFLOAT3& pos) {
 	//ワールド座標に変換する
 	XMVECTOR texHPFirst;
 	texHPFirst = { pos.x, pos.y, pos.z };
@@ -47,9 +47,7 @@ void DrawNumber::SetExplain(const int Number,const XMFLOAT3& pos) {
 	texHPFirst = Helper::GetInstance()->WDivision(texHPFirst, false);
 	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatPort, false);
 
-	m_NumberPos = { texHPFirst.m128_f32[0],texHPFirst.m128_f32[1] };
-	//描画する数字を指定
-	m_Number = Number;
+	m_Position = { texHPFirst.m128_f32[0],texHPFirst.m128_f32[1] };
 }
 //カメラ情報
 void DrawNumber::GetCameraData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort) {

@@ -2,10 +2,10 @@
 #include "CsvLoader.h"
 #include <Helper.h>
 #include "Input.h"
-#include "ParticleEmitter.h"
 #include "Audio.h"
 #include <GameStateManager.h>
 #include <StagePanel.h>
+#include <ImageManager.h>
 Player* Player::GetInstance()
 {
 	static Player instance;
@@ -20,18 +20,30 @@ void Player::LoadResource() {
 	m_Object->SetScale({ 2.f,2.f,2.f });
 	m_Object->SetPosition({ 0.0f,2.0f,0.0f });
 	m_Object->VertexCheck();
+
+	//HPII
+	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	for (auto i = 0; i < _drawnumber.size(); i++) {
+		_drawnumber[i] = make_unique<DrawNumber>();
+		_drawnumber[i]->Initialize();
+	}
+	_drawnumber[FIRST_DIGHT]->SetPosition({ 160.0f,600.0f });
+	_drawnumber[SECOND_DIGHT]->SetPosition({ 140.0f,600.0f });
+	_drawnumber[THIRD_DIGHT]->SetPosition({ 120.0f,600.0f });
 }
 //初期化
 bool Player::Initialize()
 {
 
 	LoadCSV();
+	m_MaxHP = m_HP;
 	//CSV読み込み
 	return true;
 }
 //CSV読み込み
 void Player::LoadCSV() {
 	m_AddSpeed = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "speed")));
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "HP")));
 }
 //ステータスの初期化
 void Player::InitState(const XMFLOAT3& pos) {
@@ -49,6 +61,11 @@ void Player::InitState(const XMFLOAT3& pos) {
 	m_CoolTime = {};
 	m_NowHeight = {};
 	m_NowWidth = {};
+	//数値化したHP表示のための変数
+	for (auto i = 0; i < _drawnumber.size(); i++) {
+		m_DigitNumber[i] = {};
+	}
+	m_InterHP = {};//整数にしたHP
 
 }
 //状態遷移
@@ -75,6 +92,16 @@ void Player::Update()
 	//プレイヤーの位置からスコアを加算する
 	GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
 	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
+
+	//表示用のHP
+	m_InterHP = (int)(m_HP);
+	for (auto i = 0; i < _drawnumber.size(); i++) {
+		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
+		_drawnumber[i]->Update();
+		m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+	}
+	hptex->SetPosition(m_HPPos);
+	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
 //描画
 void Player::Draw(DirectXCommon* dxCommon)
@@ -82,11 +109,24 @@ void Player::Draw(DirectXCommon* dxCommon)
 
 	Obj_Draw();
 }
+//UIの描画
+void Player::UIDraw() {
+	IKESprite::PreDraw();
+	//HPバー
+	hptex->Draw();
+	_drawnumber[FIRST_DIGHT]->Draw();
+	if (m_InterHP >= 10)
+		_drawnumber[SECOND_DIGHT]->Draw();
+	if (m_InterHP >= 100)
+		_drawnumber[THIRD_DIGHT]->Draw();
+	IKESprite::PostDraw();
+}
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("Length:%f", m_Length);
 	ImGui::Text("GrazeScore:%f", m_GrazeScore);
+	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
 	ImGui::End();
 }
 //移動
@@ -186,4 +226,10 @@ void Player::Move() {
 }
 
 void Player::BirthParticle() {
+}
+//HPの割合
+float Player::HpPercent() {
+	float temp = m_HP / m_MaxHP;
+	Helper::GetInstance()->Clamp(temp, 0.0f, 1.0f);
+	return temp;
 }

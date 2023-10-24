@@ -86,6 +86,8 @@ public:
 	bool All_Of(bool* flag, int size);
 	bool All_OfF(bool* flag, int size);
 	bool All_Of_float(float *list,int size,float standVal);
+	//Š„‡‚ğ•Ô‚·
+	int getDigits(int value, int m, int n);
 private:
 
 	//ƒJƒƒ‰

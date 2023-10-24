@@ -12,7 +12,7 @@ StagePanel* StagePanel::GetInstance() {
 
 	return &instance;
 }
-//ƒŠƒ\[ƒX“Ç‚İ‚İ
+//ãƒªã‚½ãƒ¼ã‚¹èª­ã¿è¾¼ã¿
 void StagePanel::LoadResource() {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
@@ -23,7 +23,7 @@ void StagePanel::LoadResource() {
 		}
 	}
 }
-//‰Šú‰»
+//åˆæœŸåŒ–
 bool StagePanel::Initialize() {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
@@ -37,11 +37,11 @@ bool StagePanel::Initialize() {
 	m_SelectWidth = 0;
 	actions.clear();
 	RandomPanel(3);
-	//CSV“Ç‚İ‚İ
+	//CSVèª­ã¿è¾¼ã¿
 	return true;
 }
 
-//XVˆ—
+//æ›´æ–°å‡¦ç†
 void StagePanel::Update() {
 	//if (GameMode::GetInstance()->GetGameTurn() == TURN_BATTLE) {
 	BattleUpdate();
@@ -56,7 +56,7 @@ void StagePanel::Update() {
 	}
 }
 
-//•`‰æ
+//æç”»
 void StagePanel::Draw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	for (int i = 0; i < PANEL_WIDTH; i++) {
@@ -75,33 +75,25 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 void StagePanel::ImGuiDraw() {
 }
 
-//ƒXƒLƒ‹ƒZƒbƒg‚ÌXV(ƒoƒgƒ‹‘O)
+//ã‚¹ã‚­ãƒ«ã‚»ãƒƒãƒˆã®æ›´æ–°(ãƒãƒˆãƒ«å‰)
 void StagePanel::SetUpdate() {
 }
 
-//ƒoƒgƒ‹‚ÌXV
+//ãƒãƒˆãƒ«ã®æ›´æ–°
 void StagePanel::BattleUpdate() {
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		RandomPanel(3);
 	}
 
-	//ƒvƒŒƒCƒ„[‚ª‹‚éƒ}ƒX‚ª‰©F‚­‚È‚é
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå±…ã‚‹ãƒã‚¹ãŒé»„è‰²ããªã‚‹
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			if (!panels[i][j].isHit) {
 				if (panels[i][j].type == NO_PANEL) {
-					if (!panels[i][j].isEnemyHit) {
-						panels[i][j].color = { 1.0f,1.0f,1.0f,1.0f };
-					}
-					else {
-						panels[i][j].color = { 0.5f,0.0f,0.0f,1.0f };
-					}
-				} else {
+					panels[i][j].color = ChangeColor(i, j);
+				}
+				else {
 					panels[i][j].color = { 0.5f,0.5f,0.5f,1.0f };
 				}
-			} else {
-				panels[i][j].color = { 0.8f,0.8f,0.0f,1.0f };
-			}
 			panels[i][j].object->Update();
 			panels[i][j].object->SetPosition(panels[i][j].position);
 			panels[i][j].object->SetColor(panels[i][j].color);
@@ -110,7 +102,7 @@ void StagePanel::BattleUpdate() {
 
 	Collide();
 }
-//ƒpƒlƒ‹‚Ìœ‹
+//ãƒ‘ãƒãƒ«ã®é™¤å»
 void StagePanel::DeletePanel() {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
@@ -163,11 +155,11 @@ void StagePanel::RandomPanel(int num) {
 
 	for (int i = 0; i < num; i++) {
 		bool isSet = false;
-		//—”‚Ìİ’è
+		//ä¹±æ•°ã®è¨­å®š
 		int width = Helper::GetInstance()->GetRanNum(0, 3);
 		int height = Helper::GetInstance()->GetRanNum(0, 3);
 
-		//ƒpƒlƒ‹’TõiŠJ‚¢‚Ä‚é‚Ì‚ª3’Ç‰Á‚Ìê‡‘‚¢‚Ä‚È‚¢j
+		//ãƒ‘ãƒãƒ«æ¢ç´¢ï¼ˆé–‹ã„ã¦ã‚‹ã®ãŒ3è¿½åŠ ã®å ´åˆæ›¸ã„ã¦ãªã„ï¼‰
 
 		while (!isSet) {
 			if (panels[width][height].type != NO_PANEL ||
@@ -178,11 +170,11 @@ void StagePanel::RandomPanel(int num) {
 				isSet = true;
 			}
 		}
-		//‚±‚ê‚Í•Ï‚¦‚È‚­‚Ä‚¢‚¢
+		//ã“ã‚Œã¯å¤‰ãˆãªãã¦ã„ã„
 		int r_type = Helper::GetInstance()->GetRanNum(1, 3);
 
 		panels[width][height].type = SKILL_PANEL;
-		//ƒAƒNƒVƒ‡ƒ“‚ÌƒZƒbƒg
+		//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®ã‚»ãƒƒãƒˆ
 		InterAction* newAction = nullptr;
 		switch (panels[width][height].type) {
 		case SKILL_PANEL:
@@ -216,7 +208,7 @@ void StagePanel::ResetAction() {
 		actions[i]->SetState(STATE_VANISH);
 	}
 }
-
+//æ•µã®ã‚’ãƒ‘ãƒãƒ«ã®å½“ãŸã‚Šåˆ¤å®š
 void StagePanel::SetEnemyHit(IKEObject3d* obj,int& wight, int& height) {
 	m_OBB1.SetParam_Pos(obj->GetPosition());
 	m_OBB1.SetParam_Rot(obj->GetMatrot());
@@ -236,4 +228,26 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj,int& wight, int& height) {
 			}
 		}
 	}
+}
+//ãƒ‘ãƒãƒ«ã®è‰²ã‚’æ±ºã‚ã‚‹
+XMFLOAT4 StagePanel::ChangeColor(const int Weight, const int Height) {
+	XMFLOAT4 color;
+	if (Weight % 2 == 0) {
+		if (Height % 2 == 0) {
+			color = { 1.0f,0.9f,0.7f,1.0f };
+		}
+		else {
+			color = { 0.5f,0.3f,0.1f,1.0f };
+		}
+	}
+	else {
+		if (Height % 2 != 0) {
+			color = { 1.0f,0.9f,0.7f,1.0f };
+		}
+		else {
+			color = { 0.5f,0.3f,0.1f,1.0f };
+		}
+	}
+
+	return color;
 }
