@@ -5,6 +5,7 @@
 #include <array>
 
 using namespace std;         //  名前空間指定
+using namespace DirectX;
 //シーンチェンジクラス
 class SceneChanger {
 private:
@@ -39,6 +40,7 @@ private:
 
 	void FeedChange();
 	void WideChange();
+	XMFLOAT4 ChangeColor(const int Weight, const int Height);
 private:
 	static const int DOOR_NUM = 2;
 public:

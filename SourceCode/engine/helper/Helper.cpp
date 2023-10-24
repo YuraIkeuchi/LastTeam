@@ -322,3 +322,16 @@ bool Helper::All_Of_float(float* list, int size, float standVal)
 void Helper::SinMove(XMFLOAT3& pos, const float angle, const float angle2) {
 
 }
+//割合を求める
+int Helper::getDigits(int value, int m, int n) {
+	int mod_value;
+	int result;
+
+	/* n桁目以下の桁を取得 */
+	mod_value = value % (int)pow(10, n + 1);
+
+	/* m桁目以上の桁を取得 */
+	result = mod_value / (int)pow(10, m);
+
+	return result;
+}

@@ -129,22 +129,29 @@ void SceneChanger::WideChange() {
 
 	for (auto i = 0; i < WIDTH_NUM; i++) {
 		for (auto j = 0; j < HEIGHT_NUM; j++) {
-			if (i % 2 == 0) {
-				if (j % 2 == 0) {
-					m_Color2[i][j] = { 0.8f,0.8f,0.8f,1.0f };
-				}
-				else {
-					m_Color2[i][j] = { 0.3f,0.3f,0.3f,1.0f };
-				}
-			}
-			else {
-				if (j % 2 != 0) {
-					m_Color2[i][j] = { 0.8f,0.8f,0.8f,1.0f };
-				}
-				else {
-					m_Color2[i][j] = { 0.3f,0.3f,0.3f,1.0f };
-				}
-			}
+			m_Color2[i][j] = ChangeColor(i, j);
 		}
 	}
+}
+//ƒpƒlƒ‹‚ÌF‚ðŒˆ‚ß‚é
+XMFLOAT4 SceneChanger::ChangeColor(const int Weight, const int Height) {
+	XMFLOAT4 color;
+	if (Weight % 2 == 0) {
+		if (Height % 2 == 0) {
+			color = { 0.8f,0.8f,0.8f,1.0f };
+		}
+		else {
+			color = { 0.3f,0.3f,0.3f,1.0f };
+		}
+	}
+	else {
+		if (Height % 2 != 0) {
+			color = { 0.8f,0.8f,0.8f,1.0f };
+		}
+		else {
+			color = { 0.3f,0.3f,0.3f,1.0f };
+		}
+	}
+
+	return color;
 }

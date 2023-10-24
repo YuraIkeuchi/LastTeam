@@ -103,9 +103,12 @@ void InterEnemy::WorldDivision() {
 	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 
 	//描画する数字と座標をここでセットする
-	_drawnumber[FIRST_DIGHT]->SetExplain(m_FirstNumber, { m_Position.x + 0.6f, m_Position.y, m_Position.z - 0.55f });
-	_drawnumber[SECOND_DIGHT]->SetExplain(m_SecondNumber, { m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f });
-	_drawnumber[THIRD_DIGHT]->SetExplain(m_ThirdNumber, { m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.6f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.55f });
+	for (auto i = 0; i < _drawnumber.size(); i++) {
+		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
+	}
 }
 //カメラデータを取得
 void InterEnemy::GetData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort) {
@@ -119,20 +122,7 @@ void InterEnemy::GetData(const XMMATRIX& matView, const XMMATRIX& matProjection,
 }
 //UIのためのHP管理
 void InterEnemy::HPManage() {
-	m_FirstNumber = getDigits(m_InterHP, 0, 0);
-	m_SecondNumber = getDigits(m_InterHP, 1, 1);
-	m_ThirdNumber = getDigits(m_InterHP, 2, 2);
-}
-//割合を求める
-int InterEnemy::getDigits(int value, int m, int n) {
-	int mod_value;
-	int result;
-
-	/* n桁目以下の桁を取得 */
-	mod_value = value % (int)pow(10, n + 1);
-
-	/* m桁目以上の桁を取得 */
-	result = mod_value / (int)pow(10, m);
-
-	return result;
+	for (auto i = 0; i < _drawnumber.size(); i++) {
+		m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+	}
 }

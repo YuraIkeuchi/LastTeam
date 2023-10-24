@@ -60,6 +60,7 @@ private:
 	//スキルセットの更新
 	void SetUpdate();
 	void Collide();
+	XMFLOAT4 ChangeColor(const int Weight, const int Height);
 
 public:
 	//gettersetter
