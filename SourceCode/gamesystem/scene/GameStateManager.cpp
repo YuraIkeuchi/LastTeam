@@ -133,15 +133,16 @@ void GameStateManager::AddSkill(const int ID) {
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
-	BirthActUI();//UIも増えるよ
+	BirthActUI(ID);//UIも増えるよ
 }
 //スキルUIの生成
-void GameStateManager::BirthActUI() {
+void GameStateManager::BirthActUI(const int ID) {
 	//アクションUIのセット
 	ActionUI* newactUi = nullptr;
 	newactUi = new ActionUI();
 	newactUi->Initialize();
 	newactUi->InitState(m_AllActCount);
+	newactUi->SetID(ID);
 	actui.emplace_back(newactUi);
 
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);

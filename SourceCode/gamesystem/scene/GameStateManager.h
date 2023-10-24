@@ -36,7 +36,7 @@ private:
 	//攻撃エリアの生成
 	void BirthArea();
 	//行動UIの生成
-	void BirthActUI();
+	void BirthActUI(const int ID);
 	//スキルの使用
 	void UseSkill();
 	//行動の終了

@@ -4,21 +4,14 @@
 #include <GameStateManager.h>
 #include <Helper.h>
 ActionUI::ActionUI() {
-	const int texCount = TEX_MAX;
-	const float l_Width_Cut = 64.0f;
-	const float l_Height_Cut = 64.0f;
-	for (int i = 0; i < tex.size(); i++) {
-		//ひとけた目
-		tex[i] = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
-		int tex_index_y = i / texCount;
-		int tex_index_x = i % texCount;
-		tex[i]->SetTextureRect(
-			{ static_cast<float>(tex_index_x) * l_Width_Cut, static_cast<float>(tex_index_y) * l_Height_Cut },
-			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
-		tex[i]->SetAnchorPoint({ 0.5f,0.5f });
-		tex[i]->SetPosition({ -100.0f,800.0f });
-		tex[i]->SetSize({ l_Width_Cut,l_Height_Cut });
-	}
+	//カード
+	tex = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
+	tex->SetAnchorPoint({ 0.5f,0.5f });
+	tex->SetPosition({ -100.0f,800.0f });
+
+	//ID用のスプライト
+	_drawnumber = make_unique<DrawNumber>();
+	_drawnumber->Initialize();
 }
 //初期化
 void ActionUI::Initialize() {
@@ -36,13 +29,18 @@ void ActionUI::InitState(const int ActCount) {
 void ActionUI::Update() {
 	UiMove();
 	
-	tex[m_ActType]->SetColor(m_Color);
-	tex[m_ActType]->SetPosition(m_Position);
+	tex->SetColor(m_Color);
+	tex->SetPosition(m_Position);
+
+	_drawnumber->SetPosition(m_Position);
+	_drawnumber->SetNumber(m_ID);
+	_drawnumber->Update();
 }
 //描画
 void ActionUI::Draw() {
 	IKESprite::PreDraw();
-	tex[m_ActType]->Draw();
+	tex->Draw();
+	_drawnumber->Draw();
 	IKESprite::PostDraw();
 }
 //ImGui
