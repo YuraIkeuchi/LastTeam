@@ -339,9 +339,18 @@
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp">
       <Filter>gamesystem\Text</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\SkillBase.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp">
+      <Filter>gamesystem\charactor\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\NormalSKill.cpp">
+      <Filter>gamesystem\charactor\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\SkillBase.cpp">
+      <Filter>gamesystem\charactor\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp">
+      <Filter>gamesystem\charactor\Skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -649,10 +658,19 @@
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h">
       <Filter>gamesystem\Text</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h" />
     <ClInclude Include="SourceCode\engine\2d\FontManager.h" />
-    <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h" />
-    <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h">
+      <Filter>gamesystem\charactor\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\NormalSkill.h">
+      <Filter>gamesystem\charactor\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h">
+      <Filter>gamesystem\charactor\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h">
+      <Filter>gamesystem\charactor\Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
@@ -819,9 +837,6 @@
     <Filter Include="gamesystem\scene\EndRoll">
       <UniqueIdentifier>{cc3076ca-66ef-4952-b4dc-38fbeb169a69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\scenetext">
-      <UniqueIdentifier>{9eaf1084-af68-4c0b-ae15-27a98f530e85}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gamesystem\charactor\Enemy\Other">
       <UniqueIdentifier>{1ffa4f48-0455-458c-b71a-9647e9a620dc}</UniqueIdentifier>
     </Filter>
@@ -857,6 +872,9 @@
     </Filter>
     <Filter Include="gamesystem\scene\Play\Battle">
       <UniqueIdentifier>{a4f89e05-04e6-49a8-918a-b14a5ea09be7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\charactor\Skill">
+      <UniqueIdentifier>{2741b4c5-3bc1-4177-8c47-ce7180f5c787}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

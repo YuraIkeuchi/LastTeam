@@ -1,6 +1,6 @@
 #pragma once
 #include "SkillBase.h"
-class AttackSkill : public SkillBase
+class NormalSkill : public SkillBase
 {
 public:
 	/// <summary>

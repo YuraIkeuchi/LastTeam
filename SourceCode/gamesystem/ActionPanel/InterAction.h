@@ -43,8 +43,10 @@ protected:
 	virtual void ImGui_Origin() = 0;//ボスそれぞれのImGui
 public:
 	//gettersetter
-	bool GetAlive() { return m_Alive; }
-	void SetState(int state) { _state= state; }
+	const bool GetAlive() { return m_Alive; }
+	const int GetSkillID() { return m_SkillID; }
+	void SetState(const int state) { _state= state; }
+	void SetSkillID(const int SkillID) { m_SkillID = SkillID; }
 
 protected:
 	string m_Tag;
@@ -59,7 +61,7 @@ protected:
 	//関数ポインタ
 	static void(InterAction::* stateTable[])();
 	int _state = STATE_SPAWN;
-
+	int m_SkillID = {};
 private:
 	void Spawn();//待機
 	void Alive();

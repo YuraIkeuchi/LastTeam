@@ -22,7 +22,8 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	Player::GetInstance()->LoadResource();
 	Player::GetInstance()->InitState({ -8.0f,1.0f,0.0f });
 	Player::GetInstance()->Initialize();
-
+	//スキル
+	SkillManager::GetInstance()->Initialize();
 	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
@@ -33,9 +34,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
-
-	//スキル
-	SkillManager::GetInstance()->Initialize();
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
@@ -114,8 +112,8 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
-	SceneChanger::GetInstance()->ImGuiDraw();
-	Player::GetInstance()->ImGuiDraw();
+	//SceneChanger::GetInstance()->ImGuiDraw();
+	//Player::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {
