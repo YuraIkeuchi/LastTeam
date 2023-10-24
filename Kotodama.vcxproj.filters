@@ -342,6 +342,9 @@
     <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\SkillBase.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\Passive.cpp">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -653,6 +656,9 @@
     <ClInclude Include="SourceCode\engine\2d\FontManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h" />
     <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\Passive.h">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
