@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseScene.h"
-#include "TitleText.h"
+#include "TextManager.h"
 /// タイトルシーン
 class TitleScene : public BaseScene {
 public:
@@ -19,7 +19,7 @@ private:
 	void FrontDraw(DirectXCommon* dxCommon);
 
 private:
-	unique_ptr<TitleText> text_;
+	unique_ptr<TextManager> text_;
 	enum SceneType {
 		PLAY,
 		MAP

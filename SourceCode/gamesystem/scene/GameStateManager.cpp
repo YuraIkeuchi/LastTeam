@@ -2,6 +2,9 @@
 #include <Helper.h>
 #include <StagePanel.h>
 #include <Input.h>
+#include <Easing.h>
+#include <ImageManager.h>
+
 GameStateManager* GameStateManager::GetInstance() {
 	static GameStateManager instance;
 	return &instance;
@@ -25,6 +28,12 @@ void GameStateManager::Initialize() {
 	actui.clear();
 	m_Act.clear();
 	attackarea.clear();
+
+	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	skillUI->SetSize(basesize);
+	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
+	gaugeUI->SetSize({ basesize.x,0.f });
+
 }
 //更新
 void GameStateManager::Update() {
@@ -66,6 +75,8 @@ void GameStateManager::Update() {
 		}
 	}
 
+	GaugeUpdate();
+
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A) && m_AllActCount != 0 && !actui[0]->GetUse()) {
 		UseSkill();
@@ -73,6 +84,11 @@ void GameStateManager::Update() {
 	}
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
+	IKESprite::PreDraw();
+	skillUI->Draw();
+	gaugeUI->Draw();
+	IKESprite::PostDraw();
+
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
 		attackarea[i]->Draw(dxCommon);
@@ -194,4 +210,20 @@ void GameStateManager::FinishAct() {
 	m_Act.erase(m_Act.begin());
 	m_AllActCount--;
 	actui[0]->SetUse(true);
+}
+
+void GameStateManager::GaugeUpdate() {
+	
+		m_GaugeCount++;
+		if (m_GaugeCount == kGaugeCountMax) {
+			StagePanel::GetInstance()->ResetAction();
+			StagePanel::GetInstance()->ResetPanel();
+			//パネル置く数
+			int panel_num = 3;
+			StagePanel::GetInstance()->RandomPanel(panel_num);
+			m_GaugeCount = 0;
+		}
+		float per = (m_GaugeCount / kGaugeCountMax);
+		float size = Ease(In, Quad, 0.5f, gaugeUI->GetSize().y, basesize.y * per);
+		gaugeUI->SetSize({ basesize.x,size });
 }
