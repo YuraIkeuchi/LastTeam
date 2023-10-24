@@ -12,8 +12,8 @@ TextManager* TextManager::GetInstance() {
 
 void TextManager::Create() {
 	conversation_.FirstFont = make_unique<Font>(m_word.FirstWord, kFirstRowPos, m_Color);
-	conversation_.SecondFont = make_unique<Font>(m_word.SecondWord, kFirstRowPos, m_Color);
-	conversation_.ThirdFont = make_unique<Font>(m_word.ThirdWord, kFirstRowPos, m_Color);
+	conversation_.SecondFont = make_unique<Font>(m_word.SecondWord, kSecondRowPos, m_Color);
+	conversation_.ThirdFont = make_unique<Font>(m_word.ThirdWord, kThirdRowPos, m_Color);
 }
 
 
@@ -23,13 +23,8 @@ void TextManager::Initialize() {
 	CreateWord(FIRST, L"タイトルだよ", L"Bボタンをおせば", L"ゲームシーンだよ");
 	//コンヴァージョン初期化
 	Create();
-
-	//フォントのあれこれ
-	conversation_.FirstFont->SetPos(kFirstRowPos);
-	conversation_.SecondFont->SetPos(kSecondRowPos);
-	conversation_.ThirdFont->SetPos(kThirdRowPos);
 }
-//描画?
+//普通の描画?
 void TextManager::Draw() {
 	//コンヴァージョン.フォントドローする
 	conversation_.FirstFont->Draw();
@@ -37,7 +32,7 @@ void TextManager::Draw() {
 	conversation_.ThirdFont->Draw();
 	Font::PostDraw();
 }
-
+//流れる様な描画
 void TextManager::FlowDraw() {
 
 	if (conversation_.FirstFont->FlowText()) {

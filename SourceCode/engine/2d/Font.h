@@ -48,12 +48,12 @@ public:	//Getter,Setter
 		this->m_Color = color;
 	}
 private:
-	static DirectX::GraphicsMemory* _gmemory;
-	static DirectXCommon* dxCommon;
+	static DirectX::GraphicsMemory* m_GraphicsMemory;
+	static DirectXCommon* m_DirectXCommon;
 private:
-	std::unique_ptr<DirectX::SpriteFont> _spritefont = nullptr;
-	std::unique_ptr<DirectX::SpriteBatch> _spritebatch = nullptr;
-	ComPtr<ID3D12DescriptorHeap> _heapForSpriteFont = nullptr;
+	std::unique_ptr<DirectX::SpriteFont> m_SpriteFont = nullptr;
+	std::unique_ptr<DirectX::SpriteBatch> m_SpriteBatch = nullptr;
+	ComPtr<ID3D12DescriptorHeap> m_DescriptHeap = nullptr;
 	//•¶Žš
 	wchar_t* m_Word = L"Hello World!";
 	//•¶Žš‚Ì’·‚³
