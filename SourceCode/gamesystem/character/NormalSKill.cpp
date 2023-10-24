@@ -17,5 +17,6 @@ void NormalSkill::Create(const std::string name, int ID, float latency, float in
 void NormalSkill::ImGui_Origin() {
 	ImGui::Begin("Normal");
 	ImGui::Text("ID:%d", ID);
+	ImGui::Text("Birth:%d", m_Birth);
 	ImGui::End();
 }

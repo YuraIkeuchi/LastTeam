@@ -69,7 +69,6 @@ private:
 	//‘Ss“®‰ñ”
 	int m_AllActCount = {};
 
-	vector<int> a{ 0,1,2,3,4,5,6,7 };
 	//s“®‚ÌUI
 	vector<unique_ptr<ActionUI>> actui;
 

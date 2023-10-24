@@ -34,9 +34,6 @@ void GameStateManager::Initialize() {
 	skillUI->SetSize(basesize);
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
-
-	//シャッフルお試し
-	std::shuffle(a.begin(), a.end(), std::default_random_engine());
 }
 //更新
 void GameStateManager::Update() {
@@ -99,29 +96,25 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("GameState");
+	//ImGui::Begin("GameState");
+	//
+	///*if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
+	//	_SkillType = SKILL_NORMAL;
+	//}
+	//if (ImGui::Button("STRONGSKILL", ImVec2(50, 50))) {
+	//	_SkillType = SKILL_STRONG;
+	//}
+	//if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
+	//	_SkillType = SKILL_SPECIAL;
+	//}*/
+	//
+	///*
+	//ImGui::End();
 	if (!m_Act.empty()) {
 		for (auto i = 0; i < m_Act.size(); i++) {
 			ImGui::Text("Act[%d]:%d", i, m_Act[i].ActID);
 		}
 	}
-	/*if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
-		_SkillType = SKILL_NORMAL;
-	}
-	if (ImGui::Button("STRONGSKILL", ImVec2(50, 50))) {
-		_SkillType = SKILL_STRONG;
-	}
-	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
-		_SkillType = SKILL_SPECIAL;
-	}*/
-	
-	/*if (!a.empty()) {
-		for (auto i = 0; i < a.size(); i++) {
-			ImGui::Text("Act[%d]:%d", i, a[i]);
-		}
-	}*/
-	ImGui::End();
-	SkillManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
@@ -220,6 +213,7 @@ void GameStateManager::GaugeUpdate() {
 			StagePanel::GetInstance()->ResetPanel();
 			//パネル置く数
 			int panel_num = 3;
+			SkillManager::GetInstance()->ResetBirth();
 			StagePanel::GetInstance()->RandomPanel(panel_num);
 			m_GaugeCount = 0;
 		}

@@ -30,6 +30,9 @@ public:
 public:
 	//getter setter
 	const int GetID() { return ID; }
+	const bool GetBirth() { return m_Birth; }
+
+	void SetBirth(const bool Birth) { this->m_Birth = Birth; }
 protected:
 	//スキル名
 	std::string name = "NoName";
@@ -47,5 +50,6 @@ protected:
 	int rarity = 1;
 	//出現ランク
 	int popRate = 1;
+	bool m_Birth = false;
 };
 

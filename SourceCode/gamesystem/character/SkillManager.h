@@ -15,6 +15,7 @@ public:
 
 	void ImGuiDraw();
 
+	void ResetBirth();
 public:
 	//ID‚ğæ‚é
 	int GetID();
@@ -30,4 +31,5 @@ private:
 	std::string nameC = "’@‚­";
 	std::string nameD = "E‚é";
 	std::string nameE = "‚©‚Ü‚·";
+	std::string nameF = "ƒXƒJƒX";
 };
