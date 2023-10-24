@@ -1,21 +1,19 @@
 #include "Font.h"
 #include<wchar.h>
+#include <Helper.h>
 
 DirectX::GraphicsMemory* Font::_gmemory = nullptr;
 
-Font::~Font()
-{
+Font::~Font() {
 	/*delete _spritefont;
 	delete _spritebatch;*/
 }
 
-void Font::Initialize(DirectXCommon* dxcommon)
-{
+void Font::Initialize(DirectXCommon* dxcommon) {
 	_gmemory = new DirectX::GraphicsMemory(dxcommon->GetDev());
 }
 
-void Font::LoadFont(DirectXCommon* dxcommon)
-{
+void Font::LoadFont(DirectXCommon* dxcommon) {
 	DirectX::ResourceUploadBatch resUploadBatch(dxcommon->GetDev());
 
 	resUploadBatch.Begin();
@@ -40,64 +38,50 @@ void Font::LoadFont(DirectXCommon* dxcommon)
 }
 
 
-void Font::StringReset()
-{
-	ward_ = L" ";
+void Font::StringReset() {
+	m_Word = L" ";
 }
 
-void Font::Draw(DirectXCommon* dxcommon)
-{
+void Font::Draw(DirectXCommon* dxcommon) {
 	dxcommon->GetCmdList()->SetDescriptorHeaps(1, _heapForSpriteFont.GetAddressOf());
 	_spritebatch->Begin(dxcommon->GetCmdList());
-	_spritefont->DrawString(_spritebatch, ward_,
+	_spritefont->DrawString(_spritebatch, m_Word,
 		disply_place_, DirectX::Colors::Black, {}, shadow_position_);
 
-	_spritefont->DrawString(_spritebatch, ward_,
-		disply_place_, color_, {},position_);
+	_spritefont->DrawString(_spritebatch, m_Word,
+		disply_place_, color_, {}, position_);
 	_spritebatch->End();
 }
 
-void Font::PostDraw(DirectXCommon* dxcommon)
-{
+void Font::PostDraw(DirectXCommon* dxcommon) {
 	_gmemory->Commit(dxcommon->GetQue());
 }
 
-void Font::SetString(wchar_t* ward)
-{
-	ward_ = ward;
+void Font::SetString(wchar_t* ward) {
+	m_StartFlag = true;
+	m_Word = ward;
 }
 
-void Font::TestSet(wchar_t* ward, size_t len, bool& flag,bool& nextflag)
-{
-	if (flag == true) {
-		testward_ = ward;
-		first_f = true;
-		flag = false;
+bool Font::FlowText() {
+	if (m_StartFlag == true) {
+		m_NowWord_ = m_Word;
+		len_ = wcslen(m_NowWord_);
+		m_StartFlag = false;
 	}
-	const wchar_t* wa{};
-	size_t newsiz{};
-	wa = testward_;
-	newsiz = wcslen(wa) + 1;
-	if (first_f == true) {
-		len_ = newsiz - 1;
-		first_f = false;
-	}
-
-	size_t origsize = wcslen(wa)+1;
-	time_ += 1.f;
-	
-	
-	if (time_ > 1) {
-		len_ -= 1;
-		time_ = 0.f;
-	}
-	wchar_t* wcstr = new wchar_t[newsiz];
-
-	if (0 < len_) {
-		wcsncpy_s(wcstr, origsize, testward_, newsiz - len_);
-		ward_ = wcstr;
-	}
-	else {
-		nextflag = true;
+	if (len_ == 0) {
+		//テキスト終了
+		return  true;
+	} else {
+		if (Helper::GetInstance()->FrameCheck(time_, 1.0f)) {
+			len_ -= 1;
+			Helper::GetInstance()->Clamp(len_,(size_t)0,(size_t)20);
+			time_ = 0.f;
+		}
+		size_t newSize = wcslen(m_NowWord_);
+		size_t origsize = wcslen(m_NowWord_) + 1;
+		wchar_t* wcstr = new wchar_t[newSize];
+		wcsncpy_s(wcstr, origsize, m_NowWord_, newSize - len_);
+		m_Word = wcstr;
+		return false;
 	}
 }

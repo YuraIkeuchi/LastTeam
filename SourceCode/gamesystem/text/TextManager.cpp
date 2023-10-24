@@ -71,16 +71,22 @@ void TextManager::TestDraw(DirectXCommon* dxcommon)
 	len[2] = wcslen(test2);
 
 	
-	conversation_.FirstFont->TestSet(test,len[0],flag[0],next_f[0]);
-	conversation_.FirstFont->Draw(dxcommon);
-	if (next_f[0] == true) {
-		conversation_.SecondFont->TestSet(test1, len[1], flag[1],next_f[1]);
+	if (conversation_.FirstFont->FlowText()) {
+		if (conversation_.SecondFont->FlowText()) {
+			if (conversation_.ThirdFont->FlowText()) {
+
+			}
+			conversation_.ThirdFont->Draw(dxcommon);
+		}
 		conversation_.SecondFont->Draw(dxcommon);
 	}
-	if (next_f[1] == true) {
-		conversation_.ThirdFont->TestSet(test2, len[2], flag[2],next_f[2]);
-		conversation_.ThirdFont->Draw(dxcommon);
-	}
+	conversation_.FirstFont->Draw(dxcommon);
+
+
+	//if (next_f[1] == true) {
+	//	conversation_.ThirdFont->TestSet(test2, len[2], flag[2],next_f[2]);
+	//	conversation_.ThirdFont->Draw(dxcommon);
+	//}
 
 	Font::PostDraw(dxcommon);
 }
