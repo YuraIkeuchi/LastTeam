@@ -339,7 +339,13 @@
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp">
       <Filter>gamesystem\Text</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp">
+    <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\SkillBase.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\Passive.cpp">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+	</ClCompile>
+	<ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\NormalSKill.cpp">
@@ -659,7 +665,12 @@
       <Filter>gamesystem\Text</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\2d\FontManager.h" />
-    <ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h">
+    <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\Passive.h">
+      <Filter>gamesystem\Action\ActionPanel</Filter>
+	</ClInclude>
+	<ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\NormalSkill.h">
