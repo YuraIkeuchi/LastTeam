@@ -47,6 +47,7 @@ void Font::LoadFont() {
 }
 
 void Font::Draw() {
+	FlowText();
 	m_DirectXCommon->GetCmdList()->SetDescriptorHeaps(1, m_DescriptHeap.GetAddressOf());
 	m_SpriteBatch->Begin(m_DirectXCommon->GetCmdList());
 	XMFLOAT2 shadow_pos = {
@@ -77,7 +78,6 @@ void Font::SetString(wchar_t* word) {
 
 bool Font::FlowText() {
 	static float time = 0.f;
-	static wchar_t* m_NowWord_ = L"NULL";
 	if (m_StartFlag == true) {
 		m_NowWord_ = m_Word;
 		m_Length = wcslen(m_NowWord_);
@@ -85,6 +85,7 @@ bool Font::FlowText() {
 	}
 	if (m_Length <= 0) {
 		//テキスト終了
+		m_FinishFlag = true;
 		return  true;
 	} else {
 		if (Helper::GetInstance()->FrameCheck(time, 1.0f)) {

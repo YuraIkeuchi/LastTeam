@@ -4,6 +4,7 @@
 #include "AudioManager.h"
 #include "Font.h"
 #include "SceneSave.h"
+#include <TextManager.h>
 
 void Framework::Run()
 {
@@ -72,6 +73,8 @@ void Framework::Initialize(DirectXCommon* m_DirectXCommon)
 	ParticleManager::CreateCommon(dxcommon->GetDev(), dxcommon->GetCmdList());
 	//パーティクルエミッター初期化
 	ParticleEmitter::GetInstance()->Initialize();
+
+	TextManager::GetInstance()->Initialize();
 	Font::SetGraphicMemory(dxcommon);
 	
 	SceneSave::GetInstance()->AllReset();
