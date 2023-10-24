@@ -72,7 +72,7 @@ void Framework::Initialize(DirectXCommon* dxCommon)
 	ParticleManager::CreateCommon(dxcommon->GetDev(), dxcommon->GetCmdList());
 	//パーティクルエミッター初期化
 	ParticleEmitter::GetInstance()->Initialize();
-	Font::Initialize(dxcommon);
+	Font::SetGraphicMemory(dxcommon);
 	
 	SceneSave::GetInstance()->AllReset();
 

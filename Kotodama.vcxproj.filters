@@ -261,9 +261,6 @@
     <ClCompile Include="SourceCode\gamesystem\gamecamera\CameraWork.cpp">
       <Filter>gamesystem\gamecamera</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\text\Text.cpp">
-      <Filter>gamesystem\Text</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp">
       <Filter>gamesystem\Text</Filter>
     </ClCompile>
@@ -563,9 +560,6 @@
     <ClInclude Include="SourceCode\gamesystem\actor\GameOverSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\GameOverSceneActor.h">
       <Filter>gamesystem\actor\GameOver</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\text\Text.h">
-      <Filter>gamesystem\Text</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\TextManager.h">
       <Filter>gamesystem\Text</Filter>

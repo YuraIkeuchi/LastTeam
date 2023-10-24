@@ -4,11 +4,10 @@
 #include<Windows.h>
 #include"DirectXCommon.h"
 #include"WinApp.h"
-
+#include<memory>
 #pragma comment(lib,"DirectXTK12.lib")
 
-class Font
-{
+class Font {
 protected:
 	// DirectX::を省略
 	using XMFLOAT2 = DirectX::XMFLOAT2;
@@ -19,40 +18,51 @@ protected:
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
-	~Font();
-	static void Initialize(DirectXCommon* dxcommon);
-	void LoadFont(DirectXCommon* dxcommon);
-	void SetColor(const XMVECTOR& color = { 1.f,1.f,1.f,1.f }) { this->color_ = color; }
-	void SetPos(const XMFLOAT2& position = { 0.f,0.f }) {
-		this->position_ = position;
-		shadow_position_.x = position.x - 2;
-		shadow_position_.y = position.y - 2;
-	}
-	void StringReset();
-	void Draw(DirectXCommon* dxcommon);
-	static void PostDraw(DirectXCommon* dxcommon);
-	void SetString(wchar_t* ward);
-	void TestSet(wchar_t* ward, size_t len,bool& flag,bool& nextflag);
-	wchar_t* GetString() { return ward_; }
 
-	void SetNum(UINT num) { TexNumver = num; }
+	Font(wchar_t* word, const XMFLOAT2& position, const XMVECTOR& color = { 1.f,1.f,1.f,1.f });
+
+	~Font();
+
+	void Initialize();
+
+	void Draw();
+
+	void LoadFont();
+
+	static void SetGraphicMemory(DirectXCommon* dxcommon);
 	
-protected:
-	static DirectX::GraphicsMemory* _gmemory;
+	static void PostDraw();
+
+	/// <summary>
+	/// 流れるテキスト
+	/// </summary>
+	/// <returns>テキスト終了</returns>
+	bool FlowText();
+public:	//Getter,Setter
+	void SetString(wchar_t* word);
+	wchar_t* GetString() { return m_Word; }
+	void SetPos(const XMFLOAT2& position) {
+		this->m_Position = position;
+	}
+	void SetColor(const XMVECTOR& color) {
+		this->m_Color = color;
+	}
 private:
-	UINT TexNumver;
-	DirectX::SpriteFont* _spritefont;
-	DirectX::SpriteBatch* _spritebatch;
-	ComPtr<ID3D12DescriptorHeap> _heapForSpriteFont;
-	XMVECTOR color_{};
-	XMFLOAT2 position_{};
-	XMFLOAT2 shadow_position_ = {};
-	XMFLOAT2 disply_place_{ 300.f,370.f };
-	wchar_t* ward_=L"w";
-	wchar_t* testward_;
-	float time_ = 0.f;
-	size_t len_ = 0;
-	size_t oldlen_ = 0;
-	bool first_f = true;
+	static DirectX::GraphicsMemory* _gmemory;
+	static DirectXCommon* dxCommon;
+private:
+	std::unique_ptr<DirectX::SpriteFont> _spritefont = nullptr;
+	std::unique_ptr<DirectX::SpriteBatch> _spritebatch = nullptr;
+	ComPtr<ID3D12DescriptorHeap> _heapForSpriteFont = nullptr;
+	//文字
+	wchar_t* m_Word = L"Hello World!";
+	//文字の長さ
+	size_t m_Length = wcslen(m_Word);
+	//動きの開始
+	bool m_StartFlag = true;
+	//ポジション
+	XMFLOAT2 m_Position = { 0.f,0.f };
+	//カラー
+	XMVECTOR m_Color = { 1.0f,1.0f,1.0f,1.0f };
 };
 

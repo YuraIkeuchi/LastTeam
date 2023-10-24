@@ -28,15 +28,13 @@ public:
 	static TextManager* GetInstance();
 
 	//
-	void Create(DirectXCommon* dxcomon);
+	void Create();
 
-	void Initialize(DirectXCommon* dxcomon);
+	void Initialize();
 
-	void Draw(DirectXCommon* dxcommon);
+	void Draw();
 
-	void TestDraw(DirectXCommon* dxcommon);
-
-	void Test();
+	void FlowDraw();
 
 	void SetAllColor(const XMVECTOR& color={1.f,1.f,1.f,1.f});
 
@@ -45,8 +43,6 @@ public:
 	void SetConversation(TITLE name= FIRST,const XMVECTOR& color={1.f,1.f,1.f,1.f});
 
 	void NoneText();
-
-	void GetWordSize(Word word);
 
 	void SetRowPosition(float posX);
 private:
@@ -61,22 +57,15 @@ private:
 	std::map<TextManager::TITLE, Word> wordlist_;
 
 	Conversation conversation_ = {};
-	Conversation old_conversation_ = {};
 
-	Conversation bossconversation_ = {};
+	XMVECTOR m_Color{ 1.f,1.f,1.f,1.f };
 
-	XMVECTOR color_{ 1.f,1.f,1.f,1.f };
-	size_t len[3];
 	bool flag[3] = { true,true,true };
 	bool next_f[3] = { false,false,false};
 
-	bool testF = false;
-	float time_ = 0.f;
-	int length = 0;
-	wchar_t* test;
-	wchar_t* test1;
-	wchar_t* test2;
 
+	bool change = false;
+	Word m_word = { L"ここで",L"あったが",L"ひゃくねんめ" };
 	TITLE old= FIRST;
 };
 
