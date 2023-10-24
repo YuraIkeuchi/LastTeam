@@ -14,6 +14,11 @@ public:
 	void Initialize();
 
 	void ImGuiDraw();
+
+public:
+	//ID‚ğæ‚é
+	int GetID();
+public:
 	std::vector<SkillBase*>GetSkillBase() { return skill; }
 private:
 	std::vector<SkillBase*> skill;
@@ -23,4 +28,6 @@ private:
 	std::string nameA = "‰£‚é";
 	std::string nameB = "R‚é";
 	std::string nameC = "’@‚­";
+	std::string nameD = "E‚é";
+	std::string nameE = "‚©‚Ü‚·";
 };

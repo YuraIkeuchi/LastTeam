@@ -45,8 +45,7 @@ void SkillAction::EffecttexDraw(DirectXCommon* dxCommon) {
 //ImGui
 void SkillAction::ImGui_Origin() {
 	ImGui::Begin("Skill");
-	ImGui::Text("PosX:%f", m_Position.x);
-	ImGui::Text("PosZ:%f", m_Position.z);
+	ImGui::Text("SkillID:%d", m_SkillID);
 	ImGui::End();
 }
 //É|Å[ÉY

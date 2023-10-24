@@ -35,6 +35,8 @@ void GameStateManager::Initialize() {
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 
+	//シャッフルお試し
+	std::shuffle(a.begin(), a.end(), std::default_random_engine());
 }
 //更新
 void GameStateManager::Update() {
@@ -83,12 +85,6 @@ void GameStateManager::Update() {
 		UseSkill();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
 	}
-
-	if (input->TriggerKey(DIK_S)) {
-		//当たり判定（弾）
-		vector<SkillBase*> _skill = SkillManager::GetInstance()->GetSkillBase();
-		AddSkillID(_skill);
-	}
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
@@ -104,8 +100,12 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 //描画
 void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("GameState");
-	ImGui::Text(m_Counter ? "CLEAR" : "NONE");
-	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
+	if (!m_Act.empty()) {
+		for (auto i = 0; i < m_Act.size(); i++) {
+			ImGui::Text("Act[%d]:%d", i, m_Act[i].ActID);
+		}
+	}
+	/*if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_NORMAL;
 	}
 	if (ImGui::Button("STRONGSKILL", ImVec2(50, 50))) {
@@ -113,19 +113,16 @@ void GameStateManager::ImGuiDraw() {
 	}
 	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_SPECIAL;
-	}
-	if (!m_Act.empty()) {
-		for (auto i = 0; i < m_Act.size(); i++) {
-			ImGui::Text("Act[%d]:%d", i, m_Act[i].ActID);
+	}*/
+	
+	/*if (!a.empty()) {
+		for (auto i = 0; i < a.size(); i++) {
+			ImGui::Text("Act[%d]:%d", i, a[i]);
 		}
-	}
-	if (!ID.empty()) {
-		for (auto i = 0; i < ID.size(); i++) {
-			ImGui::Text("ID[%d]:%d", i, ID[i]);
-		}
-	}
+	}*/
 	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
+	StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -229,10 +226,4 @@ void GameStateManager::GaugeUpdate() {
 		float per = (m_GaugeCount / kGaugeCountMax);
 		float size = Ease(In, Quad, 0.5f, gaugeUI->GetSize().y, basesize.y * per);
 		gaugeUI->SetSize({ basesize.x,size });
-}
-//スキルのID取得
-void GameStateManager::AddSkillID(vector<SkillBase*> skill) {
-	for (SkillBase* _skill : skill) {
-		ID.push_back(_skill->GetID());
-	}
 }

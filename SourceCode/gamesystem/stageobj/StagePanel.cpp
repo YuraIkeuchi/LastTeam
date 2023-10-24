@@ -6,6 +6,7 @@
 #include "Collision.h"
 #include "ImageManager.h"
 #include <Easing.h>
+#include <SkillManager.h>
 
 StagePanel* StagePanel::GetInstance() {
 	static StagePanel instance;
@@ -73,6 +74,10 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
+	for (auto i = 0; i < actions.size(); i++) {
+		if (actions[i] == nullptr)continue;
+		actions[i]->ImGuiDraw();
+	}
 }
 
 //スキルセットの更新(バトル前)
@@ -184,6 +189,7 @@ void StagePanel::RandomPanel(int num) {
 			break;
 		}
 		newAction->Initialize();
+		newAction->SetSkillID(SkillManager::GetInstance()->GetID());
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
 
