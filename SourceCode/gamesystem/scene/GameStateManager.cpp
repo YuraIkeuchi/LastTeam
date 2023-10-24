@@ -110,11 +110,11 @@ void GameStateManager::ImGuiDraw() {
 	//
 	///*
 	//ImGui::End();
-	if (!m_Act.empty()) {
+	/*if (!m_Act.empty()) {
 		for (auto i = 0; i < m_Act.size(); i++) {
 			ImGui::Text("Act[%d]:%d", i, m_Act[i].ActID);
 		}
-	}
+	}*/
 	StagePanel::GetInstance()->ImGuiDraw();
 }
 //Žè‚É“ü‚ê‚½UI‚Ì•`‰æ
