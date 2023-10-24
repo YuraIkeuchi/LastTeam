@@ -344,7 +344,8 @@
     <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\Passive.cpp">
       <Filter>gamesystem\Action\ActionPanel</Filter>
-    <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp">
+	</ClCompile>
+	<ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\NormalSKill.cpp">
@@ -668,7 +669,8 @@
     <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\Passive.h">
       <Filter>gamesystem\Action\ActionPanel</Filter>
-    <ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h">
+	</ClInclude>
+	<ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\NormalSkill.h">
