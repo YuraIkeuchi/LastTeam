@@ -47,19 +47,28 @@ public:	//Getter,Setter
 	void SetColor(const XMVECTOR& color) {
 		this->m_Color = color;
 	}
+
+	bool GetFinish() {
+		return m_FinishFlag;
+	}
+
 private:
-	static DirectX::GraphicsMemory* _gmemory;
-	static DirectXCommon* dxCommon;
+	static DirectX::GraphicsMemory* m_GraphicsMemory;
+	static DirectXCommon* m_DirectXCommon;
 private:
-	std::unique_ptr<DirectX::SpriteFont> _spritefont = nullptr;
-	std::unique_ptr<DirectX::SpriteBatch> _spritebatch = nullptr;
-	ComPtr<ID3D12DescriptorHeap> _heapForSpriteFont = nullptr;
+	std::unique_ptr<DirectX::SpriteFont> m_SpriteFont = nullptr;
+	std::unique_ptr<DirectX::SpriteBatch> m_SpriteBatch = nullptr;
+	ComPtr<ID3D12DescriptorHeap> m_DescriptHeap = nullptr;
 	//文字
 	wchar_t* m_Word = L"Hello World!";
+	wchar_t* m_NowWord_ = L"NULL";
+
 	//文字の長さ
 	size_t m_Length = wcslen(m_Word);
 	//動きの開始
 	bool m_StartFlag = true;
+	//動きが終わった
+	bool m_FinishFlag = false;
 	//ポジション
 	XMFLOAT2 m_Position = { 0.f,0.f };
 	//カラー

@@ -4,6 +4,7 @@
 #include "AudioManager.h"
 #include "Font.h"
 #include "SceneSave.h"
+#include <TextManager.h>
 
 void Framework::Run()
 {
@@ -26,7 +27,7 @@ void Framework::Run()
 	Finalize();
 
 }
-void Framework::Initialize(DirectXCommon* dxCommon)
+void Framework::Initialize(DirectXCommon* m_DirectXCommon)
 {
 	winApp = new WinApp();
 	winApp->Initialize();
@@ -72,6 +73,8 @@ void Framework::Initialize(DirectXCommon* dxCommon)
 	ParticleManager::CreateCommon(dxcommon->GetDev(), dxcommon->GetCmdList());
 	//パーティクルエミッター初期化
 	ParticleEmitter::GetInstance()->Initialize();
+
+	TextManager::GetInstance()->Initialize();
 	Font::SetGraphicMemory(dxcommon);
 	
 	SceneSave::GetInstance()->AllReset();
@@ -93,7 +96,7 @@ void Framework::Finalize()
 	delete winApp;
 }
 
-void Framework::Update(DirectXCommon* dxCommon)
+void Framework::Update(DirectXCommon* m_DirectXCommon)
 {
 	//ウィンドウメッセージ処理
 	if (winApp->ProcessMessage()) {
@@ -105,17 +108,17 @@ void Framework::Update(DirectXCommon* dxCommon)
 	input->Update();
 
 	//シーン更新処理
-	SceneManager::GetInstance()->Update(dxCommon);
+	SceneManager::GetInstance()->Update(m_DirectXCommon);
 }
 
-void Framework::Draw(DirectXCommon* dxCommon)
+void Framework::Draw(DirectXCommon* m_DirectXCommon)
 {
-	//dxCommon->PreDraw();
+	//m_DirectXCommon->PreDraw();
 
 	//シーン描画
-	SceneManager::GetInstance()->Draw(dxCommon);
+	SceneManager::GetInstance()->Draw(m_DirectXCommon);
 
-	//dxCommon->PostDraw();
+	//m_DirectXCommon->PostDraw();
 	//でバックテキストの描画
 	//debugText->DrawAll();
 }

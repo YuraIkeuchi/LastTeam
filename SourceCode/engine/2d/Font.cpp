@@ -2,8 +2,8 @@
 #include<wchar.h>
 #include <Helper.h>
 
-DirectX::GraphicsMemory* Font::_gmemory = nullptr;
-DirectXCommon* Font::dxCommon = nullptr;
+DirectX::GraphicsMemory* Font::m_GraphicsMemory = nullptr;
+DirectXCommon* Font::m_DirectXCommon = nullptr;
 Font::Font(wchar_t* word, const XMFLOAT2& position, const XMVECTOR& color) {
 	m_StartFlag = true;
 	m_Word = word;
@@ -23,7 +23,7 @@ void Font::Initialize() {
 }
 
 void Font::LoadFont() {
-	DirectX::ResourceUploadBatch resUploadBatch(dxCommon->GetDev());
+	DirectX::ResourceUploadBatch resUploadBatch(m_DirectXCommon->GetDev());
 
 	resUploadBatch.Begin();
 	DirectX::RenderTargetState rtState(
@@ -31,43 +31,44 @@ void Font::LoadFont() {
 		DXGI_FORMAT_D32_FLOAT);
 	DirectX::SpriteBatchPipelineStateDescription pd(rtState);
 
-	_spritebatch = std::make_unique<DirectX::SpriteBatch>(dxCommon->GetDev(), resUploadBatch, pd);
+	m_SpriteBatch = std::make_unique<DirectX::SpriteBatch>(m_DirectXCommon->GetDev(), resUploadBatch, pd);
 
-	_heapForSpriteFont = dxCommon->CreateDescriptorHeapForSproteFont();
-	_spritefont = std::make_unique<DirectX::SpriteFont>(dxCommon->GetDev(),
+	m_DescriptHeap = m_DirectXCommon->CreateDescriptorHeapForSproteFont();
+	m_SpriteFont = std::make_unique<DirectX::SpriteFont>(m_DirectXCommon->GetDev(),
 		resUploadBatch,
 		L"Resources/font/keifont.spritefont",
-		_heapForSpriteFont->GetCPUDescriptorHandleForHeapStart(),
-		_heapForSpriteFont->GetGPUDescriptorHandleForHeapStart());
+		m_DescriptHeap->GetCPUDescriptorHandleForHeapStart(),
+		m_DescriptHeap->GetGPUDescriptorHandleForHeapStart());
 
-	auto future = resUploadBatch.End(dxCommon->GetQue());
-	dxCommon->GetCmdList()->SetDescriptorHeaps(1, _heapForSpriteFont.GetAddressOf());
+	auto future = resUploadBatch.End(m_DirectXCommon->GetQue());
+	m_DirectXCommon->GetCmdList()->SetDescriptorHeaps(1, m_DescriptHeap.GetAddressOf());
 	future.wait();
-	_spritebatch->SetViewport(dxCommon->GetViewPort());
+	m_SpriteBatch->SetViewport(m_DirectXCommon->GetViewPort());
 }
 
 void Font::Draw() {
-	dxCommon->GetCmdList()->SetDescriptorHeaps(1, _heapForSpriteFont.GetAddressOf());
-	_spritebatch->Begin(dxCommon->GetCmdList());
+	FlowText();
+	m_DirectXCommon->GetCmdList()->SetDescriptorHeaps(1, m_DescriptHeap.GetAddressOf());
+	m_SpriteBatch->Begin(m_DirectXCommon->GetCmdList());
 	XMFLOAT2 shadow_pos = {
 		m_Position.x - 2.f,
 		m_Position.y - 2.f
 	};
-	_spritefont->DrawString(_spritebatch.get(), m_Word,
+	m_SpriteFont->DrawString(m_SpriteBatch.get(), m_Word,
 		shadow_pos, DirectX::Colors::Black);
 
-	_spritefont->DrawString(_spritebatch.get(), m_Word,
+	m_SpriteFont->DrawString(m_SpriteBatch.get(), m_Word,
 		m_Position, m_Color);
-	_spritebatch->End();
+	m_SpriteBatch->End();
 }
 
 void Font::SetGraphicMemory(DirectXCommon* dxcommon) {
-	dxCommon = dxcommon;
-	_gmemory = new DirectX::GraphicsMemory(dxCommon->GetDev());
+	m_DirectXCommon = dxcommon;
+	m_GraphicsMemory = new DirectX::GraphicsMemory(m_DirectXCommon->GetDev());
 }
 
 void Font::PostDraw() {
-	_gmemory->Commit(dxCommon->GetQue());
+	m_GraphicsMemory->Commit(m_DirectXCommon->GetQue());
 }
 
 void Font::SetString(wchar_t* word) {
@@ -77,7 +78,6 @@ void Font::SetString(wchar_t* word) {
 
 bool Font::FlowText() {
 	static float time = 0.f;
-	static wchar_t* m_NowWord_ = L"NULL";
 	if (m_StartFlag == true) {
 		m_NowWord_ = m_Word;
 		m_Length = wcslen(m_NowWord_);
@@ -85,6 +85,7 @@ bool Font::FlowText() {
 	}
 	if (m_Length <= 0) {
 		//テキスト終了
+		m_FinishFlag = true;
 		return  true;
 	} else {
 		if (Helper::GetInstance()->FrameCheck(time, 1.0f)) {
