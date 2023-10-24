@@ -2,6 +2,7 @@
 #include "ModelManager.h"
 #include "ParticleEmitter.h"
 #include "ImageManager.h"
+#include <Helper.h>
 
 //“Ç‚İ‚İ
 SkillAction::SkillAction() {
@@ -12,6 +13,8 @@ SkillAction::SkillAction() {
 	m_Pannel.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	m_Pannel->TextureCreate();
 	m_Pannel->Initialize();
+
+	m_SkillID = Helper::GetInstance()->GetRanNum(0, 3);
 }
 //‰Šú‰»
 bool SkillAction::Initialize() {

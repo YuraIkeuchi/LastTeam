@@ -28,20 +28,9 @@ void ActionUI::Initialize() {
 	m_Alive = true;
 }
 //ステータス初期化
-void ActionUI::InitState(const int ActCount,const string& Tag) {
+void ActionUI::InitState(const int ActCount) {
 	m_ActCount = ActCount;
-	if (Tag == "Attack") {
-		m_ActType = ACT_ATTACK;
-	}
-	else if (Tag == "Skill") {
-		m_ActType = ACT_ATTACK;
-	}
-	else if (Tag == "Skill") {
-		m_ActType = ACT_GUARD;
-	}
-	else {
-		assert(0);
-	}
+	m_ActType = ACT_ATTACK;
 }
 //更新
 void ActionUI::Update() {

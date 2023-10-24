@@ -105,11 +105,6 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("GameState");
 	ImGui::Text(m_Counter ? "CLEAR" : "NONE");
-	ImGui::Text("CounterTimer:%d", m_CounterTimer);
-	ImGui::Text("CounteScore:%d", m_CounterScore);
-	ImGui::Text("PosScore:%d", (int)(m_PosScore));
-	ImGui::Text("Graze:%d", (int)m_GrazeScore);
-	ImGui::Text("All:%d", m_AllScore);
 	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_NORMAL;
 	}
@@ -118,6 +113,11 @@ void GameStateManager::ImGuiDraw() {
 	}
 	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_SPECIAL;
+	}
+	if (!m_Act.empty()) {
+		for (auto i = 0; i < m_Act.size(); i++) {
+			ImGui::Text("Act[%d]:%d", i, m_Act[i].ActID);
+		}
 	}
 	if (!ID.empty()) {
 		for (auto i = 0; i < ID.size(); i++) {
@@ -137,31 +137,21 @@ void GameStateManager::ActUIDraw() {
 	IKESprite::PostDraw();
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const string& Tag) {
-	if (Tag == "Attack") {
-		m_Act.push_back(ACT_ATTACK);
-	}
-	else if (Tag == "Guard") {
-		m_Act.push_back(ACT_GUARD);
-	}
-	else if (Tag == "Skill") {
-		m_Act.push_back(ACT_SKILL);
-	}
-	else {
-		assert(0);
-	}
-
+void GameStateManager::AddSkill(const int ID) {
+	ActState act;
+	act.ActID = ID;
+	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
-	BirthActUI(Tag);//UIも増えるよ
+	BirthActUI();//UIも増えるよ
 }
 //スキルUIの生成
-void GameStateManager::BirthActUI(const string& Tag) {
+void GameStateManager::BirthActUI() {
 	//アクションUIのセット
 	ActionUI* newactUi = nullptr;
 	newactUi = new ActionUI();
 	newactUi->Initialize();
-	newactUi->InitState(m_AllActCount, Tag);
+	newactUi->InitState(m_AllActCount);
 	actui.emplace_back(newactUi);
 
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);

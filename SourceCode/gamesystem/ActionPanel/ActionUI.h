@@ -19,7 +19,7 @@ public:
 	//初期化
 	void Initialize();
 	//ステータスセット
-	void InitState(const int ActCount, const string& Tag);
+	void InitState(const int ActCount);
 	//更新
 	void Update();
 	//UIの動き
