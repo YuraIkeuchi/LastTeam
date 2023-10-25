@@ -107,8 +107,6 @@ public:
 
 	void UIDraw();
 
-	//カメラのデータをゲットする
-	void GetData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort);
 private:
 	void BirthParticle();
 	//HPの割合を求める

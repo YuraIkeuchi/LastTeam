@@ -3,6 +3,7 @@
 #include "CollisionPrimitive.h"
 #include <string>
 #include <IKETexture.h>
+#include <DrawNumber.h>
 using namespace std;         //  –¼‘O‹óŠÔŽw’è
 enum State {
 	STATE_SPAWN = 0,
@@ -62,6 +63,7 @@ protected:
 	static void(InterAction::* stateTable[])();
 	int _state = STATE_SPAWN;
 	int m_SkillID = {};
+	unique_ptr<DrawNumber> _drawnumber;
 private:
 	void Spawn();//‘Ò‹@
 	void Alive();

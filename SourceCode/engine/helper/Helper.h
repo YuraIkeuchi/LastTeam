@@ -22,6 +22,7 @@ private:
 
 public:
 	static Helper* GetInstance();
+	Camera* GetCamera() { return m_Camera; }
 	void SetCamera(Camera* camera) {
 		m_Camera = camera;
 	}

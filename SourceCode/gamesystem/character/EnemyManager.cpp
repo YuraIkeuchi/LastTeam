@@ -79,9 +79,3 @@ bool EnemyManager::BossDestroy() {
 	}
 	return false;
 }
-
-void EnemyManager::GetCameraData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort) {
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->GetData(matView, matProjection, matPort);
-	}
-}

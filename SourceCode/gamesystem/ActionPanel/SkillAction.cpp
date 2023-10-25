@@ -15,6 +15,9 @@ SkillAction::SkillAction() {
 	m_Pannel->Initialize();
 
 	m_SkillID = Helper::GetInstance()->GetRanNum(0, 3);
+	//ID用のスプライト
+	_drawnumber = make_unique<DrawNumber>();
+	_drawnumber->Initialize();
 }
 //初期化
 bool SkillAction::Initialize() {
@@ -30,6 +33,10 @@ void SkillAction::Action() {
 	(this->*stateTable[_state])();
 	Obj_SetParam();
 	Collide();
+	GetData();
+	_drawnumber->SetExplain(m_Position);
+	_drawnumber->SetNumber(m_SkillID);
+	_drawnumber->Update();
 }
 //描画
 void SkillAction::Draw(DirectXCommon* dxCommon) {
@@ -37,6 +44,10 @@ void SkillAction::Draw(DirectXCommon* dxCommon) {
 	m_Pannel->Draw();
 	IKETexture::PostDraw();
 	Obj_Draw();
+
+	IKESprite::PreDraw();
+	_drawnumber->Draw();
+	IKESprite::PostDraw();
 }
 //エフェクト描画
 void SkillAction::EffecttexDraw(DirectXCommon* dxCommon) {
@@ -51,4 +62,12 @@ void SkillAction::ImGui_Origin() {
 //ポーズ
 void SkillAction::Pause() {
 
+}
+//カメラデータ
+void SkillAction::GetData() {
+	Camera* camera = Helper::GetInstance()->GetCamera();
+	m_MatView = camera->GetViewMatrix();
+	m_MatProjection = camera->GetProjectionMatrix();
+	m_MatPort = camera->GetViewPort();
+	_drawnumber->GetCameraData(m_MatView, m_MatProjection, m_MatPort);
 }

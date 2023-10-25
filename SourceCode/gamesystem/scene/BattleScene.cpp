@@ -15,6 +15,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	dxCommon->SetFullScreen(true);
 	//ポストエフェクト
 	PlayPostEffect = false;
+	
 	//パーティクル全削除
 	ParticleEmitter::GetInstance()->AllDelete();
 
@@ -51,7 +52,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
-	enemyManager->GetCameraData(camera->GetViewMatrix(), camera->GetProjectionMatrix(), camera->GetViewPort());
 	//敵を倒したらシーン以降(仮)
 	if (enemyManager->BossDestroy()) {
 		SceneChanger::GetInstance()->SetChangeStart(true);

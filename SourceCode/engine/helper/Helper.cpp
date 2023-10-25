@@ -320,7 +320,6 @@ bool Helper::All_Of_float(float* list, int size, float standVal)
 }
 
 void Helper::SinMove(XMFLOAT3& pos, const float angle, const float angle2) {
-
 }
 //割合を求める
 int Helper::getDigits(int value, int m, int n) {

@@ -29,8 +29,6 @@ public:
 	//敵の死亡処理
 	bool BossDestroy();
 
-	//カメラのデータをゲットする
-	void GetCameraData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort);
 private:
 	std::list<unique_ptr<InterEnemy>> enemys;
 };
