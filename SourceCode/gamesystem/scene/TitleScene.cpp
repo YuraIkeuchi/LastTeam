@@ -89,6 +89,7 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 			texts[i]->Draw();
 		}
 	}
+	Font::PostDraw();
 	IKESprite::PreDraw();
 	SceneChanger::GetInstance()->Draw();
 	IKESprite::PostDraw();
