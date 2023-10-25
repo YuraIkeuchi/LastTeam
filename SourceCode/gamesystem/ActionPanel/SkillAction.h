@@ -18,5 +18,10 @@ private:
 
 	//エフェクト
 	void EffecttexDraw(DirectXCommon* dxCommon) override;
+
+	void GetData();
 private:
+	XMMATRIX m_MatView = {};
+	XMMATRIX m_MatProjection = {};
+	XMMATRIX m_MatPort = {};
 };

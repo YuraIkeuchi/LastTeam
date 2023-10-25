@@ -110,16 +110,6 @@ void InterEnemy::WorldDivision() {
 		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
 	}
 }
-//カメラデータを取得
-void InterEnemy::GetData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort) {
-	m_MatView = matView;
-	m_MatProjection = matProjection;
-	m_MatPort = matPort;
-
-	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i]->GetCameraData(m_MatView,m_MatProjection,m_MatPort);
-	}
-}
 //UIのためのHP管理
 void InterEnemy::HPManage() {
 	for (auto i = 0; i < _drawnumber.size(); i++) {
