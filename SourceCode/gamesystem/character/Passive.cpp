@@ -1,14 +1,64 @@
 #include "Passive.h"
-
-Passive::Passive(int id) {
+#include "ImageManager.h"
+Passive::Passive(int id, XMFLOAT2 pos) {
+	this->pos = pos;
+	CreatePassive(id);
+	Initialize();
 }
 
 Passive::~Passive() {
 }
 
+void Passive::Initialize() {
+	icon = IKESprite::Create(ImageManager::PASSIVE_01 + spriteNum, pos);
+
+}
+
+void Passive::Update() {
+}
+
+void Passive::Draw() {
+	IKESprite::PreDraw();
+	icon->Draw();
+	IKESprite::PostDraw();
+}
+
+void Passive::LoadCsvPassive(std::string& FileName) {
+	std::ifstream file;
+	std::stringstream popcom;
+
+	file.open(FileName);
+	popcom << file.rdbuf();
+	file.close();
+
+	std::string line;
+	while (std::getline(popcom, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		std::getline(line_stream, word, ',');
+
+		if (word.find("//") == 0) {
+			continue;
+		}else if (word.find("ID") == 0) {
+			std::getline(line_stream, word, ',');
+			id = std::stoi(word);
+		} else if (word.find("ICON") == 0) {
+			std::getline(line_stream, word, ',');
+			spriteNum = std::stoi(word);
+		} else if (word.find("ABILITY") == 0) {
+			std::getline(line_stream, word, ',');
+			status = ABILITY(std::stoi(word));
+		} else if (word.find("DIAMETER") == 0) {
+			std::getline(line_stream, word, ',');
+			diameter = std::stof(word);
+			break;
+		}
+	}
+}
+
 bool Passive::CreatePassive(int id) {
 
-	string directory = "Resources/csv/chara/player/Passive";
+	string directory = "Resources/csv/chara/player/passive/Passive";
 
 	std::stringstream ss;
 	if (id > 10) {
@@ -17,7 +67,6 @@ bool Passive::CreatePassive(int id) {
 		ss << directory << "0" << id << ".csv";
 	}
 	std::string csv_ = ss.str();
-	spriteNum = std::any_cast<int>(LoadCSV::LoadCsvParam(csv_, "icon"));
-
+	LoadCsvPassive(csv_);
 	return true;
 }

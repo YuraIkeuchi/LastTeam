@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseScene.h"
+#include "Passive.h"
 
 class MapScene : public BaseScene {
 public:
@@ -51,6 +52,7 @@ private:
 	unique_ptr<IKESprite>screen = nullptr;
 	unique_ptr<IKESprite> frame = nullptr;
 
+	unique_ptr<Passive> passive = nullptr;
 
 	array<UI, 20> UIs;
 
