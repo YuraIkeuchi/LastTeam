@@ -119,5 +119,5 @@ private:
 	float m_DiameterGauge = 1.0f;
 	//ゲージマックス
 	float kGaugeCountMax = 180;
-
+	bool m_IsReload = true;
 };

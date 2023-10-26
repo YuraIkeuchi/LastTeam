@@ -31,6 +31,7 @@ public:
 		MAP_BOSS,
 		PASSIVE_01,
 		PASSIVE_02,
+		PASSIVE_03,
 		GAUGE,
 	};
 	//テクスチャの名前
