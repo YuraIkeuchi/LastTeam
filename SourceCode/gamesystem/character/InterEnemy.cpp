@@ -93,6 +93,10 @@ float InterEnemy::HpPercent() {
 }
 //スプライトを敵の市に出す
 void InterEnemy::WorldDivision() {
+	Camera* camera = Helper::GetInstance()->GetCamera();
+	m_MatView = camera->GetViewMatrix();
+	m_MatProjection = camera->GetProjectionMatrix();
+	m_MatPort = camera->GetViewPort();
 	//HPバー
 	XMVECTOR tex2DPos = { m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.25f };
 	tex2DPos = Helper::GetInstance()->PosDivi(tex2DPos, m_MatView, false);
@@ -107,6 +111,7 @@ void InterEnemy::WorldDivision() {
 	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f });
 	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.55f });
 	for (auto i = 0; i < _drawnumber.size(); i++) {
+		_drawnumber[i]->GetCameraData();
 		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
 	}
 }
