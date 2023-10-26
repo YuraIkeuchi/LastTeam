@@ -3,8 +3,10 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <map>
 #include "ActionUI.h"
 #include "AttackArea.h"
+#include <Passive.h>
 using namespace DirectX;
 using namespace std;
 //行動の種類
@@ -32,7 +34,7 @@ public:
 	//スキルを入手する
 	void AddSkill(const int ID);
 private:
-	
+
 	//攻撃エリアの生成
 	void BirthArea();
 	//行動UIの生成
@@ -43,17 +45,22 @@ private:
 	void FinishAct();
 	//
 	void GaugeUpdate();
+
+	void PassiveCheck();
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
+	const float GetDiameterVel() { return m_DiameterVel; }
+
 
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
 	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
-	
+	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
+
 private:
 	static const int ACT_PATTERN = 3;
 private:
@@ -71,6 +78,8 @@ private:
 
 	//行動のUI
 	vector<unique_ptr<ActionUI>> actui;
+
+	std::list<std::unique_ptr<Passive>> GotPassives;
 
 	unique_ptr<IKESprite> skillUI = nullptr;
 	unique_ptr<IKESprite> gaugeUI = nullptr;
@@ -96,6 +105,8 @@ private:
 	//プレイヤーの現在パネル
 	int m_NowHeight = {};
 	int m_NowWidth = {};
+	float m_DiameterVel = 1.0f;
+
 
 	enum SkillType {
 		SKILL_NORMAL,
@@ -104,6 +115,8 @@ private:
 	}_SkillType = SKILL_NORMAL;
 	//ゲージ
 	float m_GaugeCount = 0;
+	//
+	float m_DiameterGauge = 1.0f;
 	//ゲージマックス
 	float kGaugeCountMax = 180;
 

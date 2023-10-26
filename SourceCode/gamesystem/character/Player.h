@@ -7,8 +7,7 @@
 #include "DrawNumber.h"
 using namespace DirectX;
 
-class Player :public ObjCommon
-{
+class Player :public ObjCommon {
 public:
 	static Player* GetInstance();
 
@@ -44,7 +43,11 @@ public:
 	const int GetNowHeight() { return m_NowHeight; }
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetCharaState() { return _charaState; }
-
+	float GetMaxHp() { return m_MaxHP; }
+	void SetMaxHp(float maxhp) {
+		m_MaxHP = maxhp;
+		m_HP = maxhp;
+	}
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 private:
 	//三桁表示まで
@@ -53,8 +56,7 @@ private:
 	static const int DIR_MAX = 4;
 public:
 	//キャラの状態
-	enum CharaState
-	{
+	enum CharaState {
 		STATE_MOVE,
 		STATE_ACTION
 	};
@@ -70,7 +72,7 @@ private:
 	XMFLOAT3 m_PanelPos = {};
 	int m_NowHeight = {};
 	int m_NowWidth = {};
-	
+
 
 	//攻撃先
 	XMFLOAT3 m_TargetPos = {};

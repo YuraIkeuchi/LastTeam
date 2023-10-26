@@ -47,7 +47,7 @@ void Passive::LoadCsvPassive(std::string& FileName) {
 			spriteNum = std::stoi(word);
 		} else if (word.find("ABILITY") == 0) {
 			std::getline(line_stream, word, ',');
-			status = ABILITY(std::stoi(word));
+			ability = ABILITY(std::stoi(word));
 		} else if (word.find("DIAMETER") == 0) {
 			std::getline(line_stream, word, ',');
 			diameter = std::stof(word);
