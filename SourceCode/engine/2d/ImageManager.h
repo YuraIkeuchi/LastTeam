@@ -29,6 +29,8 @@ public:
 		MAP_NORMAL,
 		MAP_HEAL,
 		MAP_BOSS,
+		PASSIVE_01,
+		PASSIVE_02,
 		GAUGE,
 	};
 	//テクスチャの名前

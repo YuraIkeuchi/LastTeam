@@ -81,7 +81,7 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	//完全に前に書くスプライト
 	for (int i = 0; i < 3; i++) {
 		if (i != 0) {
-			if (texts[i - 1]->GetFinish()) {
+			if (texts[(size_t)i - 1]->GetFinish()) {
 				texts[i]->Draw();
 
 			}

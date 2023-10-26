@@ -2,34 +2,41 @@
 #include"IKESprite.h"
 #include<memory>
 
-#include <string>
+#include"VariableCommon.h"
 #include "CsvLoader.h"
-#include <sstream>
 
 using namespace std;         //  –¼‘O‹óŠÔŽw’è
 
 class Passive {
 public:
-	enum STATUS {
+	enum class ABILITY: int{
 		NONE = 0,
+		RELOAD_UP,
+		SPEED_UP,
 		HP_UP,
-		HP_DOWN,
 		ATTACK_UP,
+		MAX_ABILITY
 	};
-	Passive(int id);
+	Passive(int id, XMFLOAT2 pos = {0.f,0.f});
 	~Passive();
 
+	void Initialize();
+	void Update();
+	void Draw();
 private:
+	void LoadCsvPassive(std::string& FileName);
 
 	bool CreatePassive(int id);
 
 
 private:
-
 	int id = 0;
 	std::unique_ptr<IKESprite> icon = nullptr;
 	int spriteNum = 0;
-	int status = NONE;
+	//
+	XMFLOAT2 pos = {};
+	//
+	ABILITY status = ABILITY::NONE;
 	//”{—¦
 	float diameter = 1.0f;
 };
