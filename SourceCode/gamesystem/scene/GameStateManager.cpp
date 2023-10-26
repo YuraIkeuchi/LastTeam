@@ -242,8 +242,8 @@ void GameStateManager::PassiveCheck() {
 			m_DiameterVel = passive->GetDiameter();
 			break;
 		case Passive::ABILITY::HP_UP:
-			//Player::GetInstance()->SetMaxHp(
-				//Player::GetInstance()->GetMaxHp()* passive->GetDiameter());
+			Player::GetInstance()->SetMaxHp(
+				Player::GetInstance()->GetMaxHp()* passive->GetDiameter());
 			break;
 		case Passive::ABILITY::ATTACK_UP:
 			break;
