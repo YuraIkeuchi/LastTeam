@@ -12,9 +12,8 @@ public:
 	enum class ABILITY: int{
 		NONE = 0,
 		RELOAD_UP,
-		SPEED_UP,
 		HP_UP,
-		ATTACK_UP,
+		RELOAD_LOCK,
 		MAX_ABILITY
 	};
 	Passive(int id, XMFLOAT2 pos = {0.f,0.f});

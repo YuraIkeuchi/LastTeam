@@ -34,6 +34,8 @@ void GameStateManager::Initialize() {
 
 	GotPassives.push_back(std::move(make_unique<Passive>(1)));
 	GotPassives.push_back(std::move(make_unique<Passive>(2, XMFLOAT2{ 70.f,0.f })));
+	GotPassives.push_back(std::move(make_unique<Passive>(3, XMFLOAT2{ 140.f,0.f })));
+
 	PassiveCheck();
 	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize(basesize);
@@ -216,8 +218,10 @@ void GameStateManager::GaugeUpdate() {
 
 	m_GaugeCount += 1.0f * m_DiameterGauge;
 	if (m_GaugeCount >= kGaugeCountMax) {
-		StagePanel::GetInstance()->ResetAction();
-		StagePanel::GetInstance()->ResetPanel();
+		if (m_IsReload) {
+			StagePanel::GetInstance()->ResetAction();
+			StagePanel::GetInstance()->ResetPanel();
+		}
 		//ƒpƒlƒ‹’u‚­”
 		int panel_num = 3;
 		SkillManager::GetInstance()->ResetBirth();
@@ -238,14 +242,15 @@ void GameStateManager::PassiveCheck() {
 		case Passive::ABILITY::RELOAD_UP:
 			m_DiameterGauge = passive->GetDiameter();
 			break;
-		case Passive::ABILITY::SPEED_UP:
-			m_DiameterVel = passive->GetDiameter();
-			break;
 		case Passive::ABILITY::HP_UP:
 			Player::GetInstance()->SetMaxHp(
 				Player::GetInstance()->GetMaxHp()* passive->GetDiameter());
 			break;
-		case Passive::ABILITY::ATTACK_UP:
+		case Passive::ABILITY::RELOAD_LOCK:
+			m_IsReload = false;
+			break;
+		case Passive::ABILITY::SPEED_UP:
+			m_DiameterVel = passive->GetDiameter();
 			break;
 		default:
 			break;
