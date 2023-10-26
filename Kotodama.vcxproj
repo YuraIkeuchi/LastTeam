@@ -193,7 +193,9 @@
     <ClCompile Include="SourceCode\gamesystem\gamecamera\CameraWork.cpp" />
     <ClCompile Include="SourceCode\gamesystem\MessageWindow\MessageWindow.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter2D.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ParticleManager\ParticleManager.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\ParticleManager\ParticleManager2D.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scenetext\TitleText.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\BaseScene.cpp" />
     <ClCompile Include="SourceCode\gamesystem\scene\ClearScene.cpp" />
@@ -307,7 +309,9 @@
     <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h" />
     <ClInclude Include="SourceCode\gamesystem\MessageWindow\MessageWindow.h" />
     <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.h" />
+    <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter2D.h" />
     <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleManager.h" />
+    <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleManager2D.h" />
     <ClInclude Include="SourceCode\gamesystem\scenetext\TitleText.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\BaseScene.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\ClearScene.h" />

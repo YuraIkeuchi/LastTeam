@@ -1,6 +1,7 @@
 #include "Framework.h"
 #include "IKEFbxLoader.h"
 #include "ParticleEmitter.h"
+#include "ParticleEmitter2D.h"
 #include "AudioManager.h"
 #include "Font.h"
 #include "SceneSave.h"
@@ -70,8 +71,10 @@ void Framework::Initialize(DirectXCommon* dxCommon)
 	shadowmap = ShadowMap::Create();
 	// パーティクルマネージャ初期化
 	ParticleManager::CreateCommon(dxcommon->GetDev(), dxcommon->GetCmdList());
+	//ParticleManager2D::CreateCommon(dxcommon->GetDev(), dxcommon->GetCmdList());
 	//パーティクルエミッター初期化
 	ParticleEmitter::GetInstance()->Initialize();
+	ParticleEmitter2D::GetInstance()->Initialize();
 	Font::Initialize(dxcommon);
 	
 	SceneSave::GetInstance()->AllReset();

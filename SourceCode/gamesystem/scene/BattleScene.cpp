@@ -1,6 +1,7 @@
 #include "BattleScene.h"
 #include <Player.h>
 #include <ParticleEmitter.h>
+#include <ParticleEmitter2D.h>
 #include <StagePanel.h>
 #include <GameMode.h>
 #include <SceneManager.h>
@@ -14,6 +15,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	PlayPostEffect = false;
 	//パーティクル全削除
 	ParticleEmitter::GetInstance()->AllDelete();
+	ParticleEmitter2D::GetInstance()->AllDelete();
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
@@ -45,6 +47,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	StagePanel::GetInstance()->Update();
 	GameMode::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
+	ParticleEmitter2D::GetInstance()->Update();
 	enemyManager->Update();
 	enemyManager->GetCameraData(camera->GetViewMatrix(), camera->GetProjectionMatrix(), camera->GetViewPort());
 	//敵を倒したらシーン以降(仮)
@@ -81,6 +84,7 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 //ポストエフェクトかからない
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
+	ParticleEmitter2D::GetInstance()->FlontDrawAll();
 	Player::GetInstance()->ActUIDraw();
 	enemyManager->UIDraw();
 }

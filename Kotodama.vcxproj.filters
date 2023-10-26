@@ -372,6 +372,12 @@
     <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\ParticleManager\ParticleManager2D.cpp">
+      <Filter>gamesystem\particle</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter2D.cpp">
+      <Filter>gamesystem\particle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -708,6 +714,12 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
       <Filter>gamesystem\charactor\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleManager2D.h">
+      <Filter>gamesystem\particle</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter2D.h">
+      <Filter>gamesystem\particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

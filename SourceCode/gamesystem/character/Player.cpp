@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Easing.h"
 #include "ParticleEmitter.h"
+#include "ParticleEmitter2D.h"
 #include "StagePanel.h"
 #include "Audio.h"
 Player* Player::GetInstance()
@@ -292,12 +293,12 @@ void Player::BirthActUI(const string& Tag) {
 void Player::BirthParticle() {
 	if (m_AllActCount != 0) {
 		if (m_Act[0] == ACT_ATTACK) {
-			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 1.0f,0.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
+			ParticleEmitter2D::GetInstance()->FireEffect(20, { m_Position.x,m_Position.y }, 1.0f, 0.0f, { 1.0f,0.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
 		}	else if (m_Act[0] == ACT_GUARD) {
-			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 0.0f,0.0f,1.0f,1.0f }, { 0.0f,0.0f,1.0f,1.0f });
+			ParticleEmitter2D::GetInstance()->FireEffect(20, { m_Position.x,m_Position.y }, 1.0f, 0.0f, { 0.0f,0.0f,1.0f,1.0f }, { 0.0f,0.0f,1.0f,1.0f });
 		}
 		else if (m_Act[0] == ACT_SKILL) {
-			ParticleEmitter::GetInstance()->FireEffect(20, m_Position, 1.0f, 0.0f, { 0.0f,1.0f,0.0f,1.0f }, { 0.0f,1.0f,0.0f,1.0f });
+			ParticleEmitter2D::GetInstance()->FireEffect(20, { m_Position.x,m_Position.y }, 1.0f, 0.0f, { 0.0f,1.0f,0.0f,1.0f }, { 0.0f,1.0f,0.0f,1.0f });
 		}
 	}
 }

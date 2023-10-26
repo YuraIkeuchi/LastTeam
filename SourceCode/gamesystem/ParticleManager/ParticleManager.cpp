@@ -29,6 +29,7 @@ static const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const Dir
 	result.y = lhs.y + rhs.y;
 	result.z = lhs.z + rhs.z;
 	return result;
+	return result;
 }
 
 static const DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs) {
