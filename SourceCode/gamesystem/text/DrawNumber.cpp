@@ -50,8 +50,9 @@ void DrawNumber::SetExplain(const XMFLOAT3& pos) {
 	m_Position = { texHPFirst.m128_f32[0],texHPFirst.m128_f32[1] };
 }
 //ƒJƒƒ‰î•ñ
-void DrawNumber::GetCameraData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort) {
-	m_MatView = matView;
-	m_MatProjection = matProjection;
-	m_MatPort = matPort;
+void DrawNumber::GetCameraData() {
+	Camera* camera = Helper::GetInstance()->GetCamera();
+	m_MatView = camera->GetViewMatrix();
+	m_MatProjection = camera->GetProjectionMatrix();
+	m_MatPort = camera->GetViewPort();
 }

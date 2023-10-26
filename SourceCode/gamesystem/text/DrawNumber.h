@@ -30,7 +30,7 @@ public:
 	//数字の指定とか座標とか
 	void SetExplain(const XMFLOAT3& pos);
 	//変換の場合カメラデータをもらう
-	void GetCameraData(const XMMATRIX& matView, const XMMATRIX& matProjection, const XMMATRIX& matPort);
+	void GetCameraData();
 public:
 	void SetPosition(const XMFLOAT2& Position) { m_Position = Position; }
 	void SetNumber(const int Number) { m_Number = Number; }
