@@ -23,12 +23,13 @@ public:
 	void Initialize();
 	void Update();
 	void Draw();
+
+	float GetDiameter() { return diameter; }
+	ABILITY GetAbility() { return ability; }
 private:
 	void LoadCsvPassive(std::string& FileName);
 
 	bool CreatePassive(int id);
-
-
 private:
 	int id = 0;
 	std::unique_ptr<IKESprite> icon = nullptr;
@@ -36,7 +37,7 @@ private:
 	//
 	XMFLOAT2 pos = {};
 	//
-	ABILITY status = ABILITY::NONE;
+	ABILITY ability = ABILITY::NONE;
 	//”{—¦
 	float diameter = 1.0f;
 };
