@@ -17,6 +17,6 @@ void AttackSkill::Create(const std::string name, int ID, float latency, float in
 void AttackSkill::ImGui_Origin() {
 	ImGui::Begin("Attack");
 	ImGui::Text("ID:%d", ID);
-	ImGui::Text("Birth:%d", m_Birth);
+	ImGui::Text("Damage:%f", damege);
 	ImGui::End();
 }

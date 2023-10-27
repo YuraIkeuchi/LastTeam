@@ -190,6 +190,7 @@ void StagePanel::RandomPanel(int num) {
 		}
 		newAction->Initialize();
 		newAction->SetSkillID(SkillManager::GetInstance()->GetID());
+		newAction->SetDamage(SkillManager::GetInstance()->GetDamage());
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
 

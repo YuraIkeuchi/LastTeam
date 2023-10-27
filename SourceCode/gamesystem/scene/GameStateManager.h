@@ -32,7 +32,7 @@ public:
 	//プレイヤーの現在位置
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
-	void AddSkill(const int ID);
+	void AddSkill(const int ID,const float damage);
 private:
 	//攻撃した瞬間
 	void AttackTrigger();
@@ -49,10 +49,6 @@ private:
 
 	void PassiveCheck();
 
-	//スキルのCSVを読み取る
-	void LoadCsvSkill(std::string& FileName);
-	//CSVを作成
-	bool CreateSkill(int id);
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -73,6 +69,7 @@ private:
 
 	struct ActState {
 		int ActID;
+		float actDamage;
 	};
 
 	vector<ActState> m_Act;
