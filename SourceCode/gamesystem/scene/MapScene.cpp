@@ -28,6 +28,9 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetAnchorPoint({ 0.5f,0.5f });
 
 	MapCreate();
+
+	passive = make_unique<Passive>(1);
+
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
@@ -75,6 +78,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 		ui.sprite->Draw();
 	}
 	frame->Draw();
+	passive->Draw();
 }
 
 void MapScene::BackDraw(DirectXCommon* dxCommon) {

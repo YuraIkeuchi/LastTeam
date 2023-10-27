@@ -6,8 +6,7 @@
 #include <GameStateManager.h>
 #include <StagePanel.h>
 #include <ImageManager.h>
-Player* Player::GetInstance()
-{
+Player* Player::GetInstance() {
 	static Player instance;
 
 	return &instance;
@@ -32,8 +31,7 @@ void Player::LoadResource() {
 	_drawnumber[THIRD_DIGHT]->SetPosition({ 120.0f,600.0f });
 }
 //初期化
-bool Player::Initialize()
-{
+bool Player::Initialize() {
 
 	LoadCSV();
 	m_MaxHP = m_HP;
@@ -72,16 +70,20 @@ void Player::InitState(const XMFLOAT3& pos) {
 /*CharaStateのState並び順に合わせる*/
 void (Player::* Player::stateTable[])() = {
 	&Player::Move,//移動
+	&Player::Delay,//動きが止まる
 };
 //更新処理
-void Player::Update()
-{
+void Player::Update() {
 	const float l_GrazeMax = 2.0f;
 
 	//状態移行(charastateに合わせる)
 	(this->*stateTable[_charaState])();
+	//ディレイタイマーが0以外ならディレイにする
+	if (m_DelayTimer != 0) {
+		_charaState = STATE_DELAY;
+	}
 	Obj_SetParam();
-	
+
 	BirthParticle();
 
 	//グレイズ用にスコアを計算する
@@ -104,8 +106,7 @@ void Player::Update()
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
 //描画
-void Player::Draw(DirectXCommon* dxCommon)
-{
+void Player::Draw(DirectXCommon* dxCommon) {
 
 	Obj_Draw();
 }
@@ -124,8 +125,7 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("Length:%f", m_Length);
-	ImGui::Text("GrazeScore:%f", m_GrazeScore);
+	ImGui::Text("DelayTimer:%d", m_DelayTimer);
 	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
 	ImGui::End();
 }
@@ -141,38 +141,31 @@ void Player::Move() {
 		input->PushButton(input->LEFT)) {
 		if (input->PushButton(input->UP)) {
 			m_InputTimer[DIR_UP]++;
-		}
-		else if (input->PushButton(input->DOWN)) {
+		} else if (input->PushButton(input->DOWN)) {
 			m_InputTimer[DIR_DOWN]++;
-		}
-		else if (input->PushButton(input->RIGHT)) {
+		} else if (input->PushButton(input->RIGHT)) {
 			m_InputTimer[DIR_RIGHT]++;
-		}
-		else if (input->PushButton(input->LEFT)) {
+		} else if (input->PushButton(input->LEFT)) {
 			m_InputTimer[DIR_LEFT]++;
 		}
-	}
-	else {			//離した瞬間
+	} else {			//離した瞬間
 		if (m_LimitCount == 0) {
 			if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
 				m_NowHeight++;
 				m_InputTimer[DIR_UP] = {};
 				m_Position.z += l_Velocity;
 				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-			}
-			else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
+			} else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
 				m_NowHeight--;
 				m_InputTimer[DIR_DOWN] = {};
 				m_Position.z -= l_Velocity;
 				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-			}
-			else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
+			} else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
 				m_NowWidth++;
 				m_InputTimer[DIR_RIGHT] = {};
 				m_Position.x += l_Velocity;
 				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-			}
-			else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
+			} else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
 				m_NowWidth--;
 				m_InputTimer[DIR_LEFT] = {};
 				m_Position.x -= l_Velocity;
@@ -194,8 +187,7 @@ void Player::Move() {
 			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 		}
 		m_InputTimer[DIR_UP] = {};
-	}
-	else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
+	} else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
 		if (m_NowHeight > 0) {
 			m_NowHeight--;
 			m_LimitCount++;
@@ -203,8 +195,7 @@ void Player::Move() {
 			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 		}
 		m_InputTimer[DIR_DOWN] = {};
-	}
-	else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
+	} else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
 		if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
 			m_NowWidth++;
 			m_LimitCount++;
@@ -212,8 +203,7 @@ void Player::Move() {
 			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 		}
 		m_InputTimer[DIR_RIGHT] = {};
-	}
-	else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
+	} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
 		if (m_NowWidth > 0) {
 			m_NowWidth--;
 			m_LimitCount++;
@@ -232,4 +222,10 @@ float Player::HpPercent() {
 	float temp = m_HP / m_MaxHP;
 	Helper::GetInstance()->Clamp(temp, 0.0f, 1.0f);
 	return temp;
+}
+//ディレイ処理
+void Player::Delay() {
+	if (Helper::GetInstance()->CheckMax(m_DelayTimer, 0, -1)) {
+		_charaState = STATE_MOVE;
+	}
 }

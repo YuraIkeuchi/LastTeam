@@ -5,6 +5,7 @@
 #include <Easing.h>
 #include <ImageManager.h>
 #include <SkillManager.h>
+#include <Player.h>
 
 GameStateManager* GameStateManager::GetInstance() {
 	static GameStateManager instance;
@@ -29,7 +30,13 @@ void GameStateManager::Initialize() {
 	actui.clear();
 	m_Act.clear();
 	attackarea.clear();
+	GotPassives.clear();
 
+	GotPassives.push_back(std::move(make_unique<Passive>(1)));
+	GotPassives.push_back(std::move(make_unique<Passive>(2, XMFLOAT2{ 70.f,0.f })));
+	GotPassives.push_back(std::move(make_unique<Passive>(3, XMFLOAT2{ 140.f,0.f })));
+
+	PassiveCheck();
 	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize(basesize);
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
@@ -37,9 +44,9 @@ void GameStateManager::Initialize() {
 }
 //更新
 void GameStateManager::Update() {
-	Input* input = Input::GetInstance();
+
 	const int l_AddCounterScore = 10;
-	m_AllScore = m_CounterScore + (int)(m_PosScore) + (int)(m_GrazeScore);
+	m_AllScore = m_CounterScore + (int)(m_PosScore)+(int)(m_GrazeScore);
 
 	//カウンターの処理
 	if (m_Counter) {
@@ -77,8 +84,18 @@ void GameStateManager::Update() {
 
 	GaugeUpdate();
 
+	//攻撃した瞬間
+	AttackTrigger();
+}
+//攻撃した瞬間
+void GameStateManager::AttackTrigger() {
+	Input* input = Input::GetInstance();
+	if (m_AllActCount == 0) { return; }
+	if (actui[0]->GetUse()) { return; }
+	if (Player::GetInstance()->GetCharaState() == 1) { return; }			//ディレイだったら
+
 	//スキルが一個以上あったらスキル使える
-	if (input->TriggerButton(input->A) && m_AllActCount != 0 && !actui[0]->GetUse()) {
+	if (input->TriggerButton(input->A)) {
 		UseSkill();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
 	}
@@ -115,7 +132,7 @@ void GameStateManager::ImGuiDraw() {
 			ImGui::Text("Act[%d]:%d", i, m_Act[i].ActID);
 		}
 	}*/
-	StagePanel::GetInstance()->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -125,6 +142,9 @@ void GameStateManager::ActUIDraw() {
 		actui[i]->Draw();
 	}
 	IKESprite::PostDraw();
+	for (unique_ptr<Passive>& passive : GotPassives) {
+		passive->Draw();
+	}
 }
 //スキルを入手(InterActionCPPで使ってます)
 void GameStateManager::AddSkill(const int ID) {
@@ -161,8 +181,7 @@ void GameStateManager::BirthArea() {
 		newarea->Initialize();
 		newarea->InitState(l_BirthCountX, m_NowHeight);
 		attackarea.push_back(newarea);
-	}
-	else if (_SkillType == SKILL_STRONG) {		//プレイヤーの一から右一列全部
+	} else if (_SkillType == SKILL_STRONG) {		//プレイヤーの一から右一列全部
 		l_BirthNumX = PANEL_WIDTH - (m_NowWidth + 1);
 		for (int i = 0; i < l_BirthNumX; i++) {
 			l_BirthCountX = (m_NowWidth + 1) + i;
@@ -172,8 +191,7 @@ void GameStateManager::BirthArea() {
 			newarea->InitState(l_BirthCountX, m_NowHeight);
 			attackarea.push_back(newarea);
 		}
-	}
-	else {				//プレイヤーから3 * 2のマス
+	} else {				//プレイヤーから3 * 2のマス
 		for (int j = 0; j < 3; j++) {
 			l_BirthCountZ = (m_NowHeight - 1) + j;
 			if (l_BirthCountZ < 0 || l_BirthCountZ > 3) {
@@ -196,6 +214,7 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 }
 //スキルの使用
 void GameStateManager::UseSkill() {
+	CreateSkill(m_Act[0].ActID);
 	BirthArea();
 	FinishAct();
 }
@@ -207,18 +226,87 @@ void GameStateManager::FinishAct() {
 }
 
 void GameStateManager::GaugeUpdate() {
-	
-		m_GaugeCount++;
-		if (m_GaugeCount == kGaugeCountMax) {
+
+	m_GaugeCount += 1.0f * m_DiameterGauge;
+	if (m_GaugeCount >= kGaugeCountMax) {
+		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();
 			StagePanel::GetInstance()->ResetPanel();
-			//パネル置く数
-			int panel_num = 3;
-			SkillManager::GetInstance()->ResetBirth();
-			StagePanel::GetInstance()->RandomPanel(panel_num);
-			m_GaugeCount = 0;
 		}
-		float per = (m_GaugeCount / kGaugeCountMax);
-		float size = Ease(In, Quad, 0.5f, gaugeUI->GetSize().y, basesize.y * per);
-		gaugeUI->SetSize({ basesize.x,size });
+		//パネル置く数
+		int panel_num = 3;
+		SkillManager::GetInstance()->ResetBirth();
+		StagePanel::GetInstance()->RandomPanel(panel_num);
+		m_GaugeCount = 0;
+	}
+	float per = (m_GaugeCount / kGaugeCountMax);
+	float size = Ease(In, Quad, 0.5f, gaugeUI->GetSize().y, basesize.y * per);
+	gaugeUI->SetSize({ basesize.x,size });
+}
+
+void GameStateManager::PassiveCheck() {
+	for (unique_ptr<Passive>& passive : GotPassives) {
+		switch (passive->GetAbility()) {
+		case Passive::ABILITY::RELOAD_UP:
+			m_DiameterGauge = passive->GetDiameter();
+			break;
+		case Passive::ABILITY::HP_UP:
+			Player::GetInstance()->SetMaxHp(
+				Player::GetInstance()->GetMaxHp()* passive->GetDiameter());
+			break;
+		case Passive::ABILITY::RELOAD_LOCK:
+			m_IsReload = false;
+			break;
+		default:
+			break;
+		}
+
+	}
+}
+//スキルのCSVを読み取る
+void GameStateManager::LoadCsvSkill(std::string& FileName) {
+	std::ifstream file;
+	std::stringstream popcom;
+
+	file.open(FileName);
+	popcom << file.rdbuf();
+	file.close();
+
+	std::string line;
+	while (std::getline(popcom, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		std::getline(line_stream, word, ',');
+
+		if (word.find("//") == 0) {
+			continue;
+		}
+		else if (word.find("ID") == 0) {
+			std::getline(line_stream, word, ',');
+			m_ID = std::stoi(word);
+		}
+		else if (word.find("Delay") == 0) {
+			std::getline(line_stream, word, ',');
+			m_Delay = std::stoi(word);
+			break;
+		}
+	}
+}
+
+bool GameStateManager::CreateSkill(int id) {
+
+	string directory = "Resources/csv/skill/Skill";
+
+	std::stringstream ss;
+	if (id > 10) {
+		ss << directory << id << ".csv";
+	}
+	else {
+		ss << directory << "0" << id << ".csv";
+	}
+	std::string csv_ = ss.str();
+	LoadCsvSkill(csv_);
+
+	Player::GetInstance()->SetDelayTimer(m_Delay);
+	return true;
 }

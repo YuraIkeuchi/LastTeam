@@ -573,7 +573,6 @@
     <ClInclude Include="SourceCode\engine\2d\ShadowMap.h">
       <Filter>engine\2d\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\GameOverSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\actor\GameOverSceneActor.h">
       <Filter>gamesystem\actor\GameOver</Filter>
     </ClInclude>
@@ -665,7 +664,6 @@
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h">
       <Filter>gamesystem\Text</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\engine\2d\FontManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h" />
     <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\Passive.h">

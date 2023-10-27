@@ -7,8 +7,7 @@
 #include "DrawNumber.h"
 using namespace DirectX;
 
-class Player :public ObjCommon
-{
+class Player :public ObjCommon {
 public:
 	static Player* GetInstance();
 
@@ -31,6 +30,8 @@ public:
 private:
 	//動き
 	void Move();
+	//動きが止まる
+	void Delay();
 
 	//パーティクル
 	void BirthParticle();
@@ -44,8 +45,14 @@ public:
 	const int GetNowHeight() { return m_NowHeight; }
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetCharaState() { return _charaState; }
-
+	float GetMaxHp() { return m_MaxHP; }
+	void SetMaxHp(float maxhp) {
+		m_MaxHP = maxhp;
+		m_HP = maxhp;
+	}
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
+
+	void SetDelayTimer(const int DelayTimer) { m_DelayTimer = DelayTimer; }
 private:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
@@ -53,10 +60,9 @@ private:
 	static const int DIR_MAX = 4;
 public:
 	//キャラの状態
-	enum CharaState
-	{
+	enum CharaState {
 		STATE_MOVE,
-		STATE_ACTION
+		STATE_DELAY
 	};
 private:
 	Input* input = Input::GetInstance();
@@ -70,7 +76,7 @@ private:
 	XMFLOAT3 m_PanelPos = {};
 	int m_NowHeight = {};
 	int m_NowWidth = {};
-	
+
 
 	//攻撃先
 	XMFLOAT3 m_TargetPos = {};
@@ -116,4 +122,6 @@ private:
 		THIRD_DIGHT
 	};
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
+
+	int m_DelayTimer = {};
 };

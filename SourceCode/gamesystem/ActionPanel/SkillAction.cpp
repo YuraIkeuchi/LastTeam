@@ -65,9 +65,5 @@ void SkillAction::Pause() {
 }
 //カメラデータ
 void SkillAction::GetData() {
-	Camera* camera = Helper::GetInstance()->GetCamera();
-	m_MatView = camera->GetViewMatrix();
-	m_MatProjection = camera->GetProjectionMatrix();
-	m_MatPort = camera->GetViewPort();
-	_drawnumber->GetCameraData(m_MatView, m_MatProjection, m_MatPort);
+	_drawnumber->GetCameraData();
 }

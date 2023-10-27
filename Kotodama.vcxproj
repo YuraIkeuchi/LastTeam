@@ -214,7 +214,6 @@
     <ClInclude Include="SourceCode\engine\2d\DebugText.h" />
     <ClInclude Include="SourceCode\engine\2d\Feed.h" />
     <ClInclude Include="SourceCode\engine\2d\Font.h" />
-    <ClInclude Include="SourceCode\engine\2d\FontManager.h" />
     <ClInclude Include="SourceCode\engine\2d\IKESprite.h" />
     <ClInclude Include="SourceCode\engine\2d\IKETexture.h" />
     <ClInclude Include="SourceCode\engine\2d\ImageManager.h" />
@@ -284,7 +283,6 @@
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
-    <ClInclude Include="SourceCode\gamesystem\actor\GameOverSceneActor.h" />
     <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterBoss.h" />

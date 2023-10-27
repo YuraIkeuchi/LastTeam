@@ -234,6 +234,33 @@ void LoadCSV::LoadCsvParam_Int(std::string FileName, std::vector<int>& obj, std:
 	}
 }
 
+void LoadCSV::LoadCsvParam_Int(std::string& FileName, int& obj, std::string LoadName) {
+	std::string line;
+	std::stringstream popcom;
+	std::ifstream file;
+
+	file.open(FileName);
+
+	popcom << file.rdbuf();
+
+	file.close();
+
+	while (std::getline(popcom, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		std::getline(line_stream, word, ',');
+
+		if (word.find("//") == 0) {
+			continue;
+		}
+		if (word.find(LoadName) == 0) {
+			std::getline(line_stream, word, ',');
+			obj = std::stoi(word);
+			break;
+		}
+	}
+}
+
 void LoadCSV::LoadCsvParam_String(std::string FileName, std::string& obj, std::string LoadName) {
 	std::string line;
 	std::stringstream popcom;
