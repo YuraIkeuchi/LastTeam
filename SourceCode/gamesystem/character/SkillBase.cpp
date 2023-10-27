@@ -8,9 +8,10 @@ void SkillBase::Create(const std::string name, int ID, float latency, float invo
 	this->invocatingTime = invocatingTime;
 	this->restraintTime = restraintTime;
 	this->rarity = rarity;
-	this->popRate = popRate; 
+	this->popRate = popRate;
 }
 
 void SkillBase::ImGuiDraw() {
 	ImGui_Origin();
 }
+

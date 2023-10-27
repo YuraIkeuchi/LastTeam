@@ -34,7 +34,8 @@ public:
 	//スキルを入手する
 	void AddSkill(const int ID);
 private:
-
+	//攻撃した瞬間
+	void AttackTrigger();
 	//攻撃エリアの生成
 	void BirthArea();
 	//行動UIの生成
@@ -47,6 +48,11 @@ private:
 	void GaugeUpdate();
 
 	void PassiveCheck();
+
+	//スキルのCSVを読み取る
+	void LoadCsvSkill(std::string& FileName);
+	//CSVを作成
+	bool CreateSkill(int id);
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -120,4 +126,9 @@ private:
 	//ゲージマックス
 	float kGaugeCountMax = 180;
 	bool m_IsReload = true;
+	bool m_BirthSkill = false;
+
+	int m_ID = {};
+	int m_Delay = {};
+	string m_Name;
 };

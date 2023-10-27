@@ -16,6 +16,12 @@ public:
 	void ImGuiDraw();
 
 	void ResetBirth();
+
+private:
+	//ƒXƒLƒ‹‚ÌCSV‚ğ“Ç‚İæ‚é
+	void LoadCsvSkill(std::string& FileName, const int id);
+	//CSV‚ğì¬
+	bool CreateSkill(int id);
 public:
 	//ID‚ğæ‚é
 	int GetID();

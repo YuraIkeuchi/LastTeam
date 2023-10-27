@@ -28,6 +28,13 @@ public:
 		XMFLOAT2 distance = { 1.0f, 0.0f });
 
 	void ImGui_Origin()override;
+
+	float GetDamege() { return damege; }
+	XMFLOAT2 GetDistance() { return distance; }
+	XMFLOAT2 GetRange() { return range; }
+
+	void SetDamege(const float damege) { this->damege = damege; }
+
 protected:
 	//ダメージ
 	float damege = 0.0f;
@@ -35,5 +42,15 @@ protected:
 	XMFLOAT2 range = { 1.0f,1.0f };
 	//距離 ※プレイヤーの位置から範囲の一番左上基準
 	XMFLOAT2 distance = { 0.0f, 1.0f };
+
+	//スキル固有割合
+	float skillRation = 0.0f;
+	
+	// deta = 000000000000000;
+	
+	//吸収攻撃
+	bool adsorption = false;
+	//自傷攻撃
+	bool selfDamege = false;
 };
 

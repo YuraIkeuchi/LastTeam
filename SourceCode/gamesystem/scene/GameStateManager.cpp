@@ -43,7 +43,7 @@ void GameStateManager::Initialize() {
 }
 //更新
 void GameStateManager::Update() {
-	Input* input = Input::GetInstance();
+
 	const int l_AddCounterScore = 10;
 	m_AllScore = m_CounterScore + (int)(m_PosScore)+(int)(m_GrazeScore);
 
@@ -83,11 +83,22 @@ void GameStateManager::Update() {
 
 	GaugeUpdate();
 
+	//攻撃した瞬間
+	AttackTrigger();
+}
+//攻撃した瞬間
+void GameStateManager::AttackTrigger() {
+	Input* input = Input::GetInstance();
+	if (m_AllActCount == 0) { return; }
+	if (actui[0]->GetUse()) { return; }
+	if (Player::GetInstance()->GetCharaState() == 1) { return; }
 	//スキルが一個以上あったらスキル使える
-	if (input->TriggerButton(input->A) && m_AllActCount != 0 && !actui[0]->GetUse()) {
-		UseSkill();
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
+	if (input->TriggerButton(input->A)) {
+		m_BirthSkill = true;
+		Player::GetInstance()->SetDelayStart(true);
+		CreateSkill(m_Act[0].ActID);
 	}
+	UseSkill();
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
@@ -102,26 +113,27 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	//ImGui::Begin("GameState");
-	//
-	///*if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
-	//	_SkillType = SKILL_NORMAL;
-	//}
-	//if (ImGui::Button("STRONGSKILL", ImVec2(50, 50))) {
-	//	_SkillType = SKILL_STRONG;
-	//}
-	//if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
-	//	_SkillType = SKILL_SPECIAL;
-	//}*/
-	//
-	///*
-	//ImGui::End();
+	ImGui::Begin("GameState");
+	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
+		_SkillType = SKILL_NORMAL;
+	}
+	if (ImGui::Button("STRONGSKILL", ImVec2(50, 50))) {
+		_SkillType = SKILL_STRONG;
+	}
+	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
+		_SkillType = SKILL_SPECIAL;
+	}
+	ImGui::End();
+	/**/
+	
+	/*
+	
 	/*if (!m_Act.empty()) {
 		for (auto i = 0; i < m_Act.size(); i++) {
 			ImGui::Text("Act[%d]:%d", i, m_Act[i].ActID);
 		}
 	}*/
-	StagePanel::GetInstance()->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -196,6 +208,7 @@ void GameStateManager::BirthArea() {
 			}
 		}
 	}
+
 }
 //プレイヤーの現在パネル
 void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
@@ -203,14 +216,21 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 }
 //スキルの使用
 void GameStateManager::UseSkill() {
-	BirthArea();
-	FinishAct();
+
+	if (!Player::GetInstance()->GetDelayStart() && m_BirthSkill) {
+
+		BirthArea();
+		FinishAct();
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
+		m_BirthSkill = false;
+	}
 }
 //行動の終了
 void GameStateManager::FinishAct() {
 	m_Act.erase(m_Act.begin());
 	m_AllActCount--;
 	actui[0]->SetUse(true);
+
 }
 
 void GameStateManager::GaugeUpdate() {
@@ -250,6 +270,59 @@ void GameStateManager::PassiveCheck() {
 		}
 
 	}
+}
+//スキルのCSVを読み取る
+void GameStateManager::LoadCsvSkill(std::string& FileName) {
+	std::ifstream file;
+	std::stringstream popcom;
 
+	file.open(FileName);
+	popcom << file.rdbuf();
+	file.close();
 
+	std::string line;
+	while (std::getline(popcom, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		std::getline(line_stream, word, ',');
+
+		if (word.find("//") == 0) {
+			continue;
+		}
+		else if (word.find("ID") == 0) {
+			std::getline(line_stream, word, ',');
+			m_ID = std::stoi(word);
+		}
+		else if (word.find("Delay") == 0) {
+			std::getline(line_stream, word, ',');
+			m_Delay = std::stoi(word);
+		}
+		else if (word.find("Name") == 0) {
+			std::getline(line_stream, word, ',');
+			m_Name = word;
+
+			break;
+		}
+
+	}
+}
+
+bool GameStateManager::CreateSkill(int id) {
+
+	string directory = "Resources/csv/skill/Skill";
+
+	std::stringstream ss;
+	if (id > 10) {
+		ss << directory << id << ".csv";
+	}
+	else {
+		ss << directory << "0" << id << ".csv";
+	}
+	std::string csv_ = ss.str();
+	LoadCsvSkill(csv_);
+
+	Player::GetInstance()->SetDelayTimer(m_Delay);
+	Player::GetInstance()->Setname(m_Name);
+
+	return true;
 }
