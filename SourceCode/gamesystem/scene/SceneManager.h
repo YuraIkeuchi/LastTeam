@@ -26,10 +26,10 @@ public:
 	/// <typeparam name="SceneClass">追加したいシーン</typeparam>
 	/// <typeparam name="...Parameter">引数など</typeparam>
 	template<class SceneClass,class... Parameter>
-	void ChangeScene(Parameter... pram);
+	void ChangeScene(bool allClear = false,Parameter... pram);
 
 	// シーン破棄予約
-	void PopScene();
+	void PopScene(bool allClear = false);
 
 	// 非同期ロード
 	void AsyncLoad();
@@ -51,6 +51,9 @@ private:
 
 	//次のシーン
 	std::shared_ptr<BaseScene> nextScene_ = nullptr;
+
+	// 全シーン破棄フラグ
+	bool all_clear_ = false;
 
 
 	~SceneManager() = default;
@@ -85,8 +88,9 @@ private:
 };
 
 template<class SceneClass,class... Parameter>
-inline void SceneManager::ChangeScene(Parameter ...pram)
+inline void SceneManager::ChangeScene(bool allClear, Parameter ...pram)
 {
 	scene_change_type_ = SceneChangeType::kPush;
 	nextScene_ = std::make_shared<SceneClass>(pram...);
+	all_clear_ = allClear;
 }
