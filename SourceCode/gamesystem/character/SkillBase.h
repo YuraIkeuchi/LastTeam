@@ -41,6 +41,10 @@ public:
 	const int GetID() { return ID; }
 	const bool GetBirth() { return m_Birth; }
 
+	void SetID(const int ID) { this->ID = ID; }
+	void SetLatency(const float latency) { this->latency = latency; }
+	void SetName(const std::string& name) { this->name = name; }
+
 	void SetBirth(const bool Birth) { this->m_Birth = Birth; }
 protected:
 	//ƒXƒLƒ‹–¼

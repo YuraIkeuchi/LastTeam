@@ -1,6 +1,10 @@
 #include "SkillManager.h"
 #include <random>
 #include <Helper.h>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
 SkillManager* SkillManager::GetInstance()
 {
 	static SkillManager instance;
@@ -14,17 +18,25 @@ void SkillManager::Initialize()
 	skill.resize(6);
 	//‚±‚±‚Í‚à‚¤­‚µ‚â‚è‚æ‚¤‚ª‚ ‚é‚©‚à‚µ‚ê‚È‚¢
 	skill[0] = new NormalSkill();
-	skill[0]->Create(nameA, 1);
+	//skill[0]->Create(nameA, 1);
 	skill[1] = new NormalSkill();
-	skill[1]->Create(nameB, 2, 0.0f, 0.0f, 0.0f, 1, 1);
+	//skill[1]->Create(nameB, 2, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[2] = new NormalSkill();
-	skill[2]->Create(nameC, 3, 0.0f, 0.0f, 0.0f, 1, 1);
+	//skill[2]->Create(nameC, 3, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[3] = new NormalSkill();
-	skill[3]->Create(nameD, 4, 0.0f, 0.0f, 0.0f, 1, 1);
+	//skill[3]->Create(nameD, 4, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[4] = new AttackSkill();
-	skill[4]->Create(nameE, 5, 0.0f, 0.0f, 0.0f, 1, 1);
+	//skill[4]->Create(nameE, 5, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[5] = new AttackSkill();
-	skill[5]->Create(nameF, 6, 0.0f, 0.0f, 0.0f, 1, 1);
+	//skill[5]->Create(nameF, 6, 0.0f, 0.0f, 0.0f, 1, 1);
+
+	//csv“Ç‚ÝŽæ‚è
+	for (int i = 1; i < 7; i++)
+	{
+		CreateSkill(i);
+	}
+
+
 	//‡”Ô“ü‚ê‘Ö‚¦‚Ä‚é
 	std::shuffle(skill.begin(), skill.end(), std::default_random_engine());
 }
@@ -61,4 +73,65 @@ void SkillManager::ResetBirth() {
 			newskill->SetBirth(false);
 		}
 	}
+}
+
+//ƒXƒLƒ‹‚ÌCSV‚ð“Ç‚ÝŽæ‚é
+void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
+	
+	std::ifstream file;
+	std::stringstream popcom;
+
+	file.open(FileName);
+	popcom << file.rdbuf();
+	file.close();
+
+	std::string line;
+	while (std::getline(popcom, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		std::getline(line_stream, word, ',');
+
+		if (word.find("//") == 0) {
+			continue;
+		}
+		else if (word.find("ID") == 0) {
+			std::getline(line_stream, word, ',');
+			skill[id - 1]->SetID(std::stoi(word));
+		}
+		else if (word.find("Delay") == 0) {
+			std::getline(line_stream, word, ',');
+			skill[id - 1]->SetLatency(std::stof(word));
+		}
+		else if (word.find("Name") == 0) {
+			std::getline(line_stream, word, ',');
+			skill[id - 1]->SetName(word);
+		}
+		else if (word.find("Damege") == 0) {
+			std::getline(line_stream, word, ',');
+			AttackSkill *atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+			if (atkSkill != nullptr)
+			{
+				atkSkill->SetDamege(std::stof(word));
+			}
+			break;
+		}
+	}
+}
+
+bool SkillManager::CreateSkill(int id) {
+
+	std::string directory = "Resources/csv/skill/Skill";
+
+	std::stringstream ss;
+	if (id > 10) {
+		ss << directory << id << ".csv";
+	}
+	else {
+		ss << directory << "0" << id << ".csv";
+	}
+	std::string csv_ = ss.str();
+	LoadCsvSkill(csv_, id);
+
+	//Player::GetInstance()->SetDelayTimer(m_Delay);
+	return true;
 }

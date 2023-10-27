@@ -33,6 +33,8 @@ public:
 	XMFLOAT2 GetDistance() { return distance; }
 	XMFLOAT2 GetRange() { return range; }
 
+	void SetDamege(const float damege) { this->damege = damege; }
+
 protected:
 	//ƒ_ƒ[ƒW
 	float damege = 0.0f;

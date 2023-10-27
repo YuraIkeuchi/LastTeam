@@ -14,3 +14,4 @@ void SkillBase::Create(const std::string name, int ID, float latency, float invo
 void SkillBase::ImGuiDraw() {
 	ImGui_Origin();
 }
+
