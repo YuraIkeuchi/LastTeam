@@ -235,9 +235,6 @@ void GameStateManager::GaugeUpdate() {
 
 void GameStateManager::PassiveCheck() {
 	for (unique_ptr<Passive>& passive : GotPassives) {
-		if (passive->GetAbility() == Passive::ABILITY::RELOAD_UP) {
-			m_DiameterGauge = passive->GetDiameter();
-		}
 		switch (passive->GetAbility()) {
 		case Passive::ABILITY::RELOAD_UP:
 			m_DiameterGauge = passive->GetDiameter();
@@ -248,9 +245,6 @@ void GameStateManager::PassiveCheck() {
 			break;
 		case Passive::ABILITY::RELOAD_LOCK:
 			m_IsReload = false;
-			break;
-		case Passive::ABILITY::SPEED_UP:
-			m_DiameterVel = passive->GetDiameter();
 			break;
 		default:
 			break;
