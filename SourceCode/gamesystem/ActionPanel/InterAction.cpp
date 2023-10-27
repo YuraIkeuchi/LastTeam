@@ -33,7 +33,7 @@ void InterAction::Collide()
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, m_Radius, Player::GetInstance()->GetPosition().x, Player::GetInstance()->GetPosition().z, m_Radius) &&
 		(m_Alive)){
 		//プレイヤーの行動数を増やしパネルを戻す
-		GameStateManager::GetInstance()->AddSkill(m_SkillID,m_Damage);
+		GameStateManager::GetInstance()->AddSkill(m_SkillID,m_Damage,m_Delay);
 		StagePanel::GetInstance()->DeletePanel();
 		m_Alive = false;
 	}

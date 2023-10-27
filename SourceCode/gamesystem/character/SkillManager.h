@@ -27,6 +27,8 @@ public:
 	int GetID();
 	//ダメージを取る
 	float GetDamage();
+	//ディレイを取る
+	int GetDelay();
 public:
 	std::vector<SkillBase*>GetSkillBase() { return skill; }
 private:

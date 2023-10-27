@@ -85,6 +85,7 @@ void GameStateManager::Update() {
 
 	//攻撃した瞬間
 	AttackTrigger();
+	UseSkill();
 }
 //攻撃した瞬間
 void GameStateManager::AttackTrigger() {
@@ -95,11 +96,9 @@ void GameStateManager::AttackTrigger() {
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
 		m_BirthSkill = true;
+		Player::GetInstance()->SetDelayTimer(m_Act[0].ActDelay);
 		Player::GetInstance()->SetDelayStart(true);
-		UseSkill();
-		
 	}
-	
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
@@ -150,10 +149,11 @@ void GameStateManager::ActUIDraw() {
 	}
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const int ID, const float damage) {
+void GameStateManager::AddSkill(const int ID, const float damage,const int Delay) {
 	ActState act;
 	act.ActID = ID;
-	act.actDamage = damage;
+	act.ActDamage = damage;
+	act.ActDelay = Delay;
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
@@ -184,7 +184,7 @@ void GameStateManager::BirthArea() {
 		newarea = new AttackArea();
 		newarea->Initialize();
 		newarea->InitState(l_BirthCountX, m_NowHeight);
-		newarea->SetDamage(m_Act[0].actDamage);
+		newarea->SetDamage(m_Act[0].ActDamage);
 		attackarea.push_back(newarea);
 	} else if (_SkillType == SKILL_STRONG) {		//プレイヤーの一から右一列全部
 		l_BirthNumX = PANEL_WIDTH - (m_NowWidth + 1);
@@ -194,7 +194,7 @@ void GameStateManager::BirthArea() {
 			newarea = new AttackArea();
 			newarea->Initialize();
 			newarea->InitState(l_BirthCountX, m_NowHeight);
-			newarea->SetDamage(m_Act[0].actDamage);
+			newarea->SetDamage(m_Act[0].ActDamage);
 			attackarea.push_back(newarea);
 		}
 	} else {				//プレイヤーから3 * 2のマス
@@ -209,7 +209,7 @@ void GameStateManager::BirthArea() {
 				newarea = new AttackArea();
 				newarea->Initialize();
 				newarea->InitState(l_BirthCountX, l_BirthCountZ);
-				newarea->SetDamage(m_Act[0].actDamage);
+				newarea->SetDamage(m_Act[0].ActDamage);
 				attackarea.push_back(newarea);
 			}
 		}
@@ -222,13 +222,11 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 }
 //スキルの使用
 void GameStateManager::UseSkill() {
-
-	BirthArea();
-	FinishAct();
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
-	m_BirthSkill = false;
 	if (!Player::GetInstance()->GetDelayStart() && m_BirthSkill) {
-
+		BirthArea();
+		FinishAct();
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
+		m_BirthSkill = false;
 	}
 }
 //行動の終了
