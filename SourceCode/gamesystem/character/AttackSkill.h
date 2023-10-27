@@ -18,9 +18,9 @@ public:
 	void Create(
 		const std::string name,
 		int ID,
-		float latency = 0.0f,
-		float invocatingTime = 0.0f,
-		float restraintTime = 0.0f,
+		int latency = 0.0f,
+		int invocatingTime = 0.0f,
+		int restraintTime = 0.0f,
 		int rarity = 1,
 		int popRate = 1,
 		float damege = 0.0f,

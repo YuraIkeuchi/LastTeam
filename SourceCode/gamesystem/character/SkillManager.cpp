@@ -100,11 +100,27 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 		}
 		else if (word.find("Delay") == 0) {
 			std::getline(line_stream, word, ',');
-			skill[id - 1]->SetLatency(std::stof(word));
+			skill[id - 1]->SetLatency(std::stoi(word));
 		}
 		else if (word.find("Name") == 0) {
 			std::getline(line_stream, word, ',');
 			skill[id - 1]->SetName(word);
+		}
+		else if (word.find("InvocatingTime") == 0) {
+			std::getline(line_stream, word, ',');
+			skill[id - 1]->SetInvocatingTime(std::stoi(word));
+		}
+		else if (word.find("restraintTime") == 0) {
+			std::getline(line_stream, word, ',');
+			skill[id - 1]->SetRestraintTime(std::stoi(word));
+		}
+		else if (word.find("Rarity") == 0) {
+			std::getline(line_stream, word, ',');
+			skill[id - 1]->SetRarity(std::stoi(word));
+		}
+		else if (word.find("PopRate") == 0) {
+			std::getline(line_stream, word, ',');
+			skill[id - 1]->SetPopRate(std::stoi(word));
 		}
 		else if (word.find("Damege") == 0) {
 			std::getline(line_stream, word, ',');

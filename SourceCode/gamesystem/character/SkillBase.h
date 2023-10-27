@@ -32,7 +32,7 @@ public:
 	/// <param name="restraintTime">拘束時間</param>
 	/// <param name="rarity">レアリティ</param>
 	/// <param name="popRate">出現ランク</param>
-	void Create(const std::string name, int ID, float latency = 0.0f, float invocatingTime = 0.0f, float restraintTime = 0.0f, int rarity = 1, int popRate = 1);
+	void Create(const std::string name, int ID, int latency = 0, int invocatingTime = 0, int restraintTime = 0, int rarity = 1, int popRate = 1);
 
 	virtual void ImGui_Origin() = 0;
 	void ImGuiDraw();
@@ -42,9 +42,12 @@ public:
 	const bool GetBirth() { return m_Birth; }
 
 	void SetID(const int ID) { this->ID = ID; }
-	void SetLatency(const float latency) { this->latency = latency; }
+	void SetLatency(const int latency) { this->latency = latency; }
 	void SetName(const std::string& name) { this->name = name; }
-
+	void SetInvocatingTime(const int invocatingTime) { this->invocatingTime = invocatingTime; }
+	void SetRestraintTime(const int restraintTime) { this->restraintTime = restraintTime; }
+	void SetRarity(const int rarity) { this->rarity = rarity; }
+	void SetPopRate(const int popRate) { this->popRate = popRate; }
 	void SetBirth(const bool Birth) { this->m_Birth = Birth; }
 protected:
 	//スキル名
@@ -54,11 +57,11 @@ protected:
 	//アイコン
 	
 	//待機時間
-	float latency = 0.0f;
+	int latency = 0;
 	//発動時間
-	float invocatingTime = 0.0f;
+	int invocatingTime = 0;
 	//拘束時間
-	float restraintTime = 0.0f;
+	int restraintTime = 0;
 	//レアリティ
 	int rarity = 1;
 	//出現ランク
