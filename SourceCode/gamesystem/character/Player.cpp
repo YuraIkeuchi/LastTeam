@@ -126,6 +126,7 @@ void Player::UIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("DelayTimer:%d", m_DelayTimer);
+	ImGui::Text("DelayEnd:%d", m_DelayStart);
 	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
 	ImGui::End();
 }
@@ -212,7 +213,6 @@ void Player::Move() {
 		}
 		m_InputTimer[DIR_LEFT] = {};
 	}
-
 }
 
 void Player::BirthParticle() {
@@ -226,6 +226,9 @@ float Player::HpPercent() {
 //ディレイ処理
 void Player::Delay() {
 	if (Helper::GetInstance()->CheckMax(m_DelayTimer, 0, -1)) {
+
+		m_DelayStart = false;
 		_charaState = STATE_MOVE;
+
 	}
 }

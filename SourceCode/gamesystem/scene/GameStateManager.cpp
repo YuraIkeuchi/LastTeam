@@ -91,13 +91,14 @@ void GameStateManager::AttackTrigger() {
 	Input* input = Input::GetInstance();
 	if (m_AllActCount == 0) { return; }
 	if (actui[0]->GetUse()) { return; }
-	if (Player::GetInstance()->GetCharaState() == 1) { return; }			//ディレイだったら
-
+	if (Player::GetInstance()->GetCharaState() == 1) { return; }
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
-		UseSkill();
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
+		m_BirthSkill = true;
+		Player::GetInstance()->SetDelayStart(true);
+		CreateSkill(m_Act[0].ActID);
 	}
+	UseSkill();
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
@@ -112,20 +113,21 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	//ImGui::Begin("GameState");
-	//
-	///*if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
-	//	_SkillType = SKILL_NORMAL;
-	//}
-	//if (ImGui::Button("STRONGSKILL", ImVec2(50, 50))) {
-	//	_SkillType = SKILL_STRONG;
-	//}
-	//if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
-	//	_SkillType = SKILL_SPECIAL;
-	//}*/
-	//
-	///*
-	//ImGui::End();
+	ImGui::Begin("GameState");
+	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
+		_SkillType = SKILL_NORMAL;
+	}
+	if (ImGui::Button("STRONGSKILL", ImVec2(50, 50))) {
+		_SkillType = SKILL_STRONG;
+	}
+	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
+		_SkillType = SKILL_SPECIAL;
+	}
+	ImGui::End();
+	/**/
+	
+	/*
+	
 	/*if (!m_Act.empty()) {
 		for (auto i = 0; i < m_Act.size(); i++) {
 			ImGui::Text("Act[%d]:%d", i, m_Act[i].ActID);
@@ -206,6 +208,7 @@ void GameStateManager::BirthArea() {
 			}
 		}
 	}
+
 }
 //プレイヤーの現在パネル
 void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
@@ -213,15 +216,21 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 }
 //スキルの使用
 void GameStateManager::UseSkill() {
-	CreateSkill(m_Act[0].ActID);
-	BirthArea();
-	FinishAct();
+
+	if (!Player::GetInstance()->GetDelayStart() && m_BirthSkill) {
+
+		BirthArea();
+		FinishAct();
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
+		m_BirthSkill = false;
+	}
 }
 //行動の終了
 void GameStateManager::FinishAct() {
 	m_Act.erase(m_Act.begin());
 	m_AllActCount--;
 	actui[0]->SetUse(true);
+
 }
 
 void GameStateManager::GaugeUpdate() {
@@ -287,8 +296,14 @@ void GameStateManager::LoadCsvSkill(std::string& FileName) {
 		else if (word.find("Delay") == 0) {
 			std::getline(line_stream, word, ',');
 			m_Delay = std::stoi(word);
+		}
+		else if (word.find("Name") == 0) {
+			std::getline(line_stream, word, ',');
+			m_Name = word;
+
 			break;
 		}
+
 	}
 }
 
@@ -307,5 +322,7 @@ bool GameStateManager::CreateSkill(int id) {
 	LoadCsvSkill(csv_);
 
 	Player::GetInstance()->SetDelayTimer(m_Delay);
+	Player::GetInstance()->Setname(m_Name);
+
 	return true;
 }

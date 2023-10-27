@@ -126,7 +126,9 @@ private:
 	//ゲージマックス
 	float kGaugeCountMax = 180;
 	bool m_IsReload = true;
+	bool m_BirthSkill = false;
 
 	int m_ID = {};
 	int m_Delay = {};
+	string m_Name;
 };
