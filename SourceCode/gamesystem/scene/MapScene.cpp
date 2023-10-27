@@ -20,6 +20,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	UIs[StartMAP].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
 	UIs[StartMAP].pos = homePos;
 	UIs[StartMAP].open = true;
+	UIs[StartMAP].hierarchy = 0;
 	UIs[StartMAP].size = { 128.f,128.f };
 	UIs[StartMAP].sprite->SetAnchorPoint({ 0.5f,0.5f });
 
@@ -74,6 +75,9 @@ void MapScene::Draw(DirectXCommon* dxCommon) {
 void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	screen->Draw();
+	for (unique_ptr<IKESprite>& road : roads) {
+		road->Draw();
+	}
 	for (UI& ui : UIs) {
 		if (!ui.sprite) { continue; }
 		ui.sprite->Draw();

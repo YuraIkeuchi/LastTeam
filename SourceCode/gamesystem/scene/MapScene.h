@@ -67,6 +67,9 @@ private:
 	int vel = 10;
 
 
+	std::list<unique_ptr<IKESprite>> roads;
+
+
 	bool moved = false;
 	float mov_frame = 0.0f;
 	float kMoveFrame = 10.0f;
