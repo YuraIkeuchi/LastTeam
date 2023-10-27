@@ -407,15 +407,7 @@ bool IKESprite::Initialize()
 	}
 
 	// 定数バッファにデータ転送
-	ConstBufferData* constMap = nullptr;
-	result = constBuff->Map(0, nullptr, (void**)&constMap);
-	if (SUCCEEDED(result))
-	{
-		constMap->color = color;
-		constMap->mat = matProjection;
-		constMap->offset = offset;
-		constBuff->Unmap(0, nullptr);
-	}
+	TransferConstBuff();
 
 	return true;
 }
@@ -586,6 +578,21 @@ void IKESprite::TransferVertices()
 	{
 		memcpy(vertMap, vertices, sizeof(vertices));
 		vertBuff->Unmap(0, nullptr);
+	}
+}
+
+void IKESprite::TransferConstBuff()
+{
+	HRESULT result = S_FALSE;
+
+	ConstBufferData* constMap = nullptr;
+	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	if (SUCCEEDED(result))
+	{
+		constMap->color = color;
+		constMap->mat = matProjection;
+		constMap->offset = offset;
+		constBuff->Unmap(0, nullptr);
 	}
 }
 

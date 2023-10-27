@@ -186,7 +186,9 @@ protected: // メンバ変数
 
 	float RadPowers;
 	XMFLOAT2 RadCenterPos;
-private: // メンバ関数
+protected: // メンバ関数
 	/// 頂点データ転送
-	void TransferVertices();
+	virtual void TransferVertices();
+
+	void TransferConstBuff();
 };

@@ -8,6 +8,7 @@
 #include <forward_list>
 #include "Camera.h"
 #include "IKESprite.h"
+#include <stdlib.h>
 
 /// <summary>
 /// パーティクルマネージャ
@@ -89,36 +90,12 @@ private: // 定数
 	UINT texNumber = 0;
 
 public: // メンバ関数	
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <returns></returns>
-	static void CreateCommon(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, );
-
-
-	
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <returns></returns>
-	bool Initialize();
+	//コンストラクタ
 
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
 	void Update();
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw(int type);
-
-	///// <summary>
-	///// カメラのセット
-	///// </summary>
-	///// <param name="camera">カメラ</param>
-	//inline void SetCamera(Camera* camera) { this->camera = camera; }
 
 	/// <summary>
 	/// パーティクルの追加
@@ -138,8 +115,10 @@ public: // メンバ関数
 	/// 生成処理
 	/// </summary>
 	/// <returns>ParticleManager2D</returns>
-	static std::unique_ptr<ParticleManager2D> Create(UINT texNumber);
+	static ParticleManager2D* Create(UINT texNumber, const XMFLOAT2& position, const XMFLOAT4& color = { 1, 1, 1, 1 },
+		const XMFLOAT2& anchorpoint = { 0.5f, 0.5f }, bool isFlipX = false, bool isFlipY = false);
 
+	void TransferVertices()override;
 
 	//削除
 	void AllDelete();
@@ -153,42 +132,26 @@ private: // メンバ変数
 	static ID3D12Device* device;
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;
-	// デスクリプタサイズ
-	static UINT descriptorHandleIncrementSize;
-	//加算合成パイプラインセット
-	static PipelineSet addBlendPipelineSet;
-	//減算合成パイプラインセット
-	static PipelineSet subBlendPipelineSet;
-	//半透明合成パイプラインセット
-	static PipelineSet alphaBlendPipelineSet;
 
 	// 射影行列
 	static XMMATRIX matProjection;
 	// カメラ
 	static Camera* camera;
-	//画像読み込み
-	static std::string directoryPath;
 	//拡張子
 	static std::string extensionPath;
-	// デスクリプタヒープ
-	static ComPtr<ID3D12DescriptorHeap> descHeap;
+
 	// 頂点バッファ
 	ComPtr<ID3D12Resource> vertBuff;
 	// テクスチャバッファ
 	//ComPtr<ID3D12Resource> texbuff[texnumber];
 	static ComPtr<ID3D12Resource> texbuff[srvCount];
 
-	// シェーダリソースビューのハンドル(CPU)
-	static CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-	// シェーダリソースビューのハンドル(CPU)
-	static CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView;
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuff;
 	// パーティクル配列
 	std::forward_list<Particle2D> particles;
-
 	
 	// Z軸回りの回転角
 	float rotation = 0.0f;

@@ -23,7 +23,6 @@ void BaseScene::BaseInitialize(DirectXCommon* dxCommon, XMFLOAT3 eye, XMFLOAT3 t
 	IKEObject3d::SetCamera(camera);
 	IKEFBXObject3d::SetCamera(camera);
 	ParticleManager::SetCamera(camera);
-	ParticleManager2D::SetCamera(camera);
 	// ライト生成
 	lightGroup = LightGroup::Create();
 	// 3Dオブエクトにライトをセット

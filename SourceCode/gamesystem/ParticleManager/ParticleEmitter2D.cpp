@@ -15,7 +15,7 @@ void ParticleEmitter2D::Initialize()
 	//テクスチャ全読み込み
 	LoadTexture();
 	//パーティクルマネージャー生成
-	circleParticle = ParticleManager2D::Create(ImageManager::Normal);
+	circleParticle.reset(ParticleManager2D::Create(ImageManager::Normal,{0.0f,0.0f}));
 }
 
 void ParticleEmitter2D::Update()
@@ -27,7 +27,7 @@ void ParticleEmitter2D::Update()
 void ParticleEmitter2D::IntroDraw() {
 }
 void ParticleEmitter2D::FlontDrawAll() {
-	circleParticle->Draw(AddBlendType);
+	circleParticle->Draw();
 }
 //炎のパーティクル
 void ParticleEmitter2D::FireEffect(const int life, const XMFLOAT2& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor)
