@@ -357,6 +357,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClCompile>
+    <ClCompile Include="SpecialSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -680,6 +681,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClInclude>
+    <ClInclude Include="SpecialSkill.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
