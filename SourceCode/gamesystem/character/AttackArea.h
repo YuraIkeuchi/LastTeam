@@ -39,7 +39,9 @@ public:
 
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetNowHeight() { return m_NowHeight; }
+	const float GetDamage() { return m_Damage; }
 	void SetHit(const bool Hit) { m_Hit = Hit; }
+	void SetDamage(const float Damage) { m_Damage = Damage; }
 private:
 	//ê∂ë∂ä÷åW
 	bool m_Alive = false;
@@ -50,4 +52,5 @@ private:
 
 	int m_NowWidth = {};
 	int m_NowHeight = {};
+	float m_Damage = {};
 };

@@ -48,7 +48,7 @@ public:
 	const int GetSkillID() { return m_SkillID; }
 	void SetState(const int state) { _state= state; }
 	void SetSkillID(const int SkillID) { m_SkillID = SkillID; }
-
+	void SetDamage(const float Damage) { m_Damage = Damage; }
 protected:
 	string m_Tag;
 	unique_ptr<IKETexture> m_Pannel = nullptr;
@@ -63,6 +63,7 @@ protected:
 	static void(InterAction::* stateTable[])();
 	int _state = STATE_SPAWN;
 	int m_SkillID = {};
+	float m_Damage = {};
 	unique_ptr<DrawNumber> _drawnumber;
 private:
 	void Spawn();//‘Ò‹@

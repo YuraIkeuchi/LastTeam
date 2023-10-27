@@ -573,9 +573,6 @@
     <ClInclude Include="SourceCode\engine\2d\ShadowMap.h">
       <Filter>engine\2d\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\actor\GameOverSceneActor.h">
-      <Filter>gamesystem\actor\GameOver</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\TextManager.h">
       <Filter>gamesystem\Text</Filter>
     </ClInclude>
@@ -788,9 +785,6 @@
     <Filter Include="gamesystem\charactor\Boss">
       <UniqueIdentifier>{81775484-798e-46ec-ac44-82d84b1001c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\charactor\Player">
-      <UniqueIdentifier>{67cc1ef3-c531-4952-b181-9f7044af6c4a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{5157e7cf-15cd-4c09-bd21-31621f90b40b}</UniqueIdentifier>
     </Filter>
@@ -886,6 +880,9 @@
     </Filter>
     <Filter Include="gamesystem\charactor\Skill">
       <UniqueIdentifier>{2741b4c5-3bc1-4177-8c47-ce7180f5c787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\charactor\Player">
+      <UniqueIdentifier>{67cc1ef3-c531-4952-b181-9f7044af6c4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

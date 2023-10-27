@@ -68,7 +68,7 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 				GameStateManager::GetInstance()->SetCounter(true);
 				damage *= 2.0f;
 			}
-			m_HP -= damage;
+			m_HP -= _area->GetDamage();
 			m_DamegeTimer = 40;
 			BirthParticle();
 			_area->SetHit(true);

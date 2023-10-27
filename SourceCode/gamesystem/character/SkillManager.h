@@ -10,7 +10,7 @@ class SkillManager
 {
 public:
 	static SkillManager* GetInstance();
-	
+
 	void Initialize();
 
 	void ImGuiDraw();
@@ -25,6 +25,7 @@ private:
 public:
 	//ID‚ğæ‚é
 	int GetID();
+	float GetDamage();
 public:
 	std::vector<SkillBase*>GetSkillBase() { return skill; }
 private:
@@ -38,4 +39,5 @@ private:
 	std::string nameD = "E‚é";
 	std::string nameE = "‚©‚Ü‚·";
 	std::string nameF = "ƒXƒJƒX";
+	int m_RandNum = {};
 };
