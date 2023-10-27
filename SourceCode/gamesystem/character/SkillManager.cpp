@@ -74,6 +74,14 @@ float SkillManager::GetDamage() {
 	
 	return result;
 }
+
+int SkillManager::GetDelay() {
+	int result = {};
+	result = skill[m_RandNum]->Getlatency();
+
+	return result;
+}
+
 void SkillManager::ResetBirth() {
 	for (SkillBase* newskill : skill) {
 		if (newskill != nullptr) {
