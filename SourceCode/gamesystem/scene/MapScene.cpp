@@ -19,6 +19,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 	UIs[StartMAP].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
 	UIs[StartMAP].pos = homePos;
+	UIs[StartMAP].open = true;
 	UIs[StartMAP].size = { 128.f,128.f };
 	UIs[StartMAP].sprite->SetAnchorPoint({ 0.5f,0.5f });
 
@@ -32,11 +33,13 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
+	BlackOut();
 
 	Move();
 	for (UI& ui : UIs) {
 		if (!ui.sprite) { continue; }
 		ui.sprite->SetPosition({ ui.pos.x + scroll.x, ui.pos.y + scroll.y });
+		ui.sprite->SetColor(ui.color);
 		ui.sprite->SetSize(ui.size);
 	}
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
@@ -118,9 +121,11 @@ void MapScene::MapCreate() {
 	//‚¯‚½‚·‚¤‚µ‚ã‚Æ‚­‚·‚é
 	int Len = (int)dungeon.length();
 	dungeons.resize(Len);
+	clearFlag.resize(Len);
 	//1•¶Žš‚¸‚ÂŠi”[
 	for (int i = 0; i < Len; ++i) {
 		dungeons[i] = (int)(dungeon[i] - '0');
+		clearFlag[i] = false;
 	}
 	XMFLOAT2 _basePos = { homePos.x + interbal.x,homePos.y };
 	for (int i = 0; i < Len; ++i) {
@@ -129,6 +134,28 @@ void MapScene::MapCreate() {
 		case 1:
 			UIs[nowUiNum] = RandPannel();
 			UIs[nowUiNum].pos = _basePos;
+			UIs[nowUiNum].hierarchy = i + 1;
+			if (i != Len - 1) {
+				switch (dungeons[i + 1]) {
+				case 1:
+					UIs[nowUiNum].nextIndex[0] =  1;
+					UIs[nowUiNum].nextIndex[1] = -1;
+					UIs[nowUiNum].nextIndex[2] = -1;
+					break;
+				case 2:
+					UIs[nowUiNum].nextIndex[0] = 0;
+					UIs[nowUiNum].nextIndex[1] = 2;
+					UIs[nowUiNum].nextIndex[2] = -1;
+					break;
+				case 3:
+					UIs[nowUiNum].nextIndex[0] = 0;
+					UIs[nowUiNum].nextIndex[1] = 1;
+					UIs[nowUiNum].nextIndex[2] = 2;
+					break;
+				default:
+					break;
+				}
+			}
 			nowUiNum++;
 			break;
 		case 2: {
@@ -136,9 +163,31 @@ void MapScene::MapCreate() {
 				{_basePos.x, _basePos.y - interbal.y},
 			{ _basePos.x, _basePos.y + interbal.y } };
 
-			for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 2; j++) {
 				UIs[nowUiNum] = RandPannel();
-				UIs[nowUiNum].pos = b_pos[i];
+				UIs[nowUiNum].pos = b_pos[j];
+				UIs[nowUiNum].hierarchy = i + 1;
+				if (i != Len - 1) {
+					switch (dungeons[i + 1]) {
+					case 1:
+						UIs[nowUiNum].nextIndex[0] = 1;
+						UIs[nowUiNum].nextIndex[1] = -1;
+						UIs[nowUiNum].nextIndex[2] = -1;
+						break;
+					case 2:
+						UIs[nowUiNum].nextIndex[0] = 0;
+						UIs[nowUiNum].nextIndex[1] = 2;
+						UIs[nowUiNum].nextIndex[2] = -1;
+						break;
+					case 3:
+						UIs[nowUiNum].nextIndex[0] = 0;
+						UIs[nowUiNum].nextIndex[1] = 1;
+						UIs[nowUiNum].nextIndex[2] = 2;
+						break;
+					default:
+						break;
+					}
+				}
 				nowUiNum++;
 			}
 			break;
@@ -147,10 +196,32 @@ void MapScene::MapCreate() {
 			XMFLOAT2 b_pos[3] = {
 		{_basePos.x, _basePos.y - interbal.y},
 		{_basePos.x, _basePos.y},
-		{_basePos.x, _basePos.y + interbal.y }};
-			for (int i = 0; i < 3; i++) {
+		{_basePos.x, _basePos.y + interbal.y } };
+			for (int j = 0; j < 3; j++) {
 				UIs[nowUiNum] = RandPannel();
-				UIs[nowUiNum].pos = b_pos[i];
+				UIs[nowUiNum].pos = b_pos[j];
+				UIs[nowUiNum].hierarchy = i + 1;
+				if (i != Len - 1) {
+					switch (dungeons[i + 1]) {
+					case 1:
+						UIs[nowUiNum].nextIndex[0] = 1;
+						UIs[nowUiNum].nextIndex[1] = -1;
+						UIs[nowUiNum].nextIndex[2] = -1;
+						break;
+					case 2:
+						UIs[nowUiNum].nextIndex[0] = 0;
+						UIs[nowUiNum].nextIndex[1] = 2;
+						UIs[nowUiNum].nextIndex[2] = -1;
+						break;
+					case 3:
+						UIs[nowUiNum].nextIndex[0] = 0;
+						UIs[nowUiNum].nextIndex[1] = 1;
+						UIs[nowUiNum].nextIndex[2] = 2;
+						break;
+					default:
+						break;
+					}
+				}
 				nowUiNum++;
 			}
 			break;
@@ -169,8 +240,36 @@ void MapScene::ImGuiDraw() {
 	ImGui::Begin("Map");
 	ImGui::Text("%f", framePos.x);
 	ImGui::Text("%f", eFrame);
-
+	ImGui::Text("HIERARCHY:%d", UIs[nowMap].hierarchy);
+	for (int i = 0; i < 3; i++) {
+		ImGui::Text("Index[%d]%d", i,UIs[nowMap].nextIndex[i]);
+	}
 	ImGui::End();
+}
+
+void MapScene::BlackOut() {
+
+	if (!clearFlag[0]) {
+		switch (dungeons[0]) {
+		case 1:
+			for (int i = 1; i < 2; i++) {
+				UIs[i].open = true;
+			}
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		default:
+			break;
+		};
+	}
+	for (UI& ui : UIs) {
+		if (!ui.sprite) { continue; }
+		if (ui.open) { continue; }
+		ui.color = { 0.5f,0.5f,0.5f,1.f };
+	}
+
 }
 
 void MapScene::Move() {
