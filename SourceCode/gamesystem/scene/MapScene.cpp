@@ -29,8 +29,6 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 	MapCreate();
 
-	passive = make_unique<Passive>(1);
-
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
@@ -78,7 +76,6 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 		ui.sprite->Draw();
 	}
 	frame->Draw();
-	passive->Draw();
 }
 
 void MapScene::BackDraw(DirectXCommon* dxCommon) {
@@ -110,7 +107,8 @@ MapScene::UI MapScene::RandPannel() {
 void MapScene::MapCreate() {
 	string csv_ = "Resources/csv/map.csv";
 	int r_num = Helper::GetInstance()->GetRanNum(0, 3);
-	
+	//テストプレイ用
+	r_num = 4;
 	//mapのあとに数字をくっつける
 	std::stringstream ss;
 	ss << "map" << r_num;
@@ -177,17 +175,6 @@ void MapScene::ImGuiDraw() {
 
 void MapScene::Move() {
 	Input* input = Input::GetInstance();
-	if (Input::GetInstance()->Pushkey(DIK_D)) {
-		scroll.x += 5;
-	}
-	if (Input::GetInstance()->Pushkey(DIK_A)) {
-		scroll.x -= 5;
-	}	if (Input::GetInstance()->Pushkey(DIK_W)) {
-		scroll.y -= 5;
-	}	if (Input::GetInstance()->Pushkey(DIK_S)) {
-		scroll.y += 5;
-	}
-
 	int vel = 0;
 	if (input->PushButton(input->LB)) {
 		vel = -10;

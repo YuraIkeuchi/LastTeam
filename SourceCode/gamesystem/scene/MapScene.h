@@ -52,8 +52,6 @@ private:
 	unique_ptr<IKESprite>screen = nullptr;
 	unique_ptr<IKESprite> frame = nullptr;
 
-	unique_ptr<Passive> passive = nullptr;
-
 	array<UI, 20> UIs;
 
 	XMFLOAT2 homePos = { 340.f,360.f };
