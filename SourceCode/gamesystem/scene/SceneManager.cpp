@@ -25,10 +25,22 @@ void SceneManager::Update(DirectXCommon* dxCommon) {
 	// シーン追加
 	if (scene_change_type_ == SceneChangeType::kPush) {
 		// シーンスタックにデータがあれば終了処理
-		if (!scene_stack_.empty())
+		if (all_clear_)
 		{
-			scene_stack_.top()->Finalize();
+			while (!scene_stack_.empty())
+			{
+				scene_stack_.top()->Finalize();
+				scene_stack_.pop();
+			}
 		}
+		else
+		{
+			if (!scene_stack_.empty())
+			{
+				scene_stack_.top()->Finalize();
+			}
+		}
+
 
 		// Scene追加
 		scene_stack_.push(nextScene_);
@@ -41,8 +53,19 @@ void SceneManager::Update(DirectXCommon* dxCommon) {
 	else if (scene_change_type_ == SceneChangeType::kPop)
 	{
 		// シーン破棄
-		scene_stack_.top()->Finalize();
-		scene_stack_.pop();
+		if (all_clear_)
+		{
+			while (!scene_stack_.empty())
+			{
+				scene_stack_.top()->Finalize();
+				scene_stack_.pop();
+			}
+		}
+		else
+		{
+			scene_stack_.top()->Finalize();
+			scene_stack_.pop();
+		}
 
 		// シーン遷移用処理初期化
 		scene_change_type_ = SceneChangeType::kNon;
@@ -81,9 +104,10 @@ void SceneManager::Draw(DirectXCommon* dxCommon) {
 
 
 
-void SceneManager::PopScene()
+void SceneManager::PopScene(bool allClear)
 {
 	scene_change_type_ = SceneChangeType::kPop;
+	all_clear_ = allClear;
 }
 
 void SceneManager::AsyncLoad()
