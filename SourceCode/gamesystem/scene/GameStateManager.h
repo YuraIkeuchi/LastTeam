@@ -32,7 +32,7 @@ public:
 	//プレイヤーの現在位置
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
-	void AddSkill(const int ID,const float damage);
+	void AddSkill(const int ID,const float damage,const int Delay);
 private:
 	//攻撃した瞬間
 	void AttackTrigger();
@@ -68,8 +68,9 @@ private:
 private:
 
 	struct ActState {
-		int ActID;
-		float actDamage;
+		int ActID;//ID
+		float ActDamage;//ダメージ
+		int ActDelay;//ディレイ
 	};
 
 	vector<ActState> m_Act;

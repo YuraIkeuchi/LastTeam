@@ -39,6 +39,7 @@ public:
 public:
 	//getter setter
 	const int GetID() { return ID; }
+	const int Getlatency() { return latency; }
 	const bool GetBirth() { return m_Birth; }
 	float GetDamege() { return damege; }
 	void SetID(const int ID) { this->ID = ID; }
