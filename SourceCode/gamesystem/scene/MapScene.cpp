@@ -70,9 +70,9 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 					Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.x,UIs[i + 1][next].pos.x),
 					Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y,UIs[i + 1][next].pos.y)
 					};
-					unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::FEED, pos);
+					unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, pos);
 					road->SetAnchorPoint({ 0.5f,0.5f});
-					road->SetSize({10.f,10.f});
+					road->SetSize({16.f,16.f});
 					roadsPos.push_back(std::move(pos));
 					roads.push_back(std::move(road));
 				}
@@ -336,7 +336,7 @@ void MapScene::ImGuiDraw() {
 
 void MapScene::BlackOut() {
 
-	for (int i = 0; i < clearHierarchy;i++) {
+	for (int i = 0; i < clearHierarchy+1;i++) {
 		for (int j = 0; j < INDEX;j++) {
 			UIs[i][j].open = true;
 		}
