@@ -31,6 +31,8 @@ private:
 
 	UI  RandPannel();
 
+	void RoadUpdate();
+
 	void MapCreate();
 
 	void ImGuiDraw();
@@ -61,7 +63,8 @@ private:
 
 	std::string dungeon;
 	vector<int> dungeons;
-	vector<bool> clearFlag;
+
+	int clearHierarchy = 1;
 
 	unique_ptr<IKESprite>screen = nullptr;
 	unique_ptr<IKESprite> frame = nullptr;
@@ -88,8 +91,8 @@ private:
 	int vel = 10;
 
 
-	std::list<unique_ptr<IKESprite>> roads;
-
+	std::vector<unique_ptr<IKESprite>> roads;
+	std::vector<XMFLOAT2> roadsPos;
 
 	bool moved = false;
 	float mov_frame = 0.0f;
