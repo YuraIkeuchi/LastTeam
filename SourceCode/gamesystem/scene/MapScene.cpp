@@ -59,11 +59,30 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetSize({ 128.f,128.f });
 	frame->SetAnchorPoint({ 0.5f,0.5f });
 
+	for (int i = 0; i < 20; i++) {
+		for (int j = 0; j < INDEX; j++) {
+			if (!UIs[i][j].sprite) { continue; }
+			for (int l = 0; l < 3; l++) {
+				if (UIs[i][j].nextIndex[l] == -1) { continue; }
+				for (int k = 0; k < 10; k++) {
+					int next = UIs[i][j].nextIndex[l];
+					XMFLOAT2 pos = {
+					Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.x,UIs[i + 1][next].pos.x),
+					Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y,UIs[i + 1][next].pos.y)
+					};
+					unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::FEED, pos);
+					road->SetAnchorPoint({ 0.5f,0.5f});
+					road->SetSize({10.f,10.f});
+					roadsPos.push_back(std::move(pos));
+					roads.push_back(std::move(road));
+				}
+			}
+		}
+	}
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
-	//BlackOut();
-
+	BlackOut();
 	Move();
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
@@ -75,7 +94,9 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	}
 	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
-
+	for (int i = 0; i < roads.size();i++) {
+		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
+	}
 }
 
 void MapScene::Draw(DirectXCommon* dxCommon) {
@@ -145,6 +166,13 @@ MapScene::UI MapScene::RandPannel() {
 	return itr;
 }
 
+void MapScene::RoadUpdate() {
+
+
+
+
+}
+
 void MapScene::MapCreate() {
 	string csv_ = "Resources/csv/map.csv";
 	int r_num = Helper::GetInstance()->GetRanNum(0, 3);
@@ -160,11 +188,9 @@ void MapScene::MapCreate() {
 	int Len = (int)dungeon.length();
 	MaxLength = Len;
 	dungeons.resize(Len);
-	clearFlag.resize(Len);
 	//1•¶Žš‚¸‚ÂŠi”[
 	for (int i = 0; i < Len; ++i) {
 		dungeons[i] = (int)(dungeon[i] - '0');
-		clearFlag[i] = false;
 	}
 	for (int i = 0; i < Len; ++i) {
 		//‚±‚Ì+1‚ÍƒXƒ^[ƒg‚ðœ‚­
@@ -194,6 +220,11 @@ void MapScene::MapCreate() {
 				default:
 					break;
 				}
+			} else {
+				UIs[hierarchy][Middle].nextIndex[0] = -1;
+				UIs[hierarchy][Middle].nextIndex[1] = -1;
+				UIs[hierarchy][Middle].nextIndex[2] = -1;
+
 			}
 			break;
 		}
@@ -235,6 +266,14 @@ void MapScene::MapCreate() {
 				default:
 					break;
 				}
+			} else {
+				UIs[hierarchy][Top].nextIndex[0] = -1;
+				UIs[hierarchy][Top].nextIndex[1] = -1;
+				UIs[hierarchy][Top].nextIndex[2] = -1;
+				UIs[hierarchy][Bottom].nextIndex[0] = -1;
+				UIs[hierarchy][Bottom].nextIndex[1] = -1;
+				UIs[hierarchy][Bottom].nextIndex[2] = -1;
+
 			}
 			break;
 		}
@@ -263,6 +302,10 @@ void MapScene::MapCreate() {
 					default:
 						break;
 					}
+				} else {
+					UIs[hierarchy][j].nextIndex[0] = -11;
+					UIs[hierarchy][j].nextIndex[1] = -1;
+					UIs[hierarchy][j].nextIndex[2] = -1;
 				}
 			}
 			break;
@@ -293,26 +336,20 @@ void MapScene::ImGuiDraw() {
 
 void MapScene::BlackOut() {
 
-	//if (!clearFlag[0]) {
-	//	switch (dungeons[0]) {
-	//	case 1:
-	//		for (int i = 1; i < 2; i++) {
-	//			UIs[i].open = true;
-	//		}
-	//		break;
-	//	case 2:
-	//		break;
-	//	case 3:
-	//		break;
-	//	default:
-	//		break;
-	//	};
-	//}
-	//for (UI& ui : UIs) {
-	//	if (!ui.sprite) { continue; }
-	//	if (ui.open) { continue; }
-	//	ui.color = { 0.5f,0.5f,0.5f,1.f };
-	//}
+	for (int i = 0; i < clearHierarchy;i++) {
+		for (int j = 0; j < INDEX;j++) {
+			UIs[i][j].open = true;
+		}
+	}
+
+
+	for (array<UI, INDEX>& ui : UIs) {
+		for (int i = 0; i < INDEX;i++) {
+			if (!ui[i].sprite) { continue; }
+			if (ui[i].open) { continue; }
+			ui[i].color = {0.5f,0.5f,0.5f,1.f};
+		}
+	}
 
 }
 
@@ -344,16 +381,15 @@ void MapScene::Move() {
 		nowHierarchy = pickHierarchy;
 		moved = true;
 	}
-	pickIndex = UIs[oldHierarchy][oldIndex].nextIndex[pickNextIndex];
-	framePos = UIs[pickHierarchy][pickIndex].pos;
-
+		pickIndex = UIs[oldHierarchy][oldIndex].nextIndex[pickNextIndex];
+		framePos = UIs[pickHierarchy][pickIndex].pos;
 
 	if (moved) {
 		if (Helper::GetInstance()->FrameCheck(mov_frame, 1 / kMoveFrame)) {
 			moved = false;
 			oldIndex = nowIndex;
 			oldHierarchy = nowHierarchy;
-			if (pickHierarchy<MaxLength) {
+			if (pickHierarchy < MaxLength) {
 				pickHierarchy = nowHierarchy + 1;
 			}
 			pickNextIndex = 0;
