@@ -17,31 +17,63 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	screen = IKESprite::Create(ImageManager::MAPSCREEN, { 0,0 });
 	screen->SetSize({ 1280.f,720.f });
 
-	UIs[StartMAP].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
-	UIs[StartMAP].pos = homePos;
-	UIs[StartMAP].open = true;
-	UIs[StartMAP].size = { 128.f,128.f };
-	UIs[StartMAP].sprite->SetAnchorPoint({ 0.5f,0.5f });
+
+	UIs[0][Middle].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
+	UIs[0][Middle].pos = { homeX ,homeY[Middle] };
+	UIs[0][Middle].open = true;
+	UIs[0][Middle].hierarchy = 0;
+	UIs[0][Middle].size = { 128.f,128.f };
+	UIs[0][Middle].sprite->SetAnchorPoint({ 0.5f,0.5f });
+	homeX += interbal;
+
+	MapCreate();
+
+	switch (dungeons[0]) {
+	case 1:
+		UIs[0][Middle].nextIndex[0] = 1;
+		UIs[0][Middle].nextIndex[1] = -1;
+		UIs[0][Middle].nextIndex[2] = -1;
+		break;
+	case 2:
+		UIs[0][Middle].nextIndex[0] = 0;
+		UIs[0][Middle].nextIndex[1] = 2;
+		UIs[0][Middle].nextIndex[2] = -1;
+		break;
+	case 3:
+		UIs[0][Middle].nextIndex[0] = 0;
+		UIs[0][Middle].nextIndex[1] = 1;
+		UIs[0][Middle].nextIndex[2] = -1;
+		break;
+	default:
+		break;
+	}
+
+	chara = IKESprite::Create(ImageManager::MAP_CHARA, { 0,0 });
+	chara->SetPosition(charaPos);
+	chara->SetSize({ 128.f,128.f });
+	chara->SetAnchorPoint({ 0.5f,1.0f });
+
 
 	frame = IKESprite::Create(ImageManager::MAP_FRAME, { 0,0 });
 	frame->SetPosition(framePos);
 	frame->SetSize({ 128.f,128.f });
 	frame->SetAnchorPoint({ 0.5f,0.5f });
 
-	MapCreate();
-
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
-	BlackOut();
+	//BlackOut();
 
 	Move();
-	for (UI& ui : UIs) {
-		if (!ui.sprite) { continue; }
-		ui.sprite->SetPosition({ ui.pos.x + scroll.x, ui.pos.y + scroll.y });
-		ui.sprite->SetColor(ui.color);
-		ui.sprite->SetSize(ui.size);
+	for (array<UI, INDEX>& ui : UIs) {
+		for (int i = 0; i < INDEX; i++) {
+			if (!ui[i].sprite) { continue; }
+			ui[i].sprite->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
+			ui[i].sprite->SetColor(ui[i].color);
+			ui[i].sprite->SetSize(ui[i].size);
+		}
 	}
+	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
 
 }
@@ -74,10 +106,16 @@ void MapScene::Draw(DirectXCommon* dxCommon) {
 void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	screen->Draw();
-	for (UI& ui : UIs) {
-		if (!ui.sprite) { continue; }
-		ui.sprite->Draw();
+	for (unique_ptr<IKESprite>& road : roads) {
+		road->Draw();
 	}
+	for (array<UI, INDEX>& ui : UIs) {
+		for (int i = 0; i < INDEX; i++) {
+			if (!ui[i].sprite) { continue; }
+			ui[i].sprite->Draw();
+		}
+	}
+	chara->Draw();
 	frame->Draw();
 }
 
@@ -120,6 +158,7 @@ void MapScene::MapCreate() {
 	LoadCSV::LoadCsvParam_String(csv_, dungeon, r_map);
 	//‚¯‚½‚·‚¤‚µ‚ã‚Æ‚­‚·‚é
 	int Len = (int)dungeon.length();
+	MaxLength = Len;
 	dungeons.resize(Len);
 	clearFlag.resize(Len);
 	//1•¶Žš‚¸‚ÂŠi”[
@@ -127,109 +166,111 @@ void MapScene::MapCreate() {
 		dungeons[i] = (int)(dungeon[i] - '0');
 		clearFlag[i] = false;
 	}
-	XMFLOAT2 _basePos = { homePos.x + interbal.x,homePos.y };
 	for (int i = 0; i < Len; ++i) {
 		//‚±‚Ì+1‚ÍƒXƒ^[ƒg‚ðœ‚­
+		size_t hierarchy = (size_t)i + 1;
 		switch (dungeons[i]) {
-		case 1:
-			UIs[nowUiNum] = RandPannel();
-			UIs[nowUiNum].pos = _basePos;
-			UIs[nowUiNum].hierarchy = i + 1;
+		case 1: {
+			UIs[hierarchy][Middle] = RandPannel();
+			UIs[hierarchy][Middle].pos = { homeX ,homeY[Middle] };
+			UIs[hierarchy][Middle].hierarchy = i + 1;
 			if (i != Len - 1) {
 				switch (dungeons[i + 1]) {
 				case 1:
-					UIs[nowUiNum].nextIndex[0] =  1;
-					UIs[nowUiNum].nextIndex[1] = -1;
-					UIs[nowUiNum].nextIndex[2] = -1;
+					UIs[hierarchy][Middle].nextIndex[0] = 1;
+					UIs[hierarchy][Middle].nextIndex[1] = -1;
+					UIs[hierarchy][Middle].nextIndex[2] = -1;
 					break;
 				case 2:
-					UIs[nowUiNum].nextIndex[0] = 0;
-					UIs[nowUiNum].nextIndex[1] = 2;
-					UIs[nowUiNum].nextIndex[2] = -1;
+					UIs[hierarchy][Middle].nextIndex[0] = 0;
+					UIs[hierarchy][Middle].nextIndex[1] = 2;
+					UIs[hierarchy][Middle].nextIndex[2] = -1;
 					break;
 				case 3:
-					UIs[nowUiNum].nextIndex[0] = 0;
-					UIs[nowUiNum].nextIndex[1] = 1;
-					UIs[nowUiNum].nextIndex[2] = 2;
+					UIs[hierarchy][Middle].nextIndex[0] = 0;
+					UIs[hierarchy][Middle].nextIndex[1] = 1;
+					UIs[hierarchy][Middle].nextIndex[2] = 2;
 					break;
 				default:
 					break;
 				}
 			}
-			nowUiNum++;
 			break;
+		}
 		case 2: {
-			XMFLOAT2 b_pos[2] = {
-				{_basePos.x, _basePos.y - interbal.y},
-			{ _basePos.x, _basePos.y + interbal.y } };
+			UIs[hierarchy][Top] = RandPannel();
+			UIs[hierarchy][Top].pos = { homeX ,homeY[Top] };
+			UIs[hierarchy][Top].hierarchy = i + 1;
 
-			for (int j = 0; j < 2; j++) {
-				UIs[nowUiNum] = RandPannel();
-				UIs[nowUiNum].pos = b_pos[j];
-				UIs[nowUiNum].hierarchy = i + 1;
-				if (i != Len - 1) {
-					switch (dungeons[i + 1]) {
-					case 1:
-						UIs[nowUiNum].nextIndex[0] = 1;
-						UIs[nowUiNum].nextIndex[1] = -1;
-						UIs[nowUiNum].nextIndex[2] = -1;
-						break;
-					case 2:
-						UIs[nowUiNum].nextIndex[0] = 0;
-						UIs[nowUiNum].nextIndex[1] = 2;
-						UIs[nowUiNum].nextIndex[2] = -1;
-						break;
-					case 3:
-						UIs[nowUiNum].nextIndex[0] = 0;
-						UIs[nowUiNum].nextIndex[1] = 1;
-						UIs[nowUiNum].nextIndex[2] = 2;
-						break;
-					default:
-						break;
-					}
+			UIs[hierarchy][Bottom] = RandPannel();
+			UIs[hierarchy][Bottom].pos = { homeX ,homeY[Bottom] };
+			UIs[hierarchy][Bottom].hierarchy = i + 1;
+
+			if (i != Len - 1) {
+				switch (dungeons[i + 1]) {
+				case 1:
+					UIs[hierarchy][Top].nextIndex[0] = 1;
+					UIs[hierarchy][Top].nextIndex[1] = -1;
+					UIs[hierarchy][Top].nextIndex[2] = -1;
+					UIs[hierarchy][Bottom].nextIndex[0] = 1;
+					UIs[hierarchy][Bottom].nextIndex[1] = -1;
+					UIs[hierarchy][Bottom].nextIndex[2] = -1;
+					break;
+				case 2:
+					UIs[hierarchy][Top].nextIndex[0] = 0;
+					UIs[hierarchy][Top].nextIndex[1] = 2;
+					UIs[hierarchy][Top].nextIndex[2] = -1;
+					UIs[hierarchy][Bottom].nextIndex[0] = 0;
+					UIs[hierarchy][Bottom].nextIndex[1] = 2;
+					UIs[hierarchy][Bottom].nextIndex[2] = -1;
+					break;
+				case 3:
+					UIs[hierarchy][Top].nextIndex[0] = 0;
+					UIs[hierarchy][Top].nextIndex[1] = 1;
+					UIs[hierarchy][Top].nextIndex[2] = 2;
+					UIs[hierarchy][Bottom].nextIndex[0] = 0;
+					UIs[hierarchy][Bottom].nextIndex[1] = 1;
+					UIs[hierarchy][Bottom].nextIndex[2] = 2;
+					break;
+				default:
+					break;
 				}
-				nowUiNum++;
 			}
 			break;
 		}
 		case 3: {
-			XMFLOAT2 b_pos[3] = {
-		{_basePos.x, _basePos.y - interbal.y},
-		{_basePos.x, _basePos.y},
-		{_basePos.x, _basePos.y + interbal.y } };
 			for (int j = 0; j < 3; j++) {
-				UIs[nowUiNum] = RandPannel();
-				UIs[nowUiNum].pos = b_pos[j];
-				UIs[nowUiNum].hierarchy = i + 1;
+				UIs[hierarchy][j] = RandPannel();
+				UIs[hierarchy][j].pos = { homeX ,homeY[j] };
+				UIs[hierarchy][j].hierarchy = i + 1;
 				if (i != Len - 1) {
 					switch (dungeons[i + 1]) {
 					case 1:
-						UIs[nowUiNum].nextIndex[0] = 1;
-						UIs[nowUiNum].nextIndex[1] = -1;
-						UIs[nowUiNum].nextIndex[2] = -1;
+						UIs[hierarchy][j].nextIndex[0] = 1;
+						UIs[hierarchy][j].nextIndex[1] = -1;
+						UIs[hierarchy][j].nextIndex[2] = -1;
 						break;
 					case 2:
-						UIs[nowUiNum].nextIndex[0] = 0;
-						UIs[nowUiNum].nextIndex[1] = 2;
-						UIs[nowUiNum].nextIndex[2] = -1;
+						UIs[hierarchy][j].nextIndex[0] = 0;
+						UIs[hierarchy][j].nextIndex[1] = 2;
+						UIs[hierarchy][j].nextIndex[2] = -1;
 						break;
 					case 3:
-						UIs[nowUiNum].nextIndex[0] = 0;
-						UIs[nowUiNum].nextIndex[1] = 1;
-						UIs[nowUiNum].nextIndex[2] = 2;
+						UIs[hierarchy][j].nextIndex[0] = 0;
+						UIs[hierarchy][j].nextIndex[1] = 1;
+						UIs[hierarchy][j].nextIndex[2] = 2;
 						break;
 					default:
 						break;
 					}
 				}
-				nowUiNum++;
 			}
 			break;
 		}
 		default:
 			break;
 		}
-		_basePos.x += interbal.x;
+		homeX += interbal;
 	}
 
 }
@@ -240,35 +281,38 @@ void MapScene::ImGuiDraw() {
 	ImGui::Begin("Map");
 	ImGui::Text("%f", framePos.x);
 	ImGui::Text("%f", eFrame);
-	ImGui::Text("HIERARCHY:%d", UIs[nowMap].hierarchy);
-	for (int i = 0; i < 3; i++) {
-		ImGui::Text("Index[%d]%d", i,UIs[nowMap].nextIndex[i]);
-	}
+	ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
+	ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
+	ImGui::Text("PICKINDEX:%d", pickIndex);
+	//ImGui::Text("PICKNow:%d", pickNow);
+	//for (int i = 0; i < 3; i++) {
+	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
+	//}
 	ImGui::End();
 }
 
 void MapScene::BlackOut() {
 
-	if (!clearFlag[0]) {
-		switch (dungeons[0]) {
-		case 1:
-			for (int i = 1; i < 2; i++) {
-				UIs[i].open = true;
-			}
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		default:
-			break;
-		};
-	}
-	for (UI& ui : UIs) {
-		if (!ui.sprite) { continue; }
-		if (ui.open) { continue; }
-		ui.color = { 0.5f,0.5f,0.5f,1.f };
-	}
+	//if (!clearFlag[0]) {
+	//	switch (dungeons[0]) {
+	//	case 1:
+	//		for (int i = 1; i < 2; i++) {
+	//			UIs[i].open = true;
+	//		}
+	//		break;
+	//	case 2:
+	//		break;
+	//	case 3:
+	//		break;
+	//	default:
+	//		break;
+	//	};
+	//}
+	//for (UI& ui : UIs) {
+	//	if (!ui.sprite) { continue; }
+	//	if (ui.open) { continue; }
+	//	ui.color = { 0.5f,0.5f,0.5f,1.f };
+	//}
 
 }
 
@@ -281,33 +325,44 @@ void MapScene::Move() {
 		vel = 10;
 	}
 
-	if (input->TiltStick(input->L_RIGHT)) {
+	if (input->TiltStick(input->L_UP)) {
 		if (moved) { return; }
-		if (nowMap == nowUiNum - 1) { return; }
-		nowMap++;
-		moved = true;
+		if (pickNextIndex == 0) { return; }
+		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex - 1] == -1) { return; }
+		pickNextIndex--;
 	}
-	if (input->TiltStick(input->L_LEFT)) {
+	if (input->TiltStick(input->L_DOWN)) {
 		if (moved) { return; }
-		if (nowMap == 0) { return; }
-		nowMap--;
-		moved = true;
+		if (pickNextIndex == 2) { return; }
+		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex + 1] == -1) { return; }
+		pickNextIndex++;
 	}
-	if ((input->TriggerButton(input->B))) {
-		SceneManager::GetInstance()->ChangeScene<BattleScene>();
 
+	if (input->TriggerButton(input->B)) {
+		if (moved) { return; }
+		nowIndex = pickIndex;
+		nowHierarchy = pickHierarchy;
+		moved = true;
 	}
+	pickIndex = UIs[oldHierarchy][oldIndex].nextIndex[pickNextIndex];
+	framePos = UIs[pickHierarchy][pickIndex].pos;
+
 
 	if (moved) {
 		if (Helper::GetInstance()->FrameCheck(mov_frame, 1 / kMoveFrame)) {
 			moved = false;
-			oldMap = nowMap;
+			oldIndex = nowIndex;
+			oldHierarchy = nowHierarchy;
+			if (pickHierarchy<MaxLength) {
+				pickHierarchy = nowHierarchy + 1;
+			}
+			pickNextIndex = 0;
 			mov_frame = 0.0f;
 			return;
 		}
-		framePos.x = Ease(In, Quad, mov_frame, UIs[oldMap].pos.x, UIs[nowMap].pos.x);
-		framePos.y = Ease(In, Quad, mov_frame, UIs[oldMap].pos.y, UIs[nowMap].pos.y);
-		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowMap].pos.x / 2);
+		charaPos.x = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.x);
+		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y, UIs[nowHierarchy][nowIndex].pos.y);
+		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowHierarchy][nowIndex].pos.x / 2);
 	}
 	if (Helper::GetInstance()->FrameCheck(eFrame, eAdd)) {
 		eAdd *= -1.0f;
@@ -320,6 +375,7 @@ void MapScene::Move() {
 	size.x = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
 	size.y = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
 	frame->SetSize(size);
+
 	scroll.x += vel;
 	scroll.x = clamp(scroll.x, -3000.f, 340.f);
 }

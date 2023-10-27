@@ -52,19 +52,43 @@ private:
 		HEAL,
 	};
 
-	string dungeon;
+	enum {
+		Top = 0,
+		Middle,
+		Bottom,
+		INDEX,
+	};
+
+	std::string dungeon;
 	vector<int> dungeons;
 	vector<bool> clearFlag;
 
 	unique_ptr<IKESprite>screen = nullptr;
 	unique_ptr<IKESprite> frame = nullptr;
+	unique_ptr<IKESprite> chara = nullptr;
 
-	array<UI, 20> UIs;
+	array<array<UI, INDEX>, 20> UIs;
+	float homeY[INDEX] = { 110.f,360.f,610.f };
+	float homeX = 360.f;
+	float interbal = 300.f;
 
-	XMFLOAT2 homePos = { 340.f,360.f };
-	XMFLOAT2 interbal = { 300.f,250.f };
+	int nowIndex = Middle;
+	int nowHierarchy = 0;
+
+	int oldIndex = Middle;
+	int oldHierarchy = 0;
+
+	int MaxLength = 0;
+
+	int pickIndex = Middle;
+	int pickHierarchy = nowHierarchy + 1;
+	int pickNextIndex = 0;
+
 	XMFLOAT2 scroll = { 0,0 };
 	int vel = 10;
+
+
+	std::list<unique_ptr<IKESprite>> roads;
 
 
 	bool moved = false;
@@ -75,11 +99,8 @@ private:
 	float eFrame = 0;
 	float eAdd = 0.01f;
 
+	XMFLOAT2 charaPos = { homeX ,homeY[Middle] };
+	XMFLOAT2 framePos = { homeX + interbal ,homeY[Middle] };
 
-	int nowUiNum = 1;
-
-	int oldMap = 0;
-	int nowMap = 0;
-	XMFLOAT2 framePos = homePos;
 };
 
