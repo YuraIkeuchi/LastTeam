@@ -29,15 +29,13 @@ public:
 
 	void ImGui_Origin()override;
 
-	float GetDamege() { return damege; }
+
 	XMFLOAT2 GetDistance() { return distance; }
 	XMFLOAT2 GetRange() { return range; }
 
-	void SetDamege(const float damege) { this->damege = damege; }
 
 protected:
-	//ダメージ
-	float damege = 0.0f;
+	
 	//範囲
 	XMFLOAT2 range = { 1.0f,1.0f };
 	//距離 ※プレイヤーの位置から範囲の一番左上基準

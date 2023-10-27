@@ -40,7 +40,7 @@ public:
 	//getter setter
 	const int GetID() { return ID; }
 	const bool GetBirth() { return m_Birth; }
-
+	float GetDamege() { return damege; }
 	void SetID(const int ID) { this->ID = ID; }
 	void SetLatency(const int latency) { this->latency = latency; }
 	void SetName(const std::string& name) { this->name = name; }
@@ -49,6 +49,8 @@ public:
 	void SetRarity(const int rarity) { this->rarity = rarity; }
 	void SetPopRate(const int popRate) { this->popRate = popRate; }
 	void SetBirth(const bool Birth) { this->m_Birth = Birth; }
+	void SetDamege(const float damege) { this->damege = damege; }
+
 protected:
 	//スキル名
 	std::string name = "NoName";
@@ -68,4 +70,6 @@ protected:
 	int popRate = 1;
 	bool m_Birth = false;
 	SkillType skillType;
+	//ダメージ
+	float damege = 0.0f;
 };

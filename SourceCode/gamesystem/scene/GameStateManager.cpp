@@ -96,9 +96,10 @@ void GameStateManager::AttackTrigger() {
 	if (input->TriggerButton(input->A)) {
 		m_BirthSkill = true;
 		Player::GetInstance()->SetDelayStart(true);
-		CreateSkill(m_Act[0].ActID);
+		UseSkill();
+		
 	}
-	UseSkill();
+	
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
@@ -124,6 +125,7 @@ void GameStateManager::ImGuiDraw() {
 		_SkillType = SKILL_SPECIAL;
 	}
 	ImGui::End();
+	SkillManager::GetInstance()->ImGuiDraw();
 	/**/
 	
 	/*
@@ -148,9 +150,10 @@ void GameStateManager::ActUIDraw() {
 	}
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const int ID) {
+void GameStateManager::AddSkill(const int ID, const float damage) {
 	ActState act;
 	act.ActID = ID;
+	act.actDamage = damage;
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
@@ -181,6 +184,7 @@ void GameStateManager::BirthArea() {
 		newarea = new AttackArea();
 		newarea->Initialize();
 		newarea->InitState(l_BirthCountX, m_NowHeight);
+		newarea->SetDamage(m_Act[0].actDamage);
 		attackarea.push_back(newarea);
 	} else if (_SkillType == SKILL_STRONG) {		//プレイヤーの一から右一列全部
 		l_BirthNumX = PANEL_WIDTH - (m_NowWidth + 1);
@@ -190,6 +194,7 @@ void GameStateManager::BirthArea() {
 			newarea = new AttackArea();
 			newarea->Initialize();
 			newarea->InitState(l_BirthCountX, m_NowHeight);
+			newarea->SetDamage(m_Act[0].actDamage);
 			attackarea.push_back(newarea);
 		}
 	} else {				//プレイヤーから3 * 2のマス
@@ -204,6 +209,7 @@ void GameStateManager::BirthArea() {
 				newarea = new AttackArea();
 				newarea->Initialize();
 				newarea->InitState(l_BirthCountX, l_BirthCountZ);
+				newarea->SetDamage(m_Act[0].actDamage);
 				attackarea.push_back(newarea);
 			}
 		}
@@ -217,12 +223,12 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 //スキルの使用
 void GameStateManager::UseSkill() {
 
+	BirthArea();
+	FinishAct();
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
+	m_BirthSkill = false;
 	if (!Player::GetInstance()->GetDelayStart() && m_BirthSkill) {
 
-		BirthArea();
-		FinishAct();
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
-		m_BirthSkill = false;
 	}
 }
 //行動の終了
@@ -230,7 +236,6 @@ void GameStateManager::FinishAct() {
 	m_Act.erase(m_Act.begin());
 	m_AllActCount--;
 	actui[0]->SetUse(true);
-
 }
 
 void GameStateManager::GaugeUpdate() {
@@ -270,59 +275,4 @@ void GameStateManager::PassiveCheck() {
 		}
 
 	}
-}
-//スキルのCSVを読み取る
-void GameStateManager::LoadCsvSkill(std::string& FileName) {
-	std::ifstream file;
-	std::stringstream popcom;
-
-	file.open(FileName);
-	popcom << file.rdbuf();
-	file.close();
-
-	std::string line;
-	while (std::getline(popcom, line)) {
-		std::istringstream line_stream(line);
-		std::string word;
-		std::getline(line_stream, word, ',');
-
-		if (word.find("//") == 0) {
-			continue;
-		}
-		else if (word.find("ID") == 0) {
-			std::getline(line_stream, word, ',');
-			m_ID = std::stoi(word);
-		}
-		else if (word.find("Delay") == 0) {
-			std::getline(line_stream, word, ',');
-			m_Delay = std::stoi(word);
-		}
-		else if (word.find("Name") == 0) {
-			std::getline(line_stream, word, ',');
-			m_Name = word;
-
-			break;
-		}
-
-	}
-}
-
-bool GameStateManager::CreateSkill(int id) {
-
-	string directory = "Resources/csv/skill/Skill";
-
-	std::stringstream ss;
-	if (id > 10) {
-		ss << directory << id << ".csv";
-	}
-	else {
-		ss << directory << "0" << id << ".csv";
-	}
-	std::string csv_ = ss.str();
-	LoadCsvSkill(csv_);
-
-	Player::GetInstance()->SetDelayTimer(m_Delay);
-	Player::GetInstance()->Setname(m_Name);
-
-	return true;
 }

@@ -10,7 +10,7 @@ class SkillManager
 {
 public:
 	static SkillManager* GetInstance();
-	
+
 	void Initialize();
 
 	void ImGuiDraw();
@@ -25,6 +25,8 @@ private:
 public:
 	//IDを取る
 	int GetID();
+	//ダメージを取る
+	float GetDamage();
 public:
 	std::vector<SkillBase*>GetSkillBase() { return skill; }
 private:
@@ -38,4 +40,5 @@ private:
 	std::string nameD = "殺る";
 	std::string nameE = "かます";
 	std::string nameF = "スカス";
+	int m_RandNum = {};
 };
