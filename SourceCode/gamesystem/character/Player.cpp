@@ -70,6 +70,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 /*CharaStateのState並び順に合わせる*/
 void (Player::* Player::stateTable[])() = {
 	&Player::Move,//移動
+	&Player::Delay,//動きが止まる
 };
 //更新処理
 void Player::Update() {
@@ -77,6 +78,10 @@ void Player::Update() {
 
 	//状態移行(charastateに合わせる)
 	(this->*stateTable[_charaState])();
+	//ディレイタイマーが0以外ならディレイにする
+	if (m_DelayTimer != 0) {
+		_charaState = STATE_DELAY;
+	}
 	Obj_SetParam();
 
 	BirthParticle();
@@ -120,8 +125,7 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("Length:%f", m_Length);
-	ImGui::Text("GrazeScore:%f", m_GrazeScore);
+	ImGui::Text("DelayTimer:%d", m_DelayTimer);
 	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
 	ImGui::End();
 }
@@ -218,4 +222,10 @@ float Player::HpPercent() {
 	float temp = m_HP / m_MaxHP;
 	Helper::GetInstance()->Clamp(temp, 0.0f, 1.0f);
 	return temp;
+}
+//ディレイ処理
+void Player::Delay() {
+	if (Helper::GetInstance()->CheckMax(m_DelayTimer, 0, -1)) {
+		_charaState = STATE_MOVE;
+	}
 }

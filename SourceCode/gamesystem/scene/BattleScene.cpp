@@ -114,7 +114,7 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
 	//SceneChanger::GetInstance()->ImGuiDraw();
-	//Player::GetInstance()->ImGuiDraw();
+	Player::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

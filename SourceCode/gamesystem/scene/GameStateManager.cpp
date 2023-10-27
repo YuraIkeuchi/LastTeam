@@ -44,7 +44,7 @@ void GameStateManager::Initialize() {
 }
 //更新
 void GameStateManager::Update() {
-	Input* input = Input::GetInstance();
+
 	const int l_AddCounterScore = 10;
 	m_AllScore = m_CounterScore + (int)(m_PosScore)+(int)(m_GrazeScore);
 
@@ -84,8 +84,18 @@ void GameStateManager::Update() {
 
 	GaugeUpdate();
 
+	//攻撃した瞬間
+	AttackTrigger();
+}
+//攻撃した瞬間
+void GameStateManager::AttackTrigger() {
+	Input* input = Input::GetInstance();
+	if (m_AllActCount == 0) { return; }
+	if (actui[0]->GetUse()) { return; }
+	if (Player::GetInstance()->GetCharaState() == 1) { return; }			//ディレイだったら
+
 	//スキルが一個以上あったらスキル使える
-	if (input->TriggerButton(input->A) && m_AllActCount != 0 && !actui[0]->GetUse()) {
+	if (input->TriggerButton(input->A)) {
 		UseSkill();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
 	}
@@ -122,7 +132,7 @@ void GameStateManager::ImGuiDraw() {
 			ImGui::Text("Act[%d]:%d", i, m_Act[i].ActID);
 		}
 	}*/
-	StagePanel::GetInstance()->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -204,6 +214,7 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 }
 //スキルの使用
 void GameStateManager::UseSkill() {
+	CreateSkill(m_Act[0].ActID);
 	BirthArea();
 	FinishAct();
 }
@@ -251,6 +262,51 @@ void GameStateManager::PassiveCheck() {
 		}
 
 	}
+}
+//スキルのCSVを読み取る
+void GameStateManager::LoadCsvSkill(std::string& FileName) {
+	std::ifstream file;
+	std::stringstream popcom;
 
+	file.open(FileName);
+	popcom << file.rdbuf();
+	file.close();
 
+	std::string line;
+	while (std::getline(popcom, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		std::getline(line_stream, word, ',');
+
+		if (word.find("//") == 0) {
+			continue;
+		}
+		else if (word.find("ID") == 0) {
+			std::getline(line_stream, word, ',');
+			m_ID = std::stoi(word);
+		}
+		else if (word.find("Delay") == 0) {
+			std::getline(line_stream, word, ',');
+			m_Delay = std::stoi(word);
+			break;
+		}
+	}
+}
+
+bool GameStateManager::CreateSkill(int id) {
+
+	string directory = "Resources/csv/skill/Skill";
+
+	std::stringstream ss;
+	if (id > 10) {
+		ss << directory << id << ".csv";
+	}
+	else {
+		ss << directory << "0" << id << ".csv";
+	}
+	std::string csv_ = ss.str();
+	LoadCsvSkill(csv_);
+
+	Player::GetInstance()->SetDelayTimer(m_Delay);
+	return true;
 }

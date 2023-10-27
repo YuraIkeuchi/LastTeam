@@ -30,6 +30,8 @@ public:
 private:
 	//動き
 	void Move();
+	//動きが止まる
+	void Delay();
 
 	//パーティクル
 	void BirthParticle();
@@ -49,6 +51,8 @@ public:
 		m_HP = maxhp;
 	}
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
+
+	void SetDelayTimer(const int DelayTimer) { m_DelayTimer = DelayTimer; }
 private:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
@@ -58,7 +62,7 @@ public:
 	//キャラの状態
 	enum CharaState {
 		STATE_MOVE,
-		STATE_ACTION
+		STATE_DELAY
 	};
 private:
 	Input* input = Input::GetInstance();
@@ -118,4 +122,6 @@ private:
 		THIRD_DIGHT
 	};
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
+
+	int m_DelayTimer = {};
 };
