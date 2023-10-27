@@ -2,6 +2,15 @@
 #include "DirectXMath.h"
 #include <string>
 
+enum class SkillType
+{
+	none = -1,
+	damege,
+	buff,
+	debuff,
+	max,
+};
+
 class SkillBase
 {
 protected:
@@ -51,5 +60,5 @@ protected:
 	//oŒ»ƒ‰ƒ“ƒN
 	int popRate = 1;
 	bool m_Birth = false;
+	SkillType skillType;
 };
-

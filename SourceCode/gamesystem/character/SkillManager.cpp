@@ -25,7 +25,6 @@ void SkillManager::Initialize()
 	skill[4]->Create(nameE, 5, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[5] = new AttackSkill();
 	skill[5]->Create(nameF, 6, 0.0f, 0.0f, 0.0f, 1, 1);
-
 	//‡”Ô“ü‚ê‘Ö‚¦‚Ä‚é
 	std::shuffle(skill.begin(), skill.end(), std::default_random_engine());
 }
