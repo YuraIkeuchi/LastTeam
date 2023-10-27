@@ -30,7 +30,6 @@ void GameStateManager::Initialize() {
 	actui.clear();
 	m_Act.clear();
 	attackarea.clear();
-	GotPassives.clear();
 
 	GotPassives.push_back(std::move(make_unique<Passive>(1)));
 	GotPassives.push_back(std::move(make_unique<Passive>(2, XMFLOAT2{ 70.f,0.f })));

@@ -19,6 +19,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 	UIs[StartMAP].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
 	UIs[StartMAP].pos = homePos;
+	UIs[StartMAP].open = true;
 	UIs[StartMAP].size = { 128.f,128.f };
 	UIs[StartMAP].sprite->SetAnchorPoint({ 0.5f,0.5f });
 
@@ -29,16 +30,16 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 	MapCreate();
 
-	passive = make_unique<Passive>(1);
-
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
+	BlackOut();
 
 	Move();
 	for (UI& ui : UIs) {
 		if (!ui.sprite) { continue; }
 		ui.sprite->SetPosition({ ui.pos.x + scroll.x, ui.pos.y + scroll.y });
+		ui.sprite->SetColor(ui.color);
 		ui.sprite->SetSize(ui.size);
 	}
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
@@ -78,7 +79,6 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 		ui.sprite->Draw();
 	}
 	frame->Draw();
-	passive->Draw();
 }
 
 void MapScene::BackDraw(DirectXCommon* dxCommon) {
@@ -110,7 +110,8 @@ MapScene::UI MapScene::RandPannel() {
 void MapScene::MapCreate() {
 	string csv_ = "Resources/csv/map.csv";
 	int r_num = Helper::GetInstance()->GetRanNum(0, 3);
-	
+	//テストプレイ用
+	r_num = 4;
 	//mapのあとに数字をくっつける
 	std::stringstream ss;
 	ss << "map" << r_num;
@@ -120,9 +121,11 @@ void MapScene::MapCreate() {
 	//けたすうしゅとくする
 	int Len = (int)dungeon.length();
 	dungeons.resize(Len);
+	clearFlag.resize(Len);
 	//1文字ずつ格納
 	for (int i = 0; i < Len; ++i) {
 		dungeons[i] = (int)(dungeon[i] - '0');
+		clearFlag[i] = false;
 	}
 	XMFLOAT2 _basePos = { homePos.x + interbal.x,homePos.y };
 	for (int i = 0; i < Len; ++i) {
@@ -131,6 +134,28 @@ void MapScene::MapCreate() {
 		case 1:
 			UIs[nowUiNum] = RandPannel();
 			UIs[nowUiNum].pos = _basePos;
+			UIs[nowUiNum].hierarchy = i + 1;
+			if (i != Len - 1) {
+				switch (dungeons[i + 1]) {
+				case 1:
+					UIs[nowUiNum].nextIndex[0] =  1;
+					UIs[nowUiNum].nextIndex[1] = -1;
+					UIs[nowUiNum].nextIndex[2] = -1;
+					break;
+				case 2:
+					UIs[nowUiNum].nextIndex[0] = 0;
+					UIs[nowUiNum].nextIndex[1] = 2;
+					UIs[nowUiNum].nextIndex[2] = -1;
+					break;
+				case 3:
+					UIs[nowUiNum].nextIndex[0] = 0;
+					UIs[nowUiNum].nextIndex[1] = 1;
+					UIs[nowUiNum].nextIndex[2] = 2;
+					break;
+				default:
+					break;
+				}
+			}
 			nowUiNum++;
 			break;
 		case 2: {
@@ -138,9 +163,31 @@ void MapScene::MapCreate() {
 				{_basePos.x, _basePos.y - interbal.y},
 			{ _basePos.x, _basePos.y + interbal.y } };
 
-			for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 2; j++) {
 				UIs[nowUiNum] = RandPannel();
-				UIs[nowUiNum].pos = b_pos[i];
+				UIs[nowUiNum].pos = b_pos[j];
+				UIs[nowUiNum].hierarchy = i + 1;
+				if (i != Len - 1) {
+					switch (dungeons[i + 1]) {
+					case 1:
+						UIs[nowUiNum].nextIndex[0] = 1;
+						UIs[nowUiNum].nextIndex[1] = -1;
+						UIs[nowUiNum].nextIndex[2] = -1;
+						break;
+					case 2:
+						UIs[nowUiNum].nextIndex[0] = 0;
+						UIs[nowUiNum].nextIndex[1] = 2;
+						UIs[nowUiNum].nextIndex[2] = -1;
+						break;
+					case 3:
+						UIs[nowUiNum].nextIndex[0] = 0;
+						UIs[nowUiNum].nextIndex[1] = 1;
+						UIs[nowUiNum].nextIndex[2] = 2;
+						break;
+					default:
+						break;
+					}
+				}
 				nowUiNum++;
 			}
 			break;
@@ -149,10 +196,32 @@ void MapScene::MapCreate() {
 			XMFLOAT2 b_pos[3] = {
 		{_basePos.x, _basePos.y - interbal.y},
 		{_basePos.x, _basePos.y},
-		{_basePos.x, _basePos.y + interbal.y }};
-			for (int i = 0; i < 3; i++) {
+		{_basePos.x, _basePos.y + interbal.y } };
+			for (int j = 0; j < 3; j++) {
 				UIs[nowUiNum] = RandPannel();
-				UIs[nowUiNum].pos = b_pos[i];
+				UIs[nowUiNum].pos = b_pos[j];
+				UIs[nowUiNum].hierarchy = i + 1;
+				if (i != Len - 1) {
+					switch (dungeons[i + 1]) {
+					case 1:
+						UIs[nowUiNum].nextIndex[0] = 1;
+						UIs[nowUiNum].nextIndex[1] = -1;
+						UIs[nowUiNum].nextIndex[2] = -1;
+						break;
+					case 2:
+						UIs[nowUiNum].nextIndex[0] = 0;
+						UIs[nowUiNum].nextIndex[1] = 2;
+						UIs[nowUiNum].nextIndex[2] = -1;
+						break;
+					case 3:
+						UIs[nowUiNum].nextIndex[0] = 0;
+						UIs[nowUiNum].nextIndex[1] = 1;
+						UIs[nowUiNum].nextIndex[2] = 2;
+						break;
+					default:
+						break;
+					}
+				}
 				nowUiNum++;
 			}
 			break;
@@ -171,23 +240,40 @@ void MapScene::ImGuiDraw() {
 	ImGui::Begin("Map");
 	ImGui::Text("%f", framePos.x);
 	ImGui::Text("%f", eFrame);
-
+	ImGui::Text("HIERARCHY:%d", UIs[nowMap].hierarchy);
+	for (int i = 0; i < 3; i++) {
+		ImGui::Text("Index[%d]%d", i,UIs[nowMap].nextIndex[i]);
+	}
 	ImGui::End();
+}
+
+void MapScene::BlackOut() {
+
+	if (!clearFlag[0]) {
+		switch (dungeons[0]) {
+		case 1:
+			for (int i = 1; i < 2; i++) {
+				UIs[i].open = true;
+			}
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		default:
+			break;
+		};
+	}
+	for (UI& ui : UIs) {
+		if (!ui.sprite) { continue; }
+		if (ui.open) { continue; }
+		ui.color = { 0.5f,0.5f,0.5f,1.f };
+	}
+
 }
 
 void MapScene::Move() {
 	Input* input = Input::GetInstance();
-	if (Input::GetInstance()->Pushkey(DIK_D)) {
-		scroll.x += 5;
-	}
-	if (Input::GetInstance()->Pushkey(DIK_A)) {
-		scroll.x -= 5;
-	}	if (Input::GetInstance()->Pushkey(DIK_W)) {
-		scroll.y -= 5;
-	}	if (Input::GetInstance()->Pushkey(DIK_S)) {
-		scroll.y += 5;
-	}
-
 	int vel = 0;
 	if (input->PushButton(input->LB)) {
 		vel = -10;

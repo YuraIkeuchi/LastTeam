@@ -20,8 +20,12 @@ private:
 
 	struct UI {
 		unique_ptr<IKESprite> sprite = nullptr;
+		int nextIndex[3] = {};
+		int hierarchy = -1;
 		XMFLOAT2 pos = { 0,0 };
 		XMFLOAT2 size = { 0,0 };
+		XMFLOAT4 color = { 1.f,1.f,1.f,1.f };
+		bool open = false;
 		int Tag = BATTLE;
 	};
 
@@ -30,6 +34,8 @@ private:
 	void MapCreate();
 
 	void ImGuiDraw();
+
+	void BlackOut();
 
 	void Move();
 private:
@@ -48,11 +54,10 @@ private:
 
 	string dungeon;
 	vector<int> dungeons;
+	vector<bool> clearFlag;
 
 	unique_ptr<IKESprite>screen = nullptr;
 	unique_ptr<IKESprite> frame = nullptr;
-
-	unique_ptr<Passive> passive = nullptr;
 
 	array<UI, 20> UIs;
 
@@ -75,6 +80,6 @@ private:
 
 	int oldMap = 0;
 	int nowMap = 0;
-	XMFLOAT2 framePos= homePos;
+	XMFLOAT2 framePos = homePos;
 };
 
