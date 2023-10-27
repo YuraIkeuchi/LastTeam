@@ -17,12 +17,12 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	screen = IKESprite::Create(ImageManager::MAPSCREEN, { 0,0 });
 	screen->SetSize({ 1280.f,720.f });
 
-	UIs[StartMAP].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
-	UIs[StartMAP].pos = homePos;
-	UIs[StartMAP].open = true;
-	UIs[StartMAP].hierarchy = 0;
-	UIs[StartMAP].size = { 128.f,128.f };
-	UIs[StartMAP].sprite->SetAnchorPoint({ 0.5f,0.5f });
+	UIs[Middle][0].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
+	UIs[Middle][0].pos = { homeX ,homeY[1] };
+	UIs[Middle][0].open = true;
+	UIs[Middle][0].hierarchy = 0;
+	UIs[Middle][0].size = { 128.f,128.f };
+	UIs[Middle][0].sprite->SetAnchorPoint({ 0.5f,0.5f });
 
 	frame = IKESprite::Create(ImageManager::MAP_FRAME, { 0,0 });
 	frame->SetPosition(framePos);
@@ -30,18 +30,19 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetAnchorPoint({ 0.5f,0.5f });
 
 	MapCreate();
-
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
 	BlackOut();
 
 	Move();
-	for (UI& ui : UIs) {
-		if (!ui.sprite) { continue; }
-		ui.sprite->SetPosition({ ui.pos.x + scroll.x, ui.pos.y + scroll.y });
-		ui.sprite->SetColor(ui.color);
-		ui.sprite->SetSize(ui.size);
+	for (array<UI,INDEX>& ui : UIs) {
+		for (int i = 0; i < INDEX;i++) {
+			if (!ui[i].sprite) { continue; }
+			ui[i].sprite->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y});
+			ui[i].sprite->SetColor(ui[i].color);
+			ui[i].sprite->SetSize(ui[i].size);
+		}
 	}
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
 
@@ -78,9 +79,11 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	for (unique_ptr<IKESprite>& road : roads) {
 		road->Draw();
 	}
-	for (UI& ui : UIs) {
-		if (!ui.sprite) { continue; }
-		ui.sprite->Draw();
+	for (array<UI, INDEX>& ui : UIs) {
+		for (int i = 0; i < INDEX; i++) {
+			if (!ui[i].sprite) { continue; }
+			ui[i].sprite->Draw();
+		}
 	}
 	frame->Draw();
 }
@@ -134,33 +137,34 @@ void MapScene::MapCreate() {
 	XMFLOAT2 _basePos = { homePos.x + interbal.x,homePos.y };
 	for (int i = 0; i < Len; ++i) {
 		//この+1はスタートを除く
+		size_t hierarchy = (size_t)i + 1;
 		switch (dungeons[i]) {
 		case 1:
-			UIs[nowUiNum] = RandPannel();
-			UIs[nowUiNum].pos = _basePos;
-			UIs[nowUiNum].hierarchy = i + 1;
+			UIs[Middle][hierarchy] = RandPannel();
+			UIs[Middle][hierarchy].pos = { homeX ,homeY[Middle]};
+			UIs[Middle][hierarchy].hierarchy = i + 1;
 			if (i != Len - 1) {
 				switch (dungeons[i + 1]) {
 				case 1:
-					UIs[nowUiNum].nextIndex[0] =  1;
-					UIs[nowUiNum].nextIndex[1] = -1;
-					UIs[nowUiNum].nextIndex[2] = -1;
+					UIs[Middle][hierarchy].nextIndex[0] = 1;
+					UIs[Middle][hierarchy].nextIndex[1] = -1;
+					UIs[Middle][hierarchy].nextIndex[2] = -1;
 					break;
 				case 2:
-					UIs[nowUiNum].nextIndex[0] = 0;
-					UIs[nowUiNum].nextIndex[1] = 2;
-					UIs[nowUiNum].nextIndex[2] = -1;
+					UIs[Middle][hierarchy].nextIndex[0] = 0;
+					UIs[Middle][hierarchy].nextIndex[1] = 2;
+					UIs[Middle][hierarchy].nextIndex[2] = -1;
 					break;
 				case 3:
-					UIs[nowUiNum].nextIndex[0] = 0;
-					UIs[nowUiNum].nextIndex[1] = 1;
-					UIs[nowUiNum].nextIndex[2] = 2;
+					UIs[Middle][hierarchy].nextIndex[0] = 0;
+					UIs[Middle][hierarchy].nextIndex[1] = 1;
+					UIs[Middle][hierarchy].nextIndex[2] = 2;
 					break;
 				default:
 					break;
 				}
 			}
-			nowUiNum++;
+			homeX += interbal.x;
 			break;
 		case 2: {
 			XMFLOAT2 b_pos[2] = {
@@ -246,7 +250,7 @@ void MapScene::ImGuiDraw() {
 	ImGui::Text("%f", eFrame);
 	ImGui::Text("HIERARCHY:%d", UIs[nowMap].hierarchy);
 	for (int i = 0; i < 3; i++) {
-		ImGui::Text("Index[%d]%d", i,UIs[nowMap].nextIndex[i]);
+		ImGui::Text("Index[%d]%d", i, UIs[nowMap].nextIndex[i]);
 	}
 	ImGui::End();
 }
