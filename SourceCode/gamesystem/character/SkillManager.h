@@ -25,6 +25,7 @@ private:
 public:
 	//ID‚ğæ‚é
 	int GetID();
+	//ƒ_ƒ[ƒW‚ğæ‚é
 	float GetDamage();
 public:
 	std::vector<SkillBase*>GetSkillBase() { return skill; }

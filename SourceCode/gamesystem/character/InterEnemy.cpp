@@ -21,9 +21,12 @@ void InterEnemy::Update() {
 	const int l_BasePanelCount = 4;
 	Helper::GetInstance()->CheckMax(m_DamegeTimer, 0, -1);
 	//表示用のHP
+	Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
+
 	m_InterHP = (int)(m_HP);
 	//敵のマスを取得する
 	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(),m_NowWidth,m_NowHeight);
+
 	//各行動
 	Action();
 	for (auto i = 0; i < _drawnumber.size(); i++) {
