@@ -1,6 +1,6 @@
 #include "AttackSkill.h"
 #include "imgui.h"
-void AttackSkill::Create(const std::string name, int ID, float latency, float invocatingTime, float restraintTime, int rarity, int popRate, float damege, XMFLOAT2 range, XMFLOAT2 distance)
+void AttackSkill::Create(const std::string name, int ID, int latency, int invocatingTime, int restraintTime, int rarity, int popRate, float damege, XMFLOAT2 range, XMFLOAT2 distance)
 {
 	this->name = name;
 	this->ID = ID;

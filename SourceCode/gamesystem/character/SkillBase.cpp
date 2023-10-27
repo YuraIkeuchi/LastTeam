@@ -1,6 +1,6 @@
 #include "SkillBase.h"
 #include "imgui.h"
-void SkillBase::Create(const std::string name, int ID, float latency, float invocatingTime, float restraintTime, int rarity, int popRate)
+void SkillBase::Create(const std::string name, int ID, int latency, int invocatingTime, int restraintTime, int rarity, int popRate)
 {
 	this->name = name;
 	this->ID = ID;
