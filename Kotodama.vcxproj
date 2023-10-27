@@ -207,6 +207,7 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
+    <ClCompile Include="SpecialSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h" />
@@ -317,6 +318,7 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h" />
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\TextManager.h" />
+    <ClInclude Include="SpecialSkill.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli" />

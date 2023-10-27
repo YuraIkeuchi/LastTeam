@@ -344,8 +344,8 @@
     <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\Passive.cpp">
       <Filter>gamesystem\Action\ActionPanel</Filter>
-	</ClCompile>
-	<ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp">
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\NormalSKill.cpp">
@@ -357,6 +357,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClCompile>
+    <ClCompile Include="SpecialSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -669,8 +670,8 @@
     <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\Passive.h">
       <Filter>gamesystem\Action\ActionPanel</Filter>
-	</ClInclude>
-	<ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h">
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\NormalSkill.h">
@@ -682,6 +683,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClInclude>
+    <ClInclude Include="SpecialSkill.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
