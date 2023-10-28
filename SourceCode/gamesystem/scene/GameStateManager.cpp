@@ -41,9 +41,8 @@ void GameStateManager::Initialize() {
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 
-	for (int i = 0; i < m_DeckNumber.size(); i++) {
-		SkillManager::GetInstance()->DeckCheck(m_DeckNumber[i]);
-	}
+	//デッキの初期化
+	DeckInitialize();
 }
 //更新
 void GameStateManager::Update() {
@@ -127,6 +126,7 @@ void GameStateManager::ImGuiDraw() {
 	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_SPECIAL;
 	}
+	ImGui::Text("Count:%d", m_AllActCount);
 	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
 	/**/
@@ -238,11 +238,17 @@ void GameStateManager::FinishAct() {
 	m_Act.erase(m_Act.begin());
 	m_AllActCount--;
 	actui[0]->SetUse(true);
+	//デッキがない且つ手札を使い切ってたらまた再配布
+	if (m_AllActCount == 0 && StagePanel::GetInstance()->GetAllDelete()) {
+		//デッキの初期化
+		DeckInitialize();
+	}
 }
 
 void GameStateManager::GaugeUpdate() {
-
-	m_GaugeCount += 1.0f * m_DiameterGauge;
+	if (SkillManager::GetInstance()->GetDeckNum() != 0) {
+		m_GaugeCount += 1.0f * m_DiameterGauge;
+	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();
@@ -251,7 +257,12 @@ void GameStateManager::GaugeUpdate() {
 		//パネル置く数
 		int panel_num = 3;
 		SkillManager::GetInstance()->ResetBirth();
-		StagePanel::GetInstance()->RandomPanel(panel_num);
+		if (SkillManager::GetInstance()->GetDeckNum() >= 3) {
+			StagePanel::GetInstance()->RandomPanel(panel_num);
+		}
+		else {
+			StagePanel::GetInstance()->RandomPanel(SkillManager::GetInstance()->GetDeckNum());
+		}
 		m_GaugeCount = 0;
 	}
 	float per = (m_GaugeCount / kGaugeCountMax);
@@ -277,4 +288,13 @@ void GameStateManager::PassiveCheck() {
 		}
 
 	}
+}
+//デッキの初期化
+void GameStateManager::DeckInitialize() {
+	//デッキに入っているカードの確認
+	for (int i = 0; i < m_DeckNumber.size(); i++) {
+		SkillManager::GetInstance()->DeckCheck(m_DeckNumber[i]);
+	}
+	//デッキの最大数確認
+	SkillManager::GetInstance()->SetDeckNum((int)(m_DeckNumber.size()));
 }

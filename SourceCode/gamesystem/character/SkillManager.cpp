@@ -47,6 +47,10 @@ void SkillManager::ImGuiDraw() {
 			newskill->ImGuiDraw();
 		}
 	}
+
+	ImGui::Begin("Mana");
+	ImGui::Text("Num:%d", m_DeckNum);
+	ImGui::End();
 }
 
 int SkillManager::GetID() {

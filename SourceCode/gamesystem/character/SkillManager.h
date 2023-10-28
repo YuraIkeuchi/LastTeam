@@ -32,6 +32,8 @@ public:
 	int GetDelay();
 public:
 	std::vector<SkillBase*>GetSkillBase() { return skill; }
+	const int GetDeckNum() { return m_DeckNum; }
+	void SetDeckNum(const int DeckNum) { this->m_DeckNum = DeckNum; }
 private:
 	std::vector<SkillBase*> skill;
 	/*SkillBase* skillA;
@@ -44,4 +46,5 @@ private:
 	std::string nameE = "Ç©Ç‹Ç∑";
 	std::string nameF = "ÉXÉJÉX";
 	int m_RandNum = {};
+	int m_DeckNum = {};
 };

@@ -49,6 +49,8 @@ private:
 
 	void PassiveCheck();
 
+	//ƒfƒbƒL‚Ì‰Šú‰»
+	void DeckInitialize();
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -130,5 +132,5 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 0,2,5, };
+	vector<int> m_DeckNumber = { 0,2,3,5, };
 };

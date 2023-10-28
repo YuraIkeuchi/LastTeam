@@ -37,7 +37,12 @@ bool StagePanel::Initialize() {
 	m_SelectHeight = 0;
 	m_SelectWidth = 0;
 	actions.clear();
-	RandomPanel(3);
+	/*if (SkillManager::GetInstance()->GetDeckNum() >= 3) {
+		RandomPanel(3);
+	}
+	else {
+		RandomPanel(SkillManager::GetInstance()->GetDeckNum());
+	}*/
 	//CSV読み込み
 	return true;
 }
@@ -54,6 +59,13 @@ void StagePanel::Update() {
 		if (!actions[i]->GetAlive()) {
 			actions.erase(cbegin(actions) + i);
 		}
+	}
+
+	if (actions.size() == 0) {
+		m_AllDelete = true;
+	}
+	else {
+		m_AllDelete = false;
 	}
 }
 
@@ -199,6 +211,8 @@ void StagePanel::RandomPanel(int num) {
 		panels[width][height].object->SetPosition(panels[width][height].position);
 		panels[width][height].object->SetColor(panels[width][height].color);
 	}
+
+	SkillManager::GetInstance()->SetDeckNum(SkillManager::GetInstance()->GetDeckNum() - num);
 }
 
 void StagePanel::ResetPanel() {
