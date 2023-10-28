@@ -25,12 +25,13 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	Player::GetInstance()->Initialize();
 	//スキル
 	SkillManager::GetInstance()->Initialize();
+	//ゲームの状態
+	GameStateManager::GetInstance()->Initialize();
 	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
 
-	//ゲームの状態
-	GameStateManager::GetInstance()->Initialize();
+
 
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();

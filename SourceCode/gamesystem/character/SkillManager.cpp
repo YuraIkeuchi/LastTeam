@@ -38,7 +38,7 @@ void SkillManager::Initialize()
 
 
 	//順番入れ替えてる
-	std::shuffle(skill.begin(), skill.end(), std::default_random_engine());
+	//std::shuffle(skill.begin(), skill.end(), std::default_random_engine());
 }
 
 void SkillManager::ImGuiDraw() {
@@ -55,16 +55,11 @@ int SkillManager::GetID() {
 
 	//ランダムで取得(ここは後で直す)
 	randskill = Helper::GetInstance()->GetRanNum(0, (int)(skill.size() - 1));
-	if (!skill[randskill]->GetBirth()) {
+	if (skill[randskill]->GetDeckIn()) {
 		skill[randskill]->SetBirth(true);
 		result = skill[randskill]->GetID();
+		m_RandNum = randskill;
 	}
-	else {
-		randskill = Helper::GetInstance()->GetRanNum(0, (int)(skill.size() - 1));
-		skill[randskill]->SetBirth(true);
-		result = skill[randskill]->GetID();
-	}
-	m_RandNum = randskill;
 	return result;
 }
 
@@ -165,4 +160,9 @@ bool SkillManager::CreateSkill(int id) {
 
 	//Player::GetInstance()->SetDelayTimer(m_Delay);
 	return true;
+}
+
+//デッキチェック
+void SkillManager::DeckCheck(const int DeckNumber) {
+	skill[DeckNumber]->SetDeckIn(true);
 }

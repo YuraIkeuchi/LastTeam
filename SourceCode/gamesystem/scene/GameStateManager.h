@@ -129,4 +129,6 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
+
+	vector<int> m_DeckNumber = { 0,2,5, };
 };

@@ -40,6 +40,10 @@ void GameStateManager::Initialize() {
 	skillUI->SetSize(basesize);
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
+
+	for (int i = 0; i < m_DeckNumber.size(); i++) {
+		SkillManager::GetInstance()->DeckCheck(m_DeckNumber[i]);
+	}
 }
 //XV
 void GameStateManager::Update() {

@@ -16,7 +16,8 @@ public:
 	void ImGuiDraw();
 
 	void ResetBirth();
-
+	//デッキに入ってるかチェック
+	void DeckCheck(const int DeckNumber);
 private:
 	//スキルのCSVを読み取る
 	void LoadCsvSkill(std::string& FileName, const int id);
