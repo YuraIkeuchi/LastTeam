@@ -82,7 +82,7 @@ private:
 	int oldHierarchy = 0;
 
 	int MaxLength = 0;
-
+	bool end = false;
 	int pickIndex = Middle;
 	int pickHierarchy = nowHierarchy + 1;
 	int pickNextIndex = 0;
@@ -93,6 +93,10 @@ private:
 
 	std::vector<unique_ptr<IKESprite>> roads;
 	std::vector<XMFLOAT2> roadsPos;
+
+
+	std::vector<unique_ptr<IKESprite>> starRoads;
+	std::vector<XMFLOAT2> starRoadsPos;
 
 	bool moved = false;
 	float mov_frame = 0.0f;
