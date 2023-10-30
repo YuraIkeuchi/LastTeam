@@ -416,6 +416,8 @@ void MapScene::Move() {
 			if (nowHierarchy!= MaxLength) {
 				pickHierarchy = nowHierarchy + 1;
 				pickNextIndex = 0;
+				pickIndex = UIs[oldHierarchy][oldIndex].nextIndex[pickNextIndex];
+				framePos = UIs[pickHierarchy][pickIndex].pos;
 			} else {
 				pickHierarchy = 0;
 				pickNextIndex = 0;
