@@ -110,9 +110,6 @@ float SkillManager::GetDamage() {
 	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[m_BirthMax]);
 	result = atkSkill->GetDamege();
 
-	result = skill[m_BirthMax]->GetDamege();
-
-	
 	return result;
 }
 //ディレイ
