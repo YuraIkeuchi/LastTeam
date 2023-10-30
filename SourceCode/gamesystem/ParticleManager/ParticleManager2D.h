@@ -91,11 +91,14 @@ private: // 定数
 
 public: // メンバ関数	
 	//コンストラクタ
+	ParticleManager2D(UINT texNumber = 0, const XMFLOAT2& position = { 0.0f,0.0f }, const XMFLOAT2& size = { 100.0f,100.0f }, const XMFLOAT4& color = { 1.0f,1.0f,1.0f,1.0f });
 
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
 	void Update();
+
+	void Draw();
 
 	/// <summary>
 	/// パーティクルの追加

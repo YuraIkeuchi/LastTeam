@@ -36,6 +36,11 @@ const DirectX::XMFLOAT2 operator/(const DirectX::XMFLOAT2& lhs, const float rhs)
 }
 
 
+ParticleManager2D::ParticleManager2D(UINT texNumber, const XMFLOAT2& position, const XMFLOAT2& size, const XMFLOAT4& color):
+	IKESprite(texNumber,position,size,color,anchorpoint,isFlipX,isFlipY)
+{
+}
+
 void ParticleManager2D::Update() {
 	HRESULT result = S_FALSE;
 
@@ -77,6 +82,21 @@ void ParticleManager2D::Update() {
 	IKESprite::TransferConstBuff();
 }
 
+void ParticleManager2D::Draw()
+{
+	UINT drawNum = (UINT)std::distance(particles.begin(), particles.end());
+	if (drawNum > vertexCount) {
+		drawNum = vertexCount;
+	}
+
+	// パーティクルが1つもない場合
+	if (drawNum == 0) {
+		return;
+	}
+
+	IKESprite::Draw();
+}
+
 void ParticleManager2D::Add(const int& life,
 	const XMFLOAT2& position, const XMFLOAT2& velocity, const XMFLOAT2& accel,
 	const float& start_scale, const float& end_scale,
@@ -114,8 +134,7 @@ ParticleManager2D* ParticleManager2D::Create(UINT texNumber, const XMFLOAT2& pos
 	}
 
 	// Spriteのインスタンスを生成
-	ParticleManager2D* sprite = new ParticleManager2D(0,position,  color, anchorpoint, false, false);
-
+	ParticleManager2D* sprite = new ParticleManager2D(0,{1.0f,1.0f});
 	if (sprite == nullptr)
 	{
 		return nullptr;

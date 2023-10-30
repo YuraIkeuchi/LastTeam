@@ -74,7 +74,6 @@ void Framework::Initialize(DirectXCommon* dxCommon)
 	//ParticleManager2D::CreateCommon(dxcommon->GetDev(), dxcommon->GetCmdList());
 	//パーティクルエミッター初期化
 	ParticleEmitter::GetInstance()->Initialize();
-	ParticleEmitter2D::GetInstance()->Initialize();
 	Font::Initialize(dxcommon);
 	
 	SceneSave::GetInstance()->AllReset();

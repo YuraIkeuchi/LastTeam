@@ -24,9 +24,8 @@ void ParticleEmitter2D::Update()
 	circleParticle->Update();
 }
 
-void ParticleEmitter2D::IntroDraw() {
-}
 void ParticleEmitter2D::FlontDrawAll() {
+	circleParticle->PreDraw();
 	circleParticle->Draw();
 }
 //炎のパーティクル

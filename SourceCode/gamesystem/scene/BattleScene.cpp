@@ -15,7 +15,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	PlayPostEffect = false;
 	//パーティクル全削除
 	ParticleEmitter::GetInstance()->AllDelete();
-	ParticleEmitter2D::GetInstance()->AllDelete();
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
@@ -47,7 +46,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	StagePanel::GetInstance()->Update();
 	GameMode::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
-	ParticleEmitter2D::GetInstance()->Update();
 	enemyManager->Update();
 	enemyManager->GetCameraData(camera->GetViewMatrix(), camera->GetProjectionMatrix(), camera->GetViewPort());
 	//敵を倒したらシーン以降(仮)

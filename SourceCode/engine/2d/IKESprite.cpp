@@ -477,6 +477,8 @@ void IKESprite::SetTextureRect(const XMFLOAT2& texBase, const XMFLOAT2& texSize)
 
 void IKESprite::Draw()
 {
+
+
 	// ワールド行列の更新
 	this->matWorld = XMMatrixIdentity();
 	this->matWorld *= XMMatrixRotationZ(XMConvertToRadians(rotation));
