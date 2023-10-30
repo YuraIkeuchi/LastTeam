@@ -47,6 +47,7 @@ void SceneChanger::Update() {
 void SceneChanger::InitializeOver() {
 }
 void SceneChanger::Draw() {
+	IKESprite::PreDraw();
 	if (_ChangeType == CHANGE_FEED) {
 		change->Draw();
 	}
@@ -57,6 +58,7 @@ void SceneChanger::Draw() {
 			}
 		}
 	}
+	IKESprite::PostDraw();
 }
 void SceneChanger::ImGuiDraw() {
 	ImGui::Begin("Changer");

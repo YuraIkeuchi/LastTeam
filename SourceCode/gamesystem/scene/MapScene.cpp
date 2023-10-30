@@ -3,6 +3,7 @@
 #include <Helper.h>
 #include "CsvLoader.h"
 #include <sstream>
+#include <SceneChanger.h>
 
 #include "SceneManager.h"
 
@@ -12,8 +13,10 @@
 void MapScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
-
 	dxCommon->SetFullScreen(true);
+	//ポストエフェクト
+	PlayPostEffect = false;
+
 	screen = IKESprite::Create(ImageManager::MAPSCREEN, { 0,0 });
 	screen->SetSize({ 1280.f,720.f });
 
@@ -111,6 +114,12 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
+	SceneChanger::GetInstance()->Update();
+	if (SceneChanger::GetInstance()->GetChange()) {
+		SceneManager::GetInstance()->ChangeScene<BattleScene>();
+		SceneChanger::GetInstance()->SetChange(false);
+	}
+
 }
 
 void MapScene::Draw(DirectXCommon* dxCommon) {
@@ -161,6 +170,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	}
 	font->Draw();
 	Font::PostDraw();
+	SceneChanger::GetInstance()->Draw();
 }
 
 void MapScene::BackDraw(DirectXCommon* dxCommon) {
@@ -375,16 +385,23 @@ void MapScene::BlackOut() {
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
-			if (ui[i].open) { continue; }
-			ui[i].color = { 0.5f,0.5f,0.5f,1.f };
+			if (ui[i].open) {
+				ui[i].color = { 1.0f,1.0f,1.0f,1.f };
+			} else {
+				ui[i].color = { 0.5f,0.5f,0.5f,1.f };
+			}
 		}
 	}
 
 }
 
 void MapScene::Move() {
-	if (end) { return; }
 	Input* input = Input::GetInstance();
+	if (input->TriggerButton(input->A)) {
+		SceneChanger::GetInstance()->SetChangeStart(true);
+	}
+
+	if (end) { return; }
 	int vel = 0;
 	if (input->PushButton(input->LB)) {
 		vel = -10;
@@ -408,6 +425,7 @@ void MapScene::Move() {
 		if (moved) { return; }
 		nowIndex = pickIndex;
 		nowHierarchy = pickHierarchy;
+		clearHierarchy++;
 		moved = true;
 	}
 
