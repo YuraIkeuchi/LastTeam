@@ -385,8 +385,11 @@ void MapScene::BlackOut() {
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
-			if (ui[i].open) { continue; }
-			ui[i].color = { 0.5f,0.5f,0.5f,1.f };
+			if (ui[i].open) {
+				ui[i].color = { 1.0f,1.0f,1.0f,1.f };
+			} else {
+				ui[i].color = { 0.5f,0.5f,0.5f,1.f };
+			}
 		}
 	}
 
@@ -422,6 +425,7 @@ void MapScene::Move() {
 		if (moved) { return; }
 		nowIndex = pickIndex;
 		nowHierarchy = pickHierarchy;
+		clearHierarchy++;
 		moved = true;
 	}
 
