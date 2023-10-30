@@ -3,6 +3,7 @@
 #include <Helper.h>
 #include "CsvLoader.h"
 #include <sstream>
+#include <SceneChanger.h>
 
 #include "SceneManager.h"
 
@@ -12,8 +13,10 @@
 void MapScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
-
 	dxCommon->SetFullScreen(true);
+	//ポストエフェクト
+	PlayPostEffect = false;
+
 	screen = IKESprite::Create(ImageManager::MAPSCREEN, { 0,0 });
 	screen->SetSize({ 1280.f,720.f });
 
@@ -111,6 +114,8 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
+	SceneChanger::GetInstance()->Update();
+
 }
 
 void MapScene::Draw(DirectXCommon* dxCommon) {
@@ -161,6 +166,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	}
 	font->Draw();
 	Font::PostDraw();
+	SceneChanger::GetInstance()->Draw();
 }
 
 void MapScene::BackDraw(DirectXCommon* dxCommon) {
