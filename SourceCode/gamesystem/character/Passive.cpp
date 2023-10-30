@@ -14,9 +14,6 @@ void Passive::Initialize() {
 
 }
 
-void Passive::Update() {
-}
-
 void Passive::Draw() {
 	IKESprite::PreDraw();
 	icon->Draw();

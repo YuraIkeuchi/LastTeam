@@ -9,46 +9,48 @@
 #include <Passive.h>
 using namespace DirectX;
 using namespace std;
-//s“®‚Ìí—Ş
+//è¡Œå‹•ã®ç¨®é¡
 enum ActType {
 	ACT_ATTACK,
 	ACT_GUARD,
 	ACT_SKILL
 };
-//ƒQ[ƒ€‚Ìó‘Ô‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+//ã‚²ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
 class GameStateManager {
 public:
 	static GameStateManager* GetInstance();
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	void Initialize();
-	//XV
+	//æ›´æ–°
 	void Update();
-	//•`‰æ
+	//æç”»
 	void Draw(DirectXCommon* dxCommon);
 	//ImGui
 	void ImGuiDraw();
-	//s“®UI‚Ì•`‰æ(‚ ‚ñ‚Ü‚è—Ç‚­‚È‚¢‚ªˆê’U‚±‚±‚Å)
+	//è¡Œå‹•UIã®æç”»(ã‚ã‚“ã¾ã‚Šè‰¯ããªã„ãŒä¸€æ—¦ã“ã“ã§)
 	void ActUIDraw();
-	//ƒvƒŒƒCƒ„[‚ÌŒ»İˆÊ’u
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ä½ç½®
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
-	//ƒXƒLƒ‹‚ğ“üè‚·‚é
+	//ã‚¹ã‚­ãƒ«ã‚’å…¥æ‰‹ã™ã‚‹
 	void AddSkill(const int ID,const float damage,const int Delay);
 private:
-	//UŒ‚‚µ‚½uŠÔ
+	//æ”»æ’ƒã—ãŸç¬é–“
 	void AttackTrigger();
-	//UŒ‚ƒGƒŠƒA‚Ì¶¬
+	//æ”»æ’ƒã‚¨ãƒªã‚¢ã®ç”Ÿæˆ
 	void BirthArea();
-	//s“®UI‚Ì¶¬
+	//è¡Œå‹•UIã®ç”Ÿæˆ
 	void BirthActUI(const int ID);
-	//ƒXƒLƒ‹‚Ìg—p
+	//ã‚¹ã‚­ãƒ«ã®ä½¿ç”¨
 	void UseSkill();
-	//s“®‚ÌI—¹
+	//è¡Œå‹•ã®çµ‚äº†
 	void FinishAct();
 	//
 	void GaugeUpdate();
 
 	void PassiveCheck();
-
+	//ãƒ‡ãƒƒã‚­ã®åˆæœŸåŒ–
+	void DeckInitialize();
+	void GetPassive(int ID);
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -69,44 +71,44 @@ private:
 
 	struct ActState {
 		int ActID;//ID
-		float ActDamage;//ƒ_ƒ[ƒW
-		int ActDelay;//ƒfƒBƒŒƒC
+		float ActDamage;//ãƒ€ãƒ¡ãƒ¼ã‚¸
+		int ActDelay;//ãƒ‡ã‚£ãƒ¬ã‚¤
 	};
 
 	vector<ActState> m_Act;
-	//Šes“®‰ñ”
+	//å„è¡Œå‹•å›æ•°
 	int m_ActCount[ACT_PATTERN] = {};
 
-	//‘Ss“®‰ñ”
+	//å…¨è¡Œå‹•å›æ•°
 	int m_AllActCount = {};
 
-	//s“®‚ÌUI
+	//è¡Œå‹•ã®UI
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-
+	std::list<int> GotPassiveIDs;
 	unique_ptr<IKESprite> skillUI = nullptr;
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 
 	XMFLOAT2 basesize = { 45.f,400.f };
 
-	//UŒ‚ƒGƒŠƒA
+	//æ”»æ’ƒã‚¨ãƒªã‚¢
 	vector<AttackArea*> attackarea;
 
-	//ƒJƒEƒ“ƒ^[
+	//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
 	bool m_Counter = false;
 	int m_CounterTimer = {};
 	int m_CounterScore = {};
 
-	//ˆÊ’u‚ÌƒXƒRƒA
+	//ä½ç½®ã®ã‚¹ã‚³ã‚¢
 	float m_PosScore = {};
-	//ƒOƒŒƒCƒY‚ÌƒXƒRƒA(ŒãXint‚É‚·‚é)
+	//ã‚°ãƒ¬ã‚¤ã‚ºã®ã‚¹ã‚³ã‚¢(å¾Œã€…intã«ã™ã‚‹)
 	float m_GrazeScore = 0.0f;
 
-	//‘S‘ÌƒXƒRƒA
+	//å…¨ä½“ã‚¹ã‚³ã‚¢
 	int m_AllScore = {};
 
-	//ƒvƒŒƒCƒ„[‚ÌŒ»İƒpƒlƒ‹
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ãƒ‘ãƒãƒ«
 	int m_NowHeight = {};
 	int m_NowWidth = {};
 	float m_DiameterVel = 1.0f;
@@ -116,12 +118,12 @@ private:
 		SKILL_NORMAL,
 		SKILL_STRONG,
 		SKILL_SPECIAL
-	}_SkillType = SKILL_NORMAL;
-	//ƒQ[ƒW
+	}_SkillType = SKILL_STRONG;
+	//ã‚²ãƒ¼ã‚¸
 	float m_GaugeCount = 0;
 	//
 	float m_DiameterGauge = 1.0f;
-	//ƒQ[ƒWƒ}ƒbƒNƒX
+	//ã‚²ãƒ¼ã‚¸ãƒãƒƒã‚¯ã‚¹
 	float kGaugeCountMax = 180;
 	bool m_IsReload = true;
 	bool m_BirthSkill = false;
@@ -129,4 +131,6 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
+
+	vector<int> m_DeckNumber = { 0,1,2,3,4,5,6, };
 };
