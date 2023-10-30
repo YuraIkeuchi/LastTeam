@@ -1,4 +1,4 @@
-#include "SkillManager.h"
+﻿#include "SkillManager.h"
 #include <random>
 #include <Helper.h>
 #include <fstream>
@@ -33,8 +33,6 @@ void SkillManager::Initialize()
 	{
 		CreateSkill(i);
 	}
-}
-
 
 	std::vector<std::vector<int>> area =
 	{
@@ -50,6 +48,7 @@ void SkillManager::Initialize()
 		atkSkill->SetArea(area);
 		atkSkill->SetDistance(distanceX, distanceY);
 	}
+}
 
 //更新(ほんますまん)
 void SkillManager::Update() {	
@@ -103,12 +102,12 @@ float SkillManager::GetDamage() {
 	float result = {};
 
 	
-	if (skill[m_RandNum]->GetSkillType() != SkillType::damege)
+	if (skill[m_BirthMax]->GetSkillType() != SkillType::damege)
 	{
 		assert(0);
 	}
 
-	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[m_RandNum]);
+	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[m_BirthMax]);
 	result = atkSkill->GetDamege();
 
 	result = skill[m_BirthMax]->GetDamege();
