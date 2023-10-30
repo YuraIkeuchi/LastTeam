@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <chrono>
 
 SkillManager* SkillManager::GetInstance()
 {
@@ -49,20 +50,21 @@ void SkillManager::ImGuiDraw() {
 	}
 
 	ImGui::Begin("Mana");
-	ImGui::Text("Num:%d", m_DeckNum);
+	ImGui::Text("Num:%d", m_RandNum);
+	ImGui::Text("Num:%d", m_BirthMax);
+	for (int i = 0; i < m_DeckDate.size(); i++) {
+		ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
+	}
 	ImGui::End();
 }
 
-int SkillManager::GetID() {
+int SkillManager::GetID(const int BirthNum) {
 	int result = 0;
-	int randskill = 0;
-
-	//ランダムで取得(ここは後で直す)
-	randskill = Helper::GetInstance()->GetRanNum(0, (int)(skill.size() - 1));
-	if (skill[randskill]->GetDeckIn()) {
-		skill[randskill]->SetBirth(true);
-		result = skill[randskill]->GetID();
-		m_RandNum = randskill;
+	if (skill[m_DeckDate[BirthNum]]->GetDeckIn()) {
+	/*	m_RandNum = BirthNum;
+		m_BirthMax = BirthNum;*/
+		skill[m_DeckDate[BirthNum]]->SetBirth(true);
+		result = skill[m_DeckDate[BirthNum]]->GetID();
 	}
 	return result;
 }
@@ -168,5 +170,22 @@ bool SkillManager::CreateSkill(int id) {
 
 //デッキチェック
 void SkillManager::DeckCheck(const int DeckNumber) {
+	
+	//if (m_DeckDate.size() != 0) {	//デッキデータが0以外ならデータを消してる
+	//	
+	//}
+	//デッキに入るようにする
 	skill[DeckNumber]->SetDeckIn(true);
+	m_DeckDate.push_back(DeckNumber);
+	unsigned int seed = (int)(std::chrono::system_clock::now())
+		.time_since_epoch()
+		.count();
+	//デッキをシャッフルする
+	std::shuffle(m_DeckDate.begin(), m_DeckDate.end(), std::default_random_engine(seed));
+}
+//デッキのクリア
+void SkillManager::DeckClear() {
+	if (!m_DeckDate.empty()) {
+		m_DeckDate.clear();
+	}
 }

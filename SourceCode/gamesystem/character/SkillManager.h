@@ -18,6 +18,8 @@ public:
 	void ResetBirth();
 	//デッキに入ってるかチェック
 	void DeckCheck(const int DeckNumber);
+	//デッキのクリア
+	void DeckClear();
 private:
 	//スキルのCSVを読み取る
 	void LoadCsvSkill(std::string& FileName, const int id);
@@ -25,7 +27,7 @@ private:
 	bool CreateSkill(int id);
 public:
 	//IDを取る
-	int GetID();
+	int GetID(const int BirthNum);
 	//ダメージを取る
 	float GetDamage();
 	//ディレイを取る
@@ -47,4 +49,6 @@ private:
 	std::string nameF = "スカス";
 	int m_RandNum = {};
 	int m_DeckNum = {};
+	int m_BirthMax = {};
+	std::vector<int> m_DeckDate;
 };

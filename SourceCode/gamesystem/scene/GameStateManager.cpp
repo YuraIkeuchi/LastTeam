@@ -240,6 +240,7 @@ void GameStateManager::FinishAct() {
 	actui[0]->SetUse(true);
 	//デッキがない且つ手札を使い切ってたらまた再配布
 	if (m_AllActCount == 0 && StagePanel::GetInstance()->GetAllDelete()) {
+		SkillManager::GetInstance()->DeckClear();
 		//デッキの初期化
 		DeckInitialize();
 	}
