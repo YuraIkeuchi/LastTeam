@@ -6,11 +6,7 @@
 #include <GameStateManager.h>
 #include <StagePanel.h>
 #include <ImageManager.h>
-Player* Player::GetInstance() {
-	static Player instance;
 
-	return &instance;
-}
 //リソース読み込み
 void Player::LoadResource() {
 	m_Object.reset(new IKEObject3d());

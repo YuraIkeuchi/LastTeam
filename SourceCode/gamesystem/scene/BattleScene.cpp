@@ -1,11 +1,13 @@
 #include "BattleScene.h"
-#include <Player.h>
+
 #include <ParticleEmitter.h>
 #include <StagePanel.h>
 #include <SceneManager.h>
 #include <GameStateManager.h>
 #include <SceneChanger.h>
+
 #include "SkillManager.h"
+#include "Player.h"
 
 //初期化
 void BattleScene::Initialize(DirectXCommon* dxCommon)
@@ -20,9 +22,15 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	ParticleEmitter::GetInstance()->AllDelete();
 
 	//プレイヤー
-	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -8.0f,1.0f,0.0f });
-	Player::GetInstance()->Initialize();
+	{
+		auto player = GameObject::CreateObject<Player>();	// プレイヤー生成
+		player->LoadResource();
+		player->InitState({ -8.0f,1.0f,0.0f });
+		player->Initialize();
+
+		GameStateManager::GetInstance()->SetPlayer(player);
+
+	}
 	//スキル
 	SkillManager::GetInstance()->Initialize();
 	//ステージの床
@@ -46,7 +54,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	//各クラス更新
 	camerawork->Update(camera);
 	lightGroup->Update();
-	Player::GetInstance()->Update();
 	StagePanel::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
@@ -93,15 +100,17 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 
+	game_object_manager_->UIDraw();
+
 	SceneChanger::GetInstance()->Draw();
-	Player::GetInstance()->UIDraw();
 	enemyManager->UIDraw();
 }
 //ポストエフェクトかかる
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
+	game_object_manager_->Draw();
+
 	StagePanel::GetInstance()->Draw(dxCommon);
-	Player::GetInstance()->Draw(dxCommon);
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
@@ -113,8 +122,8 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
+	game_object_manager_->ImGuiDraw();
 	//SceneChanger::GetInstance()->ImGuiDraw();
-	Player::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

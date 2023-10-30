@@ -33,13 +33,14 @@ public:
 	//
 	//===========================================
 
-	virtual void Initialize() {};
+	virtual bool Initialize() { return true; }
 	virtual void Update() {};
 	virtual void Draw() {};
+	virtual void UIDraw() {};
 	virtual void Finalize() {};
 
 	// ImGuiデバッグ用
-	virtual void DrawData() {};
+	virtual void ImGuiDraw() {};
 
 
 
@@ -76,6 +77,7 @@ private:
 template<class GameObjectClass, class ...Parameter>
 inline std::shared_ptr<GameObjectClass> GameObject::CreateObject(Parameter ...param)
 {
-	return SceneManager::GetInstance()->GetTopScene()->GetGameObjectManager()->
-		push_back(std::make_shared<GameObjectClass>(param))
+	std::shared_ptr<GameObjectClass> object = std::make_shared<GameObjectClass>(param...);
+	SceneManager::GetInstance()->GetTopScene()->GetGameObjectManager().lock()->GetContainer().push_back(object);
+	return object;
 }

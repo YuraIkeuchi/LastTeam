@@ -5,11 +5,15 @@
 #include <Input.h>
 #include <array>
 #include "DrawNumber.h"
+#include "GameObject/GameObject.h"
+
 using namespace DirectX;
 
-class Player :public ObjCommon {
+class Player :
+	public ObjCommon,
+	public GameObject
+{
 public:
-	static Player* GetInstance();
 
 private:
 	static void (Player::* stateTable[])();
@@ -17,15 +21,15 @@ public:
 	void InitState(const XMFLOAT3& pos);
 	void LoadResource();
 	//初期化
-	bool Initialize()override;
+	bool Initialize() override;
 	//更新
-	void Update()override;
+	void Update() override;
 	//描画
-	void Draw(DirectXCommon* dxCommon)override;
+	void Draw(DirectXCommon* dxCommon) override;
 	//UI用
-	void UIDraw();
+	void UIDraw() override;
 	//ImGui
-	void ImGuiDraw();
+	void ImGuiDraw() override;
 
 private:
 	//動き

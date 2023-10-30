@@ -8,6 +8,8 @@
 #include <Easing.h>
 #include <SkillManager.h>
 
+#include "GameStateManager.h"
+
 StagePanel* StagePanel::GetInstance() {
 	static StagePanel instance;
 
@@ -119,9 +121,10 @@ void StagePanel::DeletePanel() {
 }
 
 void StagePanel::Collide() {
-	m_OBB1.SetParam_Pos(Player::GetInstance()->GetPosition());
-	m_OBB1.SetParam_Rot(Player::GetInstance()->GetMatrot());
-	m_OBB1.SetParam_Scl(Player::GetInstance()->GetScale());
+	auto player = GameStateManager::GetInstance()->GetPlayer();
+	m_OBB1.SetParam_Pos(player.lock()->GetPosition());
+	m_OBB1.SetParam_Rot(player.lock()->GetMatrot());
+	m_OBB1.SetParam_Scl(player.lock()->GetScale());
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			m_OBB2.SetParam_Pos(panels[i][j].position);
@@ -138,9 +141,11 @@ void StagePanel::Collide() {
 
 
 void StagePanel::RandomPanel(int num) {
+	auto player = GameStateManager::GetInstance()->GetPlayer();
+
 	int freeNum = 0;
-	int p_height = Player::GetInstance()->GetNowHeight();
-	int p_width = Player::GetInstance()->GetNowWidth();
+	int p_height = player.lock()->GetNowHeight();
+	int p_width = player.lock()->GetNowWidth();
 
 	for (int i = 0; i < PANEL_WIDTH/2; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {

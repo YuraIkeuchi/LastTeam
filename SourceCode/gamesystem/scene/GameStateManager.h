@@ -7,6 +7,10 @@
 #include "ActionUI.h"
 #include "AttackArea.h"
 #include <Passive.h>
+
+#include "GameObject/GameObject.h"
+#include "Player.h"
+
 using namespace DirectX;
 using namespace std;
 //行動の種類
@@ -56,12 +60,14 @@ public:
 	const float GetGrazeScore() { return m_GrazeScore; }
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
 	const float GetDiameterVel() { return m_DiameterVel; }
-
+	std::weak_ptr<Player> GetPlayer() { return player_; }
 
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
 	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
+
+	void SetPlayer(std::weak_ptr<Player> player) { player_ = player; }
 
 private:
 	static const int ACT_PATTERN = 3;
@@ -129,4 +135,9 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
+
+
+	// Playerのデータ保持
+	std::weak_ptr<Player> player_;
+
 };

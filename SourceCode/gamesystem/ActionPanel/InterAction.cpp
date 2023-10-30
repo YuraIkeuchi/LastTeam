@@ -29,8 +29,12 @@ void InterAction::ImGuiDraw() {
 //プレイヤーとパネルの当たり判定
 void InterAction::Collide()
 {
+	auto player = GameStateManager::GetInstance()->GetPlayer();
 	//ラッシュ中判定あり
-	if (Collision::CircleCollision(m_Position.x, m_Position.z, m_Radius, Player::GetInstance()->GetPosition().x, Player::GetInstance()->GetPosition().z, m_Radius) &&
+	if (Collision::CircleCollision(
+		m_Position.x, m_Position.z, m_Radius, 
+		player.lock()->GetPosition().x,
+		player.lock()->GetPosition().z, m_Radius) &&
 		(m_Alive)){
 		//プレイヤーの行動数を増やしパネルを戻す
 		GameStateManager::GetInstance()->AddSkill(m_SkillID,m_Damage,m_Delay);

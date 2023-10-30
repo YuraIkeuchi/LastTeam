@@ -92,12 +92,12 @@ void GameStateManager::AttackTrigger() {
 	Input* input = Input::GetInstance();
 	if (m_AllActCount == 0) { return; }
 	if (actui[0]->GetUse()) { return; }
-	if (Player::GetInstance()->GetCharaState() == 1) { return; }
+	if (player_.lock()->GetCharaState() == 1) { return; }
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
 		m_BirthSkill = true;
-		Player::GetInstance()->SetDelayTimer(m_Act[0].ActDelay);
-		Player::GetInstance()->SetDelayStart(true);
+		player_.lock()->SetDelayTimer(m_Act[0].ActDelay);
+		player_.lock()->SetDelayStart(true);
 	}
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
@@ -222,7 +222,7 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 }
 //スキルの使用
 void GameStateManager::UseSkill() {
-	if (!Player::GetInstance()->GetDelayStart() && m_BirthSkill) {
+	if (!player_.lock()->GetDelayStart() && m_BirthSkill) {
 		BirthArea();
 		FinishAct();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
@@ -262,8 +262,8 @@ void GameStateManager::PassiveCheck() {
 			m_DiameterGauge = passive->GetDiameter();
 			break;
 		case Passive::ABILITY::HP_UP:
-			Player::GetInstance()->SetMaxHp(
-				Player::GetInstance()->GetMaxHp()* passive->GetDiameter());
+			player_.lock()->SetMaxHp(
+				player_.lock()->GetMaxHp()* passive->GetDiameter());
 			break;
 		case Passive::ABILITY::RELOAD_LOCK:
 			m_IsReload = false;
