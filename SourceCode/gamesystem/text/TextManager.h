@@ -19,6 +19,10 @@ public:
 		TITLE_01,
 		TITLE_02,
 		TITLE_03,
+		MAP_01,
+		MAP_BATTLE,
+		MAP_HEAL,
+		MAP_BOSS,
 
 	};
 
