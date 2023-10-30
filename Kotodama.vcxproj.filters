@@ -358,6 +358,9 @@
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClCompile>
     <ClCompile Include="SpecialSkill.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\DeckUI.cpp">
+      <Filter>gamesystem\charactor\Skill\DeckUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -679,6 +682,9 @@
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClInclude>
     <ClInclude Include="SpecialSkill.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\DeckUI.h">
+      <Filter>gamesystem\charactor\Skill\DeckUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
@@ -883,6 +889,9 @@
     </Filter>
     <Filter Include="gamesystem\charactor\Player">
       <UniqueIdentifier>{67cc1ef3-c531-4952-b181-9f7044af6c4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\charactor\Skill\DeckUI">
+      <UniqueIdentifier>{76028162-69a6-4121-9d2e-09018ec2653b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

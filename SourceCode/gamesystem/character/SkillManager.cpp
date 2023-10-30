@@ -37,10 +37,26 @@ void SkillManager::Initialize()
 	{
 		CreateSkill(i);
 	}
+}
 
+//更新(ほんますまん)
+void SkillManager::Update() {	
+	for (auto i = 0; i < deckui.size(); i++) {
+		if (deckui[i] == nullptr)continue;
+		deckui[i]->SetActCount(i);
+		deckui[i]->Update();
 
-	//順番入れ替えてる
-	//std::shuffle(skill.begin(), skill.end(), std::default_random_engine());
+		if (!deckui[i]->GetAlive()) {
+			deckui.erase(cbegin(deckui) + i);
+		}
+	}
+}
+//UIの描画(ほんますまんpart2)
+void SkillManager::UIDraw() {
+	for (auto i = 0; i < deckui.size(); i++) {
+		if (deckui[i] == nullptr)continue;
+		deckui[i]->Draw();
+	}
 }
 
 void SkillManager::ImGuiDraw() {
@@ -64,6 +80,7 @@ int SkillManager::GetID(const int BirthNum) {
 	if (skill[m_DeckDate[BirthNum + m_DeckRemain]]->GetDeckIn()) {
 		m_BirthMax = m_DeckDate[BirthNum + m_DeckRemain];
 		skill[m_DeckDate[BirthNum + m_DeckRemain]]->SetBirth(true);
+		deckui[BirthNum]->SetUse(true);
 		result = skill[m_DeckDate[BirthNum + m_DeckRemain]]->GetID();
 	}
 	return result;
@@ -169,11 +186,8 @@ bool SkillManager::CreateSkill(int id) {
 }
 
 //デッキチェック
-void SkillManager::DeckCheck(const int DeckNumber) {
+void SkillManager::DeckCheck(const int DeckNumber, const int DeckCount) {
 	
-	//if (m_DeckDate.size() != 0) {	//デッキデータが0以外ならデータを消してる
-	//	
-	//}
 	//デッキに入るようにする
 	skill[DeckNumber]->SetDeckIn(true);
 	m_DeckDate.push_back(DeckNumber);
@@ -182,15 +196,31 @@ void SkillManager::DeckCheck(const int DeckNumber) {
 		.count();
 	//デッキをシャッフルする
 	std::shuffle(m_DeckDate.begin(), m_DeckDate.end(), std::default_random_engine(seed));
+	//デッキのUIを作成
+	BirthDeckUI(DeckNumber, DeckCount);
 }
 //デッキのクリア
 void SkillManager::DeckClear() {
 	if (!m_DeckDate.empty()) {
 		m_DeckDate.clear();
+		deckui.clear();
 	}
 }
 //デッキの状態を取る(残ってるデッキとか)
 void SkillManager::SetDeckState(const int DeckNum) {
 	m_DeckNum = DeckNum;
 	m_DeckRemain = (int)(m_DeckDate.size()) - m_DeckNum;
+}
+//UIの生成
+void SkillManager::BirthDeckUI(const int DeckNumber, const int DeckCount) {
+	//デッキUIのセット
+	DeckUI* newdeckUi = nullptr;
+	newdeckUi = new DeckUI();
+	newdeckUi->Initialize();
+	newdeckUi->InitState(DeckCount);
+	deckui.emplace_back(newdeckUi);
+	//手に入れたスキルのUIの更新
+	for (auto i = 0; i < m_DeckDate.size(); i++) {
+		deckui[i]->SetID(m_DeckDate[i]);
+	}
 }

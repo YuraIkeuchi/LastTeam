@@ -89,6 +89,7 @@ void GameStateManager::Update() {
 	//攻撃した瞬間
 	AttackTrigger();
 	UseSkill();
+	SkillManager::GetInstance()->Update();
 }
 //攻撃した瞬間
 void GameStateManager::AttackTrigger() {
@@ -107,6 +108,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	skillUI->Draw();
 	gaugeUI->Draw();
+	SkillManager::GetInstance()->UIDraw();
 	IKESprite::PostDraw();
 
 	for (auto i = 0; i < attackarea.size(); i++) {
@@ -294,7 +296,7 @@ void GameStateManager::DeckInitialize() {
 	SkillManager::GetInstance()->DeckClear();
 	//デッキに入っているカードの確認
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
-		SkillManager::GetInstance()->DeckCheck(m_DeckNumber[i]);
+		SkillManager::GetInstance()->DeckCheck(m_DeckNumber[i],i);
 	}
 	//デッキの最大数確認
 	SkillManager::GetInstance()->SetDeckState((int)(m_DeckNumber.size()));
