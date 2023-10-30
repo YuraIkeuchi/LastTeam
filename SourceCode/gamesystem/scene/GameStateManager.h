@@ -49,6 +49,7 @@ private:
 
 	void PassiveCheck();
 
+	void GetPassive(int ID);
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -84,7 +85,7 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-
+	std::list<int> GotPassiveIDs;
 	unique_ptr<IKESprite> skillUI = nullptr;
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 

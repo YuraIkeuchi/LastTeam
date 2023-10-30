@@ -31,10 +31,6 @@ void GameStateManager::Initialize() {
 	m_Act.clear();
 	attackarea.clear();
 
-	GotPassives.push_back(std::move(make_unique<Passive>(1)));
-	GotPassives.push_back(std::move(make_unique<Passive>(2, XMFLOAT2{ 70.f,0.f })));
-	GotPassives.push_back(std::move(make_unique<Passive>(3, XMFLOAT2{ 140.f,0.f })));
-
 	PassiveCheck();
 	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize(basesize);
@@ -273,4 +269,12 @@ void GameStateManager::PassiveCheck() {
 		}
 
 	}
+}
+
+void GameStateManager::GetPassive(int ID) {
+
+
+
+	GotPassives.push_back(std::move(make_unique<Passive>(ID)));
+
 }

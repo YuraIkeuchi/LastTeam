@@ -20,7 +20,9 @@ public:
 	~Passive();
 
 	void Initialize();
-	void Update();
+	virtual void FirstUpdate() {};
+	virtual void PlayUpdate() {};
+	virtual void LastUpdate() {};
 	void Draw();
 
 	float GetDiameter() { return diameter; }
