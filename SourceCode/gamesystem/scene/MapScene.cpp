@@ -58,35 +58,40 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetPosition(framePos);
 	frame->SetSize({ 128.f,128.f });
 	frame->SetAnchorPoint({ 0.5f,0.5f });
+	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::MAP_01);
 
-	for (int i = 0; i < 20; i++) {
-		for (int j = 0; j < INDEX; j++) {
-			if (!UIs[i][j].sprite) { continue; }
-			for (int l = 0; l < 3; l++) {
-				if (UIs[i][j].nextIndex[l] == -1) { continue; }
-				for (int k = 0; k < 10; k++) {
-					int next = UIs[i][j].nextIndex[l];
-					XMFLOAT2 pos = {
-					Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.x,UIs[i + 1][next].pos.x),
-					Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y,UIs[i + 1][next].pos.y)
-					};
-					unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, pos);
-					road->SetAnchorPoint({ 0.5f,0.5f });
-					road->SetSize({ 16.f,16.f });
-					roadsPos.push_back(std::move(pos));
-					roads.push_back(std::move(road));
+	font = std::make_unique<Font>(sample, XMFLOAT2{ 750.f,450.f }, XMVECTOR{ 1.f,1.f,1.f,1.f });
+	//ìπÇÃèàóù
+	{
+		for (int i = 0; i < 20; i++) {
+			for (int j = 0; j < INDEX; j++) {
+				if (!UIs[i][j].sprite) { continue; }
+				for (int l = 0; l < 3; l++) {
+					if (UIs[i][j].nextIndex[l] == -1) { continue; }
+					for (int k = 0; k < 10; k++) {
+						int next = UIs[i][j].nextIndex[l];
+						XMFLOAT2 pos = {
+						Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.x,UIs[i + 1][next].pos.x),
+						Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y,UIs[i + 1][next].pos.y)
+						};
+						unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, pos);
+						road->SetAnchorPoint({ 0.5f,0.5f });
+						road->SetSize({ 16.f,16.f });
+						roadsPos.push_back(std::move(pos));
+						roads.push_back(std::move(road));
+					}
 				}
 			}
 		}
+		for (int i = 0; i < 10; i++) {
+			unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, {});
+			road->SetAnchorPoint({ 0.5f,0.5f });
+			road->SetSize({ 16.f,16.f });
+			road->SetColor({ 1.f,1.f,0.f,1.f });
+			starRoads.push_back(std::move(road));
+		}
+		starRoadsPos.resize(10);
 	}
-	for (int i = 0; i < 10; i++) {
-		unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, {});
-		road->SetAnchorPoint({ 0.5f,0.5f });
-		road->SetSize({ 16.f,16.f });
-		road->SetColor({ 1.f,1.f,0.f,1.f });
-		starRoads.push_back(std::move(road));
-	}
-	starRoadsPos.resize(10);
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
@@ -140,7 +145,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 		road->Draw();
 	}
 	for (unique_ptr<IKESprite>& road : starRoads) {
-		if (!end&&!moved) {
+		if (!end && !moved) {
 			road->Draw();
 		}
 	}
@@ -154,6 +159,8 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!end) {
 		frame->Draw();
 	}
+	font->Draw();
+	Font::PostDraw();
 }
 
 void MapScene::BackDraw(DirectXCommon* dxCommon) {
@@ -190,7 +197,7 @@ void MapScene::RoadUpdate() {
 		};
 		starRoadsPos[k] = pos;
 	}
-	for (int i = 0; i < 10;i++) {
+	for (int i = 0; i < 10; i++) {
 		starRoads[i]->SetPosition({ starRoadsPos[i].x + scroll.x,starRoadsPos[i].y + scroll.y });
 	}
 }
@@ -403,9 +410,32 @@ void MapScene::Move() {
 		nowHierarchy = pickHierarchy;
 		moved = true;
 	}
+
+
 	if (!end) {
 		pickIndex = UIs[oldHierarchy][oldIndex].nextIndex[pickNextIndex];
 		framePos = UIs[pickHierarchy][pickIndex].pos;
+
+		if (oldPickInd != pickIndex) {
+			wchar_t* sample=L" Ç”";
+			switch (UIs[pickHierarchy][pickIndex].Tag) {
+				case BATTLE:
+					sample= TextManager::GetInstance()->SearchText(TextManager::MAP_BATTLE);
+					break;
+				case BOSS:
+					sample = TextManager::GetInstance()->SearchText(TextManager::MAP_BOSS);
+					break;
+				case HEAL:
+					sample = TextManager::GetInstance()->SearchText(TextManager::MAP_HEAL);
+					break;
+				default:
+					break;
+			}
+			font->SetString(sample);
+			oldPickHis = pickHierarchy;
+			oldPickInd = pickIndex;
+		}
+
 	}
 	if (moved) {
 		if (Helper::GetInstance()->FrameCheck(mov_frame, 1 / kMoveFrame)) {
@@ -413,7 +443,7 @@ void MapScene::Move() {
 			mov_frame = 0.0f;
 			oldIndex = nowIndex;
 			oldHierarchy = nowHierarchy;
-			if (nowHierarchy!= MaxLength) {
+			if (nowHierarchy != MaxLength) {
 				pickHierarchy = nowHierarchy + 1;
 				pickNextIndex = 0;
 				pickIndex = UIs[oldHierarchy][oldIndex].nextIndex[pickNextIndex];

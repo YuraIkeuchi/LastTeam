@@ -1,4 +1,4 @@
-#include <GameStateManager.h>
+﻿#include <GameStateManager.h>
 #include <Helper.h>
 #include <StagePanel.h>
 #include <Input.h>
