@@ -18,17 +18,11 @@ void SkillManager::Initialize()
 	skill.resize(6);
 	//‚±‚±‚Í‚à‚¤­‚µ‚â‚è‚æ‚¤‚ª‚ ‚é‚©‚à‚µ‚ê‚È‚¢
 	skill[0] = new AttackSkill();
-	//skill[0]->Create(nameA, 1);
 	skill[1] = new AttackSkill();
-	//skill[1]->Create(nameB, 2, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[2] = new AttackSkill();
-	//skill[2]->Create(nameC, 3, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[3] = new AttackSkill();
-	//skill[3]->Create(nameD, 4, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[4] = new AttackSkill();
-	//skill[4]->Create(nameE, 5, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[5] = new AttackSkill();
-	//skill[5]->Create(nameF, 6, 0.0f, 0.0f, 0.0f, 1, 1);
 
 	//csv“Ç‚ÝŽæ‚è
 	for (int i = 1; i < 7; i++)
@@ -36,6 +30,20 @@ void SkillManager::Initialize()
 		CreateSkill(i);
 	}
 
+	std::vector<std::vector<int>> area =
+	{
+		{1,0,0},
+		{0,0,1},
+		{1,0,0}
+	};
+	int distanceX = 1;
+	int distanceY = -1;
+	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[0]);
+	if (atkSkill != nullptr)
+	{
+		atkSkill->SetArea(area);
+		atkSkill->SetDistance(distanceX, distanceY);
+	}
 
 	//‡”Ô“ü‚ê‘Ö‚¦‚Ä‚é
 	std::shuffle(skill.begin(), skill.end(), std::default_random_engine());
@@ -70,7 +78,14 @@ int SkillManager::GetID() {
 
 float SkillManager::GetDamage() {
 	float result = {};
-	result = skill[m_RandNum]->GetDamege();
+	
+	if (skill[m_RandNum]->GetSkillType() != SkillType::damege)
+	{
+		assert(0);
+	}
+
+	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[m_RandNum]);
+	result = atkSkill->GetDamege();
 	
 	return result;
 }
@@ -112,6 +127,25 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 		else if (word.find("ID") == 0) {
 			std::getline(line_stream, word, ',');
 			skill[id - 1]->SetID(std::stoi(word));
+		}
+		else if (word.find("SkillType") == 0) {
+			std::getline(line_stream, word, ',');
+			if (std::stoi(word) == 0)
+			{
+				skill[id - 1]->SetSkillType(SkillType::damege);
+			}
+			else if (std::stoi(word) == 1)
+			{
+				skill[id - 1]->SetSkillType(SkillType::buff);
+			}
+			else if (std::stoi(word) == 2)
+			{
+				skill[id - 1]->SetSkillType(SkillType::debuff);
+			}
+			else if (std::stoi(word) == 3)
+			{
+				skill[id - 1]->SetSkillType(SkillType::max);
+			}
 		}
 		else if (word.find("Delay") == 0) {
 			std::getline(line_stream, word, ',');
