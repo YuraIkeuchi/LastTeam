@@ -8,7 +8,6 @@
 //ƒV[ƒ“ŠÇ—
 class SceneManager
 {
-public:
 
 public:
 	static SceneManager* GetInstance();

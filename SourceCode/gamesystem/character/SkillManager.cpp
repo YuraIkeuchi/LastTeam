@@ -36,9 +36,9 @@ void SkillManager::Initialize()
 
 	std::vector<std::vector<int>> area =
 	{
-		{5,0,0},
-		{0,0,1},
-		{1,0,0}
+		{1,1,1},
+		{1,0,1},
+		{1,1,1}
 	};
 	int distanceX = 1;
 	int distanceY = -1;
@@ -275,5 +275,9 @@ void SkillManager::GetAreaDate(int& DisX, int& DisY,std::vector<std::vector<int>
 	l_Area = atkSkill->GetArea();
 	DisX = l_DistanceX;
 	DisY = l_DistanceY;
-	area[0][0] = l_Area[0][0];
+	for (int i = 0; i < area.size(); i++) {
+		for (int j = 0; j < area.size(); j++) {
+			area[i][j] = l_Area[i][j];
+		}
+	}
 }

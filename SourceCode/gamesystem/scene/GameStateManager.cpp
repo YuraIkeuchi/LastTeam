@@ -143,7 +143,10 @@ void GameStateManager::ImGuiDraw() {
 	for (int i = 0; i < m_NotDeckNumber.size(); i++) {
 		ImGui::Text("NotDeck[%d]:%d", i, m_NotDeckNumber[i]);
 	}
-	//ImGui::Text("Count:%d", m_Area[0][0]);
+	ImGui::Text("DisX:%d", m_DistanceX);
+	ImGui::Text("DisY:%d", m_DistanceY);
+	ImGui::Text("NowHeight:%d", m_NowHeight);
+	ImGui::Text("NowWidth:%d", m_NowWidth);
 	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
 	if (ImGui::Button("in", ImVec2(90, 50))) {
 		InDeck();		//デッキに入っていないカードをデッキに組み込む
@@ -189,50 +192,29 @@ void GameStateManager::BirthActUI(const int ID) {
 
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);
 }
-//攻撃エリアの描画(無理やり処理)
+//攻撃エリアの生成(無理やり処理)
 void GameStateManager::BirthArea() {
-	int l_BirthNumX = {};//パネルのマックス数
+	int l_BirthBaseX = {};
+	int l_BirthBaseY = {};
 
-	int l_BirthCountX = {};
-	int l_BirthCountZ = {};
-
-	if (_SkillType == SKILL_NORMAL) {		//普通に一個右
-		l_BirthCountX = m_NowWidth + 1;
-		AttackArea* newarea = nullptr;
-		newarea = new AttackArea();
-		newarea->Initialize();
-		newarea->InitState(l_BirthCountX, m_NowHeight);
-		newarea->SetDamage(m_Act[0].ActDamage);
-		attackarea.push_back(newarea);
-	} else if (_SkillType == SKILL_STRONG) {		//プレイヤーの一から右一列全部
-		l_BirthNumX = PANEL_WIDTH - (m_NowWidth + 1);
-		for (int i = 0; i < l_BirthNumX; i++) {
-			l_BirthCountX = (m_NowWidth + 1) + i;
-			AttackArea* newarea = nullptr;
-			newarea = new AttackArea();
-			newarea->Initialize();
-			newarea->InitState(l_BirthCountX, m_NowHeight);
-			newarea->SetDamage(m_Act[0].ActDamage);
-			attackarea.push_back(newarea);
-		}
-	} else {				//プレイヤーから3 * 2のマス
-		for (int j = 0; j < 3; j++) {
-			l_BirthCountZ = (m_NowHeight - 1) + j;
-			if (l_BirthCountZ < 0 || l_BirthCountZ > 3) {
-				continue;
-			}
-			for (int i = 0; i < 2; i++) {
-				l_BirthCountX = (m_NowWidth + 1) + i;
+	l_BirthBaseX = m_NowWidth + m_DistanceX;		//生成の初めの位置を見てる
+	l_BirthBaseY = m_NowHeight + m_DistanceY;
+	int AreaX = {};
+	int AreaY = {};
+	for (auto i = 0; i < m_Area.size(); i++) {
+		for (auto j = 0; j < m_Area.size(); j++) {
+			AreaX = l_BirthBaseX + i;
+			AreaY = l_BirthBaseY - j;
+			if (m_Area[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0))) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				AttackArea* newarea = nullptr;
 				newarea = new AttackArea();
 				newarea->Initialize();
-				newarea->InitState(l_BirthCountX, l_BirthCountZ);
+				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(m_Act[0].ActDamage);
 				attackarea.push_back(newarea);
 			}
 		}
 	}
-
 }
 //プレイヤーの現在パネル
 void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
