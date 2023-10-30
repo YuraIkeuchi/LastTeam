@@ -37,12 +37,6 @@ bool StagePanel::Initialize() {
 	m_SelectHeight = 0;
 	m_SelectWidth = 0;
 	actions.clear();
-	/*if (SkillManager::GetInstance()->GetDeckNum() >= 3) {
-		RandomPanel(3);
-	}
-	else {
-		RandomPanel(SkillManager::GetInstance()->GetDeckNum());
-	}*/
 	//CSV読み込み
 	return true;
 }
