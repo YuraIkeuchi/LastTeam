@@ -41,6 +41,7 @@ public:
 	const int GetID() { return ID; }
 	const int Getlatency() { return latency; }
 	const bool GetBirth() { return m_Birth; }
+	const bool GetDeckIn() { return m_DeckIn; }
 	float GetDamege() { return damege; }
 	void SetID(const int ID) { this->ID = ID; }
 	void SetLatency(const int latency) { this->latency = latency; }
@@ -51,7 +52,7 @@ public:
 	void SetPopRate(const int popRate) { this->popRate = popRate; }
 	void SetBirth(const bool Birth) { this->m_Birth = Birth; }
 	void SetDamege(const float damege) { this->damege = damege; }
-
+	void SetDeckIn(const bool DeckIn) { this->m_DeckIn = DeckIn; }
 protected:
 	//スキル名
 	std::string name = "NoName";
@@ -73,4 +74,6 @@ protected:
 	SkillType skillType;
 	//ダメージ
 	float damege = 0.0f;
+	//デッキに入っているか
+	bool m_DeckIn = false;
 };

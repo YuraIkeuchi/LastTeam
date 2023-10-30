@@ -37,7 +37,6 @@ bool StagePanel::Initialize() {
 	m_SelectHeight = 0;
 	m_SelectWidth = 0;
 	actions.clear();
-	RandomPanel(3);
 	//CSV読み込み
 	return true;
 }
@@ -54,6 +53,13 @@ void StagePanel::Update() {
 		if (!actions[i]->GetAlive()) {
 			actions.erase(cbegin(actions) + i);
 		}
+	}
+
+	if (actions.size() == 0) {
+		m_AllDelete = true;
+	}
+	else {
+		m_AllDelete = false;
 	}
 }
 
@@ -189,9 +195,11 @@ void StagePanel::RandomPanel(int num) {
 			break;
 		}
 		newAction->Initialize();
-		newAction->SetSkillID(SkillManager::GetInstance()->GetID());
+		//ステージに配布されるパネルに情報を読み取ってる
+		newAction->SetSkillID(SkillManager::GetInstance()->GetID(i));
 		newAction->SetDamage(SkillManager::GetInstance()->GetDamage());
 		newAction->SetDelay(SkillManager::GetInstance()->GetDelay());
+
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
 
@@ -199,6 +207,8 @@ void StagePanel::RandomPanel(int num) {
 		panels[width][height].object->SetPosition(panels[width][height].position);
 		panels[width][height].object->SetColor(panels[width][height].color);
 	}
+
+	SkillManager::GetInstance()->SetDeckState(SkillManager::GetInstance()->GetDeckNum() - num);
 }
 
 void StagePanel::ResetPanel() {

@@ -68,6 +68,8 @@ public:
 		return panels[width][height].position;
 	}
 
+	const bool GetAllDelete() { return m_AllDelete; }
+
 private:
 	//パネル
 	Panel panels[PANEL_WIDTH][PANEL_HEIGHT];
@@ -93,4 +95,7 @@ private:
 	//XMFLOAT3 m_SelectPos = {};
 
 	OBB m_OBB1 = {}, m_OBB2 = {};
+
+	//スキルをすべて手に入れているか
+	bool m_AllDelete = false;
 };

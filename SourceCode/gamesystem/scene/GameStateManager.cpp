@@ -11,21 +11,21 @@ GameStateManager* GameStateManager::GetInstance() {
 	static GameStateManager instance;
 	return &instance;
 }
-//‰Šú‰»
+//åˆæœŸåŒ–
 void GameStateManager::Initialize() {
-	//ƒJƒEƒ“ƒ^[
+	//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
 	m_Counter = false;
 	m_CounterTimer = {};
 	m_CounterScore = {};
-	//ˆÊ’u‚ÌƒXƒRƒA
+	//ä½ç½®ã®ã‚¹ã‚³ã‚¢
 	m_PosScore = {};
-	//ƒOƒŒƒCƒY‚ÌƒXƒRƒA(ŒãXint‚É‚·‚é)
+	//ã‚°ãƒ¬ã‚¤ã‚ºã®ã‚¹ã‚³ã‚¢(å¾Œã€…intã«ã™ã‚‹)
 	m_GrazeScore = 0.0f;
 
-	//‘S‘ÌƒXƒRƒA
+	//å…¨ä½“ã‚¹ã‚³ã‚¢
 	m_AllScore = {};
 
-	//—v‘f‚Ì‘Síœ‚Íˆê’U‚±‚±‚Å
+	//è¦ç´ ã®å…¨å‰Šé™¤ã¯ä¸€æ—¦ã“ã“ã§
 	m_AllActCount = {};
 	actui.clear();
 	m_Act.clear();
@@ -36,27 +36,30 @@ void GameStateManager::Initialize() {
 	skillUI->SetSize(basesize);
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
+
+	//ãƒ‡ãƒƒã‚­ã®åˆæœŸåŒ–
+	DeckInitialize();
 }
-//XV
+//æ›´æ–°
 void GameStateManager::Update() {
 
 	const int l_AddCounterScore = 10;
 	m_AllScore = m_CounterScore + (int)(m_PosScore)+(int)(m_GrazeScore);
 
-	//ƒJƒEƒ“ƒ^[‚Ìˆ—
+	//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®å‡¦ç†
 	if (m_Counter) {
-		if (m_CounterTimer == 0) {		//ƒJƒEƒ“ƒ^[‚ÌƒXƒRƒA‚É‰ÁZ
+		if (m_CounterTimer == 0) {		//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®ã‚¹ã‚³ã‚¢ã«åŠ ç®—
 			m_CounterScore += l_AddCounterScore;
 		}
 		m_CounterTimer++;
 
-		if (Helper::GetInstance()->CheckMin(m_CounterTimer, 20, 1)) {		//ˆê’èƒtƒŒ[ƒ€‚ÅƒJƒEƒ“ƒ^[I—¹
+		if (Helper::GetInstance()->CheckMin(m_CounterTimer, 20, 1)) {		//ä¸€å®šãƒ•ãƒ¬ãƒ¼ãƒ ã§ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼çµ‚äº†
 			m_Counter = false;
 			m_CounterTimer = {};
 		}
 	}
 
-	//è‚É“ü‚ê‚½ƒXƒLƒ‹‚ÌUI‚ÌXV
+	//æ‰‹ã«å…¥ã‚ŒãŸã‚¹ã‚­ãƒ«ã®UIã®æ›´æ–°
 	for (auto i = 0; i < actui.size(); i++) {
 		if (actui[i] == nullptr)continue;
 		actui[i]->SetActCount(i);
@@ -67,7 +70,7 @@ void GameStateManager::Update() {
 		}
 	}
 
-	//UŒ‚ƒGƒŠƒA‚ÌXV(ÀÛ‚ÍƒXƒLƒ‹‚É‚È‚é‚Æv‚¤)
+	//æ”»æ’ƒã‚¨ãƒªã‚¢ã®æ›´æ–°(å®Ÿéš›ã¯ã‚¹ã‚­ãƒ«ã«ãªã‚‹ã¨æ€ã†)
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
 		attackarea[i]->Update();
@@ -79,17 +82,18 @@ void GameStateManager::Update() {
 
 	GaugeUpdate();
 
-	//UŒ‚‚µ‚½uŠÔ
+	//æ”»æ’ƒã—ãŸç¬é–“
 	AttackTrigger();
 	UseSkill();
+	SkillManager::GetInstance()->Update();
 }
-//UŒ‚‚µ‚½uŠÔ
+//æ”»æ’ƒã—ãŸç¬é–“
 void GameStateManager::AttackTrigger() {
 	Input* input = Input::GetInstance();
 	if (m_AllActCount == 0) { return; }
 	if (actui[0]->GetUse()) { return; }
 	if (Player::GetInstance()->GetCharaState() == 1) { return; }
-	//ƒXƒLƒ‹‚ªˆêŒÂˆÈã‚ ‚Á‚½‚çƒXƒLƒ‹g‚¦‚é
+	//ã‚¹ã‚­ãƒ«ãŒä¸€å€‹ä»¥ä¸Šã‚ã£ãŸã‚‰ã‚¹ã‚­ãƒ«ä½¿ãˆã‚‹
 	if (input->TriggerButton(input->A)) {
 		m_BirthSkill = true;
 		Player::GetInstance()->SetDelayTimer(m_Act[0].ActDelay);
@@ -100,6 +104,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	skillUI->Draw();
 	gaugeUI->Draw();
+	SkillManager::GetInstance()->UIDraw();
 	IKESprite::PostDraw();
 
 	for (auto i = 0; i < attackarea.size(); i++) {
@@ -107,7 +112,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		attackarea[i]->Draw(dxCommon);
 	}
 }
-//•`‰æ
+//æç”»
 void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("GameState");
 	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
@@ -119,6 +124,7 @@ void GameStateManager::ImGuiDraw() {
 	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_SPECIAL;
 	}
+	ImGui::Text("Count:%d", m_AllActCount);
 	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
 	/**/
@@ -132,7 +138,7 @@ void GameStateManager::ImGuiDraw() {
 	}*/
 	//StagePanel::GetInstance()->ImGuiDraw();
 }
-//è‚É“ü‚ê‚½UI‚Ì•`‰æ
+//æ‰‹ã«å…¥ã‚ŒãŸUIã®æç”»
 void GameStateManager::ActUIDraw() {
 	IKESprite::PreDraw();
 	for (auto i = 0; i < actui.size(); i++) {
@@ -144,20 +150,20 @@ void GameStateManager::ActUIDraw() {
 		passive->Draw();
 	}
 }
-//ƒXƒLƒ‹‚ğ“üè(InterActionCPP‚Åg‚Á‚Ä‚Ü‚·)
+//ã‚¹ã‚­ãƒ«ã‚’å…¥æ‰‹(InterActionCPPã§ä½¿ã£ã¦ã¾ã™)
 void GameStateManager::AddSkill(const int ID, const float damage,const int Delay) {
 	ActState act;
 	act.ActID = ID;
 	act.ActDamage = damage;
 	act.ActDelay = Delay;
 	m_Act.push_back(act);
-	//è‚É“ü‚ê‚½ƒXƒLƒ‹‚Ì‘”‚ğ‰ÁZ‚·‚é
+	//æ‰‹ã«å…¥ã‚ŒãŸã‚¹ã‚­ãƒ«ã®ç·æ•°ã‚’åŠ ç®—ã™ã‚‹
 	m_AllActCount++;
-	BirthActUI(ID);//UI‚à‘‚¦‚é‚æ
+	BirthActUI(ID);//UIã‚‚å¢—ãˆã‚‹ã‚ˆ
 }
-//ƒXƒLƒ‹UI‚Ì¶¬
+//ã‚¹ã‚­ãƒ«UIã®ç”Ÿæˆ
 void GameStateManager::BirthActUI(const int ID) {
-	//ƒAƒNƒVƒ‡ƒ“UI‚ÌƒZƒbƒg
+	//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³UIã®ã‚»ãƒƒãƒˆ
 	ActionUI* newactUi = nullptr;
 	newactUi = new ActionUI();
 	newactUi->Initialize();
@@ -167,14 +173,14 @@ void GameStateManager::BirthActUI(const int ID) {
 
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);
 }
-//UŒ‚ƒGƒŠƒA‚Ì•`‰æ(–³—‚â‚èˆ—)
+//æ”»æ’ƒã‚¨ãƒªã‚¢ã®æç”»(ç„¡ç†ã‚„ã‚Šå‡¦ç†)
 void GameStateManager::BirthArea() {
-	int l_BirthNumX = {};//ƒpƒlƒ‹‚Ìƒ}ƒbƒNƒX”
+	int l_BirthNumX = {};//ãƒ‘ãƒãƒ«ã®ãƒãƒƒã‚¯ã‚¹æ•°
 
 	int l_BirthCountX = {};
 	int l_BirthCountZ = {};
 
-	if (_SkillType == SKILL_NORMAL) {		//•’Ê‚ÉˆêŒÂ‰E
+	if (_SkillType == SKILL_NORMAL) {		//æ™®é€šã«ä¸€å€‹å³
 		l_BirthCountX = m_NowWidth + 1;
 		AttackArea* newarea = nullptr;
 		newarea = new AttackArea();
@@ -182,7 +188,7 @@ void GameStateManager::BirthArea() {
 		newarea->InitState(l_BirthCountX, m_NowHeight);
 		newarea->SetDamage(m_Act[0].ActDamage);
 		attackarea.push_back(newarea);
-	} else if (_SkillType == SKILL_STRONG) {		//ƒvƒŒƒCƒ„[‚Ìˆê‚©‚ç‰Eˆê—ñ‘S•”
+	} else if (_SkillType == SKILL_STRONG) {		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä¸€ã‹ã‚‰å³ä¸€åˆ—å…¨éƒ¨
 		l_BirthNumX = PANEL_WIDTH - (m_NowWidth + 1);
 		for (int i = 0; i < l_BirthNumX; i++) {
 			l_BirthCountX = (m_NowWidth + 1) + i;
@@ -193,7 +199,7 @@ void GameStateManager::BirthArea() {
 			newarea->SetDamage(m_Act[0].ActDamage);
 			attackarea.push_back(newarea);
 		}
-	} else {				//ƒvƒŒƒCƒ„[‚©‚ç3 * 2‚Ìƒ}ƒX
+	} else {				//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰3 * 2ã®ãƒã‚¹
 		for (int j = 0; j < 3; j++) {
 			l_BirthCountZ = (m_NowHeight - 1) + j;
 			if (l_BirthCountZ < 0 || l_BirthCountZ > 3) {
@@ -212,11 +218,11 @@ void GameStateManager::BirthArea() {
 	}
 
 }
-//ƒvƒŒƒCƒ„[‚ÌŒ»İƒpƒlƒ‹
+//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ãƒ‘ãƒãƒ«
 void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 	m_NowWidth = NowWidth, m_NowHeight = NowHeight;
 }
-//ƒXƒLƒ‹‚Ìg—p
+//ã‚¹ã‚­ãƒ«ã®ä½¿ç”¨
 void GameStateManager::UseSkill() {
 	if (!Player::GetInstance()->GetDelayStart() && m_BirthSkill) {
 		BirthArea();
@@ -225,25 +231,36 @@ void GameStateManager::UseSkill() {
 		m_BirthSkill = false;
 	}
 }
-//s“®‚ÌI—¹
+//è¡Œå‹•ã®çµ‚äº†
 void GameStateManager::FinishAct() {
 	m_Act.erase(m_Act.begin());
 	m_AllActCount--;
 	actui[0]->SetUse(true);
+	//ãƒ‡ãƒƒã‚­ãŒãªã„ä¸”ã¤æ‰‹æœ­ã‚’ä½¿ã„åˆ‡ã£ã¦ãŸã‚‰ã¾ãŸå†é…å¸ƒ
+	if (m_AllActCount == 0 && StagePanel::GetInstance()->GetAllDelete()) {
+		//ãƒ‡ãƒƒã‚­ã®åˆæœŸåŒ–
+		DeckInitialize();
+	}
 }
 
 void GameStateManager::GaugeUpdate() {
-
-	m_GaugeCount += 1.0f * m_DiameterGauge;
+	if (SkillManager::GetInstance()->GetDeckNum() != 0) {
+		m_GaugeCount += 1.0f * m_DiameterGauge;
+	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();
 			StagePanel::GetInstance()->ResetPanel();
 		}
-		//ƒpƒlƒ‹’u‚­”
+		//ãƒ‘ãƒãƒ«ç½®ãæ•°
 		int panel_num = 3;
 		SkillManager::GetInstance()->ResetBirth();
-		StagePanel::GetInstance()->RandomPanel(panel_num);
+		if (SkillManager::GetInstance()->GetDeckNum() >= 3) {
+			StagePanel::GetInstance()->RandomPanel(panel_num);
+		}
+		else {
+			StagePanel::GetInstance()->RandomPanel(SkillManager::GetInstance()->GetDeckNum());
+		}
 		m_GaugeCount = 0;
 	}
 	float per = (m_GaugeCount / kGaugeCountMax);
@@ -270,11 +287,18 @@ void GameStateManager::PassiveCheck() {
 
 	}
 }
+//ãƒ‡ãƒƒã‚­ã®åˆæœŸåŒ–
+void GameStateManager::DeckInitialize() {
+	SkillManager::GetInstance()->DeckClear();
+	//ãƒ‡ãƒƒã‚­ã«å…¥ã£ã¦ã„ã‚‹ã‚«ãƒ¼ãƒ‰ã®ç¢ºèª
+	for (int i = 0; i < m_DeckNumber.size(); i++) {
+		SkillManager::GetInstance()->DeckCheck(m_DeckNumber[i],i);
+	}
+	//ãƒ‡ãƒƒã‚­ã®æœ€å¤§æ•°ç¢ºèª
+	SkillManager::GetInstance()->SetDeckState((int)(m_DeckNumber.size()));
+}
 
 void GameStateManager::GetPassive(int ID) {
-
-
-
 	GotPassives.push_back(std::move(make_unique<Passive>(ID)));
 
 }

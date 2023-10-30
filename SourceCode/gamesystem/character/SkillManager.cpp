@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <chrono>
 
 SkillManager* SkillManager::GetInstance()
 {
@@ -15,7 +16,7 @@ SkillManager* SkillManager::GetInstance()
 void SkillManager::Initialize()
 {
 	//一旦3に指定(実際はCSVとかになるかな)
-	skill.resize(6);
+	skill.resize(7);
 	//ここはもう少しやりようがあるかもしれない
 	skill[0] = new AttackSkill();
 	//skill[0]->Create(nameA, 1);
@@ -28,17 +29,34 @@ void SkillManager::Initialize()
 	skill[4] = new AttackSkill();
 	//skill[4]->Create(nameE, 5, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[5] = new AttackSkill();
+	skill[6] = new AttackSkill();
 	//skill[5]->Create(nameF, 6, 0.0f, 0.0f, 0.0f, 1, 1);
 
 	//csv読み取り
-	for (int i = 1; i < 7; i++)
+	for (int i = 1; i < 8; i++)
 	{
 		CreateSkill(i);
 	}
+}
 
+//更新(ほんますまん)
+void SkillManager::Update() {	
+	for (auto i = 0; i < deckui.size(); i++) {
+		if (deckui[i] == nullptr)continue;
+		deckui[i]->SetActCount(i);
+		deckui[i]->Update();
 
-	//順番入れ替えてる
-	std::shuffle(skill.begin(), skill.end(), std::default_random_engine());
+		if (!deckui[i]->GetAlive()) {
+			deckui.erase(cbegin(deckui) + i);
+		}
+	}
+}
+//UIの描画(ほんますまんpart2)
+void SkillManager::UIDraw() {
+	for (auto i = 0; i < deckui.size(); i++) {
+		if (deckui[i] == nullptr)continue;
+		deckui[i]->Draw();
+	}
 }
 
 void SkillManager::ImGuiDraw() {
@@ -47,41 +65,41 @@ void SkillManager::ImGuiDraw() {
 			newskill->ImGuiDraw();
 		}
 	}
+
+	ImGui::Begin("Mana");
+	ImGui::Text("Num:%d", m_DeckNum);
+	ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
+	for (int i = 0; i < m_DeckDate.size(); i++) {
+		ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
+	}
+	ImGui::End();
 }
 
-int SkillManager::GetID() {
+int SkillManager::GetID(const int BirthNum) {
 	int result = 0;
-	int randskill = 0;
-
-	//ランダムで取得(ここは後で直す)
-	randskill = Helper::GetInstance()->GetRanNum(0, (int)(skill.size() - 1));
-	if (!skill[randskill]->GetBirth()) {
-		skill[randskill]->SetBirth(true);
-		result = skill[randskill]->GetID();
+	if (skill[m_DeckDate[BirthNum + m_DeckRemain]]->GetDeckIn()) {
+		m_BirthMax = m_DeckDate[BirthNum + m_DeckRemain];
+		skill[m_DeckDate[BirthNum + m_DeckRemain]]->SetBirth(true);
+		deckui[BirthNum]->SetUse(true);
+		result = skill[m_DeckDate[BirthNum + m_DeckRemain]]->GetID();
 	}
-	else {
-		randskill = Helper::GetInstance()->GetRanNum(0, (int)(skill.size() - 1));
-		skill[randskill]->SetBirth(true);
-		result = skill[randskill]->GetID();
-	}
-	m_RandNum = randskill;
 	return result;
 }
-
+//ダメージ
 float SkillManager::GetDamage() {
 	float result = {};
-	result = skill[m_RandNum]->GetDamege();
+	result = skill[m_BirthMax]->GetDamege();
 	
 	return result;
 }
-
+//ディレイ
 int SkillManager::GetDelay() {
 	int result = {};
-	result = skill[m_RandNum]->Getlatency();
+	result = skill[m_BirthMax]->Getlatency();
 
 	return result;
 }
-
+//リセット
 void SkillManager::ResetBirth() {
 	for (SkillBase* newskill : skill) {
 		if (newskill != nullptr) {
@@ -165,4 +183,44 @@ bool SkillManager::CreateSkill(int id) {
 
 	//Player::GetInstance()->SetDelayTimer(m_Delay);
 	return true;
+}
+
+//デッキチェック
+void SkillManager::DeckCheck(const int DeckNumber, const int DeckCount) {
+	
+	//デッキに入るようにする
+	skill[DeckNumber]->SetDeckIn(true);
+	m_DeckDate.push_back(DeckNumber);
+	unsigned int seed = (int)(std::chrono::system_clock::now())
+		.time_since_epoch()
+		.count();
+	//デッキをシャッフルする
+	std::shuffle(m_DeckDate.begin(), m_DeckDate.end(), std::default_random_engine(seed));
+	//デッキのUIを作成
+	BirthDeckUI(DeckNumber, DeckCount);
+}
+//デッキのクリア
+void SkillManager::DeckClear() {
+	if (!m_DeckDate.empty()) {
+		m_DeckDate.clear();
+		deckui.clear();
+	}
+}
+//デッキの状態を取る(残ってるデッキとか)
+void SkillManager::SetDeckState(const int DeckNum) {
+	m_DeckNum = DeckNum;
+	m_DeckRemain = (int)(m_DeckDate.size()) - m_DeckNum;
+}
+//UIの生成
+void SkillManager::BirthDeckUI(const int DeckNumber, const int DeckCount) {
+	//デッキUIのセット
+	DeckUI* newdeckUi = nullptr;
+	newdeckUi = new DeckUI();
+	newdeckUi->Initialize();
+	newdeckUi->InitState(DeckCount);
+	deckui.emplace_back(newdeckUi);
+	//手に入れたスキルのUIの更新
+	for (auto i = 0; i < m_DeckDate.size(); i++) {
+		deckui[i]->SetID(m_DeckDate[i]);
+	}
 }
