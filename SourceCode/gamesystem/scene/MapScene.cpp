@@ -115,6 +115,10 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
 	SceneChanger::GetInstance()->Update();
+	if (SceneChanger::GetInstance()->GetChange()) {
+		SceneManager::GetInstance()->ChangeScene<BattleScene>();
+		SceneChanger::GetInstance()->SetChange(false);
+	}
 
 }
 
@@ -389,8 +393,12 @@ void MapScene::BlackOut() {
 }
 
 void MapScene::Move() {
-	if (end) { return; }
 	Input* input = Input::GetInstance();
+	if (input->TriggerButton(input->A)) {
+		SceneChanger::GetInstance()->SetChangeStart(true);
+	}
+
+	if (end) { return; }
 	int vel = 0;
 	if (input->PushButton(input->LB)) {
 		vel = -10;
