@@ -16,7 +16,7 @@ SkillManager* SkillManager::GetInstance()
 void SkillManager::Initialize()
 {
 	//一旦3に指定(実際はCSVとかになるかな)
-	skill.resize(6);
+	skill.resize(7);
 	//ここはもう少しやりようがあるかもしれない
 	skill[0] = new AttackSkill();
 	//skill[0]->Create(nameA, 1);
@@ -29,10 +29,11 @@ void SkillManager::Initialize()
 	skill[4] = new AttackSkill();
 	//skill[4]->Create(nameE, 5, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[5] = new AttackSkill();
+	skill[6] = new AttackSkill();
 	//skill[5]->Create(nameF, 6, 0.0f, 0.0f, 0.0f, 1, 1);
 
 	//csv読み取り
-	for (int i = 1; i < 7; i++)
+	for (int i = 1; i < 8; i++)
 	{
 		CreateSkill(i);
 	}
@@ -50,8 +51,8 @@ void SkillManager::ImGuiDraw() {
 	}
 
 	ImGui::Begin("Mana");
-	ImGui::Text("Num:%d", m_RandNum);
-	ImGui::Text("Num:%d", m_BirthMax);
+	ImGui::Text("Num:%d", m_DeckNum);
+	ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
 	for (int i = 0; i < m_DeckDate.size(); i++) {
 		ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
 	}
@@ -60,29 +61,28 @@ void SkillManager::ImGuiDraw() {
 
 int SkillManager::GetID(const int BirthNum) {
 	int result = 0;
-	if (skill[m_DeckDate[BirthNum]]->GetDeckIn()) {
-	/*	m_RandNum = BirthNum;
-		m_BirthMax = BirthNum;*/
-		skill[m_DeckDate[BirthNum]]->SetBirth(true);
-		result = skill[m_DeckDate[BirthNum]]->GetID();
+	if (skill[m_DeckDate[BirthNum + m_DeckRemain]]->GetDeckIn()) {
+		m_BirthMax = m_DeckDate[BirthNum + m_DeckRemain];
+		skill[m_DeckDate[BirthNum + m_DeckRemain]]->SetBirth(true);
+		result = skill[m_DeckDate[BirthNum + m_DeckRemain]]->GetID();
 	}
 	return result;
 }
-
+//ダメージ
 float SkillManager::GetDamage() {
 	float result = {};
-	result = skill[m_RandNum]->GetDamege();
+	result = skill[m_BirthMax]->GetDamege();
 	
 	return result;
 }
-
+//ディレイ
 int SkillManager::GetDelay() {
 	int result = {};
-	result = skill[m_RandNum]->Getlatency();
+	result = skill[m_BirthMax]->Getlatency();
 
 	return result;
 }
-
+//リセット
 void SkillManager::ResetBirth() {
 	for (SkillBase* newskill : skill) {
 		if (newskill != nullptr) {
@@ -188,4 +188,9 @@ void SkillManager::DeckClear() {
 	if (!m_DeckDate.empty()) {
 		m_DeckDate.clear();
 	}
+}
+//デッキの状態を取る(残ってるデッキとか)
+void SkillManager::SetDeckState(const int DeckNum) {
+	m_DeckNum = DeckNum;
+	m_DeckRemain = (int)(m_DeckDate.size()) - m_DeckNum;
 }

@@ -32,10 +32,11 @@ public:
 	float GetDamage();
 	//ディレイを取る
 	int GetDelay();
+	void SetDeckState(const int DeckNum);
 public:
 	std::vector<SkillBase*>GetSkillBase() { return skill; }
 	const int GetDeckNum() { return m_DeckNum; }
-	void SetDeckNum(const int DeckNum) { this->m_DeckNum = DeckNum; }
+	
 private:
 	std::vector<SkillBase*> skill;
 	/*SkillBase* skillA;
@@ -47,8 +48,8 @@ private:
 	std::string nameD = "殺る";
 	std::string nameE = "かます";
 	std::string nameF = "スカス";
-	int m_RandNum = {};
 	int m_DeckNum = {};
 	int m_BirthMax = {};
+	int m_DeckRemain = {};
 	std::vector<int> m_DeckDate;
 };

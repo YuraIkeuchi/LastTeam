@@ -118,7 +118,7 @@ private:
 		SKILL_NORMAL,
 		SKILL_STRONG,
 		SKILL_SPECIAL
-	}_SkillType = SKILL_NORMAL;
+	}_SkillType = SKILL_STRONG;
 	//ÉQÅ[ÉW
 	float m_GaugeCount = 0;
 	//
@@ -132,5 +132,5 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 0,2,3,5, };
+	vector<int> m_DeckNumber = { 0,1,2,3,4,5,6, };
 };

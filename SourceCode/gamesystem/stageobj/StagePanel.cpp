@@ -214,7 +214,7 @@ void StagePanel::RandomPanel(int num) {
 		panels[width][height].object->SetColor(panels[width][height].color);
 	}
 
-	SkillManager::GetInstance()->SetDeckNum(SkillManager::GetInstance()->GetDeckNum() - num);
+	SkillManager::GetInstance()->SetDeckState(SkillManager::GetInstance()->GetDeckNum() - num);
 }
 
 void StagePanel::ResetPanel() {
