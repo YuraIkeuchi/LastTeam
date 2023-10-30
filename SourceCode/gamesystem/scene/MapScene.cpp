@@ -71,19 +71,28 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 					Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y,UIs[i + 1][next].pos.y)
 					};
 					unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, pos);
-					road->SetAnchorPoint({ 0.5f,0.5f});
-					road->SetSize({16.f,16.f});
+					road->SetAnchorPoint({ 0.5f,0.5f });
+					road->SetSize({ 16.f,16.f });
 					roadsPos.push_back(std::move(pos));
 					roads.push_back(std::move(road));
 				}
 			}
 		}
 	}
+	for (int i = 0; i < 10; i++) {
+		unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, {});
+		road->SetAnchorPoint({ 0.5f,0.5f });
+		road->SetSize({ 16.f,16.f });
+		road->SetColor({ 1.f,1.f,0.f,1.f });
+		starRoads.push_back(std::move(road));
+	}
+	starRoadsPos.resize(10);
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
 	BlackOut();
 	Move();
+	RoadUpdate();
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
@@ -94,7 +103,7 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	}
 	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
-	for (int i = 0; i < roads.size();i++) {
+	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
 }
@@ -130,6 +139,11 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	for (unique_ptr<IKESprite>& road : roads) {
 		road->Draw();
 	}
+	for (unique_ptr<IKESprite>& road : starRoads) {
+		if (!end&&!moved) {
+			road->Draw();
+		}
+	}
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
@@ -137,7 +151,9 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 		}
 	}
 	chara->Draw();
-	frame->Draw();
+	if (!end) {
+		frame->Draw();
+	}
 }
 
 void MapScene::BackDraw(DirectXCommon* dxCommon) {
@@ -167,10 +183,16 @@ MapScene::UI MapScene::RandPannel() {
 }
 
 void MapScene::RoadUpdate() {
-
-
-
-
+	for (int k = 0; k < 10; k++) {
+		XMFLOAT2 pos = {
+		Ease(In,Linear,(float)k / 10.0f,UIs[nowHierarchy][nowIndex].pos.x,UIs[pickHierarchy][pickIndex].pos.x),
+		Ease(In,Linear,(float)k / 10.0f,UIs[nowHierarchy][nowIndex].pos.y,UIs[pickHierarchy][pickIndex].pos.y)
+		};
+		starRoadsPos[k] = pos;
+	}
+	for (int i = 0; i < 10;i++) {
+		starRoads[i]->SetPosition({ starRoadsPos[i].x + scroll.x,starRoadsPos[i].y + scroll.y });
+	}
 }
 
 void MapScene::MapCreate() {
@@ -336,24 +358,25 @@ void MapScene::ImGuiDraw() {
 
 void MapScene::BlackOut() {
 
-	for (int i = 0; i < clearHierarchy+1;i++) {
-		for (int j = 0; j < INDEX;j++) {
+	for (int i = 0; i < clearHierarchy + 1; i++) {
+		for (int j = 0; j < INDEX; j++) {
 			UIs[i][j].open = true;
 		}
 	}
 
 
 	for (array<UI, INDEX>& ui : UIs) {
-		for (int i = 0; i < INDEX;i++) {
+		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
 			if (ui[i].open) { continue; }
-			ui[i].color = {0.5f,0.5f,0.5f,1.f};
+			ui[i].color = { 0.5f,0.5f,0.5f,1.f };
 		}
 	}
 
 }
 
 void MapScene::Move() {
+	if (end) { return; }
 	Input* input = Input::GetInstance();
 	int vel = 0;
 	if (input->PushButton(input->LB)) {
@@ -361,7 +384,6 @@ void MapScene::Move() {
 	} else if (input->PushButton(input->RB)) {
 		vel = 10;
 	}
-
 	if (input->TiltStick(input->L_UP)) {
 		if (moved) { return; }
 		if (pickNextIndex == 0) { return; }
@@ -381,19 +403,24 @@ void MapScene::Move() {
 		nowHierarchy = pickHierarchy;
 		moved = true;
 	}
+	if (!end) {
 		pickIndex = UIs[oldHierarchy][oldIndex].nextIndex[pickNextIndex];
 		framePos = UIs[pickHierarchy][pickIndex].pos;
-
+	}
 	if (moved) {
 		if (Helper::GetInstance()->FrameCheck(mov_frame, 1 / kMoveFrame)) {
 			moved = false;
+			mov_frame = 0.0f;
 			oldIndex = nowIndex;
 			oldHierarchy = nowHierarchy;
-			if (pickHierarchy < MaxLength) {
+			if (nowHierarchy!= MaxLength) {
 				pickHierarchy = nowHierarchy + 1;
+				pickNextIndex = 0;
+			} else {
+				pickHierarchy = 0;
+				pickNextIndex = 0;
+				end = true;
 			}
-			pickNextIndex = 0;
-			mov_frame = 0.0f;
 			return;
 		}
 		charaPos.x = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.x);

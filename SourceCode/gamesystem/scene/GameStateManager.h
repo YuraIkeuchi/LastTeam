@@ -49,6 +49,7 @@ private:
 
 	void PassiveCheck();
 
+	void GetPassive(int ID);
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
