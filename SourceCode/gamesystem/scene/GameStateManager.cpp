@@ -143,10 +143,10 @@ void GameStateManager::ImGuiDraw() {
 	for (int i = 0; i < m_NotDeckNumber.size(); i++) {
 		ImGui::Text("NotDeck[%d]:%d", i, m_NotDeckNumber[i]);
 	}
-	ImGui::Text("Count:%d", m_Area[0][0]);
-	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));
+	//ImGui::Text("Count:%d", m_Area[0][0]);
+	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
 	if (ImGui::Button("in", ImVec2(90, 50))) {
-		InDeck();
+		InDeck();		//デッキに入っていないカードをデッキに組み込む
 	}
 	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
