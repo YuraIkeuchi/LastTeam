@@ -3,7 +3,6 @@
 #include "input.h"
 #include "ImageManager.h"
 #include "ParticleEmitter.h"
-#include "SceneManager.h"
 
 // ‘JˆÚ‚µ‚¤‚éƒV[ƒ“
 #include "BattleScene.h"

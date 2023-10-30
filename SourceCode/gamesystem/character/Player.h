@@ -48,6 +48,7 @@ public:
 	const bool GetDelayStart() { return m_DelayStart; }
 
 	float GetMaxHp() { return m_MaxHP; }
+	float GetHp() { return m_HP; }
 	void SetMaxHp(float maxhp) {
 		m_MaxHP = maxhp;
 		m_HP = maxhp;

@@ -6,6 +6,7 @@
 #include <GameStateManager.h>
 #include <SceneChanger.h>
 #include "SkillManager.h"
+#include "GameoverScene.h"
 
 //‰Šú‰»
 void BattleScene::Initialize(DirectXCommon* dxCommon)
@@ -55,13 +56,26 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	enemyManager->Update();
 	//“G‚ð“|‚µ‚½‚çƒV[ƒ“ˆÈ~(‰¼)
 	if (enemyManager->BossDestroy()) {
+		_ChangeType = CHANGE_TITLE;
+		SceneChanger::GetInstance()->SetChangeStart(true);
+	}
+	//‚Õ‚ê‚¢‚â[‚ÌHP‚ª–³‚­‚È‚Á‚Ä‚à‘JˆÚ‚·‚é
+	if (Player::GetInstance()->GetHp() <= 0.0f) {
+		_ChangeType = CHANGE_OVER;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
-		SceneManager::GetInstance()->PopScene();
+		if (_ChangeType == CHANGE_TITLE) {
+			SceneManager::GetInstance()->PopScene();
+		}
+		else {
+			SceneManager::GetInstance()->ChangeScene<GameoverScene>();
+		}
 		SceneChanger::GetInstance()->SetChange(false);
 	}
+
+	
 }
 
 void BattleScene::Draw(DirectXCommon* dxCommon) {

@@ -26,4 +26,9 @@ private:
 	unique_ptr<EnemyManager> enemyManager = nullptr;
 
 	unique_ptr<IKESprite> ui = nullptr;
+
+	enum ChangeType {
+		CHANGE_TITLE,
+		CHANGE_OVER,
+	}_ChangeType = CHANGE_TITLE;
 };
