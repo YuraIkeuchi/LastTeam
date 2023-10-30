@@ -15,43 +15,56 @@ SkillManager* SkillManager::GetInstance()
 
 void SkillManager::Initialize()
 {
-	//ˆê’U3‚Éw’è(ÀÛ‚ÍCSV‚Æ‚©‚É‚È‚é‚©‚È)
+	//ä¸€æ—¦3ã«æŒ‡å®š(å®Ÿéš›ã¯CSVã¨ã‹ã«ãªã‚‹ã‹ãª)
 	skill.resize(7);
-	//‚±‚±‚Í‚à‚¤­‚µ‚â‚è‚æ‚¤‚ª‚ ‚é‚©‚à‚µ‚ê‚È‚¢
+	//ã“ã“ã¯ã‚‚ã†å°‘ã—ã‚„ã‚Šã‚ˆã†ãŒã‚ã‚‹ã‹ã‚‚ã—ã‚Œãªã„
 	skill[0] = new AttackSkill();
-	//skill[0]->Create(nameA, 1);
 	skill[1] = new AttackSkill();
-	//skill[1]->Create(nameB, 2, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[2] = new AttackSkill();
-	//skill[2]->Create(nameC, 3, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[3] = new AttackSkill();
-	//skill[3]->Create(nameD, 4, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[4] = new AttackSkill();
-	//skill[4]->Create(nameE, 5, 0.0f, 0.0f, 0.0f, 1, 1);
 	skill[5] = new AttackSkill();
 	skill[6] = new AttackSkill();
 	//skill[5]->Create(nameF, 6, 0.0f, 0.0f, 0.0f, 1, 1);
 
-	//csv“Ç‚İæ‚è
+
+	//csvèª­ã¿å–ã‚Š
 	for (int i = 1; i < 8; i++)
 	{
 		CreateSkill(i);
 	}
 }
 
-//XV(‚Ù‚ñ‚Ü‚·‚Ü‚ñ)
+
+	std::vector<std::vector<int>> area =
+	{
+		{1,0,0},
+		{0,0,1},
+		{1,0,0}
+	};
+	int distanceX = 1;
+	int distanceY = -1;
+	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[0]);
+	if (atkSkill != nullptr)
+	{
+		atkSkill->SetArea(area);
+		atkSkill->SetDistance(distanceX, distanceY);
+	}
+
+//æ›´æ–°(ã»ã‚“ã¾ã™ã¾ã‚“)
 void SkillManager::Update() {	
 	for (auto i = 0; i < deckui.size(); i++) {
 		if (deckui[i] == nullptr)continue;
 		deckui[i]->SetActCount(i);
 		deckui[i]->Update();
 
+
 		if (!deckui[i]->GetAlive()) {
 			deckui.erase(cbegin(deckui) + i);
 		}
 	}
 }
-//UI‚Ì•`‰æ(‚Ù‚ñ‚Ü‚·‚Ü‚ñpart2)
+//UIã®æç”»(ã»ã‚“ã¾ã™ã¾ã‚“part2)
 void SkillManager::UIDraw() {
 	for (auto i = 0; i < deckui.size(); i++) {
 		if (deckui[i] == nullptr)continue;
@@ -85,21 +98,32 @@ int SkillManager::GetID(const int BirthNum) {
 	}
 	return result;
 }
-//ƒ_ƒ[ƒW
+//ãƒ€ãƒ¡ãƒ¼ã‚¸
 float SkillManager::GetDamage() {
 	float result = {};
+
+	
+	if (skill[m_RandNum]->GetSkillType() != SkillType::damege)
+	{
+		assert(0);
+	}
+
+	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[m_RandNum]);
+	result = atkSkill->GetDamege();
+
 	result = skill[m_BirthMax]->GetDamege();
+
 	
 	return result;
 }
-//ƒfƒBƒŒƒC
+//ãƒ‡ã‚£ãƒ¬ã‚¤
 int SkillManager::GetDelay() {
 	int result = {};
 	result = skill[m_BirthMax]->Getlatency();
 
 	return result;
 }
-//ƒŠƒZƒbƒg
+//ãƒªã‚»ãƒƒãƒˆ
 void SkillManager::ResetBirth() {
 	for (SkillBase* newskill : skill) {
 		if (newskill != nullptr) {
@@ -108,7 +132,7 @@ void SkillManager::ResetBirth() {
 	}
 }
 
-//ƒXƒLƒ‹‚ÌCSV‚ğ“Ç‚İæ‚é
+//ã‚¹ã‚­ãƒ«ã®CSVã‚’èª­ã¿å–ã‚‹
 void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 	
 	std::ifstream file;
@@ -130,6 +154,25 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 		else if (word.find("ID") == 0) {
 			std::getline(line_stream, word, ',');
 			skill[id - 1]->SetID(std::stoi(word));
+		}
+		else if (word.find("SkillType") == 0) {
+			std::getline(line_stream, word, ',');
+			if (std::stoi(word) == 0)
+			{
+				skill[id - 1]->SetSkillType(SkillType::damege);
+			}
+			else if (std::stoi(word) == 1)
+			{
+				skill[id - 1]->SetSkillType(SkillType::buff);
+			}
+			else if (std::stoi(word) == 2)
+			{
+				skill[id - 1]->SetSkillType(SkillType::debuff);
+			}
+			else if (std::stoi(word) == 3)
+			{
+				skill[id - 1]->SetSkillType(SkillType::max);
+			}
 		}
 		else if (word.find("Delay") == 0) {
 			std::getline(line_stream, word, ',');
@@ -185,41 +228,41 @@ bool SkillManager::CreateSkill(int id) {
 	return true;
 }
 
-//ƒfƒbƒLƒ`ƒFƒbƒN
+//ãƒ‡ãƒƒã‚­ãƒã‚§ãƒƒã‚¯
 void SkillManager::DeckCheck(const int DeckNumber, const int DeckCount) {
 	
-	//ƒfƒbƒL‚É“ü‚é‚æ‚¤‚É‚·‚é
+	//ãƒ‡ãƒƒã‚­ã«å…¥ã‚‹ã‚ˆã†ã«ã™ã‚‹
 	skill[DeckNumber]->SetDeckIn(true);
 	m_DeckDate.push_back(DeckNumber);
 	unsigned int seed = (int)(std::chrono::system_clock::now())
 		.time_since_epoch()
 		.count();
-	//ƒfƒbƒL‚ğƒVƒƒƒbƒtƒ‹‚·‚é
+	//ãƒ‡ãƒƒã‚­ã‚’ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã™ã‚‹
 	std::shuffle(m_DeckDate.begin(), m_DeckDate.end(), std::default_random_engine(seed));
-	//ƒfƒbƒL‚ÌUI‚ğì¬
+	//ãƒ‡ãƒƒã‚­ã®UIã‚’ä½œæˆ
 	BirthDeckUI(DeckNumber, DeckCount);
 }
-//ƒfƒbƒL‚ÌƒNƒŠƒA
+//ãƒ‡ãƒƒã‚­ã®ã‚¯ãƒªã‚¢
 void SkillManager::DeckClear() {
 	if (!m_DeckDate.empty()) {
 		m_DeckDate.clear();
 		deckui.clear();
 	}
 }
-//ƒfƒbƒL‚Ìó‘Ô‚ğæ‚é(c‚Á‚Ä‚éƒfƒbƒL‚Æ‚©)
+//ãƒ‡ãƒƒã‚­ã®çŠ¶æ…‹ã‚’å–ã‚‹(æ®‹ã£ã¦ã‚‹ãƒ‡ãƒƒã‚­ã¨ã‹)
 void SkillManager::SetDeckState(const int DeckNum) {
 	m_DeckNum = DeckNum;
 	m_DeckRemain = (int)(m_DeckDate.size()) - m_DeckNum;
 }
-//UI‚Ì¶¬
+//UIã®ç”Ÿæˆ
 void SkillManager::BirthDeckUI(const int DeckNumber, const int DeckCount) {
-	//ƒfƒbƒLUI‚ÌƒZƒbƒg
+	//ãƒ‡ãƒƒã‚­UIã®ã‚»ãƒƒãƒˆ
 	DeckUI* newdeckUi = nullptr;
 	newdeckUi = new DeckUI();
 	newdeckUi->Initialize();
 	newdeckUi->InitState(DeckCount);
 	deckui.emplace_back(newdeckUi);
-	//è‚É“ü‚ê‚½ƒXƒLƒ‹‚ÌUI‚ÌXV
+	//æ‰‹ã«å…¥ã‚ŒãŸã‚¹ã‚­ãƒ«ã®UIã®æ›´æ–°
 	for (auto i = 0; i < m_DeckDate.size(); i++) {
 		deckui[i]->SetID(m_DeckDate[i]);
 	}

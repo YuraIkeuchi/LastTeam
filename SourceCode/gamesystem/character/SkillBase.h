@@ -14,7 +14,7 @@ enum class SkillType
 class SkillBase
 {
 protected:
-	// DirectX::‚ğÈ—ª
+	// DirectX::ã‚’çœç•¥
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
@@ -23,15 +23,15 @@ protected:
 
 public:
 	/// <summary>
-	/// ¶¬
+	/// ç”Ÿæˆ
 	/// </summary>
-	/// <param name="name">–¼‘O</param>
+	/// <param name="name">åå‰</param>
 	/// <param name="ID">ID</param>
-	/// <param name="latency">‘Ò‹@ŠÔ</param>
-	/// <param name="invocatingTime">”­“®ŠÔ</param>
-	/// <param name="restraintTime">S‘©ŠÔ</param>
-	/// <param name="rarity">ƒŒƒAƒŠƒeƒB</param>
-	/// <param name="popRate">oŒ»ƒ‰ƒ“ƒN</param>
+	/// <param name="latency">å¾…æ©Ÿæ™‚é–“</param>
+	/// <param name="invocatingTime">ç™ºå‹•æ™‚é–“</param>
+	/// <param name="restraintTime">æ‹˜æŸæ™‚é–“</param>
+	/// <param name="rarity">ãƒ¬ã‚¢ãƒªãƒ†ã‚£</param>
+	/// <param name="popRate">å‡ºç¾ãƒ©ãƒ³ã‚¯</param>
 	void Create(const std::string name, int ID, int latency = 0, int invocatingTime = 0, int restraintTime = 0, int rarity = 1, int popRate = 1);
 
 	virtual void ImGui_Origin() = 0;
@@ -41,8 +41,12 @@ public:
 	const int GetID() { return ID; }
 	const int Getlatency() { return latency; }
 	const bool GetBirth() { return m_Birth; }
+
+	const SkillType GetSkillType() { return skillType; }
+
 	const bool GetDeckIn() { return m_DeckIn; }
 	float GetDamege() { return damege; }
+
 	void SetID(const int ID) { this->ID = ID; }
 	void SetLatency(const int latency) { this->latency = latency; }
 	void SetName(const std::string& name) { this->name = name; }
@@ -51,29 +55,36 @@ public:
 	void SetRarity(const int rarity) { this->rarity = rarity; }
 	void SetPopRate(const int popRate) { this->popRate = popRate; }
 	void SetBirth(const bool Birth) { this->m_Birth = Birth; }
+
+	void SetSkillType(SkillType skillType) { this->skillType = skillType; }
+
 	void SetDamege(const float damege) { this->damege = damege; }
 	void SetDeckIn(const bool DeckIn) { this->m_DeckIn = DeckIn; }
+
 protected:
-	//ƒXƒLƒ‹–¼
+	//ã‚¹ã‚­ãƒ«å
 	std::string name = "NoName";
 	//ID
 	int ID = 0;
-	//ƒAƒCƒRƒ“
+	//ã‚¢ã‚¤ã‚³ãƒ³
 	
-	//‘Ò‹@ŠÔ
+	//å¾…æ©Ÿæ™‚é–“
 	int latency = 0;
-	//”­“®ŠÔ
+	//ç™ºå‹•æ™‚é–“
 	int invocatingTime = 0;
-	//S‘©ŠÔ
+	//æ‹˜æŸæ™‚é–“
 	int restraintTime = 0;
-	//ƒŒƒAƒŠƒeƒB
+	//ãƒ¬ã‚¢ãƒªãƒ†ã‚£
 	int rarity = 1;
-	//oŒ»ƒ‰ƒ“ƒN
+	//å‡ºç¾ãƒ©ãƒ³ã‚¯
 	int popRate = 1;
 	bool m_Birth = false;
 	SkillType skillType;
-	//ƒ_ƒ[ƒW
+
+
+	//ãƒ€ãƒ¡ãƒ¼ã‚¸
 	float damege = 0.0f;
-	//ƒfƒbƒL‚É“ü‚Á‚Ä‚¢‚é‚©
+	//ãƒ‡ãƒƒã‚­ã«å…¥ã£ã¦ã„ã‚‹ã‹
 	bool m_DeckIn = false;
+
 };
