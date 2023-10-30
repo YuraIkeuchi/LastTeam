@@ -51,6 +51,8 @@ private:
 	//デッキの初期化
 	void DeckInitialize();
 	void GetPassive(int ID);
+
+	void InDeck();//デッキに組み込む
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -64,7 +66,6 @@ public:
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
 	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
-
 private:
 	static const int ACT_PATTERN = 3;
 private:
@@ -133,9 +134,10 @@ private:
 	string m_Name;
 
 	vector<int> m_DeckNumber = { 0,2,3,5,6, };
-	vector<int> m_NotDeckNumber = {1,4};
+	vector<int> m_NotDeckNumber = {};
 
 	int m_DistanceX = 5;
 	int m_DistanceY = 10;
 	std::vector<std::vector<int>> m_Area;
+	int m_NotCount = {};
 };

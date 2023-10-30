@@ -46,6 +46,21 @@ void GameStateManager::Initialize() {
 			m_Area[i].push_back(j);
 		}
 	}
+
+	//デッキにないカードを検索する
+	const int CARD_MAX = 7;
+
+	for (int i = 0; i < m_DeckNumber.size(); i++) {
+		for (int j = 0; j < CARD_MAX; j++) {
+			bool found = std::find(m_DeckNumber.begin(), m_DeckNumber.end(), j) != m_DeckNumber.end();		//最初から探す
+			if (!found) {
+				m_NotDeckNumber.push_back(j);		//なかったら追加する
+			}
+		}
+		break;
+	}
+
+	m_NotCount = (int)(m_NotDeckNumber.size()) - 1;			//無いカードの枚数を検索してる(ImGui用)
 }
 //更新
 void GameStateManager::Update() {
@@ -122,19 +137,17 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 //描画
 void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("GameState");
-	if (ImGui::Button("NORMALSKILL", ImVec2(50, 50))) {
-		_SkillType = SKILL_NORMAL;
-	}
-	if (ImGui::Button("STRONGSKILL", ImVec2(50, 50))) {
-		_SkillType = SKILL_STRONG;
-	}
-	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
-		_SkillType = SKILL_SPECIAL;
+	for (int i = 0; i < m_DeckNumber.size(); i++) {
+		ImGui::Text("Deck[%d]:%d", i, m_DeckNumber[i]);
 	}
 	for (int i = 0; i < m_NotDeckNumber.size(); i++) {
-		ImGui::Text("Not[%d],%d", i, m_NotDeckNumber[i]);
+		ImGui::Text("NotDeck[%d]:%d", i, m_NotDeckNumber[i]);
 	}
 	ImGui::Text("Count:%d", m_Area[0][0]);
+	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));
+	if (ImGui::Button("in", ImVec2(90, 50))) {
+		InDeck();
+	}
 	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
 	
@@ -303,4 +316,9 @@ void GameStateManager::DeckInitialize() {
 
 void GameStateManager::GetPassive(int ID) {
 	GotPassives.push_back(std::move(make_unique<Passive>(ID)));
+}
+
+void GameStateManager::InDeck() {
+	m_DeckNumber.push_back(m_NotDeckNumber[m_NotCount]);
+	m_NotDeckNumber.erase(cbegin(m_NotDeckNumber) + m_NotCount);
 }
