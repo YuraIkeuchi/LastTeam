@@ -132,5 +132,10 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 0,1,2,3,4,5,6, };
+	vector<int> m_DeckNumber = { 0,2,3,5,6, };
+	vector<int> m_NotDeckNumber = {1,4};
+
+	int m_DistanceX = 5;
+	int m_DistanceY = 10;
+	std::vector<std::vector<int>> m_Area;
 };

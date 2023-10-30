@@ -74,8 +74,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		}
 		SceneChanger::GetInstance()->SetChange(false);
 	}
-
-	
 }
 
 void BattleScene::Draw(DirectXCommon* dxCommon) {

@@ -36,7 +36,7 @@ void SkillManager::Initialize()
 
 	std::vector<std::vector<int>> area =
 	{
-		{1,0,0},
+		{5,0,0},
 		{0,0,1},
 		{1,0,0}
 	};
@@ -72,11 +72,11 @@ void SkillManager::UIDraw() {
 }
 
 void SkillManager::ImGuiDraw() {
-	for (SkillBase* newskill : skill) {
-		if (newskill != nullptr) {
-			newskill->ImGuiDraw();
-		}
-	}
+	//for (SkillBase* newskill : skill) {
+	//	if (newskill != nullptr) {
+	//		newskill->ImGuiDraw();
+	//	}
+	//}
 
 	ImGui::Begin("Mana");
 	ImGui::Text("Num:%d", m_DeckNum);
@@ -262,4 +262,18 @@ void SkillManager::BirthDeckUI(const int DeckNumber, const int DeckCount) {
 	for (auto i = 0; i < m_DeckDate.size(); i++) {
 		deckui[i]->SetID(m_DeckDate[i]);
 	}
+}
+//攻撃エリアの取得
+void SkillManager::GetAreaDate(int& DisX, int& DisY,std::vector<std::vector<int>>& area) {
+	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[0]);
+	
+	int l_DistanceX = {};
+	int l_DistanceY = {};
+	std::vector<std::vector<int>> l_Area;
+	l_DistanceX = atkSkill->GetDistanceX();
+	l_DistanceY = atkSkill->GetDistanceX();
+	l_Area = atkSkill->GetArea();
+	DisX = l_DistanceX;
+	DisY = l_DistanceY;
+	area[0][0] = l_Area[0][0];
 }

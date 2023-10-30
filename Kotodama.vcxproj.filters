@@ -211,7 +211,7 @@
       <Filter>gamesystem\scene</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\ClearScene.cpp">
-      <Filter>gamesystem\scene\Clear</Filter>
+      <Filter>gamesystem\scene\Base\Clear</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\BattleScene.cpp">
       <Filter>gamesystem\scene\Play\Battle</Filter>
@@ -532,7 +532,7 @@
       <Filter>gamesystem\scene</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\ClearScene.h">
-      <Filter>gamesystem\scene\Clear</Filter>
+      <Filter>gamesystem\scene\Base\Clear</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\BattleScene.h">
       <Filter>gamesystem\scene\Play\Battle</Filter>
@@ -665,7 +665,6 @@
       <Filter>gamesystem\Text</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h" />
-    <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\Passive.h">
       <Filter>gamesystem\Action\ActionPanel</Filter>
     </ClInclude>
@@ -684,6 +683,9 @@
     <ClInclude Include="SpecialSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\character\DeckUI.h">
       <Filter>gamesystem\charactor\Skill\DeckUI</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h">
+      <Filter>gamesystem\charactor\Skill</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -827,9 +829,6 @@
     <Filter Include="gamesystem\scene\Tutorial">
       <UniqueIdentifier>{40fae6cc-723f-427e-8439-66617f5c0615}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\scene\Clear">
-      <UniqueIdentifier>{836dd921-f6f8-4000-addf-b66663142475}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gamesystem\scene\Load">
       <UniqueIdentifier>{47055e9e-6cba-47a1-b497-d0672c56b841}</UniqueIdentifier>
     </Filter>
@@ -892,6 +891,9 @@
     </Filter>
     <Filter Include="gamesystem\charactor\Skill\DeckUI">
       <UniqueIdentifier>{76028162-69a6-4121-9d2e-09018ec2653b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\scene\Base\Clear">
+      <UniqueIdentifier>{836dd921-f6f8-4000-addf-b66663142475}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -39,6 +39,13 @@ void GameStateManager::Initialize() {
 
 	//デッキの初期化
 	DeckInitialize();
+
+	m_Area.resize(3);
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			m_Area[i].push_back(j);
+		}
+	}
 }
 //更新
 void GameStateManager::Update() {
@@ -124,19 +131,14 @@ void GameStateManager::ImGuiDraw() {
 	if (ImGui::Button("SPECIALSKILL", ImVec2(50, 50))) {
 		_SkillType = SKILL_SPECIAL;
 	}
-	ImGui::Text("Count:%d", m_AllActCount);
+	for (int i = 0; i < m_NotDeckNumber.size(); i++) {
+		ImGui::Text("Not[%d],%d", i, m_NotDeckNumber[i]);
+	}
+	ImGui::Text("Count:%d", m_Area[0][0]);
 	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
-	/**/
 	
-	/*
 	
-	/*if (!m_Act.empty()) {
-		for (auto i = 0; i < m_Act.size(); i++) {
-			ImGui::Text("Act[%d]:%d", i, m_Act[i].ActID);
-		}
-	}*/
-	//StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -160,6 +162,7 @@ void GameStateManager::AddSkill(const int ID, const float damage,const int Delay
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
 	BirthActUI(ID);//UIも増えるよ
+	SkillManager::GetInstance()->GetAreaDate(m_DistanceX, m_DistanceY, m_Area);
 }
 //スキルUIの生成
 void GameStateManager::BirthActUI(const int ID) {
@@ -300,5 +303,4 @@ void GameStateManager::DeckInitialize() {
 
 void GameStateManager::GetPassive(int ID) {
 	GotPassives.push_back(std::move(make_unique<Passive>(ID)));
-
 }

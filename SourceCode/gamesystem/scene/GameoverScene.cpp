@@ -17,7 +17,6 @@ void GameoverScene::Update(DirectXCommon* dxCommon) {
 	Input* input = Input::GetInstance();
 	if ((input->TriggerButton(input->B))) {			//ƒoƒgƒ‹
 		SceneChanger::GetInstance()->SetChangeStart(true);
-	
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {			//^‚ÁˆÃ‚É‚È‚Á‚½‚ç•Ï‚í‚é
