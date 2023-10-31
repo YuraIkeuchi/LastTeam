@@ -300,6 +300,13 @@ void GameStateManager::GetPassive(int ID) {
 	GotPassives.push_back(std::move(make_unique<Passive>(ID)));
 }
 
+void GameStateManager::InputDebug() {
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+		
+	}
+
+}
+
 void GameStateManager::InDeck() {
 	m_DeckNumber.push_back(m_NotDeckNumber[m_NotCount]);
 	m_NotDeckNumber.erase(cbegin(m_NotDeckNumber) + m_NotCount);

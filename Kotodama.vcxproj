@@ -109,6 +109,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ResultSkill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
@@ -211,6 +212,7 @@
     <ClCompile Include="SpecialSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ResultSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h" />
     <ClInclude Include="SourceCode\engine\2d\DebugText.h" />
     <ClInclude Include="SourceCode\engine\2d\Feed.h" />
