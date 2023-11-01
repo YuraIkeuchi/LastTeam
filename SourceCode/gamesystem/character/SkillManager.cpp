@@ -128,6 +128,14 @@ void SkillManager::ResetBirth() {
 	}
 }
 
+vector<std::vector<int>> SkillManager::GetArea() {
+	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[0]);
+	vector<std::vector<int>> result;
+	result = atkSkill->GetArea();
+
+	return result;
+}
+
 //スキルのCSVを読み取る
 void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 	
@@ -264,7 +272,7 @@ void SkillManager::BirthDeckUI(const int DeckNumber, const int DeckCount) {
 	}
 }
 //攻撃エリアの取得
-void SkillManager::GetAreaDate(int& DisX, int& DisY,std::vector<std::vector<int>>& area) {
+void SkillManager::GetAreaDate(int& DisX, int& DisY) {
 	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[0]);
 	
 	int l_DistanceX = {};
@@ -272,12 +280,6 @@ void SkillManager::GetAreaDate(int& DisX, int& DisY,std::vector<std::vector<int>
 	std::vector<std::vector<int>> l_Area;
 	l_DistanceX = atkSkill->GetDistanceX();
 	l_DistanceY = atkSkill->GetDistanceX();
-	l_Area = atkSkill->GetArea();
 	DisX = l_DistanceX;
 	DisY = l_DistanceY;
-	for (int i = 0; i < area.size(); i++) {
-		for (int j = 0; j < area.size(); j++) {
-			area[i][j] = l_Area[i][j];
-		}
-	}
 }

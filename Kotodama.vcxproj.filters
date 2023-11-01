@@ -327,9 +327,6 @@
     <ClCompile Include="SourceCode\engine\GameObject\GameObjectManager.cpp">
       <Filter>engine\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
-      <Filter>gamesystem\charactor\Player</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\GameStateManager.cpp">
       <Filter>gamesystem\scene\Base</Filter>
     </ClCompile>
@@ -360,6 +357,12 @@
     <ClCompile Include="SpecialSkill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\DeckUI.cpp">
       <Filter>gamesystem\charactor\Skill\DeckUI</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
+      <Filter>gamesystem\charactor\Player\Area</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp">
+      <Filter>gamesystem\stageobj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -652,9 +655,6 @@
     <ClInclude Include="SourceCode\engine\GameObject\GameObjectManager.h">
       <Filter>engine\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
-      <Filter>gamesystem\charactor\Player</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\GameStateManager.h">
       <Filter>gamesystem\scene\Base</Filter>
     </ClInclude>
@@ -686,6 +686,12 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h">
       <Filter>gamesystem\charactor\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
+      <Filter>gamesystem\charactor\Player\Area</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h">
+      <Filter>gamesystem\stageobj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -894,6 +900,9 @@
     </Filter>
     <Filter Include="gamesystem\scene\Base\Clear">
       <UniqueIdentifier>{836dd921-f6f8-4000-addf-b66663142475}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\charactor\Player\Area">
+      <UniqueIdentifier>{7ec79472-1212-466d-acad-f2d54ca50e59}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

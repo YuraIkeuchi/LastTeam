@@ -20,7 +20,7 @@ public:
 	//初期化
 	void Initialize();
 	//ステータスセット
-	void InitState(const int ActCount);
+	void InitState(const int ActCount,const int ID);
 	//更新
 	void Update();
 	//UIの動き
@@ -35,7 +35,7 @@ public:
 	const bool GetUse() { return m_Use; }
 	void SetActCount(const int ActCount) { m_ActCount = ActCount; }
 	void SetUse(const bool Use) { m_Use = Use; }
-	void SetID(const int ID) { m_ID = ID; }
+	//void SetID(const int ID) { m_ID = ID; }
 
 private:
 	static const int TEX_MAX = 3;

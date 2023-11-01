@@ -6,6 +6,7 @@
 #include <map>
 #include "ActionUI.h"
 #include "AttackArea.h"
+#include "PredictArea.h"
 #include <Passive.h>
 using namespace DirectX;
 using namespace std;
@@ -32,8 +33,9 @@ public:
 	//プレイヤーの現在位置
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
-	void AddSkill(const int ID,const float damage,const int Delay);
+	void AddSkill(const int ID,const float damage,const int Delay, vector<std::vector<int>> area);
 private:
+	void PredictManager();
 	//攻撃した瞬間
 	void AttackTrigger();
 	//攻撃エリアの生成
@@ -74,6 +76,7 @@ private:
 		int ActID;//ID
 		float ActDamage;//ダメージ
 		int ActDelay;//ディレイ
+		vector<std::vector<int>> AttackArea;
 	};
 
 	vector<ActState> m_Act;
@@ -95,7 +98,6 @@ private:
 
 	//攻撃エリア
 	vector<AttackArea*> attackarea;
-
 	//カウンター
 	bool m_Counter = false;
 	int m_CounterTimer = {};
@@ -133,11 +135,13 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 0,2,3,5,6, };
+	vector<int> m_DeckNumber = { 6 };
 	vector<int> m_NotDeckNumber = {};
 
 	int m_DistanceX = 5;
 	int m_DistanceY = 10;
-	std::vector<std::vector<int>> m_Area;
 	int m_NotCount = {};
+
+	//予測エリア
+	unique_ptr<PredictArea> predictarea;
 };

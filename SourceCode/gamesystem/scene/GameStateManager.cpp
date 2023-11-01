@@ -40,13 +40,6 @@ void GameStateManager::Initialize() {
 	//デッキの初期化
 	DeckInitialize();
 
-	m_Area.resize(3);
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			m_Area[i].push_back(j);
-		}
-	}
-
 	//デッキにないカードを検索する
 	const int CARD_MAX = 7;
 
@@ -61,6 +54,9 @@ void GameStateManager::Initialize() {
 	}
 
 	m_NotCount = (int)(m_NotDeckNumber.size()) - 1;			//無いカードの枚数を検索してる(ImGui用)
+	
+	predictarea.reset(new PredictArea());
+	predictarea->Initialize();
 }
 //更新
 void GameStateManager::Update() {
@@ -107,7 +103,9 @@ void GameStateManager::Update() {
 	//攻撃した瞬間
 	AttackTrigger();
 	UseSkill();
+	PredictManager();
 	SkillManager::GetInstance()->Update();
+
 }
 //攻撃した瞬間
 void GameStateManager::AttackTrigger() {
@@ -133,6 +131,10 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		if (attackarea[i] == nullptr)continue;
 		attackarea[i]->Draw(dxCommon);
 	}
+
+	if (m_AllActCount != 0) {
+		predictarea->Draw(dxCommon);
+	}
 }
 //描画
 void GameStateManager::ImGuiDraw() {
@@ -143,17 +145,17 @@ void GameStateManager::ImGuiDraw() {
 	for (int i = 0; i < m_NotDeckNumber.size(); i++) {
 		ImGui::Text("NotDeck[%d]:%d", i, m_NotDeckNumber[i]);
 	}
-	ImGui::Text("DisX:%d", m_DistanceX);
-	ImGui::Text("DisY:%d", m_DistanceY);
-	ImGui::Text("NowHeight:%d", m_NowHeight);
-	ImGui::Text("NowWidth:%d", m_NowWidth);
+	//ImGui::Text("DisX:%d", m_DistanceX);
+	//ImGui::Text("DisY:%d", m_DistanceY);
+	//ImGui::Text("NowHeight:%d", m_NowHeight);
+	//ImGui::Text("NowWidth:%d", m_NowWidth);
 	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
 	if (ImGui::Button("in", ImVec2(90, 50))) {
 		InDeck();		//デッキに入っていないカードをデッキに組み込む
 	}
 	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
-	
+	predictarea->ImGuiDraw();
 	
 }
 //手に入れたUIの描画
@@ -169,16 +171,23 @@ void GameStateManager::ActUIDraw() {
 	}
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const int ID, const float damage,const int Delay) {
+void GameStateManager::AddSkill(const int ID, const float damage,const int Delay, vector<std::vector<int>> area) {
 	ActState act;
 	act.ActID = ID;
 	act.ActDamage = damage;
 	act.ActDelay = Delay;
+	act.AttackArea.resize(3);
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			act.AttackArea[i].push_back(j);
+		}
+	}
+	act.AttackArea = area;
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
 	BirthActUI(ID);//UIも増えるよ
-	SkillManager::GetInstance()->GetAreaDate(m_DistanceX, m_DistanceY, m_Area);
+	SkillManager::GetInstance()->GetAreaDate(m_DistanceX, m_DistanceY);
 }
 //スキルUIの生成
 void GameStateManager::BirthActUI(const int ID) {
@@ -186,8 +195,7 @@ void GameStateManager::BirthActUI(const int ID) {
 	ActionUI* newactUi = nullptr;
 	newactUi = new ActionUI();
 	newactUi->Initialize();
-	newactUi->InitState(m_AllActCount);
-	newactUi->SetID(ID);
+	newactUi->InitState(m_AllActCount,ID);
 	actui.emplace_back(newactUi);
 
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);
@@ -201,11 +209,11 @@ void GameStateManager::BirthArea() {
 	l_BirthBaseY = m_NowHeight + m_DistanceY;
 	int AreaX = {};
 	int AreaY = {};
-	for (auto i = 0; i < m_Area.size(); i++) {
-		for (auto j = 0; j < m_Area.size(); j++) {
+	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
+		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
-			if (m_Area[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0))) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0))) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				AttackArea* newarea = nullptr;
 				newarea = new AttackArea();
 				newarea->Initialize();
@@ -215,6 +223,33 @@ void GameStateManager::BirthArea() {
 			}
 		}
 	}
+}
+//予測エリア関係
+void GameStateManager::PredictManager() {
+	if (m_AllActCount == 0) { return; }
+	int l_BirthBaseX = {};
+	int l_BirthBaseY = {};
+
+	l_BirthBaseX = m_NowWidth + m_DistanceX;		//生成の初めの位置を見てる
+	l_BirthBaseY = m_NowHeight + m_DistanceY;
+
+	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
+		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
+			int AreaX = {};
+			int AreaY = {};
+			AreaX = l_BirthBaseX + i;
+			AreaY = l_BirthBaseY - j;
+			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0))) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+				predictarea->SetPredict(AreaX, AreaY, true);
+				//continue;
+			}
+			else {
+				//predictarea->ResetPredict();
+			}
+		}
+	}
+
+	predictarea->Update();
 }
 //プレイヤーの現在パネル
 void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
