@@ -19,7 +19,7 @@ void ResultSkill::Initialize() {
 void ResultSkill::Update() {
 	RandSkill();
 	for (std::unique_ptr<ActionUI>& skill : choiceSkills) {
-		skill->Update();
+		//skill->Update();
 	}
 
 }
@@ -48,6 +48,7 @@ void ResultSkill::GetNotDeckNumber(std::vector<int>& notDeck) {
 	actUi = std::make_unique<ActionUI>();
 	actUi->Initialize();
 	actUi->SetID(num);
+	actUi->SetPosition(BasePos[0]);
 	choiceSkills.push_back(std::move(actUi));
 }
 
@@ -60,7 +61,7 @@ void ResultSkill::RandSkill() {
 	//パッシブ最大数（後で絶対変えろ）
 	int r_num = Helper::GetInstance()->GetRanNum(1, 2);
 	std::unique_ptr<Passive> passive;
-	passive = std::make_unique<Passive>(1, XMFLOAT2(360.f, 240.f), XMFLOAT2{256.f,256.f});
+	passive = std::make_unique<Passive>(1, BasePos[1], XMFLOAT2{256.f,256.f});
 	choicePassives.push_back(std::move(passive));
 	isStart = false;
 

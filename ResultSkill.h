@@ -36,6 +36,6 @@ private:
 	std::list<std::unique_ptr<Passive>> choicePassives;
 
 	std::vector<int> GetPassives;
-
+	XMFLOAT2 BasePos[2] = { {320.f,360.0f},{960.f,360.f} };
 };
 

@@ -66,7 +66,7 @@ void GameStateManager::Initialize() {
 }
 //更新
 void GameStateManager::Update() {
-
+	InputDebug();
 	const int l_AddCounterScore = 10;
 	m_AllScore = m_CounterScore + (int)(m_PosScore)+(int)(m_GrazeScore);
 
@@ -306,7 +306,7 @@ void GameStateManager::GetPassive(int ID) {
 
 void GameStateManager::InputDebug() {
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-		
+		resultSkill->GetNotDeckNumber(m_NotDeckNumber);
 	}
 
 }
