@@ -31,6 +31,7 @@ public:
 	void ImGuiDraw();
 
 	void ResetPredict();
+
 public:
 
 	//gettersetter

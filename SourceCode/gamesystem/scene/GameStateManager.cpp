@@ -103,7 +103,10 @@ void GameStateManager::Update() {
 	//攻撃した瞬間
 	AttackTrigger();
 	UseSkill();
-	PredictManager();
+	if (m_ResetPredict) {
+		PredictManager();
+		m_ResetPredict = false;
+	}
 	SkillManager::GetInstance()->Update();
 
 }
@@ -188,6 +191,7 @@ void GameStateManager::AddSkill(const int ID, const float damage,const int Delay
 	m_AllActCount++;
 	BirthActUI(ID);//UIも増えるよ
 	SkillManager::GetInstance()->GetAreaDate(m_DistanceX, m_DistanceY);
+	PredictManager();
 }
 //スキルUIの生成
 void GameStateManager::BirthActUI(const int ID) {
@@ -227,6 +231,7 @@ void GameStateManager::BirthArea() {
 //予測エリア関係
 void GameStateManager::PredictManager() {
 	if (m_AllActCount == 0) { return; }
+	predictarea->ResetPredict();
 	int l_BirthBaseX = {};
 	int l_BirthBaseY = {};
 
@@ -235,16 +240,13 @@ void GameStateManager::PredictManager() {
 
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
+			
 			int AreaX = {};
 			int AreaY = {};
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
 			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0))) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				predictarea->SetPredict(AreaX, AreaY, true);
-				//continue;
-			}
-			else {
-				//predictarea->ResetPredict();
 			}
 		}
 	}

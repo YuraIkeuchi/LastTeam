@@ -56,7 +56,6 @@ void PredictArea::ImGuiDraw() {
 	ImGui::Begin("Pre");
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			ImGui::Text("Flag[%d][%d]:%d", i, j, panels[i][j].predict);
 		}
 	}
 	ImGui::End();

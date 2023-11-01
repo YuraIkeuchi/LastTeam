@@ -156,21 +156,25 @@ void Player::Move() {
 				m_InputTimer[DIR_UP] = {};
 				m_Position.z += l_Velocity;
 				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+				GameStateManager::GetInstance()->SetResetPredict(true);
 			} else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
 				m_NowHeight--;
 				m_InputTimer[DIR_DOWN] = {};
 				m_Position.z -= l_Velocity;
 				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+				GameStateManager::GetInstance()->SetResetPredict(true);
 			} else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
 				m_NowWidth++;
 				m_InputTimer[DIR_RIGHT] = {};
 				m_Position.x += l_Velocity;
 				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+				GameStateManager::GetInstance()->SetResetPredict(true);
 			} else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
 				m_NowWidth--;
 				m_InputTimer[DIR_LEFT] = {};
 				m_Position.x -= l_Velocity;
 				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+				GameStateManager::GetInstance()->SetResetPredict(true);
 			}
 		}
 		for (int i = 0; i < DIR_MAX; i++) {
@@ -186,6 +190,7 @@ void Player::Move() {
 			m_LimitCount++;
 			m_Position.z += l_Velocity;
 			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+			GameStateManager::GetInstance()->SetResetPredict(true);
 		}
 		m_InputTimer[DIR_UP] = {};
 	} else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
@@ -194,6 +199,7 @@ void Player::Move() {
 			m_LimitCount++;
 			m_Position.z -= l_Velocity;
 			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+			GameStateManager::GetInstance()->SetResetPredict(true);
 		}
 		m_InputTimer[DIR_DOWN] = {};
 	} else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
@@ -202,6 +208,7 @@ void Player::Move() {
 			m_LimitCount++;
 			m_Position.x += l_Velocity;
 			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+			GameStateManager::GetInstance()->SetResetPredict(true);
 		}
 		m_InputTimer[DIR_RIGHT] = {};
 	} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
@@ -210,6 +217,7 @@ void Player::Move() {
 			m_LimitCount++;
 			m_Position.x -= l_Velocity;
 			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+			GameStateManager::GetInstance()->SetResetPredict(true);
 		}
 		m_InputTimer[DIR_LEFT] = {};
 	}

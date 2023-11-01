@@ -65,6 +65,7 @@ public:
 
 
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
+	void SetResetPredict(const bool ResetPredict) { this->m_ResetPredict = ResetPredict; }
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
 	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
@@ -98,6 +99,7 @@ private:
 
 	//攻撃エリア
 	vector<AttackArea*> attackarea;
+
 	//カウンター
 	bool m_Counter = false;
 	int m_CounterTimer = {};
@@ -144,4 +146,6 @@ private:
 
 	//予測エリア
 	unique_ptr<PredictArea> predictarea;
+
+	bool m_ResetPredict = false;
 };
