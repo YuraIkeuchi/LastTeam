@@ -10,7 +10,7 @@ using namespace std;         //  –¼‘O‹óŠÔŽw’è
 class Passive {
 public:
 	enum class ABILITY: int{
-		NONE = 0,
+		NONE = -1,
 		RELOAD_UP,
 		HP_UP,
 		RELOAD_LOCK,

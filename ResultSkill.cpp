@@ -4,65 +4,73 @@
 
 ResultSkill::ResultSkill() {
 
-	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.1f });
-	backScreen->SetSize({1280.f,720.f});
 }
 
 ResultSkill::~ResultSkill() {
 }
 
 void ResultSkill::Initialize() {
+	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.1f });
+	backScreen->SetSize({ 1280.f,720.f });
+
 
 
 }
 
 void ResultSkill::Update() {
-	RandSkill();
-	for (std::unique_ptr<ActionUI>& skill : choiceSkills) {
-		//skill->Update();
-	}
 
+	for (ResultUI& resultUI : choiceSkills) {
+		if (resultUI.isSkill) {
+			resultUI.number->Update();
+		}
+	}
 }
 
 void ResultSkill::Draw() {
+	if (!isStart) { return; }
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
+	for (ResultUI& resultUI:choiceSkills) {
+		resultUI.icon->Draw();
+		if (resultUI.isSkill) {
+			resultUI.number->Draw();
+		}
+	}
 	IKESprite::PostDraw();
 
-	for (std::unique_ptr<ActionUI>& skill : choiceSkills) {
-		skill->Draw();
+}
+
+void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notPassives) {
+	if (isStart) { return; }
+	vector<int> noDeck = notDeck;
+	vector<int> noPassive = notPassives;
+
+	ResultUI resultUI;
+	resultUI.ID = noDeck[0];
+	resultUI.position = BasePos[0];
+	resultUI.icon= IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
+	resultUI.icon->SetAnchorPoint({ 0.5f,0.5f });
+	resultUI.icon->SetPosition(resultUI.position);
+	resultUI.isSkill = true;
+	if (resultUI.isSkill) {
+		resultUI.number = make_unique<DrawNumber>();
+		resultUI.number->Initialize();
+		resultUI.number->SetNumber(resultUI.ID);
+		resultUI.number->SetPosition(resultUI.position);
 	}
 
-	for (std::unique_ptr<Passive>& passive : choicePassives) {
-		passive->Draw();
-	}
-}
+	choiceSkills.push_back(std::move(resultUI));
 
-void ResultSkill::GetNotDeckNumber(std::vector<int>& notDeck) {
-	std::vector<int>l_Deck = notDeck;
-	int num = l_Deck[0];
+	ResultUI passiveUI;
+	passiveUI.ID = noPassive[0];
+	passiveUI.position = BasePos[1];
+	passiveUI.icon = IKESprite::Create(ImageManager::PASSIVE_01 + passiveUI.ID, { 0.0f,0.0f });
+	passiveUI.icon->SetAnchorPoint({ 0.5f,0.5f });
+	passiveUI.icon->SetPosition(passiveUI.position);
+	passiveUI.isSkill = false;
 
-	//アクションUIのセット
-	std::unique_ptr<ActionUI> actUi = nullptr;
-	actUi = std::make_unique<ActionUI>();
-	actUi->Initialize();
-	actUi->SetID(num);
-	actUi->SetPosition(BasePos[0]);
-	choiceSkills.push_back(std::move(actUi));
-}
+	choiceSkills.push_back(std::move(passiveUI));
 
-void ResultSkill::SetPassiveId(std::vector<int>& gotPassives) {
-	GetPassives = gotPassives;
-}
-
-void ResultSkill::RandSkill() {
-	if (!isStart) { return; }
-	//パッシブ最大数（後で絶対変えろ）
-	int r_num = Helper::GetInstance()->GetRanNum(1, 2);
-	std::unique_ptr<Passive> passive;
-	passive = std::make_unique<Passive>(1, BasePos[1], XMFLOAT2{256.f,256.f});
-	choicePassives.push_back(std::move(passive));
-	isStart = false;
-
+	isStart = true;
 }

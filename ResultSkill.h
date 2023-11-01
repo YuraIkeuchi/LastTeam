@@ -4,6 +4,8 @@
 #include <memory>
 #include <ActionUI.h>
 #include <Passive.h>
+#include "DrawNumber.h"
+
 class ResultSkill {
 public:
 	ResultSkill();
@@ -14,28 +16,30 @@ public:
 	void Draw();
 
 
-	void GetNotDeckNumber(std::vector<int>& notDeck);
-	void SetPassiveId(std::vector<int>& gotPassives);
+	void CreateResult(std::vector<int>& notDeck,
+		std::vector<int>& notPassives);
 
 
-	void SetIsVisible(const bool isVisible) {
-		this->isVisible = isVisible;
-		isStart = true;
-	}
-	bool GetIsVisible() { return isVisible; }
-
+	bool GetIsVisible() { return isStart; }
 private:
-	void RandSkill();
+
+	struct ResultUI{
+		std::unique_ptr<IKESprite> icon;
+		std::unique_ptr<DrawNumber> number;
+		XMFLOAT2 position = { 640.f,320.f };
+		XMFLOAT2 size = { 128.f,128.f };
+		int ID = -1;
+		bool isSkill = true;
 
 
+	};
 private:
-	bool isVisible = false;
-	bool isStart = true;
+	bool isStart = false;
+
+
 	std::unique_ptr<IKESprite> backScreen;
-	std::list<std::unique_ptr<ActionUI>> choiceSkills;
-	std::list<std::unique_ptr<Passive>> choicePassives;
+	std::list<ResultUI> choiceSkills;
 
-	std::vector<int> GetPassives;
 	XMFLOAT2 BasePos[2] = { {320.f,360.0f},{960.f,360.f} };
 };
 

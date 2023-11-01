@@ -91,6 +91,8 @@ private:
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
 	std::vector<int> GotPassiveIDs;
+	std::vector<int> NotPassiveIDs;
+
 	unique_ptr<IKESprite> skillUI = nullptr;
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 

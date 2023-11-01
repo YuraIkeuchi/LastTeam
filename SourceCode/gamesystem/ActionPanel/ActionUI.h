@@ -36,11 +36,6 @@ public:
 	void SetActCount(const int ActCount) { m_ActCount = ActCount; }
 	void SetUse(const bool Use) { m_Use = Use; }
 	void SetID(const int ID) { m_ID = ID; }
-	void SetPosition(XMFLOAT2 pos) {
-		m_Position = pos;
-		tex->SetPosition(m_Position);
-		_drawnumber->SetPosition(m_Position);
-	}
 private:
 	static const int TEX_MAX = 3;
 private:

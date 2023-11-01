@@ -61,8 +61,24 @@ void GameStateManager::Initialize() {
 		}
 		break;
 	}
+	const int PASSIVE_MAX = 3;
+	GotPassiveIDs.resize(PASSIVE_MAX);
+	NotPassiveIDs.resize(PASSIVE_MAX);
+	for (int i = 0; i < GotPassiveIDs.size(); i++) {
+		for (int j = 0; j < PASSIVE_MAX; j++) {
+			bool found = std::find(GotPassiveIDs.begin(), GotPassiveIDs.end(), j) != GotPassiveIDs.end();		//最初から探す
+			if (!found) {
+				NotPassiveIDs.push_back(j);		//なかったら追加する
+			}
+		}
+		break;
+	}
 
-	m_NotCount = (int)(m_NotDeckNumber.size()) - 1;			//無いカードの枚数を検索してる(ImGui用)
+
+	m_NotCount = (int)(m_NotDeckNumber.size()) - 1;//無いカードの枚数を検索してる(ImGui用)
+
+
+
 }
 //更新
 void GameStateManager::Update() {
@@ -306,7 +322,8 @@ void GameStateManager::GetPassive(int ID) {
 
 void GameStateManager::InputDebug() {
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-		resultSkill->GetNotDeckNumber(m_NotDeckNumber);
+	
+		resultSkill->CreateResult(m_NotDeckNumber,NotPassiveIDs);
 	}
 
 }
