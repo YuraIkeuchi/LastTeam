@@ -142,24 +142,17 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 //描画
 void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("GameState");
-	for (int i = 0; i < m_DeckNumber.size(); i++) {
-		ImGui::Text("Deck[%d]:%d", i, m_DeckNumber[i]);
+	if (!m_Act.empty()) {
+		ImGui::Text("damage:%f", m_Act[0].ActDamage);
+		ImGui::Text("delay:%d", m_Act[0].ActDelay);
 	}
-	for (int i = 0; i < m_NotDeckNumber.size(); i++) {
-		ImGui::Text("NotDeck[%d]:%d", i, m_NotDeckNumber[i]);
-	}
-	//ImGui::Text("DisX:%d", m_DistanceX);
-	//ImGui::Text("DisY:%d", m_DistanceY);
-	//ImGui::Text("NowHeight:%d", m_NowHeight);
-	//ImGui::Text("NowWidth:%d", m_NowWidth);
 	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
 	if (ImGui::Button("in", ImVec2(90, 50))) {
 		InDeck();		//デッキに入っていないカードをデッキに組み込む
 	}
 	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
-	predictarea->ImGuiDraw();
-	
+	StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {

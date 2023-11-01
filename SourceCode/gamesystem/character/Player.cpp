@@ -133,8 +133,10 @@ void Player::ImGuiDraw() {
 //移動
 void Player::Move() {
 	const int l_TargetTimer = 10;
-	const float l_Velocity = 2.0f;
-
+	const float l_AddVelocity = 2.0f;
+	const float l_SubVelocity = -2.0f;
+	const int l_AddSpace = 1;
+	const int l_SubSpace = -1;
 	//ボタンでマスを移動する
 	if (input->PushButton(input->UP) ||
 		input->PushButton(input->DOWN) ||
@@ -152,29 +154,17 @@ void Player::Move() {
 	} else {			//離した瞬間
 		if (m_LimitCount == 0) {
 			if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
-				m_NowHeight++;
+				MoveCommon(m_Position.z, l_AddVelocity, m_NowHeight, l_AddSpace);
 				m_InputTimer[DIR_UP] = {};
-				m_Position.z += l_Velocity;
-				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-				GameStateManager::GetInstance()->SetResetPredict(true);
 			} else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
-				m_NowHeight--;
+				MoveCommon(m_Position.z, l_SubVelocity, m_NowHeight, l_SubSpace);
 				m_InputTimer[DIR_DOWN] = {};
-				m_Position.z -= l_Velocity;
-				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-				GameStateManager::GetInstance()->SetResetPredict(true);
 			} else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-				m_NowWidth++;
+				MoveCommon(m_Position.x, l_AddVelocity, m_NowWidth, l_AddSpace);
 				m_InputTimer[DIR_RIGHT] = {};
-				m_Position.x += l_Velocity;
-				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-				GameStateManager::GetInstance()->SetResetPredict(true);
 			} else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
-				m_NowWidth--;
+				MoveCommon(m_Position.x, l_SubVelocity, m_NowWidth, l_SubSpace);
 				m_InputTimer[DIR_LEFT] = {};
-				m_Position.x -= l_Velocity;
-				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-				GameStateManager::GetInstance()->SetResetPredict(true);
 			}
 		}
 		for (int i = 0; i < DIR_MAX; i++) {
@@ -186,38 +176,26 @@ void Player::Move() {
 	//一定フレーム立つと選択マス移動
 	if (m_InputTimer[DIR_UP] == l_TargetTimer) {
 		if (m_NowHeight < PANEL_HEIGHT - 1) {
-			m_NowHeight++;
+			MoveCommon(m_Position.z, l_AddVelocity, m_NowHeight, l_AddSpace);
 			m_LimitCount++;
-			m_Position.z += l_Velocity;
-			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-			GameStateManager::GetInstance()->SetResetPredict(true);
 		}
 		m_InputTimer[DIR_UP] = {};
 	} else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
 		if (m_NowHeight > 0) {
-			m_NowHeight--;
+			MoveCommon(m_Position.z, l_SubVelocity, m_NowHeight, l_SubSpace);
 			m_LimitCount++;
-			m_Position.z -= l_Velocity;
-			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-			GameStateManager::GetInstance()->SetResetPredict(true);
 		}
 		m_InputTimer[DIR_DOWN] = {};
 	} else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
 		if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-			m_NowWidth++;
+			MoveCommon(m_Position.x, l_AddVelocity, m_NowWidth, l_AddSpace);
 			m_LimitCount++;
-			m_Position.x += l_Velocity;
-			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-			GameStateManager::GetInstance()->SetResetPredict(true);
 		}
 		m_InputTimer[DIR_RIGHT] = {};
 	} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
 		if (m_NowWidth > 0) {
-			m_NowWidth--;
+			MoveCommon(m_Position.x, l_SubVelocity, m_NowWidth, l_SubSpace);
 			m_LimitCount++;
-			m_Position.x -= l_Velocity;
-			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-			GameStateManager::GetInstance()->SetResetPredict(true);
 		}
 		m_InputTimer[DIR_LEFT] = {};
 	}
@@ -239,4 +217,11 @@ void Player::Delay() {
 		_charaState = STATE_MOVE;
 
 	}
+}
+//プレイヤーの動きの基本
+void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int addspace) {
+	pos += velocity;
+	playerspace += addspace;
+	GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+	GameStateManager::GetInstance()->SetResetPredict(true);
 }

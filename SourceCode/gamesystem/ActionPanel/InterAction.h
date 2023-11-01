@@ -37,6 +37,7 @@ public:
 	virtual void EffecttexDraw(DirectXCommon* dxCommon) = 0;
 
 	void Collide();
+	void GetSkillData();
 protected:
 
 	virtual void Action() = 0;//É{ÉXì¡óLÇÃèàóù
@@ -46,6 +47,10 @@ public:
 	//gettersetter
 	const bool GetAlive() { return m_Alive; }
 	const int GetSkillID() { return m_SkillID; }
+	const float GetDamage() { return m_Damage; }
+	const int GetDelay() { return m_Delay; }
+	const std::vector<std::vector<int>> GetArea() { return m_Area; }
+
 	void SetState(const int state) { _state= state; }
 	void SetSkillID(const int SkillID) { m_SkillID = SkillID; }
 	void SetDamage(const float Damage) { m_Damage = Damage; }

@@ -34,12 +34,8 @@ private:
 public:
 	//IDを取る
 	int GetID(const int BirthNum);
-	//ダメージを取る
-	float GetDamage();
-	//ディレイを取る
-	int GetDelay();
+	void GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area);
 
-	std::vector<std::vector<int>> GetArea();
 	void SetDeckState(const int DeckNum);
 public:
 	const int GetDeckNum() { return m_DeckNum; }

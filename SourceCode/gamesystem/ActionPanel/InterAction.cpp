@@ -3,8 +3,9 @@
 #include "Collision.h"
 #include "StagePanel.h"
 #include <Easing.h>
-#include "Helper.h"
+#include <Helper.h>
 #include <GameStateManager.h>
+#include <SkillManager.h>
 
 void (InterAction::* InterAction::stateTable[])() = {
 	&InterAction::Spawn,//動きの合間
@@ -87,4 +88,9 @@ void InterAction::Vanish() {
 		m_Alive = false;
 		m_VanishFrame = 0;
 	}
+}
+
+//スキルデータ取得
+void InterAction::GetSkillData() {
+	SkillManager::GetInstance()->GetSkillData(m_Damage, m_Delay, m_Area);
 }

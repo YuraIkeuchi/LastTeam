@@ -197,9 +197,7 @@ void StagePanel::RandomPanel(int num) {
 		newAction->Initialize();
 		//ステージに配布されるパネルに情報を読み取ってる
 		newAction->SetSkillID(SkillManager::GetInstance()->GetID(i));
-		newAction->SetDamage(SkillManager::GetInstance()->GetDamage());
-		newAction->SetDelay(SkillManager::GetInstance()->GetDelay());
-		newAction->SetArea(SkillManager::GetInstance()->GetArea());
+		newAction->GetSkillData();
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
 

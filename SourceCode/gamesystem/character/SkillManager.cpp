@@ -97,28 +97,6 @@ int SkillManager::GetID(const int BirthNum) {
 	}
 	return result;
 }
-//ダメージ
-float SkillManager::GetDamage() {
-	float result = {};
-
-	
-	if (skill[m_BirthMax]->GetSkillType() != SkillType::damege)
-	{
-		assert(0);
-	}
-
-	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[m_BirthMax]);
-	result = atkSkill->GetDamege();
-
-	return result;
-}
-//ディレイ
-int SkillManager::GetDelay() {
-	int result = {};
-	result = skill[m_BirthMax]->Getlatency();
-
-	return result;
-}
 //リセット
 void SkillManager::ResetBirth() {
 	for (SkillBase* newskill : skill) {
@@ -128,14 +106,19 @@ void SkillManager::ResetBirth() {
 	}
 }
 
-vector<std::vector<int>> SkillManager::GetArea() {
-	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[0]);
-	vector<std::vector<int>> result;
-	result = atkSkill->GetArea();
+//スキルのデータを渡す
+void SkillManager::GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area) {
+	if (skill[m_BirthMax]->GetSkillType() != SkillType::damege)
+	{
+		assert(0);
+	}
 
-	return result;
+	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[m_BirthMax]);
+	AttackSkill* atkSkill2 = dynamic_cast<AttackSkill*>(skill[0]);
+	damage = atkSkill->GetDamege();
+	delay = skill[m_BirthMax]->Getlatency();
+	area = atkSkill2->GetArea();
 }
-
 //スキルのCSVを読み取る
 void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 	
