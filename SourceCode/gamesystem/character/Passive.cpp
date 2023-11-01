@@ -1,7 +1,8 @@
 #include "Passive.h"
 #include "ImageManager.h"
-Passive::Passive(int id, XMFLOAT2 pos) {
+Passive::Passive(int id, XMFLOAT2 pos, XMFLOAT2 size) {
 	this->pos = pos;
+	this->size = size;
 	CreatePassive(id);
 	Initialize();
 }
@@ -11,6 +12,7 @@ Passive::~Passive() {
 
 void Passive::Initialize() {
 	icon = IKESprite::Create(ImageManager::PASSIVE_01 + spriteNum, pos);
+	icon->SetSize(size);
 
 }
 

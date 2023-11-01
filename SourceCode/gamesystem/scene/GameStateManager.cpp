@@ -37,6 +37,8 @@ void GameStateManager::Initialize() {
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 
+	resultSkill = make_unique<ResultSkill>();
+	resultSkill->Initialize();
 	//デッキの初期化
 	DeckInitialize();
 
@@ -103,7 +105,7 @@ void GameStateManager::Update() {
 	}
 
 	GaugeUpdate();
-
+	resultSkill->Update();
 	//攻撃した瞬間
 	AttackTrigger();
 	UseSkill();
@@ -128,6 +130,8 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	gaugeUI->Draw();
 	SkillManager::GetInstance()->UIDraw();
 	IKESprite::PostDraw();
+
+	resultSkill->Draw();
 
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;

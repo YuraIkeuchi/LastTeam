@@ -16,7 +16,7 @@ public:
 		RELOAD_LOCK,
 		MAX_ABILITY
 	};
-	Passive(int id, XMFLOAT2 pos = {0.f,0.f});
+	Passive(int id, XMFLOAT2 pos = { 0.f,0.f }, XMFLOAT2 size = {64.f,64.f});
 	~Passive();
 
 	void Initialize();
@@ -34,6 +34,7 @@ private:
 private:
 	int id = 0;
 	std::unique_ptr<IKESprite> icon = nullptr;
+	XMFLOAT2 size = { 64.f,64.f };
 	int spriteNum = 0;
 	//
 	XMFLOAT2 pos = {};

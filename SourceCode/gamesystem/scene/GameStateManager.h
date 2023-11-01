@@ -7,6 +7,7 @@
 #include "ActionUI.h"
 #include "AttackArea.h"
 #include <Passive.h>
+#include "../../../ResultSkill.h"
 using namespace DirectX;
 using namespace std;
 //行動の種類
@@ -142,4 +143,5 @@ private:
 	int m_DistanceY = 10;
 	std::vector<std::vector<int>> m_Area;
 	int m_NotCount = {};
+	std::unique_ptr<ResultSkill> resultSkill;
 };
