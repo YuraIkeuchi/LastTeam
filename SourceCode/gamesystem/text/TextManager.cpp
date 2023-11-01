@@ -18,7 +18,7 @@ void TextManager::Initialize() {
 	CreateWord(TITLE_03, L"ゲームシーンだよ");
 	CreateWord(MAP_01, L"はじめようここから！");
 	CreateWord(MAP_BATTLE, L"バトルカードいっぱい！");
-	CreateWord(MAP_HEAL, L"かいふくしたいあなたへ！");
+	CreateWord(MAP_HEAL, L"回復したいあなたへ！");
 	CreateWord(MAP_BOSS, L"てごわそうだ！");
 
 	
