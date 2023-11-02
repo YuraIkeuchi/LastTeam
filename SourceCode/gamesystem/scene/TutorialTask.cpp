@@ -6,11 +6,6 @@ TutorialTask* TutorialTask::GetInstance() {
 	return &instance;
 }
 
-//‰Šú‰»
-void  TutorialTask::Initialize() {
-	m_TutorialState = TASK_MOVE;		//Å‰‚Ìƒ^ƒXƒN‚É‚·‚é
-}
-
 //ImGui
 void TutorialTask::ImGuiDraw() {
 	ImGui::Begin("Task");

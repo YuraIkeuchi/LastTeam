@@ -5,6 +5,7 @@
 #include <StagePanel.h>
 #include <SceneManager.h>
 #include "TitleEnemy.h"
+#include "TutorialTask.h"
 // 遷移しうるシーン
 #include "BattleScene.h"
 #include "MapScene.h"
@@ -61,15 +62,21 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	if ((input->TriggerButton(input->B))) {			//バトル
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = PLAY;
+		//チュートリアルのタスク
+		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 
 	}
 	if (input->TriggerKey(DIK_SPACE)) {			//マップ
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = MAP;
+		//チュートリアルのタスク
+		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 	}
 	if (input->TriggerButton(input->X)) {			//チュートリアル
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = TUTORIAL;
+		//チュートリアルのタスク
+		TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 	}
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		if (_SceneType == PLAY) {
@@ -83,7 +90,6 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 
-	SceneChanger::GetInstance()->Update();
 }
 //描画
 void TitleScene::Draw(DirectXCommon* dxCommon) {
