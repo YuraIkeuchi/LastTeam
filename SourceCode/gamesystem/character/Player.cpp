@@ -139,14 +139,19 @@ void Player::Move() {
 	if (input->PushButton(input->UP) ||
 		input->PushButton(input->DOWN) ||
 		input->PushButton(input->RIGHT) ||
-		input->PushButton(input->LEFT)) {
-		if (input->PushButton(input->UP)) {
+		input->PushButton(input->LEFT) ||
+		input->TiltPushStick(input->L_UP)||
+		input->TiltPushStick(input->L_DOWN) ||
+		input->TiltPushStick(input->L_LEFT) ||
+		input->TiltPushStick(input->L_RIGHT)
+		) {
+		if (input->PushButton(input->UP)|| input->TiltPushStick(input->L_UP)) {
 			m_InputTimer[DIR_UP]++;
-		} else if (input->PushButton(input->DOWN)) {
+		} else if (input->PushButton(input->DOWN)|| input->TiltPushStick(input->L_DOWN)) {
 			m_InputTimer[DIR_DOWN]++;
-		} else if (input->PushButton(input->RIGHT)) {
+		} else if (input->PushButton(input->RIGHT)|| input->TiltPushStick(input->L_RIGHT)) {
 			m_InputTimer[DIR_RIGHT]++;
-		} else if (input->PushButton(input->LEFT)) {
+		} else if (input->PushButton(input->LEFT)|| input->TiltPushStick(input->L_LEFT)) {
 			m_InputTimer[DIR_LEFT]++;
 		}
 	} else {			//離した瞬間

@@ -11,7 +11,7 @@ ResultSkill::~ResultSkill() {
 }
 
 void ResultSkill::Initialize() {
-	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.3f });
+	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.5f });
 	backScreen->SetSize({ 1280.f,720.f });
 	wchar_t* sample = L"よくたおした！こんやはカツドンだ！";
 	font = std::make_unique<Font>(sample, XMFLOAT2{300.f,100.f});

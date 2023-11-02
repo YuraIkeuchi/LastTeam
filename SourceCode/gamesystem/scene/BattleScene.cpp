@@ -108,11 +108,11 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 //ポストエフェクトかからない
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
-	GameStateManager::GetInstance()->ActUIDraw();
 
-	SceneChanger::GetInstance()->Draw();
 	Player::GetInstance()->UIDraw();
 	enemyManager->UIDraw();
+	GameStateManager::GetInstance()->ActUIDraw();
+	SceneChanger::GetInstance()->Draw();
 }
 //ポストエフェクトかかる
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
