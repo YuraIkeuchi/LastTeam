@@ -30,6 +30,9 @@ void TextManager::Initialize() {
 	CreateWord(TUTORIAL_MARK2, L"それが攻撃エリアだと思ってくれればいい");
 	CreateWord(TUTORIAL_TEXT_ATTACK, L"エリアに敵を収めてAボタンで攻撃してみろ");
 	CreateWord(TUTORIAL_TEXT_DAMAGE, L"よし、よくできた");
+	CreateWord(TUTORIAL_ENEMYKNOCK, L"じゃあ敵を倒してみよう");
+	CreateWord(TUTORIAL_ENEMYDESTROY, L"よく倒した、それじゃ");
+	CreateWord(TUTORIAL_END, L"自分の好きなようにデッキを組んで頑張れ");
 }
 
 

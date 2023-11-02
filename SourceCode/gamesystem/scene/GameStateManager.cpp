@@ -58,6 +58,8 @@ void GameStateManager::Initialize() {
 	
 	predictarea.reset(new PredictArea());
 	predictarea->Initialize();
+
+	m_GaugeCount = {};
 }
 //更新
 void GameStateManager::Update() {

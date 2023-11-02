@@ -7,6 +7,7 @@ enum TutorialState {
 	TASK_BIRTHSKIL,
 	TASK_ATTACK,
 	TASK_DAMAGE,
+	TASK_END,
 };
 class TutorialTask {
 public:

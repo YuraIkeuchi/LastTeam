@@ -8,6 +8,7 @@
 #include "SkillManager.h"
 #include <TutorialTask.h>
 #include <Helper.h>
+#include "BattleScene.h"
 
 //状態遷移
 /*stateの並び順に合わせる*/
@@ -17,6 +18,7 @@ void (TutorialScene::* TutorialScene::stateTable[])() = {
 	&TutorialScene::GetState,//スキルゲット
 	&TutorialScene::AttackState,//攻撃
 	&TutorialScene::DamageState,//ダメージを与えた
+	&TutorialScene::TutorialEnd,//終わり
 };
 //初期化
 void TutorialScene::Initialize(DirectXCommon* dxCommon)
@@ -55,6 +57,8 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	enemyManager->Initialize();
 
 	_nowstate = TUTORIAL_INTRO;
+
+	TutorialTask::GetInstance()->Initialize();
 }
 //更新
 void TutorialScene::Update(DirectXCommon* dxCommon)
@@ -73,7 +77,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
 	//敵を倒したらシーン以降(仮)
-	if (enemyManager->BossDestroy()) {
+	if (m_End) {
 		_ChangeType = CHANGE_TITLE;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
@@ -84,12 +88,14 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
-		if (_ChangeType == CHANGE_TITLE) {
+		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
+		SceneManager::GetInstance()->ChangeScene<BattleScene>();
+		/*if (_ChangeType == CHANGE_TITLE) {
 			SceneManager::GetInstance()->PopScene();
 		}
 		else {
-			//SceneManager::GetInstance()->ChangeScene<GameoverScene>();
-		}
+			
+		}*/
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 
@@ -140,9 +146,9 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 
-	SceneChanger::GetInstance()->Draw();
 	Player::GetInstance()->UIDraw();
 	enemyManager->UIDraw();
+	SceneChanger::GetInstance()->Draw();
 }
 //ポストエフェクトかかる
 void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
@@ -224,10 +230,26 @@ void TutorialScene::AttackState() {
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
 		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_TEXT_DAMAGE);
 		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_ENEMYKNOCK);
+		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
 		_nowstate = TUTORIAL_DAMAGE;
+		m_Timer = {};
 	}
 }
 //ダメージが入った
 void TutorialScene::DamageState() {
-
+	if (enemyManager->BossDestroy()) {
+		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_ENEMYDESTROY);
+		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_END);
+		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		_nowstate = TUTORIAL_FINISH;
+	}
+}
+//チュートリアル終わり
+void TutorialScene::TutorialEnd() {
+	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
+		m_Timer = {};
+		m_End = true;
+	}
 }

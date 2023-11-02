@@ -29,6 +29,7 @@ private:
 	void GetState();	//スキルゲット
 	void AttackState();		//攻撃
 	void DamageState();//ダメージを与える
+	void TutorialEnd();//終わり
 	void Skip();		//スキップ
 
 private:
@@ -50,5 +51,8 @@ private:
 		TUTORIAL_GETSKILL,
 		TUTORIAL_ATTACK,
 		TUTORIAL_DAMAGE,
+		TUTORIAL_FINISH,
 	}_nowstate = TUTORIAL_INTRO;
+
+	bool m_End = false;
 };

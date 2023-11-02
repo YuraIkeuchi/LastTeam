@@ -137,7 +137,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 3 };
+	vector<int> m_DeckNumber = { 6 };
 	vector<int> m_NotDeckNumber = {};
 
 	int m_DistanceX = 5;
