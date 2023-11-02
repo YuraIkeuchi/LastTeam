@@ -57,8 +57,12 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	enemyManager->Update();
 	//“G‚ð“|‚µ‚½‚çƒV[ƒ“ˆÈ~(‰¼)
 	if (enemyManager->BossDestroy()) {
-		_ChangeType = CHANGE_TITLE;
-		SceneChanger::GetInstance()->SetChangeStart(true);
+		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
+			GameStateManager::GetInstance()->StageClearInit();
+		} else {
+			_ChangeType = CHANGE_TITLE;
+			SceneChanger::GetInstance()->SetChangeStart(true);
+		}
 	}
 	//‚Õ‚ê‚¢‚â[‚ÌHP‚ª–³‚­‚È‚Á‚Ä‚à‘JˆÚ‚·‚é
 	if (Player::GetInstance()->GetHp() <= 0.0f) {

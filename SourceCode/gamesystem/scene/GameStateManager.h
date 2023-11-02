@@ -8,6 +8,7 @@
 #include "AttackArea.h"
 #include "PredictArea.h"
 #include <Passive.h>
+#include "../../../ResultSkill.h"
 using namespace DirectX;
 using namespace std;
 //行動の種類
@@ -54,16 +55,24 @@ private:
 	void DeckInitialize();
 	void GetPassive(int ID);
 
+
+	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
+	const bool GetIsChangeScene() { return isChangeScene; }
+
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
 	const float GetDiameterVel() { return m_DiameterVel; }
-
-
+	/// <summary>
+	/// 敵を倒したら最初の処理
+	/// </summary>
+	void StageClearInit();
+	
+	
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetResetPredict(const bool ResetPredict) { this->m_ResetPredict = ResetPredict; }
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
@@ -72,7 +81,8 @@ public:
 private:
 	static const int ACT_PATTERN = 3;
 private:
-
+	bool isFinish = false;
+	bool isChangeScene = false;
 	struct ActState {
 		int ActID;//ID
 		float ActDamage;//ダメージ
@@ -91,7 +101,9 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::list<int> GotPassiveIDs;
+	std::vector<int> GotPassiveIDs;
+	std::vector<int> NotPassiveIDs;
+
 	unique_ptr<IKESprite> skillUI = nullptr;
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 
@@ -148,4 +160,5 @@ private:
 	unique_ptr<PredictArea> predictarea;
 
 	bool m_ResetPredict = false;
+	std::unique_ptr<ResultSkill> resultSkill;
 };
