@@ -6,7 +6,8 @@
 #include <GameStateManager.h>
 #include <ParticleEmitter.h>
 XMFLOAT3 InterEnemy::randPanelPos() {
-	int width = Helper::GetInstance()->GetRanNum(4, 7);
+	//本当は4~7
+	int width = Helper::GetInstance()->GetRanNum(4, 4);
 	int height = Helper::GetInstance()->GetRanNum(0, 3);
 	m_NowHeight = height;
 	m_NowWidth = width;
