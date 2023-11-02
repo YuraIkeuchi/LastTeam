@@ -8,6 +8,7 @@
 
 #include "SkillManager.h"
 #include "Player.h"
+#include "InterEnemy.h"
 
 //初期化
 void BattleScene::Initialize(DirectXCommon* dxCommon)
@@ -21,7 +22,10 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//パーティクル全削除
 	ParticleEmitter::GetInstance()->AllDelete();
 
-	//プレイヤー
+	//ゲームの状態
+	GameStateManager::GetInstance()->Initialize();
+
+	//　プレイヤー
 	{
 		auto player = GameObject::CreateObject<Player>();	// プレイヤー生成
 		player->LoadResource();
@@ -31,15 +35,20 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 		GameStateManager::GetInstance()->SetPlayer(player);
 
 	}
+
+	// エネミー
+	{
+		auto test_enemy_1 = GameObject::CreateObject<InterEnemy>();
+	}
+
+
 	//スキル
 	SkillManager::GetInstance()->Initialize();
 	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
 
-	//ゲームの状態
-	GameStateManager::GetInstance()->Initialize();
-
+	
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();

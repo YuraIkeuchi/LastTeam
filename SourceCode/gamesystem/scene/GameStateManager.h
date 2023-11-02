@@ -69,6 +69,7 @@ public:
 
 	void SetPlayer(std::weak_ptr<Player> player) { player_ = player; }
 
+
 private:
 	static const int ACT_PATTERN = 3;
 private:
