@@ -39,9 +39,9 @@ void GameStateManager::Initialize() {
 	//一旦クリア方式で
 	GotPassives.clear();
 	PassiveCheck();
-	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize(basesize);
-	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
+	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 
 	resultSkill = make_unique<ResultSkill>();
@@ -137,9 +137,6 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	gaugeUI->Draw();
 	SkillManager::GetInstance()->UIDraw();
 	IKESprite::PostDraw();
-
-	resultSkill->Draw();
-
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
 		attackarea[i]->Draw(dxCommon);
@@ -148,6 +145,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	if (m_AllActCount != 0) {
 		predictarea->Draw(dxCommon);
 	}
+	resultSkill->Draw();
 }
 //描画
 void GameStateManager::ImGuiDraw() {

@@ -26,9 +26,9 @@ void Player::LoadResource() {
 		_drawnumber[i] = make_unique<DrawNumber>();
 		_drawnumber[i]->Initialize();
 	}
-	_drawnumber[FIRST_DIGHT]->SetPosition({ 160.0f,600.0f });
-	_drawnumber[SECOND_DIGHT]->SetPosition({ 140.0f,600.0f });
-	_drawnumber[THIRD_DIGHT]->SetPosition({ 120.0f,600.0f });
+	_drawnumber[FIRST_DIGHT]->SetPosition({ 100.0f,620.0f });
+	_drawnumber[SECOND_DIGHT]->SetPosition({ 80.0f,620.0f });
+	_drawnumber[THIRD_DIGHT]->SetPosition({ 60.0f,620.0f });
 }
 //初期化
 bool Player::Initialize() {

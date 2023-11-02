@@ -117,9 +117,9 @@ void InterEnemy::WorldDivision() {
 	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 
 	//描画する数字と座標をここでセットする
-	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.6f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.55f, m_Position.y, m_Position.z - 0.55f });
 	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f });
-	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.15f, m_Position.y, m_Position.z - 0.55f });
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i]->GetCameraData();
 		_drawnumber[i]->SetNumber(m_DigitNumber[i]);

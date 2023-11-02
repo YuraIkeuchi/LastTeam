@@ -63,7 +63,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetAnchorPoint({ 0.5f,0.5f });
 	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::MAP_01);
 
-	font = std::make_unique<Font>(sample, XMFLOAT2{ 750.f,450.f }, XMVECTOR{ 1.f,1.f,1.f,1.f });
+	font = std::make_unique<Font>(sample, XMFLOAT2{ 700.f,450.f }, XMVECTOR{ 1.f,1.f,1.f,1.f });
 	//ìπÇÃèàóù
 	{
 		for (int i = 0; i < 20; i++) {
