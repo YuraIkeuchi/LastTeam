@@ -57,6 +57,7 @@ void SkillAction::EffecttexDraw(DirectXCommon* dxCommon) {
 void SkillAction::ImGui_Origin() {
 	ImGui::Begin("Skill");
 	ImGui::Text("SkillID:%d", m_SkillID);
+	ImGui::Text("Damage:%f", m_Damage);
 	ImGui::End();
 }
 //É|Å[ÉY

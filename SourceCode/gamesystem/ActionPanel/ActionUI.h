@@ -3,11 +3,11 @@
 #include <memory>
 #include <array>
 #include "DrawNumber.h"
-using namespace std;         //  –¼‘O‹óŠÔw’è
+using namespace std;         //  åå‰ç©ºé–“æŒ‡å®š
 
 class ActionUI {
 private:
-	// DirectX::‚ğÈ—ª
+	// DirectX::ã‚’çœç•¥
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
@@ -17,15 +17,15 @@ private:
 public:
 	ActionUI();
 
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	void Initialize();
-	//ƒXƒe[ƒ^ƒXƒZƒbƒg
-	void InitState(const int ActCount);
-	//XV
+	//ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã‚»ãƒƒãƒˆ
+	void InitState(const int ActCount,const int ID);
+	//æ›´æ–°
 	void Update();
-	//UI‚Ì“®‚«
+	//UIã®å‹•ã
 	void UiMove();
-	//•`‰æ
+	//æç”»
 	void Draw();
 	//ImGui
 	void ImGuiDraw();
@@ -35,6 +35,7 @@ public:
 	const bool GetUse() { return m_Use; }
 	void SetActCount(const int ActCount) { m_ActCount = ActCount; }
 	void SetUse(const bool Use) { m_Use = Use; }
+
 	void SetID(const int ID) { m_ID = ID; }
 private:
 	static const int TEX_MAX = 3;

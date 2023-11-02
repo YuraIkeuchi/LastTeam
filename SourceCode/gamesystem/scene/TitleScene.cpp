@@ -7,6 +7,7 @@
 // 遷移しうるシーン
 #include "BattleScene.h"
 #include "MapScene.h"
+#include "TutorialScene.h"
 #include "TextManager.h"
 //初期化
 void TitleScene::Initialize(DirectXCommon* dxCommon) {
@@ -40,12 +41,18 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = MAP;
 	}
-
+	if (input->TriggerButton(input->X)) {			//チュートリアル
+		SceneChanger::GetInstance()->SetChangeStart(true);
+		_SceneType = TUTORIAL;
+	}
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		if (_SceneType == PLAY) {
 			SceneManager::GetInstance()->ChangeScene<BattleScene>();
-		} else {
+		} else if(_SceneType == MAP) {
 			SceneManager::GetInstance()->ChangeScene<MapScene>();
+		}
+		else {
+			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
 		}
 		SceneChanger::GetInstance()->SetChange(false);
 	}

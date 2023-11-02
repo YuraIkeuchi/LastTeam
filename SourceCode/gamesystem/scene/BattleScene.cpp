@@ -7,6 +7,7 @@
 #include <SceneChanger.h>
 #include "SkillManager.h"
 #include "GameoverScene.h"
+#include "TitleScene.h"
 
 //初期化
 void BattleScene::Initialize(DirectXCommon* dxCommon)
@@ -71,7 +72,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 
 	if (SceneChanger::GetInstance()->GetChange()) {
 		if (_ChangeType == CHANGE_TITLE) {
-			SceneManager::GetInstance()->PopScene();
+			SceneManager::GetInstance()->ChangeScene<TitleScene>(true);
 		}
 		else {
 			SceneManager::GetInstance()->ChangeScene<GameoverScene>();
@@ -110,9 +111,9 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 
-	SceneChanger::GetInstance()->Draw();
 	Player::GetInstance()->UIDraw();
 	enemyManager->UIDraw();
+	SceneChanger::GetInstance()->Draw();
 }
 //ポストエフェクトかかる
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {

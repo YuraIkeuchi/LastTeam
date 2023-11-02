@@ -3,8 +3,10 @@
 #include "Collision.h"
 #include "StagePanel.h"
 #include <Easing.h>
-#include "Helper.h"
+#include <Helper.h>
 #include <GameStateManager.h>
+#include <SkillManager.h>
+#include <TutorialTask.h>
 
 void (InterAction::* InterAction::stateTable[])() = {
 	&InterAction::Spawn,//動きの合間
@@ -33,8 +35,11 @@ void InterAction::Collide()
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, m_Radius, Player::GetInstance()->GetPosition().x, Player::GetInstance()->GetPosition().z, m_Radius) &&
 		(m_Alive)){
 		//プレイヤーの行動数を増やしパネルを戻す
-		GameStateManager::GetInstance()->AddSkill(m_SkillID,m_Damage,m_Delay);
+		GameStateManager::GetInstance()->AddSkill(m_SkillID,m_Damage,m_Delay,m_Area);
 		StagePanel::GetInstance()->DeletePanel();
+		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
+			TutorialTask::GetInstance()->SetTutorialState(TASK_ATTACK);
+		}
 		m_Alive = false;
 	}
 }
@@ -87,4 +92,9 @@ void InterAction::Vanish() {
 		m_Alive = false;
 		m_VanishFrame = 0;
 	}
+}
+
+//スキルデータ取得
+void InterAction::GetSkillData() {
+	SkillManager::GetInstance()->GetSkillData(m_Damage, m_Delay, m_Area);
 }

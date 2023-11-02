@@ -99,11 +99,11 @@ void StagePanel::BattleUpdate() {
 	//プレイヤーが居るマスが黄色くなる
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-				if (panels[i][j].type == NO_PANEL) {
+				if (!panels[i][j].predict) {
 					panels[i][j].color = ChangeColor(i, j);
 				}
 				else {
-					panels[i][j].color = { 0.5f,0.5f,0.5f,1.0f };
+					panels[i][j].color = { 1.0f,0.3f,0.0f,1.0f };
 				}
 			panels[i][j].object->Update();
 			panels[i][j].object->SetPosition(panels[i][j].position);
@@ -197,9 +197,7 @@ void StagePanel::RandomPanel(int num) {
 		newAction->Initialize();
 		//ステージに配布されるパネルに情報を読み取ってる
 		newAction->SetSkillID(SkillManager::GetInstance()->GetID(i));
-		newAction->SetDamage(SkillManager::GetInstance()->GetDamage());
-		newAction->SetDelay(SkillManager::GetInstance()->GetDelay());
-
+		newAction->GetSkillData();
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
 
@@ -269,3 +267,7 @@ XMFLOAT4 StagePanel::ChangeColor(const int Weight, const int Height) {
 
 	return color;
 }
+////チェック
+//bool StagePanel::SetPredict(int width, int height, bool Frag) {
+//	panels[width][height].predict = Frag;
+//}

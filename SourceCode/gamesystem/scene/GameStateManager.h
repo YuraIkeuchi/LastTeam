@@ -6,6 +6,7 @@
 #include <map>
 #include "ActionUI.h"
 #include "AttackArea.h"
+#include "PredictArea.h"
 #include <Passive.h>
 #include "../../../ResultSkill.h"
 using namespace DirectX;
@@ -33,8 +34,9 @@ public:
 	//プレイヤーの現在位置
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
-	void AddSkill(const int ID,const float damage,const int Delay);
+	void AddSkill(const int ID,const float damage,const int Delay, vector<std::vector<int>> area);
 private:
+	void PredictManager();
 	//攻撃した瞬間
 	void AttackTrigger();
 	//攻撃エリアの生成
@@ -72,6 +74,7 @@ public:
 	
 	
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
+	void SetResetPredict(const bool ResetPredict) { this->m_ResetPredict = ResetPredict; }
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
 	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
@@ -84,6 +87,7 @@ private:
 		int ActID;//ID
 		float ActDamage;//ダメージ
 		int ActDelay;//ディレイ
+		vector<std::vector<int>> AttackArea;
 	};
 
 	vector<ActState> m_Act;
@@ -145,12 +149,16 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 0,2,3,5,6, };
+	vector<int> m_DeckNumber = { 6 };
 	vector<int> m_NotDeckNumber = {};
 
 	int m_DistanceX = 5;
 	int m_DistanceY = 10;
-	std::vector<std::vector<int>> m_Area;
 	int m_NotCount = {};
+
+	//予測エリア
+	unique_ptr<PredictArea> predictarea;
+
+	bool m_ResetPredict = false;
 	std::unique_ptr<ResultSkill> resultSkill;
 };

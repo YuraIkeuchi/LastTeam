@@ -37,6 +37,7 @@ public:
 	virtual void EffecttexDraw(DirectXCommon* dxCommon) = 0;
 
 	void Collide();
+	void GetSkillData();
 protected:
 
 	virtual void Action() = 0;//ボス特有の処理
@@ -46,10 +47,15 @@ public:
 	//gettersetter
 	const bool GetAlive() { return m_Alive; }
 	const int GetSkillID() { return m_SkillID; }
+	const float GetDamage() { return m_Damage; }
+	const int GetDelay() { return m_Delay; }
+	const std::vector<std::vector<int>> GetArea() { return m_Area; }
+
 	void SetState(const int state) { _state= state; }
 	void SetSkillID(const int SkillID) { m_SkillID = SkillID; }
 	void SetDamage(const float Damage) { m_Damage = Damage; }
 	void SetDelay(const int Delay) { m_Delay = Delay; }
+	void SetArea(const std::vector<std::vector<int>> Area) { m_Area = Area; }
 protected:
 	string m_Tag;
 	unique_ptr<IKETexture> m_Pannel = nullptr;
@@ -66,6 +72,7 @@ protected:
 	int m_SkillID = {};
 	float m_Damage = {};
 	int m_Delay = {};
+	std::vector<std::vector<int>> m_Area;
 	unique_ptr<DrawNumber> _drawnumber;
 private:
 	void Spawn();//待機
