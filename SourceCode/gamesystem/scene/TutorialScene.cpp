@@ -58,7 +58,6 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 
 	_nowstate = TUTORIAL_INTRO;
 
-	TutorialTask::GetInstance()->Initialize();
 }
 //XV
 void TutorialScene::Update(DirectXCommon* dxCommon)

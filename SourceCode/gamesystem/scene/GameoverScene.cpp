@@ -10,7 +10,7 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 
 	//‹¤’Ê‚Ì‰Šú‰»
 	BaseInitialize(dxCommon);
-	sprite = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	sprite = IKESprite::Create(ImageManager::GAMEOVERBACK, { 0.0f,0.0f });
 }
 //XV
 void GameoverScene::Update(DirectXCommon* dxCommon) {

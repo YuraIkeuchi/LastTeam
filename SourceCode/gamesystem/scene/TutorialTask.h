@@ -14,7 +14,7 @@ public:
 	static TutorialTask* GetInstance();
 
 	//‰Šú‰»
-	void Initialize();
+	//void Initialize();
 
 	void ImGuiDraw();
 public:
