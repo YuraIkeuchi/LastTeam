@@ -367,6 +367,10 @@
     <ClCompile Include="SourceCode\gamesystem\scene\TutorialTask.cpp">
       <Filter>gamesystem\scene\Tutorial</Filter>
     </ClCompile>
+    <ClCompile Include="ResultSkill.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\TitleEnemy.cpp">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -698,6 +702,10 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\TutorialTask.h">
       <Filter>gamesystem\scene\Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultSkill.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\TitleEnemy.h">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
