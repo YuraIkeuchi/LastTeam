@@ -25,12 +25,18 @@ void GameStateManager::Initialize() {
 	//全体スコア
 	m_AllScore = {};
 
+	//終了関連
+	isFinish = false;
+	isChangeScene = false;
+
+
 	//要素の全削除は一旦ここで
 	m_AllActCount = {};
 	actui.clear();
 	m_Act.clear();
 	attackarea.clear();
-
+	//一旦クリア方式で
+	GotPassives.clear();
 	PassiveCheck();
 	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,600.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize(basesize);
@@ -51,7 +57,7 @@ void GameStateManager::Initialize() {
 
 	//デッキにないカードを検索する
 	const int CARD_MAX = 7;
-
+	m_NotDeckNumber.clear();
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
 		for (int j = 0; j < CARD_MAX; j++) {
 			bool found = std::find(m_DeckNumber.begin(), m_DeckNumber.end(), j) != m_DeckNumber.end();		//最初から探す
@@ -61,28 +67,12 @@ void GameStateManager::Initialize() {
 		}
 		break;
 	}
-	const int PASSIVE_MAX = 3;
-	GotPassiveIDs.resize(PASSIVE_MAX);
-	NotPassiveIDs.resize(PASSIVE_MAX);
-	for (int i = 0; i < GotPassiveIDs.size(); i++) {
-		for (int j = 0; j < PASSIVE_MAX; j++) {
-			bool found = std::find(GotPassiveIDs.begin(), GotPassiveIDs.end(), j) != GotPassiveIDs.end();		//最初から探す
-			if (!found) {
-				NotPassiveIDs.push_back(j);		//なかったら追加する
-			}
-		}
-		break;
-	}
-
 
 	m_NotCount = (int)(m_NotDeckNumber.size()) - 1;//無いカードの枚数を検索してる(ImGui用)
-
-
-
 }
 //更新
 void GameStateManager::Update() {
-	InputDebug();
+	if (ResultUpdate()) { return; }
 	const int l_AddCounterScore = 10;
 	m_AllScore = m_CounterScore + (int)(m_PosScore)+(int)(m_GrazeScore);
 
@@ -121,7 +111,6 @@ void GameStateManager::Update() {
 	}
 
 	GaugeUpdate();
-	resultSkill->Update();
 	//攻撃した瞬間
 	AttackTrigger();
 	UseSkill();
@@ -287,6 +276,11 @@ void GameStateManager::GaugeUpdate() {
 }
 
 void GameStateManager::PassiveCheck() {
+
+	for (int& id:GotPassiveIDs) {
+		GetPassive(id);
+	}
+
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		switch (passive->GetAbility()) {
 		case Passive::ABILITY::RELOAD_UP:
@@ -302,7 +296,23 @@ void GameStateManager::PassiveCheck() {
 		default:
 			break;
 		}
-
+	}
+	const int PASSIVE_MAX = 3;
+	NotPassiveIDs.clear();
+	if (GotPassiveIDs.size() == 0) { 
+		for (int j = 0; j < PASSIVE_MAX; j++) {
+			NotPassiveIDs.push_back(j);		//なかったら追加する
+		}
+		return; 
+	}
+	for (int i = 0; i < GotPassiveIDs.size(); i++) {
+		for (int j = 0; j < PASSIVE_MAX; j++) {
+			bool found = std::find(GotPassiveIDs.begin(), GotPassiveIDs.end(), j) != GotPassiveIDs.end();		//最初から探す
+			if (!found) {
+				NotPassiveIDs.push_back(j);		//なかったら追加する
+			}
+		}
+		break;
 	}
 }
 //デッキの初期化
@@ -317,18 +327,32 @@ void GameStateManager::DeckInitialize() {
 }
 
 void GameStateManager::GetPassive(int ID) {
-	GotPassives.push_back(std::move(make_unique<Passive>(ID)));
+	float posX = GotPassives.size() * 60.0f;
+	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,0.0f})));
 }
 
-void GameStateManager::InputDebug() {
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-	
-		resultSkill->CreateResult(m_NotDeckNumber,NotPassiveIDs);
-	}
 
+bool GameStateManager::ResultUpdate() {
+	if (!isFinish) { return false; }
+
+	resultSkill->Update();
+
+	if (Input::GetInstance()->TriggerButton(Input::B)) {
+		resultSkill->InDeck(m_DeckNumber);
+		resultSkill->InPassive(GotPassiveIDs);
+		isChangeScene = true;
+		isFinish = false;
+	}
+	return true;
 }
 
 void GameStateManager::InDeck() {
 	m_DeckNumber.push_back(m_NotDeckNumber[m_NotCount]);
 	m_NotDeckNumber.erase(cbegin(m_NotDeckNumber) + m_NotCount);
+}
+
+void GameStateManager::StageClearInit() {
+	if (isFinish) { return; }
+	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
+	isFinish = true;
 }

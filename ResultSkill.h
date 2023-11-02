@@ -16,9 +16,12 @@ public:
 	void Draw();
 
 
+	void InDeck(std::vector<int>& Deck);
+	void InPassive(std::vector<int>& Passive);
+
+
 	void CreateResult(std::vector<int>& notDeck,
 		std::vector<int>& notPassives);
-
 
 	bool GetIsVisible() { return isStart; }
 private:
@@ -30,16 +33,20 @@ private:
 		XMFLOAT2 size = { 128.f,128.f };
 		int ID = -1;
 		bool isSkill = true;
-
-
 	};
+
+
+
+	ResultUI CreateUI(bool isSkill,int id,XMFLOAT2 pos);
+
 private:
 	bool isStart = false;
 
 
 	std::unique_ptr<IKESprite> backScreen;
 	std::list<ResultUI> choiceSkills;
+	int nowPos = 0;
 
-	XMFLOAT2 BasePos[2] = { {320.f,360.0f},{960.f,360.f} };
+	XMFLOAT2 BasePos[3] = { {320.f,360.0f},{640.f,360.f},{960.f,360.f} };
 };
 

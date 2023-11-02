@@ -54,17 +54,23 @@ private:
 	void GetPassive(int ID);
 
 
-	void InputDebug();
+	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
+	const bool GetIsChangeScene() { return isChangeScene; }
+
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
 	const float GetDiameterVel() { return m_DiameterVel; }
-
-
+	/// <summary>
+	/// 敵を倒したら最初の処理
+	/// </summary>
+	void StageClearInit();
+	
+	
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
 	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
@@ -72,7 +78,8 @@ public:
 private:
 	static const int ACT_PATTERN = 3;
 private:
-
+	bool isFinish = false;
+	bool isChangeScene = false;
 	struct ActState {
 		int ActID;//ID
 		float ActDamage;//ダメージ
