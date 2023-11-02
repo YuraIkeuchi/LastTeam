@@ -123,7 +123,7 @@ private:
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//整数にしたHP
 
-	XMFLOAT2 m_HPPos = { 100.0f,580.0f };
+	XMFLOAT2 m_HPPos = { 25.f,600.0f };
 	XMFLOAT2 m_HPSize = { 400.0f,40.0f };
 	//桁数
 	enum DightType {
