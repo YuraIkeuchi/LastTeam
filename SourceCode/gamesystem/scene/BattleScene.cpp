@@ -7,6 +7,7 @@
 #include <SceneChanger.h>
 #include "SkillManager.h"
 #include "GameoverScene.h"
+#include "TitleScene.h"
 
 //‰Šú‰»
 void BattleScene::Initialize(DirectXCommon* dxCommon)
@@ -71,7 +72,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 
 	if (SceneChanger::GetInstance()->GetChange()) {
 		if (_ChangeType == CHANGE_TITLE) {
-			SceneManager::GetInstance()->PopScene();
+			SceneManager::GetInstance()->ChangeScene<TitleScene>(true);
 		}
 		else {
 			SceneManager::GetInstance()->ChangeScene<GameoverScene>();

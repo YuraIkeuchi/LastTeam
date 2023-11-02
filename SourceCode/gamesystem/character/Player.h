@@ -37,6 +37,9 @@ private:
 	void BirthParticle();
 	//HPの割合を求める
 	float HpPercent();
+
+private:
+	void MoveCommon(float& pos, const float velocity, int& playerspace,const int addspace);
 private:
 	void LoadCSV();
 

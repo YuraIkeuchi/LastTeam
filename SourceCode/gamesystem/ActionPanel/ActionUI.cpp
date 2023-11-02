@@ -21,8 +21,9 @@ void ActionUI::Initialize() {
 	m_Alive = true;
 }
 //ステータス初期化
-void ActionUI::InitState(const int ActCount) {
+void ActionUI::InitState(const int ActCount, const int ID) {
 	m_ActCount = ActCount;
+	m_ID = ID;
 	m_ActType = ACT_ATTACK;
 }
 //更新
