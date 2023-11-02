@@ -35,6 +35,9 @@ public:
 		PASSIVE_02,
 		PASSIVE_03,
 		GAUGE,
+		TITLEBACK,
+		TITLETEXT,
+		GAMEOVERBACK,
 	};
 	//テクスチャの名前
 	enum tex2dName

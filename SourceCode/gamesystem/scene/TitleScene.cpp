@@ -38,11 +38,13 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
 
-
-
 	//“G
 	enemy = make_unique<TitleEnemy>();
 	enemy->Initialize();
+
+	//ƒJ[ƒh
+	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
+	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
 }
 //XV
 void TitleScene::Update(DirectXCommon* dxCommon) {
@@ -129,16 +131,19 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	}
 	Font::PostDraw();
 	IKESprite::PreDraw();
+	title_[TITLE_TEXT]->Draw();
 	SceneChanger::GetInstance()->Draw();
 	IKESprite::PostDraw();
 
 }
 //”w–Ê•`‰æ
 void TitleScene::BackDraw(DirectXCommon* dxCommon) {
+	IKESprite::PreDraw();
+	title_[TITLE_BACK]->Draw();
+	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
 	Player::GetInstance()->Draw(dxCommon);
-	//GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
 	enemy->Draw(dxCommon);
@@ -148,10 +153,6 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	//ImGui::Begin("TITLE");
-	//ImGui::Text("Title");
-	//ImGui::End();
-	//SceneChanger::GetInstance()->ImGuiDraw();
 }
 //‰ð•ú
 void TitleScene::Finalize() {
