@@ -358,11 +358,14 @@
     <ClCompile Include="SourceCode\gamesystem\character\DeckUI.cpp">
       <Filter>gamesystem\charactor\Skill\DeckUI</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\AttackArea.cpp">
-      <Filter>gamesystem\charactor\Player\Area</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp">
       <Filter>gamesystem\stageobj</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\AttackArea.cpp">
+      <Filter>gamesystem\stageobj</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\scene\TutorialTask.cpp">
+      <Filter>gamesystem\scene\Tutorial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -687,11 +690,14 @@
     <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\AttackArea.h">
-      <Filter>gamesystem\charactor\Player\Area</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h">
       <Filter>gamesystem\stageobj</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\AttackArea.h">
+      <Filter>gamesystem\stageobj</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\scene\TutorialTask.h">
+      <Filter>gamesystem\scene\Tutorial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

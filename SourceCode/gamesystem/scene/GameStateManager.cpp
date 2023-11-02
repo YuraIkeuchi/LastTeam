@@ -6,6 +6,7 @@
 #include <ImageManager.h>
 #include <SkillManager.h>
 #include <Player.h>
+#include <TutorialTask.h>
 
 GameStateManager* GameStateManager::GetInstance() {
 	static GameStateManager instance;
@@ -272,7 +273,7 @@ void GameStateManager::FinishAct() {
 }
 
 void GameStateManager::GaugeUpdate() {
-	if (SkillManager::GetInstance()->GetDeckNum() != 0) {
+	if (SkillManager::GetInstance()->GetDeckNum() != 0 && (TutorialTask::GetInstance()->GetTutorialState() >= TASK_BIRTH_BEFORE)) {
 		m_GaugeCount += 1.0f * m_DiameterGauge;
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
@@ -290,6 +291,9 @@ void GameStateManager::GaugeUpdate() {
 			StagePanel::GetInstance()->RandomPanel(SkillManager::GetInstance()->GetDeckNum());
 		}
 		m_GaugeCount = 0;
+		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTH_BEFORE) {		//チュートリアル専用
+			TutorialTask::GetInstance()->SetTutorialState(TASK_BIRTHSKIL);
+		}
 	}
 	float per = (m_GaugeCount / kGaugeCountMax);
 	float size = Ease(In, Quad, 0.5f, gaugeUI->GetSize().y, basesize.y * per);

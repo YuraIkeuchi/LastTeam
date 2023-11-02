@@ -22,9 +22,11 @@ private:
 
 private:
 	std::array<unique_ptr<Font>,3> texts;
+	std::array<bool, 3> m_Check;
 
 	enum SceneType {
 		PLAY,
-		MAP
+		MAP,
+		TUTORIAL
 	}_SceneType = PLAY;
 };

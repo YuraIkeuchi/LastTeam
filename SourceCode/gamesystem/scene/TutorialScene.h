@@ -21,8 +21,18 @@ private:
 	void FrontDraw(DirectXCommon* dxCommon);
 	void BackDraw(DirectXCommon* dxCommon);
 	void ImGuiDraw();
-private:
+	//void TutorialManager();//チュートリアルの進行状況
 
+	static void (TutorialScene::* stateTable[])();
+	void IntroState();
+	void MoveState();	//動く
+	void GetState();	//スキルゲット
+	void AttackState();		//攻撃
+	void DamageState();//ダメージを与える
+	void Skip();		//スキップ
+
+private:
+	std::array<unique_ptr<Font>, 3> texts;
 	unique_ptr<EnemyManager> enemyManager = nullptr;
 
 	unique_ptr<IKESprite> ui = nullptr;
@@ -31,4 +41,14 @@ private:
 		CHANGE_TITLE,
 		CHANGE_OVER,
 	}_ChangeType = CHANGE_TITLE;
+
+	int m_Timer = {};
+
+	enum TutorialState {
+		TUTORIAL_INTRO,
+		TUTORIAL_MOVE,
+		TUTORIAL_GETSKILL,
+		TUTORIAL_ATTACK,
+		TUTORIAL_DAMAGE,
+	}_nowstate = TUTORIAL_INTRO;
 };

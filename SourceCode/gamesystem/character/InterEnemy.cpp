@@ -5,6 +5,7 @@
 #include <StagePanel.h>
 #include <GameStateManager.h>
 #include <ParticleEmitter.h>
+#include <TutorialTask.h>
 XMFLOAT3 InterEnemy::randPanelPos() {
 	int width = Helper::GetInstance()->GetRanNum(4, 7);
 	int height = Helper::GetInstance()->GetRanNum(0, 3);
@@ -66,7 +67,7 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 	for (AttackArea* _area : area) {
 		if (Collision::SphereCollision(_area->GetPosition(), m_Radius, m_Position, m_Radius) &&
 			!_area->GetHit() && (m_HP > 0.0f)) {
-			float damage = 5.0f;
+			float damage = _area->GetDamage();
 			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
 				GameStateManager::GetInstance()->SetCounter(true);
 				damage *= 2.0f;
@@ -75,6 +76,10 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 			m_DamegeTimer = 40;
 			BirthParticle();
 			_area->SetHit(true);
+			//チュートリアル専用
+			if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
+				TutorialTask::GetInstance()->SetTutorialState(TASK_DAMAGE);
+			}
 		}
 	}
 }

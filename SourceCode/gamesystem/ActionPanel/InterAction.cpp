@@ -6,6 +6,7 @@
 #include <Helper.h>
 #include <GameStateManager.h>
 #include <SkillManager.h>
+#include <TutorialTask.h>
 
 void (InterAction::* InterAction::stateTable[])() = {
 	&InterAction::Spawn,//動きの合間
@@ -36,6 +37,9 @@ void InterAction::Collide()
 		//プレイヤーの行動数を増やしパネルを戻す
 		GameStateManager::GetInstance()->AddSkill(m_SkillID,m_Damage,m_Delay,m_Area);
 		StagePanel::GetInstance()->DeletePanel();
+		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
+			TutorialTask::GetInstance()->SetTutorialState(TASK_ATTACK);
+		}
 		m_Alive = false;
 	}
 }
