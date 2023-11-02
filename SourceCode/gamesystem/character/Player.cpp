@@ -125,8 +125,8 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("DelayTimer:%d", m_DelayTimer);
-	ImGui::Text("DelayEnd:%d", m_DelayStart);
+	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
 	ImGui::End();
 }
@@ -229,4 +229,8 @@ void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int a
 	playerspace += addspace;
 	GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 	GameStateManager::GetInstance()->SetResetPredict(true);
+}
+//チュートリアルの更新
+void Player::TitleUpdate() {
+	Obj_SetParam();
 }

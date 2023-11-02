@@ -26,7 +26,8 @@ public:
 	void UIDraw();
 	//ImGui
 	void ImGuiDraw();
-
+	//チュートリアルの更新
+	void TitleUpdate();
 private:
 	//動き
 	void Move();
