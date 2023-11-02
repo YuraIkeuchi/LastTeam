@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "IKESprite.h"
 #include <memory>
 #include <array>
