@@ -327,7 +327,7 @@ void GameStateManager::DeckInitialize() {
 }
 
 void GameStateManager::GetPassive(int ID) {
-	float posX = GotPassives.size() * 60.0f;
+	float posX = GotPassives.size() * 70.0f;
 	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,0.0f})));
 }
 
