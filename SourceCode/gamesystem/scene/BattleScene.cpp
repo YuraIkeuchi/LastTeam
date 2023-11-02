@@ -33,8 +33,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
 
-
-
 	//“G
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
