@@ -17,8 +17,9 @@ public:
 		this->distanceX = distanceX;
 		this->distanceY = distanceY;
 	}
-
-
+	//”O‚Ì‚½‚ß
+	void SetDistanceX(const int distanceX) { this->distanceX = distanceX; }
+	void SetDistanceY(const int distanceY) { this->distanceY = distanceY; }
 protected:
 	float damege = 0.0f;
 

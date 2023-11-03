@@ -3,3 +3,8 @@ SkillType,0
 Delay,30
 Name,kamasu
 Damege,20
+DistanceX,1
+DistanceY,-1
+AttackArea,0 1 0
+AttackArea,1 1 1
+AttackAreA,0 1 0

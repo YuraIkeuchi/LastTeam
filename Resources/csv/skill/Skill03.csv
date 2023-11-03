@@ -3,3 +3,6 @@ SkillType,0
 Delay,15
 Name,hit
 Damege,5
+DistanceX,1
+AttackArea,0 1
+AttackAreA,1 0

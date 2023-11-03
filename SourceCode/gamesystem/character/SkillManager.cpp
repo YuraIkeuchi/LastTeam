@@ -130,6 +130,9 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 	file.close();
 
 	std::string line;
+	//アタックエリア用
+	std::vector<std::vector<int> > MyVector;
+
 	while (std::getline(popcom, line)) {
 		std::istringstream line_stream(line);
 		std::string word;
@@ -191,6 +194,52 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 			if (atkSkill != nullptr)
 			{
 				atkSkill->SetDamege(std::stof(word));
+			}
+		}
+		else if (word.find("DistanceX") == 0) {
+			std::getline(line_stream, word, ',');
+			AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+			if (atkSkill != nullptr)
+			{
+				atkSkill->SetDistanceX(std::stoi(word));
+			}
+		}
+		else if (word.find("DistanceY") == 0) {
+			std::getline(line_stream, word, ',');
+			AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+			if (atkSkill != nullptr)
+			{
+				atkSkill->SetDistanceY(std::stoi(word));
+			}
+		}
+		else if (word.find("AttackArea") == 0) {
+			while (std::getline(line_stream, word)) {
+				std::vector<int> row;
+
+				for (char& x : word) {
+					int X = x - '0';
+					if (x != ' ')
+						row.push_back(X);
+				}
+				MyVector.push_back(row);
+			}
+		}
+		else if (word.find("AttackAreA") == 0) {
+			while (std::getline(line_stream, word)) {
+				std::vector<int> row;
+
+				for (char& x : word) {
+					int X = x - '0';
+					if (x != ' ')
+						row.push_back(X);
+				}
+				MyVector.push_back(row);
+			}
+
+			AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+			if (atkSkill != nullptr)
+			{
+				atkSkill->SetArea(MyVector);
 			}
 			break;
 		}
