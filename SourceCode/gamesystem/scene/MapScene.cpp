@@ -8,6 +8,7 @@
 
 //‘JˆÚ‚µ‚¤‚éƒV[ƒ“
 #include "BattleScene.h"
+#include <TutorialScene.h>
 
 void (MapScene::* MapScene::stateTable[])() = {
 	&MapScene::InitState,//
@@ -591,7 +592,7 @@ void MapScene::CheckState() {
 		m_State = State::mainState;
 	}
 	if (SceneChanger::GetInstance()->GetChange()) {
-		SceneManager::GetInstance()->ChangeScene<BattleScene>();
+		SceneManager::GetInstance()->ChangeScene<TutorialScene>();
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 }
