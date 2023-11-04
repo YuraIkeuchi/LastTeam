@@ -13,11 +13,10 @@ class Player :
 	public ObjCommon,
 	public GameObject
 {
-public:
-
 private:
 	static void (Player::* stateTable[])();
 public:
+
 	void InitState(const XMFLOAT3& pos);
 	void LoadResource();
 	//初期化
@@ -25,7 +24,8 @@ public:
 	//更新
 	void Update() override;
 	//描画
-	void Draw(DirectXCommon* dxCommon) override;
+	void Draw() override;
+	void Draw(DirectXCommon *dxCommon) override {};
 	//UI用
 	void UIDraw() override;
 	//ImGui

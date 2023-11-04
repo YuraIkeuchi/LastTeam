@@ -8,6 +8,7 @@
 
 #include "SkillManager.h"
 #include "Player.h"
+#include "BaseEnemy.h"
 #include "InterEnemy.h"
 
 //初期化
@@ -22,8 +23,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//パーティクル全削除
 	ParticleEmitter::GetInstance()->AllDelete();
 
-	//ゲームの状態
-	GameStateManager::GetInstance()->Initialize();
 
 	//　プレイヤー
 	{
@@ -35,17 +34,20 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 		GameStateManager::GetInstance()->SetPlayer(player);
 
 	}
+	//ステージの床
+	StagePanel::GetInstance()->LoadResource();
 
 	// エネミー
 	{
-		auto test_enemy_1 = GameObject::CreateObject<InterEnemy>();
+		auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
+		test_enemy_1->Initialize();
 	}
 
+	//ゲームの状態
+	GameStateManager::GetInstance()->Initialize();
 
 	//スキル
 	SkillManager::GetInstance()->Initialize();
-	//ステージの床
-	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
 
 	
@@ -67,7 +69,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	enemyManager->Update();
+	//enemyManager->Update();
 	//敵を倒したらシーン以降(仮)
 	if (enemyManager->BossDestroy()) {
 		SceneChanger::GetInstance()->SetChangeStart(true);
@@ -112,7 +114,7 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	game_object_manager_->UIDraw();
 
 	SceneChanger::GetInstance()->Draw();
-	enemyManager->UIDraw();
+	//enemyManager->UIDraw();
 }
 //ポストエフェクトかかる
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
@@ -123,7 +125,7 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
-	enemyManager->Draw(dxCommon);
+	//enemyManager->Draw(dxCommon);
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	IKETexture::PostDraw();

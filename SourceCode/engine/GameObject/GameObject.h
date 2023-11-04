@@ -4,10 +4,10 @@
 #include <string>
 
 #include "scene/SceneManager.h"
-#include "scene/BaseScene.h"
 #include "Property.h"
 
 
+class BaseScene;
 class GameObject
 {
 public:

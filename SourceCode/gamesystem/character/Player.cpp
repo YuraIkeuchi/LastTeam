@@ -102,7 +102,7 @@ void Player::Update() {
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
 //描画
-void Player::Draw(DirectXCommon* dxCommon) {
+void Player::Draw() {
 
 	Obj_Draw();
 }
