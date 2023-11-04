@@ -34,20 +34,20 @@ void SkillManager::Initialize()
 		CreateSkill(i);
 	}
 
-	std::vector<std::vector<int>> area =
-	{
-		{1,1,1},
-		{1,0,1},
-		{1,1,1}
-	};
-	int distanceX = 1;
-	int distanceY = -1;
-	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[0]);
-	if (atkSkill != nullptr)
-	{
-		atkSkill->SetArea(area);
-		atkSkill->SetDistance(distanceX, distanceY);
-	}
+	//std::vector<std::vector<int>> area =
+	//{
+	//	{1,1,1},
+	//	{1,0,1},
+	//	{1,1,1}
+	//};
+	//int distanceX = 1;
+	//int distanceY = -1;
+	//AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[0]);
+	//if (atkSkill != nullptr)
+	//{
+	//	//atkSkill->SetArea(area);
+	//	atkSkill->SetDistance(distanceX, distanceY);
+	//}
 }
 
 //更新(ほんますまん)
@@ -107,17 +107,23 @@ void SkillManager::ResetBirth() {
 }
 
 //スキルのデータを渡す
-void SkillManager::GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area) {
+void SkillManager::GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY) {
 	if (skill[m_BirthMax]->GetSkillType() != SkillType::damege)
 	{
 		assert(0);
 	}
 
 	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[m_BirthMax]);
-	AttackSkill* atkSkill2 = dynamic_cast<AttackSkill*>(skill[0]);
-	damage = atkSkill->GetDamege();
-	delay = skill[m_BirthMax]->Getlatency();
-	area = atkSkill2->GetArea();
+	damage = atkSkill->GetDamege();		//ダメージ
+	delay = skill[m_BirthMax]->Getlatency();		//硬直時間
+	area = atkSkill->GetArea();		//範囲
+	//プレイヤーからの距離
+	int l_DistanceX = {};
+	int l_DistanceY = {};
+	l_DistanceX = atkSkill->GetDistanceX();
+	l_DistanceY = atkSkill->GetDistanceX();
+	DisX = l_DistanceX;
+	DisY = l_DistanceY;
 }
 //スキルのCSVを読み取る
 void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
@@ -302,16 +308,4 @@ void SkillManager::BirthDeckUI(const int DeckNumber, const int DeckCount) {
 	for (auto i = 0; i < m_DeckDate.size(); i++) {
 		deckui[i]->SetID(m_DeckDate[i]);
 	}
-}
-//攻撃エリアの取得
-void SkillManager::GetAreaDate(int& DisX, int& DisY) {
-	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[0]);
-	
-	int l_DistanceX = {};
-	int l_DistanceY = {};
-	std::vector<std::vector<int>> l_Area;
-	l_DistanceX = atkSkill->GetDistanceX();
-	l_DistanceY = atkSkill->GetDistanceX();
-	DisX = l_DistanceX;
-	DisY = l_DistanceY;
 }

@@ -23,7 +23,6 @@ public:
 	void DeckCheck(const int DeckNumber,const int DeckCount);
 	//デッキのクリア
 	void DeckClear();
-	void GetAreaDate(int& DisX, int& DisY);
 private:
 	//スキルのCSVを読み取る
 	void LoadCsvSkill(std::string& FileName, const int id);
@@ -34,7 +33,7 @@ private:
 public:
 	//IDを取る
 	int GetID(const int BirthNum);
-	void GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area);
+	void GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY);
 
 	void SetDeckState(const int DeckNum);
 public:
