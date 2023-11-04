@@ -175,14 +175,16 @@ void GameStateManager::ActUIDraw() {
 	}
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const int ID, const float damage,const int Delay, vector<std::vector<int>> area) {
+void GameStateManager::AddSkill(const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY) {
 	ActState act;
 	act.ActID = ID;
 	act.ActDamage = damage;
 	act.ActDelay = Delay;
-	act.AttackArea.resize(3);
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
+	act.AttackArea.resize(7);
+	act.DistanceX = DisX;
+	act.DistanceY = DisY;
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 7; j++) {
 			act.AttackArea[i].push_back(j);
 		}
 	}
@@ -191,7 +193,6 @@ void GameStateManager::AddSkill(const int ID, const float damage,const int Delay
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
 	BirthActUI(ID);//UIも増えるよ
-	SkillManager::GetInstance()->GetAreaDate(m_DistanceX, m_DistanceY);
 	PredictManager();
 }
 //スキルUIの生成
@@ -210,15 +211,15 @@ void GameStateManager::BirthArea() {
 	int l_BirthBaseX = {};
 	int l_BirthBaseY = {};
 
-	l_BirthBaseX = m_NowWidth + m_DistanceX;		//生成の初めの位置を見てる
-	l_BirthBaseY = m_NowHeight + m_DistanceY;
+	l_BirthBaseX = m_NowWidth + m_Act[0].DistanceX;		//生成の初めの位置を見てる
+	l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
 	int AreaX = {};
 	int AreaY = {};
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
-			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0))) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0)) && (AreaX < 8)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				AttackArea* newarea = nullptr;
 				newarea = new AttackArea();
 				newarea->Initialize();
@@ -236,8 +237,8 @@ void GameStateManager::PredictManager() {
 	int l_BirthBaseX = {};
 	int l_BirthBaseY = {};
 
-	l_BirthBaseX = m_NowWidth + m_DistanceX;		//生成の初めの位置を見てる
-	l_BirthBaseY = m_NowHeight + m_DistanceY;
+	l_BirthBaseX = m_NowWidth + m_Act[0].DistanceX;;		//生成の初めの位置を見てる
+	l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
 
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
@@ -265,6 +266,7 @@ void GameStateManager::UseSkill() {
 		FinishAct();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
 		m_BirthSkill = false;
+		m_ResetPredict = true;
 	}
 }
 //行動の終了

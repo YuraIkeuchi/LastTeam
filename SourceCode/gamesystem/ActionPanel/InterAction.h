@@ -55,6 +55,8 @@ public:
 	void SetSkillID(const int SkillID) { m_SkillID = SkillID; }
 	void SetDamage(const float Damage) { m_Damage = Damage; }
 	void SetDelay(const int Delay) { m_Delay = Delay; }
+	void SetDistanceX(const int DistanceX) { m_DistanceX = DistanceX; }
+	void SetDistanceY(const int DistanceY) { m_DistanceY = DistanceY; }
 	void SetArea(const std::vector<std::vector<int>> Area) { m_Area = Area; }
 protected:
 	string m_Tag;
@@ -73,6 +75,8 @@ protected:
 	float m_Damage = {};
 	int m_Delay = {};
 	std::vector<std::vector<int>> m_Area;
+	int m_DistanceX = {};
+	int m_DistanceY = {};
 	unique_ptr<DrawNumber> _drawnumber;
 private:
 	void Spawn();//‘Ò‹@

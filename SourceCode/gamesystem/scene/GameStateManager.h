@@ -34,7 +34,7 @@ public:
 	//プレイヤーの現在位置
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
-	void AddSkill(const int ID,const float damage,const int Delay, vector<std::vector<int>> area);
+	void AddSkill(const int ID,const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY);
 private:
 	void PredictManager();
 	//攻撃した瞬間
@@ -87,7 +87,9 @@ private:
 		int ActID;//ID
 		float ActDamage;//ダメージ
 		int ActDelay;//ディレイ
-		vector<std::vector<int>> AttackArea;
+		vector<std::vector<int>> AttackArea;	//範囲
+		int DistanceX;		//プレイヤーからの距離
+		int DistanceY;		//プレイヤーからの距離
 	};
 
 	vector<ActState> m_Act;
@@ -149,7 +151,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 6 };
+	vector<int> m_DeckNumber = {0,1,3,5,6 };
 	vector<int> m_NotDeckNumber = {};
 
 	int m_DistanceX = 5;
