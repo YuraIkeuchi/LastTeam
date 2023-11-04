@@ -26,6 +26,10 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	screen = IKESprite::Create(ImageManager::MAPSCREEN, { 0,0 });
 	screen->SetSize({ 1280.f,720.f });
 
+	cheack = IKESprite::Create(ImageManager::MAP_CHEACK, { 640.f,360.f });
+	cheack->SetSize({0.f,0.f});
+	cheack->SetAnchorPoint({0.5f,0.5f});
+
 	UIs[0][Middle].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
 	UIs[0][Middle].pos = { homeX ,homeY[Middle] };
 	UIs[0][Middle].open = true;
@@ -125,6 +129,18 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	if (m_State==State::initState&&
 		SceneChanger::GetInstance()->GetChangeState() == 1) { return; }
 	
+	if (Helper::GetInstance()->FrameCheck(eFrame, eAdd)) {
+		eAdd *= -1.0f;
+		eFrame = 0.99f;
+	}
+	if (eFrame == 0.0f) {
+		eAdd *= -1.0f;
+	}
+	XMFLOAT2 size = frame->GetSize();
+	size.x = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
+	size.y = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
+	frame->SetSize(size);
+
 	(this->*stateTable[(size_t)m_State])();
 }
 
@@ -174,8 +190,15 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!end) {
 		frame->Draw();
 	}
+	IKESprite::PostDraw();
+
 	font->Draw();
 	Font::PostDraw();
+
+	IKESprite::PreDraw();
+	cheack->Draw();
+	IKESprite::PostDraw();
+
 	SceneChanger::GetInstance()->Draw();
 }
 
@@ -483,18 +506,6 @@ void MapScene::Move() {
 		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y, UIs[nowHierarchy][nowIndex].pos.y);
 		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowHierarchy][nowIndex].pos.x / 2);
 	}
-	if (Helper::GetInstance()->FrameCheck(eFrame, eAdd)) {
-		eAdd *= -1.0f;
-		eFrame = 0.99f;
-	}
-	if (eFrame == 0.0f) {
-		eAdd *= -1.0f;
-	}
-	XMFLOAT2 size = frame->GetSize();
-	size.x = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
-	size.y = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
-	frame->SetSize(size);
-
 	scroll.x += vel;
 	scroll.x = clamp(scroll.x, -3000.f, 340.f);
 }
@@ -557,13 +568,28 @@ void MapScene::MainState() {
 }
 
 void MapScene::CheckState() {
-	Input* input = Input::GetInstance();
+	const float addFrame = 1.0f / 45.f;
+	static float s_frame = 0.0f;
+	static XMFLOAT2 size = {};
 
-	if (input->TriggerButton(input->A)) {
-		SceneChanger::GetInstance()->SetChangeStart(true);
+	if (UIs[nowHierarchy][nowIndex].Tag==TUTORIAL) {
+		if (Helper::GetInstance()->FrameCheck(s_frame, addFrame)) {
+			Input* input = Input::GetInstance();
+			if (input->TriggerButton(input->B)) {
+				size = {};
+				m_State = State::mainState;
+			}
+			if (input->TriggerButton(input->A)) {
+				SceneChanger::GetInstance()->SetChangeStart(true);
+			}
+		} else {
+			size.x = Ease(Out, Elastic, s_frame, 0.f, 640.f);
+			size.y = Ease(Out, Elastic, s_frame, 0.f, 480.f);
+		}
+		cheack->SetSize(size);
+	} else {
+		m_State = State::mainState;
 	}
-
-
 	if (SceneChanger::GetInstance()->GetChange()) {
 		SceneManager::GetInstance()->ChangeScene<BattleScene>();
 		SceneChanger::GetInstance()->SetChange(false);

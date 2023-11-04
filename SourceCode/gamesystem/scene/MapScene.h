@@ -82,7 +82,8 @@ private:
 
 	int clearHierarchy = 1;
 
-	unique_ptr<IKESprite>screen = nullptr;
+	unique_ptr<IKESprite> screen = nullptr;
+	unique_ptr<IKESprite> cheack= nullptr;
 	unique_ptr<IKESprite> frame = nullptr;
 	unique_ptr<IKESprite> chara = nullptr;
 
