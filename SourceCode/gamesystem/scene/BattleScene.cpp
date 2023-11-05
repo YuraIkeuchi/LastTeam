@@ -17,7 +17,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	dxCommon->SetFullScreen(true);
 	//ポストエフェクト
 	PlayPostEffect = false;
-	
+
 	//パーティクル全削除
 	ParticleEmitter::GetInstance()->AllDelete();
 
@@ -57,7 +57,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	if (enemyManager->BossDestroy()) {
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
 			GameStateManager::GetInstance()->StageClearInit();
-		} else {
+		}
+		else {
 			_ChangeType = CHANGE_TITLE;
 			SceneChanger::GetInstance()->SetChangeStart(true);
 		}
@@ -70,10 +71,10 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 
 	if (SceneChanger::GetInstance()->GetChange()) {
 		if (_ChangeType == CHANGE_TITLE) {
-			SceneManager::GetInstance()->ChangeScene<TitleScene>(true);
+			SceneManager::GetInstance()->ChangeScene("TITLE");
 		}
 		else {
-			SceneManager::GetInstance()->ChangeScene<GameoverScene>();
+			SceneManager::GetInstance()->ChangeScene("GAMEOVER");
 		}
 		SceneChanger::GetInstance()->SetChange(false);
 	}

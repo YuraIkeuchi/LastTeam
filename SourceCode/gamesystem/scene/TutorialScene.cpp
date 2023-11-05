@@ -88,12 +88,12 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 
 	if (SceneChanger::GetInstance()->GetChange()) {
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
-		SceneManager::GetInstance()->ChangeScene<BattleScene>();
+		SceneManager::GetInstance()->ChangeScene("BATTLE");
 		/*if (_ChangeType == CHANGE_TITLE) {
 			SceneManager::GetInstance()->PopScene();
 		}
 		else {
-			
+
 		}*/
 		SceneChanger::GetInstance()->SetChange(false);
 	}
@@ -168,7 +168,7 @@ void TutorialScene::ImGuiDraw() {
 	ImGui::Text("Timer:%d", m_Timer);
 	ImGui::Text("State:%d", _nowstate);
 	ImGui::End();
-	
+
 	TutorialTask::GetInstance()->ImGuiDraw();
 }
 

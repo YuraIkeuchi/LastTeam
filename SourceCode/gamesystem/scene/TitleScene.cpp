@@ -44,7 +44,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 
 	//カード
 	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
-	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
+	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f }, { 1.0f,1.0f,1.0f,1.0f }, { 0.5f,0.5f });
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
@@ -61,33 +61,35 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	SceneChanger::GetInstance()->Update();
 	enemy->Update();
 
-	if ((input->TriggerButton(input->B))) {			//バトル
-		SceneChanger::GetInstance()->SetChangeStart(true);
-		_SceneType = PLAY;
-		//チュートリアルのタスク
-		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
+	if (!SceneChanger::GetInstance()->GetChange()) {
+		if ((input->TriggerButton(input->B))) {			//バトル
+			SceneChanger::GetInstance()->SetChangeStart(true);
+			_SceneType = PLAY;
+			//チュートリアルのタスク
+			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 
+		}
+		if (input->TriggerKey(DIK_SPACE)) {			//マップ
+			SceneChanger::GetInstance()->SetChangeStart(true);
+			_SceneType = MAP;
+			//チュートリアルのタスク
+			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
+		}
+		if (input->TriggerButton(input->X)) {			//チュートリアル
+			SceneChanger::GetInstance()->SetChangeStart(true);
+			_SceneType = TUTORIAL;
+			//チュートリアルのタスク
+			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
+		}
 	}
-	if (input->TriggerKey(DIK_SPACE)) {			//マップ
-		SceneChanger::GetInstance()->SetChangeStart(true);
-		_SceneType = MAP;
-		//チュートリアルのタスク
-		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
-	}
-	if (input->TriggerButton(input->X)) {			//チュートリアル
-		SceneChanger::GetInstance()->SetChangeStart(true);
-		_SceneType = TUTORIAL;
-		//チュートリアルのタスク
-		TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
-	}
-	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
+	else if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		if (_SceneType == PLAY) {
-			SceneManager::GetInstance()->ChangeScene<BattleScene>();
+			SceneManager::GetInstance()->ChangeScene("BATTLE");
 		} else if(_SceneType == MAP) {
-			SceneManager::GetInstance()->ChangeScene<MapScene>();
+			SceneManager::GetInstance()->ChangeScene("MAPSCENE");
 		}
 		else {
-			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
+			SceneManager::GetInstance()->ChangeScene("TUTORIAL");
 		}
 		SceneChanger::GetInstance()->SetChange(false);
 	}
@@ -105,7 +107,8 @@ void TitleScene::Draw(DirectXCommon* dxCommon) {
 		postEffect->Draw(dxCommon->GetCmdList());
 		ImGuiDraw(dxCommon);
 		dxCommon->PostDraw();
-	} else {
+	}
+	else {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		postEffect->Draw(dxCommon->GetCmdList());
 		postEffect->PostDrawScene(dxCommon->GetCmdList());
@@ -132,8 +135,8 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	Font::PostDraw();
 	IKESprite::PreDraw();
 	title_[TITLE_TEXT]->Draw();
-	SceneChanger::GetInstance()->Draw();
 	IKESprite::PostDraw();
+	SceneChanger::GetInstance()->Draw();
 
 }
 //背面描画

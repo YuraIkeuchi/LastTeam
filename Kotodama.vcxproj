@@ -110,6 +110,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResultSkill.cpp" />
+    <ClCompile Include="SourceCode\engine\enginebase\AbstractSceneFactory.cpp" />
+    <ClCompile Include="SourceCode\engine\enginebase\SceneFactory.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
@@ -216,6 +218,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ResultSkill.h" />
+    <ClInclude Include="SourceCode\engine\enginebase\AbstractSceneFactory.h" />
+    <ClInclude Include="SourceCode\engine\enginebase\SceneFactory.h" />
     <ClInclude Include="SourceCode\gamesystem\character\AttackSkill.h" />
     <ClInclude Include="SourceCode\engine\2d\DebugText.h" />
     <ClInclude Include="SourceCode\engine\2d\Feed.h" />

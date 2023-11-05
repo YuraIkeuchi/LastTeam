@@ -371,6 +371,12 @@
     <ClCompile Include="SourceCode\gamesystem\character\TitleEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\engine\enginebase\AbstractSceneFactory.cpp">
+      <Filter>engine\enginebase</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\engine\enginebase\SceneFactory.cpp">
+      <Filter>engine\enginebase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -706,6 +712,12 @@
     <ClInclude Include="ResultSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\character\TitleEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\enginebase\AbstractSceneFactory.h">
+      <Filter>engine\enginebase</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\engine\enginebase\SceneFactory.h">
+      <Filter>engine\enginebase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

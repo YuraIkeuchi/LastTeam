@@ -20,7 +20,7 @@ void GameoverScene::Update(DirectXCommon* dxCommon) {
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {			//^‚ÁˆÃ‚É‚È‚Á‚½‚ç•Ï‚í‚é
-		SceneManager::GetInstance()->ChangeScene<TitleScene>(true);
+		SceneManager::GetInstance()->ChangeScene("TITLE");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 

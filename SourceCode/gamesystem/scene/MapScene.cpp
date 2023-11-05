@@ -116,7 +116,7 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	}
 	SceneChanger::GetInstance()->Update();
 	if (SceneChanger::GetInstance()->GetChange()) {
-		SceneManager::GetInstance()->ChangeScene<BattleScene>();
+		SceneManager::GetInstance()->ChangeScene("BATTLESCENE");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 
