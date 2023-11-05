@@ -5,8 +5,10 @@
 #include <StagePanel.h>
 #include <GameStateManager.h>
 #include <ParticleEmitter.h>
+#include <TutorialTask.h>
 XMFLOAT3 InterEnemy::randPanelPos() {
-	int width = Helper::GetInstance()->GetRanNum(4, 7);
+	//本当は4~7
+	int width = Helper::GetInstance()->GetRanNum(4, 4);
 	int height = Helper::GetInstance()->GetRanNum(0, 3);
 	m_NowHeight = height;
 	m_NowWidth = width;
@@ -52,6 +54,7 @@ void InterEnemy::UIDraw() {
 	//HPバー
 	hptex->Draw();
 	//HP(数字)
+	if(m_InterHP != 0)
 	_drawnumber[FIRST_DIGHT]->Draw();
 	if (m_InterHP >= 10)
 		_drawnumber[SECOND_DIGHT]->Draw();
@@ -66,7 +69,7 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 	for (AttackArea* _area : area) {
 		if (Collision::SphereCollision(_area->GetPosition(), m_Radius, m_Position, m_Radius) &&
 			!_area->GetHit() && (m_HP > 0.0f)) {
-			float damage = 5.0f;
+			float damage = _area->GetDamage();
 			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
 				GameStateManager::GetInstance()->SetCounter(true);
 				damage *= 2.0f;
@@ -75,6 +78,10 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 			m_DamegeTimer = 40;
 			BirthParticle();
 			_area->SetHit(true);
+			//チュートリアル専用
+			if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
+				TutorialTask::GetInstance()->SetTutorialState(TASK_DAMAGE);
+			}
 		}
 	}
 }
@@ -110,9 +117,9 @@ void InterEnemy::WorldDivision() {
 	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 
 	//描画する数字と座標をここでセットする
-	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.6f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.55f, m_Position.y, m_Position.z - 0.55f });
 	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f });
-	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.15f, m_Position.y, m_Position.z - 0.55f });
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i]->GetCameraData();
 		_drawnumber[i]->SetNumber(m_DigitNumber[i]);

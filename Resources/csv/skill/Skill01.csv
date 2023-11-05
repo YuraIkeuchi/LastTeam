@@ -1,4 +1,7 @@
 ID,0
+SkillType,0
 Delay,5
 Name,punch
 Damege,1
+DistanceX,1
+AttackAreA,1

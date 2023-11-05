@@ -21,14 +21,15 @@ void ActionUI::Initialize() {
 	m_Alive = true;
 }
 //ステータス初期化
-void ActionUI::InitState(const int ActCount) {
+void ActionUI::InitState(const int ActCount, const int ID) {
 	m_ActCount = ActCount;
+	m_ID = ID;
 	m_ActType = ACT_ATTACK;
 }
 //更新
 void ActionUI::Update() {
 	UiMove();
-	
+
 	tex->SetColor(m_Color);
 	tex->SetPosition(m_Position);
 
@@ -54,11 +55,10 @@ void ActionUI::ImGuiDraw() {
 //UIの動き
 void ActionUI::UiMove() {
 	const float l_AddFrame = 0.1f;
-	m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (32.0f + ((m_ActCount) * 64.0f)));
+	m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (20.f + 32.f + ((m_ActCount) * 64.0f)));
 	if (!m_Use) {
-		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 690.0f);
-	}
-	else {
+		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 680.0f);
+	} else {
 		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 		}

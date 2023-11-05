@@ -22,9 +22,9 @@ void Player::LoadResource() {
 		_drawnumber[i] = make_unique<DrawNumber>();
 		_drawnumber[i]->Initialize();
 	}
-	_drawnumber[FIRST_DIGHT]->SetPosition({ 160.0f,600.0f });
-	_drawnumber[SECOND_DIGHT]->SetPosition({ 140.0f,600.0f });
-	_drawnumber[THIRD_DIGHT]->SetPosition({ 120.0f,600.0f });
+	_drawnumber[FIRST_DIGHT]->SetPosition({ 100.0f,620.0f });
+	_drawnumber[SECOND_DIGHT]->SetPosition({ 80.0f,620.0f });
+	_drawnumber[THIRD_DIGHT]->SetPosition({ 60.0f,620.0f });
 }
 //初期化
 bool Player::Initialize() {
@@ -70,36 +70,43 @@ void (Player::* Player::stateTable[])() = {
 };
 //更新処理
 void Player::Update() {
-	const float l_GrazeMax = 2.0f;
-
-	//状態移行(charastateに合わせる)
-	(this->*stateTable[_charaState])();
-	//ディレイタイマーが0以外ならディレイにする
-	if (m_DelayTimer != 0) {
-		_charaState = STATE_DELAY;
+	if(is_title)
+	{
+		TitleUpdate();
 	}
-	Obj_SetParam();
+	else
+	{
+		const float l_GrazeMax = 2.0f;
 
-	BirthParticle();
+		//状態移行(charastateに合わせる)
+		(this->*stateTable[_charaState])();
+		//ディレイタイマーが0以外ならディレイにする
+		if (m_DelayTimer != 0) {
+			_charaState = STATE_DELAY;
+		}
+		Obj_SetParam();
 
-	//グレイズ用にスコアを計算する
-	m_Length = Helper::GetInstance()->ChechLength(m_Position, m_GrazePos);
-	m_GrazeScore = l_GrazeMax - m_Length;
-	//最大スコアは10
-	Helper::GetInstance()->Clamp(m_GrazeScore, 0.0f, l_GrazeMax);
-	//プレイヤーの位置からスコアを加算する
-	GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
-	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
+		BirthParticle();
 
-	//表示用のHP
-	m_InterHP = (int)(m_HP);
-	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
-		_drawnumber[i]->Update();
-		m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+		//グレイズ用にスコアを計算する
+		m_Length = Helper::GetInstance()->ChechLength(m_Position, m_GrazePos);
+		m_GrazeScore = l_GrazeMax - m_Length;
+		//最大スコアは10
+		Helper::GetInstance()->Clamp(m_GrazeScore, 0.0f, l_GrazeMax);
+		//プレイヤーの位置からスコアを加算する
+		GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
+		GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
+
+		//表示用のHP
+		m_InterHP = (int)(m_HP);
+		for (auto i = 0; i < _drawnumber.size(); i++) {
+			_drawnumber[i]->SetNumber(m_DigitNumber[i]);
+			_drawnumber[i]->Update();
+			m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+		}
+		hptex->SetPosition(m_HPPos);
+		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 	}
-	hptex->SetPosition(m_HPPos);
-	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
 //描画
 void Player::Draw() {
@@ -121,52 +128,51 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("DelayTimer:%d", m_DelayTimer);
-	ImGui::Text("DelayEnd:%d", m_DelayStart);
+	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
 	ImGui::End();
 }
 //移動
 void Player::Move() {
 	const int l_TargetTimer = 10;
-	const float l_Velocity = 2.0f;
-
+	const float l_AddVelocity = 2.0f;
+	const float l_SubVelocity = -2.0f;
+	const int l_AddSpace = 1;
+	const int l_SubSpace = -1;
 	//ボタンでマスを移動する
 	if (input->PushButton(input->UP) ||
 		input->PushButton(input->DOWN) ||
 		input->PushButton(input->RIGHT) ||
-		input->PushButton(input->LEFT)) {
-		if (input->PushButton(input->UP)) {
+		input->PushButton(input->LEFT) ||
+		input->TiltPushStick(input->L_UP)||
+		input->TiltPushStick(input->L_DOWN) ||
+		input->TiltPushStick(input->L_LEFT) ||
+		input->TiltPushStick(input->L_RIGHT)
+		) {
+		if (input->PushButton(input->UP)|| input->TiltPushStick(input->L_UP)) {
 			m_InputTimer[DIR_UP]++;
-		} else if (input->PushButton(input->DOWN)) {
+		} else if (input->PushButton(input->DOWN)|| input->TiltPushStick(input->L_DOWN)) {
 			m_InputTimer[DIR_DOWN]++;
-		} else if (input->PushButton(input->RIGHT)) {
+		} else if (input->PushButton(input->RIGHT)|| input->TiltPushStick(input->L_RIGHT)) {
 			m_InputTimer[DIR_RIGHT]++;
-		} else if (input->PushButton(input->LEFT)) {
+		} else if (input->PushButton(input->LEFT)|| input->TiltPushStick(input->L_LEFT)) {
 			m_InputTimer[DIR_LEFT]++;
 		}
 	} else {			//離した瞬間
 		if (m_LimitCount == 0) {
 			if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
-				m_NowHeight++;
+				MoveCommon(m_Position.z, l_AddVelocity, m_NowHeight, l_AddSpace);
 				m_InputTimer[DIR_UP] = {};
-				m_Position.z += l_Velocity;
-				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 			} else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
-				m_NowHeight--;
+				MoveCommon(m_Position.z, l_SubVelocity, m_NowHeight, l_SubSpace);
 				m_InputTimer[DIR_DOWN] = {};
-				m_Position.z -= l_Velocity;
-				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 			} else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-				m_NowWidth++;
+				MoveCommon(m_Position.x, l_AddVelocity, m_NowWidth, l_AddSpace);
 				m_InputTimer[DIR_RIGHT] = {};
-				m_Position.x += l_Velocity;
-				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 			} else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
-				m_NowWidth--;
+				MoveCommon(m_Position.x, l_SubVelocity, m_NowWidth, l_SubSpace);
 				m_InputTimer[DIR_LEFT] = {};
-				m_Position.x -= l_Velocity;
-				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 			}
 		}
 		for (int i = 0; i < DIR_MAX; i++) {
@@ -178,34 +184,26 @@ void Player::Move() {
 	//一定フレーム立つと選択マス移動
 	if (m_InputTimer[DIR_UP] == l_TargetTimer) {
 		if (m_NowHeight < PANEL_HEIGHT - 1) {
-			m_NowHeight++;
+			MoveCommon(m_Position.z, l_AddVelocity, m_NowHeight, l_AddSpace);
 			m_LimitCount++;
-			m_Position.z += l_Velocity;
-			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 		}
 		m_InputTimer[DIR_UP] = {};
 	} else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
 		if (m_NowHeight > 0) {
-			m_NowHeight--;
+			MoveCommon(m_Position.z, l_SubVelocity, m_NowHeight, l_SubSpace);
 			m_LimitCount++;
-			m_Position.z -= l_Velocity;
-			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 		}
 		m_InputTimer[DIR_DOWN] = {};
 	} else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
 		if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-			m_NowWidth++;
+			MoveCommon(m_Position.x, l_AddVelocity, m_NowWidth, l_AddSpace);
 			m_LimitCount++;
-			m_Position.x += l_Velocity;
-			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 		}
 		m_InputTimer[DIR_RIGHT] = {};
 	} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
 		if (m_NowWidth > 0) {
-			m_NowWidth--;
+			MoveCommon(m_Position.x, l_SubVelocity, m_NowWidth, l_SubSpace);
 			m_LimitCount++;
-			m_Position.x -= l_Velocity;
-			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 		}
 		m_InputTimer[DIR_LEFT] = {};
 	}
@@ -227,4 +225,15 @@ void Player::Delay() {
 		_charaState = STATE_MOVE;
 
 	}
+}
+//プレイヤーの動きの基本
+void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int addspace) {
+	pos += velocity;
+	playerspace += addspace;
+	GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+	GameStateManager::GetInstance()->SetResetPredict(true);
+}
+//チュートリアルの更新
+void Player::TitleUpdate() {
+	Obj_SetParam();
 }

@@ -40,7 +40,6 @@ bool StagePanel::Initialize() {
 	m_SelectHeight = 0;
 	m_SelectWidth = 0;
 	actions.clear();
-	RandomPanel(3);
 	//CSV読み込み
 	return true;
 }
@@ -57,6 +56,13 @@ void StagePanel::Update() {
 		if (!actions[i]->GetAlive()) {
 			actions.erase(cbegin(actions) + i);
 		}
+	}
+
+	if (actions.size() == 0) {
+		m_AllDelete = true;
+	}
+	else {
+		m_AllDelete = false;
 	}
 }
 
@@ -89,18 +95,18 @@ void StagePanel::SetUpdate() {
 
 //バトルの更新
 void StagePanel::BattleUpdate() {
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-		RandomPanel(3);
-	}
+	//if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+	//	RandomPanel(3);
+	//}
 
 	//プレイヤーが居るマスが黄色くなる
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-				if (panels[i][j].type == NO_PANEL) {
+				if (!panels[i][j].predict) {
 					panels[i][j].color = ChangeColor(i, j);
 				}
 				else {
-					panels[i][j].color = { 0.5f,0.5f,0.5f,1.0f };
+					panels[i][j].color = { 1.0f,0.3f,0.0f,1.0f };
 				}
 			panels[i][j].object->Update();
 			panels[i][j].object->SetPosition(panels[i][j].position);
@@ -195,9 +201,9 @@ void StagePanel::RandomPanel(int num) {
 			break;
 		}
 		newAction->Initialize();
-		newAction->SetSkillID(SkillManager::GetInstance()->GetID());
-		newAction->SetDamage(SkillManager::GetInstance()->GetDamage());
-		newAction->SetDelay(SkillManager::GetInstance()->GetDelay());
+		//ステージに配布されるパネルに情報を読み取ってる
+		newAction->SetSkillID(SkillManager::GetInstance()->GetID(i));
+		newAction->GetSkillData();
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
 
@@ -205,6 +211,8 @@ void StagePanel::RandomPanel(int num) {
 		panels[width][height].object->SetPosition(panels[width][height].position);
 		panels[width][height].object->SetColor(panels[width][height].color);
 	}
+
+	SkillManager::GetInstance()->SetDeckState(SkillManager::GetInstance()->GetDeckNum() - num);
 }
 
 void StagePanel::ResetPanel() {
@@ -265,3 +273,7 @@ XMFLOAT4 StagePanel::ChangeColor(const int Weight, const int Height) {
 
 	return color;
 }
+////チェック
+//bool StagePanel::SetPredict(int width, int height, bool Frag) {
+//	panels[width][height].predict = Frag;
+//}

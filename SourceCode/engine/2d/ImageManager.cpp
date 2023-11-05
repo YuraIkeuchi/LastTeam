@@ -14,7 +14,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ACTIONUI, L"Resources/2d/objicon/action.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 	IKESprite::LoadTexture(HPNUMBERUI, L"Resources/2d/objicon/Num.png");
-	IKESprite::LoadTexture(MAPSCREEN, L"Resources/2d/sceneback/mapscreen.jpg");
+	IKESprite::LoadTexture(MAPSCREEN, L"Resources/2d/sceneback/mapscreen.png");
 	IKESprite::LoadTexture(MAPROAD, L"Resources/2d/objicon/map_road.png");
 	IKESprite::LoadTexture(MAP_CHARA, L"Resources/2d/objicon/map_chara.png");
 	IKESprite::LoadTexture(MAP_FRAME, L"Resources/2d/objicon/Frame.png");
@@ -26,6 +26,9 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(PASSIVE_02, L"Resources/2d/objicon/Passive_02.png");
 	IKESprite::LoadTexture(PASSIVE_03, L"Resources/2d/objicon/Passive_03.png");
 	IKESprite::LoadTexture(GAUGE, L"Resources/2d/effect/white1x1.png");
+	IKESprite::LoadTexture(TITLEBACK, L"Resources/2d/sceneback/TitleBack.png");
+	IKESprite::LoadTexture(TITLETEXT, L"Resources/2d/sceneback/TitleText.png");
+	IKESprite::LoadTexture(GAMEOVERBACK, L"Resources/2d/sceneback/Gameover.png");
 }
 
 //非同期処理で読み込むスプライト

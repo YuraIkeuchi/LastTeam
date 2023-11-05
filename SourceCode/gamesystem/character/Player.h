@@ -30,7 +30,10 @@ public:
 	void UIDraw() override;
 	//ImGui
 	void ImGuiDraw() override;
+	//チュートリアルの更新
+	void TitleUpdate();
 
+	void SetTitleFlag(bool flag) { is_title = flag; }
 private:
 	//動き
 	void Move();
@@ -41,6 +44,9 @@ private:
 	void BirthParticle();
 	//HPの割合を求める
 	float HpPercent();
+
+private:
+	void MoveCommon(float& pos, const float velocity, int& playerspace,const int addspace);
 private:
 	void LoadCSV();
 
@@ -52,6 +58,7 @@ public:
 	const bool GetDelayStart() { return m_DelayStart; }
 
 	float GetMaxHp() { return m_MaxHP; }
+	float GetHp() { return m_HP; }
 	void SetMaxHp(float maxhp) {
 		m_MaxHP = maxhp;
 		m_HP = maxhp;
@@ -123,7 +130,7 @@ private:
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//整数にしたHP
 
-	XMFLOAT2 m_HPPos = { 100.0f,580.0f };
+	XMFLOAT2 m_HPPos = { 25.f,600.0f };
 	XMFLOAT2 m_HPSize = { 400.0f,40.0f };
 	//桁数
 	enum DightType {
@@ -138,4 +145,6 @@ private:
 	bool m_DelayStart = false;
 
 	string m_name = "NONE";
+
+	bool is_title = false;
 };

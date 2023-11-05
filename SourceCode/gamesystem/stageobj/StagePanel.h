@@ -34,6 +34,7 @@ private:
 		int type = NO_PANEL;
 		bool isHit = false;
 		bool isEnemyHit = false;
+		bool predict = false;
 	};
 
 public:
@@ -68,6 +69,13 @@ public:
 		return panels[width][height].position;
 	}
 
+	//gettersetter
+	bool SetPredict(int width, int height, bool Flag) {
+		return panels[width][height].predict = Flag;
+	}
+
+	const bool GetAllDelete() { return m_AllDelete; }
+
 private:
 	//パネル
 	Panel panels[PANEL_WIDTH][PANEL_HEIGHT];
@@ -93,4 +101,7 @@ private:
 	//XMFLOAT3 m_SelectPos = {};
 
 	OBB m_OBB1 = {}, m_OBB2 = {};
+
+	//スキルをすべて手に入れているか
+	bool m_AllDelete = false;
 };

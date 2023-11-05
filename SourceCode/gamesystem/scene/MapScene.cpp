@@ -3,6 +3,7 @@
 #include <Helper.h>
 #include "CsvLoader.h"
 #include <sstream>
+#include <SceneChanger.h>
 
 #include "SceneManager.h"
 
@@ -12,8 +13,10 @@
 void MapScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
-
 	dxCommon->SetFullScreen(true);
+	//ポストエフェクト
+	PlayPostEffect = false;
+
 	screen = IKESprite::Create(ImageManager::MAPSCREEN, { 0,0 });
 	screen->SetSize({ 1280.f,720.f });
 
@@ -58,32 +61,46 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetPosition(framePos);
 	frame->SetSize({ 128.f,128.f });
 	frame->SetAnchorPoint({ 0.5f,0.5f });
+	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::MAP_01);
 
-	for (int i = 0; i < 20; i++) {
-		for (int j = 0; j < INDEX; j++) {
-			if (!UIs[i][j].sprite) { continue; }
-			for (int l = 0; l < 3; l++) {
-				if (UIs[i][j].nextIndex[l] == -1) { continue; }
-				for (int k = 0; k < 10; k++) {
-					int next = UIs[i][j].nextIndex[l];
-					XMFLOAT2 pos = {
-					Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.x,UIs[i + 1][next].pos.x),
-					Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y,UIs[i + 1][next].pos.y)
-					};
-					unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, pos);
-					road->SetAnchorPoint({ 0.5f,0.5f});
-					road->SetSize({16.f,16.f});
-					roadsPos.push_back(std::move(pos));
-					roads.push_back(std::move(road));
+	font = std::make_unique<Font>(sample, XMFLOAT2{ 700.f,450.f }, XMVECTOR{ 1.f,1.f,1.f,1.f });
+	//道の処理
+	{
+		for (int i = 0; i < 20; i++) {
+			for (int j = 0; j < INDEX; j++) {
+				if (!UIs[i][j].sprite) { continue; }
+				for (int l = 0; l < 3; l++) {
+					if (UIs[i][j].nextIndex[l] == -1) { continue; }
+					for (int k = 0; k < 10; k++) {
+						int next = UIs[i][j].nextIndex[l];
+						XMFLOAT2 pos = {
+						Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.x,UIs[i + 1][next].pos.x),
+						Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y,UIs[i + 1][next].pos.y)
+						};
+						unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, pos);
+						road->SetAnchorPoint({ 0.5f,0.5f });
+						road->SetSize({ 16.f,16.f });
+						roadsPos.push_back(std::move(pos));
+						roads.push_back(std::move(road));
+					}
 				}
 			}
 		}
+		for (int i = 0; i < 10; i++) {
+			unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, {});
+			road->SetAnchorPoint({ 0.5f,0.5f });
+			road->SetSize({ 16.f,16.f });
+			road->SetColor({ 1.f,1.f,0.f,1.f });
+			starRoads.push_back(std::move(road));
+		}
+		starRoadsPos.resize(10);
 	}
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
 	BlackOut();
 	Move();
+	RoadUpdate();
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
@@ -94,9 +111,15 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	}
 	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
-	for (int i = 0; i < roads.size();i++) {
+	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
+	SceneChanger::GetInstance()->Update();
+	if (SceneChanger::GetInstance()->GetChange()) {
+		SceneManager::GetInstance()->ChangeScene<BattleScene>();
+		SceneChanger::GetInstance()->SetChange(false);
+	}
+
 }
 
 void MapScene::Draw(DirectXCommon* dxCommon) {
@@ -130,6 +153,11 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	for (unique_ptr<IKESprite>& road : roads) {
 		road->Draw();
 	}
+	for (unique_ptr<IKESprite>& road : starRoads) {
+		if (!end && !moved) {
+			road->Draw();
+		}
+	}
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
@@ -137,7 +165,12 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 		}
 	}
 	chara->Draw();
-	frame->Draw();
+	if (!end) {
+		frame->Draw();
+	}
+	font->Draw();
+	Font::PostDraw();
+	SceneChanger::GetInstance()->Draw();
 }
 
 void MapScene::BackDraw(DirectXCommon* dxCommon) {
@@ -167,10 +200,16 @@ MapScene::UI MapScene::RandPannel() {
 }
 
 void MapScene::RoadUpdate() {
-
-
-
-
+	for (int k = 0; k < 10; k++) {
+		XMFLOAT2 pos = {
+		Ease(In,Linear,(float)k / 10.0f,UIs[nowHierarchy][nowIndex].pos.x,UIs[pickHierarchy][pickIndex].pos.x),
+		Ease(In,Linear,(float)k / 10.0f,UIs[nowHierarchy][nowIndex].pos.y,UIs[pickHierarchy][pickIndex].pos.y)
+		};
+		starRoadsPos[k] = pos;
+	}
+	for (int i = 0; i < 10; i++) {
+		starRoads[i]->SetPosition({ starRoadsPos[i].x + scroll.x,starRoadsPos[i].y + scroll.y });
+	}
 }
 
 void MapScene::MapCreate() {
@@ -336,18 +375,21 @@ void MapScene::ImGuiDraw() {
 
 void MapScene::BlackOut() {
 
-	for (int i = 0; i < clearHierarchy+1;i++) {
-		for (int j = 0; j < INDEX;j++) {
+	for (int i = 0; i < clearHierarchy + 1; i++) {
+		for (int j = 0; j < INDEX; j++) {
 			UIs[i][j].open = true;
 		}
 	}
 
 
 	for (array<UI, INDEX>& ui : UIs) {
-		for (int i = 0; i < INDEX;i++) {
+		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
-			if (ui[i].open) { continue; }
-			ui[i].color = {0.5f,0.5f,0.5f,1.f};
+			if (ui[i].open) {
+				ui[i].color = { 1.0f,1.0f,1.0f,1.f };
+			} else {
+				ui[i].color = { 0.5f,0.5f,0.5f,1.f };
+			}
 		}
 	}
 
@@ -355,13 +397,17 @@ void MapScene::BlackOut() {
 
 void MapScene::Move() {
 	Input* input = Input::GetInstance();
+	if (input->TriggerButton(input->A)) {
+		SceneChanger::GetInstance()->SetChangeStart(true);
+	}
+
+	if (end) { return; }
 	int vel = 0;
 	if (input->PushButton(input->LB)) {
 		vel = -10;
 	} else if (input->PushButton(input->RB)) {
 		vel = 10;
 	}
-
 	if (input->TiltStick(input->L_UP)) {
 		if (moved) { return; }
 		if (pickNextIndex == 0) { return; }
@@ -379,21 +425,52 @@ void MapScene::Move() {
 		if (moved) { return; }
 		nowIndex = pickIndex;
 		nowHierarchy = pickHierarchy;
+		clearHierarchy++;
 		moved = true;
 	}
+
+
+	if (!end) {
 		pickIndex = UIs[oldHierarchy][oldIndex].nextIndex[pickNextIndex];
 		framePos = UIs[pickHierarchy][pickIndex].pos;
 
+		if (oldPickInd != pickIndex) {
+			wchar_t* sample=L" ふ";
+			switch (UIs[pickHierarchy][pickIndex].Tag) {
+				case BATTLE:
+					sample= TextManager::GetInstance()->SearchText(TextManager::MAP_BATTLE);
+					break;
+				case BOSS:
+					sample = TextManager::GetInstance()->SearchText(TextManager::MAP_BOSS);
+					break;
+				case HEAL:
+					sample = TextManager::GetInstance()->SearchText(TextManager::MAP_HEAL);
+					break;
+				default:
+					break;
+			}
+			font->SetString(sample);
+			oldPickHis = pickHierarchy;
+			oldPickInd = pickIndex;
+		}
+
+	}
 	if (moved) {
 		if (Helper::GetInstance()->FrameCheck(mov_frame, 1 / kMoveFrame)) {
 			moved = false;
+			mov_frame = 0.0f;
 			oldIndex = nowIndex;
 			oldHierarchy = nowHierarchy;
-			if (pickHierarchy < MaxLength) {
+			if (nowHierarchy != MaxLength) {
 				pickHierarchy = nowHierarchy + 1;
+				pickNextIndex = 0;
+				pickIndex = UIs[oldHierarchy][oldIndex].nextIndex[pickNextIndex];
+				framePos = UIs[pickHierarchy][pickIndex].pos;
+			} else {
+				pickHierarchy = 0;
+				pickNextIndex = 0;
+				end = true;
 			}
-			pickNextIndex = 0;
-			mov_frame = 0.0f;
 			return;
 		}
 		charaPos.x = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.x);

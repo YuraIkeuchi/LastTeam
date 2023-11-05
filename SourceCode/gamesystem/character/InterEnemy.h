@@ -70,7 +70,7 @@ protected:
 
 	//HPÇÃUIÇ…égÇ§ïœêî
 	XMFLOAT2 m_HPPos = { 1000.0f,50.0f };
-	XMFLOAT2 m_HPSize = {100.0f,30.0f};
+	XMFLOAT2 m_HPSize = {100.0f,15.0f};
 	XMMATRIX m_MatView = {};
 	XMMATRIX m_MatProjection = {};
 	XMMATRIX m_MatPort = {};

@@ -1,17 +1,19 @@
-#include "TitleScene.h"
-#include "SceneManager.h"
+ï»¿#include "TitleScene.h"
 #include "input.h"
 #include "ImageManager.h"
-#include "ParticleEmitter.h"
-#include "SceneManager.h"
-
-// ‘JˆÚ‚µ‚¤‚éƒV[ƒ“
+#include <Player.h>
+#include <StagePanel.h>
+#include <SceneManager.h>
+#include "TitleEnemy.h"
+#include "TutorialTask.h"
+// é·ç§»ã—ã†ã‚‹ã‚·ãƒ¼ãƒ³
 #include "BattleScene.h"
 #include "MapScene.h"
+#include "TutorialScene.h"
 #include "TextManager.h"
-//‰Šú‰»
+//åˆæœŸåŒ–
 void TitleScene::Initialize(DirectXCommon* dxCommon) {
-	//‹¤’Ê‚Ì‰Šú‰»
+	//å…±é€šã®åˆæœŸåŒ–
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
 	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TITLE_01);
@@ -27,35 +29,79 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 		SceneChanger::GetInstance()->Initialize();
 		s_GameLoop = true;
 	}
+
+
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç”Ÿæˆ
+	{
+		auto player = GameObject::CreateObject<Player>();	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+		player->LoadResource();
+		player->InitState({ -4.0f,1.0f,0.0f });
+		player->Initialize();
+		player->SetTitleFlag(true);
+
+	}
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã®åºŠ
+	StagePanel::GetInstance()->LoadResource();
+	StagePanel::GetInstance()->Initialize();
+
+	//æ•µ
+	enemy = make_unique<TitleEnemy>();
+	enemy->Initialize();
+
+	//ã‚«ãƒ¼ãƒ‰
+	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
+	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
 }
-//XV
+//æ›´æ–°
 void TitleScene::Update(DirectXCommon* dxCommon) {
-	camerawork->Update(camera);
 	Input* input = Input::GetInstance();
-	if ((input->TriggerButton(input->B))) {			//ƒoƒgƒ‹
+	camerawork->Update(camera);
+	// å…¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ›´æ–°
+	game_object_manager_->Update();
+
+	//å„ã‚¯ãƒ©ã‚¹æ›´æ–°
+	camerawork->Update(camera);
+	lightGroup->Update();
+	game_object_manager_->Update();
+	StagePanel::GetInstance()->Update();
+	SceneChanger::GetInstance()->Update();
+	enemy->Update();
+
+	if ((input->TriggerButton(input->B))) {			//ãƒãƒˆãƒ«
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = PLAY;
+		//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¿ã‚¹ã‚¯
+		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 
 	}
-	if (input->TriggerKey(DIK_SPACE)) {			//ƒ}ƒbƒv
+	if (input->TriggerKey(DIK_SPACE)) {			//ãƒãƒƒãƒ—
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = MAP;
+		//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¿ã‚¹ã‚¯
+		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 	}
-
-	if (SceneChanger::GetInstance()->GetChange()) {			//^‚ÁˆÃ‚É‚È‚Á‚½‚ç•Ï‚í‚é
+	if (input->TriggerButton(input->X)) {			//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«
+		SceneChanger::GetInstance()->SetChangeStart(true);
+		_SceneType = TUTORIAL;
+		//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¿ã‚¹ã‚¯
+		TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
+	}
+	if (SceneChanger::GetInstance()->GetChange()) {			//çœŸã£æš—ã«ãªã£ãŸã‚‰å¤‰ã‚ã‚‹
 		if (_SceneType == PLAY) {
 			SceneManager::GetInstance()->ChangeScene<BattleScene>();
-		} else {
+		} else if(_SceneType == MAP) {
 			SceneManager::GetInstance()->ChangeScene<MapScene>();
+		}
+		else {
+			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
 		}
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 
-	SceneChanger::GetInstance()->Update();
 }
-//•`‰æ
+//æç”»
 void TitleScene::Draw(DirectXCommon* dxCommon) {
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚é‚©
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ã‚‹ã‹
 	if (PlayPostEffect) {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		BackDraw(dxCommon);
@@ -76,9 +122,9 @@ void TitleScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PostDraw();
 	}
 }
-//‘O–Ê•`‰æ
+//å‰é¢æç”»
 void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
-	//Š®‘S‚É‘O‚É‘‚­ƒXƒvƒ‰ƒCƒg
+	//å®Œå…¨ã«å‰ã«æ›¸ãã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	for (int i = 0; i < 3; i++) {
 		if (i != 0) {
 			if (texts[(size_t)i - 1]->GetFinish()) {
@@ -91,20 +137,29 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	}
 	Font::PostDraw();
 	IKESprite::PreDraw();
+	title_[TITLE_TEXT]->Draw();
 	SceneChanger::GetInstance()->Draw();
 	IKESprite::PostDraw();
 
 }
-//”w–Ê•`‰æ
+//èƒŒé¢æç”»
 void TitleScene::BackDraw(DirectXCommon* dxCommon) {
+	IKESprite::PreDraw();
+	title_[TITLE_BACK]->Draw();
+	IKESprite::PostDraw();
+	IKEObject3d::PreDraw();
+	StagePanel::GetInstance()->Draw(dxCommon);
+	game_object_manager_->Draw();
+	IKEObject3d::PostDraw();
+
+	enemy->Draw(dxCommon);
+
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	IKETexture::PostDraw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	ImGui::Begin("TITLE");
-	ImGui::Text("Title");
-	ImGui::End();
-	SceneChanger::GetInstance()->ImGuiDraw();
 }
-//‰ğ•ú
+//è§£æ”¾
 void TitleScene::Finalize() {
 }

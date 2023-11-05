@@ -36,7 +36,7 @@ void Font::LoadFont() {
 	m_DescriptHeap = m_DirectXCommon->CreateDescriptorHeapForSproteFont();
 	m_SpriteFont = std::make_unique<DirectX::SpriteFont>(m_DirectXCommon->GetDev(),
 		resUploadBatch,
-		L"Resources/font/keifont.spritefont",
+		L"Resources/font/newUD.spritefont",
 		m_DescriptHeap->GetCPUDescriptorHandleForHeapStart(),
 		m_DescriptHeap->GetGPUDescriptorHandleForHeapStart());
 

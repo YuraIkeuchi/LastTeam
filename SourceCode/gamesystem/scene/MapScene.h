@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseScene.h"
 #include "Passive.h"
-
+#include"Font.h"
 class MapScene : public BaseScene {
 public:
 	//èâä˙âª
@@ -82,17 +82,27 @@ private:
 	int oldHierarchy = 0;
 
 	int MaxLength = 0;
-
+	bool end = false;
 	int pickIndex = Middle;
 	int pickHierarchy = nowHierarchy + 1;
 	int pickNextIndex = 0;
+
+	int oldPickHis = pickHierarchy;
+	int oldPickInd = pickIndex;
+
 
 	XMFLOAT2 scroll = { 0,0 };
 	int vel = 10;
 
 
+	std::unique_ptr<Font> font = nullptr;
+
 	std::vector<unique_ptr<IKESprite>> roads;
 	std::vector<XMFLOAT2> roadsPos;
+
+
+	std::vector<unique_ptr<IKESprite>> starRoads;
+	std::vector<XMFLOAT2> starRoadsPos;
 
 	bool moved = false;
 	float mov_frame = 0.0f;

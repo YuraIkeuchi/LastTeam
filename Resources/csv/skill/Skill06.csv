@@ -1,4 +1,13 @@
 ID,5
+SkillType,0
 Delay,35
 Name,yabu
 Damege,50
+DistanceX,1
+AttackArea,0 1 0 0 0 0 0
+AttackArea,0 1 0 0 0 0 0
+AttackArea,0 1 0 0 0 0 0
+AttackArea,0 1 0 0 0 0 0
+AttackArea,0 1 0 0 0 0 0
+AttackArea,0 1 0 0 0 0 0
+AttackAreA,0 1 0 0 0 0 0

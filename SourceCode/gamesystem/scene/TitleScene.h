@@ -2,7 +2,9 @@
 #include "BaseScene.h"
 #include "Font.h"
 #include<memory>
-
+#include"InterEnemy.h"
+#include "IKESprite.h"
+#include <array>
 /// タイトルシーン
 class TitleScene : public BaseScene {
 public:
@@ -25,6 +27,16 @@ private:
 
 	enum SceneType {
 		PLAY,
-		MAP
+		MAP,
+		TUTORIAL
 	}_SceneType = PLAY;
+
+	unique_ptr<InterEnemy> enemy = nullptr;
+
+	array<unique_ptr<IKESprite>, 2> title_;
+
+	enum TitleParts {
+		TITLE_BACK,
+		TITLE_TEXT
+	};
 };

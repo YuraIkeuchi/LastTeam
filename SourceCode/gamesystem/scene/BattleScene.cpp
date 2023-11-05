@@ -1,4 +1,4 @@
-#include "BattleScene.h"
+ï»¿#include "BattleScene.h"
 
 #include <ParticleEmitter.h>
 #include <StagePanel.h>
@@ -10,23 +10,24 @@
 #include "Player.h"
 #include "BaseEnemy.h"
 #include "InterEnemy.h"
+#include "GameoverScene.h"
+#include "TitleScene.h"
 
-//‰Šú‰»
+// åˆæœŸåŒ–
 void BattleScene::Initialize(DirectXCommon* dxCommon)
 {
-	//‹¤’Ê‚Ì‰Šú‰»
+	//
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg
+	// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 	PlayPostEffect = false;
 	
-	//ƒp[ƒeƒBƒNƒ‹‘Síœ
+	// ãƒ‘ãƒ†ãƒ¼ã‚£ã‚¯ãƒ«
 	ParticleEmitter::GetInstance()->AllDelete();
 
-
-	//@ƒvƒŒƒCƒ„[
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç”Ÿæˆ
 	{
-		auto player = GameObject::CreateObject<Player>();	// ƒvƒŒƒCƒ„[¶¬
+		auto player = GameObject::CreateObject<Player>();	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
 		player->LoadResource();
 		player->InitState({ -8.0f,1.0f,0.0f });
 		player->Initialize();
@@ -34,35 +35,39 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 		GameStateManager::GetInstance()->SetPlayer(player);
 
 	}
-	//ƒXƒe[ƒW‚Ì°
+	//ï¿½Xï¿½Lï¿½ï¿½
+	SkillManager::GetInstance()->Initialize();
+	//ï¿½Qï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½
+	GameStateManager::GetInstance()->Initialize();
+	//ï¿½Xï¿½eï¿½[ï¿½Wï¿½Ìï¿½
 	StagePanel::GetInstance()->LoadResource();
 
-	// ƒGƒlƒ~[
+	// ï¿½Gï¿½lï¿½~ï¿½[
 	{
 		auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
 		test_enemy_1->Initialize();
 	}
 
-	//ƒQ[ƒ€‚Ìó‘Ô
+	//ï¿½Qï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½
 	GameStateManager::GetInstance()->Initialize();
 
-	//ƒXƒLƒ‹
+	//ï¿½Xï¿½Lï¿½ï¿½
 	SkillManager::GetInstance()->Initialize();
 	StagePanel::GetInstance()->Initialize();
 
 	
-	//“G
+	//ï¿½G
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
 }
-//XV
+//ï¿½Xï¿½V
 void BattleScene::Update(DirectXCommon* dxCommon)
 {
 	Input* input = Input::GetInstance();
-	// ‘SƒIƒuƒWƒFƒNƒgXV
+	// ï¿½Sï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Xï¿½V
 	game_object_manager_->Update();
 
-	//ŠeƒNƒ‰ƒXXV
+	//ï¿½eï¿½Nï¿½ï¿½ï¿½Xï¿½Xï¿½V
 	camerawork->Update(camera);
 	lightGroup->Update();
 	StagePanel::GetInstance()->Update();
@@ -70,20 +75,35 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	//enemyManager->Update();
-	//“G‚ğ“|‚µ‚½‚çƒV[ƒ“ˆÈ~(‰¼)
+	//ï¿½Gï¿½ï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½[ï¿½ï¿½ï¿½È~(ï¿½ï¿½)
 	if (enemyManager->BossDestroy()) {
+		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
+			GameStateManager::GetInstance()->StageClearInit();
+		} else {
+			_ChangeType = CHANGE_TITLE;
+			SceneChanger::GetInstance()->SetChangeStart(true);
+		}
+	}
+	//ï¿½Õ‚ê‚¢ï¿½ï¿½[ï¿½ï¿½HPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Ä‚ï¿½ï¿½Jï¿½Ú‚ï¿½ï¿½ï¿½
+	if (GameStateManager::GetInstance()->GetPlayer().lock()->GetHp() <= 0.0f) {
+		_ChangeType = CHANGE_OVER;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
-		SceneManager::GetInstance()->PopScene();
+		if (_ChangeType == CHANGE_TITLE) {
+			SceneManager::GetInstance()->ChangeScene<TitleScene>(true);
+		}
+		else {
+			SceneManager::GetInstance()->ChangeScene<GameoverScene>();
+		}
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 }
 
 void BattleScene::Draw(DirectXCommon* dxCommon) {
-	//•`‰æ•û–@
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚é‚©
+	//ï¿½`ï¿½ï¿½ï¿½ï¿½@
+	//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é‚©
 	if (PlayPostEffect) {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		BackDraw(dxCommon);
@@ -106,17 +126,18 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PostDraw();
 	}
 }
-//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚©‚©‚ç‚È‚¢
+//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
-	GameStateManager::GetInstance()->ActUIDraw();
 
 	game_object_manager_->UIDraw();
 
 	SceneChanger::GetInstance()->Draw();
 	//enemyManager->UIDraw();
+	GameStateManager::GetInstance()->ActUIDraw();
+	SceneChanger::GetInstance()->Draw();
 }
-//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚©‚©‚é
+//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	game_object_manager_->Draw();
