@@ -27,6 +27,7 @@ Font::~Font() {
 }
 
 void Font::Initialize() {
+}
 
 
 void Font::LoadFont() {
