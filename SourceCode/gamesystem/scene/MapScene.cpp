@@ -41,6 +41,12 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 	MapCreate();
 
+	//テキスト
+	text_ = make_unique<TextManager>();
+	text_->Initialize(dxCommon);
+	text_->SetConversation(TextManager::MAP_01,{-300.0f,-80.0f});
+	//text_->SetConversation(TextManager::TITLE);
+
 	switch (dungeons[0]) {
 	case 1:
 		UIs[0][Middle].nextIndex[0] = 1;
@@ -192,6 +198,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	}
 	IKESprite::PostDraw();
 
+	text_->TestDraw(dxCommon);
 	//font->Draw();
 	//Font::PostDraw();
 
@@ -466,18 +473,17 @@ void MapScene::Move() {
 			wchar_t* sample=L" ふ";
 			switch (UIs[pickHierarchy][pickIndex].Tag) {
 				case BATTLE:
-					//sample= TextManager::GetInstance()->SearchText(TextManager::MAP_BATTLE);
+					text_->SetConversation(TextManager::MAP_BATTLE, { -300.0f,-80.0f });
 					break;
 				case BOSS:
-					//sample = TextManager::GetInstance()->SearchText(TextManager::MAP_BOSS);
+					text_->SetConversation(TextManager::MAP_BOSS, { -300.0f,-80.0f });
 					break;
 				case HEAL:
-					//sample = TextManager::GetInstance()->SearchText(TextManager::MAP_HEAL);
+					text_->SetConversation(TextManager::MAP_HEAL, { -300.0f,-80.0f });
 					break;
 				default:
 					break;
 			}
-			font->SetString(sample);
 			oldPickHis = pickHierarchy;
 			oldPickInd = pickIndex;
 		}

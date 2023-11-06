@@ -44,15 +44,9 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
-	//wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_START);
-	//texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-
-	//wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::NONE);
-	//texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,0.f,1.f,1.f })));
-
-	//wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::NONE);
-	//texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
-
+	text_ = make_unique<TextManager>();
+	text_->Initialize(dxCommon);
+	text_->SetConversation(TextManager::TUTORIAL_START);
 	//敵
 	enemy = make_unique<TutorialEnemy>();
 	enemy->Initialize();
@@ -131,22 +125,11 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 //ポストエフェクトかからない
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	////完全に前に書くスプライト
-	//for (int i = 0; i < 3; i++) {
-	//	if (i != 0) {
-	//		if (texts[(size_t)i - 1]->GetFinish()) {
-	//			texts[i]->Draw();
-
-	//		}
-	//	}
-	//	else {
-	//		texts[i]->Draw();
-	//	}
-	//}
-	//Font::PostDraw();
+	text_->TestDraw(dxCommon);
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 
-	Player::GetInstance()->UIDraw();
+	//Player::GetInstance()->UIDraw();
 	enemy->UIDraw();
 	SceneChanger::GetInstance()->Draw();
 }
@@ -181,8 +164,7 @@ void TutorialScene::IntroState() {
 	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
 		_nowstate = TUTORIAL_MOVE;
 		m_Timer = {};
-	/*	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_MOVE);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));*/
+	
 	}
 }
 //移動
@@ -193,8 +175,7 @@ void TutorialScene::MoveState() {
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
-	/*	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_GET);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));*/
+		text_->SetConversation(TextManager::TUTORIAL_GET);
 		_nowstate = TUTORIAL_GETSKILL;
 	}
 }
@@ -202,11 +183,8 @@ void TutorialScene::MoveState() {
 void TutorialScene::GetState() {
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
+		text_->SetConversation(TextManager::TUTORIAL_EXPLAIN);
 		_nowstate = TUTORIAL_ATTACK;
-	/*	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_EXPLAIN1);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_EXPLAIN2);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));*/
 		m_Timer = {};
 	}
 }
@@ -215,13 +193,14 @@ void TutorialScene::AttackState() {
 	Helper::GetInstance()->CheckMin(m_Timer, 410, 1);
 
 	if (m_Timer == 200) {
+		text_->SetConversation(TextManager::TUTORIAL_MARK);
 	}
 	else if (m_Timer == 400) {
-	
+		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK);
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
-	
+		text_->SetConversation(TextManager::TUTORIAL_TEXT_DAMAGE);
 		_nowstate = TUTORIAL_DAMAGE;
 		m_Timer = {};
 	}
@@ -231,18 +210,15 @@ void TutorialScene::DamageState() {
 	if (enemy->GetHP() <= 0.0f) {
 		m_Timer++;
 		if (m_Timer == 10) {
-		
+			text_->SetConversation(TextManager::TUTORIAL_SKILL);
 		}
 		else if (m_Timer == 200) {
-	
+			text_->SetConversation(TextManager::TUTORIAL_END);
 		}
 		else if (m_Timer == 400) {
 			_nowstate = TUTORIAL_FINISH;
 		}
 		GameStateManager::GetInstance()->StageClearInit();
-	/*	if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
-			
-		}*/
 	}
 }
 //チュートリアル終わり
