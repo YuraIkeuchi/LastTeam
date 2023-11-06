@@ -27,9 +27,12 @@ public:
 
 	void Draw();
 
-	void LoadFont();
+	static void LoadFont();
 
-	static void SetGraphicMemory(DirectXCommon* dxcommon);
+	static bool StaticInitialize(DirectXCommon* dxcommon,ID3D12Device* device, ID3D12GraphicsCommandList* cmdList);
+
+
+
 	
 	static void PostDraw();
 
@@ -53,12 +56,22 @@ public:	//Getter,Setter
 	}
 
 private:
+	// デバイス
+	static ID3D12Device* device;
+	// コマンドリスト
+	static ID3D12GraphicsCommandList* cmdList;
+	// デスクリプタヒープ
+	static ComPtr<ID3D12DescriptorHeap> descHeap;
+	//グラフィック
 	static DirectX::GraphicsMemory* m_GraphicsMemory;
+	//ダイレクトエックスコモン
 	static DirectXCommon* m_DirectXCommon;
+	//
+	static std::unique_ptr<DirectX::SpriteFont> m_SpriteFont;
+	static std::unique_ptr<DirectX::SpriteBatch> m_SpriteBatch;
+
 private:
-	std::unique_ptr<DirectX::SpriteFont> m_SpriteFont = nullptr;
-	std::unique_ptr<DirectX::SpriteBatch> m_SpriteBatch = nullptr;
-	ComPtr<ID3D12DescriptorHeap> m_DescriptHeap = nullptr;
+	//ComPtr<ID3D12DescriptorHeap> m_DescriptHeap = nullptr;
 	//文字
 	wchar_t* m_Word = L"Hello World!";
 	wchar_t* m_NowWord_ = L"NULL";

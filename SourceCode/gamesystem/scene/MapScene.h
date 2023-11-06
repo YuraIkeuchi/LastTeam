@@ -13,6 +13,21 @@ public:
 	//開放
 	void Finalize() override;
 private:
+	//関数ポインタ
+	static void(MapScene::* stateTable[])();
+
+	enum class State :int{
+		initState = 0,
+		mainState,
+		checkState
+	}m_State=State::initState;
+	
+private:
+	void InitState();//待機
+	void MainState();
+	void CheckState();
+private:
+
 	/// 描画
 	void FrontDraw(DirectXCommon* dxCommon);
 	void BackDraw(DirectXCommon* dxCommon);
@@ -52,6 +67,7 @@ private:
 		BATTLE = 1,
 		BOSS,
 		HEAL,
+		TUTORIAL,
 	};
 
 	enum {
@@ -66,7 +82,8 @@ private:
 
 	int clearHierarchy = 1;
 
-	unique_ptr<IKESprite>screen = nullptr;
+	unique_ptr<IKESprite> screen = nullptr;
+	unique_ptr<IKESprite> cheack= nullptr;
 	unique_ptr<IKESprite> frame = nullptr;
 	unique_ptr<IKESprite> chara = nullptr;
 
@@ -82,6 +99,7 @@ private:
 	int oldHierarchy = 0;
 
 	int MaxLength = 0;
+	float lastScroll = 0;
 	bool end = false;
 	int pickIndex = Middle;
 	int pickHierarchy = nowHierarchy + 1;

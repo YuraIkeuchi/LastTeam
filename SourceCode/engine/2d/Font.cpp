@@ -2,8 +2,17 @@
 #include<wchar.h>
 #include <Helper.h>
 
+using namespace Microsoft::WRL;
+
 DirectX::GraphicsMemory* Font::m_GraphicsMemory = nullptr;
 DirectXCommon* Font::m_DirectXCommon = nullptr;
+
+ID3D12Device* Font::device = nullptr;
+ID3D12GraphicsCommandList* Font::cmdList = nullptr;
+ComPtr<ID3D12DescriptorHeap> Font::descHeap=nullptr;
+std::unique_ptr<DirectX::SpriteFont> Font::m_SpriteFont = nullptr;
+std::unique_ptr<DirectX::SpriteBatch> Font::m_SpriteBatch = nullptr;
+
 Font::Font(wchar_t* word, const XMFLOAT2& position, const XMVECTOR& color) {
 	m_StartFlag = true;
 	m_Word = word;
@@ -18,12 +27,11 @@ Font::~Font() {
 }
 
 void Font::Initialize() {
-	LoadFont();
 
 }
 
 void Font::LoadFont() {
-	DirectX::ResourceUploadBatch resUploadBatch(m_DirectXCommon->GetDev());
+	DirectX::ResourceUploadBatch resUploadBatch(device);
 
 	resUploadBatch.Begin();
 	DirectX::RenderTargetState rtState(
@@ -31,25 +39,42 @@ void Font::LoadFont() {
 		DXGI_FORMAT_D32_FLOAT);
 	DirectX::SpriteBatchPipelineStateDescription pd(rtState);
 
-	m_SpriteBatch = std::make_unique<DirectX::SpriteBatch>(m_DirectXCommon->GetDev(), resUploadBatch, pd);
+	m_SpriteBatch = std::make_unique<DirectX::SpriteBatch>(device, resUploadBatch, pd);
 
-	m_DescriptHeap = m_DirectXCommon->CreateDescriptorHeapForSproteFont();
-	m_SpriteFont = std::make_unique<DirectX::SpriteFont>(m_DirectXCommon->GetDev(),
+	descHeap = m_DirectXCommon->CreateDescriptorHeapForSproteFont();
+	m_SpriteFont = std::make_unique<DirectX::SpriteFont>(device,
 		resUploadBatch,
 		L"Resources/font/newUD.spritefont",
-		m_DescriptHeap->GetCPUDescriptorHandleForHeapStart(),
-		m_DescriptHeap->GetGPUDescriptorHandleForHeapStart());
+		descHeap->GetCPUDescriptorHandleForHeapStart(),
+		descHeap->GetGPUDescriptorHandleForHeapStart());
 
 	auto future = resUploadBatch.End(m_DirectXCommon->GetQue());
-	m_DirectXCommon->GetCmdList()->SetDescriptorHeaps(1, m_DescriptHeap.GetAddressOf());
+	cmdList->SetDescriptorHeaps(1, descHeap.GetAddressOf());
 	future.wait();
 	m_SpriteBatch->SetViewport(m_DirectXCommon->GetViewPort());
 }
 
+bool Font::StaticInitialize(DirectXCommon* dxcommon, ID3D12Device* device, ID3D12GraphicsCommandList* cmdList) {
+	// nullptrチェック
+	assert(dxcommon);
+	assert(device);
+	assert(cmdList);
+
+	Font::m_DirectXCommon = dxcommon;
+	Font::device = device;
+	Font::cmdList = cmdList;
+
+	m_GraphicsMemory = new DirectX::GraphicsMemory(device);
+
+	LoadFont();
+
+	return true;
+}
+
 void Font::Draw() {
 	FlowText();
-	m_DirectXCommon->GetCmdList()->SetDescriptorHeaps(1, m_DescriptHeap.GetAddressOf());
-	m_SpriteBatch->Begin(m_DirectXCommon->GetCmdList());
+	cmdList->SetDescriptorHeaps(1, descHeap.GetAddressOf());
+	m_SpriteBatch->Begin(cmdList);
 	XMFLOAT2 shadow_pos = {
 		m_Position.x - 2.f,
 		m_Position.y - 2.f
@@ -62,10 +87,6 @@ void Font::Draw() {
 	m_SpriteBatch->End();
 }
 
-void Font::SetGraphicMemory(DirectXCommon* dxcommon) {
-	m_DirectXCommon = dxcommon;
-	m_GraphicsMemory = new DirectX::GraphicsMemory(m_DirectXCommon->GetDev());
-}
 
 void Font::PostDraw() {
 	m_GraphicsMemory->Commit(m_DirectXCommon->GetQue());
