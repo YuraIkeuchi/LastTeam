@@ -20,14 +20,17 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(MAP_FRAME, L"Resources/2d/objicon/Frame.png");
 	IKESprite::LoadTexture(MAP_START, L"Resources/2d/objicon/map_00.png");
 	IKESprite::LoadTexture(MAP_NORMAL, L"Resources/2d/objicon/map_01.png");
-	IKESprite::LoadTexture(MAP_HEAL, L"Resources/2d/objicon/map_03.png");
 	IKESprite::LoadTexture(MAP_BOSS, L"Resources/2d/objicon/map_02.png");
+	IKESprite::LoadTexture(MAP_HEAL, L"Resources/2d/objicon/map_03.png");
+	IKESprite::LoadTexture(MAP_TUTORIAL, L"Resources/2d/objicon/map_04.png");
+	IKESprite::LoadTexture(MAP_CHEACK, L"Resources/2d/objicon/map_cheack.png");
 	IKESprite::LoadTexture(PASSIVE_01, L"Resources/2d/objicon/Passive_01.png");
 	IKESprite::LoadTexture(PASSIVE_02, L"Resources/2d/objicon/Passive_02.png");
 	IKESprite::LoadTexture(PASSIVE_03, L"Resources/2d/objicon/Passive_03.png");
 	IKESprite::LoadTexture(GAUGE, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(TITLEBACK, L"Resources/2d/sceneback/TitleBack.png");
 	IKESprite::LoadTexture(TITLETEXT, L"Resources/2d/sceneback/TitleText.png");
+	IKESprite::LoadTexture(GAMEOVERBACK, L"Resources/2d/sceneback/Gameover.png");
 	IKESprite::LoadTexture(GAMEOVERBACK, L"Resources/2d/sceneback/Gameover.png");
 }
 

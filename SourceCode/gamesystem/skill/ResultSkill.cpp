@@ -38,8 +38,8 @@ void ResultSkill::Draw() {
 		}
 	}
 	IKESprite::PostDraw();
-	font->Draw();
-	Font::PostDraw();
+	//font->Draw();
+	//Font::PostDraw();
 
 }
 

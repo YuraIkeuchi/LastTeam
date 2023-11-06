@@ -57,6 +57,11 @@ void Framework::Initialize(DirectXCommon* m_DirectXCommon)
 	// デバッグテキスト初期化
 
 	IKEObject3d::StaticInitialize(dxcommon->GetDev(), dxcommon->GetCmdList(), WinApp::window_width, WinApp::window_height);
+	// デバイスをセット
+	IKEFBXObject3d::SetDevice(dxcommon->GetDev());
+	// グラフィックスパイプライン生成
+	IKEFBXObject3d::CreateGraphicsPipeline();
+
 	IKETexture::StaticInitialize(dxcommon->GetDev(), dxcommon->GetCmdList(), WinApp::window_width, WinApp::window_height);
 	
 	// FBX関連静的初期化
@@ -75,7 +80,7 @@ void Framework::Initialize(DirectXCommon* m_DirectXCommon)
 	ParticleEmitter::GetInstance()->Initialize();
 
 	TextManager::GetInstance()->Initialize();
-	Font::SetGraphicMemory(dxcommon);
+	Font::StaticInitialize(dxcommon,dxcommon->GetDev(),dxcommon->GetCmdList());
 	
 	SceneSave::GetInstance()->AllReset();
 
