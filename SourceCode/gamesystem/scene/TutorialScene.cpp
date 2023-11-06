@@ -239,11 +239,22 @@ void TutorialScene::AttackState() {
 //ƒ_ƒ[ƒW‚ª“ü‚Á‚½
 void TutorialScene::DamageState() {
 	if (enemy->GetHP() <= 0.0f) {
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_ENEMYDESTROY);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_END);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		_nowstate = TUTORIAL_FINISH;
+		m_Timer++;
+		if (m_Timer == 10) {
+			wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_SKILL);
+			texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+			wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_SKILL2);
+			texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		}
+		else if (m_Timer == 200) {
+			wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_SKILL3);
+			texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+			wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_END);
+			texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		}
+		else if (m_Timer == 400) {
+			_nowstate = TUTORIAL_FINISH;
+		}
 		GameStateManager::GetInstance()->StageClearInit();
 	/*	if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
 			
