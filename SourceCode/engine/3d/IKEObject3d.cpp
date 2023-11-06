@@ -336,6 +336,7 @@ void IKEObject3d::Update()
 	constMap->cameraPos = cameraPos;
 	constMap->color = color;
 	constMap->uvval = uv;
+	constMap->LightEffect = LightEffect;
 	constBuffB0->Unmap(0, nullptr);
 	//“–‚½‚è”»’èXV
 	if (collider)

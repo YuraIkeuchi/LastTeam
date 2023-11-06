@@ -35,7 +35,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -8.0f,1.0f,0.0f });
+	Player::GetInstance()->InitState({ -8.0f,0.1f,0.0f });
 	Player::GetInstance()->Initialize();
 	//スキル
 	SkillManager::GetInstance()->Initialize();
@@ -53,26 +53,44 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 
 	_nowstate = TUTORIAL_INTRO;
 
+	//リザルトテキスト
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
-	resulttext->SetConversation(TextManager::RESULT,{5.0f,280.0f});
+	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
+
+	//丸影
+	lightGroup->SetCircleShadowActive(0, true);
+	lightGroup->SetCircleShadowActive(1, true);
 }
 //更新
 void TutorialScene::Update(DirectXCommon* dxCommon)
 {
 	Input* input = Input::GetInstance();
+	//プレイヤー
+	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	//ボス
+	lightGroup->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
+	lightGroup->Update();
 	// 全オブジェクト更新
 	game_object_manager_->Update();
 
 	//各クラス更新
 	camerawork->Update(camera);
-	lightGroup->Update();
 	Player::GetInstance()->Update();
 	StagePanel::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemy->Update();
+	if (input->TriggerButton(input->BACK)) {
+		m_End = true;
+	}
 	//敵を倒したらシーン以降(仮)
 	if (m_End) {
 		_ChangeType = CHANGE_TITLE;

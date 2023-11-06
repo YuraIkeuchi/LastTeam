@@ -79,3 +79,13 @@ bool EnemyManager::BossDestroy() {
 	}
 	return false;
 }
+//ライト
+void EnemyManager::SetLight(LightGroup* light) {
+	//ボス
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		light->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+		light->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
+		light->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
+		light->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
+	}
+}

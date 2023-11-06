@@ -12,6 +12,7 @@ TitleEnemy::TitleEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	m_Object->SetLightEffect(false);
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 
@@ -22,7 +23,7 @@ TitleEnemy::TitleEnemy() {
 }
 //èâä˙âª
 bool TitleEnemy::Initialize() {
-	m_Position = { 2.0f,1.0f,2.0f };
+	m_Position = { 2.0f,0.1f,2.0f };
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5 };

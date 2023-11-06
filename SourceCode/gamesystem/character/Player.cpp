@@ -18,7 +18,7 @@ void Player::LoadResource() {
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
 	m_Object->SetScale({ 2.f,2.f,2.f });
 	m_Object->SetPosition({ 0.0f,2.0f,0.0f });
-	m_Object->VertexCheck();
+	m_Object->SetLightEffect(false);
 
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
