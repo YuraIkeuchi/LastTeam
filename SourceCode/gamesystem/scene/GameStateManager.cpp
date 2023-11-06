@@ -61,11 +61,20 @@ void GameStateManager::Initialize() {
 		}
 		break;
 	}
+	//予測
 	predictarea.reset(new PredictArea());
 	predictarea->Initialize();
 
+	//右のゲージ
 	m_GaugeCount = {};
 	m_NotCount = (int)(m_NotDeckNumber.size()) - 1;//無いカードの枚数を検索してる(ImGui用)
+
+	//m_Object->SetScale({ 2.f,0.1f,2.f });	
+	_charge.reset(new IKETexture(ImageManager::CHARGE, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	_charge->TextureCreate();
+	_charge->Initialize();
+	_charge->SetRotation({ 90.0f,0.0f,0.0f });
+	m_ChargeScale = 1.0f;
 }
 //更新
 void GameStateManager::Update() {
@@ -116,7 +125,11 @@ void GameStateManager::Update() {
 		m_ResetPredict = false;
 	}
 	SkillManager::GetInstance()->Update();
+	Player::GetInstance()->SetDelay(m_Delay);
 
+	_charge->SetPosition({ Player::GetInstance()->GetPosition().x,0.5f,Player::GetInstance()->GetPosition().z });
+	_charge->SetScale({ m_ChargeScale,m_ChargeScale,m_ChargeScale });
+	_charge->Update();
 }
 //攻撃した瞬間
 void GameStateManager::AttackTrigger() {
@@ -127,12 +140,15 @@ void GameStateManager::AttackTrigger() {
 	if (isFinish) { return; }
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
-		m_BirthSkill = true;
-		Player::GetInstance()->SetDelayTimer(m_Act[0].ActDelay);
-		Player::GetInstance()->SetDelayStart(true);
+		m_Delay = true;
 	}
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	if (m_Delay) {
+		_charge->Draw();
+	}
+	IKETexture::PostDraw();
 	IKESprite::PreDraw();
 	skillUI->Draw();
 	gaugeUI->Draw();
@@ -151,6 +167,8 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 //描画
 void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("GameState");
+	ImGui::Text("Scale:%f", m_ChargeScale);
+	ImGui::Text("Timer:%d", m_DelayTimer);
 	if (!m_Act.empty()) {
 		ImGui::Text("damage:%f", m_Act[0].ActDamage);
 		ImGui::Text("delay:%d", m_Act[0].ActDelay);
@@ -262,12 +280,17 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 }
 //スキルの使用
 void GameStateManager::UseSkill() {
-	if (!Player::GetInstance()->GetDelayStart() && m_BirthSkill) {
+	if (m_AllActCount == 0) { return; }
+	if (!m_Delay) { return; }
+	m_ChargeScale = Helper::GetInstance()->Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
+	if (Helper::GetInstance()->CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
 		BirthArea();
 		FinishAct();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
-		m_BirthSkill = false;
 		m_ResetPredict = true;
+		m_Delay = false;
+		m_DelayTimer = {};
+		m_ChargeScale = 5;
 	}
 }
 //行動の終了

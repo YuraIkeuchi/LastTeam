@@ -336,9 +336,6 @@
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp">
       <Filter>gamesystem\Text</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\SkillBase.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClCompile>
@@ -687,11 +684,7 @@
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h">
       <Filter>gamesystem\Text</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h" />
     <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h">
-      <Filter>gamesystem\charactor\Skill</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\SkillManager.h">
       <Filter>gamesystem\charactor\Skill</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h">
@@ -934,9 +927,6 @@
     </Filter>
     <Filter Include="gamesystem\scene\Base\Clear">
       <UniqueIdentifier>{836dd921-f6f8-4000-addf-b66663142475}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\charactor\Player\Area">
-      <UniqueIdentifier>{7ec79472-1212-466d-acad-f2d54ca50e59}</UniqueIdentifier>
     </Filter>
     <Filter Include="gamesystem\skill">
       <UniqueIdentifier>{21e0b239-fd1c-40b5-92bf-ff38bbc889cb}</UniqueIdentifier>

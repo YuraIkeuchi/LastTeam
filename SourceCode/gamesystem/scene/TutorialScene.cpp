@@ -35,7 +35,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -8.0f,1.0f,0.0f });
+	Player::GetInstance()->InitState({ -8.0f,0.1f,0.0f });
 	Player::GetInstance()->Initialize();
 	//スキル
 	SkillManager::GetInstance()->Initialize();
@@ -44,38 +44,53 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
-	//wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_START);
-	//texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-
-	//wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::NONE);
-	//texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,0.f,1.f,1.f })));
-
-	//wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::NONE);
-	//texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
-
+	text_ = make_unique<TextManager>();
+	text_->Initialize(dxCommon);
+	text_->SetConversation(TextManager::TUTORIAL_START);
 	//敵
 	enemy = make_unique<TutorialEnemy>();
 	enemy->Initialize();
 
 	_nowstate = TUTORIAL_INTRO;
 
+	//リザルトテキスト
+	resulttext = make_unique<TextManager>();
+	resulttext->Initialize(dxCommon);
+	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
+
+	//丸影
+	lightGroup->SetCircleShadowActive(0, true);
+	lightGroup->SetCircleShadowActive(1, true);
 }
 //更新
 void TutorialScene::Update(DirectXCommon* dxCommon)
 {
 	Input* input = Input::GetInstance();
+	//プレイヤー
+	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	//ボス
+	lightGroup->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
+	lightGroup->Update();
 	// 全オブジェクト更新
 	game_object_manager_->Update();
 
 	//各クラス更新
 	camerawork->Update(camera);
-	lightGroup->Update();
 	Player::GetInstance()->Update();
 	StagePanel::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemy->Update();
+	if (input->TriggerButton(input->BACK)) {
+		m_End = true;
+	}
 	//敵を倒したらシーン以降(仮)
 	if (m_End) {
 		_ChangeType = CHANGE_TITLE;
@@ -131,22 +146,14 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 //ポストエフェクトかからない
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	////完全に前に書くスプライト
-	//for (int i = 0; i < 3; i++) {
-	//	if (i != 0) {
-	//		if (texts[(size_t)i - 1]->GetFinish()) {
-	//			texts[i]->Draw();
-
-	//		}
-	//	}
-	//	else {
-	//		texts[i]->Draw();
-	//	}
-	//}
-	//Font::PostDraw();
+	text_->TestDraw(dxCommon);
+	if (_nowstate == TUTORIAL_DAMAGE) {
+		resulttext->TestDraw(dxCommon);
+	}
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 
-	Player::GetInstance()->UIDraw();
+	//Player::GetInstance()->UIDraw();
 	enemy->UIDraw();
 	SceneChanger::GetInstance()->Draw();
 }
@@ -181,8 +188,7 @@ void TutorialScene::IntroState() {
 	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
 		_nowstate = TUTORIAL_MOVE;
 		m_Timer = {};
-	/*	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_MOVE);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));*/
+	
 	}
 }
 //移動
@@ -193,8 +199,7 @@ void TutorialScene::MoveState() {
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
-	/*	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_GET);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));*/
+		text_->SetConversation(TextManager::TUTORIAL_GET);
 		_nowstate = TUTORIAL_GETSKILL;
 	}
 }
@@ -202,11 +207,8 @@ void TutorialScene::MoveState() {
 void TutorialScene::GetState() {
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
+		text_->SetConversation(TextManager::TUTORIAL_EXPLAIN);
 		_nowstate = TUTORIAL_ATTACK;
-	/*	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_EXPLAIN1);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_EXPLAIN2);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));*/
 		m_Timer = {};
 	}
 }
@@ -215,13 +217,14 @@ void TutorialScene::AttackState() {
 	Helper::GetInstance()->CheckMin(m_Timer, 410, 1);
 
 	if (m_Timer == 200) {
+		text_->SetConversation(TextManager::TUTORIAL_MARK);
 	}
 	else if (m_Timer == 400) {
-	
+		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK);
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
-	
+		text_->SetConversation(TextManager::TUTORIAL_TEXT_DAMAGE);
 		_nowstate = TUTORIAL_DAMAGE;
 		m_Timer = {};
 	}
@@ -231,18 +234,15 @@ void TutorialScene::DamageState() {
 	if (enemy->GetHP() <= 0.0f) {
 		m_Timer++;
 		if (m_Timer == 10) {
-		
+			text_->SetConversation(TextManager::TUTORIAL_SKILL);
 		}
 		else if (m_Timer == 200) {
-	
+			text_->SetConversation(TextManager::TUTORIAL_END);
 		}
 		else if (m_Timer == 400) {
 			_nowstate = TUTORIAL_FINISH;
 		}
 		GameStateManager::GetInstance()->StageClearInit();
-	/*	if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
-			
-		}*/
 	}
 }
 //チュートリアル終わり

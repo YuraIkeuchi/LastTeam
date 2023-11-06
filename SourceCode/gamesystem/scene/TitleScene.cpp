@@ -35,7 +35,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -4.0f,1.0f,2.0f });
+	Player::GetInstance()->InitState({ -4.0f,0.1f,2.0f });
 	Player::GetInstance()->Initialize();
 	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
@@ -45,9 +45,13 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	enemy = make_unique<TitleEnemy>();
 	enemy->Initialize();
 
-	//カード
+	//タイトル
 	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
 	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
+
+	//丸影
+	lightGroup->SetCircleShadowActive(0, true);
+	lightGroup->SetCircleShadowActive(1, true);
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
@@ -58,7 +62,19 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 
 	//各クラス更新
 	camerawork->Update(camera);
+	//プレイヤー
+	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	//ボス
+	lightGroup->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
 	lightGroup->Update();
+	
+	//各クラス更新
 	Player::GetInstance()->TitleUpdate();
 	StagePanel::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
@@ -157,6 +173,7 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
+	camerawork->ImGuiDraw();
 }
 //解放
 void TitleScene::Finalize() {

@@ -45,6 +45,7 @@ public:
 	enum tex2dName
 	{
 		MAGIC,
+		CHARGE,
 	};
 	enum particleName
 	{

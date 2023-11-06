@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "IKESprite.h"
+#include "IKETexture.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -80,8 +81,8 @@ public:
 	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
 private:
-	static const int ACT_PATTERN = 3;
 private:
+	unique_ptr<IKETexture> _charge;
 	bool isFinish = false;
 	bool isChangeScene = false;
 	struct ActState {
@@ -94,8 +95,6 @@ private:
 	};
 
 	vector<ActState> m_Act;
-	//各行動回数
-	int m_ActCount[ACT_PATTERN] = {};
 
 	//全行動回数
 	int m_AllActCount = {};
@@ -152,7 +151,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = {0};
+	vector<int> m_DeckNumber = {0,6};
 	vector<int> m_NotDeckNumber = {};
 
 	int m_DistanceX = 0;
@@ -164,4 +163,8 @@ private:
 
 	bool m_ResetPredict = false;
 	std::unique_ptr<ResultSkill> resultSkill;
+
+	float m_ChargeScale = {};
+	int m_DelayTimer = {};
+	bool m_DelayStart = false;
 };

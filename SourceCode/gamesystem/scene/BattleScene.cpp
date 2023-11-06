@@ -23,7 +23,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -8.0f,1.0f,0.0f });
+	Player::GetInstance()->InitState({ -8.0f,0.1f,0.0f });
 	Player::GetInstance()->Initialize();
 	//スキル
 	SkillManager::GetInstance()->Initialize();
@@ -36,17 +36,30 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
+
+	//リザルトテキスト
+	resulttext = make_unique<TextManager>();
+	resulttext->Initialize(dxCommon);
+	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
+
+	//丸影
+	lightGroup->SetCircleShadowActive(0, true);
+	lightGroup->SetCircleShadowActive(1, true);
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
 {
-	Input* input = Input::GetInstance();
+	//プレイヤー
+	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	lightGroup->Update();
 	// 全オブジェクト更新
 	game_object_manager_->Update();
 
 	//各クラス更新
 	camerawork->Update(camera);
-	lightGroup->Update();
 	if (!GameStateManager::GetInstance()->GetIsFinish()) {
 		Player::GetInstance()->Update();
 	}
@@ -55,6 +68,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
+	enemyManager->SetLight(lightGroup);
 	//敵を倒したらシーン以降(仮)
 	if (enemyManager->BossDestroy()) {
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
@@ -109,7 +123,9 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 //ポストエフェクトかからない
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
-
+	if (enemyManager->BossDestroy()) {
+		resulttext->TestDraw(dxCommon);
+	}
 	Player::GetInstance()->UIDraw();
 	enemyManager->UIDraw();
 	GameStateManager::GetInstance()->ActUIDraw();

@@ -2,7 +2,7 @@
 #include"InterEnemy.h"
 #include<list>
 #include<memory>
-
+#include "LightGroup.h"
 class EnemyManager {
 protected:
 	// DirectX::‚ğÈ—ª
@@ -29,7 +29,14 @@ public:
 	//“G‚Ì€–Sˆ—
 	bool BossDestroy();
 
+	void SetLight(LightGroup* light);
+
 private:
 	std::list<unique_ptr<InterEnemy>> enemys;
+
+	//ŠÛ‰e(ƒ{ƒX)
+	float BosscircleShadowDir[3] = { 0,-1,0 };
+	float BosscircleShadowAtten[3] = { 0.5f,0.6f,0.0f };
+	float BosscircleShadowFactorAngle[2] = { 0.0f, 0.3f };
 };
 

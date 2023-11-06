@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseScene.h"
 #include "Passive.h"
-#include"Font.h"
+#include"TextManager.h"
 class MapScene : public BaseScene {
 public:
 	//èâä˙âª
@@ -79,7 +79,7 @@ private:
 
 	std::string dungeon;
 	vector<int> dungeons;
-
+	unique_ptr<TextManager> text_;
 	int clearHierarchy = 1;
 
 	unique_ptr<IKESprite> screen = nullptr;
@@ -111,9 +111,6 @@ private:
 
 	XMFLOAT2 scroll = { 0,0 };
 	int vel = 10;
-
-
-	std::unique_ptr<Font> font = nullptr;
 
 	std::vector<unique_ptr<IKESprite>> roads;
 	std::vector<XMFLOAT2> roadsPos;

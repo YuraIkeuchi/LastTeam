@@ -40,6 +40,13 @@ public:
 		RESULT,
 	};
 
+	enum PosType {
+		FIRST_POS = 0,
+		SECOND_POS,
+		THIRD_POS,
+		ALL_POS,
+	};
+
 	static TextManager* GetInstance();
 
 	//
@@ -57,13 +64,14 @@ public:
 
 	void SetOnceColor(int row, const XMVECTOR& color = { 1.f,1.f,1.f,1.f });
 
-	void SetConversation(Name name = NONE, const XMVECTOR& color = { 1.f,1.f,1.f,1.f });
+	void SetConversation(Name name = NONE, const XMFLOAT2& pos = { 5.f,0.f }, const XMVECTOR& color = { 1.f,1.f,1.f,1.f });
 
 	void NoneText();
 
 	void GetWordSize(Word word);
 
-	void SetRowPosition(float posX);
+	//void SetRowPosition(float posX);
+
 private:
 
 	//
@@ -95,5 +103,6 @@ private:
 	wchar_t* test2;
 
 	Name old = NONE;
+
 };
 
