@@ -10,6 +10,10 @@
 #include <Helper.h>
 #include "BattleScene.h"
 
+#include <imgui.h>
+#include <imgui_impl_dx12.h>
+#include <imgui_impl_win32.h>
+
 //ó‘Ô‘JˆÚ
 /*state‚Ì•À‚Ñ‡‚É‡‚í‚¹‚é*/
 void (TutorialScene::* TutorialScene::stateTable[])() = {

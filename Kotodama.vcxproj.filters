@@ -374,6 +374,27 @@
     <ClCompile Include="SourceCode\gamesystem\character\TitleEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
+    <ClCompile Include="lib\imgui\include\imgui.cpp">
+      <Filter>ImGUi</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui\include\imgui_draw.cpp">
+      <Filter>ImGUi</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui\include\imgui_impl_dx12.cpp">
+      <Filter>ImGUi</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui\include\imgui_impl_win32.cpp">
+      <Filter>ImGUi</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui\include\imgui_tables.cpp">
+      <Filter>ImGUi</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui\include\imgui_widgets.cpp">
+      <Filter>ImGUi</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui\include\imgui_demo.cpp">
+      <Filter>ImGUi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -713,6 +734,30 @@
     <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Base</Filter>
     </ClInclude>
+    <ClInclude Include="lib\imgui\include\imconfig.h">
+      <Filter>ImGUi</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\include\imgui.h">
+      <Filter>ImGUi</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\include\imgui_impl_dx12.h">
+      <Filter>ImGUi</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\include\imgui_impl_win32.h">
+      <Filter>ImGUi</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\include\imgui_internal.h">
+      <Filter>ImGUi</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\include\imstb_rectpack.h">
+      <Filter>ImGUi</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\include\imstb_textedit.h">
+      <Filter>ImGUi</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\include\imstb_truetype.h">
+      <Filter>ImGUi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
@@ -923,6 +968,9 @@
     </Filter>
     <Filter Include="gamesystem\charactor\Player\Area">
       <UniqueIdentifier>{7ec79472-1212-466d-acad-f2d54ca50e59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGUi">
+      <UniqueIdentifier>{598dadcd-3b8d-4dda-8403-a41316b53aa3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

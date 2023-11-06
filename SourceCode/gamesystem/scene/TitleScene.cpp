@@ -6,6 +6,7 @@
 #include <SceneManager.h>
 #include "TitleEnemy.h"
 #include "TutorialTask.h"
+#include "GameStateManager.h"
 // 遷移しうるシーン
 #include "BattleScene.h"
 #include "MapScene.h"
@@ -38,6 +39,9 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 		player->InitState({ -4.0f,1.0f,0.0f });
 		player->Initialize();
 		player->SetTitleFlag(true);
+
+		GameStateManager::GetInstance()->SetPlayer(player);
+
 
 	}
 	//ステージの床
