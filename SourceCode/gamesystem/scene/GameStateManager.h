@@ -62,6 +62,7 @@ public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
 	const bool GetIsChangeScene() { return isChangeScene; }
+	const bool GetIsFinish() { return isFinish; }
 
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
