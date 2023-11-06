@@ -2,6 +2,7 @@
 #include"InterEnemy.h"
 #include<list>
 #include<memory>
+#include "CsvLoader.h"
 
 class EnemyManager {
 protected:
@@ -28,8 +29,12 @@ public:
 
 	//敵の死亡処理
 	bool BossDestroy();
-
+	/// <summary>
+	/// マップにスポーン
+	/// </summary>
+	void Spawn2Map();
 private:
+
 	std::list<unique_ptr<InterEnemy>> enemys;
 };
 
