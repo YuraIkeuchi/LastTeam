@@ -72,8 +72,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetSize({ 128.f,128.f });
 	frame->SetAnchorPoint({ 0.5f,0.5f });
 
-	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::MAP_01);
-	font = std::make_unique<Font>(sample, XMFLOAT2{ 700.f,450.f }, XMVECTOR{ 1.f,1.f,1.f,1.f });
+
 	//“¹‚Ìˆ—
 	{
 		for (int i = 0; i < 20; i++) {
@@ -467,13 +466,13 @@ void MapScene::Move() {
 			wchar_t* sample=L" ‚Ó";
 			switch (UIs[pickHierarchy][pickIndex].Tag) {
 				case BATTLE:
-					sample= TextManager::GetInstance()->SearchText(TextManager::MAP_BATTLE);
+					//sample= TextManager::GetInstance()->SearchText(TextManager::MAP_BATTLE);
 					break;
 				case BOSS:
-					sample = TextManager::GetInstance()->SearchText(TextManager::MAP_BOSS);
+					//sample = TextManager::GetInstance()->SearchText(TextManager::MAP_BOSS);
 					break;
 				case HEAL:
-					sample = TextManager::GetInstance()->SearchText(TextManager::MAP_HEAL);
+					//sample = TextManager::GetInstance()->SearchText(TextManager::MAP_HEAL);
 					break;
 				default:
 					break;

@@ -44,14 +44,14 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
-	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_START);
-	texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+	//wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_START);
+	//texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
 
-	wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::NONE);
-	texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,0.f,1.f,1.f })));
+	//wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::NONE);
+	//texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,0.f,1.f,1.f })));
 
-	wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::NONE);
-	texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
+	//wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::NONE);
+	//texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
 
 	//敵
 	enemy = make_unique<TutorialEnemy>();
@@ -130,19 +130,19 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 }
 //ポストエフェクトかからない
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
-	//完全に前に書くスプライト
-	for (int i = 0; i < 3; i++) {
-		if (i != 0) {
-			if (texts[(size_t)i - 1]->GetFinish()) {
-				texts[i]->Draw();
+	////完全に前に書くスプライト
+	//for (int i = 0; i < 3; i++) {
+	//	if (i != 0) {
+	//		if (texts[(size_t)i - 1]->GetFinish()) {
+	//			texts[i]->Draw();
 
-			}
-		}
-		else {
-			texts[i]->Draw();
-		}
-	}
-	Font::PostDraw();
+	//		}
+	//	}
+	//	else {
+	//		texts[i]->Draw();
+	//	}
+	//}
+	//Font::PostDraw();
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 
@@ -181,8 +181,8 @@ void TutorialScene::IntroState() {
 	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
 		_nowstate = TUTORIAL_MOVE;
 		m_Timer = {};
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_MOVE);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+	/*	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_MOVE);
+		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));*/
 	}
 }
 //移動
@@ -193,8 +193,8 @@ void TutorialScene::MoveState() {
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_GET);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+	/*	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_GET);
+		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));*/
 		_nowstate = TUTORIAL_GETSKILL;
 	}
 }
@@ -203,10 +203,10 @@ void TutorialScene::GetState() {
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
 		_nowstate = TUTORIAL_ATTACK;
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_EXPLAIN1);
+	/*	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_EXPLAIN1);
 		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
 		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_EXPLAIN2);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));*/
 		m_Timer = {};
 	}
 }
@@ -215,23 +215,13 @@ void TutorialScene::AttackState() {
 	Helper::GetInstance()->CheckMin(m_Timer, 410, 1);
 
 	if (m_Timer == 200) {
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_MARK1);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_MARK2);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
 	}
 	else if (m_Timer == 400) {
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_TEXT_ATTACK);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::NONE);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+	
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_TEXT_DAMAGE);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_ENEMYKNOCK);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+	
 		_nowstate = TUTORIAL_DAMAGE;
 		m_Timer = {};
 	}
@@ -241,16 +231,10 @@ void TutorialScene::DamageState() {
 	if (enemy->GetHP() <= 0.0f) {
 		m_Timer++;
 		if (m_Timer == 10) {
-			wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_SKILL);
-			texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-			wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_SKILL2);
-			texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		
 		}
 		else if (m_Timer == 200) {
-			wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_SKILL3);
-			texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-			wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_END);
-			texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+	
 		}
 		else if (m_Timer == 400) {
 			_nowstate = TUTORIAL_FINISH;

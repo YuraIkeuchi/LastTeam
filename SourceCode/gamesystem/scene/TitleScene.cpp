@@ -25,6 +25,9 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::TITLE_03);
 	//texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
 
+	text_ = make_unique<TextManager>();
+	text_->Initialize(dxCommon);
+	text_->SetConversation(TextManager::TITLE);
 	if (!s_GameLoop) {
 		SceneChanger::GetInstance()->Initialize();
 		s_GameLoop = true;
@@ -130,6 +133,7 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	//	}
 	//}
 	//Font::PostDraw();
+	text_->TestDraw(dxCommon);
 	IKESprite::PreDraw();
 	title_[TITLE_TEXT]->Draw();
 	SceneChanger::GetInstance()->Draw();

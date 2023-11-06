@@ -5,7 +5,6 @@
 #include <ActionUI.h>
 #include <Passive.h>
 #include "DrawNumber.h"
-#include <Font.h>
 
 class ResultSkill {
 public:
@@ -42,8 +41,6 @@ private:
 
 private:
 	bool isStart = false;
-	std::unique_ptr<Font>font;
-
 	std::unique_ptr<IKESprite> backScreen;
 	std::list<ResultUI> choiceSkills;
 	int nowPos = 0;
