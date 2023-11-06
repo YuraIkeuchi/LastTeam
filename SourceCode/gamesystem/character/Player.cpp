@@ -18,7 +18,7 @@ void Player::LoadResource() {
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
 	m_Object->SetScale({ 2.f,2.f,2.f });
 	m_Object->SetPosition({ 0.0f,2.0f,0.0f });
-	m_Object->VertexCheck();
+	m_Object->SetLightEffect(false);
 
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
@@ -78,10 +78,10 @@ void Player::Update() {
 
 	//状態移行(charastateに合わせる)
 	(this->*stateTable[_charaState])();
-	//ディレイタイマーが0以外ならディレイにする
-	if (m_DelayTimer != 0) {
-		_charaState = STATE_DELAY;
-	}
+	////ディレイタイマーが0以外ならディレイにする
+	//if (m_DelayTimer != 0) {
+	//	_charaState = STATE_DELAY;
+	//}
 	Obj_SetParam();
 
 	BirthParticle();
@@ -132,6 +132,7 @@ void Player::ImGuiDraw() {
 }
 //移動
 void Player::Move() {
+	if (m_Delay) { return; }
 	const int l_TargetTimer = 10;
 	const float l_AddVelocity = 2.0f;
 	const float l_SubVelocity = -2.0f;
@@ -216,12 +217,12 @@ float Player::HpPercent() {
 }
 //ディレイ処理
 void Player::Delay() {
-	if (Helper::GetInstance()->CheckMax(m_DelayTimer, 0, -1)) {
+	/*if (Helper::GetInstance()->CheckMax(m_DelayTimer, 0, -1)) {
 
 		m_DelayStart = false;
 		_charaState = STATE_MOVE;
 
-	}
+	}*/
 }
 //プレイヤーの動きの基本
 void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int addspace) {

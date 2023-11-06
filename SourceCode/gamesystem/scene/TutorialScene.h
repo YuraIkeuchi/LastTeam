@@ -33,7 +33,7 @@ private:
 	void Skip();		//スキップ
 
 private:
-	std::array<unique_ptr<Font>, 3> texts;
+	unique_ptr<TextManager> text_;
 	unique_ptr<InterEnemy> enemy = nullptr;
 
 	unique_ptr<IKESprite> ui = nullptr;

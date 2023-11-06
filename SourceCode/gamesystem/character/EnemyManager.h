@@ -4,6 +4,7 @@
 #include<memory>
 #include "CsvLoader.h"
 
+#include "LightGroup.h"
 class EnemyManager {
 protected:
 	// DirectX::を省略
@@ -29,12 +30,20 @@ public:
 
 	//敵の死亡処理
 	bool BossDestroy();
+
+
+	void SetLight(LightGroup* light);
+private:
 	/// <summary>
 	/// マップにスポーン
 	/// </summary>
 	void Spawn2Map();
 private:
-
 	std::list<unique_ptr<InterEnemy>> enemys;
+
+	//丸影(ボス)
+	float BosscircleShadowDir[3] = { 0,-1,0 };
+	float BosscircleShadowAtten[3] = { 0.5f,0.6f,0.0f };
+	float BosscircleShadowFactorAngle[2] = { 0.0f, 0.3f };
 };
 
