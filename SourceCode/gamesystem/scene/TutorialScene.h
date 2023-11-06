@@ -2,7 +2,7 @@
 #include "BaseScene.h"
 #include"BossText.h"
 #include "MessageWindow.h"
-#include "EnemyManager.h"
+#include"InterEnemy.h"
 
 //ゲームプレイシーン
 class TutorialScene : public BaseScene
@@ -34,7 +34,7 @@ private:
 
 private:
 	std::array<unique_ptr<Font>, 3> texts;
-	unique_ptr<EnemyManager> enemyManager = nullptr;
+	unique_ptr<InterEnemy> enemy = nullptr;
 
 	unique_ptr<IKESprite> ui = nullptr;
 

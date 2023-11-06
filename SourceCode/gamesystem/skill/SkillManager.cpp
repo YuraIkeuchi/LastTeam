@@ -121,7 +121,7 @@ void SkillManager::GetSkillData(float& damage, int& delay, vector<std::vector<in
 	int l_DistanceX = {};
 	int l_DistanceY = {};
 	l_DistanceX = atkSkill->GetDistanceX();
-	l_DistanceY = atkSkill->GetDistanceX();
+	l_DistanceY = atkSkill->GetDistanceY();
 	DisX = l_DistanceX;
 	DisY = l_DistanceY;
 }

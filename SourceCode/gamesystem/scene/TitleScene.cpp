@@ -16,14 +16,14 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
-	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TITLE_01);
-	texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+	//wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TITLE_01);
+	//texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
 
-	wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TITLE_02);
-	texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,0.f,1.f,1.f })));
+	//wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TITLE_02);
+	//texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,0.f,1.f,1.f })));
 
-	wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::TITLE_03);
-	texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
+	//wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::TITLE_03);
+	//texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
 
 	if (!s_GameLoop) {
 		SceneChanger::GetInstance()->Initialize();
@@ -118,18 +118,18 @@ void TitleScene::Draw(DirectXCommon* dxCommon) {
 }
 //前面描画
 void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
-	//完全に前に書くスプライト
-	for (int i = 0; i < 3; i++) {
-		if (i != 0) {
-			if (texts[(size_t)i - 1]->GetFinish()) {
-				texts[i]->Draw();
+	////完全に前に書くスプライト
+	//for (int i = 0; i < 3; i++) {
+	//	if (i != 0) {
+	//		if (texts[(size_t)i - 1]->GetFinish()) {
+	//			texts[i]->Draw();
 
-			}
-		} else {
-			texts[i]->Draw();
-		}
-	}
-	Font::PostDraw();
+	//		}
+	//	} else {
+	//		texts[i]->Draw();
+	//	}
+	//}
+	//Font::PostDraw();
 	IKESprite::PreDraw();
 	title_[TITLE_TEXT]->Draw();
 	SceneChanger::GetInstance()->Draw();

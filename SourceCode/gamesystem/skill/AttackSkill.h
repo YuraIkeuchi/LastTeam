@@ -13,10 +13,6 @@ public:
 
 	void SetDamege(const float damege) { this->damege = damege; }
 	void SetArea(std::vector<std::vector<int>> area) { this->area = area; }
-	void SetDistance(const int distanceX, const int distanceY) {
-		this->distanceX = distanceX;
-		this->distanceY = distanceY;
-	}
 	//”O‚Ì‚½‚ß
 	void SetDistanceX(const int distanceX) { this->distanceX = distanceX; }
 	void SetDistanceY(const int distanceY) { this->distanceY = distanceY; }

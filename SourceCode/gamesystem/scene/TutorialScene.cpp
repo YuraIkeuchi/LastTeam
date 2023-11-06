@@ -9,6 +9,7 @@
 #include <TutorialTask.h>
 #include <Helper.h>
 #include "BattleScene.h"
+#include "TutorialEnemy.h"
 
 //状態遷移
 /*stateの並び順に合わせる*/
@@ -53,8 +54,8 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
 
 	//敵
-	enemyManager = std::make_unique<EnemyManager>();
-	enemyManager->Initialize();
+	enemy = make_unique<TutorialEnemy>();
+	enemy->Initialize();
 
 	_nowstate = TUTORIAL_INTRO;
 
@@ -74,7 +75,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	enemyManager->Update();
+	enemy->Update();
 	//敵を倒したらシーン以降(仮)
 	if (m_End) {
 		_ChangeType = CHANGE_TITLE;
@@ -146,7 +147,7 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	GameStateManager::GetInstance()->ActUIDraw();
 
 	Player::GetInstance()->UIDraw();
-	enemyManager->UIDraw();
+	enemy->UIDraw();
 	SceneChanger::GetInstance()->Draw();
 }
 //ポストエフェクトかかる
@@ -157,7 +158,7 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
-	enemyManager->Draw(dxCommon);
+	enemy->Draw(dxCommon);
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	IKETexture::PostDraw();
@@ -237,12 +238,16 @@ void TutorialScene::AttackState() {
 }
 //ダメージが入った
 void TutorialScene::DamageState() {
-	if (enemyManager->BossDestroy()) {
+	if (enemy->GetHP() <= 0.0f) {
 		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_ENEMYDESTROY);
 		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
 		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_END);
 		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
 		_nowstate = TUTORIAL_FINISH;
+		GameStateManager::GetInstance()->StageClearInit();
+	/*	if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
+			
+		}*/
 	}
 }
 //チュートリアル終わり
