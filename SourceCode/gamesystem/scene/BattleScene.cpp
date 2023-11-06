@@ -47,7 +47,9 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	//各クラス更新
 	camerawork->Update(camera);
 	lightGroup->Update();
-	Player::GetInstance()->Update();
+	if (!GameStateManager::GetInstance()->GetIsFinish()) {
+		Player::GetInstance()->Update();
+	}
 	StagePanel::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();

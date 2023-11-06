@@ -124,6 +124,7 @@ void GameStateManager::AttackTrigger() {
 	if (m_AllActCount == 0) { return; }
 	if (actui[0]->GetUse()) { return; }
 	if (Player::GetInstance()->GetCharaState() == 1) { return; }
+	if (isFinish) { return; }
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
 		m_BirthSkill = true;

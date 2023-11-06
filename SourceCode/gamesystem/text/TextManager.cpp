@@ -31,8 +31,10 @@ void TextManager::Initialize() {
 	CreateWord(TUTORIAL_TEXT_ATTACK, L"エリアに敵を収めてAボタンで攻撃してみろ");
 	CreateWord(TUTORIAL_TEXT_DAMAGE, L"よし、よくできた");
 	CreateWord(TUTORIAL_ENEMYKNOCK, L"じゃあ敵を倒してみよう");
-	CreateWord(TUTORIAL_ENEMYDESTROY, L"よく倒した、それじゃ");
-	CreateWord(TUTORIAL_END, L"自分の好きなようにデッキを組んで頑張れ");
+	CreateWord(TUTORIAL_SKILL, L"敵を倒すとスキルが手に入るぞ");
+	CreateWord(TUTORIAL_SKILL2, L"スキルは攻撃やパッシブなどいろんな物があるぞ");
+	CreateWord(TUTORIAL_SKILL3, L"手に入れたスキルを駆使して");
+	CreateWord(TUTORIAL_END, L"敵を倒そう!");
 }
 
 

@@ -8,7 +8,7 @@
 #include "AttackArea.h"
 #include "PredictArea.h"
 #include <Passive.h>
-#include "../../../ResultSkill.h"
+#include "ResultSkill.h"
 using namespace DirectX;
 using namespace std;
 //行動の種類
@@ -62,6 +62,7 @@ public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
 	const bool GetIsChangeScene() { return isChangeScene; }
+	const bool GetIsFinish() { return isFinish; }
 
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
@@ -151,11 +152,11 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = {0,1,3,5,6 };
+	vector<int> m_DeckNumber = {0};
 	vector<int> m_NotDeckNumber = {};
 
-	int m_DistanceX = 5;
-	int m_DistanceY = 10;
+	int m_DistanceX = 0;
+	int m_DistanceY = 0;
 	int m_NotCount = {};
 
 	//予測エリア
