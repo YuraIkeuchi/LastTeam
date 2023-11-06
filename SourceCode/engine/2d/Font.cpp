@@ -19,8 +19,8 @@ Font::~Font() {
 
 void Font::Initialize() {
 	LoadFont();
-
 }
+
 
 void Font::LoadFont() {
 	DirectX::ResourceUploadBatch resUploadBatch(m_DirectXCommon->GetDev());
