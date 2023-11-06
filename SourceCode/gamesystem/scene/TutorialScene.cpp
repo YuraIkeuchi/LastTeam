@@ -53,6 +53,9 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 
 	_nowstate = TUTORIAL_INTRO;
 
+	resulttext = make_unique<TextManager>();
+	resulttext->Initialize(dxCommon);
+	resulttext->SetConversation(TextManager::RESULT,{5.0f,280.0f});
 }
 //更新
 void TutorialScene::Update(DirectXCommon* dxCommon)
@@ -126,6 +129,9 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	////完全に前に書くスプライト
 	text_->TestDraw(dxCommon);
+	if (_nowstate == TUTORIAL_DAMAGE) {
+		resulttext->TestDraw(dxCommon);
+	}
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 

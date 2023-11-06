@@ -36,6 +36,10 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
+
+	resulttext = make_unique<TextManager>();
+	resulttext->Initialize(dxCommon);
+	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
@@ -109,7 +113,9 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 //ポストエフェクトかからない
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
-
+	if (enemyManager->BossDestroy()) {
+		resulttext->TestDraw(dxCommon);
+	}
 	Player::GetInstance()->UIDraw();
 	enemyManager->UIDraw();
 	GameStateManager::GetInstance()->ActUIDraw();
