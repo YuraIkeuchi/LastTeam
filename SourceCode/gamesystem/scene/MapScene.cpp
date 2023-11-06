@@ -193,8 +193,8 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	}
 	IKESprite::PostDraw();
 
-	font->Draw();
-	Font::PostDraw();
+	//font->Draw();
+	//Font::PostDraw();
 
 	IKESprite::PreDraw();
 	cheack->Draw();

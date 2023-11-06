@@ -122,14 +122,14 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	for (int i = 0; i < 3; i++) {
 		if (i != 0) {
 			if (texts[(size_t)i - 1]->GetFinish()) {
-				texts[i]->Draw();
+				//texts[i]->Draw();
 
 			}
 		} else {
-			texts[i]->Draw();
+			//texts[i]->Draw();
 		}
 	}
-	Font::PostDraw();
+	//Font::PostDraw();
 	IKESprite::PreDraw();
 	title_[TITLE_TEXT]->Draw();
 	SceneChanger::GetInstance()->Draw();
