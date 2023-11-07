@@ -16,7 +16,7 @@ SkillManager* SkillManager::GetInstance()
 void SkillManager::Initialize()
 {
 	//一旦3に指定(実際はCSVとかになるかな)
-	skill.resize(7);
+	skill.resize(9);
 	//ここはもう少しやりようがあるかもしれない
 	skill[0] = new AttackSkill();
 	skill[1] = new AttackSkill();
@@ -25,11 +25,13 @@ void SkillManager::Initialize()
 	skill[4] = new AttackSkill();
 	skill[5] = new AttackSkill();
 	skill[6] = new AttackSkill();
+	skill[7] = new AttackSkill();
+	skill[8] = new AttackSkill();
 	//skill[5]->Create(nameF, 6, 0.0f, 0.0f, 0.0f, 1, 1);
 
 
 	//csv読み取り
-	for (int i = 1; i < 8; i++)
+	for (int i = 1; i < 10; i++)
 	{
 		CreateSkill(i);
 	}
@@ -72,11 +74,11 @@ void SkillManager::UIDraw() {
 }
 
 void SkillManager::ImGuiDraw() {
-	//for (SkillBase* newskill : skill) {
-	//	if (newskill != nullptr) {
-	//		newskill->ImGuiDraw();
-	//	}
-	//}
+	for (SkillBase* newskill : skill) {
+		if (newskill != nullptr) {
+			newskill->ImGuiDraw();
+		}
+	}
 
 	ImGui::Begin("Mana");
 	ImGui::Text("Num:%d", m_DeckNum);
@@ -107,7 +109,7 @@ void SkillManager::ResetBirth() {
 }
 
 //スキルのデータを渡す
-void SkillManager::GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY) {
+void SkillManager::GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY, string& name) {
 	if (skill[m_BirthMax]->GetSkillType() != SkillType::damege)
 	{
 		assert(0);
@@ -117,6 +119,7 @@ void SkillManager::GetSkillData(float& damage, int& delay, vector<std::vector<in
 	damage = atkSkill->GetDamege();		//ダメージ
 	delay = skill[m_BirthMax]->Getlatency();		//硬直時間
 	area = atkSkill->GetArea();		//範囲
+	name = atkSkill->GetStateName();		//付与状態
 	//プレイヤーからの距離
 	int l_DistanceX = {};
 	int l_DistanceY = {};
@@ -177,6 +180,14 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 		else if (word.find("Name") == 0) {
 			std::getline(line_stream, word, ',');
 			skill[id - 1]->SetName(word);
+		}
+		else if (word.find("StateName") == 0) {
+			std::getline(line_stream, word, ',');
+			AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+			if (atkSkill != nullptr)
+			{
+				atkSkill->SetStateName(word);
+			}
 		}
 		else if (word.find("InvocatingTime") == 0) {
 			std::getline(line_stream, word, ',');

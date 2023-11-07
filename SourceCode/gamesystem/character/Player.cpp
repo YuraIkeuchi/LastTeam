@@ -6,6 +6,7 @@
 #include <GameStateManager.h>
 #include <StagePanel.h>
 #include <ImageManager.h>
+#include <ParticleEmitter.h>
 Player* Player::GetInstance() {
 	static Player instance;
 
@@ -95,6 +96,8 @@ void Player::Update() {
 	GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
 	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 
+	//HPの限界値を決める
+	Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
 	//表示用のHP
 	m_InterHP = (int)(m_HP);
 	for (auto i = 0; i < _drawnumber.size(); i++) {
@@ -217,12 +220,7 @@ float Player::HpPercent() {
 }
 //ディレイ処理
 void Player::Delay() {
-	/*if (Helper::GetInstance()->CheckMax(m_DelayTimer, 0, -1)) {
 
-		m_DelayStart = false;
-		_charaState = STATE_MOVE;
-
-	}*/
 }
 //プレイヤーの動きの基本
 void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int addspace) {
@@ -231,7 +229,22 @@ void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int a
 	GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 	GameStateManager::GetInstance()->SetResetPredict(true);
 }
+//プレイヤーのHP回復
+void Player::HealPlayer(const float power) {
+	m_HP += power;
+	for (int i = 0; i < 15; i++) {
+		Particle();
+	}
+}
 //チュートリアルの更新
 void Player::TitleUpdate() {
 	Obj_SetParam();
+}
+//パーティクル
+void Player::Particle() {
+	XMFLOAT4 s_color = { 0.5f,1.0f,0.1f,1.0f };
+	XMFLOAT4 e_color = { 0.5f,1.0f,0.1f,1.0f };
+	float s_scale = 1.0f;
+	float e_scale = 0.0f;
+	ParticleEmitter::GetInstance()->HealEffect(50, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
 }

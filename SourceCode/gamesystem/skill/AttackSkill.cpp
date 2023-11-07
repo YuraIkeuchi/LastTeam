@@ -6,5 +6,6 @@ void AttackSkill::ImGui_Origin() {
 	ImGui::Text("ID:%d", ID);
 	ImGui::Text("Damage:%f", damege);
 	ImGui::Text("DeckIn:%d", m_DeckIn);
+	ImGui::Text("State:%s", StateName);
 	ImGui::End();
 }

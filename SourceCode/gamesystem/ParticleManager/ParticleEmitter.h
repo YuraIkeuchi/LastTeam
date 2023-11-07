@@ -36,8 +36,12 @@ public: //メンバ関数
 
 	//エフェクト
 	void FireEffect(const int life,const XMFLOAT3& pos,const float startscale, const float endscale,const XMFLOAT4& startcolor,const XMFLOAT4& endcolor);
+	//毒
+	void PoisonEffect(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor);
 	//ダメージエフェクト
 	void Break(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const float Gravity, float divi);
+	//ヒールエフェクト
+	void HealEffect(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor);
 	void AllDelete();
 private: //メンバ関数
 	/// <summary>
@@ -48,6 +52,10 @@ private: //メンバ関数
 private: //メンバ変数
 	//パーティクルマネージャー(丸)
 	unique_ptr<ParticleManager> circleParticle;
+	//パーティクルマネージャー(毒)
+	unique_ptr<ParticleManager> poisonParticle;
+	//パーティクルマネージャー(ヒール)
+	unique_ptr<ParticleManager> healParticle;
 private:
 	int m_Timer = 0;
 };

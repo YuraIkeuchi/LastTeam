@@ -1,0 +1,8 @@
+ID,8
+Delay,30
+Name,yabu2
+StateName,DRAIN
+Damege,10
+DistanceX,1
+AttackArea,1 1 1
+AttackAreA,1 1 1
