@@ -46,7 +46,8 @@ private:
 	void MoveCommon(float& pos, const float velocity, int& playerspace,const int addspace);
 private:
 	void LoadCSV();
-
+	//パーティクル
+	void Particle();
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }

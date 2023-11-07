@@ -118,6 +118,7 @@ private:
 	void WorldDivision();
 	//UI‚Ì‚½‚ß‚ÌHP‚ÌŠÇ—
 	void HPManage();
+	void BirthPoisonParticle();
 protected:
 	void Collide(vector<AttackArea*>area);
 	//“Å‚Ìó‘Ô

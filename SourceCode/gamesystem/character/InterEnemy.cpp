@@ -92,7 +92,7 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 		}
 	}
 }
-//パーティクル
+//パーティクル(ダメージ)
 void InterEnemy::BirthParticle() {
 	const XMFLOAT4 s_color = { 0.5f,0.5f,0.5f,1.0f };
 	const XMFLOAT4 e_color = { 0.5f,0.5f,0.5f,1.0f };
@@ -100,6 +100,16 @@ void InterEnemy::BirthParticle() {
 	const float e_scale = 0.0f;
 	for (int i = 0; i < 20; i++) {
 		ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
+	}
+}
+//パーティクル(毒)
+void InterEnemy::BirthPoisonParticle() {
+	const XMFLOAT4 s_color = { 0.5f,0.0f,0.5f,1.0f };
+	const XMFLOAT4 e_color = { 0.5f,0.0f,0.5f,1.0f };
+	const float s_scale = 1.0f;
+	const float e_scale = 0.0f;
+	for (int i = 0; i < 3; i++) {
+		ParticleEmitter::GetInstance()->PoisonEffect(50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color);
 	}
 }
 //HPの割合
@@ -147,6 +157,9 @@ void InterEnemy::PoisonState() {
 
 	if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
 		m_HP -= 1.0f;
+	}
+	else if (m_PoisonTimer % 50 == 0) {		//毒のエフェクト
+		BirthPoisonParticle();
 	}
 
 	if (m_PoisonTimer == 800) {	//一定時間立ったら毒終了
