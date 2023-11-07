@@ -35,7 +35,7 @@ void InterAction::Collide()
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, m_Radius, Player::GetInstance()->GetPosition().x, Player::GetInstance()->GetPosition().z, m_Radius) &&
 		(m_Alive)){
 		//プレイヤーの行動数を増やしパネルを戻す
-		GameStateManager::GetInstance()->AddSkill(m_SkillID,m_Damage,m_Delay,m_Area,m_DistanceX,m_DistanceY);
+		GameStateManager::GetInstance()->AddSkill(m_SkillID,m_Damage,m_Delay,m_Area,m_DistanceX,m_DistanceY,StateName);
 		StagePanel::GetInstance()->DeletePanel();
 		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
 			TutorialTask::GetInstance()->SetTutorialState(TASK_ATTACK);
@@ -96,5 +96,5 @@ void InterAction::Vanish() {
 
 //スキルデータ取得
 void InterAction::GetSkillData() {
-	SkillManager::GetInstance()->GetSkillData(m_Damage, m_Delay, m_Area,m_DistanceX,m_DistanceY);
+	SkillManager::GetInstance()->GetSkillData(m_Damage, m_Delay, m_Area,m_DistanceX,m_DistanceY,StateName);
 }

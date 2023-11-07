@@ -75,7 +75,14 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 				damage *= 2.0f;
 			}
 			m_HP -= _area->GetDamage();
-			m_DamegeTimer = 40;
+			std::string name = _area->GetStateName();
+
+			if (name == "DRAIN") {
+				Player::GetInstance()->HealPlayer(damage * 0.2f);		//HP回復
+			}
+			else if (name == "POISON") {
+				m_Poison = true;
+			}
 			BirthParticle();
 			_area->SetHit(true);
 			//チュートリアル専用
@@ -129,5 +136,21 @@ void InterEnemy::WorldDivision() {
 void InterEnemy::HPManage() {
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+	}
+}
+
+//毒
+void InterEnemy::PoisonState() {
+	if (!m_Poison) { return; }
+
+	m_PoisonTimer++;
+
+	if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
+		m_HP -= 1.0f;
+	}
+
+	if (m_PoisonTimer == 800) {	//一定時間立ったら毒終了
+		m_Poison = false;
+		m_PoisonTimer = {};
 	}
 }

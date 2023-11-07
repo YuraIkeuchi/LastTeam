@@ -47,7 +47,8 @@ void NormalEnemy::Action() {
 	Obj_SetParam();
 	//“–‚½‚è”»’è
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	Collide(_AttackArea);
+	Collide(_AttackArea);		//“–‚½‚è”»’è
+	PoisonState();//“Å
 }
 //•`‰æ
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
@@ -56,10 +57,8 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 //ImGui•`‰æ
 void NormalEnemy::ImGui_Origin() {
 	ImGui::Begin("Enemy");
-	ImGui::Text("POSX:%f", m_Position.x);
-	ImGui::Text("POSZ:%f", m_Position.z);
-	ImGui::Text("Width:%d", m_NowWidth);
-	ImGui::Text("Height:%d", m_NowHeight);
+	ImGui::Text("Poison:%d", m_Poison);
+	ImGui::Text("Timer:%d", m_PoisonTimer);
 	ImGui::End();
 }
 //ŠJ•ú

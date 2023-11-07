@@ -75,6 +75,9 @@ protected:
 	//”’l‰»‚µ‚½HP•\¦‚Ì‚½‚ß‚Ì•Ï”
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//®”‚É‚µ‚½HP
+
+	bool m_Poison = false;
+	int m_PoisonTimer = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -117,4 +120,6 @@ private:
 	void HPManage();
 protected:
 	void Collide(vector<AttackArea*>area);
+	//“Å‚Ìó‘Ô
+	void PoisonState();
 };

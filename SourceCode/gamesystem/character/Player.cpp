@@ -95,6 +95,8 @@ void Player::Update() {
 	GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
 	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 
+	//HPの限界値を決める
+	Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
 	//表示用のHP
 	m_InterHP = (int)(m_HP);
 	for (auto i = 0; i < _drawnumber.size(); i++) {
@@ -217,12 +219,7 @@ float Player::HpPercent() {
 }
 //ディレイ処理
 void Player::Delay() {
-	/*if (Helper::GetInstance()->CheckMax(m_DelayTimer, 0, -1)) {
 
-		m_DelayStart = false;
-		_charaState = STATE_MOVE;
-
-	}*/
 }
 //プレイヤーの動きの基本
 void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int addspace) {
@@ -230,6 +227,10 @@ void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int a
 	playerspace += addspace;
 	GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 	GameStateManager::GetInstance()->SetResetPredict(true);
+}
+//プレイヤーのHP回復
+void Player::HealPlayer(const float power) {
+	m_HP += power;
 }
 //チュートリアルの更新
 void Player::TitleUpdate() {

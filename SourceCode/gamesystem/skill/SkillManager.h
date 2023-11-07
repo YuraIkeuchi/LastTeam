@@ -33,7 +33,7 @@ private:
 public:
 	//IDÇéÊÇÈ
 	int GetID(const int BirthNum);
-	void GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY);
+	void GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY,string& name);
 
 	void SetDeckState(const int DeckNum);
 public:
@@ -42,15 +42,6 @@ public:
 private:
 	std::vector<unique_ptr<DeckUI>> deckui;
 	std::vector<SkillBase*> skill;
-	/*SkillBase* skillA;
-	SkillBase* skillB;
-	AttackSkill skillC;*/
-	std::string nameA = "â£ÇÈ";
-	std::string nameB = "èRÇÈ";
-	std::string nameC = "í@Ç≠";
-	std::string nameD = "éEÇÈ";
-	std::string nameE = "Ç©Ç‹Ç∑";
-	std::string nameF = "ÉXÉJÉX";
 	int m_DeckNum = {};
 	int m_BirthMax = {};
 	int m_DeckRemain = {};
