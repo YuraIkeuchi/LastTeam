@@ -152,6 +152,7 @@ private:
 	string m_Name;
 
 	vector<int> m_DeckNumber = {7,8,9};
+
 	vector<int> m_NotDeckNumber = {};
 
 	int m_DistanceX = 0;

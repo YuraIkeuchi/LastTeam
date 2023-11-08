@@ -109,7 +109,7 @@ public:
 	virtual void ImGui_Origin() = 0;
 
 	void UIDraw();
-
+	XMFLOAT3 SetPannelPos(int width, int height);
 private:
 	void BirthParticle();
 	//HP‚ÌŠ„‡‚ğ‹‚ß‚é
