@@ -64,11 +64,11 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		Player::GetInstance()->Update();
 	}
 	StagePanel::GetInstance()->Update();
-	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
 	enemyManager->SetLight(lightGroup);
+	GameStateManager::GetInstance()->Update();
 	//“G‚ð“|‚µ‚½‚çƒV[ƒ“ˆÈ~(‰¼)
 	if (enemyManager->BossDestroy()) {
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {

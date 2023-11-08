@@ -88,8 +88,8 @@ void SkillManager::ResetBirth() {
 	}
 }
 
-//スキルのデータを渡す
-void SkillManager::GetSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY, string& name) {
+//スキルのデータを渡す(攻撃)
+void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY, string& name) {
 	if (skill[m_BirthMax]->GetSkillType() != SkillType::damege)
 	{
 		assert(0);
@@ -107,6 +107,15 @@ void SkillManager::GetSkillData(float& damage, int& delay, vector<std::vector<in
 	l_DistanceY = atkSkill->GetDistanceY();
 	DisX = l_DistanceX;
 	DisY = l_DistanceY;
+}
+void SkillManager::GetSkillType(int& SkillType) {
+	SkillType = (int)skill[m_BirthMax]->GetSkillType();
+}
+//スキルのデータを渡す(特殊)
+void SkillManager::GetSpecialSkillDate(int& delay,string& name) {
+	SpecialSkill* specialskill = dynamic_cast<SpecialSkill*>(skill[m_BirthMax]);
+	delay = skill[m_BirthMax]->Getlatency();
+	name = specialskill->GetStateName();
 }
 //スキルのCSVを読み取る
 void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {

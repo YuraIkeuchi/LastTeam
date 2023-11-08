@@ -50,7 +50,7 @@ void GameStateManager::Initialize() {
 	DeckInitialize();
 
 	//デッキにないカードを検索する
-	const int CARD_MAX = 9;
+	const int CARD_MAX = 10;
 	m_NotDeckNumber.clear();
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
 		for (int j = 0; j < CARD_MAX; j++) {
@@ -75,6 +75,8 @@ void GameStateManager::Initialize() {
 	_charge->Initialize();
 	_charge->SetRotation({ 90.0f,0.0f,0.0f });
 	m_ChargeScale = 1.0f;
+	m_Delay = false;
+	m_Buff = false;
 }
 //更新
 void GameStateManager::Update() {
@@ -169,9 +171,9 @@ void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("GameState");
 	ImGui::Text("Scale:%f", m_ChargeScale);
 	ImGui::Text("Timer:%d", m_DelayTimer);
+	ImGui::Text("Buff:%d", m_Buff);
 	if (!m_Act.empty()) {
-		ImGui::Text("damage:%f", m_Act[0].ActDamage);
-		ImGui::Text("delay:%d", m_Act[0].ActDelay);
+		ImGui::Text("SkillType:%d", m_Act[0].SkillType);
 		ImGui::Text("Name:%s", m_Act[0].StateName);
 	}
 	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
@@ -195,8 +197,9 @@ void GameStateManager::ActUIDraw() {
 	}
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name) {
+void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name) {
 	ActState act;
+	act.SkillType = SkillType;
 	act.ActID = ID;
 	act.ActDamage = damage;
 	act.ActDelay = Delay;
@@ -287,7 +290,12 @@ void GameStateManager::UseSkill() {
 	if (!m_Delay) { return; }
 	m_ChargeScale = Helper::GetInstance()->Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
 	if (Helper::GetInstance()->CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
-		BirthArea();
+		if (m_Act[0].SkillType == 0) {
+			BirthArea();
+		}
+		else {
+			BirthBuff();
+		}
 		FinishAct();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
 		m_ResetPredict = true;
@@ -416,4 +424,8 @@ void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
 	isFinish = true;
+}
+//バフの生成
+void GameStateManager::BirthBuff() {
+	m_Buff = true;		//一旦中身はこれだけ
 }

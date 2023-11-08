@@ -23,7 +23,6 @@ void DeckUI::Initialize() {
 //ステータス初期化
 void DeckUI::InitState(const int ActCount) {
 	m_ActCount = ActCount;
-	m_ActType = ACT_ATTACK;
 }
 //更新
 void DeckUI::Update() {
