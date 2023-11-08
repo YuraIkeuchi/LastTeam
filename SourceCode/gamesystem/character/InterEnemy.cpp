@@ -14,6 +14,11 @@ XMFLOAT3 InterEnemy::randPanelPos() {
 	m_NowWidth = width;
 	return StagePanel::GetInstance()->SetPositon(m_NowWidth, m_NowHeight);
 }
+XMFLOAT3 InterEnemy::SetPannelPos(int width, int height) {
+	m_NowHeight = height;
+	m_NowWidth = width;
+	return StagePanel::GetInstance()->SetPositon(m_NowWidth, m_NowHeight);
+}
 //初期化
 bool InterEnemy::Initialize() {
 	return true;

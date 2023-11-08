@@ -2,6 +2,8 @@
 #include"InterEnemy.h"
 #include<list>
 #include<memory>
+#include "CsvLoader.h"
+
 #include "LightGroup.h"
 class EnemyManager {
 protected:
@@ -29,8 +31,13 @@ public:
 	//敵の死亡処理
 	bool BossDestroy();
 
-	void SetLight(LightGroup* light);
 
+	void SetLight(LightGroup* light);
+private:
+	/// <summary>
+	/// マップにスポーン
+	/// </summary>
+	void Spawn2Map();
 private:
 	std::list<unique_ptr<InterEnemy>> enemys;
 

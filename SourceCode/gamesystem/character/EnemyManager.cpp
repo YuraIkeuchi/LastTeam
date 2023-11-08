@@ -11,11 +11,12 @@ EnemyManager::~EnemyManager() {
 }
 
 void EnemyManager::Initialize() {
+	Spawn2Map();
+	//unique_ptr<InterEnemy> enemy_ = std::make_unique<NormalEnemy>();
+	//enemy_->SetPannelPos(4, 0);
+	//enemys.push_back(std::move(enemy_));
 
-	unique_ptr<InterEnemy> enemy_ = std::make_unique<NormalEnemy>();
-	enemys.push_back(std::move(enemy_));
-
-	for (unique_ptr<InterEnemy> &enemy :enemys) {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->Initialize();
 	}
 }
@@ -40,9 +41,8 @@ void EnemyManager::Update() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		if (enemy->GetState() == STATE_ATTACK) {			//ˆê’UUŒ‚ˆÈŠO‚ÍŽæ‚ç‚È‚¢
 			Player::GetInstance()->SetGrazePos(enemy->GetPosition());
-		}
-		else {
-			Player::GetInstance()->SetGrazePos({1000.0f,0.0f,0.0f});
+		} else {
+			Player::GetInstance()->SetGrazePos({ 1000.0f,0.0f,0.0f });
 		}
 	}
 }
@@ -57,9 +57,15 @@ void EnemyManager::SetCount() {
 }
 
 void EnemyManager::ImGuiDraw() {
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->ImGuiDraw();
-	}
+	ImGui::Begin("Enemys");
+	ImGui::Text("size:%d", enemys.size());
+	//unique_ptr<InterEnemy>& enemy = enemys.front();
+	//ImGui::Text("POSX:%f", enemy.get()->GetPosition().x);
+	//ImGui::Text("POSZ:%f", enemy.get()->GetPosition().z);
+	ImGui::End();
+	//for (unique_ptr<InterEnemy>& enemy : enemys) {
+	//	enemy->ImGuiDraw();
+	//}
 }
 //UI‚Ì•`‰æ
 void EnemyManager::UIDraw() {
@@ -72,12 +78,44 @@ bool EnemyManager::BossDestroy() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		if (enemy->GetHP() <= 0.0f) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
 	return false;
+}
+
+void EnemyManager::Spawn2Map() {
+	string csv_ = "Resources/csv/EnemySpawn/BattleMap01.csv";
+	std::string line;
+	std::stringstream popcom;
+	std::ifstream file;
+
+	file.open(csv_);
+	popcom << file.rdbuf();
+	file.close();
+	int height = 0;
+	while (std::getline(popcom, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		std::getline(line_stream, word, ',');
+		int width = 0;
+		for (char& x : word) {
+			if (x == ',') {
+				break;
+			}
+			if (x == '0') {
+				width++;
+			} else {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<NormalEnemy>();
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+		}
+		height++;
+
+	}
 }
 //ƒ‰ƒCƒg
 void EnemyManager::SetLight(LightGroup* light) {

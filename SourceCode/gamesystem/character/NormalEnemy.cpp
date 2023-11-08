@@ -24,8 +24,7 @@ NormalEnemy::NormalEnemy() {
 //èâä˙âª
 bool NormalEnemy::Initialize() {
 
-	m_Position = randPanelPos();
-	m_Position.y = 0.1f;
+	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5 };
