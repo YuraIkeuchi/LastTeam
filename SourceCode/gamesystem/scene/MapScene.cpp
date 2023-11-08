@@ -9,6 +9,7 @@
 //‘JˆÚ‚µ‚¤‚éƒV[ƒ“
 #include "BattleScene.h"
 #include <TutorialScene.h>
+#include <GameStateManager.h>
 
 void (MapScene::* MapScene::stateTable[])() = {
 	&MapScene::InitState,//
@@ -588,16 +589,28 @@ void MapScene::CheckState() {
 			if (input->TriggerButton(input->A)) {
 				SceneChanger::GetInstance()->SetChangeStart(true);
 			}
-		} else {
+		} else{
 			size.x = Ease(Out, Elastic, s_frame, 0.f, 640.f);
 			size.y = Ease(Out, Elastic, s_frame, 0.f, 480.f);
 		}
 		cheack->SetSize(size);
+		if (SceneChanger::GetInstance()->GetChange()) {
+			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
+			SceneChanger::GetInstance()->SetChange(false);
+		}
 	} else {
+		SceneChanger::GetInstance()->SetChangeStart(true);
+
+		int num=Helper::GetInstance()->GetRanNum(1,3);
+		std::stringstream ss;
+		ss << "Resources/csv/EnemySpawn/BattleMap0" << num<< ".csv";
+		std::string r_map = ss.str();
+		GameStateManager::GetInstance()->SetEnemySpawnText(r_map);
 		m_State = State::mainState;
+		if (SceneChanger::GetInstance()->GetChange()) {
+			SceneManager::GetInstance()->ChangeScene<BattleScene>();
+			SceneChanger::GetInstance()->SetChange(false);
+		}
 	}
-	if (SceneChanger::GetInstance()->GetChange()) {
-		SceneManager::GetInstance()->ChangeScene<TutorialScene>();
-		SceneChanger::GetInstance()->SetChange(false);
-	}
+
 }

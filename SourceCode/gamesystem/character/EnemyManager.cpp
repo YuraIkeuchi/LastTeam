@@ -2,6 +2,7 @@
 #include "NormalEnemy.h"
 #include <StagePanel.h>
 #include <Player.h>
+#include <GameStateManager.h>
 
 
 EnemyManager::EnemyManager() {
@@ -86,7 +87,7 @@ bool EnemyManager::BossDestroy() {
 }
 
 void EnemyManager::Spawn2Map() {
-	string csv_ = "Resources/csv/EnemySpawn/BattleMap01.csv";
+	string csv_ = GameStateManager::GetInstance()->GetEnemySpawnText();
 	std::string line;
 	std::stringstream popcom;
 	std::ifstream file;
