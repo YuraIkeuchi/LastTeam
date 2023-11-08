@@ -39,11 +39,15 @@ private:
 	//HPの割合を求める
 	float HpPercent();
 
+public:
+	//プレイヤーの回復
+	void HealPlayer(const float power);
 private:
 	void MoveCommon(float& pos, const float velocity, int& playerspace,const int addspace);
 private:
 	void LoadCSV();
-
+	//パーティクル
+	void Particle();
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }
@@ -53,6 +57,7 @@ public:
 
 	float GetMaxHp() { return m_MaxHP; }
 	float GetHp() { return m_HP; }
+
 	void SetMaxHp(float maxhp) {
 		m_MaxHP = maxhp;
 		m_HP = maxhp;

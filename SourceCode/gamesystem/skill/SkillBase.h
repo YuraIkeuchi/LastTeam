@@ -45,7 +45,7 @@ public:
 	const SkillType GetSkillType() { return skillType; }
 
 	const bool GetDeckIn() { return m_DeckIn; }
-	float GetDamege() { return damege; }
+	const float GetDamege() { return damege; }
 
 	void SetID(const int ID) { this->ID = ID; }
 	void SetLatency(const int latency) { this->latency = latency; }
@@ -64,6 +64,7 @@ public:
 protected:
 	//スキル名
 	std::string name = "NoName";
+
 	//ID
 	int ID = 0;
 	//アイコン

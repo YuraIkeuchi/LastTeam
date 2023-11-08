@@ -50,7 +50,7 @@ void GameStateManager::Initialize() {
 	DeckInitialize();
 
 	//デッキにないカードを検索する
-	const int CARD_MAX = 7;
+	const int CARD_MAX = 9;
 	m_NotDeckNumber.clear();
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
 		for (int j = 0; j < CARD_MAX; j++) {
@@ -172,6 +172,7 @@ void GameStateManager::ImGuiDraw() {
 	if (!m_Act.empty()) {
 		ImGui::Text("damage:%f", m_Act[0].ActDamage);
 		ImGui::Text("delay:%d", m_Act[0].ActDelay);
+		ImGui::Text("Name:%s", m_Act[0].StateName);
 	}
 	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
 	if (ImGui::Button("in", ImVec2(90, 50))) {
@@ -194,7 +195,7 @@ void GameStateManager::ActUIDraw() {
 	}
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY) {
+void GameStateManager::AddSkill(const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name) {
 	ActState act;
 	act.ActID = ID;
 	act.ActDamage = damage;
@@ -202,6 +203,7 @@ void GameStateManager::AddSkill(const int ID, const float damage,const int Delay
 	act.AttackArea.resize(7);
 	act.DistanceX = DisX;
 	act.DistanceY = DisY;
+	act.StateName = name;
 	for (int i = 0; i < 7; i++) {
 		for (int j = 0; j < 7; j++) {
 			act.AttackArea[i].push_back(j);
@@ -244,6 +246,7 @@ void GameStateManager::BirthArea() {
 				newarea->Initialize();
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(m_Act[0].ActDamage);
+				newarea->SetStateName(m_Act[0].StateName);
 				attackarea.push_back(newarea);
 			}
 		}

@@ -2,6 +2,7 @@ ID,1
 SkillType,0
 Delay,10
 Name,kick
+StateName,NONE
 Damege,2
 DistanceX,1
 AttackAreA,1 1
