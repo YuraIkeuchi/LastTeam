@@ -70,6 +70,7 @@ protected:
 	int m_SkillID = {};
 	float m_Damage = {};
 	int m_Delay = {};
+	int m_SkillType = {};
 	std::vector<std::vector<int>> m_Area;
 	int m_DistanceX = {};
 	int m_DistanceY = {};

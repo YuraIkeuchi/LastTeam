@@ -79,7 +79,10 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 				GameStateManager::GetInstance()->SetCounter(true);
 				damage *= 2.0f;
 			}
-			m_HP -= _area->GetDamage();
+			if (GameStateManager::GetInstance()->GetBuff()) {
+				damage *= 2.0f;
+			}
+			m_HP -= damage;
 			std::string name = _area->GetStateName();
 
 			if (name == "DRAIN") {

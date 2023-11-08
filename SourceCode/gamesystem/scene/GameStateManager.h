@@ -12,12 +12,7 @@
 #include "ResultSkill.h"
 using namespace DirectX;
 using namespace std;
-//行動の種類
-enum ActType {
-	ACT_ATTACK,
-	ACT_GUARD,
-	ACT_SKILL
-};
+
 //ゲームの状態を管理するクラス
 class GameStateManager {
 public:
@@ -35,13 +30,15 @@ public:
 	//プレイヤーの現在位置
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
-	void AddSkill(const int ID,const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name);
+	void AddSkill(const int SkillType,const int ID,const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name);
 private:
 	void PredictManager();
 	//攻撃した瞬間
 	void AttackTrigger();
 	//攻撃エリアの生成
 	void BirthArea();
+	//バフ状況
+	void BirthBuff();
 	//行動UIの生成
 	void BirthActUI(const int ID);
 	//スキルの使用
@@ -64,6 +61,7 @@ public:
 	const bool GetCounter() { return m_Counter; }
 	const bool GetIsChangeScene() { return isChangeScene; }
 	const bool GetIsFinish() { return isFinish; }
+	const bool GetBuff() { return m_Buff; }
 
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
@@ -80,12 +78,13 @@ public:
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
 	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
-private:
+	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
 private:
 	unique_ptr<IKETexture> _charge;
 	bool isFinish = false;
 	bool isChangeScene = false;
 	struct ActState {
+		int SkillType;//スキルの種類
 		int ActID;//ID
 		float ActDamage;//ダメージ
 		int ActDelay;//ディレイ
@@ -152,7 +151,8 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = {6,7,8};
+	vector<int> m_DeckNumber = {7,8,9};
+
 	vector<int> m_NotDeckNumber = {};
 
 	int m_DistanceX = 0;
@@ -165,7 +165,11 @@ private:
 	bool m_ResetPredict = false;
 	std::unique_ptr<ResultSkill> resultSkill;
 
+	//ディレイ関係
 	float m_ChargeScale = {};
 	int m_DelayTimer = {};
 	bool m_DelayStart = false;
+
+	//バフ(一旦一個)
+	bool m_Buff = false;
 };

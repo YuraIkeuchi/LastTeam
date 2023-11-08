@@ -24,7 +24,6 @@ void ActionUI::Initialize() {
 void ActionUI::InitState(const int ActCount, const int ID) {
 	m_ActCount = ActCount;
 	m_ID = ID;
-	m_ActType = ACT_ATTACK;
 }
 //çXêV
 void ActionUI::Update() {

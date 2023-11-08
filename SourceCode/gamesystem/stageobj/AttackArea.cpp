@@ -1,6 +1,7 @@
 #include "AttackArea.h"
 #include <StagePanel.h>
 #include <ModelManager.h>
+#include <GameStateManager.h>
 #include <Helper.h>
 //“Ç‚Ýž‚Ý
 AttackArea::AttackArea() {
@@ -31,6 +32,7 @@ void AttackArea::Update() {
 	const int l_TargetTimer = 10;
 
 	if (Helper::GetInstance()->CheckMin(m_AliveTimer, l_TargetTimer, 1)) {
+		GameStateManager::GetInstance()->SetBuff(false);
 		m_Alive = false;
 	}
 
