@@ -415,5 +415,6 @@ void GameStateManager::InDeck() {
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
+	
 	isFinish = true;
 }

@@ -13,6 +13,7 @@ ResultSkill::~ResultSkill() {
 void ResultSkill::Initialize() {
 	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.5f });
 	backScreen->SetSize({ 1280.f,720.f });
+	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, {200.f,200.f});
 }
 
 void ResultSkill::Update() {
@@ -28,6 +29,7 @@ void ResultSkill::Draw() {
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
+	selectFrame->Draw();
 	for (ResultUI& resultUI:choiceSkills) {
 		resultUI.icon->Draw();
 		if (resultUI.isSkill) {
@@ -35,9 +37,6 @@ void ResultSkill::Draw() {
 		}
 	}
 	IKESprite::PostDraw();
-	//font->Draw();
-	//Font::PostDraw();
-
 }
 
 void ResultSkill::InDeck(std::vector<int>& Deck) {

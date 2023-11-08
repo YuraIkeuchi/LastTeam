@@ -44,6 +44,7 @@ private:
 	bool isStart = false;
 	unique_ptr<TextManager> text_;
 	std::unique_ptr<IKESprite> backScreen;
+	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;
 	int nowPos = 0;
 
