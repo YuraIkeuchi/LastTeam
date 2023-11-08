@@ -2,7 +2,7 @@
 #include "SkillBase.h"
 #include "AttackSkill.h"
 #include "NormalSkill.h"
-#include "AttackSkill.h"
+#include "SpecialSkill.h"
 #include <string>
 #include <vector>
 #include "DeckUI.h"
