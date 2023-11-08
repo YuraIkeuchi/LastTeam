@@ -320,5 +320,6 @@ void SkillManager::BirthDeckUI(const int DeckNumber, const int DeckCount) {
 	//手に入れたスキルのUIの更新
 	for (auto i = 0; i < m_DeckDate.size(); i++) {
 		deckui[i]->SetID(m_DeckDate[i]);
+		deckui[i]->SetType((int)skill[m_DeckDate[i]]->GetSkillType());
 	}
 }

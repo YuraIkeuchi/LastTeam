@@ -40,7 +40,7 @@ private:
 	//バフ状況
 	void BirthBuff();
 	//行動UIの生成
-	void BirthActUI(const int ID);
+	void BirthActUI(const int ID,const int Type);
 	//スキルの使用
 	void UseSkill();
 	//行動の終了
