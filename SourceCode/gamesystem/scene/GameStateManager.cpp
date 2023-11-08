@@ -146,23 +146,25 @@ void GameStateManager::AttackTrigger() {
 	}
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
-	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	if (m_Delay) {
-		_charge->Draw();
-	}
-	IKETexture::PostDraw();
-	IKESprite::PreDraw();
-	skillUI->Draw();
-	gaugeUI->Draw();
-	SkillManager::GetInstance()->UIDraw();
-	IKESprite::PostDraw();
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->Draw(dxCommon);
-	}
+	if (!isFinish && !isChangeScene) {
+		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+		if (m_Delay) {
+			_charge->Draw();
+		}
+		IKETexture::PostDraw();
+		IKESprite::PreDraw();
+		skillUI->Draw();
+		gaugeUI->Draw();
+		SkillManager::GetInstance()->UIDraw();
+		IKESprite::PostDraw();
+		for (auto i = 0; i < attackarea.size(); i++) {
+			if (attackarea[i] == nullptr)continue;
+			attackarea[i]->Draw(dxCommon);
+		}
 
-	if (m_AllActCount != 0) {
-		predictarea->Draw(dxCommon);
+		if (m_AllActCount != 0) {
+			predictarea->Draw(dxCommon);
+		}
 	}
 	resultSkill->Draw();
 }
@@ -216,16 +218,16 @@ void GameStateManager::AddSkill(const int SkillType,const int ID, const float da
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
-	BirthActUI(ID);//UIも増えるよ
+	BirthActUI(ID,act.SkillType);//UIも増えるよ
 	PredictManager();
 }
 //スキルUIの生成
-void GameStateManager::BirthActUI(const int ID) {
+void GameStateManager::BirthActUI(const int ID,const int Type) {
 	//アクションUIのセット
 	ActionUI* newactUi = nullptr;
 	newactUi = new ActionUI();
 	newactUi->Initialize();
-	newactUi->InitState(m_AllActCount,ID);
+	newactUi->InitState(m_AllActCount,ID,Type);
 	actui.emplace_back(newactUi);
 
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);

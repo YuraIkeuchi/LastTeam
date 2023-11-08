@@ -66,6 +66,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 	}
 	m_InterHP = {};//整数にしたHP
 
+	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 }
 //状態遷移
 /*CharaStateのState並び順に合わせる*/

@@ -20,7 +20,7 @@ public:
 	//初期化
 	void Initialize();
 	//ステータスセット
-	void InitState(const int ActCount,const int ID);
+	void InitState(const int ActCount,const int ID,const int Type);
 	//更新
 	void Update();
 	//UIの動き
@@ -46,7 +46,7 @@ private:
 	XMFLOAT4 m_Color = { 1.0f,1.0f,1.0f,1.0f };
 	int m_ActCount = {};
 
-	int m_ActType = {};
+	int m_Type = {};
 	bool m_Use = false;
 	float m_Frame = {};
 	bool m_Alive = true;

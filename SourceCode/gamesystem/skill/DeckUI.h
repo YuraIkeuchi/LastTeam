@@ -36,7 +36,7 @@ public:
 	void SetActCount(const int ActCount) { m_ActCount = ActCount; }
 	void SetUse(const bool Use) { m_Use = Use; }
 	void SetID(const int ID) { m_ID = ID; }
-
+	void SetType(const int Type) { m_Type = Type; }
 private:
 	static const int TEX_MAX = 3;
 private:
@@ -46,7 +46,7 @@ private:
 	XMFLOAT4 m_Color = { 1.0f,1.0f,1.0f,1.0f };
 	int m_ActCount = {};
 
-	int m_ActType = {};
+	int m_Type = {};
 	bool m_Use = false;
 	float m_Frame = {};
 	bool m_Alive = true;

@@ -27,7 +27,12 @@ void DeckUI::InitState(const int ActCount) {
 //XV
 void DeckUI::Update() {
 	UiMove();
-
+	if (m_Type == 0) {
+		m_Color = { 1.0f,0.0f,0.0f,1.0f };
+	}
+	else {
+		m_Color = { 0.0f,1.0f,0.0f,1.0f };
+	}
 	tex->SetColor(m_Color);
 	tex->SetPosition(m_Position);
 
