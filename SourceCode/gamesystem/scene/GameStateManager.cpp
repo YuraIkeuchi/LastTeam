@@ -77,6 +77,7 @@ void GameStateManager::Initialize() {
 	m_ChargeScale = 1.0f;
 	m_Delay = false;
 	m_Buff = false;
+	predictarea->ResetPredict();
 }
 //更新
 void GameStateManager::Update() {
@@ -202,19 +203,22 @@ void GameStateManager::ActUIDraw() {
 void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name) {
 	ActState act;
 	act.SkillType = SkillType;
-	act.ActID = ID;
-	act.ActDamage = damage;
-	act.ActDelay = Delay;
-	act.AttackArea.resize(7);
-	act.DistanceX = DisX;
-	act.DistanceY = DisY;
-	act.StateName = name;
-	for (int i = 0; i < 7; i++) {
-		for (int j = 0; j < 7; j++) {
-			act.AttackArea[i].push_back(j);
+	if (act.SkillType == 0) {
+		act.ActID = ID;
+		act.ActDamage = damage;
+		act.AttackArea.resize(7);
+		act.DistanceX = DisX;
+		act.DistanceY = DisY;
+
+		for (int i = 0; i < 7; i++) {
+			for (int j = 0; j < 7; j++) {
+				act.AttackArea[i].push_back(j);
+			}
 		}
+		act.AttackArea = area;
 	}
-	act.AttackArea = area;
+	act.ActDelay = Delay;
+	act.StateName = name;
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
@@ -260,6 +264,7 @@ void GameStateManager::BirthArea() {
 //予測エリア関係
 void GameStateManager::PredictManager() {
 	if (m_AllActCount == 0) { return; }
+	if (m_Act.empty()) { return; }
 	predictarea->ResetPredict();
 	int l_BirthBaseX = {};
 	int l_BirthBaseY = {};
@@ -274,7 +279,9 @@ void GameStateManager::PredictManager() {
 			int AreaY = {};
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
-			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0))) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+			Helper::GetInstance()->Clamp(AreaX, 0, 7);
+			Helper::GetInstance()->Clamp(AreaY, 0, 3);
+			if (m_Act[0].AttackArea[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				predictarea->SetPredict(AreaX, AreaY, true);
 			}
 		}
