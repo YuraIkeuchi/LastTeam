@@ -366,9 +366,6 @@
     <ClCompile Include="SourceCode\gamesystem\skill\SpecialSkill.cpp">
       <Filter>gamesystem\skill</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp">
-      <Filter>gamesystem\charactor\Enemy\Other</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\stageobj\AttackArea.cpp">
       <Filter>gamesystem\stageobj\Area</Filter>
     </ClCompile>
@@ -380,6 +377,9 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyBullet.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
