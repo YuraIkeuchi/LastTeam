@@ -306,6 +306,7 @@ void SkillManager::PushOnce2Deck(const int DeckNumber) {
 	newdeckUi->SetType((int)skill[DeckNumber]->GetSkillType());
 	deckui.emplace_back(newdeckUi);
 	m_DeckNum = (int)deckui.size();
+
 }
 //デッキのクリア
 void SkillManager::DeckClear() {

@@ -330,6 +330,9 @@ void GameStateManager::GaugeUpdate() {
 		m_GaugeCount += 1.0f * m_DiameterGauge;
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
+		if (m_IsReloadDamage) {
+			//エネミーに5ダメージ
+		}
 		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();
 			StagePanel::GetInstance()->ResetPanel();
@@ -378,14 +381,17 @@ void GameStateManager::PassiveCheck() {
 			m_IsVenom = true;
 			break;
 		case Passive::ABILITY::SKILL_RECYCLE:
-			m_IsRecycle = true;
+			//m_IsRecycle = true;
+			break;
+		case Passive::ABILITY::RELOAD_DAMAGE:
+			m_IsReloadDamage = true;
 			break;
 		default:
 			assert(0);
 			break;
 		}
 	}
-	const int PASSIVE_MAX = 3;
+	const int PASSIVE_MAX = 7;
 	NotPassiveIDs.clear();
 	if (GotPassiveIDs.size() == 0) { 
 		for (int j = 0; j < PASSIVE_MAX; j++) {
