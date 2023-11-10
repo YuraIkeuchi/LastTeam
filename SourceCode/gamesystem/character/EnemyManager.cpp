@@ -107,7 +107,7 @@ void EnemyManager::Spawn2Map() {
 			}
 			if (x == '0') {
 				width++;
-			} else {
+			} else if (x == '1') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<NormalEnemy>();
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));

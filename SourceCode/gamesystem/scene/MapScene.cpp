@@ -135,7 +135,7 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	SceneChanger::GetInstance()->Update();
 	if (m_State==State::initState&&
 		SceneChanger::GetInstance()->GetChangeState() == 1) { return; }
-	
+
 	if (Helper::GetInstance()->FrameCheck(eFrame, eAdd)) {
 		eAdd *= -1.0f;
 		eFrame = 0.99f;
@@ -579,6 +579,10 @@ void MapScene::CheckState() {
 	static float s_frame = 0.0f;
 	static XMFLOAT2 size = {};
 
+	if (SceneChanger::GetInstance()->GetChangeState() == 1) {
+		m_State = State::mainState;
+	}
+
 	if (UIs[nowHierarchy][nowIndex].Tag==TUTORIAL) {
 		if (Helper::GetInstance()->FrameCheck(s_frame, addFrame)) {
 			Input* input = Input::GetInstance();
@@ -606,7 +610,6 @@ void MapScene::CheckState() {
 		ss << "Resources/csv/EnemySpawn/BattleMap0" << num<< ".csv";
 		std::string r_map = ss.str();
 		GameStateManager::GetInstance()->SetEnemySpawnText(r_map);
-		m_State = State::mainState;
 		if (SceneChanger::GetInstance()->GetChange()) {
 			SceneManager::GetInstance()->ChangeScene<BattleScene>();
 			SceneChanger::GetInstance()->SetChange(false);

@@ -74,7 +74,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
 			GameStateManager::GetInstance()->StageClearInit();
 		} else {
-			_ChangeType = CHANGE_TITLE;
+			_ChangeType = CHANGE_MAP;
 			SceneChanger::GetInstance()->SetChangeStart(true);
 		}
 	}
@@ -85,8 +85,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
-		if (_ChangeType == CHANGE_TITLE) {
-			SceneManager::GetInstance()->ChangeScene<TitleScene>(true);
+		if (_ChangeType == CHANGE_MAP) {
+			SceneManager::GetInstance()->PopScene();
 		}
 		else {
 			SceneManager::GetInstance()->ChangeScene<GameoverScene>();

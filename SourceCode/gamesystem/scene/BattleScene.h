@@ -28,7 +28,7 @@ private:
 	unique_ptr<IKESprite> ui = nullptr;
 
 	enum ChangeType {
-		CHANGE_TITLE,
+		CHANGE_MAP,
 		CHANGE_OVER,
-	}_ChangeType = CHANGE_TITLE;
+	}_ChangeType = CHANGE_MAP;
 };
