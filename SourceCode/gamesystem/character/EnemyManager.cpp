@@ -23,16 +23,6 @@ void EnemyManager::Initialize() {
 	}
 }
 
-void EnemyManager::BattleUpdate() {
-	//すべての敵の行動が終わったr
-	//for (unique_ptr<InterEnemy>& enemy : enemys) {
-	//	if (enemy->GetState() != STATE_STANDBY) { break; }
-	//	for (unique_ptr<InterEnemy>& enemy : enemys) {
-	//		enemy->SetState(STATE_INTER);
-	//	}
-	//}
-
-}
 
 void EnemyManager::Update() {
 	BattleUpdate();
