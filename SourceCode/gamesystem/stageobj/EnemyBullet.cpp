@@ -15,11 +15,11 @@ EnemyBullet::EnemyBullet() {
 bool EnemyBullet::Initialize() {
 	m_Position = { 0.0f,0.0f,0.0f };
 	m_Rotation.y = 270.0f;
-	m_Scale = { 0.3f,0.3f,0.3f };
+	m_Scale = { 0.15f,0.15f,0.15f };
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
 	m_AddSpeed = 3.0f;
 	m_Alive = true;
-	m_AfterPos.y = 2.0f;
+	m_AfterPos.y = 1.0f;
 	m_ThrowType = THROW_SET;
 	m_AliveTimer = {};
 

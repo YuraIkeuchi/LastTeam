@@ -266,7 +266,7 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 
 bool SkillManager::CreateSkill(int id) {
 
-	std::string directory = "Resources/csv/skill/Skill";
+	std::string directory = "Resources/csv/chara/player/skill/Skill";
 
 	std::stringstream ss;
 	if (id >= 10) {

@@ -77,7 +77,7 @@ private:
 
 	//‰~‰^“®
 	XMFLOAT3 m_BasePos = {};
-	float m_CircleScale = 2.0f;
+	float m_CircleScale = 1.0f;
 	float m_CircleSpeed = {};
 
 	XMFLOAT2 m_Angle = {};
