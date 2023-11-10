@@ -76,14 +76,19 @@ void EnemyManager::UIDraw() {
 }
 //“G‚Ì€–Sˆ’u
 bool EnemyManager::BossDestroy() {
+	int num = (int)enemys.size();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetHP() <= 0.0f) {
-			return true;
-		} else {
+		if (enemy->GetHP() > 0.0f) {
 			return false;
+		} else {
+			num--;
 		}
 	}
-	return false;
+	if (num == 0) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 void EnemyManager::PoizonGauge() {
