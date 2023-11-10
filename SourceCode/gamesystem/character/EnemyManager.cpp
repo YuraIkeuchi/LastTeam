@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include "NormalEnemy.h"
+#include "CanonEnemy.h"
 #include <StagePanel.h>
 #include <Player.h>
 #include <GameStateManager.h>
@@ -23,13 +24,13 @@ void EnemyManager::Initialize() {
 }
 
 void EnemyManager::BattleUpdate() {
-	//‚·‚×‚Ä‚Ì“G‚Ìs“®‚ªI‚í‚Á‚½r
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetState() != STATE_STANDBY) { break; }
-		for (unique_ptr<InterEnemy>& enemy : enemys) {
-			enemy->SetState(STATE_INTER);
-		}
-	}
+	//ã™ã¹ã¦ã®æ•µã®è¡Œå‹•ãŒçµ‚ã‚ã£ãŸr
+	//for (unique_ptr<InterEnemy>& enemy : enemys) {
+	//	if (enemy->GetState() != STATE_STANDBY) { break; }
+	//	for (unique_ptr<InterEnemy>& enemy : enemys) {
+	//		enemy->SetState(STATE_INTER);
+	//	}
+	//}
 
 }
 
@@ -40,7 +41,7 @@ void EnemyManager::Update() {
 	}
 
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetState() == STATE_ATTACK) {			//ˆê’UUŒ‚ˆÈŠO‚Íæ‚ç‚È‚¢
+		if (enemy->GetState() == STATE_ATTACK) {			//ä¸€æ—¦æ”»æ’ƒä»¥å¤–ã¯å–ã‚‰ãªã„
 			Player::GetInstance()->SetGrazePos(enemy->GetPosition());
 		} else {
 			Player::GetInstance()->SetGrazePos({ 1000.0f,0.0f,0.0f });
@@ -68,13 +69,13 @@ void EnemyManager::ImGuiDraw() {
 	//	enemy->ImGuiDraw();
 	//}
 }
-//UI‚Ì•`‰æ
+//UIã®æç”»
 void EnemyManager::UIDraw() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->UIDraw();
 	}
 }
-//“G‚Ì€–Sˆ’u
+//æ•µã®æ­»äº¡å‡¦ç½®
 bool EnemyManager::BossDestroy() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		if (enemy->GetHP() <= 0.0f) {
@@ -118,9 +119,9 @@ void EnemyManager::Spawn2Map() {
 
 	}
 }
-//ƒ‰ƒCƒg
+//ãƒ©ã‚¤ãƒˆ
 void EnemyManager::SetLight(LightGroup* light) {
-	//ƒ{ƒX
+	//ãƒœã‚¹
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		light->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
 		light->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));

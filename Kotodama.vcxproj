@@ -173,6 +173,7 @@
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterBoss.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp" />
@@ -210,6 +211,7 @@
     <ClCompile Include="SourceCode\gamesystem\skill\SkillManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\SpecialSkill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\AttackArea.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyBullet.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp" />
@@ -288,6 +290,7 @@
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterBoss.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h" />
@@ -325,6 +328,7 @@
     <ClInclude Include="SourceCode\gamesystem\skill\SkillManager.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\SpecialSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\AttackArea.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyBullet.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h" />
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h" />
