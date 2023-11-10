@@ -109,7 +109,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EnemyBullet.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_demo.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_draw.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_impl_dx12.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_impl_win32.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_tables.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_widgets.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Font.cpp" />
@@ -174,6 +180,7 @@
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\BaseEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterBoss.cpp" />
@@ -219,7 +226,14 @@
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EnemyBullet.h" />
+    <ClInclude Include="lib\imgui\include\imconfig.h" />
+    <ClInclude Include="lib\imgui\include\imgui.h" />
+    <ClInclude Include="lib\imgui\include\imgui_impl_dx12.h" />
+    <ClInclude Include="lib\imgui\include\imgui_impl_win32.h" />
+    <ClInclude Include="lib\imgui\include\imgui_internal.h" />
+    <ClInclude Include="lib\imgui\include\imstb_rectpack.h" />
+    <ClInclude Include="lib\imgui\include\imstb_textedit.h" />
+    <ClInclude Include="lib\imgui\include\imstb_truetype.h" />
     <ClInclude Include="SourceCode\engine\2d\DebugText.h" />
     <ClInclude Include="SourceCode\engine\2d\Feed.h" />
     <ClInclude Include="SourceCode\engine\2d\Font.h" />
@@ -292,6 +306,7 @@
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterBoss.h" />
