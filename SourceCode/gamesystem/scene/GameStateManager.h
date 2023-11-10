@@ -11,9 +11,12 @@
 #include <Passive.h>
 #include "GameObject/GameObject.h"
 #include "Player.h"
+#include "BaseEnemy.h"
 #include "ResultSkill.h"
 using namespace DirectX;
 using namespace std;
+
+
 
 //ゲームの状態を管理するクラス
 class GameStateManager {
@@ -58,12 +61,17 @@ private:
 
 	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
+
+	bool AttackSubAction();
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
 	const bool GetIsChangeScene() { return isChangeScene; }
 	const bool GetIsFinish() { return isFinish; }
 	const bool GetBuff() { return m_Buff; }
+
+	const bool GetPoisonSkill() { return  m_poizonLong; }
+	const bool GetPoisonVenom() { return  m_IsVenom; }
 
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
@@ -109,7 +117,7 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector<int> GotPassiveIDs;
+	std::vector<int> GotPassiveIDs = {4};
 	std::vector<int> NotPassiveIDs;
 
 	unique_ptr<IKESprite> skillUI = nullptr;
@@ -117,7 +125,7 @@ private:
 
 	XMFLOAT2 basesize = { 45.f,400.f };
 
-	//攻撃エリア
+	// 攻撃エリア
 	vector<AttackArea*> attackarea;
 
 	//カウンター
@@ -152,16 +160,18 @@ private:
 	//ゲージマックス
 	float kGaugeCountMax = 180;
 	bool m_IsReload = true;
+
+	bool m_poizonLong = false;
+	bool m_IsVenom = false;
 	bool m_BirthSkill = false;
 
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
 
-	// Playerポインタ
-	std::weak_ptr<Player> player_;
+	vector<int> m_DeckNumber = { 6,7,8,9 };
 
-	vector<int> m_DeckNumber = { 7,8,9 };
+
 	vector<int> m_NotDeckNumber = {};
 
 	int m_DistanceX = 0;
@@ -181,4 +191,26 @@ private:
 
 	//バフ(一旦一個)
 	bool m_Buff = false;
+
+
+	///=============================
+	/// 
+	/// プレイヤー関連
+	/// 
+	/// =============================
+
+	// Playerポインタ
+	std::weak_ptr<Player> player_;
+
+
+	/// =============================
+	/// 
+	/// エネミー関連
+	/// 
+	/// =============================
+	
+	/// <summary>
+	/// エネミー管理用のコンテナ
+	/// </summary>
+	vector<weak_ptr<BaseEnemy>> enemys_container_;
 };

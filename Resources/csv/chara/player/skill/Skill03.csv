@@ -3,7 +3,7 @@ SkillType,0
 Delay,15
 Name,hit
 StateName,NONE
-Damege,5
+Damege,70
 DistanceX,1
 AttackArea,0 1
 AttackAreA,1 0

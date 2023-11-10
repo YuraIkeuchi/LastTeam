@@ -6,9 +6,11 @@
 #include "scene/SceneManager.h"
 #include "Property.h"
 
+#include <memory>
 
 class BaseScene;
-class GameObject
+class GameObject:
+	public std::enable_shared_from_this<GameObject>
 {
 public:
 	//===========================================
@@ -79,5 +81,7 @@ inline std::shared_ptr<GameObjectClass> GameObject::CreateObject(Parameter ...pa
 {
 	std::shared_ptr<GameObjectClass> object = std::make_shared<GameObjectClass>(param...);
 	SceneManager::GetInstance()->GetTopScene()->GetGameObjectManager().lock()->GetContainer().push_back(object);
+	object->Initialize();
+	
 	return object;
 }

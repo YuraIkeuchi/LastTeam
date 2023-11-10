@@ -30,7 +30,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
 		player->LoadResource();
 		player->InitState({ -8.0f,1.0f,0.0f });
-		player->Initialize();
 
 		GameStateManager::GetInstance()->SetPlayer(player);
 
@@ -44,7 +43,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	// �G�l�~�[
 	{
 		auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
-		test_enemy_1->Initialize();
 	}
 
 	//�Q�[���̏��
@@ -59,7 +57,12 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
 
-	//���U���g�e�L�X�g
+	if (GameStateManager::GetInstance()->GetPoisonSkill()) {
+		enemyManager->PoizonGauge();
+	}
+	if (GameStateManager::GetInstance()->GetPoisonVenom()) {
+		enemyManager->PoizonVenom();
+	}
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
 	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });

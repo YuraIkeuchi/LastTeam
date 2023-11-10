@@ -75,14 +75,32 @@ void EnemyManager::UIDraw() {
 }
 //�G�̎��S���u
 bool EnemyManager::BossDestroy() {
+	int num = (int)enemys.size();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetHP() <= 0.0f) {
-			return true;
-		} else {
+		if (enemy->GetHP() > 0.0f) {
 			return false;
+		} else {
+			num--;
 		}
 	}
-	return false;
+	if (num == 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void EnemyManager::PoizonGauge() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SetPoizonLong(true);
+	}
+}
+
+void EnemyManager::PoizonVenom() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SetPoizonVenom(true);
+	}
+
 }
 
 void EnemyManager::Spawn2Map() {
@@ -108,6 +126,12 @@ void EnemyManager::Spawn2Map() {
 				width++;
 			} else if (x == '1') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<NormalEnemy>();
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '2') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<CanonEnemy>();
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
