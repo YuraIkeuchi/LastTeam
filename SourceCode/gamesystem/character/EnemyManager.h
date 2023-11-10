@@ -31,6 +31,8 @@ public:
 	//“G‚Ì€–Sˆ—
 	bool BossDestroy();
 
+	void PoizonGauge();
+	void PoizonVenom();
 
 	void SetLight(LightGroup* light);
 private:

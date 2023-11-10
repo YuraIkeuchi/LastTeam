@@ -86,6 +86,19 @@ bool EnemyManager::BossDestroy() {
 	return false;
 }
 
+void EnemyManager::PoizonGauge() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SetPoizonLong(true);
+	}
+}
+
+void EnemyManager::PoizonVenom() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SetPoizonVenom(true);
+	}
+
+}
+
 void EnemyManager::Spawn2Map() {
 	string csv_ = GameStateManager::GetInstance()->GetEnemySpawnText();
 	std::string line;

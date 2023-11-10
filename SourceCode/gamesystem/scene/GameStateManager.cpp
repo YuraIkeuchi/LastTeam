@@ -371,6 +371,12 @@ void GameStateManager::PassiveCheck() {
 		case Passive::ABILITY::RELOAD_LOCK:
 			m_IsReload = false;
 			break;
+		case Passive::ABILITY::POIZON_GAUGEUP:
+			m_poizonLong = true;
+			break;
+		case Passive::ABILITY::POIZON_DAMAGEUP:
+			m_IsVenom = true;
+			break;
 		default:
 			break;
 		}

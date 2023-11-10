@@ -63,6 +63,9 @@ public:
 	const bool GetIsFinish() { return isFinish; }
 	const bool GetBuff() { return m_Buff; }
 
+	const bool GetPoisonSkill() { return  m_poizonLong; }
+	const bool GetPoisonVenom() { return  m_IsVenom; }
+
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
@@ -104,7 +107,7 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector<int> GotPassiveIDs;
+	std::vector<int> GotPassiveIDs = {4};
 	std::vector<int> NotPassiveIDs;
 
 	unique_ptr<IKESprite> skillUI = nullptr;
@@ -147,6 +150,9 @@ private:
 	//ゲージマックス
 	float kGaugeCountMax = 180;
 	bool m_IsReload = true;
+
+	bool m_poizonLong = false;
+	bool m_IsVenom = false;
 	bool m_BirthSkill = false;
 
 	int m_ID = {};

@@ -162,17 +162,22 @@ void InterEnemy::HPManage() {
 //毒
 void InterEnemy::PoisonState() {
 	if (!m_Poison) { return; }
-
+	int kTimerMax = 800;
+	if (m_PoisonLong) { kTimerMax *= 2; }
 	m_PoisonTimer++;
 
 	if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
-		m_HP -= 1.0f;
+		if (!m_IsVenom) {
+			m_HP -= 1.0f;
+		} else {
+			m_HP -= 2.0f;
+		}
 	}
 	else if (m_PoisonTimer % 50 == 0) {		//毒のエフェクト
 		BirthPoisonParticle();
 	}
 
-	if (m_PoisonTimer == 800) {	//一定時間立ったら毒終了
+	if (m_PoisonTimer == kTimerMax) {	//一定時間立ったら毒終了
 		m_Poison = false;
 		m_PoisonTimer = {};
 	}
