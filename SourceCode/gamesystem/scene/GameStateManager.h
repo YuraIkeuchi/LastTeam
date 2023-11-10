@@ -52,7 +52,10 @@ private:
 	//デッキの初期化
 	void DeckInitialize();
 	void GetPassive(int ID);
+	
+	bool AttackSubAction();
 
+	bool SkillRecycle();
 
 	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
@@ -107,7 +110,7 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector<int> GotPassiveIDs = {4};
+	std::vector<int> GotPassiveIDs = {5};
 	std::vector<int> NotPassiveIDs;
 
 	unique_ptr<IKESprite> skillUI = nullptr;
@@ -153,6 +156,8 @@ private:
 
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
+	bool m_IsRecycle = false;
+
 	bool m_BirthSkill = false;
 
 	int m_ID = {};

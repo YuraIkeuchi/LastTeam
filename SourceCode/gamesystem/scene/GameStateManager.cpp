@@ -376,6 +376,9 @@ void GameStateManager::PassiveCheck() {
 		case Passive::ABILITY::POIZON_DAMAGEUP:
 			m_IsVenom = true;
 			break;
+		case Passive::ABILITY::SKILL_RECYCLE:
+			m_IsRecycle = true;
+			break;
 		default:
 			break;
 		}
@@ -416,7 +419,8 @@ void GameStateManager::GetPassive(int ID) {
 
 
 bool GameStateManager::AttackSubAction() {
-	return false;
+	SkillRecycle();
+	return true;
 }
 
 bool GameStateManager::ResultUpdate() {
@@ -436,6 +440,13 @@ bool GameStateManager::ResultUpdate() {
 void GameStateManager::InDeck() {
 	m_DeckNumber.push_back(m_NotDeckNumber[m_NotCount]);
 	m_NotDeckNumber.erase(cbegin(m_NotDeckNumber) + m_NotCount);
+}
+
+bool GameStateManager::SkillRecycle() {
+	if (!m_IsRecycle) { return false; }
+
+
+	return true;
 }
 
 void GameStateManager::StageClearInit() {
