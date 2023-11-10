@@ -2,9 +2,9 @@
 #include"InterEnemy.h"
 using namespace std;         //  名前空間指定
 //普通の敵
-class TutorialEnemy :public InterEnemy {
+class MobEnemy :public InterEnemy {
 public:
-	TutorialEnemy();
+	MobEnemy();
 	bool Initialize() override;//初期化
 	void Finalize() override;//開放
 	void Action()override;//更新
