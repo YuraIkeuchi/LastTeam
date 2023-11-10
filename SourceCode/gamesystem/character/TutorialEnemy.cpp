@@ -23,7 +23,6 @@ TutorialEnemy::TutorialEnemy() {
 }
 //‰Šú‰»
 bool TutorialEnemy::Initialize() {
-
 	m_Position = { 0.0f,0.1f,2.0f };
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };

@@ -28,6 +28,7 @@ public:
 	void ImGuiDraw();
 	//チュートリアルの更新
 	void TitleUpdate();
+	//
 private:
 	//動き
 	void Move();
@@ -42,6 +43,7 @@ private:
 public:
 	//プレイヤーの回復
 	void HealPlayer(const float power);
+	void RecvDamage(float Damage);
 private:
 	void MoveCommon(float& pos, const float velocity, int& playerspace,const int addspace);
 private:

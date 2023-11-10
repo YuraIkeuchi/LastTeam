@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include "NormalEnemy.h"
+#include "CanonEnemy.h"
 #include <StagePanel.h>
 #include <Player.h>
 
@@ -23,12 +24,12 @@ void EnemyManager::Initialize() {
 
 void EnemyManager::BattleUpdate() {
 	//Ç∑Ç◊ÇƒÇÃìGÇÃçsìÆÇ™èIÇÌÇ¡ÇΩr
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetState() != STATE_STANDBY) { break; }
-		for (unique_ptr<InterEnemy>& enemy : enemys) {
-			enemy->SetState(STATE_INTER);
-		}
-	}
+	//for (unique_ptr<InterEnemy>& enemy : enemys) {
+	//	if (enemy->GetState() != STATE_STANDBY) { break; }
+	//	for (unique_ptr<InterEnemy>& enemy : enemys) {
+	//		enemy->SetState(STATE_INTER);
+	//	}
+	//}
 
 }
 
@@ -107,7 +108,7 @@ void EnemyManager::Spawn2Map() {
 			if (x == '0') {
 				width++;
 			} else {
-				unique_ptr<InterEnemy> enemy_ = std::make_unique<NormalEnemy>();
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<CanonEnemy>();
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;

@@ -17,6 +17,7 @@ void ModelManager::StartInitialize()
 	LoadModel(PLAYERMODEL, "chr_knight");
 	LoadModel(SKYDOME, "skydome");
 	LoadModel(PANEL, "box1x1x1");
+	LoadModel(BULLET, "UVSphere");
 	LoadFBXModel(PLAYER, "kotoko");
 }
 

@@ -12,7 +12,7 @@ using namespace std;         //  –¼‘O‹óŠÔŽw’è
 enum CharaState {
 	STATE_INTER,
 	STATE_ATTACK,
-	STATE_STANDBY,
+	STATE_SPECIAL,
 };
 //“GŠî’ê
 class InterEnemy :

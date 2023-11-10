@@ -18,6 +18,7 @@ public:
 		PLAYERMODEL,
 		SKYDOME,
 		PANEL,
+		BULLET,
 	};
 	//FBXの名前
 	enum FBXName {
