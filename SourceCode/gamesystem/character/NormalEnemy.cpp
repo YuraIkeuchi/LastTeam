@@ -55,8 +55,8 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void NormalEnemy::ImGui_Origin() {
-	ImGui::Begin("Enemy");
-	ImGui::Text("Poison:%d", m_Poison);
+	ImGui::Begin("NormalEnemy");
+	ImGui::Text("Height:%d,Width:%d", m_NowHeight,m_NowWidth);
 	ImGui::Text("Timer:%d", m_PoisonTimer);
 	ImGui::End();
 }

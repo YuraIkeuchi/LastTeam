@@ -34,6 +34,7 @@ public:
 	void PoizonGauge();
 	void PoizonVenom();
 
+	void EnemyLightInit(LightGroup* light);
 	void SetLight(LightGroup* light);
 private:
 	/// <summary>
@@ -41,7 +42,7 @@ private:
 	/// </summary>
 	void Spawn2Map();
 private:
-	std::list<unique_ptr<InterEnemy>> enemys;
+	std::vector<unique_ptr<InterEnemy>> enemys;
 
 	//ä€âe(É{ÉX)
 	float BosscircleShadowDir[3] = { 0,-1,0 };

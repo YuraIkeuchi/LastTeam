@@ -5,7 +5,8 @@
 #include "Font.h"
 #include "SceneSave.h"
 #include <TextManager.h>
-
+#include "IKEObject3d.h"
+#include "IKEFBXObject3d.h"
 void Framework::Run()
 {
 	Initialize(dxcommon);

@@ -195,9 +195,6 @@
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Base</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\InterBoss.cpp">
-      <Filter>gamesystem\charactor\Boss\Base</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\Player.cpp">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClCompile>
@@ -336,10 +333,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\TutorialTask.cpp">
       <Filter>gamesystem\scene\Tutorial</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\TitleEnemy.cpp">
-      <Filter>gamesystem\charactor\Enemy\Other</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\TutorialEnemy.cpp">
+    <ClCompile Include="SourceCode\gamesystem\character\MobEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\skill\AttackSkill.cpp">
@@ -536,9 +530,6 @@
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Base</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\InterBoss.h">
-      <Filter>gamesystem\charactor\Boss\Base</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\Player.h">
       <Filter>gamesystem\charactor\Player</Filter>
     </ClInclude>
@@ -681,10 +672,7 @@
     <ClInclude Include="SourceCode\gamesystem\scene\TutorialTask.h">
       <Filter>gamesystem\scene\Tutorial</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\TitleEnemy.h">
-      <Filter>gamesystem\charactor\Enemy\Other</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\TutorialEnemy.h">
+    <ClInclude Include="SourceCode\gamesystem\character\MobEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\skill\AttackSkill.h">
@@ -829,9 +817,6 @@
     <Filter Include="gamesystem\charactor\Enemy\Base">
       <UniqueIdentifier>{b2050d0c-0b32-4a36-a63c-681f0585db9b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\charactor\Boss">
-      <UniqueIdentifier>{81775484-798e-46ec-ac44-82d84b1001c4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{5157e7cf-15cd-4c09-bd21-31621f90b40b}</UniqueIdentifier>
     </Filter>
@@ -855,12 +840,6 @@
     </Filter>
     <Filter Include="gamesystem\Text">
       <UniqueIdentifier>{6b589362-730f-4fb1-bae8-d3a3afeff414}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\charactor\Boss\Text">
-      <UniqueIdentifier>{09ec16d5-a106-4dae-a612-3fe4d8dcfa6b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\charactor\Boss\Base">
-      <UniqueIdentifier>{cddcc7b5-f579-4ffb-bf7a-fc05ad2ee680}</UniqueIdentifier>
     </Filter>
     <Filter Include="gamesystem\scene">
       <UniqueIdentifier>{88dffa51-41c6-421c-ae0e-d8f4ba011bb3}</UniqueIdentifier>

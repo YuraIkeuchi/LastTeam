@@ -80,10 +80,19 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
-	for (auto i = 0; i < actions.size(); i++) {
-		if (actions[i] == nullptr)continue;
-		actions[i]->ImGuiDraw();
+	//for (auto i = 0; i < actions.size(); i++) {
+	//	if (actions[i] == nullptr)continue;
+	//	actions[i]->ImGuiDraw();
+	//}
+
+	ImGui::Begin("Panel");
+	//プレイヤーが居るマスが黄色くなる
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			ImGui::Text("Hit[%d][%d]:%d", i, j, panels[i][j].isEnemyHit);
+		}
 	}
+	ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
