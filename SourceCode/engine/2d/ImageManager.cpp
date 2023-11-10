@@ -27,6 +27,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(PASSIVE_01, L"Resources/2d/objicon/Passive_01.png");
 	IKESprite::LoadTexture(PASSIVE_02, L"Resources/2d/objicon/Passive_02.png");
 	IKESprite::LoadTexture(PASSIVE_03, L"Resources/2d/objicon/Passive_03.png");
+	IKESprite::LoadTexture(PASSIVE_04, L"Resources/2d/objicon/Passive_04.png");
+	IKESprite::LoadTexture(PASSIVE_05, L"Resources/2d/objicon/Passive_05.png");
 	IKESprite::LoadTexture(PASSIVE_FRAME, L"Resources/2d/objicon/Passive_Frame.png");
 	IKESprite::LoadTexture(GAUGE, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(TITLEBACK, L"Resources/2d/sceneback/TitleBack.png");

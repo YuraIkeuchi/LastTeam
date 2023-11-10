@@ -77,14 +77,32 @@ void EnemyManager::UIDraw() {
 }
 //敵の死亡処置
 bool EnemyManager::BossDestroy() {
+	int num = (int)enemys.size();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetHP() <= 0.0f) {
-			return true;
-		} else {
+		if (enemy->GetHP() > 0.0f) {
 			return false;
+		} else {
+			num--;
 		}
 	}
-	return false;
+	if (num == 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void EnemyManager::PoizonGauge() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SetPoizonLong(true);
+	}
+}
+
+void EnemyManager::PoizonVenom() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SetPoizonVenom(true);
+	}
+
 }
 
 void EnemyManager::Spawn2Map() {

@@ -77,10 +77,16 @@ protected:
 	int m_InterHP = {};//êÆêîÇ…ÇµÇΩHP
 
 	bool m_Poison = false;
+	bool m_PoisonLong = false;
+	bool m_IsVenom = false;
 	int m_PoisonTimer = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
+	
+	void SetPoizonLong(bool isPoison) { m_PoisonLong = isPoison; }
+	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
+
 	const float GetHP() { return m_HP; }
 public:
 	//virtual ~InterEnemy() = default;

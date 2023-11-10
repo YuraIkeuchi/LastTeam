@@ -36,7 +36,12 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
-
+	if (GameStateManager::GetInstance()->GetPoisonSkill()) {
+		enemyManager->PoizonGauge();
+	}
+	if (GameStateManager::GetInstance()->GetPoisonVenom()) {
+		enemyManager->PoizonVenom();
+	}
 	//リザルトテキスト
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);

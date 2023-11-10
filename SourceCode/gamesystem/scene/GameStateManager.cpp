@@ -143,6 +143,7 @@ void GameStateManager::AttackTrigger() {
 	if (isFinish) { return; }
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
+		AttackSubAction();
 		m_Delay = true;
 	}
 }
@@ -369,6 +370,12 @@ void GameStateManager::PassiveCheck() {
 		case Passive::ABILITY::RELOAD_LOCK:
 			m_IsReload = false;
 			break;
+		case Passive::ABILITY::POIZON_GAUGEUP:
+			m_poizonLong = true;
+			break;
+		case Passive::ABILITY::POIZON_DAMAGEUP:
+			m_IsVenom = true;
+			break;
 		default:
 			break;
 		}
@@ -407,6 +414,10 @@ void GameStateManager::GetPassive(int ID) {
 	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,0.0f})));
 }
 
+
+bool GameStateManager::AttackSubAction() {
+	return false;
+}
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
