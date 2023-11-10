@@ -30,7 +30,7 @@ public:
 	//プレイヤーの現在位置
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
-	void AddSkill(const int SkillType,const int ID,const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name);
+	void AddSkill(const int SkillType, const int ID, const float damage, const int Delay, vector<std::vector<int>> area, int DisX, int DisY, string name);
 private:
 	void PredictManager();
 	//攻撃した瞬間
@@ -40,7 +40,7 @@ private:
 	//バフ状況
 	void BirthBuff();
 	//行動UIの生成
-	void BirthActUI(const int ID,const int Type);
+	void BirthActUI(const int ID, const int Type);
 	//スキルの使用
 	void UseSkill();
 	//行動の終了
@@ -71,8 +71,9 @@ public:
 	/// 敵を倒したら最初の処理
 	/// </summary>
 	void StageClearInit();
-	
-	
+
+	void SetEnemySpawnText(string& text) { enemySpawnText = text; }
+	string& GetEnemySpawnText() { return enemySpawnText; }
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetResetPredict(const bool ResetPredict) { this->m_ResetPredict = ResetPredict; }
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
@@ -132,6 +133,7 @@ private:
 	int m_NowWidth = {};
 	float m_DiameterVel = 1.0f;
 
+	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
 
 	enum SkillType {
 		SKILL_NORMAL,
@@ -151,7 +153,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = {7,8,9};
+	vector<int> m_DeckNumber = { 7,8,9 };
 
 	vector<int> m_NotDeckNumber = {};
 
