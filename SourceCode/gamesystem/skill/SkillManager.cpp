@@ -297,6 +297,16 @@ void SkillManager::DeckCheck(const int DeckNumber, const int DeckCount) {
 	//デッキのUIを作成
 	BirthDeckUI(DeckNumber, DeckCount);
 }
+void SkillManager::PushOnce2Deck(const int DeckNumber) {
+	DeckUI* newdeckUi = nullptr;
+	newdeckUi = new DeckUI();
+	newdeckUi->Initialize();
+	newdeckUi->InitState((int)deckui.size());
+	newdeckUi->SetID(DeckNumber);
+	newdeckUi->SetType((int)skill[DeckNumber]->GetSkillType());
+	deckui.emplace_back(newdeckUi);
+	m_DeckNum = (int)deckui.size();
+}
 //デッキのクリア
 void SkillManager::DeckClear() {
 	if (!m_DeckDate.empty()) {
