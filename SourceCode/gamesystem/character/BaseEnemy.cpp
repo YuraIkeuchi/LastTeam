@@ -3,7 +3,7 @@
 #include "Helper.h"
 #include "StagePanel.h"
 #include "CsvLoader.h"
-
+#include "GameStateManager.h"
 
 
 BaseEnemy::BaseEnemy():
@@ -15,6 +15,8 @@ BaseEnemy::BaseEnemy():
 
 bool BaseEnemy::Initialize()
 {
+	// エネミーのポインタをゲームステートマネージャに格納
+	GameStateManager::GetInstance()->AddEnemy(std::static_pointer_cast<BaseEnemy>(shared_from_this()));
 	return false;
 }
 
@@ -65,6 +67,7 @@ TestEnemy::TestEnemy()
 
 bool TestEnemy::Initialize()
 {
+	BaseEnemy::Initialize();
 	// 座標セット
 	m_Position = RandPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };

@@ -36,6 +36,13 @@ public:
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
 	void AddSkill(const int SkillType, const int ID, const float damage, const int Delay, vector<std::vector<int>> area, int DisX, int DisY, string name);
+
+	/// <summary>
+	/// エネミーのデータをコンテナに追加
+	/// </summary>
+	/// <param name="Enemy"></param>
+	/// <param name="作者">やぶなか</param>
+	void AddEnemy(std::weak_ptr<BaseEnemy> Enemy) { enemys_container_.emplace_back(Enemy); }
 private:
 	void PredictManager();
 	//攻撃した瞬間
@@ -65,7 +72,6 @@ private:
 	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
 
-	bool AttackSubAction();
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -144,10 +150,6 @@ private:
 	//全体スコア
 	int m_AllScore = {};
 
-	//プレイヤーの現在パネル
-	int m_NowHeight = {};
-	int m_NowWidth = {};
-	float m_DiameterVel = 1.0f;
 
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
 
@@ -204,9 +206,17 @@ private:
 	/// 
 	/// =============================
 
-	// Playerポインタ
+	/// <summary>
+	/// プレイヤーのポインタ
+	/// </summary>
 	std::weak_ptr<Player> player_;
 
+	//プレイヤーの現在パネル
+	int m_NowHeight = {};		// Yパネル座標
+	int m_NowWidth = {};		// Xパネル座標
+
+	// ゲージ速度
+	float m_DiameterVel = 1.0f;
 
 	/// =============================
 	/// 

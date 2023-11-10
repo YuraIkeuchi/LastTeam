@@ -1,8 +1,11 @@
 #pragma once
 
+#include <memory>
+
 #include "GameObject/GameObject.h"
 #include "ObjCommon.h"
 #include "BehaviorTree/BehaviorTree.h"
+
 
 using namespace behaviorTree;
 
@@ -55,7 +58,7 @@ public:
 	TestEnemy();
 
 	//èâä˙âª
-	bool Initialize() override;
+	bool Initialize();
 	//ï`âÊ
 	void Draw() override;
 	void Draw(DirectXCommon *dxCommon) override {};
