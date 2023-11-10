@@ -172,19 +172,19 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("GameState");
-	ImGui::Text("Scale:%f", m_ChargeScale);
-	ImGui::Text("Timer:%d", m_DelayTimer);
-	ImGui::Text("Buff:%d", m_Buff);
-	if (!m_Act.empty()) {
-		ImGui::Text("SkillType:%d", m_Act[0].SkillType);
-		ImGui::Text("Name:%s", m_Act[0].StateName);
-	}
-	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
-	if (ImGui::Button("in", ImVec2(90, 50))) {
-		InDeck();		//デッキに入っていないカードをデッキに組み込む
-	}
-	ImGui::End();
+	//ImGui::Begin("GameState");
+	//ImGui::Text("Scale:%f", m_ChargeScale);
+	//ImGui::Text("Timer:%d", m_DelayTimer);
+	//ImGui::Text("Buff:%d", m_Buff);
+	//if (!m_Act.empty()) {
+	//	ImGui::Text("SkillType:%d", m_Act[0].SkillType);
+	//	ImGui::Text("Name:%s", m_Act[0].StateName);
+	//}
+	//ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
+	//if (ImGui::Button("in", ImVec2(90, 50))) {
+	//	InDeck();		//デッキに入っていないカードをデッキに組み込む
+	//}
+	//ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
 }
@@ -330,6 +330,9 @@ void GameStateManager::GaugeUpdate() {
 		m_GaugeCount += 1.0f * m_DiameterGauge;
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
+		if (m_IsReloadDamage) {
+			//エネミーに5ダメージ
+		}
 		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();
 			StagePanel::GetInstance()->ResetPanel();
@@ -378,14 +381,17 @@ void GameStateManager::PassiveCheck() {
 			m_IsVenom = true;
 			break;
 		case Passive::ABILITY::SKILL_RECYCLE:
-			m_IsRecycle = true;
+			//m_IsRecycle = true;
+			break;
+		case Passive::ABILITY::RELOAD_DAMAGE:
+			m_IsReloadDamage = true;
 			break;
 		default:
 			assert(0);
 			break;
 		}
 	}
-	const int PASSIVE_MAX = 3;
+	const int PASSIVE_MAX = 7;
 	NotPassiveIDs.clear();
 	if (GotPassiveIDs.size() == 0) { 
 		for (int j = 0; j < PASSIVE_MAX; j++) {

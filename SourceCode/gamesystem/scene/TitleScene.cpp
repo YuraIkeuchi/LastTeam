@@ -4,7 +4,7 @@
 #include <Player.h>
 #include <StagePanel.h>
 #include <SceneManager.h>
-#include "TitleEnemy.h"
+#include "MobEnemy.h"
 #include "TutorialTask.h"
 #include "GameStateManager.h"
 // 遷移しうるシーン
@@ -17,14 +17,6 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
-	//wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TITLE_01);
-	//texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-
-	//wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TITLE_02);
-	//texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,0.f,1.f,1.f })));
-
-	//wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::TITLE_03);
-	//texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
 
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
@@ -50,7 +42,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->Initialize();
 
 	//敵
-	enemy = make_unique<TitleEnemy>();
+	enemy = make_unique<MobEnemy>();
 	enemy->Initialize();
 
 	//カード

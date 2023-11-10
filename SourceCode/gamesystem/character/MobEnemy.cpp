@@ -1,4 +1,4 @@
-#include "TutorialEnemy.h"
+#include "MobEnemy.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -8,7 +8,7 @@
 #include "ImageManager.h"
 #include <GameStateManager.h>
 //ÉÇÉfÉãì«Ç›çûÇ›
-TutorialEnemy::TutorialEnemy() {
+MobEnemy::MobEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
@@ -22,8 +22,8 @@ TutorialEnemy::TutorialEnemy() {
 	}
 }
 //èâä˙âª
-bool TutorialEnemy::Initialize() {
-	m_Position = { 0.0f,0.1f,2.0f };
+bool MobEnemy::Initialize() {
+	m_Position = { 2.0f,0.1f,2.0f };
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5 };
@@ -33,18 +33,18 @@ bool TutorialEnemy::Initialize() {
 }
 
 //çsìÆ
-void TutorialEnemy::Action() {
+void MobEnemy::Action() {
 	Obj_SetParam();
 	//ìñÇΩÇËîªíË
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);
 }
 //ï`âÊ
-void TutorialEnemy::Draw(DirectXCommon* dxCommon) {
+void MobEnemy::Draw(DirectXCommon* dxCommon) {
 	Obj_Draw();
 }
 //ImGuiï`âÊ
-void TutorialEnemy::ImGui_Origin() {
+void MobEnemy::ImGui_Origin() {
 	ImGui::Begin("Enemy");
 	ImGui::Text("POSX:%f", m_Position.x);
 	ImGui::Text("POSZ:%f", m_Position.z);
@@ -53,6 +53,6 @@ void TutorialEnemy::ImGui_Origin() {
 	ImGui::End();
 }
 //äJï˙
-void TutorialEnemy::Finalize() {
+void MobEnemy::Finalize() {
 
 }

@@ -62,7 +62,9 @@ void SkillManager::ImGuiDraw() {
 
 	ImGui::Begin("Mana");
 	//ImGui::Text("Num:%d", m_DeckNum);
-	//ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
+	ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
+	ImGui::Text("m_DeckNum:%d", m_DeckNum);
+	ImGui::Text("m_DeckSize:%d", (int)m_DeckDate.size());
 	for (int i = 0; i < m_DeckDate.size(); i++) {
 		ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
 	}
@@ -306,6 +308,7 @@ void SkillManager::PushOnce2Deck(const int DeckNumber) {
 	newdeckUi->SetType((int)skill[DeckNumber]->GetSkillType());
 	deckui.emplace_back(newdeckUi);
 	m_DeckNum = (int)deckui.size();
+
 }
 //デッキのクリア
 void SkillManager::DeckClear() {

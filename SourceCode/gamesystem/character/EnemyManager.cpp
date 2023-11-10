@@ -23,19 +23,8 @@ void EnemyManager::Initialize() {
 	}
 }
 
-void EnemyManager::BattleUpdate() {
-	//すべての敵の行動が終わったr
-	//for (unique_ptr<InterEnemy>& enemy : enemys) {
-	//	if (enemy->GetState() != STATE_STANDBY) { break; }
-	//	for (unique_ptr<InterEnemy>& enemy : enemys) {
-	//		enemy->SetState(STATE_INTER);
-	//	}
-	//}
-
-}
 
 void EnemyManager::Update() {
-	BattleUpdate();
 
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 
@@ -63,9 +52,9 @@ void EnemyManager::ImGuiDraw() {
 	//ImGui::Text("POSX:%f", enemy.get()->GetPosition().x);
 	//ImGui::Text("POSZ:%f", enemy.get()->GetPosition().z);
 	ImGui::End();
-	//for (unique_ptr<InterEnemy>& enemy : enemys) {
-	//	enemy->ImGuiDraw();
-	//}
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->ImGuiDraw();
+	}
 }
 //UI�̕`��
 void EnemyManager::UIDraw() {
@@ -141,13 +130,27 @@ void EnemyManager::Spawn2Map() {
 
 	}
 }
-//���C�g
-void EnemyManager::SetLight(LightGroup* light) {
-	//�{�X
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		light->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
-		light->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
-		light->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
-		light->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
+//ライトのセット
+void EnemyManager::EnemyLightInit(LightGroup* light) {
+	for (int i = 0; i < (int)(enemys.size()); i++) {
+		light->SetCircleShadowActive(1 + i, true);
 	}
+}
+//ライト
+void EnemyManager::SetLight(LightGroup* light) {
+
+	for (int i = 0; i < (int)(enemys.size()); i++) {
+		light->SetCircleShadowDir(1 + i, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+		light->SetCircleShadowCasterPos(1 + i, XMFLOAT3({ enemys[i]->GetPosition().x, 	0.5f, 	enemys[i]->GetPosition().z}));
+		light->SetCircleShadowAtten(1 + i, XMFLOAT3(BosscircleShadowAtten));
+		light->SetCircleShadowFactorAngle(1 + i, XMFLOAT2(BosscircleShadowFactorAngle));
+	}
+
+	for (int i = 0; i < (int)(enemys.size()); i++) {
+		if (!enemys[i]->GetAlive()) {
+			enemys.erase(cbegin(enemys) + i);
+			light->SetCircleShadowActive(1 + i, false);
+		}
+	}
+
 }

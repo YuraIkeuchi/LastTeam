@@ -126,7 +126,7 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector<int> GotPassiveIDs = {5};
+	std::vector<int> GotPassiveIDs = {};
 	std::vector<int> NotPassiveIDs;
 
 	unique_ptr<IKESprite> skillUI = nullptr;
@@ -165,10 +165,11 @@ private:
 	//ゲージマックス
 	float kGaugeCountMax = 180;
 	bool m_IsReload = true;
-
+	bool m_IsReloadDamage = false;
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
 	bool m_IsRecycle = false;
+
 
 	bool m_BirthSkill = false;
 
@@ -176,7 +177,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 6,7,8,9 };
+	vector<int> m_DeckNumber = { 2,6,7,8,9 };
 
 
 	vector<int> m_NotDeckNumber = {};

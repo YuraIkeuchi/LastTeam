@@ -17,6 +17,7 @@ public:
 		POIZON_GAUGEUP,
 		POIZON_DAMAGEUP,
 		SKILL_RECYCLE,
+		RELOAD_DAMAGE,
 		MAX_ABILITY
 	};
 	Passive(int id, XMFLOAT2 pos = { 0.f,0.f }, XMFLOAT2 size = {64.f,64.f});

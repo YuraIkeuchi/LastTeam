@@ -9,7 +9,7 @@
 #include <TutorialTask.h>
 #include <Helper.h>
 #include "BattleScene.h"
-#include "TutorialEnemy.h"
+#include "MobEnemy.h"
 
 #include <imgui.h>
 #include <imgui_impl_dx12.h>
@@ -56,8 +56,8 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
 	text_->SetConversation(TextManager::TUTORIAL_START);
-	//�G
-	enemy = make_unique<TutorialEnemy>();
+	//敵
+	enemy = make_unique<MobEnemy>();
 	enemy->Initialize();
 
 	_nowstate = TUTORIAL_INTRO;
@@ -208,7 +208,7 @@ void TutorialScene::IntroState() {
 }
 //�ړ�
 void TutorialScene::MoveState() {
-	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
+	if (Helper::GetInstance()->CheckMin(m_Timer, 50, 1)) {
 		m_Timer = {};
 		TutorialTask::GetInstance()->SetTutorialState(TASK_BIRTH_BEFORE);
 	}
@@ -248,10 +248,10 @@ void TutorialScene::AttackState() {
 void TutorialScene::DamageState() {
 	if (enemy->GetHP() <= 0.0f) {
 		m_Timer++;
-		if (m_Timer == 10) {
+		if (m_Timer == 150) {
 			text_->SetConversation(TextManager::TUTORIAL_SKILL);
 		}
-		else if (m_Timer == 200) {
+		else if (m_Timer == 300) {
 			text_->SetConversation(TextManager::TUTORIAL_END);
 		}
 		else if (m_Timer == 400) {
