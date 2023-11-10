@@ -5,6 +5,8 @@
 #include <memory>
 #include <IKESprite.h>
 #include <array>
+
+
 using namespace std;         //  –¼‘O‹óŠÔw’è
 
 
@@ -16,7 +18,8 @@ enum CharaState {
 };
 //“GŠî’ê
 class InterEnemy :
-	public ObjCommon {
+	public ObjCommon
+{
 protected:
 	// DirectX::‚ğÈ—ª
 	using XMFLOAT2 = DirectX::XMFLOAT2;
@@ -80,6 +83,7 @@ protected:
 	bool m_PoisonLong = false;
 	bool m_IsVenom = false;
 	int m_PoisonTimer = {};
+	bool m_Alive = true;
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -88,6 +92,7 @@ public://getter setter
 	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
 
 	const float GetHP() { return m_HP; }
+	const bool GetAlive() { return m_Alive; }
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>

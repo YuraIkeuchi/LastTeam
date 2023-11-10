@@ -3,7 +3,6 @@
 #include "Shake.h"
 #include <memory>
 #include "Feed.h"
-#include "InterBoss.h"
 #include"Spline.h"
 using namespace std;         //  名前空間指定
 

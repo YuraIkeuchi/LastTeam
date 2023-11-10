@@ -5,6 +5,8 @@
 #include "Helper.h"
 #include <ParticleEmitter.h>
 #include <Easing.h>
+#include "GameStateManager.h"
+
 EnemyBullet::EnemyBullet() {
 	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BULLET);
 	m_Object.reset(new IKEObject3d());
@@ -72,11 +74,12 @@ void EnemyBullet::Particle() {
 
 //“–‚½‚è”»’è
 bool EnemyBullet::Collide() {
-	XMFLOAT3 l_PlayerPos = Player::GetInstance()->GetPosition();
+	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
+	XMFLOAT3 l_PlayerPos = player_data->GetPosition();
 	const float l_Damage = 0.5f;
 	const float l_Radius = 0.2f;
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
-		Player::GetInstance()->RecvDamage(5.0f);
+		player_data->RecvDamage(5.0f);
 		m_Alive = false;
 		return true;
 	}
@@ -88,6 +91,7 @@ bool EnemyBullet::Collide() {
 }
 //’Ç]
 void EnemyBullet::Follow() {
+	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
 	const float l_AddFrame = 0.01f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
@@ -106,8 +110,8 @@ void EnemyBullet::Follow() {
 		m_ThrowTimer++;
 		if (m_ThrowTimer == l_BaseTimer + m_TargetTimer) {
 			double sb, sbx, sbz;
-			sbx = Player::GetInstance()->GetPosition().x - m_Position.x;
-			sbz = Player::GetInstance()->GetPosition().z - m_Position.z;
+			sbx = player_data->GetPosition().x - m_Position.x;
+			sbz = player_data->GetPosition().z - m_Position.z;
 			sb = sqrt(sbx * sbx + sbz * sbz);
 			m_SpeedX = sbx / sb * 0.1f;
 			m_SpeedZ = sbz / sb * 0.1f;

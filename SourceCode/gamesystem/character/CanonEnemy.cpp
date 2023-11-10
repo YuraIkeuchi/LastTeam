@@ -79,8 +79,8 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void CanonEnemy::ImGui_Origin() {
-	ImGui::Begin("Enemy");
-	ImGui::Text("Poison:%d", m_Poison);
+	ImGui::Begin("Canon");
+	ImGui::Text("Height:%d,Width:%d", m_NowHeight, m_NowWidth);
 	ImGui::Text("Timer:%d", m_PoisonTimer);
 	ImGui::End();
 }
@@ -108,7 +108,7 @@ void CanonEnemy::Attack() {
 
 void CanonEnemy::Teleport() {
 	if (Helper::GetInstance()->CheckMin(coolTimer, kIntervalMax, 1)) {
-		m_Position = randPanelPos();
+		//m_Position = randPanelPos();
 		_charaState = STATE_INTER;
 		coolTimer = {};
 	}

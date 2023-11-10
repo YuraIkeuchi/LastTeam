@@ -26,14 +26,11 @@ void EnemyManager::Initialize() {
 
 void EnemyManager::Update() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->Update();
-	}
 
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetState() == STATE_ATTACK) {			//一旦攻撃以外は取らない
-			Player::GetInstance()->SetGrazePos(enemy->GetPosition());
+		if (enemy->GetState() == STATE_ATTACK) {			//��U�U���ȊO�͎��Ȃ�
+			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos(enemy->GetPosition());
 		} else {
-			Player::GetInstance()->SetGrazePos({ 1000.0f,0.0f,0.0f });
+			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos({ 1000.0f,0.0f,0.0f });
 		}
 	}
 }
@@ -54,17 +51,17 @@ void EnemyManager::ImGuiDraw() {
 	//ImGui::Text("POSX:%f", enemy.get()->GetPosition().x);
 	//ImGui::Text("POSZ:%f", enemy.get()->GetPosition().z);
 	ImGui::End();
-	//for (unique_ptr<InterEnemy>& enemy : enemys) {
-	//	enemy->ImGuiDraw();
-	//}
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->ImGuiDraw();
+	}
 }
-//UIの描画
+//UI�̕`��
 void EnemyManager::UIDraw() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->UIDraw();
 	}
 }
-//敵の死亡処置
+//�G�̎��S���u
 bool EnemyManager::BossDestroy() {
 	int num = (int)enemys.size();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
@@ -132,13 +129,27 @@ void EnemyManager::Spawn2Map() {
 
 	}
 }
+//ライトのセット
+void EnemyManager::EnemyLightInit(LightGroup* light) {
+	for (int i = 0; i < (int)(enemys.size()); i++) {
+		light->SetCircleShadowActive(1 + i, true);
+	}
+}
 //ライト
 void EnemyManager::SetLight(LightGroup* light) {
-	//ボス
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		light->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
-		light->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
-		light->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
-		light->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
+
+	for (int i = 0; i < (int)(enemys.size()); i++) {
+		light->SetCircleShadowDir(1 + i, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+		light->SetCircleShadowCasterPos(1 + i, XMFLOAT3({ enemys[i]->GetPosition().x, 	0.5f, 	enemys[i]->GetPosition().z}));
+		light->SetCircleShadowAtten(1 + i, XMFLOAT3(BosscircleShadowAtten));
+		light->SetCircleShadowFactorAngle(1 + i, XMFLOAT2(BosscircleShadowFactorAngle));
 	}
+
+	for (int i = 0; i < (int)(enemys.size()); i++) {
+		if (!enemys[i]->GetAlive()) {
+			enemys.erase(cbegin(enemys) + i);
+			light->SetCircleShadowActive(1 + i, false);
+		}
+	}
+
 }
