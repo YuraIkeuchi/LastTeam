@@ -5,6 +5,8 @@
 #include <memory>
 #include <IKESprite.h>
 #include <array>
+
+
 using namespace std;         //  –¼‘O‹óŠÔw’è
 
 
@@ -16,7 +18,8 @@ enum CharaState {
 };
 //“GŠî’ê
 class InterEnemy :
-	public ObjCommon {
+	public ObjCommon
+{
 protected:
 	// DirectX::‚ğÈ—ª
 	using XMFLOAT2 = DirectX::XMFLOAT2;

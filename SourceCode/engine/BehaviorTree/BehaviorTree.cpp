@@ -208,13 +208,13 @@ behaviorTree::BehaviorStatus behaviorTree::SimpleBehaviorTree::Execute(Node *nod
 
 		}
 
-		if (cnode->Status == BehaviorStatus::Runnning)
+		if (cnode->GetStatus() == BehaviorStatus::Runnning)
 		{
 			node->OnEnd();
 			PopNode();
 		}
 		
-		return cnode->Status;
+		return cnode->GetStatus();
 	}
 	else
 	{

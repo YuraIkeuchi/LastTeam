@@ -21,10 +21,20 @@ public:
 	/// </summary>
 	void Draw();
 	/// <summary>
+	/// UI描画
+	/// </summary>
+	void UIDraw();
+	/// <summary>
 	/// 終了
 	/// </summary>
 	void Finalize();
 
+	/// <summary>
+	/// ImGui描画
+	/// </summary>
+	void ImGuiDraw();
+
+	std::vector<std::shared_ptr<GameObject>> &GetContainer() { return game_objects_; }
 
 private:
 	// オブジェクトコンテナ

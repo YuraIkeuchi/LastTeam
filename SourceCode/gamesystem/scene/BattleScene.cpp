@@ -1,46 +1,65 @@
-#include "BattleScene.h"
-#include <Player.h>
+ï»¿#include "BattleScene.h"
+
 #include <ParticleEmitter.h>
 #include <StagePanel.h>
 #include <SceneManager.h>
 #include <GameStateManager.h>
 #include <SceneChanger.h>
+
 #include "SkillManager.h"
+#include "Player.h"
+#include "BaseEnemy.h"
+#include "InterEnemy.h"
 #include "GameoverScene.h"
 #include "TitleScene.h"
 
-//‰Šú‰»
+// åˆæœŸåŒ–
 void BattleScene::Initialize(DirectXCommon* dxCommon)
 {
-	//‹¤’Ê‚Ì‰Šú‰»
+	//
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg
+	// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 	PlayPostEffect = false;
 	
-	//ƒp[ƒeƒBƒNƒ‹‘Síœ
+	// ãƒ‘ãƒ†ãƒ¼ã‚£ã‚¯ãƒ«
 	ParticleEmitter::GetInstance()->AllDelete();
 
-	//ƒvƒŒƒCƒ„[
-	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -8.0f,0.1f,0.0f });
-	Player::GetInstance()->Initialize();
-	//ƒXƒLƒ‹
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç”Ÿæˆ
+	{
+		auto player = GameObject::CreateObject<Player>();	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+		player->LoadResource();
+		player->InitState({ -8.0f,1.0f,0.0f });
+
+		GameStateManager::GetInstance()->SetPlayer(player);
+
+	}
 	SkillManager::GetInstance()->Initialize();
-	//ƒQ[ƒ€‚Ìó‘Ô
+	//ï¿½Qï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½
 	GameStateManager::GetInstance()->Initialize();
-	//ƒXƒe[ƒW‚Ì°
+	//ï¿½Xï¿½eï¿½[ï¿½Wï¿½Ìï¿½
 	StagePanel::GetInstance()->LoadResource();
+
+	// ï¿½Gï¿½lï¿½~ï¿½[
+	{
+		auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
+	}
+
+	//ï¿½Qï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½
+	GameStateManager::GetInstance()->Initialize();
+
+	//ï¿½Xï¿½Lï¿½ï¿½
+	SkillManager::GetInstance()->Initialize();
 	StagePanel::GetInstance()->Initialize();
 
-	//ƒŠƒUƒ‹ƒgƒeƒLƒXƒg
+	//ãƒªã‚¶ãƒ«ãƒˆãƒ†ã‚­ã‚¹ãƒˆ
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
 	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
 
-	//ŠÛ‰e
+	//ä¸¸å½±
 	lightGroup->SetCircleShadowActive(0, true);
-	//“G
+	//æ•µ
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
 	enemyManager->EnemyLightInit(lightGroup);
@@ -53,22 +72,22 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	}
 	
 }
-//XV
+//ï¿½Xï¿½V
 void BattleScene::Update(DirectXCommon* dxCommon)
 {
-	//ƒvƒŒƒCƒ„[
+	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[
 	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x, 0.5f, GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z }));
 	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
 	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
 	lightGroup->Update();
-	// ‘SƒIƒuƒWƒFƒNƒgXV
+	// ï¿½Sï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Xï¿½V
 	game_object_manager_->Update();
 
-	//ŠeƒNƒ‰ƒXXV
+	//ï¿½eï¿½Nï¿½ï¿½ï¿½Xï¿½Xï¿½V
 	camerawork->Update(camera);
 	if (!GameStateManager::GetInstance()->GetIsFinish()) {
-		Player::GetInstance()->Update();
+		// Player::GetInstance()->Update();
 	}
 	StagePanel::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
@@ -76,7 +95,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	enemyManager->Update();
 	enemyManager->SetLight(lightGroup);
 	GameStateManager::GetInstance()->Update();
-	//“G‚ğ“|‚µ‚½‚çƒV[ƒ“ˆÈ~(‰¼)
+	//ï¿½Gï¿½ï¿½ï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½[ï¿½ï¿½ï¿½È~(ï¿½ï¿½)
 	if (enemyManager->BossDestroy()) {
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
 			GameStateManager::GetInstance()->StageClearInit();
@@ -85,8 +104,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			SceneChanger::GetInstance()->SetChangeStart(true);
 		}
 	}
-	//‚Õ‚ê‚¢‚â[‚ÌHP‚ª–³‚­‚È‚Á‚Ä‚à‘JˆÚ‚·‚é
-	if (Player::GetInstance()->GetHp() <= 0.0f) {
+	//ï¿½Õ‚ê‚¢ï¿½ï¿½[ï¿½ï¿½HPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Ä‚ï¿½ï¿½Jï¿½Ú‚ï¿½ï¿½ï¿½
+	if (GameStateManager::GetInstance()->GetPlayer().lock()->GetHp() <= 0.0f) {
 		_ChangeType = CHANGE_OVER;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
@@ -103,8 +122,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 }
 
 void BattleScene::Draw(DirectXCommon* dxCommon) {
-	//•`‰æ•û–@
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚é‚©
+	//ï¿½`ï¿½ï¿½ï¿½ï¿½@
+	//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é‚©
 	if (PlayPostEffect) {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		BackDraw(dxCommon);
@@ -127,26 +146,31 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PostDraw();
 	}
 }
-//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚©‚©‚ç‚È‚¢
+//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
+
+	game_object_manager_->UIDraw();
+
 	if (enemyManager->BossDestroy()) {
 		resulttext->TestDraw(dxCommon);
 	}
-	Player::GetInstance()->UIDraw();
+	// Player::GetInstance()->UIDraw();
 	enemyManager->UIDraw();
+
 	GameStateManager::GetInstance()->ActUIDraw();
 	SceneChanger::GetInstance()->Draw();
 }
-//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚©‚©‚é
+//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
+	game_object_manager_->Draw();
+
 	StagePanel::GetInstance()->Draw(dxCommon);
-	Player::GetInstance()->Draw(dxCommon);
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
-	enemyManager->Draw(dxCommon);
+	//enemyManager->Draw(dxCommon);
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	IKETexture::PostDraw();
@@ -154,8 +178,8 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
+	game_object_manager_->ImGuiDraw();
 	//SceneChanger::GetInstance()->ImGuiDraw();
-	Player::GetInstance()->ImGuiDraw();
 	enemyManager->ImGuiDraw();
 }
 

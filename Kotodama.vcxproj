@@ -60,7 +60,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(ProjectDir)SourceCode;$(ProjectDir)SourceCode\engine;$(ProjectDir)SourceCode\engine\3d;$(ProjectDir)SourceCode\engine\2d;$(ProjectDir)SourceCode\engine\audio;$(ProjectDir)SourceCode\engine\input;$(ProjectDir)SourceCode\engine\camera;$(ProjectDir)SourceCode\engine\enginebase;$(ProjectDir)SourceCode\engine\light;$(ProjectDir)SourceCode\engine\FpsManager;$(ProjectDir)SourceCode\engine\imgui;$(ProjectDir)SourceCode\engine\math;$(ProjectDir)SourceCode\engine\collision;$(ProjectDir)SourceCode\engine\ease;$(ProjectDir)SourceCode\gamesystem;$(ProjectDir)SourceCode\gamesystem\editor;$(ProjectDir)SourceCode\gamesystem\ParticleManager;$(ProjectDir)SourceCode\gamesystem\scene;$(SolutionDir)DirectXTex\include;$(ProjectDir)SourceCode\gamesystem\gamecamera;$(ProjectDir)SourceCode\gamesystem\Common;$(ProjectDir)SourceCode\gamesystem\scenetext;$(ProjectDir)SourceCode\gamesystem\character;$(ProjectDir)SourceCode\gamesystem\MessageWindow;$(ProjectDir)SourceCode\gamesystem\actor;$(ProjectDir)SourceCode\gamesystem\text;$(ProjectDir)SourceCode\engine\helper;$(ProjectDir)SourceCode\engine\shake;$(ProjectDir)SourceCode\gamesystem\stageobj;$(ProjectDir)SourceCode\gamesystem\ActionPanel;$(ProjectDir)SourceCode\gamesystem\skill</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(ProjectDir)SourceCode;$(ProjectDir)SourceCode\engine;$(ProjectDir)SourceCode\engine\3d;$(ProjectDir)SourceCode\engine\2d;$(ProjectDir)SourceCode\engine\audio;$(ProjectDir)SourceCode\engine\input;$(ProjectDir)SourceCode\engine\camera;$(ProjectDir)SourceCode\engine\enginebase;$(ProjectDir)SourceCode\engine\light;$(ProjectDir)SourceCode\engine\FpsManager;$(ProjectDir)SourceCode\engine\imgui;$(ProjectDir)SourceCode\engine\math;$(ProjectDir)SourceCode\engine\collision;$(ProjectDir)SourceCode\engine\ease;$(ProjectDir)SourceCode\gamesystem;$(ProjectDir)SourceCode\gamesystem\editor;$(ProjectDir)SourceCode\gamesystem\ParticleManager;$(ProjectDir)SourceCode\gamesystem\scene;$(SolutionDir)DirectXTex\include;$(ProjectDir)SourceCode\gamesystem\gamecamera;$(ProjectDir)SourceCode\gamesystem\Common;$(ProjectDir)SourceCode\gamesystem\scenetext;$(ProjectDir)SourceCode\gamesystem\character;$(ProjectDir)SourceCode\gamesystem\MessageWindow;$(ProjectDir)SourceCode\gamesystem\actor;$(ProjectDir)SourceCode\gamesystem\text;$(ProjectDir)SourceCode\engine\helper;$(ProjectDir)SourceCode\engine\shake;$(ProjectDir)SourceCode\gamesystem\stageobj;$(ProjectDir)SourceCode\gamesystem\ActionPanel;$(ProjectDir)SourceCode\gamesystem\skill;$(ProjectDir)lib\imgui\include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -84,7 +84,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(ProjectDir)SourceCode;$(ProjectDir)SourceCode\engine;$(ProjectDir)SourceCode\engine\3d;$(ProjectDir)SourceCode\engine\2d;$(ProjectDir)SourceCode\engine\audio;$(ProjectDir)SourceCode\engine\input;$(ProjectDir)SourceCode\engine\camera;$(ProjectDir)SourceCode\engine\enginebase;$(ProjectDir)SourceCode\engine\light;$(ProjectDir)SourceCode\engine\FpsManager;$(ProjectDir)SourceCode\engine\imgui;$(ProjectDir)SourceCode\engine\math;$(ProjectDir)SourceCode\engine\collision;$(ProjectDir)SourceCode\engine\ease;$(ProjectDir)SourceCode\gamesystem;$(ProjectDir)SourceCode\gamesystem\editor;$(ProjectDir)SourceCode\gamesystem\ParticleManager;$(ProjectDir)SourceCode\gamesystem\scene;$(SolutionDir)DirectXTex\include;$(ProjectDir)SourceCode\gamesystem\gamecamera;$(ProjectDir)SourceCode\gamesystem\Common;$(ProjectDir)SourceCode\gamesystem\scenetext;$(ProjectDir)SourceCode\gamesystem\character;$(ProjectDir)SourceCode\gamesystem\MessageWindow;$(ProjectDir)SourceCode\gamesystem\actor;$(ProjectDir)SourceCode\gamesystem\text;$(ProjectDir)SourceCode\engine\helper;$(ProjectDir)SourceCode\engine\shake;$(ProjectDir)SourceCode\gamesystem\stageobj;$(ProjectDir)SourceCode\gamesystem\ActionPanel;$(ProjectDir)SourceCode\gamesystem\skill</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(ProjectDir)SourceCode;$(ProjectDir)SourceCode\engine;$(ProjectDir)SourceCode\engine\3d;$(ProjectDir)SourceCode\engine\2d;$(ProjectDir)SourceCode\engine\audio;$(ProjectDir)SourceCode\engine\input;$(ProjectDir)SourceCode\engine\camera;$(ProjectDir)SourceCode\engine\enginebase;$(ProjectDir)SourceCode\engine\light;$(ProjectDir)SourceCode\engine\FpsManager;$(ProjectDir)SourceCode\engine\imgui;$(ProjectDir)SourceCode\engine\math;$(ProjectDir)SourceCode\engine\collision;$(ProjectDir)SourceCode\engine\ease;$(ProjectDir)SourceCode\gamesystem;$(ProjectDir)SourceCode\gamesystem\editor;$(ProjectDir)SourceCode\gamesystem\ParticleManager;$(ProjectDir)SourceCode\gamesystem\scene;$(SolutionDir)DirectXTex\include;$(ProjectDir)SourceCode\gamesystem\gamecamera;$(ProjectDir)SourceCode\gamesystem\Common;$(ProjectDir)SourceCode\gamesystem\scenetext;$(ProjectDir)SourceCode\gamesystem\character;$(ProjectDir)SourceCode\gamesystem\MessageWindow;$(ProjectDir)SourceCode\gamesystem\actor;$(ProjectDir)SourceCode\gamesystem\text;$(ProjectDir)SourceCode\engine\helper;$(ProjectDir)SourceCode\engine\shake;$(ProjectDir)SourceCode\gamesystem\stageobj;$(ProjectDir)SourceCode\gamesystem\ActionPanel;$(ProjectDir)SourceCode\gamesystem\skill;$(ProjectDir)lib\imgui\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -109,6 +109,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="lib\imgui\include\imgui.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_demo.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_draw.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_impl_dx12.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_impl_win32.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_tables.cpp" />
+    <ClCompile Include="lib\imgui\include\imgui_widgets.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Font.cpp" />
@@ -173,6 +180,7 @@
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\BaseEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp" />
@@ -216,6 +224,14 @@
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="lib\imgui\include\imconfig.h" />
+    <ClInclude Include="lib\imgui\include\imgui.h" />
+    <ClInclude Include="lib\imgui\include\imgui_impl_dx12.h" />
+    <ClInclude Include="lib\imgui\include\imgui_impl_win32.h" />
+    <ClInclude Include="lib\imgui\include\imgui_internal.h" />
+    <ClInclude Include="lib\imgui\include\imstb_rectpack.h" />
+    <ClInclude Include="lib\imgui\include\imstb_textedit.h" />
+    <ClInclude Include="lib\imgui\include\imstb_truetype.h" />
     <ClInclude Include="SourceCode\engine\2d\DebugText.h" />
     <ClInclude Include="SourceCode\engine\2d\Feed.h" />
     <ClInclude Include="SourceCode\engine\2d\Font.h" />
@@ -288,6 +304,7 @@
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h" />
