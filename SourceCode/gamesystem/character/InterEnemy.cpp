@@ -36,10 +36,13 @@ void InterEnemy::Update() {
 
 	//各行動
 	Action();
-	if (m_HP >= 0.0f) {
+	if (m_HP > 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
 			_drawnumber[i]->Update();
 		}
+	}
+	else {
+		m_Alive = false;
 	}
 	//数値化したHP
 	HPManage();

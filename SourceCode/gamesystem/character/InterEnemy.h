@@ -80,6 +80,7 @@ protected:
 	bool m_PoisonLong = false;
 	bool m_IsVenom = false;
 	int m_PoisonTimer = {};
+	bool m_Alive = true;
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -88,6 +89,7 @@ public://getter setter
 	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
 
 	const float GetHP() { return m_HP; }
+	const bool GetAlive() { return m_Alive; }
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>

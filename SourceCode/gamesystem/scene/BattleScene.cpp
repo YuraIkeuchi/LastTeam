@@ -33,15 +33,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
 
-	//敵
-	enemyManager = std::make_unique<EnemyManager>();
-	enemyManager->Initialize();
-	if (GameStateManager::GetInstance()->GetPoisonSkill()) {
-		enemyManager->PoizonGauge();
-	}
-	if (GameStateManager::GetInstance()->GetPoisonVenom()) {
-		enemyManager->PoizonVenom();
-	}
 	//リザルトテキスト
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
@@ -49,7 +40,18 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 
 	//丸影
 	lightGroup->SetCircleShadowActive(0, true);
-	lightGroup->SetCircleShadowActive(1, true);
+	//敵
+	enemyManager = std::make_unique<EnemyManager>();
+	enemyManager->Initialize();
+	enemyManager->EnemyLightInit(lightGroup);
+
+	if (GameStateManager::GetInstance()->GetPoisonSkill()) {
+		enemyManager->PoizonGauge();
+	}
+	if (GameStateManager::GetInstance()->GetPoisonVenom()) {
+		enemyManager->PoizonVenom();
+	}
+	
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
