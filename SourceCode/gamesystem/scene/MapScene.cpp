@@ -80,6 +80,9 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetAnchorPoint({ 0.5f,0.5f });
 
 
+	Onomatope = IKESprite::Create(ImageManager::ONOMATO_00, { 640,360 });
+	Onomatope->SetAnchorPoint({ 0.5f,0.5f });
+
 	//“¹‚Ìˆ—
 	{
 		for (int i = 0; i < 20; i++) {
@@ -197,6 +200,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!end) {
 		frame->Draw();
 	}
+	Onomatope->Draw();
 	IKESprite::PostDraw();
 
 	text_->TestDraw(dxCommon);

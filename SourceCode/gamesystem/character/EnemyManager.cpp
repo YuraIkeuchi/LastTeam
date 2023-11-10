@@ -25,7 +25,6 @@ void EnemyManager::Initialize() {
 
 
 void EnemyManager::Update() {
-
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 
 		if (enemy->GetState() == STATE_ATTACK) {			//��U�U���ȊO�͎��Ȃ�
