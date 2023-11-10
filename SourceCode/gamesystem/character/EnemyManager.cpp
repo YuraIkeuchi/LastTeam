@@ -1,4 +1,4 @@
-#include "EnemyManager.h"
+﻿#include "EnemyManager.h"
 #include "NormalEnemy.h"
 #include <StagePanel.h>
 #include <Player.h>
@@ -39,9 +39,9 @@ void EnemyManager::Update() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 
 		if (enemy->GetState() == STATE_ATTACK) {			//��U�U���ȊO�͎��Ȃ�
-			Player::GetInstance()->SetGrazePos(enemy->GetPosition());
+			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos(enemy->GetPosition());
 		} else {
-			Player::GetInstance()->SetGrazePos({ 1000.0f,0.0f,0.0f });
+			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos({ 1000.0f,0.0f,0.0f });
 		}
 	}
 }

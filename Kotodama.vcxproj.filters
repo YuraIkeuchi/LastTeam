@@ -279,9 +279,6 @@
     <ClCompile Include="SourceCode\gamesystem\character\NormalEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp">
-      <Filter>gamesystem\stageobj</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp">
       <Filter>gamesystem\Action\ActionPanel</Filter>
     </ClCompile>
@@ -336,59 +333,12 @@
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp">
       <Filter>gamesystem\Text</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\AttackSkill.cpp">
-      <Filter>gamesystem\charactor\Skill</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\SkillBase.cpp">
-      <Filter>gamesystem\charactor\Skill</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\SkillManager.cpp">
-      <Filter>gamesystem\charactor\Skill</Filter>
-    </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="SpecialSkill.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\BaseEnemy.cpp">
-      <Filter>gamesystem\charactor\Enemy\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\DeckUI.cpp">
-      <Filter>gamesystem\charactor\Skill\DeckUI</Filter>
-    </ClCompile>
-=======
->>>>>>> 5735619e9defc9fdb26571e999c2bcb5a575bea5
-    <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp">
-      <Filter>gamesystem\stageobj</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\stageobj\AttackArea.cpp">
-      <Filter>gamesystem\stageobj</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\TutorialTask.cpp">
       <Filter>gamesystem\scene\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\TitleEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="lib\imgui\include\imgui.cpp">
-      <Filter>ImGUi</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\imgui\include\imgui_draw.cpp">
-      <Filter>ImGUi</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\imgui\include\imgui_impl_dx12.cpp">
-      <Filter>ImGUi</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\imgui\include\imgui_impl_win32.cpp">
-      <Filter>ImGUi</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\imgui\include\imgui_tables.cpp">
-      <Filter>ImGUi</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\imgui\include\imgui_widgets.cpp">
-      <Filter>ImGUi</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\imgui\include\imgui_demo.cpp">
-      <Filter>ImGUi</Filter>
-=======
     <ClCompile Include="SourceCode\gamesystem\character\TutorialEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
@@ -415,7 +365,21 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\skill\SpecialSkill.cpp">
       <Filter>gamesystem\skill</Filter>
->>>>>>> 5735619e9defc9fdb26571e999c2bcb5a575bea5
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\AttackArea.cpp">
+      <Filter>gamesystem\stageobj\Area</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp">
+      <Filter>gamesystem\stageobj\Area</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp">
+      <Filter>gamesystem\stageobj\Area</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBullet.cpp">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -657,9 +621,6 @@
     <ClInclude Include="SourceCode\gamesystem\character\NormalEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h">
-      <Filter>gamesystem\stageobj</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h">
       <Filter>gamesystem\Action\ActionPanel</Filter>
     </ClInclude>
@@ -717,49 +678,12 @@
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h">
       <Filter>gamesystem\Text</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\SkillBase.h">
-      <Filter>gamesystem\charactor\Skill</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h">
-      <Filter>gamesystem\stageobj</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\stageobj\AttackArea.h">
-      <Filter>gamesystem\stageobj</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\TutorialTask.h">
       <Filter>gamesystem\scene\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\TitleEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h">
-      <Filter>gamesystem\charactor\Enemy\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\include\imconfig.h">
-      <Filter>ImGUi</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\include\imgui.h">
-      <Filter>ImGUi</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\include\imgui_impl_dx12.h">
-      <Filter>ImGUi</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\include\imgui_impl_win32.h">
-      <Filter>ImGUi</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\include\imgui_internal.h">
-      <Filter>ImGUi</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\include\imstb_rectpack.h">
-      <Filter>ImGUi</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\include\imstb_textedit.h">
-      <Filter>ImGUi</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\include\imstb_truetype.h">
-      <Filter>ImGUi</Filter>
-=======
     <ClInclude Include="SourceCode\gamesystem\character\TutorialEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
@@ -786,7 +710,21 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\skill\SpecialSkill.h">
       <Filter>gamesystem\skill</Filter>
->>>>>>> 5735619e9defc9fdb26571e999c2bcb5a575bea5
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h">
+      <Filter>gamesystem\stageobj\Area</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\AttackArea.h">
+      <Filter>gamesystem\stageobj\Area</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h">
+      <Filter>gamesystem\stageobj\Area</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBullet.h">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -993,8 +931,11 @@
     <Filter Include="gamesystem\skill">
       <UniqueIdentifier>{21e0b239-fd1c-40b5-92bf-ff38bbc889cb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGUi">
-      <UniqueIdentifier>{598dadcd-3b8d-4dda-8403-a41316b53aa3}</UniqueIdentifier>
+    <Filter Include="gamesystem\stageobj\Area">
+      <UniqueIdentifier>{6d02a0f6-b53b-4cdb-a8c1-7a76189fead8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\stageobj\Enemy">
+      <UniqueIdentifier>{5649cc66-5a5b-4071-844a-811153c76ca2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -127,9 +127,9 @@ void GameStateManager::Update() {
 		m_ResetPredict = false;
 	}
 	SkillManager::GetInstance()->Update();
-	Player::GetInstance()->SetDelay(m_Delay);
+	GameStateManager::GetInstance()->GetPlayer().lock()->SetDelay(m_Delay);
 
-	_charge->SetPosition({ Player::GetInstance()->GetPosition().x,0.5f,Player::GetInstance()->GetPosition().z });
+	_charge->SetPosition({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x,0.5f,GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z });
 	_charge->SetScale({ m_ChargeScale,m_ChargeScale,m_ChargeScale });
 	_charge->Update();
 }

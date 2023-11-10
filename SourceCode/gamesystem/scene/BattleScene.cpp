@@ -73,7 +73,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 {
 	//�v���C���[
 	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x, 0.5f, GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z }));
 	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
 	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
 	lightGroup->Update();
