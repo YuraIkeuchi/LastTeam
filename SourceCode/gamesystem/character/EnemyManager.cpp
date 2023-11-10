@@ -1,5 +1,6 @@
 ﻿#include "EnemyManager.h"
 #include "NormalEnemy.h"
+#include "CanonEnemy.h"
 #include <StagePanel.h>
 #include <Player.h>
 #include <GameStateManager.h>
@@ -23,13 +24,13 @@ void EnemyManager::Initialize() {
 }
 
 void EnemyManager::BattleUpdate() {
-	//���ׂĂ̓G�̍s�����I�����r
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetState() != STATE_STANDBY) { break; }
-		for (unique_ptr<InterEnemy>& enemy : enemys) {
-			enemy->SetState(STATE_INTER);
-		}
-	}
+	//すべての敵の行動が終わったr
+	//for (unique_ptr<InterEnemy>& enemy : enemys) {
+	//	if (enemy->GetState() != STATE_STANDBY) { break; }
+	//	for (unique_ptr<InterEnemy>& enemy : enemys) {
+	//		enemy->SetState(STATE_INTER);
+	//	}
+	//}
 
 }
 

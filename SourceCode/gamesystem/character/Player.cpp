@@ -249,3 +249,7 @@ void Player::Particle() {
 	float e_scale = 0.0f;
 	ParticleEmitter::GetInstance()->HealEffect(50, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
 }
+//プレイヤーのダメージ判定
+void Player::RecvDamage(float Damage) {
+	m_HP -= Damage;
+}

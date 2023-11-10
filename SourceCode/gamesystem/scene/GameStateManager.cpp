@@ -279,9 +279,7 @@ void GameStateManager::PredictManager() {
 			int AreaY = {};
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
-			Helper::GetInstance()->Clamp(AreaX, 0, 7);
-			Helper::GetInstance()->Clamp(AreaY, 0, 3);
-			if (m_Act[0].AttackArea[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+			if (m_Act[0].AttackArea[i][j] == 1 && (AreaY < 4) && (AreaY >= 0)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				predictarea->SetPredict(AreaX, AreaY, true);
 			}
 		}
