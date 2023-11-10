@@ -18,7 +18,6 @@ public:
 	~EnemyManager();
 
 	void Initialize();
-	void BattleUpdate();
 	void Update();
 	void Draw(DirectXCommon* dxCommon);
 
@@ -30,14 +29,19 @@ public:
 
 	//敵の死亡処理
 	bool BossDestroy();
-
+	/// <summary>
+	/// パッシブがあれば毒延長(バトルシーン)
+	/// </summary>
 	void PoizonGauge();
+	/// <summary>
+	/// パッシブがあれば猛毒(バトルシーン)
+	/// </summary>
 	void PoizonVenom();
 
 	void SetLight(LightGroup* light);
 private:
 	/// <summary>
-	/// マップにスポーン
+	/// csvでマップに敵をスポーン
 	/// </summary>
 	void Spawn2Map();
 private:
