@@ -59,8 +59,6 @@ private:
 
 	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
-
-	bool AttackSubAction();
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
