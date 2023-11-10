@@ -25,7 +25,6 @@ void EnemyManager::Initialize() {
 
 
 void EnemyManager::Update() {
-	BattleUpdate();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->Update();
 	}
