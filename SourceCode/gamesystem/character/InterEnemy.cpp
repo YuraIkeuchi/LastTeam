@@ -14,6 +14,11 @@ XMFLOAT3 InterEnemy::randPanelPos() {
 	m_NowWidth = width;
 	return StagePanel::GetInstance()->SetPositon(m_NowWidth, m_NowHeight);
 }
+XMFLOAT3 InterEnemy::SetPannelPos(int width, int height) {
+	m_NowHeight = height;
+	m_NowWidth = width;
+	return StagePanel::GetInstance()->SetPositon(m_NowWidth, m_NowHeight);
+}
 //初期化
 bool InterEnemy::Initialize() {
 	return true;
@@ -31,8 +36,10 @@ void InterEnemy::Update() {
 
 	//各行動
 	Action();
-	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i]->Update();
+	if (m_HP >= 0.0f) {
+		for (auto i = 0; i < _drawnumber.size(); i++) {
+			_drawnumber[i]->Update();
+		}
 	}
 	//数値化したHP
 	HPManage();
@@ -74,8 +81,18 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 				GameStateManager::GetInstance()->SetCounter(true);
 				damage *= 2.0f;
 			}
-			m_HP -= _area->GetDamage();
-			m_DamegeTimer = 40;
+			if (GameStateManager::GetInstance()->GetBuff()) {
+				damage *= 2.0f;
+			}
+			m_HP -= damage;
+			std::string name = _area->GetStateName();
+
+			if (name == "DRAIN") {
+				Player::GetInstance()->HealPlayer(damage * 0.2f);		//HP回復
+			}
+			else if (name == "POISON") {
+				m_Poison = true;
+			}
 			BirthParticle();
 			_area->SetHit(true);
 			//チュートリアル専用
@@ -85,7 +102,7 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 		}
 	}
 }
-//パーティクル
+//パーティクル(ダメージ)
 void InterEnemy::BirthParticle() {
 	const XMFLOAT4 s_color = { 0.5f,0.5f,0.5f,1.0f };
 	const XMFLOAT4 e_color = { 0.5f,0.5f,0.5f,1.0f };
@@ -93,6 +110,16 @@ void InterEnemy::BirthParticle() {
 	const float e_scale = 0.0f;
 	for (int i = 0; i < 20; i++) {
 		ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
+	}
+}
+//パーティクル(毒)
+void InterEnemy::BirthPoisonParticle() {
+	const XMFLOAT4 s_color = { 0.5f,0.0f,0.5f,1.0f };
+	const XMFLOAT4 e_color = { 0.5f,0.0f,0.5f,1.0f };
+	const float s_scale = 1.0f;
+	const float e_scale = 0.0f;
+	for (int i = 0; i < 3; i++) {
+		ParticleEmitter::GetInstance()->PoisonEffect(50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color);
 	}
 }
 //HPの割合
@@ -129,5 +156,24 @@ void InterEnemy::WorldDivision() {
 void InterEnemy::HPManage() {
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+	}
+}
+
+//毒
+void InterEnemy::PoisonState() {
+	if (!m_Poison) { return; }
+
+	m_PoisonTimer++;
+
+	if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
+		m_HP -= 1.0f;
+	}
+	else if (m_PoisonTimer % 50 == 0) {		//毒のエフェクト
+		BirthPoisonParticle();
+	}
+
+	if (m_PoisonTimer == 800) {	//一定時間立ったら毒終了
+		m_Poison = false;
+		m_PoisonTimer = {};
 	}
 }

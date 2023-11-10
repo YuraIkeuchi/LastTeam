@@ -49,7 +49,7 @@ void GameStateManager::Initialize() {
 	DeckInitialize();
 
 	//デッキにないカードを検索する
-	const int CARD_MAX = 7;
+	const int CARD_MAX = 10;
 	m_NotDeckNumber.clear();
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
 		for (int j = 0; j < CARD_MAX; j++) {
@@ -60,11 +60,23 @@ void GameStateManager::Initialize() {
 		}
 		break;
 	}
+	//予測
 	predictarea.reset(new PredictArea());
 	predictarea->Initialize();
 
+	//右のゲージ
 	m_GaugeCount = {};
 	m_NotCount = (int)(m_NotDeckNumber.size()) - 1;//無いカードの枚数を検索してる(ImGui用)
+
+	//m_Object->SetScale({ 2.f,0.1f,2.f });	
+	_charge.reset(new IKETexture(ImageManager::CHARGE, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	_charge->TextureCreate();
+	_charge->Initialize();
+	_charge->SetRotation({ 90.0f,0.0f,0.0f });
+	m_ChargeScale = 1.0f;
+	m_Delay = false;
+	m_Buff = false;
+	predictarea->ResetPredict();
 }
 //更新
 void GameStateManager::Update() {
@@ -115,7 +127,11 @@ void GameStateManager::Update() {
 		m_ResetPredict = false;
 	}
 	SkillManager::GetInstance()->Update();
+	Player::GetInstance()->SetDelay(m_Delay);
 
+	_charge->SetPosition({ Player::GetInstance()->GetPosition().x,0.5f,Player::GetInstance()->GetPosition().z });
+	_charge->SetScale({ m_ChargeScale,m_ChargeScale,m_ChargeScale });
+	_charge->Update();
 }
 //攻撃した瞬間
 void GameStateManager::AttackTrigger() {
@@ -123,35 +139,44 @@ void GameStateManager::AttackTrigger() {
 	if (m_AllActCount == 0) { return; }
 	if (actui[0]->GetUse()) { return; }
 	if (player_.lock()->GetCharaState() == 1) { return; }
+	if (isFinish) { return; }
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
-		m_BirthSkill = true;
-		player_.lock()->SetDelayTimer(m_Act[0].ActDelay);
-		player_.lock()->SetDelayStart(true);
+		m_Delay = true;
 	}
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
-	IKESprite::PreDraw();
-	skillUI->Draw();
-	gaugeUI->Draw();
-	SkillManager::GetInstance()->UIDraw();
-	IKESprite::PostDraw();
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->Draw(dxCommon);
-	}
+	if (!isFinish && !isChangeScene) {
+		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+		if (m_Delay) {
+			_charge->Draw();
+		}
+		IKETexture::PostDraw();
+		IKESprite::PreDraw();
+		skillUI->Draw();
+		gaugeUI->Draw();
+		SkillManager::GetInstance()->UIDraw();
+		IKESprite::PostDraw();
+		for (auto i = 0; i < attackarea.size(); i++) {
+			if (attackarea[i] == nullptr)continue;
+			attackarea[i]->Draw(dxCommon);
+		}
 
-	if (m_AllActCount != 0) {
-		predictarea->Draw(dxCommon);
+		if (m_AllActCount != 0) {
+			predictarea->Draw(dxCommon);
+		}
 	}
 	resultSkill->Draw();
 }
 //描画
 void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("GameState");
+	ImGui::Text("Scale:%f", m_ChargeScale);
+	ImGui::Text("Timer:%d", m_DelayTimer);
+	ImGui::Text("Buff:%d", m_Buff);
 	if (!m_Act.empty()) {
-		ImGui::Text("damage:%f", m_Act[0].ActDamage);
-		ImGui::Text("delay:%d", m_Act[0].ActDelay);
+		ImGui::Text("SkillType:%d", m_Act[0].SkillType);
+		ImGui::Text("Name:%s", m_Act[0].StateName);
 	}
 	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
 	if (ImGui::Button("in", ImVec2(90, 50))) {
@@ -174,33 +199,38 @@ void GameStateManager::ActUIDraw() {
 	}
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY) {
+void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name) {
 	ActState act;
-	act.ActID = ID;
-	act.ActDamage = damage;
-	act.ActDelay = Delay;
-	act.AttackArea.resize(7);
-	act.DistanceX = DisX;
-	act.DistanceY = DisY;
-	for (int i = 0; i < 7; i++) {
-		for (int j = 0; j < 7; j++) {
-			act.AttackArea[i].push_back(j);
+	act.SkillType = SkillType;
+	if (act.SkillType == 0) {
+		act.ActID = ID;
+		act.ActDamage = damage;
+		act.AttackArea.resize(7);
+		act.DistanceX = DisX;
+		act.DistanceY = DisY;
+
+		for (int i = 0; i < 7; i++) {
+			for (int j = 0; j < 7; j++) {
+				act.AttackArea[i].push_back(j);
+			}
 		}
+		act.AttackArea = area;
 	}
-	act.AttackArea = area;
+	act.ActDelay = Delay;
+	act.StateName = name;
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
-	BirthActUI(ID);//UIも増えるよ
+	BirthActUI(ID,act.SkillType);//UIも増えるよ
 	PredictManager();
 }
 //スキルUIの生成
-void GameStateManager::BirthActUI(const int ID) {
+void GameStateManager::BirthActUI(const int ID,const int Type) {
 	//アクションUIのセット
 	ActionUI* newactUi = nullptr;
 	newactUi = new ActionUI();
 	newactUi->Initialize();
-	newactUi->InitState(m_AllActCount,ID);
+	newactUi->InitState(m_AllActCount,ID,Type);
 	actui.emplace_back(newactUi);
 
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);
@@ -225,6 +255,7 @@ void GameStateManager::BirthArea() {
 				newarea->Initialize();
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(m_Act[0].ActDamage);
+				newarea->SetStateName(m_Act[0].StateName);
 				attackarea.push_back(newarea);
 			}
 		}
@@ -233,6 +264,7 @@ void GameStateManager::BirthArea() {
 //予測エリア関係
 void GameStateManager::PredictManager() {
 	if (m_AllActCount == 0) { return; }
+	if (m_Act.empty()) { return; }
 	predictarea->ResetPredict();
 	int l_BirthBaseX = {};
 	int l_BirthBaseY = {};
@@ -247,7 +279,9 @@ void GameStateManager::PredictManager() {
 			int AreaY = {};
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
-			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0))) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+			Helper::GetInstance()->Clamp(AreaX, 0, 7);
+			Helper::GetInstance()->Clamp(AreaY, 0, 3);
+			if (m_Act[0].AttackArea[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				predictarea->SetPredict(AreaX, AreaY, true);
 			}
 		}
@@ -261,12 +295,22 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 }
 //スキルの使用
 void GameStateManager::UseSkill() {
-	if (!player_.lock()->GetDelayStart() && m_BirthSkill) {
-		BirthArea();
+	if (m_AllActCount == 0) { return; }
+	if (!m_Delay) { return; }
+	m_ChargeScale = Helper::GetInstance()->Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
+	if (Helper::GetInstance()->CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
+		if (m_Act[0].SkillType == 0) {
+			BirthArea();
+		}
+		else {
+			BirthBuff();
+		}
 		FinishAct();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
-		m_BirthSkill = false;
 		m_ResetPredict = true;
+		m_Delay = false;
+		m_DelayTimer = {};
+		m_ChargeScale = 5;
 	}
 }
 //行動の終了
@@ -388,5 +432,10 @@ void GameStateManager::InDeck() {
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
+	
 	isFinish = true;
+}
+//バフの生成
+void GameStateManager::BirthBuff() {
+	m_Buff = true;		//一旦中身はこれだけ
 }

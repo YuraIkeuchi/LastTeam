@@ -45,31 +45,35 @@ private:
 	//HPの割合を求める
 	float HpPercent();
 
+public:
+	//プレイヤーの回復
+	void HealPlayer(const float power);
 private:
 	void MoveCommon(float& pos, const float velocity, int& playerspace,const int addspace);
 private:
 	void LoadCSV();
-
+	//パーティクル
+	void Particle();
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetCharaState() { return _charaState; }
-	const bool GetDelayStart() { return m_DelayStart; }
+	const bool GetDelay() { return m_Delay; }
 
 	float GetMaxHp() { return m_MaxHP; }
 	float GetHp() { return m_HP; }
+
 	void SetMaxHp(float maxhp) {
 		m_MaxHP = maxhp;
 		m_HP = maxhp;
 	}
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 
-	void SetDelayTimer(const int DelayTimer) { m_DelayTimer = DelayTimer; }
+	void SetDelay(const bool Delay) { m_Delay = Delay; }
 
 	void Setname(const string name) { m_name = name; }
 
-	void SetDelayStart(const bool DelayStart) { m_DelayStart = DelayStart; }
 private:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
@@ -139,11 +143,8 @@ private:
 		THIRD_DIGHT
 	};
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
-
-	int m_DelayTimer = {};
-
-	bool m_DelayStart = false;
-
+	
+	bool m_Delay = false;
 	string m_name = "NONE";
 
 	bool is_title = false;

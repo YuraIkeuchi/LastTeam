@@ -47,6 +47,7 @@ public: // サブクラス
 		float pad;//パディング
 		XMFLOAT4 color;//色情報
 		float uvval;
+		bool LightEffect;//ライトの影響受けるか
 	};
 
 private: // 定数

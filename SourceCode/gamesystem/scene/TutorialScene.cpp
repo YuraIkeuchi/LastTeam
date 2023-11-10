@@ -9,34 +9,34 @@
 #include <TutorialTask.h>
 #include <Helper.h>
 #include "BattleScene.h"
+#include "TutorialEnemy.h"
 
 #include <imgui.h>
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
 
-//ó‘Ô‘JˆÚ
-/*state‚Ì•À‚Ñ‡‚É‡‚í‚¹‚é*/
+//ï¿½ï¿½Ô‘Jï¿½ï¿½
+/*stateï¿½Ì•ï¿½ï¿½Ñï¿½ï¿½Éï¿½ï¿½í‚¹ï¿½ï¿½*/
 void (TutorialScene::* TutorialScene::stateTable[])() = {
 	&TutorialScene::IntroState,//
 	&TutorialScene::MoveState,//
-	&TutorialScene::GetState,//ƒXƒLƒ‹ƒQƒbƒg
-	&TutorialScene::AttackState,//UŒ‚
-	&TutorialScene::DamageState,//ƒ_ƒ[ƒW‚ğ—^‚¦‚½
-	&TutorialScene::TutorialEnd,//I‚í‚è
+	&TutorialScene::GetState,//ï¿½Xï¿½Lï¿½ï¿½ï¿½Qï¿½bï¿½g
+	&TutorialScene::AttackState,//ï¿½Uï¿½ï¿½
+	&TutorialScene::DamageState,//ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½
+	&TutorialScene::TutorialEnd,//ï¿½Iï¿½ï¿½ï¿½
 };
-//‰Šú‰»
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void TutorialScene::Initialize(DirectXCommon* dxCommon)
 {
-	//‹¤’Ê‚Ì‰Šú‰»
+	//ï¿½ï¿½ï¿½Ê‚Ìï¿½ï¿½ï¿½ï¿½ï¿½
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg
+	//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½g
 	PlayPostEffect = false;
 
-	//ƒp[ƒeƒBƒNƒ‹‘Síœ
+	//ï¿½pï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½Sï¿½íœ
 	ParticleEmitter::GetInstance()->AllDelete();
 
-	// ƒvƒŒƒCƒ„[¶¬
 	{
 		auto player = GameObject::CreateObject<Player>();
 		player->LoadResource();
@@ -46,37 +46,50 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 		GameStateManager::GetInstance()->SetPlayer(player);
 
 	}
-	//ƒXƒLƒ‹
+	//ï¿½Xï¿½Lï¿½ï¿½
 	SkillManager::GetInstance()->Initialize();
-	//ƒQ[ƒ€‚Ìó‘Ô
+	//ï¿½Qï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½
 	GameStateManager::GetInstance()->Initialize();
-	//ƒXƒe[ƒW‚Ì°
+	//ï¿½Xï¿½eï¿½[ï¿½Wï¿½Ìï¿½
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
-	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_START);
-	texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-
-	wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::NONE);
-	texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,0.f,1.f,1.f })));
-
-	wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::NONE);
-	texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
-
-	//“G
-	enemyManager = std::make_unique<EnemyManager>();
-	enemyManager->Initialize();
+	text_ = make_unique<TextManager>();
+	text_->Initialize(dxCommon);
+	text_->SetConversation(TextManager::TUTORIAL_START);
+	//ï¿½G
+	enemy = make_unique<TutorialEnemy>();
+	enemy->Initialize();
 
 	_nowstate = TUTORIAL_INTRO;
 
+	//ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½gï¿½eï¿½Lï¿½Xï¿½g
+	resulttext = make_unique<TextManager>();
+	resulttext->Initialize(dxCommon);
+	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
+
+	//ï¿½Û‰e
+	lightGroup->SetCircleShadowActive(0, true);
+	lightGroup->SetCircleShadowActive(1, true);
 }
-//XV
+//ï¿½Xï¿½V
 void TutorialScene::Update(DirectXCommon* dxCommon)
 {
 	Input* input = Input::GetInstance();
-	// ‘SƒIƒuƒWƒFƒNƒgXV
+	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[
+	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	//ï¿½{ï¿½X
+	lightGroup->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
+	lightGroup->Update();
+	// ï¿½Sï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Xï¿½V
 	game_object_manager_->Update();
 
-	//ŠeƒNƒ‰ƒXXV
+	//ï¿½eï¿½Nï¿½ï¿½ï¿½Xï¿½Xï¿½V
 	camerawork->Update(camera);
 	lightGroup->Update();
 	game_object_manager_->Update();
@@ -84,13 +97,16 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	enemyManager->Update();
-	//“G‚ğ“|‚µ‚½‚çƒV[ƒ“ˆÈ~(‰¼)
+	enemy->Update();
+	if (input->TriggerButton(input->BACK)) {
+		m_End = true;
+	}
+	//ï¿½Gï¿½ï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½[ï¿½ï¿½ï¿½È~(ï¿½ï¿½)
 	if (m_End) {
 		_ChangeType = CHANGE_TITLE;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
-	//‚Õ‚ê‚¢‚â[‚ÌHP‚ª–³‚­‚È‚Á‚Ä‚à‘JˆÚ‚·‚é
+	//ï¿½Õ‚ê‚¢ï¿½ï¿½[ï¿½ï¿½HPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Ä‚ï¿½ï¿½Jï¿½Ú‚ï¿½ï¿½ï¿½
 	if (GameStateManager::GetInstance()->GetPlayer().lock()->GetHp() <= 0.0f) {
 		_ChangeType = CHANGE_OVER;
 		SceneChanger::GetInstance()->SetChangeStart(true);
@@ -108,13 +124,13 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 
-	//ó‘ÔˆÚs(state‚É‡‚í‚¹‚é)
+	//ï¿½ï¿½ÔˆÚs(stateï¿½Éï¿½ï¿½í‚¹ï¿½ï¿½)
 	(this->*stateTable[static_cast<size_t>(_nowstate)])();
 }
 
 void TutorialScene::Draw(DirectXCommon* dxCommon) {
-	//•`‰æ•û–@
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚é‚©
+	//ï¿½`ï¿½ï¿½ï¿½ï¿½@
+	//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é‚©
 	if (PlayPostEffect) {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		BackDraw(dxCommon);
@@ -137,29 +153,26 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PostDraw();
 	}
 }
-//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚©‚©‚ç‚È‚¢
+//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
-	//Š®‘S‚É‘O‚É‘‚­ƒXƒvƒ‰ƒCƒg
-	for (int i = 0; i < 3; i++) {
-		if (i != 0) {
-			if (texts[(size_t)i - 1]->GetFinish()) {
-				texts[i]->Draw();
-
-			}
-		}
-		else {
-			texts[i]->Draw();
-		}
+	////ï¿½ï¿½ï¿½Sï¿½É‘Oï¿½Éï¿½ï¿½ï¿½ï¿½Xï¿½vï¿½ï¿½ï¿½Cï¿½g
+	text_->TestDraw(dxCommon);
+	if (_nowstate == TUTORIAL_DAMAGE) {
+		resulttext->TestDraw(dxCommon);
 	}
-	Font::PostDraw();
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 	game_object_manager_->UIDraw();
 
-	enemyManager->UIDraw();
+// <<<<<<< HEAD
+// 	enemyManager->UIDraw();
+// =======
+// 	//Player::GetInstance()->UIDraw();
+// 	enemy->UIDraw();
+// >>>>>>> 5735619e9defc9fdb26571e999c2bcb5a575bea5
 	SceneChanger::GetInstance()->Draw();
 }
-//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚©‚©‚é
+//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
@@ -167,7 +180,7 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
-	enemyManager->Draw(dxCommon);
+	enemy->Draw(dxCommon);
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	IKETexture::PostDraw();
@@ -185,16 +198,15 @@ void TutorialScene::ImGuiDraw() {
 void TutorialScene::Finalize() {
 
 }
-//Å‰‚ÌŒê‚è
+//ï¿½Åï¿½ï¿½ÌŒï¿½ï¿½
 void TutorialScene::IntroState() {
 	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
 		_nowstate = TUTORIAL_MOVE;
 		m_Timer = {};
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_MOVE);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+	
 	}
 }
-//ˆÚ“®
+//ï¿½Ú“ï¿½
 void TutorialScene::MoveState() {
 	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
 		m_Timer = {};
@@ -202,60 +214,53 @@ void TutorialScene::MoveState() {
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_GET);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		text_->SetConversation(TextManager::TUTORIAL_GET);
 		_nowstate = TUTORIAL_GETSKILL;
 	}
 }
-//ƒXƒLƒ‹ƒQƒbƒg
+//ï¿½Xï¿½Lï¿½ï¿½ï¿½Qï¿½bï¿½g
 void TutorialScene::GetState() {
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
+		text_->SetConversation(TextManager::TUTORIAL_EXPLAIN);
 		_nowstate = TUTORIAL_ATTACK;
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_EXPLAIN1);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_EXPLAIN2);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
 		m_Timer = {};
 	}
 }
-//UŒ‚
+//ï¿½Uï¿½ï¿½
 void TutorialScene::AttackState() {
 	Helper::GetInstance()->CheckMin(m_Timer, 410, 1);
 
 	if (m_Timer == 200) {
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_MARK1);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_MARK2);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		text_->SetConversation(TextManager::TUTORIAL_MARK);
 	}
 	else if (m_Timer == 400) {
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_TEXT_ATTACK);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::NONE);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK);
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_TEXT_DAMAGE);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_ENEMYKNOCK);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+		text_->SetConversation(TextManager::TUTORIAL_TEXT_DAMAGE);
 		_nowstate = TUTORIAL_DAMAGE;
 		m_Timer = {};
 	}
 }
-//ƒ_ƒ[ƒW‚ª“ü‚Á‚½
+//ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void TutorialScene::DamageState() {
-	if (enemyManager->BossDestroy()) {
-		wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_ENEMYDESTROY);
-		texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TUTORIAL_END);
-		texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
-		_nowstate = TUTORIAL_FINISH;
+	if (enemy->GetHP() <= 0.0f) {
+		m_Timer++;
+		if (m_Timer == 10) {
+			text_->SetConversation(TextManager::TUTORIAL_SKILL);
+		}
+		else if (m_Timer == 200) {
+			text_->SetConversation(TextManager::TUTORIAL_END);
+		}
+		else if (m_Timer == 400) {
+			_nowstate = TUTORIAL_FINISH;
+		}
+		GameStateManager::GetInstance()->StageClearInit();
 	}
 }
-//ƒ`ƒ…[ƒgƒŠƒAƒ‹I‚í‚è
+//ï¿½`ï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½
 void TutorialScene::TutorialEnd() {
 	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
 		m_Timer = {};

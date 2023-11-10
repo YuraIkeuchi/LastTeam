@@ -35,7 +35,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 		GameStateManager::GetInstance()->SetPlayer(player);
 
 	}
-	//�X�L��
 	SkillManager::GetInstance()->Initialize();
 	//�Q�[���̏��
 	GameStateManager::GetInstance()->Initialize();
@@ -59,28 +58,45 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//�G
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
+
+	//���U���g�e�L�X�g
+	resulttext = make_unique<TextManager>();
+	resulttext->Initialize(dxCommon);
+	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
+
+	//�ۉe
+	lightGroup->SetCircleShadowActive(0, true);
+	lightGroup->SetCircleShadowActive(1, true);
 }
 //�X�V
 void BattleScene::Update(DirectXCommon* dxCommon)
 {
-	Input* input = Input::GetInstance();
+	//�v���C���[
+	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	lightGroup->Update();
 	// �S�I�u�W�F�N�g�X�V
 	game_object_manager_->Update();
 
 	//�e�N���X�X�V
 	camerawork->Update(camera);
-	lightGroup->Update();
+	if (!GameStateManager::GetInstance()->GetIsFinish()) {
+		// Player::GetInstance()->Update();
+	}
 	StagePanel::GetInstance()->Update();
-	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	//enemyManager->Update();
-	//�G��|������V�[���ȍ~(��)
+	enemyManager->Update();
+	enemyManager->SetLight(lightGroup);
+	GameStateManager::GetInstance()->Update();
+	//�G���|�������V�[���ȍ~(��)
 	if (enemyManager->BossDestroy()) {
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
 			GameStateManager::GetInstance()->StageClearInit();
 		} else {
-			_ChangeType = CHANGE_TITLE;
+			_ChangeType = CHANGE_MAP;
 			SceneChanger::GetInstance()->SetChangeStart(true);
 		}
 	}
@@ -91,8 +107,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
-		if (_ChangeType == CHANGE_TITLE) {
-			SceneManager::GetInstance()->ChangeScene<TitleScene>(true);
+		if (_ChangeType == CHANGE_MAP) {
+			SceneManager::GetInstance()->PopScene();
 		}
 		else {
 			SceneManager::GetInstance()->ChangeScene<GameoverScene>();
@@ -132,8 +148,12 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 
 	game_object_manager_->UIDraw();
 
-	SceneChanger::GetInstance()->Draw();
-	//enemyManager->UIDraw();
+	if (enemyManager->BossDestroy()) {
+		resulttext->TestDraw(dxCommon);
+	}
+	// Player::GetInstance()->UIDraw();
+	enemyManager->UIDraw();
+
 	GameStateManager::GetInstance()->ActUIDraw();
 	SceneChanger::GetInstance()->Draw();
 }
@@ -156,6 +176,7 @@ void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
 	game_object_manager_->ImGuiDraw();
 	//SceneChanger::GetInstance()->ImGuiDraw();
+	enemyManager->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

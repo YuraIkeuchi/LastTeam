@@ -19,17 +19,23 @@ void ActionUI::Initialize() {
 	m_Use = false;
 	m_Frame = {};
 	m_Alive = true;
+	
 }
 //ステータス初期化
-void ActionUI::InitState(const int ActCount, const int ID) {
+void ActionUI::InitState(const int ActCount, const int ID,const int Type) {
 	m_ActCount = ActCount;
 	m_ID = ID;
-	m_ActType = ACT_ATTACK;
+	m_Type = Type;
 }
 //更新
 void ActionUI::Update() {
 	UiMove();
-
+	if (m_Type == 0) {
+		m_Color = { 1.0f,0.0f,0.0f,1.0f };
+	}
+	else {
+		m_Color = { 0.0f,1.0f,0.0f,1.0f };
+	}
 	tex->SetColor(m_Color);
 	tex->SetPosition(m_Position);
 

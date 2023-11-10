@@ -78,6 +78,9 @@ protected:
 	//”’l‰»‚µ‚½HP•\¦‚Ì‚½‚ß‚Ì•Ï”
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//®”‚É‚µ‚½HP
+
+	bool m_Poison = false;
+	int m_PoisonTimer = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -109,7 +112,7 @@ public:
 	virtual void ImGui_Origin() = 0;
 
 	void UIDraw();
-
+	XMFLOAT3 SetPannelPos(int width, int height);
 private:
 	void BirthParticle();
 	//HP‚ÌŠ„‡‚ğ‹‚ß‚é
@@ -118,6 +121,9 @@ private:
 	void WorldDivision();
 	//UI‚Ì‚½‚ß‚ÌHP‚ÌŠÇ—
 	void HPManage();
+	void BirthPoisonParticle();
 protected:
 	void Collide(vector<AttackArea*>area);
+	//“Å‚Ìó‘Ô
+	void PoisonState();
 };

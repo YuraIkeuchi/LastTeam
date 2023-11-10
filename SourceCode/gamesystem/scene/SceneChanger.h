@@ -87,5 +87,5 @@ private:
 	}_ChangeState;
 
 public:
-
+	int GetChangeState() { return _ChangeState; }
 };

@@ -12,6 +12,7 @@ NormalEnemy::NormalEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	m_Object->SetLightEffect(false);
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 
@@ -23,7 +24,7 @@ NormalEnemy::NormalEnemy() {
 //èâä˙âª
 bool NormalEnemy::Initialize() {
 
-	m_Position = randPanelPos();
+	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5 };
@@ -45,7 +46,8 @@ void NormalEnemy::Action() {
 	Obj_SetParam();
 	//ìñÇΩÇËîªíË
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	Collide(_AttackArea);
+	Collide(_AttackArea);		//ìñÇΩÇËîªíË
+	PoisonState();//ì≈
 }
 //ï`âÊ
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
@@ -54,10 +56,8 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 //ImGuiï`âÊ
 void NormalEnemy::ImGui_Origin() {
 	ImGui::Begin("Enemy");
-	ImGui::Text("POSX:%f", m_Position.x);
-	ImGui::Text("POSZ:%f", m_Position.z);
-	ImGui::Text("Width:%d", m_NowWidth);
-	ImGui::Text("Height:%d", m_NowHeight);
+	ImGui::Text("Poison:%d", m_Poison);
+	ImGui::Text("Timer:%d", m_PoisonTimer);
 	ImGui::End();
 }
 //äJï˙

@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseScene.h"
-#include "Font.h"
+#include "TextManager.h"
 #include<memory>
 #include"InterEnemy.h"
 #include "IKESprite.h"
@@ -23,7 +23,7 @@ private:
 	void FrontDraw(DirectXCommon* dxCommon);
 
 private:
-	std::array<unique_ptr<Font>,3> texts;
+	unique_ptr<TextManager> text_;
 
 	enum SceneType {
 		PLAY,

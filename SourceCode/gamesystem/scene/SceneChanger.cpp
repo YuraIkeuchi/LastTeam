@@ -81,7 +81,7 @@ void SceneChanger::ImGuiDraw() {
 //普通のフェード
 void SceneChanger::FeedChange() {
 	if (!m_ChangeStart) { return; }
-	const float l_AddFrame = 0.01f;
+	const float l_AddFrame = 1.f/45.f;
 	const int l_MaxTimer = 5;
 	m_Color.x = 1.0f;
 	if (_ChangeState == CHANGE_START) {			//徐々に暗くなる
@@ -106,7 +106,7 @@ void SceneChanger::FeedChange() {
 //広がるやつ
 void SceneChanger::WideChange() {
 	if (!m_ChangeStart) { return; }
-	const float l_AddFrame = 0.01f;
+	const float l_AddFrame = 1.f/45.f;
 	const int l_MaxTimer = 5;
 	m_Color.w = 1.0f;
 	if (_ChangeState == CHANGE_START) {			//徐々に暗くなる

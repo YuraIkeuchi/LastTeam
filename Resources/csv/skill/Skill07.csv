@@ -1,6 +1,8 @@
 ID,6
+SkillType,0
 Delay,55
 Name,yabu2
+StateName,NONE
 Damege,70
 DistanceX,1
 AttackArea,1 1 1 1 1 1 1

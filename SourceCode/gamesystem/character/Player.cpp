@@ -6,6 +6,7 @@
 #include <GameStateManager.h>
 #include <StagePanel.h>
 #include <ImageManager.h>
+#include <ParticleEmitter.h>
 
 //リソース読み込み
 void Player::LoadResource() {
@@ -14,7 +15,7 @@ void Player::LoadResource() {
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
 	m_Object->SetScale({ 2.f,2.f,2.f });
 	m_Object->SetPosition({ 0.0f,2.0f,0.0f });
-	m_Object->VertexCheck();
+	m_Object->SetLightEffect(false);
 
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
@@ -61,6 +62,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 	}
 	m_InterHP = {};//整数にしたHP
 
+	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 }
 //状態遷移
 /*CharaStateのState並び順に合わせる*/
@@ -77,32 +79,37 @@ void Player::Update() {
 	else
 	{
 		const float l_GrazeMax = 2.0f;
+	}
+	// 状態移行(charastateに合わせる)
+	(this->*stateTable[_charaState])();
+	// ディレイタイマーが0以外ならディレイにする
+	if (m_DelayTimer != 0)
+	{
+		_charaState = STATE_DELAY;
+	}
+	Obj_SetParam();
 
-		//状態移行(charastateに合わせる)
-		(this->*stateTable[_charaState])();
-		//ディレイタイマーが0以外ならディレイにする
-		if (m_DelayTimer != 0) {
-			_charaState = STATE_DELAY;
-		}
-		Obj_SetParam();
+	BirthParticle();
 
-		BirthParticle();
+<<<<<<< HEAD
+	// グレイズ用にスコアを計算する
+	m_Length = Helper::GetInstance()->ChechLength(m_Position, m_GrazePos);
+	m_GrazeScore = l_GrazeMax - m_Length;
+	// 最大スコアは10
+	Helper::GetInstance()->Clamp(m_GrazeScore, 0.0f, l_GrazeMax);
+	// プレイヤーの位置からスコアを加算する
+	GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth)*0.1f));
+	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 
-		//グレイズ用にスコアを計算する
-		m_Length = Helper::GetInstance()->ChechLength(m_Position, m_GrazePos);
-		m_GrazeScore = l_GrazeMax - m_Length;
-		//最大スコアは10
-		Helper::GetInstance()->Clamp(m_GrazeScore, 0.0f, l_GrazeMax);
-		//プレイヤーの位置からスコアを加算する
-		GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
-		GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
-
-		//表示用のHP
-		m_InterHP = (int)(m_HP);
-		for (auto i = 0; i < _drawnumber.size(); i++) {
-			_drawnumber[i]->SetNumber(m_DigitNumber[i]);
-			_drawnumber[i]->Update();
-			m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+	//HPの限界値を決める
+	Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
+	// 表示用のHP
+	m_InterHP = (int)(m_HP);
+	for (auto i = 0; i < _drawnumber.size(); i++)
+	{
+		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
+		_drawnumber[i]->Update();
+		m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
 		}
 		hptex->SetPosition(m_HPPos);
 		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
@@ -135,6 +142,7 @@ void Player::ImGuiDraw() {
 }
 //移動
 void Player::Move() {
+	if (m_Delay) { return; }
 	const int l_TargetTimer = 10;
 	const float l_AddVelocity = 2.0f;
 	const float l_SubVelocity = -2.0f;
@@ -219,12 +227,7 @@ float Player::HpPercent() {
 }
 //ディレイ処理
 void Player::Delay() {
-	if (Helper::GetInstance()->CheckMax(m_DelayTimer, 0, -1)) {
 
-		m_DelayStart = false;
-		_charaState = STATE_MOVE;
-
-	}
 }
 //プレイヤーの動きの基本
 void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int addspace) {
@@ -233,7 +236,22 @@ void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int a
 	GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 	GameStateManager::GetInstance()->SetResetPredict(true);
 }
+//プレイヤーのHP回復
+void Player::HealPlayer(const float power) {
+	m_HP += power;
+	for (int i = 0; i < 15; i++) {
+		Particle();
+	}
+}
 //チュートリアルの更新
 void Player::TitleUpdate() {
 	Obj_SetParam();
+}
+//パーティクル
+void Player::Particle() {
+	XMFLOAT4 s_color = { 0.5f,1.0f,0.1f,1.0f };
+	XMFLOAT4 e_color = { 0.5f,1.0f,0.1f,1.0f };
+	float s_scale = 1.0f;
+	float e_scale = 0.0f;
+	ParticleEmitter::GetInstance()->HealEffect(50, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
 }

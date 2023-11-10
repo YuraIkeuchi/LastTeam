@@ -17,20 +17,22 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
-	wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TITLE_01);
-	texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
+	//wchar_t* sample = TextManager::GetInstance()->SearchText(TextManager::TITLE_01);
+	//texts[0] = (std::move(std::make_unique<Font>(sample, XMFLOAT2{ 300.f,380.f }, XMVECTOR{ 1.f,1.f,1.f,1.f })));
 
-	wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TITLE_02);
-	texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,0.f,1.f,1.f })));
+	//wchar_t* sample2 = TextManager::GetInstance()->SearchText(TextManager::TITLE_02);
+	//texts[1] = (std::move(std::make_unique<Font>(sample2, XMFLOAT2{ 300.f,420.f }, XMVECTOR{ 1.f,0.f,1.f,1.f })));
 
-	wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::TITLE_03);
-	texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
+	//wchar_t* sample3 = TextManager::GetInstance()->SearchText(TextManager::TITLE_03);
+	//texts[2] = (std::move(std::make_unique<Font>(sample3, XMFLOAT2{ 300.f,460.f }, XMVECTOR{ 1.f,0.f,0.f,1.f })));
 
+	text_ = make_unique<TextManager>();
+	text_->Initialize(dxCommon);
+	text_->SetConversation(TextManager::TITLE);
 	if (!s_GameLoop) {
 		SceneChanger::GetInstance()->Initialize();
 		s_GameLoop = true;
 	}
-
 
 	// プレイヤー生成
 	{
@@ -44,7 +46,6 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 
 
 	}
-	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
 
@@ -55,6 +56,10 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//カード
 	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
 	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
+
+	//�ۉe
+	lightGroup->SetCircleShadowActive(0, true);
+	lightGroup->SetCircleShadowActive(1, true);
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
@@ -65,8 +70,19 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 
 	//各クラス更新
 	camerawork->Update(camera);
+	//�v���C���[
+	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	//�{�X
+	lightGroup->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
 	lightGroup->Update();
 	game_object_manager_->Update();
+	//Player::GetInstance()->TitleUpdate();
 	StagePanel::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemy->Update();
@@ -128,18 +144,7 @@ void TitleScene::Draw(DirectXCommon* dxCommon) {
 }
 //前面描画
 void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
-	//完全に前に書くスプライト
-	for (int i = 0; i < 3; i++) {
-		if (i != 0) {
-			if (texts[(size_t)i - 1]->GetFinish()) {
-				texts[i]->Draw();
-
-			}
-		} else {
-			texts[i]->Draw();
-		}
-	}
-	Font::PostDraw();
+	text_->TestDraw(dxCommon);
 	IKESprite::PreDraw();
 	title_[TITLE_TEXT]->Draw();
 	SceneChanger::GetInstance()->Draw();
@@ -163,6 +168,7 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
+	camerawork->ImGuiDraw();
 }
 //解放
 void TitleScene::Finalize() {

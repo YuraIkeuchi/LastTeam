@@ -11,10 +11,6 @@ BaseScene::BaseScene()
 
 //共通の初期化
 void BaseScene::BaseInitialize(DirectXCommon* dxCommon, XMFLOAT3 eye, XMFLOAT3 target) {
-	// デバイスをセット
-	IKEFBXObject3d::SetDevice(dxCommon->GetDev());
-	// グラフィックスパイプライン生成
-	IKEFBXObject3d::CreateGraphicsPipeline();
 	// カメラ生成
 	camera = new DebugCamera(WinApp::window_width, WinApp::window_height);
 	IKETexture::SetCamera(camera);

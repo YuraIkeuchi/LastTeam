@@ -29,11 +29,14 @@ public:
 		MAP_FRAME,
 		MAP_START,
 		MAP_NORMAL,
-		MAP_HEAL,
 		MAP_BOSS,
+		MAP_HEAL,
+		MAP_TUTORIAL,
+		MAP_CHEACK,
 		PASSIVE_01,
 		PASSIVE_02,
 		PASSIVE_03,
+		PASSIVE_FRAME,
 		GAUGE,
 		TITLEBACK,
 		TITLETEXT,
@@ -43,6 +46,7 @@ public:
 	enum tex2dName
 	{
 		MAGIC,
+		CHARGE,
 	};
 	enum particleName
 	{

@@ -49,15 +49,11 @@ public:
 	const int GetSkillID() { return m_SkillID; }
 	const float GetDamage() { return m_Damage; }
 	const int GetDelay() { return m_Delay; }
+	const string GetStateName() { return StateName; }
 	const std::vector<std::vector<int>> GetArea() { return m_Area; }
 
 	void SetState(const int state) { _state= state; }
 	void SetSkillID(const int SkillID) { m_SkillID = SkillID; }
-	void SetDamage(const float Damage) { m_Damage = Damage; }
-	void SetDelay(const int Delay) { m_Delay = Delay; }
-	void SetDistanceX(const int DistanceX) { m_DistanceX = DistanceX; }
-	void SetDistanceY(const int DistanceY) { m_DistanceY = DistanceY; }
-	void SetArea(const std::vector<std::vector<int>> Area) { m_Area = Area; }
 protected:
 	string m_Tag;
 	unique_ptr<IKETexture> m_Pannel = nullptr;
@@ -74,9 +70,11 @@ protected:
 	int m_SkillID = {};
 	float m_Damage = {};
 	int m_Delay = {};
+	int m_SkillType = {};
 	std::vector<std::vector<int>> m_Area;
 	int m_DistanceX = {};
 	int m_DistanceY = {};
+	string StateName = {};
 	unique_ptr<DrawNumber> _drawnumber;
 private:
 	void Spawn();//‘Ò‹@

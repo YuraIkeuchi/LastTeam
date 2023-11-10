@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseScene.h"
 #include "Passive.h"
-#include"Font.h"
+#include"TextManager.h"
 class MapScene : public BaseScene {
 public:
 	//初期化
@@ -13,6 +13,21 @@ public:
 	//開放
 	void Finalize() override;
 private:
+	//関数ポインタ
+	static void(MapScene::* stateTable[])();
+
+	enum class State :int{
+		initState = 0,
+		mainState,
+		checkState
+	}m_State=State::initState;
+	
+private:
+	void InitState();//待機
+	void MainState();
+	void CheckState();
+private:
+
 	/// 描画
 	void FrontDraw(DirectXCommon* dxCommon);
 	void BackDraw(DirectXCommon* dxCommon);
@@ -52,6 +67,7 @@ private:
 		BATTLE = 1,
 		BOSS,
 		HEAL,
+		TUTORIAL,
 	};
 
 	enum {
@@ -63,10 +79,11 @@ private:
 
 	std::string dungeon;
 	vector<int> dungeons;
-
+	unique_ptr<TextManager> text_;
 	int clearHierarchy = 1;
 
-	unique_ptr<IKESprite>screen = nullptr;
+	unique_ptr<IKESprite> screen = nullptr;
+	unique_ptr<IKESprite> cheack= nullptr;
 	unique_ptr<IKESprite> frame = nullptr;
 	unique_ptr<IKESprite> chara = nullptr;
 
@@ -82,6 +99,7 @@ private:
 	int oldHierarchy = 0;
 
 	int MaxLength = 0;
+	float lastScroll = 0;
 	bool end = false;
 	int pickIndex = Middle;
 	int pickHierarchy = nowHierarchy + 1;
@@ -93,9 +111,6 @@ private:
 
 	XMFLOAT2 scroll = { 0,0 };
 	int vel = 10;
-
-
-	std::unique_ptr<Font> font = nullptr;
 
 	std::vector<unique_ptr<IKESprite>> roads;
 	std::vector<XMFLOAT2> roadsPos;

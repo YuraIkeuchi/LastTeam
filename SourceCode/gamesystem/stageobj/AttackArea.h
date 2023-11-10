@@ -40,8 +40,11 @@ public:
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetNowHeight() { return m_NowHeight; }
 	const float GetDamage() { return m_Damage; }
+	const std::string GetStateName() { return StateName; }
+
 	void SetHit(const bool Hit) { m_Hit = Hit; }
 	void SetDamage(const float Damage) { m_Damage = Damage; }
+	void SetStateName(const std::string name) { StateName = name; }
 private:
 	//ê∂ë∂ä÷åW
 	bool m_Alive = false;
@@ -53,4 +56,5 @@ private:
 	int m_NowWidth = {};
 	int m_NowHeight = {};
 	float m_Damage = {};
+	std::string StateName = "NONE";
 };
