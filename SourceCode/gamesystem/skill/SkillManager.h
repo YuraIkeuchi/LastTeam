@@ -21,6 +21,8 @@ public:
 	void ResetBirth();
 	//デッキに入ってるかチェック
 	void DeckCheck(const int DeckNumber,const int DeckCount);
+	
+	void PushOnce2Deck(const int DeckNumber);
 	//デッキのクリア
 	void DeckClear();
 private:
@@ -39,6 +41,7 @@ public:
 
 	void SetDeckState(const int DeckNum);
 public:
+	const int GetDeckUISize() { return (int)deckui.size(); }
 	const int GetDeckNum() { return m_DeckNum; }
 	std::vector<SkillBase*>GetSkillBase() { return skill; }
 private:

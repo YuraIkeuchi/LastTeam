@@ -140,6 +140,7 @@ void GameStateManager::AttackTrigger() {
 	if (actui[0]->GetUse()) { return; }
 	if (player_.lock()->GetCharaState() == 1) { return; }
 	if (isFinish) { return; }
+	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
 		AttackSubAction();
@@ -376,7 +377,11 @@ void GameStateManager::PassiveCheck() {
 		case Passive::ABILITY::POIZON_DAMAGEUP:
 			m_IsVenom = true;
 			break;
+		case Passive::ABILITY::SKILL_RECYCLE:
+			m_IsRecycle = true;
+			break;
 		default:
+			assert(0);
 			break;
 		}
 	}
@@ -416,7 +421,8 @@ void GameStateManager::GetPassive(int ID) {
 
 
 bool GameStateManager::AttackSubAction() {
-	return false;
+	SkillRecycle();
+	return true;
 }
 
 bool GameStateManager::ResultUpdate() {
@@ -436,6 +442,18 @@ bool GameStateManager::ResultUpdate() {
 void GameStateManager::InDeck() {
 	m_DeckNumber.push_back(m_NotDeckNumber[m_NotCount]);
 	m_NotDeckNumber.erase(cbegin(m_NotDeckNumber) + m_NotCount);
+}
+
+bool GameStateManager::SkillRecycle() {
+	if (!m_IsRecycle) { return false; }
+	if (Helper::GetInstance()->GetRanNum(0, 100) > 20) {
+		return false;
+	}
+
+	SkillManager::GetInstance()->PushOnce2Deck(actui[0]->GetID());
+	//デッキの最大数確認
+	SkillManager::GetInstance()->SetDeckState((int)(SkillManager::GetInstance()->GetDeckUISize()));
+	return true;
 }
 
 void GameStateManager::StageClearInit() {
