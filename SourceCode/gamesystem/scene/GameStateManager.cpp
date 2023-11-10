@@ -143,6 +143,7 @@ void GameStateManager::AttackTrigger() {
 	if (isFinish) { return; }
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
+		AttackSubAction();
 		m_Delay = true;
 	}
 }
@@ -415,6 +416,10 @@ void GameStateManager::GetPassive(int ID) {
 	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,0.0f})));
 }
 
+
+bool GameStateManager::AttackSubAction() {
+	return false;
+}
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
