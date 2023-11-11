@@ -532,7 +532,7 @@ void MapScene::Move() {
 		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowHierarchy][nowIndex].pos.x / 2);
 	}
 	scroll.x += vel;
-	scroll.x = clamp(scroll.x, -3000.f, 340.f);
+	scroll.x = clamp(scroll.x, -lastScroll, 340.f);
 }
 
 void MapScene::Finalize() {

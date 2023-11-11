@@ -104,7 +104,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 
 	if (SceneChanger::GetInstance()->GetChange()) {
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
-		SceneManager::GetInstance()->ChangeScene<BattleScene>();
+		SceneManager::GetInstance()->PopScene();
 		/*if (_ChangeType == CHANGE_TITLE) {
 			SceneManager::GetInstance()->PopScene();
 		}
