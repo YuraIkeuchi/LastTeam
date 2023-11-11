@@ -7,6 +7,7 @@
 #include "Easing.h"
 #include "ImageManager.h"
 #include <GameStateManager.h>
+#include <StagePanel.h>
 //ƒ‚ƒfƒ‹“Ç‚İ‚İ
 NormalEnemy::NormalEnemy() {
 	m_Object.reset(new IKEObject3d());
@@ -30,7 +31,7 @@ bool NormalEnemy::Initialize() {
 	m_Scale = { 0.5f,0.5f,0.5 };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
 	m_MaxHP = m_HP;
-	m_CheckPanel = true;
+	StagePanel::GetInstance()->EnemyHitReset();
 	return true;
 }
 

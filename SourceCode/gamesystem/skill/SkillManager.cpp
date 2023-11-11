@@ -71,7 +71,7 @@ void SkillManager::ImGuiDraw() {
 	ImGui::End();
 }
 
-int SkillManager::GetID(const int BirthNum) {
+int SkillManager::IDSearch(const int BirthNum) {
 	int result = 0;
 	if (skill[m_DeckDate[BirthNum + m_DeckRemain]]->GetDeckIn()) {
 		m_BirthMax = m_DeckDate[BirthNum + m_DeckRemain];

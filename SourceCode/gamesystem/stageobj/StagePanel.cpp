@@ -32,9 +32,7 @@ bool StagePanel::Initialize() {
 			panels[i][j].color = { 1.f,1.f,1.f,1.f };
 			panels[i][j].type = NO_PANEL;
 			panels[i][j].isHit = false;
-			panels[i][j].isEnemyHit = false;
-			panels[i][j].isEnemyBreak = false;
-			panels[i][j].isCanonHit = false;
+	
 		}
 	}
 	m_SelectHeight = 0;
@@ -83,18 +81,7 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
-	//for (auto i = 0; i < actions.size(); i++) {
-	//	if (actions[i] == nullptr)continue;
-	//	actions[i]->ImGuiDraw();
-	//}
 
-	//ImGui::Begin("Panel");
-	//for (int i = 0; i < PANEL_WIDTH; i++) {
-	//	for (int j = 0; j < PANEL_HEIGHT; j++) {
-	//		ImGui::Text("Hit[%d][%d]:%f", i, j, panels[i][j].position.x);
-	//	}
-	//}
-	//ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
@@ -111,12 +98,7 @@ void StagePanel::BattleUpdate() {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if (!panels[i][j].predict) {
-					if (!panels[i][j].isCanonHit) {
-						panels[i][j].color = ChangeColor(i, j);
-					}
-					else {
-						panels[i][j].color = { 1.0f,0.3f,0.0f,1.0f };
-					}
+					panels[i][j].color = ChangeColor(i, j);
 				}
 				else {
 					panels[i][j].color = { 1.0f,0.3f,0.0f,1.0f };
@@ -212,7 +194,7 @@ void StagePanel::RandomPanel(int num) {
 		}
 		newAction->Initialize();
 		//ステージに配布されるパネルに情報を読み取ってる
-		newAction->SetSkillID(SkillManager::GetInstance()->GetID(i));
+		newAction->SetSkillID(SkillManager::GetInstance()->IDSearch(i));
 		newAction->GetSkillData();
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
@@ -252,15 +234,8 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height) {
 			m_OBB2.SetParam_Rot(panels[i][j].object->GetMatrot());
 			m_OBB2.SetParam_Scl({ 0.5f,1.0f,0.5f });
 			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
-				panels[i][j].isEnemyHit = true;
 				wight = i;
 				height = j;
-				//panels[i][j].isEnemyBreak = true;
-			}
-			else {
-				if (panels[i][j].isEnemyHit) {
-					continue;
-				}
 			}
 		}
 	}
@@ -279,7 +254,6 @@ void StagePanel::SetCanonHit(IKEObject3d* obj, int& width, int& height) {
 			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
 				width = i;
 				height = j;
-				//panels[i][j].isCanonHit = true;
 			}
 		}
 	}
@@ -305,4 +279,31 @@ XMFLOAT4 StagePanel::ChangeColor(const int Weight, const int Height) {
 	}
 
 	return color;
+}
+void StagePanel::EnemyHitReset() {
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			panels[i][j].isEnemyHit = false;
+		}
+	}
+}
+XMFLOAT3 StagePanel::EnemySetPanel() {
+	bool isSet = false;
+	//乱数の設定
+	int width = Helper::GetInstance()->GetRanNum(4, 7);
+	int height = Helper::GetInstance()->GetRanNum(0, 3);
+
+	//パネル探索（敵がいる場合は再検索）
+
+	while (!isSet) {
+		if (panels[width][height].isEnemyHit) {
+			width = Helper::GetInstance()->GetRanNum(4, 7);
+			height = Helper::GetInstance()->GetRanNum(0, 3);
+		}
+		else {
+			isSet = true;
+		}
+	}
+
+	return SetPositon(width, height);
 }

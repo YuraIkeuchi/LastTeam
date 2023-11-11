@@ -30,6 +30,7 @@ bool CanonEnemy::Initialize() {
 	m_Scale = { 0.5f,0.5f,0.5f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
 	m_MaxHP = m_HP;
+	m_CheckPanel = true;
 	return true;
 }
 
@@ -126,6 +127,7 @@ void CanonEnemy::Attack() {
 		_charaState = STATE_SPECIAL;
 		coolTimer = {};
 		_CanonType = CANON_SET;
+		StagePanel::GetInstance()->EnemyHitReset();
 	}
 }
 
@@ -136,6 +138,7 @@ void CanonEnemy::Teleport() {
 		//m_Position = randPanelPos();
 		_charaState = STATE_INTER;
 		coolTimer = {};
+		m_Position = StagePanel::GetInstance()->EnemySetPanel();
 	}
 }
 //’e‚Ì¶¬
