@@ -79,6 +79,12 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void CanonEnemy::ImGui_Origin() {
+	//“G‚Ì’e
+	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
+		if (newbullet != nullptr) {
+			newbullet->ImGuiDraw();
+		}
+	}
 }
 //ŠJ•ú
 void CanonEnemy::Finalize() {
@@ -140,6 +146,6 @@ void CanonEnemy::BirthBullet() {
 		newbullet->Initialize();
 
 		newbullet->SetPolterType(TYPE_FOLLOW);
-		newbullet->SetPosition({ m_Position.x,m_Position.y + 2.0f,m_Position.z });
+		newbullet->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 		bullets.emplace_back(newbullet);
 }

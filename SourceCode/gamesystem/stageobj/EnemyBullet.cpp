@@ -4,11 +4,16 @@
 #include "Helper.h"
 #include <StagePanel.h>
 #include <Easing.h>
+#include <ImageManager.h>
 EnemyBullet::EnemyBullet() {
 	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BULLET);
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(m_Model);
+
+	m_Pannel.reset(new IKEObject3d());
+	m_Pannel->Initialize();
+	m_Pannel->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
 }
 //‰Šú‰»
 bool EnemyBullet::Initialize() {
@@ -39,17 +44,27 @@ void EnemyBullet::Update() {
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//“–‚½‚è”»’è
 
-	//’e‚Ìƒ}ƒX‚ðŽæ“¾‚·‚é
-	//StagePanel::GetInstance()->SetCanonHit(m_Object.get(), m_NowWidth, m_NowHeight);
+	m_PanelPos = {(-8.0f) + (2.0f * m_NowWidth),0.01f,(2.0f * m_NowHeight)};
+	m_Pannel->SetPosition(m_PanelPos);
+	m_Pannel->SetScale({2.0f,0.1f,2.0f});
+	m_Pannel->SetColor({1.0f,0.3f,0.0f,1.0f});
+	//m_Pannel->SetRotation({ 90.0f,0.0f,0.0f });
+	m_Pannel->Update();
 	//StagePanel::GetInstance()->SetCanonChange(m_NowWidth, m_NowHeight);
 }
 //•`‰æ
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
+	IKEObject3d::PreDraw();
+	if (m_ThrowType == THROW_PLAY) {
+		m_Pannel->Draw();
+	}
+	IKEObject3d::PostDraw();
 	Obj_Draw();
 }
 //ImGui•`‰æ
 void EnemyBullet::ImGuiDraw() {
 	ImGui::Begin("Bullet");
+	ImGui::Text("POSX:%f,POSZ:%f", m_PanelPos.x, m_PanelPos.z);
 	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight,m_NowWidth);
 	ImGui::End();
 }
@@ -75,6 +90,8 @@ void EnemyBullet::Throw() {
 	const float l_AddFrame = 0.01f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
+	//’e‚Ìƒ}ƒX‚ðŽæ“¾‚·‚é
+	StagePanel::GetInstance()->SetCanonHit(m_Object.get(), m_NowWidth, m_NowHeight);
 	//’e‚ÌƒZƒbƒg(‚¾‚ñ‚¾‚ñ•‚‚©‚Ñˆ§‚Ó‚ª‚é‚æ‚¤‚ÈŠ´‚¶)
 	if (m_ThrowType == THROW_SET) {
 		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
@@ -119,9 +136,8 @@ void EnemyBullet::Throw() {
 		if (Helper::GetInstance()->CheckNotValueRange(m_Position.z, 0.0f, 6.0f)) {		//”½ŽË‚·‚é
 			m_Angle.y *= -1.0f;
 		}
-		if (Helper::GetInstance()->CheckNotValueRange(m_Position.x, -30.0f, 30.0f)) {
+		if (Helper::GetInstance()->CheckNotValueRange(m_Position.x, -9.0f,10.0f)) {
 			m_Alive = false;
 		}
 	}
-
 }

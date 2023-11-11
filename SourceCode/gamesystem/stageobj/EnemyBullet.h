@@ -1,5 +1,6 @@
 #pragma once
 #include "ObjCommon.h"
+
 enum PolterType {
 	TYPE_FOLLOW,
 	TYPE_BOUND,
@@ -50,6 +51,7 @@ public:
 	void SetTargetTimer(const int TargetTimer) { m_TargetTimer = TargetTimer; }
 
 private:
+	unique_ptr<IKEObject3d> m_Pannel = nullptr;
 	//åªç›ÇÃÉ}ÉXî‘çÜ
 	int m_NowWidth = {};
 	int m_NowHeight = {};
@@ -84,4 +86,6 @@ private:
 		DIR_SLASHDOWN,//éŒÇﬂÇµÇΩ
 	};
 	int m_ThrowDir = {};
+
+	XMFLOAT3 m_PanelPos = {};
 };

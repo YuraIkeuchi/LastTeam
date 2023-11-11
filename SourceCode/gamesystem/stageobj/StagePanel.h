@@ -60,8 +60,7 @@ public:
 	void SetEnemyHit(IKEObject3d* obj,int& wight, int& height);
 	//色変更(敵の弾)
 	void SetCanonHit(IKEObject3d* obj, int& wight, int& height);
-	//たまがある場所は色変更
-	void SetCanonChange(int& wight, int& height);
+
 private:
 	//バトル中の更新
 	void BattleUpdate();

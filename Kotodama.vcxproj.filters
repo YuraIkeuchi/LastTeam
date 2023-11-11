@@ -545,9 +545,6 @@
     <ClInclude Include="SourceCode\gamesystem\scene\ClearScene.h">
       <Filter>gamesystem\scene\Base\Clear</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scene\BattleScene.h">
-      <Filter>gamesystem\scene\Play\Battle</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\LoadScene.h">
       <Filter>gamesystem\scene\Load</Filter>
     </ClInclude>
@@ -713,6 +710,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyBullet.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\scene\BattleScene.h">
+      <Filter>gamesystem\scene\Title</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

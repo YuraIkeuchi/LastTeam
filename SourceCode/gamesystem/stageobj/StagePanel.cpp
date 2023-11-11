@@ -88,13 +88,13 @@ void StagePanel::ImGuiDraw() {
 	//	actions[i]->ImGuiDraw();
 	//}
 
-	ImGui::Begin("Panel");
-	for (int i = 4; i < PANEL_WIDTH; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			ImGui::Text("Hit[%d][%d]:%d", i, j, panels[i][j].isEnemyHit);
-		}
-	}
-	ImGui::End();
+	//ImGui::Begin("Panel");
+	//for (int i = 0; i < PANEL_WIDTH; i++) {
+	//	for (int j = 0; j < PANEL_HEIGHT; j++) {
+	//		ImGui::Text("Hit[%d][%d]:%f", i, j, panels[i][j].position.x);
+	//	}
+	//}
+	//ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
@@ -111,7 +111,7 @@ void StagePanel::BattleUpdate() {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if (!panels[i][j].predict) {
-					if (!panels[i][j].isEnemyHit) {
+					if (!panels[i][j].isCanonHit) {
 						panels[i][j].color = ChangeColor(i, j);
 					}
 					else {
@@ -255,12 +255,11 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height) {
 				panels[i][j].isEnemyHit = true;
 				wight = i;
 				height = j;
-				panels[i][j].isEnemyBreak = true;
+				//panels[i][j].isEnemyBreak = true;
 			}
 			else {
-				if (!panels[i][j].isEnemyBreak) {
-					panels[i][j].isEnemyHit = false;
-					panels[i][j].isEnemyBreak = false;
+				if (panels[i][j].isEnemyHit) {
+					continue;
 				}
 			}
 		}
@@ -268,32 +267,19 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height) {
 
 }
 //敵の弾とパネルの当たり判定
-void StagePanel::SetCanonHit(IKEObject3d* obj, int& wight, int& height) {
+void StagePanel::SetCanonHit(IKEObject3d* obj, int& width, int& height) {
 	m_OBB1.SetParam_Pos({ obj->GetPosition().x, 0.0f, obj->GetPosition().z });
 	m_OBB1.SetParam_Rot(obj->GetMatrot());
-	m_OBB1.SetParam_Scl({0.5f,0.5f,0.5f});
+	m_OBB1.SetParam_Scl({0.45f,0.45f,0.45f});
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			m_OBB2.SetParam_Pos({ panels[i][j].position.x, 0.0f, panels[i][j].position.z });
 			m_OBB2.SetParam_Rot(panels[i][j].object->GetMatrot());
 			m_OBB2.SetParam_Scl({ 0.5f,1.0f,0.5f });
 			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
-				wight = i;
+				width = i;
 				height = j;
-			}
-		}
-	}
-}
-
-void StagePanel::SetCanonChange(int& wight, int& height) {
-	for (int i = 0; i < PANEL_WIDTH; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			if (i == wight && j == height) {
-				panels[i][j].isCanonHit = true;
-				break;
-			}
-			else {
-				panels[i][j].isCanonHit = false;
+				//panels[i][j].isCanonHit = true;
 			}
 		}
 	}
