@@ -80,14 +80,15 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 //ImGui•`‰æ
 void CanonEnemy::ImGui_Origin() {
 	ImGui::Begin("Canon");
-	ImGui::Text("Height:%d,Width:%d", m_NowHeight, m_NowWidth);
-	ImGui::Text("Timer:%d", m_PoisonTimer);
+	ImGui::Text("State:%d", _charaState);
+	ImGui::Text("Attack:%d", m_AttackCount);
 	ImGui::End();
 }
 //ŠJ•ú
 void CanonEnemy::Finalize() {
 
 }
+//‘Ò‹@
 void CanonEnemy::Inter() {
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, kIntervalMax);
@@ -97,36 +98,51 @@ void CanonEnemy::Inter() {
 		BirthBullet();
 	}
 }
-
+//UŒ‚
 void CanonEnemy::Attack() {
-	const int l_TargetTimer = 240;
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	const int l_TargetTimer = 200;
+
+	if (_CanonType == CANON_SET) {
+		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+			coolTimer = {};
+			_CanonType = CANON_THROW;
+		}
+	}
+	else if (_CanonType == CANON_THROW) {
+		m_AttackCount++;
+		BirthBullet();
+		if (m_AttackCount != 2) {
+			_CanonType = CANON_SET;
+		}
+		else {
+			_CanonType = CANON_END;
+		}
+	}
+	else {
+		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
 		coolTimer = {};
+		_CanonType = CANON_SET;
 	}
 }
 
+//ƒ[ƒv
 void CanonEnemy::Teleport() {
-	if (Helper::GetInstance()->CheckMin(coolTimer, kIntervalMax, 1)) {
+	const int l_TargetTimer = 200;
+	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
 		//m_Position = randPanelPos();
 		_charaState = STATE_INTER;
 		coolTimer = {};
 	}
 }
-
+//’e‚Ì¶¬
 void CanonEnemy::BirthBullet() {
-	const int l_LimitTimer = 80;//áŠQ•¨‚ª“®‚­‚Ü‚Å‚ÌŠÔ
-	for (int i = 0; i < BULLET_NUM; i++) {
 		//áŠQ•¨‚Ì”­¶
 		EnemyBullet* newbullet;
 		newbullet = new EnemyBullet();
 		newbullet->Initialize();
 
 		newbullet->SetPolterType(TYPE_FOLLOW);
-		newbullet->SetTargetTimer(i * l_LimitTimer);
-		newbullet->SetBasePos(m_Position);
-		newbullet->SetPosition({ m_Position.x,m_Position.y - 10.0f,m_Position.z });
-		newbullet->SetCircleSpeed(i * 120.0f);
+		newbullet->SetPosition({ m_Position.x,m_Position.y + 2.0f,m_Position.z });
 		bullets.emplace_back(newbullet);
-	}
 }

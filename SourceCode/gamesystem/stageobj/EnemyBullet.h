@@ -51,9 +51,7 @@ public:
 	void SetPolterType(const int PolterType) { m_PolterType = PolterType; }
 
 	void SetTargetTimer(const int TargetTimer) { m_TargetTimer = TargetTimer; }
-	void SetCircleSpeed(const float CircleSpeed) { m_CircleSpeed = CircleSpeed; }
 
-	void SetBasePos(const XMFLOAT3& BasePos) { m_BasePos = BasePos; }
 private:
 	bool m_Alive = true;//ê∂ë∂ÉtÉâÉO
 	int m_PolterType = TYPE_FOLLOW;
@@ -72,18 +70,18 @@ private:
 	XMFLOAT3 m_AfterPos = {};
 	float m_Frame = {};
 
-	double m_SpeedX = {};
-	double m_SpeedZ = {};
-
-	//â~â^ìÆ
-	XMFLOAT3 m_BasePos = {};
-	float m_CircleScale = 1.0f;
-	float m_CircleSpeed = {};
-
+	float m_BaseScale = {};
 	XMFLOAT2 m_Angle = {};
 
 	float m_AddSpeed = {};//â¡ë¨ìx
 
 	int m_AliveTimer = {};
 
+	//ìäÇ∞ÇÈï˚å¸
+	enum ThrowDir {
+		DIR_STRAIGHT,//Ç‹Ç¡Ç∑ÇÆ
+		DIR_SLASHUP,//éŒÇﬂè„
+		DIR_SLASHDOWN,//éŒÇﬂÇµÇΩ
+	};
+	int m_ThrowDir = {};
 };

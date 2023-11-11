@@ -15,11 +15,11 @@ EnemyBullet::EnemyBullet() {
 bool EnemyBullet::Initialize() {
 	m_Position = { 0.0f,0.0f,0.0f };
 	m_Rotation.y = 270.0f;
-	m_Scale = { 0.15f,0.15f,0.15f };
+	m_Scale = { 0.0f,0.0f,0.0f };
+	m_BaseScale = {};
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
-	m_AddSpeed = 3.0f;
+	m_AddSpeed = 1.0f;
 	m_Alive = true;
-	m_AfterPos.y = 1.0f;
 	m_ThrowType = THROW_SET;
 	m_AliveTimer = {};
 
@@ -37,6 +37,7 @@ void EnemyBullet::Update() {
 	//タイプによって色を一旦変えてる
 	Obj_SetParam();
 
+	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();
 	Particle();
 }
@@ -98,32 +99,41 @@ void EnemyBullet::Follow() {
 			m_ThrowType = THROW_INTER;
 
 		}
-		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, m_AfterPos.y);
-		m_Position = Helper::GetInstance()->CircleMove({ m_BasePos.x,m_Position.y,m_BasePos.z }, m_CircleScale, m_CircleSpeed);
+		
+		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.15f);
 	}
 	//狙う方向を決める
 	else if (m_ThrowType == THROW_INTER) {
+		XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f };
+		XMMATRIX matRot = {};
+		mt19937 mt{ std::random_device{}() };
 		m_ThrowTimer++;
-		if (m_ThrowTimer == l_BaseTimer + m_TargetTimer) {
-			double sb, sbx, sbz;
-			sbx = Player::GetInstance()->GetPosition().x - m_Position.x;
-			sbz = Player::GetInstance()->GetPosition().z - m_Position.z;
-			sb = sqrt(sbx * sbx + sbz * sbz);
-			m_SpeedX = sbx / sb * 0.1f;
-			m_SpeedZ = sbz / sb * 0.1f;
+		if (m_ThrowTimer == l_BaseTimer) {
+			float l_Rot = {};
+			int num = Helper::GetInstance()->GetRanNum(0, 2);
+			if (num == DIR_STRAIGHT) {
+				l_Rot = -90.0f;
+			}
+			else if (num == DIR_SLASHUP) {
+				l_Rot = -45.0f;
+			}
+			else {
+				l_Rot = -135.0f;
+			}
+			matRot = XMMatrixRotationY(XMConvertToRadians(l_Rot));
+			move = XMVector3TransformNormal(move, matRot);
+			m_Angle.x = move.m128_f32[0];
+			m_Angle.y = move.m128_f32[2];
 			m_ThrowTimer = 0;
 			m_ThrowType = THROW_PLAY;
 		}
-		m_CircleSpeed += l_AddCircle;
-		m_Position = Helper::GetInstance()->CircleMove({ m_BasePos.x,m_Position.y,m_BasePos.z }, m_CircleScale, m_CircleSpeed);
 	}
 	//実際に狙っちゃう
 	else {
 		//プレイヤーにスピード加算
-		m_Position.x += (float)m_SpeedX;
-		m_Position.z += (float)m_SpeedZ;
-
-		if (Helper::GetInstance()->CheckNotValueRange(m_Position.x, -30.0f, 30.0f) || Helper::GetInstance()->CheckNotValueRange(m_Position.z, -30.0f, 30.0f)) {
+		m_Position.x += m_Angle.x * m_AddSpeed;
+		m_Position.z += m_Angle.y * m_AddSpeed;
+		if (Helper::GetInstance()->CheckNotValueRange(m_Position.x, -30.0f, 30.0f)) {
 			m_Alive = false;
 		}
 	}
