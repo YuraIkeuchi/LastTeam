@@ -47,7 +47,7 @@ void CanonEnemy::Action() {
 	//“–‚½‚è”»’è
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//“–‚½‚è”»’è
-	PoisonState();//“Å
+	//PoisonState();//“Å
 
 	//“G‚Ì’e
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
@@ -81,7 +81,6 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 void CanonEnemy::ImGui_Origin() {
 	ImGui::Begin("Canon");
 	ImGui::Text("Height:%d,Width:%d", m_NowHeight, m_NowWidth);
-	ImGui::Text("Timer:%d", m_PoisonTimer);
 	ImGui::End();
 }
 //ŠJ•ú

@@ -4,6 +4,7 @@
 #include "StagePanel.h"
 #include "CsvLoader.h"
 #include "GameStateManager.h"
+#include "ParticleEmitter.h"
 
 
 BaseEnemy::BaseEnemy():
@@ -22,6 +23,31 @@ bool BaseEnemy::Initialize()
 
 void BaseEnemy::Update()
 {
+	// 毒フラグあり
+	if (debuff_ & static_cast<int>(Debuff::kPoison))
+	{
+		int kTimerMax = 800;
+		if (m_PoisonLong) { kTimerMax *= 2; }
+		m_PoisonTimer++;
+
+		if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
+			if (!m_IsVenom) {
+				hitpoint_ -= 1.0f;
+			}
+			else {
+				hitpoint_ -= 2.0f;
+			}
+		}
+		else if (m_PoisonTimer % 50 == 0) {		//毒のエフェクト
+			BirthPoisonParticle();
+		}
+
+		if (m_PoisonTimer == kTimerMax) {	//一定時間立ったら毒終了
+			debuff_ -= static_cast<int>(Debuff::kPoison);
+			m_PoisonTimer = {};
+		}
+	}
+
 	// ツリー更新
 	behavior_tree_->Update();
 	Obj_SetParam();
@@ -41,6 +67,15 @@ void BaseEnemy::ImGuiDraw()
 {
 }
 
+XMFLOAT3 BaseEnemy::SetPannelPos(int width, int height)
+{
+	panel_position_ =
+	{ width,
+		height
+	};
+	return StagePanel::GetInstance()->SetPositon(panel_position_.width, panel_position_.height);
+}
+
 XMFLOAT3 BaseEnemy::RandPanelPos()
 {
 	panel_position_ =
@@ -49,6 +84,17 @@ XMFLOAT3 BaseEnemy::RandPanelPos()
 		Helper::GetInstance()->GetRanNum(0, 3)
 	};
 	return StagePanel::GetInstance()->SetPositon(panel_position_.width, panel_position_.height);
+}
+
+void BaseEnemy::BirthPoisonParticle()
+{
+	const XMFLOAT4 s_color = { 0.5f,0.0f,0.5f,1.0f };
+	const XMFLOAT4 e_color = { 0.5f,0.0f,0.5f,1.0f };
+	const float s_scale = 1.0f;
+	const float e_scale = 0.0f;
+	for (int i = 0; i < 3; i++) {
+		ParticleEmitter::GetInstance()->PoisonEffect(50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color);
+	}
 }
 
 TestEnemy::TestEnemy()
@@ -96,8 +142,8 @@ void TestEnemy::ImGuiDraw()
 	ImGui::Begin("TestEnemy");
 	ImGui::Text("POSX:%f", m_Position.x);
 	ImGui::Text("POSZ:%f", m_Position.z);
-	ImGui::Text("Width:%d", panel_position_.width);
-	ImGui::Text("Height:%d", panel_position_.height);
+	ImGui::Text("Width:%d,Height:%d", panel_position_.width, panel_position_.height);
+	ImGui::Text("Poison:%d",m_PoisonTimer);
 	ImGui::End();
 }
 

@@ -42,7 +42,7 @@ void InterEnemy::Update() {
 		}
 	}
 	else {
-		m_Alive = false;
+		//m_Alive = false;
 	}
 	//数値化したHP
 	HPManage();
@@ -94,7 +94,7 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 				GameStateManager::GetInstance()->GetPlayer().lock()->HealPlayer(damage * 0.2f);		//HP回復
 			}
 			else if (name == "POISON") {
-				m_Poison = true;
+				//m_Poison = true;
 			}
 			BirthParticle();
 			_area->SetHit(true);
@@ -159,29 +159,5 @@ void InterEnemy::WorldDivision() {
 void InterEnemy::HPManage() {
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
-	}
-}
-
-//毒
-void InterEnemy::PoisonState() {
-	if (!m_Poison) { return; }
-	int kTimerMax = 800;
-	if (m_PoisonLong) { kTimerMax *= 2; }
-	m_PoisonTimer++;
-
-	if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
-		if (!m_IsVenom) {
-			m_HP -= 1.0f;
-		} else {
-			m_HP -= 2.0f;
-		}
-	}
-	else if (m_PoisonTimer % 50 == 0) {		//毒のエフェクト
-		BirthPoisonParticle();
-	}
-
-	if (m_PoisonTimer == kTimerMax) {	//一定時間立ったら毒終了
-		m_Poison = false;
-		m_PoisonTimer = {};
 	}
 }

@@ -93,7 +93,6 @@ public:
 	/// </summary>
 	void StageClearInit();
 	void SetEnemySpawnText(string& text) { enemySpawnText = text; }
-	string& GetEnemySpawnText() { return enemySpawnText; }
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetResetPredict(const bool ResetPredict) { this->m_ResetPredict = ResetPredict; }
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
@@ -207,6 +206,10 @@ private:
 	/// 
 	/// =============================
 
+	public:
+		// 開始時に設定されるパッシブ
+		void BattleStartPassive();
+	private:
 	/// <summary>
 	/// プレイヤーのポインタ
 	/// </summary>
@@ -219,14 +222,49 @@ private:
 	// ゲージ速度
 	float m_DiameterVel = 1.0f;
 
+
+	/// <summary>
+	/// パッシブがあれば毒延長(バトルシーン)
+	/// </summary>
+	void PoizonGauge();
+	/// <summary>
+	/// パッシブがあれば猛毒(バトルシーン)
+	/// </summary>
+	void PoizonVenom();
+
 	/// =============================
 	/// 
 	/// エネミー関連
 	/// 
 	/// =============================
+
+public:
+
+	/// <summary>
+	/// エネミー全滅確認
+	/// </summary>
+	bool EnemysDestory();
+
+	void SetLight(LightGroup *light);
+
+
+private:
+
+
+
+	/// <summary>
+	/// CSVからマップに敵をスポーン
+	/// </summary>
+	void Spawn2Map();
 	
 	/// <summary>
 	/// エネミー管理用のコンテナ
 	/// </summary>
 	vector<weak_ptr<BaseEnemy>> enemys_container_;
+
+
+	//丸影(ボス)
+	float BosscircleShadowDir[3] = { 0,-1,0 };
+	float BosscircleShadowAtten[3] = { 0.5f,0.6f,0.0f };
+	float BosscircleShadowFactorAngle[2] = { 0.0f, 0.3f };
 };

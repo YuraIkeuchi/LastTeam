@@ -61,16 +61,9 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	lightGroup->SetCircleShadowActive(0, true);
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
-	enemyManager->Initialize();
-	enemyManager->EnemyLightInit(lightGroup);
 
-	if (GameStateManager::GetInstance()->GetPoisonSkill()) {
-		enemyManager->PoizonGauge();
-	}
-	if (GameStateManager::GetInstance()->GetPoisonVenom()) {
-		enemyManager->PoizonVenom();
-	}
-	
+	// Battle開始時パッシブ
+	GameStateManager::GetInstance()->BattleStartPassive();
 }
 //�X�V
 void BattleScene::Update(DirectXCommon* dxCommon)
@@ -92,11 +85,9 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	StagePanel::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	enemyManager->Update();
-	enemyManager->SetLight(lightGroup);
 	GameStateManager::GetInstance()->Update();
 	//�G���|�������V�[���ȍ~(��)
-	if (enemyManager->BossDestroy()) {
+	if (GameStateManager::GetInstance()->EnemysDestory()) {
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
 			GameStateManager::GetInstance()->StageClearInit();
 		} else {
@@ -152,11 +143,10 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 
 	game_object_manager_->UIDraw();
 
-	if (enemyManager->BossDestroy()) {
+	if (GameStateManager::GetInstance()->EnemysDestory()) {
 		resulttext->TestDraw(dxCommon);
 	}
 	// Player::GetInstance()->UIDraw();
-	enemyManager->UIDraw();
 
 	GameStateManager::GetInstance()->ActUIDraw();
 	SceneChanger::GetInstance()->Draw();
@@ -180,7 +170,6 @@ void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
 	game_object_manager_->ImGuiDraw();
 	//SceneChanger::GetInstance()->ImGuiDraw();
-	enemyManager->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

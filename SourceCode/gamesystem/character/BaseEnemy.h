@@ -9,7 +9,11 @@
 
 using namespace behaviorTree;
 
-
+enum class Debuff
+{
+	kNone = 0,
+	kPoison = 1 << 1,
+};
 
 class BaseEnemy:
 	public ObjCommon,
@@ -29,6 +33,15 @@ public:
 	//ImGui
 	void ImGuiDraw() override;
 
+	XMFLOAT3 SetPannelPos(int width, int height);
+
+	const float GetHP() { return hitpoint_; }
+
+	bool GetAlive() { return is_alive_; }
+
+
+	void SetPoizonLong(bool isPoison) { m_PoisonLong = isPoison; }
+	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
 protected:
 
 	XMFLOAT3 RandPanelPos();
@@ -42,11 +55,21 @@ protected:
 
 	float hitpoint_{};		// 体力
 	float max_hitpoint_{};	// 最大体力
+	bool is_alive_{ false };	// 生存確認
 
 	// ビヘイビアツリー
 	std::unique_ptr<SimpleBehaviorTree> behavior_tree_;
 
+	bool m_PoisonLong = false;
+	bool m_IsVenom = false;
+	int m_PoisonTimer = {};
 
+	// デバフ
+	int debuff_ { static_cast<int>(Debuff::kNone)};
+
+
+	// ポイズンパーティクル
+	void BirthPoisonParticle();
 };
 
 // デバック用エネミークラスです

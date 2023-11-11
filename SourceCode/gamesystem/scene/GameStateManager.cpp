@@ -468,6 +468,124 @@ void GameStateManager::StageClearInit() {
 	
 	isFinish = true;
 }
+void GameStateManager::Spawn2Map()
+{
+	string csv_ = enemySpawnText;
+	std::string line;
+	std::stringstream popcom;
+	std::ifstream file;
+
+	file.open(csv_);
+	popcom << file.rdbuf();
+	file.close();
+	int height = 0;
+	while (std::getline(popcom, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		std::getline(line_stream, word, ',');
+		int width = 0;
+		for (char &x : word) {
+			if (x == ',') {
+				break;
+			}
+			if (x == '0') {
+				width++;
+			}
+			else if (x == '1') {
+				// 後でノーマルに差し替え
+				std::weak_ptr<BaseEnemy> enemy = GameObject::CreateObject<TestEnemy>();
+				//unique_ptr<InterEnemy> enemy_ = std::make_unique<NormalEnemy>();
+				enemy.lock()->SetPosition(enemy.lock()->SetPannelPos(4 + width, 3 - height));
+				//enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '2') {
+				// 後でキャノンに差し替え
+				std::weak_ptr<BaseEnemy> enemy = GameObject::CreateObject<TestEnemy>();
+				//unique_ptr<InterEnemy> enemy_ = std::make_unique<CanonEnemy>();
+				enemy.lock()->SetPosition(enemy.lock()->SetPannelPos(4 + width, 3 - height));
+				//enemys.push_back(std::move(enemy_));
+				width++;
+			}
+		}
+		height++;
+
+	}
+
+}
+bool GameStateManager::EnemysDestory()
+{
+	int num = static_cast<int>(enemys_container_.size());
+	for (auto &enemy : enemys_container_)
+	{
+		if (enemy.lock()->GetHP() > 0.0f)
+		{
+			return false;
+		}
+		else
+		{
+			num--;
+		}
+	}
+	if (num == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+void GameStateManager::SetLight(LightGroup *light)
+{
+	static bool is_init = false;
+	if (!is_init)
+	{
+		for (int i = 0; i < (int)(enemys_container_.size()); i++) {
+			light->SetCircleShadowActive(1 + i, true);
+		}
+		is_init = true;
+
+	}
+	for (int i = 0; i < (int)(enemys_container_.size()); i++) {
+		light->SetCircleShadowDir(1 + i, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+		light->SetCircleShadowCasterPos(
+			1 + i,
+			XMFLOAT3({ enemys_container_[i].lock()->GetPosition().x,
+			0.5f,enemys_container_[i].lock()->GetPosition().z}));
+		light->SetCircleShadowAtten(1 + i, XMFLOAT3(BosscircleShadowAtten));
+		light->SetCircleShadowFactorAngle(1 + i, XMFLOAT2(BosscircleShadowFactorAngle));
+	}
+
+	for (int i = 0; i < (int)(enemys_container_.size()); i++) {
+		if (!enemys_container_[i].lock()->GetAlive()) {
+			enemys_container_.erase(cbegin(enemys_container_) + i);
+			light->SetCircleShadowActive(1 + i, false);
+		}
+	}
+}
+void GameStateManager::BattleStartPassive()
+{
+	if (m_poizonLong)
+	{
+		PoizonGauge();
+	}
+	if (m_IsVenom)
+	{
+		PoizonVenom();
+	}
+
+}
+void GameStateManager::PoizonGauge()
+{
+	for (weak_ptr<BaseEnemy> &enemy : enemys_container_) {
+		enemy.lock()->SetPoizonLong(true);
+	}
+}
+void GameStateManager::PoizonVenom()
+{
+	for (weak_ptr<BaseEnemy> &enemy : enemys_container_) {
+		enemy.lock()->SetPoizonVenom(true);
+	}
+}
 //バフの生成
 void GameStateManager::BirthBuff() {
 	m_Buff = true;		//一旦中身はこれだけ
