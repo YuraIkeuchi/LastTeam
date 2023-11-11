@@ -1,9 +1,8 @@
 #include "EnemyBullet.h"
 #include "Collision.h"
-#include "CsvLoader.h"
 #include "Player.h"
 #include "Helper.h"
-#include <ParticleEmitter.h>
+#include <StagePanel.h>
 #include <Easing.h>
 EnemyBullet::EnemyBullet() {
 	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BULLET);
@@ -28,7 +27,7 @@ bool EnemyBullet::Initialize() {
 //ó‘Ô‘JˆÚ
 /*CharaState‚ÌState•À‚Ñ‡‚É‡‚í‚¹‚é*/
 void (EnemyBullet::* EnemyBullet::stateTable[])() = {
-	&EnemyBullet::Follow,//’Ç]
+	&EnemyBullet::Throw,//“Š‚°‚é
 };
 //XV
 void EnemyBullet::Update() {
@@ -38,8 +37,11 @@ void EnemyBullet::Update() {
 	Obj_SetParam();
 
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
-	Collide();
-	Particle();
+	Collide();		//“–‚½‚è”»’è
+
+	//’e‚Ìƒ}ƒX‚ðŽæ“¾‚·‚é
+	//StagePanel::GetInstance()->SetCanonHit(m_Object.get(), m_NowWidth, m_NowHeight);
+	//StagePanel::GetInstance()->SetCanonChange(m_NowWidth, m_NowHeight);
 }
 //•`‰æ
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
@@ -47,28 +49,9 @@ void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void EnemyBullet::ImGuiDraw() {
-	ImGui::Begin("Polter");
-	ImGui::Text("Timer:%d", m_AliveTimer);
-	ImGui::Text("POSY:%f", m_Position.y);
+	ImGui::Begin("Bullet");
+	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight,m_NowWidth);
 	ImGui::End();
-}
-
-//ƒp[ƒeƒBƒNƒ‹
-void EnemyBullet::Particle() {
-	XMFLOAT4 s_color = { 0.0f,0.4f,1.0f,1.0f };
-	XMFLOAT4 s_color2 = { 0.4f,0.0f,1.0f,1.0f };
-	XMFLOAT4 e_color = { 1.0f,1.0f,1.0f,1.0f };
-	float s_scale = 0.3f;
-	float e_scale = 0.0f;
-	const int m_Life = 50;
-	//if (m_Alive) {
-	//	if (m_PolterType == TYPE_FOLLOW) {
-	//		ParticleEmitter::GetInstance()->FireEffect(m_Life, m_Position, s_scale, e_scale, s_color, e_color);
-	//	}
-	//	else {
-	//		ParticleEmitter::GetInstance()->FireEffect(m_Life, m_Position, s_scale, e_scale, s_color2, e_color);
-	//	}
-	//}
 }
 
 //“–‚½‚è”»’è
@@ -88,7 +71,7 @@ bool EnemyBullet::Collide() {
 	return false;
 }
 //’Ç]
-void EnemyBullet::Follow() {
+void EnemyBullet::Throw() {
 	const float l_AddFrame = 0.01f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
@@ -130,9 +113,12 @@ void EnemyBullet::Follow() {
 	}
 	//ŽÀÛ‚É‘_‚Á‚¿‚á‚¤
 	else {
-		//ƒvƒŒƒCƒ„[‚ÉƒXƒs[ƒh‰ÁŽZ
+		//’e‚ÉƒXƒs[ƒh‚ð‰ÁŽZ
 		m_Position.x += m_Angle.x * m_AddSpeed;
 		m_Position.z += m_Angle.y * m_AddSpeed;
+		if (Helper::GetInstance()->CheckNotValueRange(m_Position.z, 0.0f, 6.0f)) {		//”½ŽË‚·‚é
+			m_Angle.y *= -1.0f;
+		}
 		if (Helper::GetInstance()->CheckNotValueRange(m_Position.x, -30.0f, 30.0f)) {
 			m_Alive = false;
 		}

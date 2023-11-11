@@ -34,6 +34,9 @@ private:
 		int type = NO_PANEL;
 		bool isHit = false;
 		bool isEnemyHit = false;
+		bool isEnemyBreak = false;
+		bool isCanonHit = false;
+		bool isCanonBreak = false;
 		bool predict = false;
 	};
 
@@ -53,8 +56,12 @@ public:
 	void RandomPanel(int num);
 	void ResetPanel();
 	void ResetAction();
-	//色変更
+	//色変更(敵)
 	void SetEnemyHit(IKEObject3d* obj,int& wight, int& height);
+	//色変更(敵の弾)
+	void SetCanonHit(IKEObject3d* obj, int& wight, int& height);
+	//たまがある場所は色変更
+	void SetCanonChange(int& wight, int& height);
 private:
 	//バトル中の更新
 	void BattleUpdate();
@@ -104,4 +111,5 @@ private:
 
 	//スキルをすべて手に入れているか
 	bool m_AllDelete = false;
+
 };

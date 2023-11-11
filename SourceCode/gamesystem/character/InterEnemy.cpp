@@ -31,9 +31,14 @@ void InterEnemy::Update() {
 	Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
 
 	m_InterHP = (int)(m_HP);
-	//敵のマスを取得する
-	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(),m_NowWidth,m_NowHeight);
-
+	////敵のマスを取得する
+	//if (m_CheckPanel) {
+	//
+	//	m_CheckPanel = false;
+	//}
+	if (m_EnemyTag == "Normal") {
+		StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight);
+	}
 	//各行動
 	Action();
 	if (m_HP > 0.0f) {

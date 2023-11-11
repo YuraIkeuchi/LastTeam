@@ -29,6 +29,7 @@ bool MobEnemy::Initialize() {
 	m_Scale = { 0.5f,0.5f,0.5 };
 	m_HP = 5.0f;
 	m_MaxHP = m_HP;
+	m_EnemyTag = "Mob";
 	return true;
 }
 

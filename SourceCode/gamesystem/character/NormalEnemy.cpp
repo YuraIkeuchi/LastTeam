@@ -30,6 +30,7 @@ bool NormalEnemy::Initialize() {
 	m_Scale = { 0.5f,0.5f,0.5 };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
 	m_MaxHP = m_HP;
+	m_CheckPanel = true;
 	return true;
 }
 

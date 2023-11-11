@@ -38,11 +38,8 @@ public:
 private://ステート
 	static void (EnemyBullet::* stateTable[])();
 private:
-	void Particle();
-	void Follow();//追従
-public:
+	void Throw();//投げる
 
-public://getter setter
 public:
 	//gettersetter
 	const bool& GetAlive() { return m_Alive; }
@@ -53,6 +50,9 @@ public:
 	void SetTargetTimer(const int TargetTimer) { m_TargetTimer = TargetTimer; }
 
 private:
+	//現在のマス番号
+	int m_NowWidth = {};
+	int m_NowHeight = {};
 	bool m_Alive = true;//生存フラグ
 	int m_PolterType = TYPE_FOLLOW;
 

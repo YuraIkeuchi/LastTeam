@@ -40,5 +40,4 @@ void BaseScene::BaseInitialize(DirectXCommon* dxCommon, XMFLOAT3 eye, XMFLOAT3 t
 
 	camerawork = make_unique<CameraWork>(eye, target);
 	Helper::GetInstance()->SetCamera(camera);
-
 }

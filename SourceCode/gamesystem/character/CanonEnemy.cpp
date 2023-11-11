@@ -7,6 +7,7 @@
 #include "Easing.h"
 #include "ImageManager.h"
 #include <GameStateManager.h>
+#include <StagePanel.h>
 //ÉÇÉfÉãì«Ç›çûÇ›
 CanonEnemy::CanonEnemy() {
 	m_Object.reset(new IKEObject3d());
@@ -23,11 +24,10 @@ CanonEnemy::CanonEnemy() {
 }
 //èâä˙âª
 bool CanonEnemy::Initialize() {
-
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5 };
+	m_Scale = { 0.5f,0.5f,0.5f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
 	m_MaxHP = m_HP;
 	return true;
@@ -79,10 +79,6 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGuiï`âÊ
 void CanonEnemy::ImGui_Origin() {
-	ImGui::Begin("Canon");
-	ImGui::Text("State:%d", _charaState);
-	ImGui::Text("Attack:%d", m_AttackCount);
-	ImGui::End();
 }
 //äJï˙
 void CanonEnemy::Finalize() {
@@ -119,6 +115,7 @@ void CanonEnemy::Attack() {
 		}
 	}
 	else {
+		m_CheckPanel = true;
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
 		coolTimer = {};

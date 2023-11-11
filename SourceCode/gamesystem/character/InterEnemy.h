@@ -81,6 +81,10 @@ protected:
 	bool m_IsVenom = false;
 	int m_PoisonTimer = {};
 	bool m_Alive = true;
+
+	bool m_CheckPanel = false;
+
+	string m_EnemyTag = "Normal";
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
