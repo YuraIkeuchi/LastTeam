@@ -242,7 +242,7 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height) {
 
 }
 //敵の弾とパネルの当たり判定
-void StagePanel::SetCanonHit(IKEObject3d* obj, int& width, int& height) {
+void StagePanel::SetPanelSearch(IKEObject3d* obj, int& width, int& height) {
 	m_OBB1.SetParam_Pos({ obj->GetPosition().x, 0.0f, obj->GetPosition().z });
 	m_OBB1.SetParam_Rot(obj->GetMatrot());
 	m_OBB1.SetParam_Scl({0.45f,0.45f,0.45f});

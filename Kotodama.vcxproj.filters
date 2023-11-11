@@ -375,6 +375,9 @@
     <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\BossEnemy.cpp">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -711,8 +714,11 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyBullet.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\BossEnemy.h">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\BattleScene.h">
-      <Filter>gamesystem\scene\Title</Filter>
+      <Filter>gamesystem\scene\Play\Battle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

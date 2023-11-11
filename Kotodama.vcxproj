@@ -173,6 +173,7 @@
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\BossEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp" />
@@ -288,6 +289,7 @@
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\BossEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h" />

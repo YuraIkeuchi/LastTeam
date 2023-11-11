@@ -35,7 +35,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -8.0f,0.1f,0.0f });
+	Player::GetInstance()->InitState({ -4.0f,0.1f,2.0f });
 	Player::GetInstance()->Initialize();
 	//スキル
 	SkillManager::GetInstance()->Initialize();
@@ -50,7 +50,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	//敵
 	enemy = make_unique<MobEnemy>();
 	enemy->Initialize();
-
+	enemy->SetPosition({ 0.0f,0.1f,4.0f });
 	_nowstate = TUTORIAL_INTRO;
 
 	//リザルトテキスト
@@ -61,6 +61,8 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	//丸影
 	lightGroup->SetCircleShadowActive(0, true);
 	lightGroup->SetCircleShadowActive(1, true);
+
+	TutorialTask::GetInstance()->SetChoiceSkill(false);
 }
 //更新
 void TutorialScene::Update(DirectXCommon* dxCommon)
@@ -145,16 +147,16 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 }
 //ポストエフェクトかからない
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
-	////完全に前に書くスプライト
-	text_->TestDraw(dxCommon);
-	if (_nowstate == TUTORIAL_DAMAGE) {
-		resulttext->TestDraw(dxCommon);
-	}
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
-
-	//Player::GetInstance()->UIDraw();
 	enemy->UIDraw();
+	if (enemy->GetHP() <= 0.0f) {
+		resulttext->TestDraw(dxCommon);
+	}
+	////完全に前に書くスプライト
+	if (Player::GetInstance()->GetNowHeight() != 0) {
+		text_->TestDraw(dxCommon);
+	}
 	SceneChanger::GetInstance()->Draw();
 }
 //ポストエフェクトかかる
@@ -233,21 +235,23 @@ void TutorialScene::AttackState() {
 void TutorialScene::DamageState() {
 	if (enemy->GetHP() <= 0.0f) {
 		m_Timer++;
-		if (m_Timer == 150) {
+		if (m_Timer == 1) {
 			text_->SetConversation(TextManager::TUTORIAL_SKILL);
 		}
-		else if (m_Timer == 300) {
-			text_->SetConversation(TextManager::TUTORIAL_END);
+		else if (m_Timer == 200) {
+			text_->SetConversation(TextManager::TUTORIAL_CHOICE);
 		}
-		else if (m_Timer == 400) {
+		if (TutorialTask::GetInstance()->GetChoiceSkill()) {
+			text_->SetConversation(TextManager::TUTORIAL_END);
 			_nowstate = TUTORIAL_FINISH;
+			m_Timer = {};
 		}
 		GameStateManager::GetInstance()->StageClearInit();
 	}
 }
 //チュートリアル終わり
 void TutorialScene::TutorialEnd() {
-	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
+	if (Helper::GetInstance()->CheckMin(m_Timer, 200, 1)) {
 		m_Timer = {};
 		m_End = true;
 	}

@@ -151,7 +151,7 @@ void GameStateManager::AttackTrigger() {
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	if (!isFinish && !isChangeScene) {
 		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-		if (m_Delay) {
+		if (m_Delay && m_Act[0].ActDelay >= 30.0f) {
 			_charge->Draw();
 		}
 		IKETexture::PostDraw();
@@ -435,6 +435,7 @@ bool GameStateManager::ResultUpdate() {
 		resultSkill->InPassive(GotPassiveIDs);
 		isChangeScene = true;
 		isFinish = false;
+		TutorialTask::GetInstance()->SetChoiceSkill(true);
 	}
 	return true;
 }

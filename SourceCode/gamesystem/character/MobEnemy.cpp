@@ -7,6 +7,7 @@
 #include "Easing.h"
 #include "ImageManager.h"
 #include <GameStateManager.h>
+#include <StagePanel.h>
 //ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
 MobEnemy::MobEnemy() {
 	m_Object.reset(new IKEObject3d());
@@ -30,11 +31,13 @@ bool MobEnemy::Initialize() {
 	m_HP = 5.0f;
 	m_MaxHP = m_HP;
 	m_EnemyTag = "Mob";
+
 	return true;
 }
 
 //s“®
 void MobEnemy::Action() {
+	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 	Obj_SetParam();
 	//“–‚½‚è”»’è
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();

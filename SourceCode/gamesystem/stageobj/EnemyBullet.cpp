@@ -91,7 +91,7 @@ void EnemyBullet::Throw() {
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
 	//弾のマスを取得する
-	StagePanel::GetInstance()->SetCanonHit(m_Object.get(), m_NowWidth, m_NowHeight);
+	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 	//弾のセット(だんだん浮かび逢ふがるような感じ)
 	if (m_ThrowType == THROW_SET) {
 		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {

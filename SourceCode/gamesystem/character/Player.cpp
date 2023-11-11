@@ -80,13 +80,11 @@ void Player::Update() {
 
 	//状態移行(charastateに合わせる)
 	(this->*stateTable[_charaState])();
-	////ディレイタイマーが0以外ならディレイにする
-	//if (m_DelayTimer != 0) {
-	//	_charaState = STATE_DELAY;
-	//}
 	Obj_SetParam();
 
 	BirthParticle();
+	//プレイヤーのマスを取得する
+	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 
 	//グレイズ用にスコアを計算する
 	m_Length = Helper::GetInstance()->ChechLength(m_Position, m_GrazePos);
@@ -129,6 +127,7 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
+	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
 	ImGui::Text("POSX:%f", m_Position.x);
 	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
@@ -164,16 +163,16 @@ void Player::Move() {
 	} else {			//離した瞬間
 		if (m_LimitCount == 0) {
 			if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
-				MoveCommon(m_Position.z, l_AddVelocity, m_NowHeight, l_AddSpace);
+				MoveCommon(m_Position.z, l_AddVelocity);
 				m_InputTimer[DIR_UP] = {};
 			} else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
-				MoveCommon(m_Position.z, l_SubVelocity, m_NowHeight, l_SubSpace);
+				MoveCommon(m_Position.z, l_SubVelocity);
 				m_InputTimer[DIR_DOWN] = {};
 			} else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-				MoveCommon(m_Position.x, l_AddVelocity, m_NowWidth, l_AddSpace);
+				MoveCommon(m_Position.x, l_AddVelocity);
 				m_InputTimer[DIR_RIGHT] = {};
 			} else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
-				MoveCommon(m_Position.x, l_SubVelocity, m_NowWidth, l_SubSpace);
+				MoveCommon(m_Position.x, l_SubVelocity);
 				m_InputTimer[DIR_LEFT] = {};
 			}
 		}
@@ -186,25 +185,25 @@ void Player::Move() {
 	//一定フレーム立つと選択マス移動
 	if (m_InputTimer[DIR_UP] == l_TargetTimer) {
 		if (m_NowHeight < PANEL_HEIGHT - 1) {
-			MoveCommon(m_Position.z, l_AddVelocity, m_NowHeight, l_AddSpace);
+			MoveCommon(m_Position.z, l_AddVelocity);
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_UP] = {};
 	} else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
 		if (m_NowHeight > 0) {
-			MoveCommon(m_Position.z, l_SubVelocity, m_NowHeight, l_SubSpace);
+			MoveCommon(m_Position.z, l_SubVelocity);
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_DOWN] = {};
 	} else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
 		if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-			MoveCommon(m_Position.x, l_AddVelocity, m_NowWidth, l_AddSpace);
+			MoveCommon(m_Position.x, l_AddVelocity);
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_RIGHT] = {};
 	} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
 		if (m_NowWidth > 0) {
-			MoveCommon(m_Position.x, l_SubVelocity, m_NowWidth, l_SubSpace);
+			MoveCommon(m_Position.x, l_SubVelocity);
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_LEFT] = {};
@@ -224,9 +223,8 @@ void Player::Delay() {
 
 }
 //プレイヤーの動きの基本
-void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int addspace) {
+void Player::MoveCommon(float& pos, float velocity) {
 	pos += velocity;
-	playerspace += addspace;
 	GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 	GameStateManager::GetInstance()->SetResetPredict(true);
 }
