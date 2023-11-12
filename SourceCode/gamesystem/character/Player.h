@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "ObjCommon.h"
 #include <IKESprite.h>
+#include <IKETexture.h>
 #include <memory>
 #include <Input.h>
 #include <array>
@@ -84,6 +85,7 @@ public:
 		STATE_DELAY
 	};
 private:
+	unique_ptr<IKETexture> shadow_tex;
 	Input* input = Input::GetInstance();
 
 	int _charaState = STATE_MOVE;
@@ -144,4 +146,8 @@ private:
 	
 	bool m_Delay = false;
 	string m_name = "NONE";
+
+	//影の変数
+	XMFLOAT3 m_ShadowPos = {};
+	XMFLOAT3 m_ShadowScale = {};
 };

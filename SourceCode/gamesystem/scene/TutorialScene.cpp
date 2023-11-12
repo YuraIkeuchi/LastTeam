@@ -58,20 +58,12 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	resulttext->Initialize(dxCommon);
 	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
 
-	//丸影
-	lightGroup->SetCircleShadowActive(0, true);
-
 	TutorialTask::GetInstance()->SetChoiceSkill(false);
 }
 //更新
 void TutorialScene::Update(DirectXCommon* dxCommon)
 {
 	Input* input = Input::GetInstance();
-	//プレイヤー
-	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
-	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
-	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
 	lightGroup->Update();
 	// 全オブジェクト更新
 	game_object_manager_->Update();

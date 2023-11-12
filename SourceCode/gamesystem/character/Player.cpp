@@ -30,12 +30,18 @@ void Player::LoadResource() {
 	_drawnumber[FIRST_DIGHT]->SetPosition({ 100.0f,620.0f });
 	_drawnumber[SECOND_DIGHT]->SetPosition({ 80.0f,620.0f });
 	_drawnumber[THIRD_DIGHT]->SetPosition({ 60.0f,620.0f });
+
+	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shadow_tex->TextureCreate();
+	shadow_tex->Initialize();
+	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //初期化
 bool Player::Initialize() {
 
 	LoadCSV();
 	m_MaxHP = m_HP;
+	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	//CSV読み込み
 	return true;
 }
@@ -108,10 +114,18 @@ void Player::Update() {
 	}
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
+
+	//影
+	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
+	shadow_tex->SetPosition(m_ShadowPos);
+	shadow_tex->SetScale(m_ShadowScale);
+	shadow_tex->Update();
 }
 //描画
 void Player::Draw(DirectXCommon* dxCommon) {
-
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	shadow_tex->Draw();
+	IKETexture::PostDraw();
 	Obj_Draw();
 }
 //UIの描画

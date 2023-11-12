@@ -42,8 +42,6 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
 	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
 
-	//丸影
-	lightGroup->SetCircleShadowActive(0, true);
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
@@ -54,11 +52,6 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 
 	//各クラス更新
 	camerawork->Update(camera);
-	//プレイヤー
-	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
-	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
-	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
 	lightGroup->Update();
 	
 	//各クラス更新
