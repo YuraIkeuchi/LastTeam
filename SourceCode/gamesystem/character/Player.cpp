@@ -232,22 +232,33 @@ void Player::MoveCommon(float& pos, float velocity) {
 void Player::HealPlayer(const float power) {
 	m_HP += power;
 	for (int i = 0; i < 15; i++) {
-		Particle();
+		HealParticle();
 	}
 }
 //チュートリアルの更新
+//プレイヤーのダメージ判定
+void Player::RecvDamage(float Damage) {
+	m_HP -= Damage;
+	for (int i = 0; i < 15; i++) {
+		DamageParticle();
+	}
+}
 void Player::TitleUpdate() {
 	Obj_SetParam();
 }
-//パーティクル
-void Player::Particle() {
+//パーティクル(回復)
+void Player::HealParticle() {
 	XMFLOAT4 s_color = { 0.5f,1.0f,0.1f,1.0f };
 	XMFLOAT4 e_color = { 0.5f,1.0f,0.1f,1.0f };
 	float s_scale = 1.0f;
 	float e_scale = 0.0f;
 	ParticleEmitter::GetInstance()->HealEffect(50, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
 }
-//プレイヤーのダメージ判定
-void Player::RecvDamage(float Damage) {
-	m_HP -= Damage;
+//ダメージパーティクル
+void Player::DamageParticle() {
+	const XMFLOAT4 s_color = { 0.5f,0.5f,0.5f,1.0f };
+	const XMFLOAT4 e_color = { 0.5f,0.5f,0.5f,1.0f };
+	const float s_scale = 2.0f;
+	const float e_scale = 0.0f;
+	ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
 }

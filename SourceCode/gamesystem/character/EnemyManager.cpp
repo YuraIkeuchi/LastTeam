@@ -150,7 +150,7 @@ void EnemyManager::EnemyLightInit(LightGroup* light) {
 	}
 }
 //ライト
-void EnemyManager::SetLight(LightGroup* light) {
+void EnemyManager::EnemyLightUpdate(LightGroup* light) {
 
 	for (int i = 0; i < (int)(enemys.size()); i++) {
 		light->SetCircleShadowDir(1 + i, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
@@ -165,5 +165,4 @@ void EnemyManager::SetLight(LightGroup* light) {
 			light->SetCircleShadowActive(1 + i, false);
 		}
 	}
-
 }

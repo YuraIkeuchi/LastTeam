@@ -81,7 +81,13 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
-
+	ImGui::Begin("Panel");
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			ImGui::Text("Hit[%d][%d]:%d", i, j, panels[i][j].isEnemyHit);
+		}
+	}
+	ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
@@ -236,6 +242,7 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height) {
 			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
 				wight = i;
 				height = j;
+				panels[i][j].isEnemyHit = true;
 			}
 		}
 	}

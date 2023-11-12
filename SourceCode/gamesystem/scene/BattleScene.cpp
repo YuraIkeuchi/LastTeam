@@ -74,7 +74,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
-	enemyManager->SetLight(lightGroup);
+	enemyManager->EnemyLightUpdate(lightGroup);
 	GameStateManager::GetInstance()->Update();
 	//“G‚ð“|‚µ‚½‚çƒV[ƒ“ˆÈ~(‰¼)
 	if (enemyManager->BossDestroy()) {

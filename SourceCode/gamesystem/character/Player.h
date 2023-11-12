@@ -48,8 +48,10 @@ private:
 	void MoveCommon(float& pos, const float velocity);
 private:
 	void LoadCSV();
-	//パーティクル
-	void Particle();
+	//パーティクル(回復)
+	void HealParticle();
+	//ダメージのパーティクル
+	void DamageParticle();
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }

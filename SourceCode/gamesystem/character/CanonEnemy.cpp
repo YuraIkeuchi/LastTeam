@@ -134,11 +134,14 @@ void CanonEnemy::Attack() {
 //ƒ[ƒv
 void CanonEnemy::Teleport() {
 	const int l_TargetTimer = 200;
+	XMFLOAT3 l_RandPos = {};
+	l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
 	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
 		//m_Position = randPanelPos();
 		_charaState = STATE_INTER;
 		coolTimer = {};
-		m_Position = StagePanel::GetInstance()->EnemySetPanel();
+		m_Position = l_RandPos;
+		StagePanel::GetInstance()->EnemyHitReset();
 	}
 }
 //’e‚Ì¶¬

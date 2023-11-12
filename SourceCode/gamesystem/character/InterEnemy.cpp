@@ -110,8 +110,8 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 }
 //パーティクル(ダメージ)
 void InterEnemy::BirthParticle() {
-	const XMFLOAT4 s_color = { 0.5f,0.5f,0.5f,1.0f };
-	const XMFLOAT4 e_color = { 0.5f,0.5f,0.5f,1.0f };
+	const XMFLOAT4 s_color = { 1.0f,0.3f,0.0f,1.0f };
+	const XMFLOAT4 e_color = { 1.0f,0.3f,0.0f,1.0f };
 	const float s_scale = 2.0f;
 	const float e_scale = 0.0f;
 	for (int i = 0; i < 20; i++) {
