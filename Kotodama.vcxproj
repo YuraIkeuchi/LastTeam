@@ -203,6 +203,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\TutorialTask.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\AttackSkill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\DeckUI.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\skill\HaveResultSkill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\NormalSKill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\Passive.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\ResultSkill.cpp" />
@@ -319,6 +320,7 @@
     <ClInclude Include="SourceCode\gamesystem\scene\TutorialTask.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\AttackSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\DeckUI.h" />
+    <ClInclude Include="SourceCode\gamesystem\skill\HaveResultSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\NormalSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\Passive.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\ResultSkill.h" />

@@ -10,6 +10,7 @@
 #include "PredictArea.h"
 #include <Passive.h>
 #include "ResultSkill.h"
+#include "HaveResultSkill.h"
 using namespace DirectX;
 using namespace std;
 
@@ -164,7 +165,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 0,1,2 };
+	vector<int> m_DeckNumber = { 0,1,5 };
 
 	vector<int> m_NotDeckNumber = {};
 
@@ -177,7 +178,7 @@ private:
 
 	bool m_ResetPredict = false;
 	std::unique_ptr<ResultSkill> resultSkill;
-
+	std::unique_ptr<HaveResultSkill> haveSkill;
 	//ディレイ関係
 	float m_ChargeScale = {};
 	int m_DelayTimer = {};
@@ -185,4 +186,9 @@ private:
 
 	//バフ(一旦一個)
 	bool m_Buff = false;
+
+	enum ResultType {
+		GET_SKILL,
+		HAVE_SKILL,
+	}_ResultType = GET_SKILL;
 };

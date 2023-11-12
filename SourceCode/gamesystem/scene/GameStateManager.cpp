@@ -46,6 +46,8 @@ void GameStateManager::Initialize() {
 
 	resultSkill = make_unique<ResultSkill>();
 	resultSkill->Initialize();
+	haveSkill = make_unique<HaveResultSkill>();
+	haveSkill->Initialize();
 	//デッキの初期化
 	DeckInitialize();
 
@@ -169,7 +171,12 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 			predictarea->Draw(dxCommon);
 		}
 	}
-	resultSkill->Draw();
+	if (_ResultType == GET_SKILL) {
+		resultSkill->Draw();
+	}
+	else {
+		haveSkill->Draw();
+	}
 }
 //描画
 void GameStateManager::ImGuiDraw() {
@@ -188,6 +195,7 @@ void GameStateManager::ImGuiDraw() {
 	//ImGui::End();
 	//SkillManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
+	haveSkill->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -429,6 +437,14 @@ bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
 
 	resultSkill->Update();
+	haveSkill->Update();
+	if (Input::GetInstance()->TriggerButton(Input::LB)) {
+		_ResultType = GET_SKILL;
+	}
+	if (Input::GetInstance()->TriggerButton(Input::RB)) {
+		_ResultType = HAVE_SKILL;
+	}
+
 
 	if (Input::GetInstance()->TriggerButton(Input::B)) {
 		resultSkill->InDeck(m_DeckNumber);
@@ -459,6 +475,8 @@ bool GameStateManager::SkillRecycle() {
 
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
+	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size());
+	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size());
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
 	
 	isFinish = true;
