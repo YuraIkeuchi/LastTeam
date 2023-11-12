@@ -29,7 +29,7 @@ void GameStateManager::Initialize() {
 	//終了関連
 	isFinish = false;
 	isChangeScene = false;
-
+	m_Choice = false;
 
 	//要素の全削除は一旦ここで
 	m_AllActCount = {};
@@ -446,11 +446,12 @@ bool GameStateManager::ResultUpdate() {
 	}
 
 
-	if (Input::GetInstance()->TriggerButton(Input::B)) {
+	if (Input::GetInstance()->TriggerButton(Input::B) && !m_Choice) {
 		resultSkill->InDeck(m_DeckNumber);
 		resultSkill->InPassive(GotPassiveIDs);
 		isChangeScene = true;
 		isFinish = false;
+		m_Choice = true;
 		TutorialTask::GetInstance()->SetChoiceSkill(true);
 	}
 	return true;

@@ -74,7 +74,7 @@ void SkillManager::ImGuiDraw() {
 int SkillManager::IDSearch(const int BirthNum) {
 	int result = 0;
 	if (skill[m_DeckDate[BirthNum + m_DeckRemain]]->GetDeckIn()) {
-		m_BirthMax = m_DeckDate[BirthNum + m_DeckRemain];
+		m_BirthNow = m_DeckDate[BirthNum + m_DeckRemain];
 		skill[m_DeckDate[BirthNum + m_DeckRemain]]->SetBirth(true);
 		deckui[BirthNum]->SetUse(true);
 		result = skill[m_DeckDate[BirthNum + m_DeckRemain]]->GetID();
@@ -92,14 +92,14 @@ void SkillManager::ResetBirth() {
 
 //スキルのデータを渡す(攻撃)
 void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY, string& name) {
-	if (skill[m_BirthMax]->GetSkillType() != SkillType::damege)
+	if (skill[m_BirthNow]->GetSkillType() != SkillType::damege)
 	{
 		assert(0);
 	}
 
-	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[m_BirthMax]);
+	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[m_BirthNow]);
 	damage = atkSkill->GetDamege();		//ダメージ
-	delay = skill[m_BirthMax]->Getlatency();		//硬直時間
+	delay = skill[m_BirthNow]->Getlatency();		//硬直時間
 	area = atkSkill->GetArea();		//範囲
 	name = atkSkill->GetStateName();		//付与状態
 	//プレイヤーからの距離
@@ -111,12 +111,12 @@ void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vec
 	DisY = l_DistanceY;
 }
 void SkillManager::GetSkillType(int& SkillType) {
-	SkillType = (int)skill[m_BirthMax]->GetSkillType();
+	SkillType = (int)skill[m_BirthNow]->GetSkillType();
 }
 //スキルのデータを渡す(特殊)
 void SkillManager::GetSpecialSkillDate(int& delay,string& name) {
-	SpecialSkill* specialskill = dynamic_cast<SpecialSkill*>(skill[m_BirthMax]);
-	delay = skill[m_BirthMax]->Getlatency();
+	SpecialSkill* specialskill = dynamic_cast<SpecialSkill*>(skill[m_BirthNow]);
+	delay = skill[m_BirthNow]->Getlatency();
 	name = specialskill->GetStateName();
 }
 //スキルのCSVを読み取る

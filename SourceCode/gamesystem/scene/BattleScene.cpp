@@ -23,13 +23,11 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -8.0f,0.1f,0.0f });
-	Player::GetInstance()->Initialize();
+	
 	//スキル
 	SkillManager::GetInstance()->Initialize();
 	//ゲームの状態
 	GameStateManager::GetInstance()->Initialize();
-
 	//リザルトテキスト
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
@@ -49,7 +47,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	
 	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
-	StagePanel::GetInstance()->Initialize();
+	GameReset({ -8.0f,0.1f,0.0f });
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
@@ -85,6 +83,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
+		GameReset({ -4.0f,0.1f,2.0f });
 		if (_ChangeType == CHANGE_MAP) {
 			SceneManager::GetInstance()->PopScene();
 		}

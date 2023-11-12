@@ -23,7 +23,8 @@ public:
 	//持っているパッシブ
 	void HavePassiveSkill(std::vector<int> Passive,
 		int PassiveSize);
-
+	void CreateAttackSkill(int num,int id);
+	void CreatePassiveSkill(int num, int id);
 private:
 private:
 

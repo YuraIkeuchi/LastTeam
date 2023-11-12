@@ -35,15 +35,12 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -4.0f,0.1f,2.0f });
-	Player::GetInstance()->Initialize();
 	//スキル
 	SkillManager::GetInstance()->Initialize();
 	//ゲームの状態
 	GameStateManager::GetInstance()->Initialize();
 	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
-	StagePanel::GetInstance()->Initialize();
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
 	text_->SetConversation(TextManager::TUTORIAL_START);
@@ -70,7 +67,9 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 
 	//各クラス更新
 	camerawork->Update(camera);
-	Player::GetInstance()->Update();
+	if (!GameStateManager::GetInstance()->GetIsFinish()) {
+		Player::GetInstance()->Update();
+	}
 	StagePanel::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
@@ -91,14 +90,9 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
+		GameReset({ -8.0f,0.1f,0.0f });
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 		SceneManager::GetInstance()->ChangeScene<BattleScene>();
-		/*if (_ChangeType == CHANGE_TITLE) {
-			SceneManager::GetInstance()->PopScene();
-		}
-		else {
-			
-		}*/
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 

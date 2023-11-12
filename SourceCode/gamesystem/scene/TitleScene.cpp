@@ -28,11 +28,11 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 
 	//プレイヤー
 	Player::GetInstance()->LoadResource();
-	Player::GetInstance()->InitState({ -4.0f,0.1f,2.0f });
-	Player::GetInstance()->Initialize();
+
 	//ステージの床
 	StagePanel::GetInstance()->LoadResource();
-	StagePanel::GetInstance()->Initialize();
+	
+	GameReset({ -4.0f,0.1f,2.0f });
 
 	//敵
 	enemy = make_unique<MobEnemy>();
@@ -81,11 +81,13 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	}
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		if (_SceneType == PLAY) {
+			GameReset({ -8.0f,0.1f,0.0f });
 			SceneManager::GetInstance()->ChangeScene<BattleScene>();
 		} else if(_SceneType == MAP) {
 			SceneManager::GetInstance()->ChangeScene<MapScene>();
 		}
 		else {
+			GameReset({ -4.0f, 0.1f, 2.0f });
 			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
 		}
 		SceneChanger::GetInstance()->SetChange(false);

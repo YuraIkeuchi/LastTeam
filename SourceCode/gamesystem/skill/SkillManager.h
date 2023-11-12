@@ -48,7 +48,7 @@ private:
 	std::vector<unique_ptr<DeckUI>> deckui;
 	std::vector<SkillBase*> skill;
 	int m_DeckNum = {};
-	int m_BirthMax = {};
+	int m_BirthNow = {};
 	int m_DeckRemain = {};
 	std::vector<int> m_DeckDate;
 };
