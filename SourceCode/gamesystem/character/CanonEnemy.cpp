@@ -21,6 +21,11 @@ CanonEnemy::CanonEnemy() {
 		_drawnumber[i] = make_unique<DrawNumber>();
 		_drawnumber[i]->Initialize();
 	}
+
+	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shadow_tex->TextureCreate();
+	shadow_tex->Initialize();
+	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //‰Šú‰»
 bool CanonEnemy::Initialize() {
@@ -31,6 +36,7 @@ bool CanonEnemy::Initialize() {
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
+	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	return true;
 }
 
@@ -67,9 +73,18 @@ void CanonEnemy::Action() {
 			bullets.erase(cbegin(bullets) + i);
 		}
 	}
+
+	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
+	shadow_tex->SetPosition(m_ShadowPos);
+	shadow_tex->SetScale(m_ShadowScale);
+	shadow_tex->Update();
 }
+
 //•`‰æ
 void CanonEnemy::Draw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	shadow_tex->Draw();
+	IKETexture::PostDraw();
 	//“G‚Ì’e
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
 		if (newbullet != nullptr) {

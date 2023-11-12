@@ -34,8 +34,6 @@ public:
 	void PoizonGauge();
 	void PoizonVenom();
 
-	void EnemyLightInit(LightGroup* light);
-	void EnemyLightUpdate(LightGroup* light);
 private:
 	/// <summary>
 	/// マップにスポーン

@@ -50,6 +50,7 @@ public:
 	{
 		MAGIC,
 		CHARGE,
+		SHADOW,
 	};
 	enum particleName
 	{

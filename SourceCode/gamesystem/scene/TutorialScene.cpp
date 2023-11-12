@@ -60,7 +60,6 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 
 	//丸影
 	lightGroup->SetCircleShadowActive(0, true);
-	lightGroup->SetCircleShadowActive(1, true);
 
 	TutorialTask::GetInstance()->SetChoiceSkill(false);
 }
@@ -73,11 +72,6 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ Player::GetInstance()->GetPosition().x, 0.5f, Player::GetInstance()->GetPosition().z }));
 	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
 	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
-	//ボス
-	lightGroup->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
-	lightGroup->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
-	lightGroup->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
 	lightGroup->Update();
 	// 全オブジェクト更新
 	game_object_manager_->Update();

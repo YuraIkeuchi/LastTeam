@@ -47,6 +47,12 @@ void EnemyManager::Update() {
 			Player::GetInstance()->SetGrazePos({ 1000.0f,0.0f,0.0f });
 		}
 	}
+
+	for (int i = 0; i < (int)(enemys.size()); i++) {
+		if (!enemys[i]->GetAlive()) {
+			enemys.erase(cbegin(enemys) + i);
+		}
+	}
 }
 
 void EnemyManager::Draw(DirectXCommon* dxCommon) {
@@ -79,7 +85,7 @@ void EnemyManager::UIDraw() {
 bool EnemyManager::BossDestroy() {
 	int num = (int)enemys.size();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetHP() > 0.0f) {
+		if (enemy->GetHP() >= 0.0f) {
 			return false;
 		} else {
 			num--;
@@ -141,28 +147,5 @@ void EnemyManager::Spawn2Map() {
 		}
 		height++;
 
-	}
-}
-//ライトのセット
-void EnemyManager::EnemyLightInit(LightGroup* light) {
-	for (int i = 0; i < (int)(enemys.size()); i++) {
-		light->SetCircleShadowActive(1 + i, true);
-	}
-}
-//ライト
-void EnemyManager::EnemyLightUpdate(LightGroup* light) {
-
-	for (int i = 0; i < (int)(enemys.size()); i++) {
-		light->SetCircleShadowDir(1 + i, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
-		light->SetCircleShadowCasterPos(1 + i, XMFLOAT3({ enemys[i]->GetPosition().x, 	0.5f, 	enemys[i]->GetPosition().z}));
-		light->SetCircleShadowAtten(1 + i, XMFLOAT3(BosscircleShadowAtten));
-		light->SetCircleShadowFactorAngle(1 + i, XMFLOAT2(BosscircleShadowFactorAngle));
-	}
-
-	for (int i = 0; i < (int)(enemys.size()); i++) {
-		if (!enemys[i]->GetAlive()) {
-			enemys.erase(cbegin(enemys) + i);
-			light->SetCircleShadowActive(1 + i, false);
-		}
 	}
 }

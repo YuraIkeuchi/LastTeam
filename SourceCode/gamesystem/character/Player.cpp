@@ -99,10 +99,12 @@ void Player::Update() {
 	Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
 	//表示用のHP
 	m_InterHP = (int)(m_HP);
-	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
-		_drawnumber[i]->Update();
-		m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+	if (m_HP > 0.0f) {
+		for (auto i = 0; i < _drawnumber.size(); i++) {
+			_drawnumber[i]->SetNumber(m_DigitNumber[i]);
+			_drawnumber[i]->Update();
+			m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+		}
 	}
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
@@ -117,6 +119,7 @@ void Player::UIDraw() {
 	IKESprite::PreDraw();
 	//HPバー
 	hptex->Draw();
+	if(m_InterHP != 0)
 	_drawnumber[FIRST_DIGHT]->Draw();
 	if (m_InterHP >= 10)
 		_drawnumber[SECOND_DIGHT]->Draw();

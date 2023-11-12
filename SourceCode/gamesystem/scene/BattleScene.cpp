@@ -40,7 +40,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//“G
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
-	enemyManager->EnemyLightInit(lightGroup);
+	//enemyManager->EnemyLightInit(lightGroup);
 
 	if (GameStateManager::GetInstance()->GetPoisonSkill()) {
 		enemyManager->PoizonGauge();
@@ -74,7 +74,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
-	enemyManager->EnemyLightUpdate(lightGroup);
+	//enemyManager->EnemyLightUpdate(lightGroup);
 	GameStateManager::GetInstance()->Update();
 	//“G‚ð“|‚µ‚½‚çƒV[ƒ“ˆÈ~(‰¼)
 	if (enemyManager->BossDestroy()) {

@@ -5,6 +5,7 @@
 #include <memory>
 #include <IKESprite.h>
 #include <array>
+#include "IKETexture.h"
 using namespace std;         //  –¼‘O‹óŠÔw’è
 
 
@@ -32,7 +33,7 @@ protected:
 
 protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
-
+	unique_ptr<IKETexture> shadow_tex;
 	//Œ…”
 	enum DightType {
 		FIRST_DIGHT,
@@ -85,6 +86,10 @@ protected:
 	bool m_CheckPanel = false;
 
 	string m_EnemyTag = "Normal";
+
+	//‰e‚Ì•Ï”
+	XMFLOAT3 m_ShadowPos = {};
+	XMFLOAT3 m_ShadowScale = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };

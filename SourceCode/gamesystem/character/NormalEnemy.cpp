@@ -21,6 +21,11 @@ NormalEnemy::NormalEnemy() {
 		_drawnumber[i] = make_unique<DrawNumber>();
 		_drawnumber[i]->Initialize();
 	}
+
+	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shadow_tex->TextureCreate();
+	shadow_tex->Initialize();
+	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //èâä˙âª
 bool NormalEnemy::Initialize() {
@@ -32,6 +37,7 @@ bool NormalEnemy::Initialize() {
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
 	m_MaxHP = m_HP;
 	StagePanel::GetInstance()->EnemyHitReset();
+	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	return true;
 }
 
@@ -50,9 +56,17 @@ void NormalEnemy::Action() {
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//ìñÇΩÇËîªíË
 	PoisonState();//ì≈
+
+	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
+	shadow_tex->SetPosition(m_ShadowPos);
+	shadow_tex->SetScale(m_ShadowScale);
+	shadow_tex->Update();
 }
 //ï`âÊ
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	shadow_tex->Draw();
+	IKETexture::PostDraw();
 	Obj_Draw();
 }
 //ImGuiï`âÊ
