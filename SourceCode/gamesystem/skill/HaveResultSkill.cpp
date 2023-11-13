@@ -179,6 +179,7 @@ void HaveResultSkill::BirthArea(const int Area) {
 				ResultAreaUI* newarea = nullptr;
 				newarea = new ResultAreaUI();
 				newarea->SetPanelNumber(i, j);
+				newarea->SetDistance(haveSkills[Area].DisX, haveSkills[Area].DisY);
 				newarea->Initialize();
 				haveSkills[Area].resultarea.emplace_back(newarea);
 			}

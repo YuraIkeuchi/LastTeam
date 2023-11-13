@@ -33,7 +33,7 @@ bool CanonEnemy::Initialize() {
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5f };
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "hp")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -82,6 +82,7 @@ void CanonEnemy::Action() {
 
 //描画
 void CanonEnemy::Draw(DirectXCommon* dxCommon) {
+	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	IKETexture::PostDraw();

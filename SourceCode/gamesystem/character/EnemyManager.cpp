@@ -1,10 +1,11 @@
 ﻿#include "EnemyManager.h"
 #include "NormalEnemy.h"
 #include "CanonEnemy.h"
+#include "BossEnemy.h"
 #include <StagePanel.h>
 #include <Player.h>
 #include <GameStateManager.h>
-
+#include <Helper.h>
 
 EnemyManager::EnemyManager() {
 }
@@ -34,12 +35,6 @@ void EnemyManager::Update() {
 		}
 		enemy->Update();
 	}
-
-	for (int i = 0; i < (int)(enemys.size()); i++) {
-		if (!enemys[i]->GetAlive()) {
-			enemys.erase(cbegin(enemys) + i);
-		}
-	}
 }
 
 void EnemyManager::Draw(DirectXCommon* dxCommon) {
@@ -54,9 +49,6 @@ void EnemyManager::SetCount() {
 void EnemyManager::ImGuiDraw() {
 	ImGui::Begin("Enemys");
 	ImGui::Text("size:%d", enemys.size());
-	//unique_ptr<InterEnemy>& enemy = enemys.front();
-	//ImGui::Text("POSX:%f", enemy.get()->GetPosition().x);
-	//ImGui::Text("POSZ:%f", enemy.get()->GetPosition().z);
 	ImGui::End();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->ImGuiDraw();
@@ -72,7 +64,7 @@ void EnemyManager::UIDraw() {
 bool EnemyManager::BossDestroy() {
 	int num = (int)enemys.size();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetHP() >= 0.0f) {
+		if (enemy->GetAlive()) {
 			return false;
 		} else {
 			num--;
@@ -80,6 +72,7 @@ bool EnemyManager::BossDestroy() {
 	}
 	if (num == 0) {
 		return true;
+		enemys.clear();
 	} else {
 		return false;
 	}
@@ -128,6 +121,12 @@ void EnemyManager::Spawn2Map() {
 			}
 			else if (x == '2') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<CanonEnemy>();
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '3') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy>();
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;

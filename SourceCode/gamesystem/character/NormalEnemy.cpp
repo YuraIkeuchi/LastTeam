@@ -34,7 +34,7 @@ bool NormalEnemy::Initialize() {
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5 };
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/NormalEnemy.csv", "hp")));
 	m_MaxHP = m_HP;
 	StagePanel::GetInstance()->EnemyHitReset();
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -64,6 +64,7 @@ void NormalEnemy::Action() {
 }
 //描画
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
+	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	IKETexture::PostDraw();

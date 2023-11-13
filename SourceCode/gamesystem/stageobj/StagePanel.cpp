@@ -233,7 +233,7 @@ void StagePanel::ResetAction() {
 	}
 }
 //敵とパネルの当たり判定
-void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height) {
+void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height, bool m_Alive) {
 
 	m_OBB1.SetParam_Pos(obj->GetPosition());
 	m_OBB1.SetParam_Rot(obj->GetMatrot());
@@ -246,7 +246,12 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height) {
 			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
 				wight = i;
 				height = j;
-				panels[i][j].isEnemyHit = true;
+				if (m_Alive) {
+					panels[i][j].isEnemyHit = true;
+				}
+				else {
+					panels[i][j].isEnemyHit = false;
+				}
 			}
 		}
 	}

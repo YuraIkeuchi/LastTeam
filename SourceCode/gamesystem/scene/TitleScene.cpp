@@ -50,7 +50,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//カード
 	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
 	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
-
+	GameStateManager::GetInstance()->DeckReset();
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
@@ -122,8 +122,8 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	text_->TestDraw(dxCommon);
 	IKESprite::PreDraw();
 	title_[TITLE_TEXT]->Draw();
-	SceneChanger::GetInstance()->Draw();
 	IKESprite::PostDraw();
+	SceneChanger::GetInstance()->Draw();
 
 }
 //背面描画
@@ -131,12 +131,9 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	title_[TITLE_BACK]->Draw();
 	IKESprite::PostDraw();
-	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
+	
 	game_object_manager_->Draw(dxCommon);
-
-	IKEObject3d::PostDraw();
-
 	enemy->Draw(dxCommon);
 
 }
