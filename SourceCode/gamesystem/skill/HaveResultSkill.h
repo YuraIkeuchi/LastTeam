@@ -6,7 +6,7 @@
 #include <Passive.h>
 #include "DrawNumber.h"
 #include <TextManager.h>
-
+#include "ResultAreaUI.h"
 class HaveResultSkill {
 public:
 	HaveResultSkill();
@@ -20,19 +20,20 @@ public:
 	//持っているスキル
 	void HaveAttackSkill(std::vector<int> Deck,
 		int DeckSize);
-	//エリアデータ取得
-	void GetAttackAreaData(int i);
+
 	//持っているパッシブ
 	void HavePassiveSkill(std::vector<int> Passive,
 		int PassiveSize);
-	void CreateAttackSkill(int num,int id);
-	void CreatePassiveSkill(int num, int id);
+	void CreateAttackSkill(const int num,const int id);
+	void CreatePassiveSkill(const int num, const int id);
+	void BirthArea(const int num);
 private:
 private:
 
 	struct HaveUI {
 		std::unique_ptr<IKESprite> icon;
 		std::unique_ptr<DrawNumber> number;
+		vector<std::unique_ptr<ResultAreaUI>> resultarea;
 		XMFLOAT2 position = { 640.f,320.f };
 		XMFLOAT2 size = { 128.f,128.f };
 		int no = -1;

@@ -26,7 +26,7 @@ void HaveResultSkill::Update() {
 			resultUI.number->Update();
 		}
 	}
-
+	
 	for (HaveUI& PassiveUI : havePassive) {
 		if (PassiveUI.isSkill) {
 			PassiveUI.number->Update();
@@ -48,6 +48,12 @@ void HaveResultSkill::Draw() {
 			resultUI.number->Draw();
 		}
 	}
+	if (m_SelectCount < (int)(haveSkills.size())) {
+		for (auto i = 0; i < haveSkills[m_SelectCount].resultarea.size(); i++) {
+			haveSkills[m_SelectCount].resultarea[i]->Draw();
+		}
+	}
+
 
 	for (HaveUI& PassiveUI : havePassive) {
 		PassiveUI.icon->Draw();
@@ -65,6 +71,7 @@ void HaveResultSkill::ImGuiDraw() {
 			ImGui::Text("HaveID[%d]:%d", i, haveSkills[i].ID);
 			ImGui::Text("DisX[%d]:%d", i, haveSkills[i].DisX);
 			ImGui::Text("DisY[%d]:%d", i, haveSkills[i].DisY);
+			ImGui::Text("Size[%d]:%d", i, haveSkills[i].area.size());
 		}
 	}
 	if (!havePassive.empty()) {
@@ -83,6 +90,7 @@ void HaveResultSkill::HaveAttackSkill(std::vector<int> Deck,
 		haveSkills[i].ID = Deck[i];
 		CreateAttackSkill(i, haveSkills[i].ID);
 		SkillManager::GetInstance()->HandResultData(Deck[i], haveSkills[i].area, haveSkills[i].DisX, haveSkills[i].DisY);
+		BirthArea(i);
 	}
 }
 //持っているパッシブ
@@ -95,7 +103,7 @@ void HaveResultSkill::HavePassiveSkill(std::vector<int> Passive,
 	}
 }
 //攻撃スキルの表示
-void HaveResultSkill::CreateAttackSkill(int num,int id) {
+void HaveResultSkill::CreateAttackSkill(const int num,const int id) {
 	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
 	haveSkills[num].position = { l_BasePos.x + (num * 100.0f),l_BasePos.y };
 	haveSkills[num].icon = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
@@ -109,10 +117,9 @@ void HaveResultSkill::CreateAttackSkill(int num,int id) {
 	m_SelectCount = {};
 	m_AddPosX = {};
 }
-void HaveResultSkill::GetAttackAreaData(int i) {
-}
+
 //パッシブスキルの表示
-void HaveResultSkill::CreatePassiveSkill(int num, int id) {
+void HaveResultSkill::CreatePassiveSkill(const int num, const int id) {
 	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
 	havePassive[num].position = { l_BasePos.x + ((num + (int)haveSkills.size()) * 100.0f),l_BasePos.y };
 	havePassive[num].icon = IKESprite::Create(ImageManager::PASSIVE_01 + havePassive[num].ID, {0.0f,0.0f});
@@ -161,5 +168,20 @@ void HaveResultSkill::Move() {
 			m_SelectCount--;
 		}
 		m_isMove = true;
+	}
+}
+//エリアの生成
+void HaveResultSkill::BirthArea(const int Area) {
+	
+	for (auto i = 0; i < haveSkills[Area].area.size(); i++) {
+		for (auto j = 0; j < haveSkills[Area].area.size(); j++) {		
+			if (haveSkills[Area].area[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+				ResultAreaUI* newarea = nullptr;
+				newarea = new ResultAreaUI();
+				newarea->SetPanelNumber(i, j);
+				newarea->Initialize();
+				haveSkills[Area].resultarea.emplace_back(newarea);
+			}
+		}
 	}
 }
