@@ -61,13 +61,13 @@ void EnemyManager::ImGuiDraw() {
 		enemy->ImGuiDraw();
 	}
 }
-//UI�̕`��
+//UI描画
 void EnemyManager::UIDraw() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->UIDraw();
 	}
 }
-//�G�̎��S���u
+//ステージのエネミー残存
 bool EnemyManager::BossDestroy() {
 	int num = (int)enemys.size();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
@@ -112,6 +112,7 @@ void EnemyManager::Spawn2Map() {
 		std::string word;
 		std::getline(line_stream, word, ',');
 		int width = 0;
+		//数字による各エネミーの場合分け
 		for (char& x : word) {
 			if (x == ',') {
 				break;

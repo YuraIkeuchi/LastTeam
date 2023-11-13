@@ -101,10 +101,6 @@ void StagePanel::SetUpdate() {
 
 //バトルの更新
 void StagePanel::BattleUpdate() {
-	//if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-	//	RandomPanel(3);
-	//}
-
 	//敵がが居るマスが赤くなる
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
