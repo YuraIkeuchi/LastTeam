@@ -89,8 +89,8 @@ void HaveResultSkill::HaveAttackSkill(std::vector<int> Deck,
 	for (auto i = 0; i < haveSkills.size(); i++) {
 		haveSkills[i].ID = Deck[i];
 		CreateAttackSkill(i, haveSkills[i].ID);
-		SkillManager::GetInstance()->HandResultData(Deck[i], haveSkills[i].area, haveSkills[i].DisX, haveSkills[i].DisY);
-		BirthArea(i);
+		SkillManager::GetInstance()->HandResultData(Deck[i], haveSkills[i].area, haveSkills[i].DisX, haveSkills[i].DisY);//IDに応じた攻撃エリア、距離を取得する
+		BirthArea(i);		//エリアを作成(持ってるスキル分)
 	}
 }
 //持っているパッシブ
