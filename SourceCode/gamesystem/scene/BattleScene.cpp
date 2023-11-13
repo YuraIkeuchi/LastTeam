@@ -27,6 +27,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	{
 		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
 		player->LoadResource();
+		player->Initialize();
 		player->InitState({ -8.0f,0.1f,0.0f });
 		GameStateManager::GetInstance()->SetPlayer(player);
 	}
@@ -78,7 +79,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
-	GameStateManager::GetInstance()->Update();
 	//エネミーが全員死亡したら
 	if (enemyManager->BossDestroy()) {
 		//クリア処理が終らなかったら
@@ -151,18 +151,14 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 		enemyManager->UIDraw();
 		GameStateManager::GetInstance()->ActUIDraw();
 	}
-	// Player::GetInstance()->UIDraw();
-	enemyManager->UIDraw();
-
-	GameStateManager::GetInstance()->ActUIDraw();
 	SceneChanger::GetInstance()->Draw();
 }
 //後方描画(主にSprite)
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
+	StagePanel::GetInstance()->Draw(dxCommon);
 	game_object_manager_->Draw(dxCommon);
 
-	StagePanel::GetInstance()->Draw(dxCommon);
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	enemyManager->Draw(dxCommon);
 	IKEObject3d::PostDraw();

@@ -37,7 +37,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 {
 	//ワード追加
 	CreateWord(NONE, L"");
-	CreateWord(TITLE, L"Bボタン:ゲーム", L"SPACEキー:マップ", L"Xボタン:チュートリアル");
+	CreateWord(TITLE, L"Bボタン:ゲーム");
 	CreateWord(MAP_01, L"はじめようここから！");
 	CreateWord(MAP_BATTLE, L"バトルカードいっぱい！");
 	CreateWord(MAP_HEAL, L"回復したいあなたへ！");

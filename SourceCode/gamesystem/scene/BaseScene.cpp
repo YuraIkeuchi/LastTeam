@@ -47,6 +47,4 @@ void BaseScene::GameReset(XMFLOAT3 pos) {
 	//Player::GetInstance()->InitState(pos);
 	//Player::GetInstance()->Initialize();
 	StagePanel::GetInstance()->Initialize();
-	GameStateManager::GetInstance()->GetPlayer().lock()->InitState(pos);
-	GameStateManager::GetInstance()->GetPlayer().lock()->Initialize();
 }

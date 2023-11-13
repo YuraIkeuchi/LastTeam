@@ -626,7 +626,7 @@ void MapScene::CheckState() {
 			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
 			SceneChanger::GetInstance()->SetChange(false);
-
+			cheack->SetSize({ 0.0f,0.0f });
 		}
 	} else {
 		if (Helper::GetInstance()->FrameCheck(delayFrame, 1/20.f)) {
