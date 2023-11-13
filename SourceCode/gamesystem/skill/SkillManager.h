@@ -23,6 +23,8 @@ public:
 	void DeckCheck(const int DeckNumber,const int DeckCount);
 	
 	void PushOnce2Deck(const int DeckNumber);
+	//リザルト画面に渡すためのデータ
+	void HandResultData(const int DeckNumber,vector<std::vector<int>>& area, int& DisX, int& DisY);
 	//デッキのクリア
 	void DeckClear();
 private:

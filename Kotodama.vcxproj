@@ -221,6 +221,7 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\AttackArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyBullet.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\ResultAreaUI.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
@@ -347,6 +348,7 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\AttackArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyBullet.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\ResultAreaUI.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h" />
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\TextManager.h" />

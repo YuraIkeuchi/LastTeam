@@ -3,7 +3,7 @@
 #include "ImageManager.h"
 #include <Input.h>
 #include <Easing.h>
-
+#include <SkillManager.h>
 HaveResultSkill::HaveResultSkill() {
 
 }
@@ -58,12 +58,13 @@ void HaveResultSkill::Draw() {
 void HaveResultSkill::ImGuiDraw() {
 	ImGui::Begin("Have");
 	ImGui::Text("Add:%f", m_AddPosX);
-	ImGui::Text("Count:%d", m_SelectCount);
 	ImGui::Text("PosX:%f,PosY:%f", selectFrame->GetPosition().x, selectFrame->GetPosition().y);
 	ImGui::Text("Num:%d", (int)(haveSkills.size()) + (int)(havePassive.size()));
 	if (!haveSkills.empty()) {
 		for (auto i = 0; i < haveSkills.size(); i++) {
 			ImGui::Text("HaveID[%d]:%d", i, haveSkills[i].ID);
+			ImGui::Text("DisX[%d]:%d", i, haveSkills[i].DisX);
+			ImGui::Text("DisY[%d]:%d", i, haveSkills[i].DisY);
 		}
 	}
 	if (!havePassive.empty()) {
@@ -81,6 +82,7 @@ void HaveResultSkill::HaveAttackSkill(std::vector<int> Deck,
 	for (auto i = 0; i < haveSkills.size(); i++) {
 		haveSkills[i].ID = Deck[i];
 		CreateAttackSkill(i, haveSkills[i].ID);
+		SkillManager::GetInstance()->HandResultData(Deck[i], haveSkills[i].area, haveSkills[i].DisX, haveSkills[i].DisY);
 	}
 }
 //持っているパッシブ
@@ -106,6 +108,8 @@ void HaveResultSkill::CreateAttackSkill(int num,int id) {
 	haveSkills[num].number->SetPosition(haveSkills[num].position);
 	m_SelectCount = {};
 	m_AddPosX = {};
+}
+void HaveResultSkill::GetAttackAreaData(int i) {
 }
 //パッシブスキルの表示
 void HaveResultSkill::CreatePassiveSkill(int num, int id) {

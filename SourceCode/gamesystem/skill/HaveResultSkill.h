@@ -20,6 +20,8 @@ public:
 	//持っているスキル
 	void HaveAttackSkill(std::vector<int> Deck,
 		int DeckSize);
+	//エリアデータ取得
+	void GetAttackAreaData(int i);
 	//持っているパッシブ
 	void HavePassiveSkill(std::vector<int> Passive,
 		int PassiveSize);
@@ -36,8 +38,11 @@ private:
 		int no = -1;
 		int ID = -1;
 		bool isSkill = true;
+		vector<std::vector<int>> area;	//範囲
+		int DisX = {};
+		int DisY = {};
 	};
-
+	
 private:
 	unique_ptr<TextManager> text_;
 	std::unique_ptr<IKESprite> backScreen;

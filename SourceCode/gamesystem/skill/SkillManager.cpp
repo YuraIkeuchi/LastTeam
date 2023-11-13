@@ -337,3 +337,15 @@ void SkillManager::BirthDeckUI(const int DeckNumber, const int DeckCount) {
 		deckui[i]->SetType((int)skill[m_DeckDate[i]]->GetSkillType());
 	}
 }
+//リザルトに渡すデータ
+void SkillManager::HandResultData(const int DeckNumber, vector<std::vector<int>>& area, int& DisX, int& DisY) {
+	AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[DeckNumber]);
+	area = atkSkill->GetArea();		//範囲
+	//プレイヤーからの距離
+	int l_DistanceX = {};
+	int l_DistanceY = {};
+	l_DistanceX = atkSkill->GetDistanceX();
+	l_DistanceY = atkSkill->GetDistanceY();
+	DisX = l_DistanceX;
+	DisY = l_DistanceY;
+}
