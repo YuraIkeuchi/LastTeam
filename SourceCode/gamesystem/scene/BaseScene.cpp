@@ -1,8 +1,10 @@
 #include "BaseScene.h"
 #include "ImageManager.h"
-#include "VariableCommon.h"
+#include "IKEObject3d.h"
+#include "IKEFBXObject3d.h"
 #include "ParticleEmitter.h"
 #include "Helper.h"
+
 bool BaseScene::s_GameLoop = false;
 BaseScene::BaseScene()
 {

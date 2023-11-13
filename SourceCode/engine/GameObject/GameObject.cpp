@@ -1,5 +1,8 @@
 #include "GameObject.h"
+
 #include <iostream>
+
+#include "scene/BaseScene.h"
 
 int GameObject::id_counter_ = 0;
 

@@ -30,7 +30,6 @@ void GameStateManager::Initialize() {
 	isFinish = false;
 	isChangeScene = false;
 
-
 	//要素の全削除は一旦ここで
 	m_AllActCount = {};
 	actui.clear();
@@ -128,9 +127,9 @@ void GameStateManager::Update() {
 		m_ResetPredict = false;
 	}
 	SkillManager::GetInstance()->Update();
-	Player::GetInstance()->SetDelay(m_Delay);
+	GameStateManager::GetInstance()->GetPlayer().lock()->SetDelay(m_Delay);
 
-	_charge->SetPosition({ Player::GetInstance()->GetPosition().x,0.5f,Player::GetInstance()->GetPosition().z });
+	_charge->SetPosition({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x,0.5f,GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z });
 	_charge->SetScale({ m_ChargeScale,m_ChargeScale,m_ChargeScale });
 	_charge->Update();
 }
@@ -139,7 +138,7 @@ void GameStateManager::AttackTrigger() {
 	Input* input = Input::GetInstance();
 	if (m_AllActCount == 0) { return; }
 	if (actui[0]->GetUse()) { return; }
-	if (Player::GetInstance()->GetCharaState() == 1) { return; }
+	if (player_.lock()->GetCharaState() == 1) { return; }
 	if (isFinish) { return; }
 	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える
@@ -173,19 +172,19 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("GameState");
-	ImGui::Text("Scale:%f", m_ChargeScale);
-	ImGui::Text("Timer:%d", m_DelayTimer);
-	ImGui::Text("Buff:%d", m_Buff);
-	if (!m_Act.empty()) {
-		ImGui::Text("SkillType:%d", m_Act[0].SkillType);
-		ImGui::Text("Name:%s", m_Act[0].StateName);
-	}
-	ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
-	if (ImGui::Button("in", ImVec2(90, 50))) {
-		InDeck();		//デッキに入っていないカードをデッキに組み込む
-	}
-	ImGui::End();
+	//ImGui::Begin("GameState");
+	//ImGui::Text("Scale:%f", m_ChargeScale);
+	//ImGui::Text("Timer:%d", m_DelayTimer);
+	//ImGui::Text("Buff:%d", m_Buff);
+	//if (!m_Act.empty()) {
+	//	ImGui::Text("SkillType:%d", m_Act[0].SkillType);
+	//	ImGui::Text("Name:%s", m_Act[0].StateName);
+	//}
+	//ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
+	//if (ImGui::Button("in", ImVec2(90, 50))) {
+	//	InDeck();		//デッキに入っていないカードをデッキに組み込む
+	//}
+	//ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
 }
@@ -238,6 +237,7 @@ void GameStateManager::BirthActUI(const int ID,const int Type) {
 
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);
 }
+
 //攻撃エリアの生成(無理やり処理)
 void GameStateManager::BirthArea() {
 	int l_BirthBaseX = {};
@@ -368,8 +368,8 @@ void GameStateManager::PassiveCheck() {
 			m_DiameterGauge = passive->GetDiameter();
 			break;
 		case Passive::ABILITY::HP_UP:
-			Player::GetInstance()->SetMaxHp(
-				Player::GetInstance()->GetMaxHp()* passive->GetDiameter());
+			player_.lock()->SetMaxHp(
+				player_.lock()->GetMaxHp()* passive->GetDiameter());
 			break;
 		case Passive::ABILITY::RELOAD_LOCK:
 			m_IsReload = false;

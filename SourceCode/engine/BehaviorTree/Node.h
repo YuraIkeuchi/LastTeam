@@ -61,11 +61,7 @@ namespace behaviorTree
 			&name_,
 			yEngine::AccessorType::AllAccess
 		};
-		yEngine::Property<BehaviorStatus> Status
-		{
-			&status_,
-			yEngine::AccessorType::ReadOnly
-		};
+		BehaviorStatus GetStatus() { return status_; }
 
 	protected:
 		GameObject* owner_;
