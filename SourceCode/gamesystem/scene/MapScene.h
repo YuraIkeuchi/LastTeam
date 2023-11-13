@@ -2,6 +2,7 @@
 #include "BaseScene.h"
 #include "Passive.h"
 #include"TextManager.h"
+#include <Onomatope.h>
 class MapScene : public BaseScene {
 public:
 	//èâä˙âª
@@ -82,12 +83,15 @@ private:
 	unique_ptr<TextManager> text_;
 	int clearHierarchy = 1;
 
+	unique_ptr<Onomatope> onomatope = nullptr;
+
+
 	unique_ptr<IKESprite> screen = nullptr;
 	unique_ptr<IKESprite> cheack= nullptr;
 	unique_ptr<IKESprite> frame = nullptr;
 	unique_ptr<IKESprite> chara = nullptr;
 
-	unique_ptr<IKESprite> Onomatope = nullptr;
+	//unique_ptr<IKESprite> Onomatope = nullptr;
 	float onomatoFrame = 0.f;
 	float kOnomatoFrameMax = 15.f;
 
