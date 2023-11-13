@@ -12,7 +12,6 @@ ResultSkill::~ResultSkill() {
 }
 
 void ResultSkill::Initialize(DirectXCommon* dxCommon) {
-	this->dxCommon = dxCommon;
 	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.5f });
 	backScreen->SetSize({ 1280.f,720.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
@@ -34,7 +33,7 @@ void ResultSkill::Update() {
 	}
 }
 
-void ResultSkill::Draw() {
+void ResultSkill::Draw(DirectXCommon* dxCommon) {
 	if (!isStart) { return; }
 
 	IKESprite::PreDraw();

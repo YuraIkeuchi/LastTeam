@@ -83,7 +83,7 @@ public:
 	const bool GetPoisonVenom() { return  m_IsVenom; }
 	const bool GetResetPredict() { return  m_ResetPredict; }
 
-	void SetDxCommon(DirectXCommon* dxCommon) { this->dxCommon = dxCommon; }
+	void SetDxCommon(DirectXCommon* dxCommon) { this->m_dxCommon = dxCommon; }
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
@@ -105,7 +105,7 @@ public:
 	// 仮
 	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
 private:
-	DirectXCommon* dxCommon = nullptr;
+	DirectXCommon* m_dxCommon = nullptr;
 	unique_ptr<IKETexture> _charge;
 	bool isFinish = false;
 	bool isChangeScene = false;

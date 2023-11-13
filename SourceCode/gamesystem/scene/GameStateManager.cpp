@@ -45,7 +45,7 @@ void GameStateManager::Initialize() {
 	gaugeUI->SetSize({ basesize.x,0.f });
 
 	resultSkill = make_unique<ResultSkill>();
-	resultSkill->Initialize(dxCommon);
+	resultSkill->Initialize(m_dxCommon);
 	haveSkill = make_unique<HaveResultSkill>();
 	haveSkill->Initialize();
 	m_PredictTimer = {};
@@ -181,7 +181,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		}
 	}
 	if (_ResultType == GET_SKILL) {
-		resultSkill->Draw();
+		resultSkill->Draw(dxCommon);
 	}
 	else {
 		haveSkill->Draw();

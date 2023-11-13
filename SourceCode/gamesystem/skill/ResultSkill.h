@@ -14,7 +14,7 @@ public:
 
 	void Initialize(DirectXCommon* dxCommon);
 	void Update();
-	void Draw();
+	void Draw(DirectXCommon* dxCommon);
 
 	void InDeck(std::vector<int>& Deck);
 	void InPassive(std::vector<int>& Passive);
@@ -40,7 +40,6 @@ private:
 	ResultUI CreateUI(bool isSkill,int id,XMFLOAT2 pos);
 
 private:
-	DirectXCommon* dxCommon = nullptr;
 	bool isStart = false;
 	unique_ptr<TextManager> text_;
 	std::unique_ptr<IKESprite> backScreen;
