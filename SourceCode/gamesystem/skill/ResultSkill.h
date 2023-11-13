@@ -12,9 +12,9 @@ public:
 	ResultSkill();
 	~ResultSkill();
 
-	void Initialize();
+	void Initialize(DirectXCommon* dxCommon);
 	void Update();
-	void Draw();
+	void Draw(DirectXCommon* dxCommon);
 
 	void InDeck(std::vector<int>& Deck);
 	void InPassive(std::vector<int>& Passive);
@@ -26,7 +26,7 @@ public:
 private:
 	void Move();
 private:
-
+	unique_ptr<TextManager> resulttext;
 	struct ResultUI{
 		std::unique_ptr<IKESprite> icon;
 		std::unique_ptr<DrawNumber> number;

@@ -29,6 +29,7 @@ void GameStateManager::Initialize() {
 	//終了関連
 	isFinish = false;
 	isChangeScene = false;
+	m_Choice = false;
 
 	//要素の全削除は一旦ここで
 	m_AllActCount = {};
@@ -44,7 +45,13 @@ void GameStateManager::Initialize() {
 	gaugeUI->SetSize({ basesize.x,0.f });
 
 	resultSkill = make_unique<ResultSkill>();
-	resultSkill->Initialize();
+	resultSkill->Initialize(m_dxCommon);
+	haveSkill = make_unique<HaveResultSkill>();
+	haveSkill->Initialize();
+	m_PredictTimer = {};
+	//
+	SkillManager::GetInstance()->Initialize();
+
 	//デッキの初期化
 	DeckInitialize();
 
@@ -78,6 +85,7 @@ void GameStateManager::Initialize() {
 	m_Buff = false;
 	predictarea->ResetPredict();
 }
+
 //更新
 void GameStateManager::Update() {
 	if (ResultUpdate()) { return; }
@@ -123,8 +131,12 @@ void GameStateManager::Update() {
 	AttackTrigger();
 	UseSkill();
 	if (m_ResetPredict) {
-		PredictManager();
-		m_ResetPredict = false;
+		m_PredictTimer++;
+		if (m_PredictTimer  > 1) {
+			PredictManager();
+			m_ResetPredict = false;
+			m_PredictTimer = {};
+		}
 	}
 	SkillManager::GetInstance()->Update();
 	GameStateManager::GetInstance()->GetPlayer().lock()->SetDelay(m_Delay);
@@ -160,7 +172,7 @@ void GameStateManager::AttackTrigger() {
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	if (!isFinish && !isChangeScene) {
 		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-		if (m_Delay) {
+		if (m_Delay && m_Act[0].ActDelay >= 30.0f) {
 			_charge->Draw();
 		}
 		IKETexture::PostDraw();
@@ -178,25 +190,21 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 			predictarea->Draw(dxCommon);
 		}
 	}
-	resultSkill->Draw();
+	if (_ResultType == GET_SKILL) {
+		resultSkill->Draw(dxCommon);
+	}
+	else {
+		haveSkill->Draw();
+	}
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	//ImGui::Begin("GameState");
-	//ImGui::Text("Scale:%f", m_ChargeScale);
-	//ImGui::Text("Timer:%d", m_DelayTimer);
-	//ImGui::Text("Buff:%d", m_Buff);
-	//if (!m_Act.empty()) {
-	//	ImGui::Text("SkillType:%d", m_Act[0].SkillType);
-	//	ImGui::Text("Name:%s", m_Act[0].StateName);
-	//}
-	//ImGui::SliderInt("Count",&m_NotCount, 0, (int)(m_NotDeckNumber.size() - 1));		//追加するカードを選べる
-	//if (ImGui::Button("in", ImVec2(90, 50))) {
-	//	InDeck();		//デッキに入っていないカードをデッキに組み込む
-	//}
-	//ImGui::End();
+	ImGui::Begin("Test");
+	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
+	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
+	haveSkill->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -286,7 +294,7 @@ void GameStateManager::PredictManager() {
 
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
-			
+
 			int AreaX = {};
 			int AreaY = {};
 			AreaX = l_BirthBaseX + i;
@@ -296,7 +304,6 @@ void GameStateManager::PredictManager() {
 			}
 		}
 	}
-
 	predictarea->Update();
 }
 //プレイヤーの現在パネル
@@ -445,12 +452,22 @@ bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
 
 	resultSkill->Update();
+	haveSkill->Update();
+	if (Input::GetInstance()->TriggerButton(Input::LB)) {
+		_ResultType = GET_SKILL;
+	}
+	if (Input::GetInstance()->TriggerButton(Input::RB)) {
+		_ResultType = HAVE_SKILL;
+	}
 
-	if (Input::GetInstance()->TriggerButton(Input::B)) {
+
+	if (Input::GetInstance()->TriggerButton(Input::B) && !m_Choice) {
 		resultSkill->InDeck(m_DeckNumber);
 		resultSkill->InPassive(GotPassiveIDs);
 		isChangeScene = true;
 		isFinish = false;
+		m_Choice = true;
+		TutorialTask::GetInstance()->SetChoiceSkill(true);
 	}
 	return true;
 }
@@ -474,8 +491,10 @@ bool GameStateManager::SkillRecycle() {
 
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
+	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size());
+	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size());
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
-	
+	m_PredictTimer = {};
 	isFinish = true;
 }
 void GameStateManager::Spawn2Map()

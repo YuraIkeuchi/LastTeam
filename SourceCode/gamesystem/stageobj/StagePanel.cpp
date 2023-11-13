@@ -31,6 +31,7 @@ void StagePanel::LoadResource() {
 			panels[i][j].color = { 1.f,1.f,1.f,1.f };
 			panels[i][j].type = NO_PANEL;
 			panels[i][j].isHit = false;
+	
 		}
 	}
 }
@@ -39,7 +40,9 @@ bool StagePanel::Initialize() {
 	
 	m_SelectHeight = 0;
 	m_SelectWidth = 0;
-	actions.clear();
+	if (!actions.empty()) {
+		actions.clear();
+	}
 	//CSV読み込み
 	return true;
 }
@@ -83,13 +86,7 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
-	//for (auto i = 0; i < actions.size(); i++) {
-	//	if (actions[i] == nullptr)continue;
-	//	actions[i]->ImGuiDraw();
-	//}
-
 	ImGui::Begin("Panel");
-	//プレイヤーが居るマスが黄色くなる
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			ImGui::Text("Hit[%d][%d]:%d", i, j, panels[i][j].isEnemyHit);
@@ -104,11 +101,7 @@ void StagePanel::SetUpdate() {
 
 //バトルの更新
 void StagePanel::BattleUpdate() {
-	//if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-	//	RandomPanel(3);
-	//}
-
-	//プレイヤーが居るマスが黄色くなる
+	//敵がが居るマスが赤くなる
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if (!panels[i][j].predict) {
@@ -211,7 +204,7 @@ void StagePanel::RandomPanel(int num) {
 		}
 		newAction->Initialize();
 		//ステージに配布されるパネルに情報を読み取ってる
-		newAction->SetSkillID(SkillManager::GetInstance()->GetID(i));
+		newAction->SetSkillID(SkillManager::GetInstance()->IDSearch(i));
 		newAction->GetSkillData();
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
@@ -239,8 +232,9 @@ void StagePanel::ResetAction() {
 		actions[i]->SetState(STATE_VANISH);
 	}
 }
-//敵のをパネルの当たり判定
-void StagePanel::SetEnemyHit(IKEObject3d* obj,int& wight, int& height) {
+//敵とパネルの当たり判定
+void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height) {
+
 	m_OBB1.SetParam_Pos(obj->GetPosition());
 	m_OBB1.SetParam_Rot(obj->GetMatrot());
 	m_OBB1.SetParam_Scl(obj->GetScale());
@@ -250,12 +244,27 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj,int& wight, int& height) {
 			m_OBB2.SetParam_Rot(panels[i][j].object->GetMatrot());
 			m_OBB2.SetParam_Scl({ 0.5f,1.0f,0.5f });
 			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
-				panels[i][j].isEnemyHit = true;
 				wight = i;
 				height = j;
+				panels[i][j].isEnemyHit = true;
 			}
-			else {
-				panels[i][j].isEnemyHit = false;
+		}
+	}
+
+}
+//敵の弾とパネルの当たり判定
+void StagePanel::SetPanelSearch(IKEObject3d* obj, int& width, int& height) {
+	m_OBB1.SetParam_Pos({ obj->GetPosition().x, 0.0f, obj->GetPosition().z });
+	m_OBB1.SetParam_Rot(obj->GetMatrot());
+	m_OBB1.SetParam_Scl({0.45f,0.45f,0.45f});
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			m_OBB2.SetParam_Pos({ panels[i][j].position.x, 0.0f, panels[i][j].position.z });
+			m_OBB2.SetParam_Rot(panels[i][j].object->GetMatrot());
+			m_OBB2.SetParam_Scl({ 0.5f,1.0f,0.5f });
+			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
+				width = i;
+				height = j;
 			}
 		}
 	}
@@ -282,7 +291,30 @@ XMFLOAT4 StagePanel::ChangeColor(const int Weight, const int Height) {
 
 	return color;
 }
-////チェック
-//bool StagePanel::SetPredict(int width, int height, bool Frag) {
-//	panels[width][height].predict = Frag;
-//}
+void StagePanel::EnemyHitReset() {
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			panels[i][j].isEnemyHit = false;
+		}
+	}
+}
+XMFLOAT3 StagePanel::EnemySetPanel() {
+	bool isSet = false;
+	//乱数の設定
+	int width = Helper::GetInstance()->GetRanNum(4, 7);
+	int height = Helper::GetInstance()->GetRanNum(0, 3);
+
+	//パネル探索（敵がいる場合は再検索）
+
+	while (!isSet) {
+		if (panels[width][height].isEnemyHit) {
+			width = Helper::GetInstance()->GetRanNum(4, 7);
+			height = Helper::GetInstance()->GetRanNum(0, 3);
+		}
+		else {
+			isSet = true;
+		}
+	}
+
+	return SetPositon(width, height);
+}

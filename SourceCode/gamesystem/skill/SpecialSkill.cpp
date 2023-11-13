@@ -3,7 +3,6 @@
 
 void SpecialSkill::ImGui_Origin() {
 	ImGui::Begin("Special");
-	ImGui::Text("ID:%d", ID);
-	ImGui::Text("State:%s", StateName);
+	ImGui::Text("DeckIn:%d", m_DeckIn);
 	ImGui::End();
 }

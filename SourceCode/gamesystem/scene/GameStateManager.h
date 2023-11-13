@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "BaseEnemy.h"
 #include "ResultSkill.h"
+#include "HaveResultSkill.h"
 using namespace DirectX;
 using namespace std;
 
@@ -71,7 +72,6 @@ private:
 
 	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
-
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -81,7 +81,9 @@ public:
 
 	const bool GetPoisonSkill() { return  m_poizonLong; }
 	const bool GetPoisonVenom() { return  m_IsVenom; }
+	const bool GetResetPredict() { return  m_ResetPredict; }
 
+	void SetDxCommon(DirectXCommon* dxCommon) { this->m_dxCommon = dxCommon; }
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
@@ -102,6 +104,7 @@ public:
 	// 仮
 	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
 private:
+	DirectXCommon* m_dxCommon = nullptr;
 	unique_ptr<IKETexture> _charge;
 	bool isFinish = false;
 	bool isChangeScene = false;
@@ -176,7 +179,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 2,6,7,8,9 };
+	vector<int> m_DeckNumber = { 0,1,6 };
 
 
 	vector<int> m_NotDeckNumber = {};
@@ -189,8 +192,9 @@ private:
 	unique_ptr<PredictArea> predictarea;
 
 	bool m_ResetPredict = false;
+	int m_PredictTimer = {};
 	std::unique_ptr<ResultSkill> resultSkill;
-
+	std::unique_ptr<HaveResultSkill> haveSkill;
 	//ディレイ関係
 	float m_ChargeScale = {};
 	int m_DelayTimer = {};
@@ -198,7 +202,11 @@ private:
 
 	//バフ(一旦一個)
 	bool m_Buff = false;
-
+	bool m_Choice = false;
+	enum ResultType {
+		GET_SKILL,
+		HAVE_SKILL,
+	}_ResultType = GET_SKILL;
 
 	///=============================
 	/// 

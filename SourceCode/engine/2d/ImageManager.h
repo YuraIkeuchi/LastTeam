@@ -45,12 +45,14 @@ public:
 		TITLEBACK,
 		TITLETEXT,
 		GAMEOVERBACK,
+		ONOMATO_00,
 	};
 	//テクスチャの名前
 	enum tex2dName
 	{
 		MAGIC,
 		CHARGE,
+		SHADOW,
 	};
 	enum particleName
 	{

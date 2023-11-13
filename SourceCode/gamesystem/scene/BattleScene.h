@@ -2,7 +2,6 @@
 #include "BaseScene.h"
 #include"BossText.h"
 #include "MessageWindow.h"
-#include "EnemyManager.h"
 
 //ゲームプレイシーン
 class BattleScene : public BaseScene
@@ -23,7 +22,6 @@ private:
 	void ImGuiDraw();
 private:
 
-	unique_ptr<EnemyManager> enemyManager = nullptr;
 
 	unique_ptr<IKESprite> ui = nullptr;
 

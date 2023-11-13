@@ -87,5 +87,4 @@ protected:
 	float damege = 0.0f;
 	//デッキに入っているか
 	bool m_DeckIn = false;
-
 };

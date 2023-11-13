@@ -1,4 +1,4 @@
-#include "NormalEnemy.h"
+ï»¿#include "NormalEnemy.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -7,7 +7,8 @@
 #include "Easing.h"
 #include "ImageManager.h"
 #include <GameStateManager.h>
-//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+#include <StagePanel.h>
+//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 NormalEnemy::NormalEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
@@ -20,8 +21,13 @@ NormalEnemy::NormalEnemy() {
 		_drawnumber[i] = make_unique<DrawNumber>();
 		_drawnumber[i]->Initialize();
 	}
+
+	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shadow_tex->TextureCreate();
+	shadow_tex->Initialize();
+	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
-//‰Šú‰»
+//åˆæœŸåŒ–
 bool NormalEnemy::Initialize() {
 
 	//m_Position = randPanelPos();
@@ -30,40 +36,50 @@ bool NormalEnemy::Initialize() {
 	m_Scale = { 0.5f,0.5f,0.5 };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
 	m_MaxHP = m_HP;
+	StagePanel::GetInstance()->EnemyHitReset();
+	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	return true;
 }
 
 void (NormalEnemy::* NormalEnemy::stateTable[])() = {
-	&NormalEnemy::Inter,//“®‚«‚Ì‡ŠÔ
-	&NormalEnemy::Attack,//“®‚«‚Ì‡ŠÔ
+	&NormalEnemy::Inter,//å‹•ãã®åˆé–“
+	&NormalEnemy::Attack,//å‹•ãã®åˆé–“
 
 };
 
-//s“®
+//è¡Œå‹•
 void NormalEnemy::Action() {
 	(this->*stateTable[_charaState])();
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	Collide(_AttackArea);		//“–‚½‚è”»’è
-	//PoisonState();//“Å
+	Collide(_AttackArea);		//å½“ãŸã‚Šåˆ¤å®š
+	PoisonState();//æ¯’
+
+	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
+	shadow_tex->SetPosition(m_ShadowPos);
+	shadow_tex->SetScale(m_ShadowScale);
+	shadow_tex->Update();
 }
-//•`‰æ
+//æç”»
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	shadow_tex->Draw();
+	IKETexture::PostDraw();
 	Obj_Draw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void NormalEnemy::ImGui_Origin() {
 	ImGui::Begin("NormalEnemy");
 	ImGui::Text("Height:%d,Width:%d", m_NowHeight,m_NowWidth);
 	ImGui::End();
 }
-//ŠJ•ú
+//é–‹æ”¾
 void NormalEnemy::Finalize() {
 
 }
-//’Ç]
+//è¿½å¾“
 //void NormalEnemy::Follow() {
 //	Helper::GetInstance()->FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
 //}

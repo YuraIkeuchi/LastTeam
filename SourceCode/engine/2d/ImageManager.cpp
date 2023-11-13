@@ -36,6 +36,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(TITLEBACK, L"Resources/2d/sceneback/TitleBack.png");
 	IKESprite::LoadTexture(TITLETEXT, L"Resources/2d/sceneback/TitleText.png");
 	IKESprite::LoadTexture(GAMEOVERBACK, L"Resources/2d/sceneback/Gameover.png");
+	IKESprite::LoadTexture(ONOMATO_00, L"Resources/2d/objicon/Onomatope/00_Foot.png");
+
 }
 
 //非同期処理で読み込むスプライト
@@ -48,6 +50,7 @@ void ImageManager::StartLoadTex2D()
 {
 	IKETexture::LoadTexture(MAGIC, L"Resources/2d/objicon/magic.png");
 	IKETexture::LoadTexture(CHARGE, L"Resources/2d/objicon/impact.png");
+	IKETexture::LoadTexture(SHADOW, L"Resources/2d/objicon/shadow.png");
 }
 
 //非同期処理でのテクスチャの読み込み

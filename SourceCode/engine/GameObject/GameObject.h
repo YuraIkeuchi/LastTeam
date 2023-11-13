@@ -37,7 +37,7 @@ public:
 
 	virtual bool Initialize() { return true; }
 	virtual void Update() {};
-	virtual void Draw() {};
+	virtual void Draw(DirectXCommon* dxCommon) {};
 	virtual void UIDraw() {};
 	virtual void Finalize() {};
 

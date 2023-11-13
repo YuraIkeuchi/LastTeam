@@ -5,7 +5,7 @@
 #include <sstream>
 #include <SceneChanger.h>
 #include "SceneManager.h"
-
+#include <TutorialTask.h>
 //遷移しうるシーン
 #include "BattleScene.h"
 #include <TutorialScene.h>
@@ -79,6 +79,10 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetSize({ 128.f,128.f });
 	frame->SetAnchorPoint({ 0.5f,0.5f });
 
+
+	Onomatope = IKESprite::Create(ImageManager::ONOMATO_00, { 960.f,360.f });
+	Onomatope->SetAnchorPoint({ 0.5f,0.5f });
+	Onomatope->SetSize({ 0.f,256.f });
 
 	//道の処理
 	{
@@ -197,6 +201,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!end) {
 		frame->Draw();
 	}
+	Onomatope->Draw();
 	IKESprite::PostDraw();
 
 	text_->TestDraw(dxCommon);
@@ -398,8 +403,6 @@ void MapScene::MapCreate() {
 	UIs[1][Middle].sprite->SetAnchorPoint({0.5f,0.5f});
 }
 
-
-
 void MapScene::ImGuiDraw() {
 	ImGui::Begin("Map");
 	ImGui::Text("%f", framePos.x);
@@ -493,6 +496,7 @@ void MapScene::Move() {
 	if (moved) {
 		if (Helper::GetInstance()->FrameCheck(mov_frame, 1 / kMoveFrame)) {
 			moved = false;
+			onomatoFrame = 0.f;
 			m_State = State::checkState;
 			mov_frame = 0.0f;
 			oldIndex = nowIndex;
@@ -509,12 +513,26 @@ void MapScene::Move() {
 			}
 			return;
 		}
+		{
+			if (Helper::GetInstance()->FrameCheck(onomatoFrame, 1 / kOnomatoFrameMax)) {
+				Onomatope->SetColor({ 1.f,1.f,1.f,0.f });
+			} else {
+				Onomatope->SetColor({ 1.f,1.f,1.f,1.f });
+				XMFLOAT2 siz = Onomatope->GetSize();
+				siz.x = Ease(Out, Quad, onomatoFrame, 0.f, 256.f);
+				Onomatope->SetSize(siz);
+				XMFLOAT2 pos = Onomatope->GetPosition();
+				pos.x = Ease(Out, Quad, onomatoFrame, 640.f + scroll.x, 960.f + scroll.x);
+				pos.y = Ease(Out, Quad, onomatoFrame, 360.f, 180.f);
+				Onomatope->SetPosition(pos);
+			}
+		}
 		charaPos.x = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.x);
 		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y, UIs[nowHierarchy][nowIndex].pos.y);
 		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowHierarchy][nowIndex].pos.x / 2);
 	}
 	scroll.x += vel;
-	scroll.x = clamp(scroll.x, -3000.f, 340.f);
+	scroll.x = clamp(scroll.x, -lastScroll, 340.f);
 }
 
 void MapScene::Finalize() {
@@ -580,37 +598,50 @@ void MapScene::CheckState() {
 	static XMFLOAT2 size = {};
 
 	if (SceneChanger::GetInstance()->GetChangeState() == 1) {
+		delayFrame = 0.f;
 		m_State = State::mainState;
 	}
 
 	if (UIs[nowHierarchy][nowIndex].Tag==TUTORIAL) {
-		if (Helper::GetInstance()->FrameCheck(s_frame, addFrame)) {
-			Input* input = Input::GetInstance();
-			if (input->TriggerButton(input->B)) {
-				size = {};
-				m_State = State::mainState;
+		if (Helper::GetInstance()->FrameCheck(delayFrame, 1 / 20.f)) {
+			if (Helper::GetInstance()->FrameCheck(s_frame, addFrame)) {
+				Input* input = Input::GetInstance();
+				if (input->TriggerButton(input->B)) {
+					size = {};
+					m_State = State::mainState;
+					delayFrame = 0.f;
+				}
+				if (input->TriggerButton(input->A)) {
+					SceneChanger::GetInstance()->SetChangeStart(true);
+				}
+			} else {
+				size.x = Ease(Out, Elastic, s_frame, 0.f, 640.f);
+				size.y = Ease(Out, Elastic, s_frame, 0.f, 480.f);
 			}
-			if (input->TriggerButton(input->A)) {
-				SceneChanger::GetInstance()->SetChangeStart(true);
-			}
-		} else{
-			size.x = Ease(Out, Elastic, s_frame, 0.f, 640.f);
-			size.y = Ease(Out, Elastic, s_frame, 0.f, 480.f);
+			cheack->SetSize(size);
 		}
-		cheack->SetSize(size);
 		if (SceneChanger::GetInstance()->GetChange()) {
+			GameReset({ -4.0f, 0.1f, 2.0f });
+			//チュートリアルのタスク
+			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
 			SceneChanger::GetInstance()->SetChange(false);
+			cheack->SetSize({ 0.0f,0.0f });
 		}
 	} else {
-		SceneChanger::GetInstance()->SetChangeStart(true);
-
-		int num=Helper::GetInstance()->GetRanNum(1,3);
-		std::stringstream ss;
-		ss << "Resources/csv/EnemySpawn/BattleMap0" << num<< ".csv";
-		std::string r_map = ss.str();
-		GameStateManager::GetInstance()->SetEnemySpawnText(r_map);
+		if (Helper::GetInstance()->FrameCheck(delayFrame, 1/20.f)) {
+			SceneChanger::GetInstance()->SetChangeStart(true);
+			int num = Helper::GetInstance()->GetRanNum(1, 3);
+			std::stringstream ss;
+			ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
+			std::string r_map = ss.str();
+			GameStateManager::GetInstance()->SetEnemySpawnText(r_map);
+			delayFrame = 0.f;
+		}
 		if (SceneChanger::GetInstance()->GetChange()) {
+			GameReset({ -8.0f,0.1f,0.0f });
+			//チュートリアルのタスク
+			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 			SceneManager::GetInstance()->ChangeScene<BattleScene>();
 			SceneChanger::GetInstance()->SetChange(false);
 		}

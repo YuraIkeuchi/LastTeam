@@ -6,7 +6,6 @@
 #include <GameStateManager.h>
 #include <SceneChanger.h>
 
-#include "SkillManager.h"
 #include "Player.h"
 #include "BaseEnemy.h"
 #include "InterEnemy.h"
@@ -16,96 +15,87 @@
 // 初期化
 void BattleScene::Initialize(DirectXCommon* dxCommon)
 {
-	//
+	//シーンの基本初期化
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
 	// ポストエフェクト
 	PlayPostEffect = false;
 	
-	// パテーィクル
+	// パーティクル
 	ParticleEmitter::GetInstance()->AllDelete();
-
 	// プレイヤー生成
 	{
 		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
 		player->LoadResource();
-		player->InitState({ -8.0f,1.0f,0.0f });
-
+		player->Initialize();
+		player->InitState({ -8.0f,0.1f,0.0f });
 		GameStateManager::GetInstance()->SetPlayer(player);
-
 	}
-	SkillManager::GetInstance()->Initialize();
-	//�Q�[���̏��
+	//ゲームステート初期化
+	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
 	GameStateManager::GetInstance()->Initialize();
-	//�X�e�[�W�̏�
+	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
+	StagePanel::GetInstance()->Initialize();
 
-	// �G�l�~�[
+	//ビヘイビア試しました！
 	{
 		auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
 	}
 
-	//�Q�[���̏��
-	GameStateManager::GetInstance()->Initialize();
-
-	//�X�L��
-	SkillManager::GetInstance()->Initialize();
-	StagePanel::GetInstance()->Initialize();
-
-	//リザルトテキスト
-	resulttext = make_unique<TextManager>();
-	resulttext->Initialize(dxCommon);
-	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
-
-	//丸影
-	lightGroup->SetCircleShadowActive(0, true);
 	//敵
-	enemyManager = std::make_unique<EnemyManager>();
+	/*enemyManager = std::make_unique<EnemyManager>();
+	enemyManager->Initialize();	*/
 
-	// Battle開始時パッシブ
+	//パッシブスキルによるエネミーの能力変更
 	GameStateManager::GetInstance()->BattleStartPassive();
+
+	GameReset({ -8.0f,0.1f,0.0f });
 }
-//�X�V
+//更新
 void BattleScene::Update(DirectXCommon* dxCommon)
 {
-	//�v���C���[
-	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x, 0.5f, GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z }));
-	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
-	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	//ライト更新
 	lightGroup->Update();
+	//�e�N���X�X�V
+	//カメラワーク更新
+	camerawork->Update(camera);
+	StagePanel::GetInstance()->Update();
 	// �S�I�u�W�F�N�g�X�V
 	game_object_manager_->Update();
+	GameStateManager::GetInstance()->Update();
 
-	//�e�N���X�X�V
-	camerawork->Update(camera);
-	if (!GameStateManager::GetInstance()->GetIsFinish()) {
-		// Player::GetInstance()->Update();
-	}
-	StagePanel::GetInstance()->Update();
+
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
 	//�G���|�������V�[���ȍ~(��)
 	if (GameStateManager::GetInstance()->EnemysDestory()) {
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
+			//クリア処理準備
 			GameStateManager::GetInstance()->StageClearInit();
 		} else {
+			//マップに戻る
 			_ChangeType = CHANGE_MAP;
 			SceneChanger::GetInstance()->SetChangeStart(true);
 		}
 	}
-	//�Ղꂢ��[��HP�������Ȃ��Ă��J�ڂ���
+	//クリア条件に達するとプレイヤーを動かせなくする
+	if (GameStateManager::GetInstance()->GetIsFinish()) {
+		auto player = GameStateManager::GetInstance()->GetPlayer();
+		player.lock()->SetDelay(true);
+	}
+	//ゲームオーバー処理
 	if (GameStateManager::GetInstance()->GetPlayer().lock()->GetHp() <= 0.0f) {
 		_ChangeType = CHANGE_OVER;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
-
+	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
+		GameReset({ -4.0f,0.1f,2.0f });
 		if (_ChangeType == CHANGE_MAP) {
 			SceneManager::GetInstance()->PopScene();
-		}
-		else {
+		}else {
 			SceneManager::GetInstance()->ChangeScene<GameoverScene>();
 		}
 		SceneChanger::GetInstance()->SetChange(false);
@@ -113,8 +103,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 }
 
 void BattleScene::Draw(DirectXCommon* dxCommon) {
-	//�`����@
-	//�|�X�g�G�t�F�N�g�������邩
+	//ポストエフェクトをかけるか
 	if (PlayPostEffect) {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		BackDraw(dxCommon);
@@ -137,7 +126,8 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PostDraw();
 	}
 }
-//�|�X�g�G�t�F�N�g������Ȃ�
+
+//前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 
@@ -151,16 +141,15 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	GameStateManager::GetInstance()->ActUIDraw();
 	SceneChanger::GetInstance()->Draw();
 }
-//�|�X�g�G�t�F�N�g������
+//後方描画(主にSprite)
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
-	game_object_manager_->Draw();
-
 	StagePanel::GetInstance()->Draw(dxCommon);
-	GameStateManager::GetInstance()->Draw(dxCommon);
-	IKEObject3d::PostDraw();
+	game_object_manager_->Draw(dxCommon);
 
-	//enemyManager->Draw(dxCommon);
+	GameStateManager::GetInstance()->Draw(dxCommon);
+	enemyManager->Draw(dxCommon);
+	IKEObject3d::PostDraw();
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	IKETexture::PostDraw();

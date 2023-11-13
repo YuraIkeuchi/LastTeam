@@ -1,10 +1,10 @@
-#include "EnemyBullet.h"
+ï»¿#include "EnemyBullet.h"
 #include "Collision.h"
-#include "CsvLoader.h"
 #include "Player.h"
 #include "Helper.h"
-#include <ParticleEmitter.h>
+#include <StagePanel.h>
 #include <Easing.h>
+#include <ImageManager.h>
 #include "GameStateManager.h"
 
 EnemyBullet::EnemyBullet() {
@@ -12,67 +12,66 @@ EnemyBullet::EnemyBullet() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(m_Model);
+
+	m_Pannel.reset(new IKEObject3d());
+	m_Pannel->Initialize();
+	m_Pannel->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
 }
-//‰Šú‰»
+//åˆæœŸåŒ–
 bool EnemyBullet::Initialize() {
 	m_Position = { 0.0f,0.0f,0.0f };
 	m_Rotation.y = 270.0f;
-	m_Scale = { 0.15f,0.15f,0.15f };
+	m_Scale = { 0.0f,0.0f,0.0f };
+	m_BaseScale = {};
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
-	m_AddSpeed = 3.0f;
+	m_AddSpeed = 1.0f;
 	m_Alive = true;
-	m_AfterPos.y = 1.0f;
 	m_ThrowType = THROW_SET;
 	m_AliveTimer = {};
 
 	return true;
 }
-//ó‘Ô‘JˆÚ
-/*CharaState‚ÌState•À‚Ñ‡‚É‡‚í‚¹‚é*/
+//çŠ¶æ…‹é·ç§»
+/*CharaStateã®Stateä¸¦ã³é †ã«åˆã‚ã›ã‚‹*/
 void (EnemyBullet::* EnemyBullet::stateTable[])() = {
-	&EnemyBullet::Follow,//’Ç]
+	&EnemyBullet::Throw,//æŠ•ã’ã‚‹
 };
-//XV
+//æ›´æ–°
 void EnemyBullet::Update() {
-	//ó‘ÔˆÚs(charastate‚É‡‚í‚¹‚é)
+	//çŠ¶æ…‹ç§»è¡Œ(charastateã«åˆã‚ã›ã‚‹)
 	(this->*stateTable[m_PolterType])();
-	//ƒ^ƒCƒv‚É‚æ‚Á‚ÄF‚ðˆê’U•Ï‚¦‚Ä‚é
+	//ã‚¿ã‚¤ãƒ—ã«ã‚ˆã£ã¦è‰²ã‚’ä¸€æ—¦å¤‰ãˆã¦ã‚‹
 	Obj_SetParam();
 
-	Collide();
-	Particle();
+	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
+	Collide();		//å½“ãŸã‚Šåˆ¤å®š
+
+	m_PanelPos = {(-8.0f) + (2.0f * m_NowWidth),0.01f,(2.0f * m_NowHeight)};
+	m_Pannel->SetPosition(m_PanelPos);
+	m_Pannel->SetScale({2.0f,0.1f,2.0f});
+	m_Pannel->SetColor({1.0f,0.3f,0.0f,1.0f});
+	//m_Pannel->SetRotation({ 90.0f,0.0f,0.0f });
+	m_Pannel->Update();
+	//StagePanel::GetInstance()->SetCanonChange(m_NowWidth, m_NowHeight);
 }
-//•`‰æ
+//æç”»
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
+	IKEObject3d::PreDraw();
+	if (m_ThrowType == THROW_PLAY) {
+		m_Pannel->Draw();
+	}
+	IKEObject3d::PostDraw();
 	Obj_Draw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void EnemyBullet::ImGuiDraw() {
-	ImGui::Begin("Polter");
-	ImGui::Text("Timer:%d", m_AliveTimer);
-	ImGui::Text("POSY:%f", m_Position.y);
+	ImGui::Begin("Bullet");
+	ImGui::Text("POSX:%f,POSZ:%f", m_PanelPos.x, m_PanelPos.z);
+	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight,m_NowWidth);
 	ImGui::End();
 }
 
-//ƒp[ƒeƒBƒNƒ‹
-void EnemyBullet::Particle() {
-	XMFLOAT4 s_color = { 0.0f,0.4f,1.0f,1.0f };
-	XMFLOAT4 s_color2 = { 0.4f,0.0f,1.0f,1.0f };
-	XMFLOAT4 e_color = { 1.0f,1.0f,1.0f,1.0f };
-	float s_scale = 0.3f;
-	float e_scale = 0.0f;
-	const int m_Life = 50;
-	//if (m_Alive) {
-	//	if (m_PolterType == TYPE_FOLLOW) {
-	//		ParticleEmitter::GetInstance()->FireEffect(m_Life, m_Position, s_scale, e_scale, s_color, e_color);
-	//	}
-	//	else {
-	//		ParticleEmitter::GetInstance()->FireEffect(m_Life, m_Position, s_scale, e_scale, s_color2, e_color);
-	//	}
-	//}
-}
-
-//“–‚½‚è”»’è
+//å½“ãŸã‚Šåˆ¤å®š
 bool EnemyBullet::Collide() {
 	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
 	XMFLOAT3 l_PlayerPos = player_data->GetPosition();
@@ -89,47 +88,60 @@ bool EnemyBullet::Collide() {
 
 	return false;
 }
-//’Ç]
-void EnemyBullet::Follow() {
+//è¿½å¾“
+void EnemyBullet::Throw() {
 	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
 	const float l_AddFrame = 0.01f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
-	//’e‚ÌƒZƒbƒg(‚¾‚ñ‚¾‚ñ•‚‚©‚Ñˆ§‚Ó‚ª‚é‚æ‚¤‚ÈŠ´‚¶)
+	//å¼¾ã®ãƒžã‚¹ã‚’å–å¾—ã™ã‚‹
+	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
+	//å¼¾ã®ã‚»ãƒƒãƒˆ(ã ã‚“ã ã‚“æµ®ã‹ã³é€¢ãµãŒã‚‹ã‚ˆã†ãªæ„Ÿã˜)
 	if (m_ThrowType == THROW_SET) {
 		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
 			m_Frame = {};
 			m_ThrowType = THROW_INTER;
 
 		}
-		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, m_AfterPos.y);
-		m_Position = Helper::GetInstance()->CircleMove({ m_BasePos.x,m_Position.y,m_BasePos.z }, m_CircleScale, m_CircleSpeed);
+		
+		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.15f);
 	}
-	//‘_‚¤•ûŒü‚ðŒˆ‚ß‚é
+	//ç‹™ã†æ–¹å‘ã‚’æ±ºã‚ã‚‹
 	else if (m_ThrowType == THROW_INTER) {
+		XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f };
+		XMMATRIX matRot = {};
+		mt19937 mt{ std::random_device{}() };
 		m_ThrowTimer++;
-		if (m_ThrowTimer == l_BaseTimer + m_TargetTimer) {
-			double sb, sbx, sbz;
-			sbx = player_data->GetPosition().x - m_Position.x;
-			sbz = player_data->GetPosition().z - m_Position.z;
-			sb = sqrt(sbx * sbx + sbz * sbz);
-			m_SpeedX = sbx / sb * 0.1f;
-			m_SpeedZ = sbz / sb * 0.1f;
+		if (m_ThrowTimer == l_BaseTimer) {
+			float l_Rot = {};
+			int num = Helper::GetInstance()->GetRanNum(0, 2);
+			if (num == DIR_STRAIGHT) {
+				l_Rot = -90.0f;
+			}
+			else if (num == DIR_SLASHUP) {
+				l_Rot = -45.0f;
+			}
+			else {
+				l_Rot = -135.0f;
+			}
+			matRot = XMMatrixRotationY(XMConvertToRadians(l_Rot));
+			move = XMVector3TransformNormal(move, matRot);
+			m_Angle.x = move.m128_f32[0];
+			m_Angle.y = move.m128_f32[2];
 			m_ThrowTimer = 0;
 			m_ThrowType = THROW_PLAY;
 		}
-		m_CircleSpeed += l_AddCircle;
-		m_Position = Helper::GetInstance()->CircleMove({ m_BasePos.x,m_Position.y,m_BasePos.z }, m_CircleScale, m_CircleSpeed);
 	}
-	//ŽÀÛ‚É‘_‚Á‚¿‚á‚¤
+	//å®Ÿéš›ã«ç‹™ã£ã¡ã‚ƒã†
 	else {
-		//ƒvƒŒƒCƒ„[‚ÉƒXƒs[ƒh‰ÁŽZ
-		m_Position.x += (float)m_SpeedX;
-		m_Position.z += (float)m_SpeedZ;
-
-		if (Helper::GetInstance()->CheckNotValueRange(m_Position.x, -30.0f, 30.0f) || Helper::GetInstance()->CheckNotValueRange(m_Position.z, -30.0f, 30.0f)) {
+		//å¼¾ã«ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚’åŠ ç®—
+		m_Position.x += m_Angle.x * m_AddSpeed;
+		m_Position.z += m_Angle.y * m_AddSpeed;
+		if (Helper::GetInstance()->CheckNotValueRange(m_Position.z, 0.0f, 6.0f)) {		//åå°„ã™ã‚‹
+			m_Angle.y *= -1.0f;
+		}
+		if (Helper::GetInstance()->CheckNotValueRange(m_Position.x, -9.0f,10.0f)) {
 			m_Alive = false;
 		}
 	}
-
 }

@@ -1,27 +1,27 @@
-#pragma once
+ï»¿#pragma once
 #include "ObjCommon.h"
 #include "AttackArea.h"
 #include "DrawNumber.h"
 #include <memory>
 #include <IKESprite.h>
 #include <array>
+#include "IKETexture.h"
+
+using namespace std;         //  åå‰ç©ºé–“æŒ‡å®š
 
 
-using namespace std;         //  –¼‘O‹óŠÔw’è
-
-
-//ƒLƒƒƒ‰‚Ìó‘Ô
+//ã‚­ãƒ£ãƒ©ã®çŠ¶æ…‹
 enum CharaState {
 	STATE_INTER,
 	STATE_ATTACK,
 	STATE_SPECIAL,
 };
-//“GŠî’ê
+//æ•µåŸºåº•
 class InterEnemy :
 	public ObjCommon
 {
 protected:
-	// DirectX::‚ğÈ—ª
+	// DirectX::ã‚’çœç•¥
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
@@ -30,32 +30,32 @@ protected:
 protected:
 	XMFLOAT3 randPanelPos();
 protected:
-	//OŒ…•\¦‚Ü‚Å
+	//ä¸‰æ¡è¡¨ç¤ºã¾ã§
 	static const int NUMBER_MAX = 3;
 
 protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
-
-	//Œ…”
+	unique_ptr<IKETexture> shadow_tex;
+	//æ¡æ•°
 	enum DightType {
 		FIRST_DIGHT,
 		SECOND_DIGHT,
 		THIRD_DIGHT
 	};
-	//HP‚Ì•\¦
+	//HPã®è¡¨ç¤º
 	unique_ptr<IKESprite> hptex;
 	
 	int _charaState = STATE_INTER;
-	//ƒN[ƒ‹ƒ^ƒCƒ€
+	//ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ 
 	int coolTimer = 0;
-	//ƒRƒ}ƒ“ƒhŠÔŠu
+	//ã‚³ãƒãƒ³ãƒ‰é–“éš”
 	int kIntervalMax = 120;
 	//HP
 	float m_HP = {};
 	float m_MaxHP = {};
-	//“G‚Ìƒ_ƒ[ƒW”»’è‚ÌƒCƒ“ƒ^[ƒoƒ‹
+	//æ•µã®ãƒ€ãƒ¡ãƒ¼ã‚¸åˆ¤å®šã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«
 	int m_DamegeTimer = {};
-	//“–‚½‚è”»’è‚Ì”¼Œa
+	//å½“ãŸã‚Šåˆ¤å®šã®åŠå¾„
 	float m_Radius = 0.5f;
 
 	struct PanelProb {
@@ -64,21 +64,34 @@ protected:
 		int GuardProb = 25;
 	};
 
-	//Œ»İ‚Ìƒ}ƒX”Ô†
+	//ç¾åœ¨ã®ãƒã‚¹ç•ªå·
 	int m_NowWidth = {};
 	int m_NowHeight = {};
 
-	//HP‚ÌUI‚Ég‚¤•Ï”
+	//HPã®UIã«ä½¿ã†å¤‰æ•°
 	XMFLOAT2 m_HPPos = { 1000.0f,50.0f };
 	XMFLOAT2 m_HPSize = {100.0f,15.0f};
 	XMMATRIX m_MatView = {};
 	XMMATRIX m_MatProjection = {};
 	XMMATRIX m_MatPort = {};
 
-	//”’l‰»‚µ‚½HP•\¦‚Ì‚½‚ß‚Ì•Ï”
+	//æ•°å€¤åŒ–ã—ãŸHPè¡¨ç¤ºã®ãŸã‚ã®å¤‰æ•°
 	array<int, NUMBER_MAX> m_DigitNumber;
-	int m_InterHP = {};//®”‚É‚µ‚½HP
+	int m_InterHP = {};//æ•´æ•°ã«ã—ãŸHP
 
+	bool m_Poison = false;
+	bool m_PoisonLong = false;
+	bool m_IsVenom = false;
+	int m_PoisonTimer = {};
+	bool m_Alive = true;
+
+	bool m_CheckPanel = false;
+
+	string m_EnemyTag = "Normal";
+
+	//å½±ã®å¤‰æ•°
+	XMFLOAT3 m_ShadowPos = {};
+	XMFLOAT3 m_ShadowScale = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -88,22 +101,22 @@ public://getter setter
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	virtual bool Initialize()override;
 	/// <summary>
-	/// I—¹
+	/// çµ‚äº†
 	/// </summary>
 	virtual void Finalize() = 0;
 	/// <summary>
-	/// –ˆƒtƒŒ[ƒ€XV
+	/// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°
 	/// </summary>
 	void Update();
 
-	virtual void Action() = 0;//“G‚Ìs“®
+	virtual void Action() = 0;//æ•µã®è¡Œå‹•
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	virtual void Draw(DirectXCommon* dxCommon)override;
 
@@ -115,13 +128,15 @@ public:
 	XMFLOAT3 SetPannelPos(int width, int height);
 private:
 	void BirthParticle();
-	//HP‚ÌŠ„‡‚ğ‹‚ß‚é
+	//HPã®å‰²åˆã‚’æ±‚ã‚ã‚‹
 	float HpPercent();
-	//ƒXƒvƒ‰ƒCƒg‚ğ“GÀ•W‚Éo‚·
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’æ•µåº§æ¨™ã«å‡ºã™
 	void WorldDivision();
-	//UI‚Ì‚½‚ß‚ÌHP‚ÌŠÇ—
+	//UIã®ãŸã‚ã®HPã®ç®¡ç†
 	void HPManage();
 	void BirthPoisonParticle();
 protected:
 	void Collide(vector<AttackArea*>area);
+	//æ¯’ã®çŠ¶æ…‹
+	void PoisonState();
 };

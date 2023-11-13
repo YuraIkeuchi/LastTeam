@@ -1,4 +1,4 @@
-#include "CanonEnemy.h"
+ï»¿#include "CanonEnemy.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -7,7 +7,8 @@
 #include "Easing.h"
 #include "ImageManager.h"
 #include <GameStateManager.h>
-//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+#include <StagePanel.h>
+//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 CanonEnemy::CanonEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
@@ -20,43 +21,49 @@ CanonEnemy::CanonEnemy() {
 		_drawnumber[i] = make_unique<DrawNumber>();
 		_drawnumber[i]->Initialize();
 	}
-}
-//‰Šú‰»
-bool CanonEnemy::Initialize() {
 
+	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shadow_tex->TextureCreate();
+	shadow_tex->Initialize();
+	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
+}
+//åˆæœŸåŒ–
+bool CanonEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5 };
+	m_Scale = { 0.5f,0.5f,0.5f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/enemy.csv", "hp")));
 	m_MaxHP = m_HP;
+	m_CheckPanel = true;
+	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	return true;
 }
 
 void (CanonEnemy::* CanonEnemy::stateTable[])() = {
-	&CanonEnemy::Inter,//“®‚«‚Ì‡ŠÔ
-	&CanonEnemy::Attack,//“®‚«‚Ì‡ŠÔ
-	&CanonEnemy::Teleport,//uŠÔˆÚ“®
+	&CanonEnemy::Inter,//å‹•ãã®åˆé–“
+	&CanonEnemy::Attack,//å‹•ãã®åˆé–“
+	&CanonEnemy::Teleport,//ç¬é–“ç§»å‹•
 };
 
-//s“®
+//è¡Œå‹•
 void CanonEnemy::Action() {
 	(this->*stateTable[_charaState])();
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	Collide(_AttackArea);		//“–‚½‚è”»’è
-	//PoisonState();//“Å
+	Collide(_AttackArea);		//å½“ãŸã‚Šåˆ¤å®š
+	//PoisonState();//æ¯’
 
-	//“G‚Ì’e
+	//æ•µã®å¼¾
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
 		if (newbullet != nullptr) {
 			newbullet->Update();
 		}
 	}
 
-	//áŠQ•¨‚Ìíœ
+	//éšœå®³ç‰©ã®å‰Šé™¤
 	for (int i = 0; i < bullets.size(); i++) {
 		if (bullets[i] == nullptr) {
 			continue;
@@ -66,10 +73,19 @@ void CanonEnemy::Action() {
 			bullets.erase(cbegin(bullets) + i);
 		}
 	}
+
+	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
+	shadow_tex->SetPosition(m_ShadowPos);
+	shadow_tex->SetScale(m_ShadowScale);
+	shadow_tex->Update();
 }
-//•`‰æ
+
+//æç”»
 void CanonEnemy::Draw(DirectXCommon* dxCommon) {
-	//“G‚Ì’e
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	shadow_tex->Draw();
+	IKETexture::PostDraw();
+	//æ•µã®å¼¾
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
 		if (newbullet != nullptr) {
 			newbullet->Draw(dxCommon);
@@ -77,16 +93,20 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 	}
 	Obj_Draw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void CanonEnemy::ImGui_Origin() {
-	ImGui::Begin("Canon");
-	ImGui::Text("Height:%d,Width:%d", m_NowHeight, m_NowWidth);
-	ImGui::End();
+	//æ•µã®å¼¾
+	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
+		if (newbullet != nullptr) {
+			newbullet->ImGuiDraw();
+		}
+	}
 }
-//ŠJ•ú
+//é–‹æ”¾
 void CanonEnemy::Finalize() {
 
 }
+//å¾…æ©Ÿ
 void CanonEnemy::Inter() {
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, kIntervalMax);
@@ -96,36 +116,57 @@ void CanonEnemy::Inter() {
 		BirthBullet();
 	}
 }
-
+//æ”»æ’ƒ
 void CanonEnemy::Attack() {
-	const int l_TargetTimer = 240;
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	const int l_TargetTimer = 200;
+
+	if (_CanonType == CANON_SET) {
+		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+			coolTimer = {};
+			_CanonType = CANON_THROW;
+		}
+	}
+	else if (_CanonType == CANON_THROW) {
+		m_AttackCount++;
+		BirthBullet();
+		if (m_AttackCount != 2) {
+			_CanonType = CANON_SET;
+		}
+		else {
+			_CanonType = CANON_END;
+		}
+	}
+	else {
+		m_CheckPanel = true;
+		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
 		coolTimer = {};
+		_CanonType = CANON_SET;
+		StagePanel::GetInstance()->EnemyHitReset();
 	}
 }
 
+//ãƒ¯ãƒ¼ãƒ—
 void CanonEnemy::Teleport() {
-	if (Helper::GetInstance()->CheckMin(coolTimer, kIntervalMax, 1)) {
+	const int l_TargetTimer = 200;
+	XMFLOAT3 l_RandPos = {};
+	l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
+	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
 		//m_Position = randPanelPos();
 		_charaState = STATE_INTER;
 		coolTimer = {};
+		m_Position = l_RandPos;
+		StagePanel::GetInstance()->EnemyHitReset();
 	}
 }
-
+//å¼¾ã®ç”Ÿæˆ
 void CanonEnemy::BirthBullet() {
-	const int l_LimitTimer = 80;//áŠQ•¨‚ª“®‚­‚Ü‚Å‚ÌŠÔ
-	for (int i = 0; i < BULLET_NUM; i++) {
-		//áŠQ•¨‚Ì”­¶
+		//éšœå®³ç‰©ã®ç™ºç”Ÿ
 		EnemyBullet* newbullet;
 		newbullet = new EnemyBullet();
 		newbullet->Initialize();
 
 		newbullet->SetPolterType(TYPE_FOLLOW);
-		newbullet->SetTargetTimer(i * l_LimitTimer);
-		newbullet->SetBasePos(m_Position);
-		newbullet->SetPosition({ m_Position.x,m_Position.y - 10.0f,m_Position.z });
-		newbullet->SetCircleSpeed(i * 120.0f);
+		newbullet->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 		bullets.emplace_back(newbullet);
-	}
 }

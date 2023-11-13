@@ -37,7 +37,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 {
 	//ワード追加
 	CreateWord(NONE, L"");
-	CreateWord(TITLE, L"Bボタン:ゲーム", L"SPACEキー:マップ", L"Xボタン:チュートリアル");
+	CreateWord(TITLE, L"Bボタン:ゲーム");
 	CreateWord(MAP_01, L"はじめようここから！");
 	CreateWord(MAP_BATTLE, L"バトルカードいっぱい！");
 	CreateWord(MAP_HEAL, L"回復したいあなたへ！");
@@ -49,6 +49,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateWord(TUTORIAL_TEXT_ATTACK, L"エリアに敵を収めてAボタンで攻撃してみろ");
 	CreateWord(TUTORIAL_TEXT_DAMAGE, L"よし、よくできた", L"じゃあ敵を倒してみよう");
 	CreateWord(TUTORIAL_SKILL, L"敵を倒すとスキルが手に入るぞ", L"スキルは攻撃やパッシブなどいろんな物があるぞ");
+	CreateWord(TUTORIAL_CHOICE, L"下の3つのスキルから", L"1つ選択してみよう");
 	CreateWord(TUTORIAL_END, L"手に入れたスキルを駆使して",L"敵を倒そう!");
 	CreateWord(RESULT, L"よくたおした！こんやはカツドンだ！");
 	//ラスボス

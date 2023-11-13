@@ -1,5 +1,5 @@
 #pragma once
-
+#include "DirectXCommon.h"
 #include <memory>
 #include <vector>
 
@@ -19,7 +19,7 @@ public:
 	/// <summary>
 	/// •`‰æ
 	/// </summary>
-	void Draw();
+	void Draw(DirectXCommon* dxCommon);
 	/// <summary>
 	/// UI•`‰æ
 	/// </summary>
