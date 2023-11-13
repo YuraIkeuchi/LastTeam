@@ -40,6 +40,7 @@ void SkillAction::Action() {
 }
 //ï`âÊ
 void SkillAction::Draw(DirectXCommon* dxCommon) {
+	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon,0);
 	m_Pannel->Draw();
 	IKETexture::PostDraw();
@@ -57,7 +58,8 @@ void SkillAction::EffecttexDraw(DirectXCommon* dxCommon) {
 void SkillAction::ImGui_Origin() {
 	ImGui::Begin("Skill");
 	ImGui::Text("SkillID:%d", m_SkillID);
-	ImGui::Text("Damage:%f", m_Damage);
+	ImGui::Text("Alive:%d", m_Alive);
+	ImGui::Text("POSX:%f,POSZ:%f", m_Position.x, m_Position.z);
 	ImGui::End();
 }
 //É|Å[ÉY

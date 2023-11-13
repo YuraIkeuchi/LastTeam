@@ -55,7 +55,7 @@ public:
 	void ResetAction();
 	void EnemyHitReset();
 	//色変更(敵)
-	void SetEnemyHit(IKEObject3d* obj,int& wight, int& height);
+	void SetEnemyHit(IKEObject3d* obj,int& wight, int& height,bool m_Alive);
 	//今いる位置のパネル番号を検索
 	void SetPanelSearch(IKEObject3d* obj, int& wight, int& height);
 	//敵の配置(かぶらないように)

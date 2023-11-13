@@ -47,10 +47,12 @@ void SkillManager::Update() {
 }
 //UIの描画(ほんますまんpart2)
 void SkillManager::UIDraw() {
+	IKESprite::PreDraw();
 	for (auto i = 0; i < deckui.size(); i++) {
 		if (deckui[i] == nullptr)continue;
 		deckui[i]->Draw();
 	}
+	IKESprite::PostDraw();
 }
 
 void SkillManager::ImGuiDraw() {

@@ -42,6 +42,10 @@ public:
 		m_Width = Width;
 		m_Height = Height;
 	}
+	void SetDistance(const int DistanceX, const int DistanceY){
+		m_DistanceX = DistanceX;
+		m_DistanceY = DistanceY;
+	}
 	bool SetPredict(bool Flag) {
 		return panels.resultarea = Flag;
 	}
@@ -50,4 +54,7 @@ private:
 	Panel panels;
 	int m_Width = {};
 	int m_Height = {};
+	int m_DistanceX = {};
+	int m_DistanceY = {};
+	std::unique_ptr<IKESprite> player_panel;
 };

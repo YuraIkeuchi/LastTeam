@@ -169,8 +169,8 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		IKESprite::PreDraw();
 		skillUI->Draw();
 		gaugeUI->Draw();
-		SkillManager::GetInstance()->UIDraw();
 		IKESprite::PostDraw();
+		SkillManager::GetInstance()->UIDraw();
 		for (auto i = 0; i < attackarea.size(); i++) {
 			if (attackarea[i] == nullptr)continue;
 			attackarea[i]->Draw(dxCommon);
@@ -189,21 +189,14 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	/*ImGui::Begin("Test");
-	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
-	ImGui::End();
-	SkillManager::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();*/
-	haveSkill->ImGuiDraw();
+	StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
-	IKESprite::PreDraw();
 	for (auto i = 0; i < actui.size(); i++) {
 		if (actui[i] == nullptr)continue;
 		actui[i]->Draw();
 	}
-	IKESprite::PostDraw();
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		passive->Draw();
 	}
@@ -440,12 +433,6 @@ bool GameStateManager::AttackSubAction() {
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
-	if (_ResultType == GET_SKILL) {
-		resultSkill->Update();
-	}
-	else {
-		haveSkill->Update();
-	}
 	if (Input::GetInstance()->TriggerButton(Input::LB)) {
 		_ResultType = GET_SKILL;
 	}
@@ -453,15 +440,22 @@ bool GameStateManager::ResultUpdate() {
 		_ResultType = HAVE_SKILL;
 	}
 
+	if (_ResultType == GET_SKILL) {
+		resultSkill->Update();
 
-	if (Input::GetInstance()->TriggerButton(Input::B) && !m_Choice) {
-		resultSkill->InDeck(m_DeckNumber);
-		resultSkill->InPassive(GotPassiveIDs);
-		isChangeScene = true;
-		isFinish = false;
-		m_Choice = true;
-		TutorialTask::GetInstance()->SetChoiceSkill(true);
+		if (Input::GetInstance()->TriggerButton(Input::B) && !m_Choice) {
+			resultSkill->InDeck(m_DeckNumber);
+			resultSkill->InPassive(GotPassiveIDs);
+			isChangeScene = true;
+			isFinish = false;
+			m_Choice = true;
+			TutorialTask::GetInstance()->SetChoiceSkill(true);
+		}
 	}
+	else {
+		haveSkill->Update();
+	}
+	
 	return true;
 }
 
@@ -493,4 +487,8 @@ void GameStateManager::StageClearInit() {
 //バフの生成
 void GameStateManager::BirthBuff() {
 	m_Buff = true;		//一旦中身はこれだけ
+}
+void GameStateManager::DeckReset() {
+	m_DeckNumber.resize(3);
+	m_DeckNumber = { 0,1,6 };
 }

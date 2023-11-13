@@ -45,7 +45,6 @@ private:
 	void Spawn2Map();
 private:
 	std::vector<unique_ptr<InterEnemy>> enemys;
-
 	//ä€âe(É{ÉX)
 	float BosscircleShadowDir[3] = { 0,-1,0 };
 	float BosscircleShadowAtten[3] = { 0.5f,0.6f,0.0f };
