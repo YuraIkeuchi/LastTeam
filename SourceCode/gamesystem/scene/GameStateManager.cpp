@@ -189,11 +189,11 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("Test");
+	/*ImGui::Begin("Test");
 	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
 	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
+	StagePanel::GetInstance()->ImGuiDraw();*/
 	haveSkill->ImGuiDraw();
 }
 //手に入れたUIの描画
@@ -440,9 +440,12 @@ bool GameStateManager::AttackSubAction() {
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
-
-	resultSkill->Update();
-	haveSkill->Update();
+	if (_ResultType == GET_SKILL) {
+		resultSkill->Update();
+	}
+	else {
+		haveSkill->Update();
+	}
 	if (Input::GetInstance()->TriggerButton(Input::LB)) {
 		_ResultType = GET_SKILL;
 	}

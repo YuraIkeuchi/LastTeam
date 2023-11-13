@@ -16,7 +16,7 @@ public:
 	void Update();
 	void Draw();
 	void ImGuiDraw();
-
+	void Move();
 	//éùÇ¡ÇƒÇ¢ÇÈÉXÉLÉã
 	void HaveAttackSkill(std::vector<int> Deck,
 		int DeckSize);
@@ -44,5 +44,13 @@ private:
 	std::unique_ptr<IKESprite> selectFrame;
 	std::vector<HaveUI> haveSkills;
 	std::vector<HaveUI> havePassive;
+	float m_AddPosX = {};
+	int m_SelectCount = {};
+	int m_OldCount = 0;
+	int m_SelectTimer = {};
+	bool m_isMove = false;
+
+	XMFLOAT2 m_SelectPos = {};
+
 };
 

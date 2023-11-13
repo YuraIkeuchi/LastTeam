@@ -16,6 +16,8 @@ void HaveResultSkill::Initialize() {
 	backScreen->SetSize({ 1280.f,720.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
+	selectFrame->SetSize({ 90.0f,90.0f });
+	selectFrame->SetPosition({ 640.0f,150.0f });
 }
 
 void HaveResultSkill::Update() {
@@ -30,13 +32,16 @@ void HaveResultSkill::Update() {
 			PassiveUI.number->Update();
 		}
 	}
+
+	//動き
+	Move();
 }
 
 void HaveResultSkill::Draw() {
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
-	//selectFrame->Draw();
+	selectFrame->Draw();
 	for (HaveUI& resultUI : haveSkills) {
 		resultUI.icon->Draw();
 		if (resultUI.isSkill) {
@@ -51,14 +56,20 @@ void HaveResultSkill::Draw() {
 	IKESprite::PostDraw();
 }
 void HaveResultSkill::ImGuiDraw() {
-	if (haveSkills.empty()) { return; }
-	if (havePassive.empty()) { return; }
 	ImGui::Begin("Have");
-	for (auto i = 0; i < haveSkills.size(); i++) {
-		ImGui::Text("HaveID[%d]:%d", i, haveSkills[i].ID);
+	ImGui::Text("Add:%f", m_AddPosX);
+	ImGui::Text("Count:%d", m_SelectCount);
+	ImGui::Text("PosX:%f,PosY:%f", selectFrame->GetPosition().x, selectFrame->GetPosition().y);
+	ImGui::Text("Num:%d", (int)(haveSkills.size()) + (int)(havePassive.size()));
+	if (!haveSkills.empty()) {
+		for (auto i = 0; i < haveSkills.size(); i++) {
+			ImGui::Text("HaveID[%d]:%d", i, haveSkills[i].ID);
+		}
 	}
-	for (auto i = 0; i < havePassive.size(); i++) {
-		ImGui::Text("PassiveHaveID[%d]:%d", i, havePassive[i].ID);
+	if (!havePassive.empty()) {
+		for (auto i = 0; i < havePassive.size(); i++) {
+			ImGui::Text("PassiveHaveID[%d]:%d", i, havePassive[i].ID);
+		}
 	}
 	ImGui::End();
 }
@@ -83,7 +94,7 @@ void HaveResultSkill::HavePassiveSkill(std::vector<int> Passive,
 }
 //攻撃スキルの表示
 void HaveResultSkill::CreateAttackSkill(int num,int id) {
-	XMFLOAT2 l_BasePos = { 200.0f,500.0f };
+	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
 	haveSkills[num].position = { l_BasePos.x + (num * 100.0f),l_BasePos.y };
 	haveSkills[num].icon = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
 	haveSkills[num].icon->SetSize({ 64.0f,64.0f });
@@ -93,10 +104,12 @@ void HaveResultSkill::CreateAttackSkill(int num,int id) {
 	haveSkills[num].number->Initialize();
 	haveSkills[num].number->SetNumber(haveSkills[num].ID);
 	haveSkills[num].number->SetPosition(haveSkills[num].position);
+	m_SelectCount = {};
+	m_AddPosX = {};
 }
 //パッシブスキルの表示
 void HaveResultSkill::CreatePassiveSkill(int num, int id) {
-	XMFLOAT2 l_BasePos = { 200.0f,500.0f };
+	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
 	havePassive[num].position = { l_BasePos.x + ((num + (int)haveSkills.size()) * 100.0f),l_BasePos.y };
 	havePassive[num].icon = IKESprite::Create(ImageManager::PASSIVE_01 + havePassive[num].ID, {0.0f,0.0f});
 	havePassive[num].icon->SetSize({ 64.0f,64.0f });
@@ -106,4 +119,43 @@ void HaveResultSkill::CreatePassiveSkill(int num, int id) {
 	havePassive[num].number->Initialize();
 	havePassive[num].number->SetNumber(havePassive[num].ID);
 	havePassive[num].number->SetPosition(havePassive[num].position);
+}
+//移動
+void HaveResultSkill::Move() {
+	Input* input = Input::GetInstance();
+	if (m_isMove) {
+		static float frame = 0.f;
+		static float addFrame = 1.f / 15.f;
+
+		if (Helper::GetInstance()->FrameCheck(frame, addFrame)) {
+			m_isMove = false;
+			frame = 0.f;
+		}
+		else {
+			m_AddPosX = Ease(InOut, Circ, frame, m_AddPosX, 100.0f * m_SelectCount);
+		}
+
+		for (auto i = 0; i < haveSkills.size(); i++) {
+			haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
+			haveSkills[i].number->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
+		}
+		for (auto i = 0; i < havePassive.size(); i++) {
+			havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
+			havePassive[i].number->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
+		}
+	}
+
+	if (input->TiltPushStick(input->L_LEFT) ||
+		input->TiltPushStick(input->L_RIGHT)) {
+		if (m_isMove) { return; }
+		if (input->TiltPushStick(input->L_RIGHT)) {
+			if (m_SelectCount == ((int)(haveSkills.size()) + (int)(havePassive.size())) - 1) { return; }
+			m_SelectCount++;
+		}
+		else {
+			if (m_SelectCount == 0) { return; }
+			m_SelectCount--;
+		}
+		m_isMove = true;
+	}
 }
