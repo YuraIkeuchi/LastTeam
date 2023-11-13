@@ -193,7 +193,7 @@ void GameStateManager::ImGuiDraw() {
 	//	InDeck();		//デッキに入っていないカードをデッキに組み込む
 	//}
 	//ImGui::End();
-	//SkillManager::GetInstance()->ImGuiDraw();
+	SkillManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
 	haveSkill->ImGuiDraw();
 }
