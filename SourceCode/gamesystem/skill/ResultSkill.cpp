@@ -3,6 +3,7 @@
 #include "ImageManager.h"
 #include <Input.h>
 #include <Easing.h>
+#include <SkillManager.h>
 
 ResultSkill::ResultSkill() {
 
@@ -46,6 +47,14 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 		}
 	}
 	resulttext->TestDraw(dxCommon);
+	for (ResultUI& itr : choiceSkills) {
+		if (itr.no == nowFrame) {
+			if (!itr.isSkill) { continue; }
+			for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
+				pickAreas->Draw();
+			}
+		}
+	}
 	IKESprite::PostDraw();
 }
 
@@ -143,6 +152,7 @@ void ResultSkill::Move() {
 			}
 		}
 	}
+
 }
 
 ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) {
@@ -156,6 +166,8 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 		resultUI.number->Initialize();
 		resultUI.number->SetNumber(resultUI.ID);
 		resultUI.number->SetPosition(resultUI.position);
+		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY);//IDに応じた攻撃エリア、距離を取得する
+		BirthArea(resultUI);
 	} else {
 		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_01 + resultUI.ID, { 0.0f,0.0f });
 	}
@@ -165,4 +177,19 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	resultUI.no = nowPos;
 	nowPos++;
 	return resultUI;
+}
+
+void ResultSkill::BirthArea(ResultUI& resultUI) {
+
+	for (auto i = 0; i < resultUI.area.size(); i++) {
+		for (auto j = 0; j < resultUI.area.size(); j++) {
+			if (resultUI.area[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+				std::unique_ptr<ResultAreaUI> newarea = std::make_unique<ResultAreaUI>();
+				newarea->SetPanelNumber(i, j);
+				newarea->Initialize();
+				resultUI.resultarea.push_back(std::move(newarea));
+			}
+		}
+	}
+
 }

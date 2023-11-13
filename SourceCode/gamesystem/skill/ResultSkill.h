@@ -6,6 +6,7 @@
 #include <Passive.h>
 #include "DrawNumber.h"
 #include <TextManager.h>
+#include <ResultAreaUI.h>
 
 class ResultSkill {
 public:
@@ -35,10 +36,14 @@ private:
 		int no = -1;
 		int ID = -1;
 		bool isSkill = true;
+		list<std::unique_ptr<ResultAreaUI>> resultarea;
+		vector<std::vector<int>> area;	//”ÍˆÍ
+		int DisX = {};
+		int DisY = {};
 	};
 
 	ResultUI CreateUI(bool isSkill,int id,XMFLOAT2 pos);
-
+	void BirthArea(ResultUI& resultUI);
 private:
 	bool isStart = false;
 	unique_ptr<TextManager> text_;

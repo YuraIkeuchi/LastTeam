@@ -97,7 +97,7 @@
       <Filter>engine\3d\Fbx</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\engine\3d\ModelManager.cpp">
-      <Filter>engine\3d\Manager</Filter>
+      <Filter>engine\3d\Fbx\Manager</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\engine\3d\ObjCommon.cpp">
       <Filter>engine\3d\Base</Filter>
@@ -408,6 +408,7 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\ResultAreaUI.cpp">
       <Filter>gamesystem\stageobj\Area</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\text\Onomatope.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -447,7 +448,7 @@
       <Filter>engine\3d\Fbx</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\3d\ModelManager.h">
-      <Filter>engine\3d\Manager</Filter>
+      <Filter>engine\3d\Fbx\Manager</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\3d\ObjCommon.h">
       <Filter>engine\3d\Base</Filter>
@@ -783,6 +784,7 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\ResultAreaUI.h">
       <Filter>gamesystem\stageobj\Area</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\text\Onomatope.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
@@ -861,9 +863,6 @@
     </Filter>
     <Filter Include="engine\3d\Obj">
       <UniqueIdentifier>{17fb0e8a-0d5b-4e26-93f3-65b32fc44c83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\3d\Manager">
-      <UniqueIdentifier>{5fa3098f-a3c1-4362-8d9a-e5454bf67630}</UniqueIdentifier>
     </Filter>
     <Filter Include="engine\3d\Base">
       <UniqueIdentifier>{43b02751-fca0-4e17-9da1-ac921e842196}</UniqueIdentifier>
@@ -993,6 +992,9 @@
     </Filter>
     <Filter Include="imgui">
       <UniqueIdentifier>{e95d12bb-687a-4d00-ae42-6a4cd3927259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\3d\Fbx\Manager">
+      <UniqueIdentifier>{5fa3098f-a3c1-4362-8d9a-e5454bf67630}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
