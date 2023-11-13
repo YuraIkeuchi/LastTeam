@@ -138,5 +138,5 @@ private:
 protected:
 	void Collide(vector<AttackArea*>area);
 	//毒の状態
-	void PoisonState() {};
+	void PoisonState();
 };
