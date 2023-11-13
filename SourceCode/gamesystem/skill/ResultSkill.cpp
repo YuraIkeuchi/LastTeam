@@ -1,4 +1,4 @@
-#include "ResultSkill.h"
+ï»¿#include "ResultSkill.h"
 #include "Helper.h"
 #include "ImageManager.h"
 #include <Input.h>
@@ -11,12 +11,17 @@ ResultSkill::ResultSkill() {
 ResultSkill::~ResultSkill() {
 }
 
-void ResultSkill::Initialize() {
+void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.5f });
 	backScreen->SetSize({ 1280.f,720.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetPosition(framePos);
+
+	//ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½gï¿½eï¿½Lï¿½Xï¿½g
+	resulttext = make_unique<TextManager>();
+	resulttext->Initialize(dxCommon);
+	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
 }
 
 void ResultSkill::Update() {
@@ -28,7 +33,7 @@ void ResultSkill::Update() {
 	}
 }
 
-void ResultSkill::Draw() {
+void ResultSkill::Draw(DirectXCommon* dxCommon) {
 	if (!isStart) { return; }
 
 	IKESprite::PreDraw();
@@ -40,6 +45,7 @@ void ResultSkill::Draw() {
 			resultUI.number->Draw();
 		}
 	}
+	resulttext->TestDraw(dxCommon);
 	IKESprite::PostDraw();
 }
 
@@ -75,16 +81,16 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 		isStart = true;
 		return;
 	}
-	// ƒVƒƒƒbƒtƒ‹
+	// ã‚·ãƒ£ãƒƒãƒ•ãƒ«
 	std::random_device seed_gen;
 	std::mt19937 engine(seed_gen());
 	std::shuffle(noDeck.begin(), noDeck.end(), engine);
 	std::shuffle(noPassive.begin(), noPassive.end(), engine);
 
-	//ƒXƒLƒ‹
+	//ã‚¹ã‚­ãƒ«
 	ResultUI resultUI = CreateUI(true, noDeck[0], BasePos[nowPos]);
 	choiceSkills.push_back(std::move(resultUI));
-	//ƒpƒbƒVƒu
+	//ãƒ‘ãƒƒã‚·ãƒ–
 	ResultUI passiveUI = CreateUI(false, noPassive[0], BasePos[nowPos]);
 	choiceSkills.push_back(std::move(passiveUI));
 	if (noDeck.size()< noPassive.size()) {

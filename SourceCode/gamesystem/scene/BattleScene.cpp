@@ -32,6 +32,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 		GameStateManager::GetInstance()->SetPlayer(player);
 	}
 	//ゲームステート初期化
+	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
 	GameStateManager::GetInstance()->Initialize();
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
@@ -41,11 +42,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	{
 		auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
 	}
-
-	//リザルトテキスト
-	resulttext = make_unique<TextManager>();
-	resulttext->Initialize(dxCommon);
-	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
 
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
@@ -144,9 +140,6 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 
 	game_object_manager_->UIDraw();
 
-	if (enemyManager->BossDestroy()) {
-		resulttext->TestDraw(dxCommon);
-	}
 	if (!enemyManager->BossDestroy()){
 		enemyManager->UIDraw();
 		GameStateManager::GetInstance()->ActUIDraw();
