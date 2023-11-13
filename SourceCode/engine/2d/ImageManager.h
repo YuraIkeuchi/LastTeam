@@ -39,11 +39,13 @@ public:
 		PASSIVE_04,
 		PASSIVE_05,
 		PASSIVE_06,
+		PASSIVE_07,
 		PASSIVE_FRAME,
 		GAUGE,
 		TITLEBACK,
 		TITLETEXT,
 		GAMEOVERBACK,
+		ONOMATO_00,
 	};
 	//テクスチャの名前
 	enum tex2dName

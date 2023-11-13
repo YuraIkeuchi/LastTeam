@@ -9,10 +9,15 @@
 #include "AttackArea.h"
 #include "PredictArea.h"
 #include <Passive.h>
+#include "GameObject/GameObject.h"
+#include "Player.h"
+#include "BaseEnemy.h"
 #include "ResultSkill.h"
 #include "HaveResultSkill.h"
 using namespace DirectX;
 using namespace std;
+
+
 
 //ゲームの状態を管理するクラス
 class GameStateManager {
@@ -32,6 +37,13 @@ public:
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
 	void AddSkill(const int SkillType, const int ID, const float damage, const int Delay, vector<std::vector<int>> area, int DisX, int DisY, string name);
+
+	/// <summary>
+	/// エネミーのデータをコンテナに追加
+	/// </summary>
+	/// <param name="Enemy"></param>
+	/// <param name="作者">やぶなか</param>
+	void AddEnemy(std::weak_ptr<BaseEnemy> Enemy) { enemys_container_.emplace_back(Enemy); }
 private:
 	void PredictManager();
 	//攻撃した瞬間
@@ -60,6 +72,7 @@ private:
 
 	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
+
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -74,11 +87,12 @@ public:
 	const float GetGrazeScore() { return m_GrazeScore; }
 	vector<AttackArea*>GetAttackArea() { return attackarea; }
 	const float GetDiameterVel() { return m_DiameterVel; }
+	std::weak_ptr<Player> GetPlayer() { return player_; }
+
 	/// <summary>
 	/// 敵を倒したら最初の処理
 	/// </summary>
 	void StageClearInit();
-
 	void SetEnemySpawnText(string& text) { enemySpawnText = text; }
 	string& GetEnemySpawnText() { return enemySpawnText; }
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
@@ -86,6 +100,8 @@ public:
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
 	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
+	void SetPlayer(std::weak_ptr<Player> player) { player_ = player; }
+	// 仮
 	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
 private:
 	unique_ptr<IKETexture> _charge;
@@ -111,7 +127,7 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector<int> GotPassiveIDs = {5};
+	std::vector<int> GotPassiveIDs = {};
 	std::vector<int> NotPassiveIDs;
 
 	unique_ptr<IKESprite> skillUI = nullptr;
@@ -119,7 +135,7 @@ private:
 
 	XMFLOAT2 basesize = { 45.f,400.f };
 
-	//攻撃エリア
+	// 攻撃エリア
 	vector<AttackArea*> attackarea;
 
 	//カウンター
@@ -135,10 +151,6 @@ private:
 	//全体スコア
 	int m_AllScore = {};
 
-	//プレイヤーの現在パネル
-	int m_NowHeight = {};
-	int m_NowWidth = {};
-	float m_DiameterVel = 1.0f;
 
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
 
@@ -154,10 +166,11 @@ private:
 	//ゲージマックス
 	float kGaugeCountMax = 180;
 	bool m_IsReload = true;
-
+	bool m_IsReloadDamage = false;
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
 	bool m_IsRecycle = false;
+
 
 	bool m_BirthSkill = false;
 
@@ -166,6 +179,7 @@ private:
 	string m_Name;
 
 	vector<int> m_DeckNumber = { 0,1,6 };
+
 
 	vector<int> m_NotDeckNumber = {};
 
@@ -191,4 +205,33 @@ private:
 		GET_SKILL,
 		HAVE_SKILL,
 	}_ResultType = GET_SKILL;
+
+	///=============================
+	/// 
+	/// プレイヤー関連
+	/// 
+	/// =============================
+
+	/// <summary>
+	/// プレイヤーのポインタ
+	/// </summary>
+	std::weak_ptr<Player> player_;
+
+	//プレイヤーの現在パネル
+	int m_NowHeight = {};		// Yパネル座標
+	int m_NowWidth = {};		// Xパネル座標
+
+	// ゲージ速度
+	float m_DiameterVel = 1.0f;
+
+	/// =============================
+	/// 
+	/// エネミー関連
+	/// 
+	/// =============================
+	
+	/// <summary>
+	/// エネミー管理用のコンテナ
+	/// </summary>
+	vector<weak_ptr<BaseEnemy>> enemys_container_;
 };

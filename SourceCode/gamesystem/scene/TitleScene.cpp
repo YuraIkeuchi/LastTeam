@@ -1,4 +1,4 @@
-#include "TitleScene.h"
+ï»¿#include "TitleScene.h"
 #include "input.h"
 #include "ImageManager.h"
 #include <Player.h>
@@ -6,15 +6,15 @@
 #include <SceneManager.h>
 #include "MobEnemy.h"
 #include "TutorialTask.h"
-#include <GameStateManager.h>
-// ‘JˆÚ‚µ‚¤‚éƒV[ƒ“
+#include "GameStateManager.h"
+// é·ç§»ã—ã†ã‚‹ã‚·ãƒ¼ãƒ³
 #include "BattleScene.h"
 #include "MapScene.h"
 #include "TutorialScene.h"
 #include "TextManager.h"
-//‰Šú‰»
+//åˆæœŸåŒ–
 void TitleScene::Initialize(DirectXCommon* dxCommon) {
-	//‹¤’Ê‚Ì‰Šú‰»
+	//å…±é€šã®åˆæœŸåŒ–
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
 
@@ -26,60 +26,83 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 		s_GameLoop = true;
 	}
 
-	//ƒvƒŒƒCƒ„[
+	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[
 	Player::GetInstance()->LoadResource();
 
-	//ƒXƒe[ƒW‚Ì°
+	//ï¿½Xï¿½eï¿½[ï¿½Wï¿½Ìï¿½
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç”Ÿæˆ
+	{
+		auto player = GameObject::CreateObject<Player>();	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+		player->LoadResource();
+		player->InitState({ -4.0f,1.0f,0.0f });
+		player->Initialize();
+		player->SetTitleFlag(true);
+
+		GameStateManager::GetInstance()->SetPlayer(player);
+	}
 	StagePanel::GetInstance()->LoadResource();
 	
 	GameReset({ -4.0f,0.1f,2.0f });
 
-	//“G
+	//æ•µ
 	enemy = make_unique<MobEnemy>();
 	enemy->Initialize();
 
-	//ƒ^ƒCƒgƒ‹
+	//ã‚«ãƒ¼ãƒ‰
 	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
 	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
 
+	//ï¿½Û‰e
+	lightGroup->SetCircleShadowActive(0, true);
+	lightGroup->SetCircleShadowActive(1, true);
 }
-//XV
+//æ›´æ–°
 void TitleScene::Update(DirectXCommon* dxCommon) {
 	Input* input = Input::GetInstance();
 	camerawork->Update(camera);
-	// ‘SƒIƒuƒWƒFƒNƒgXV
+	// å…¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ›´æ–°
 	game_object_manager_->Update();
 
-	//ŠeƒNƒ‰ƒXXV
+	//å„ã‚¯ãƒ©ã‚¹æ›´æ–°
 	camerawork->Update(camera);
+
+	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[
+	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x, 0.5f, GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z}));
+	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	//ï¿½{ï¿½X
+	lightGroup->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
 	lightGroup->Update();
-	
-	//ŠeƒNƒ‰ƒXXV
-	Player::GetInstance()->TitleUpdate();
+	game_object_manager_->Update();
+	//Player::GetInstance()->TitleUpdate();
 	StagePanel::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemy->Update();
 
-	if ((input->TriggerButton(input->B))) {			//ƒoƒgƒ‹
+	if ((input->TriggerButton(input->B))) {			//ãƒãƒˆãƒ«
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = PLAY;
-		//ƒ`ƒ…[ƒgƒŠƒAƒ‹‚Ìƒ^ƒXƒN
+		//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¿ã‚¹ã‚¯
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 
 	}
-	if (input->TriggerKey(DIK_SPACE)) {			//ƒ}ƒbƒv
+	if (input->TriggerKey(DIK_SPACE)) {			//ãƒãƒƒãƒ—
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = MAP;
-		//ƒ`ƒ…[ƒgƒŠƒAƒ‹‚Ìƒ^ƒXƒN
+		//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¿ã‚¹ã‚¯
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 	}
-	if (input->TriggerButton(input->X)) {			//ƒ`ƒ…[ƒgƒŠƒAƒ‹
+	if (input->TriggerButton(input->X)) {			//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = TUTORIAL;
-		//ƒ`ƒ…[ƒgƒŠƒAƒ‹‚Ìƒ^ƒXƒN
+		//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¿ã‚¹ã‚¯
 		TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 	}
-	if (SceneChanger::GetInstance()->GetChange()) {			//^‚ÁˆÃ‚É‚È‚Á‚½‚ç•Ï‚í‚é
+	if (SceneChanger::GetInstance()->GetChange()) {			//çœŸã£æš—ã«ãªã£ãŸã‚‰å¤‰ã‚ã‚‹
 		if (_SceneType == PLAY) {
 			GameReset({ -8.0f,0.1f,0.0f });
 			SceneManager::GetInstance()->ChangeScene<BattleScene>();
@@ -94,9 +117,9 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	}
 
 }
-//•`‰æ
+//æç”»
 void TitleScene::Draw(DirectXCommon* dxCommon) {
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚é‚©
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ã‚‹ã‹
 	if (PlayPostEffect) {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		BackDraw(dxCommon);
@@ -117,20 +140,8 @@ void TitleScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PostDraw();
 	}
 }
-//‘O–Ê•`‰æ
+//å‰é¢æç”»
 void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
-	////Š®‘S‚É‘O‚É‘‚­ƒXƒvƒ‰ƒCƒg
-	//for (int i = 0; i < 3; i++) {
-	//	if (i != 0) {
-	//		if (texts[(size_t)i - 1]->GetFinish()) {
-	//			texts[i]->Draw();
-
-	//		}
-	//	} else {
-	//		texts[i]->Draw();
-	//	}
-	//}
-	//Font::PostDraw();
 	text_->TestDraw(dxCommon);
 	IKESprite::PreDraw();
 	title_[TITLE_TEXT]->Draw();
@@ -138,14 +149,14 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 
 }
-//”w–Ê•`‰æ
+//èƒŒé¢æç”»
 void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	title_[TITLE_BACK]->Draw();
 	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	Player::GetInstance()->Draw(dxCommon);
+	game_object_manager_->Draw();
 	IKEObject3d::PostDraw();
 
 	enemy->Draw(dxCommon);
@@ -153,10 +164,10 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	IKETexture::PostDraw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	camerawork->ImGuiDraw();
 }
-//‰ğ•ú
+//è§£æ”¾
 void TitleScene::Finalize() {
 }

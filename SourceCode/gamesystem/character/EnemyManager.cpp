@@ -23,28 +23,14 @@ void EnemyManager::Initialize() {
 	}
 }
 
-void EnemyManager::BattleUpdate() {
-	//すべての敵の行動が終わったr
-	//for (unique_ptr<InterEnemy>& enemy : enemys) {
-	//	if (enemy->GetState() != STATE_STANDBY) { break; }
-	//	for (unique_ptr<InterEnemy>& enemy : enemys) {
-	//		enemy->SetState(STATE_INTER);
-	//	}
-	//}
-
-}
 
 void EnemyManager::Update() {
-	BattleUpdate();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->Update();
-	}
 
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		if (enemy->GetState() == STATE_ATTACK) {			//一旦攻撃以外は取らない
-			Player::GetInstance()->SetGrazePos(enemy->GetPosition());
+		if (enemy->GetState() == STATE_ATTACK) {			//��U�U���ȊO�͎��Ȃ�
+			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos(enemy->GetPosition());
 		} else {
-			Player::GetInstance()->SetGrazePos({ 1000.0f,0.0f,0.0f });
+			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos({ 1000.0f,0.0f,0.0f });
 		}
 	}
 
@@ -75,13 +61,13 @@ void EnemyManager::ImGuiDraw() {
 		enemy->ImGuiDraw();
 	}
 }
-//UIの描画
+//UI�̕`��
 void EnemyManager::UIDraw() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->UIDraw();
 	}
 }
-//敵の死亡処置
+//�G�̎��S���u
 bool EnemyManager::BossDestroy() {
 	int num = (int)enemys.size();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {

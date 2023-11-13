@@ -1,4 +1,4 @@
-#include "TutorialScene.h"
+ï»¿#include "TutorialScene.h"
 #include <Player.h>
 #include <ParticleEmitter.h>
 #include <StagePanel.h>
@@ -11,65 +11,91 @@
 #include "BattleScene.h"
 #include "MobEnemy.h"
 
-//ó‘Ô‘JˆÚ
-/*state‚Ì•À‚Ñ‡‚É‡‚í‚¹‚é*/
+#include <imgui.h>
+#include <imgui_impl_dx12.h>
+#include <imgui_impl_win32.h>
+
+//ï¿½ï¿½Ô‘Jï¿½ï¿½
+/*stateï¿½Ì•ï¿½ï¿½Ñï¿½ï¿½Éï¿½ï¿½í‚¹ï¿½ï¿½*/
 void (TutorialScene::* TutorialScene::stateTable[])() = {
 	&TutorialScene::IntroState,//
 	&TutorialScene::MoveState,//
-	&TutorialScene::GetState,//ƒXƒLƒ‹ƒQƒbƒg
-	&TutorialScene::AttackState,//UŒ‚
-	&TutorialScene::DamageState,//ƒ_ƒ[ƒW‚ğ—^‚¦‚½
-	&TutorialScene::TutorialEnd,//I‚í‚è
+	&TutorialScene::GetState,//ï¿½Xï¿½Lï¿½ï¿½ï¿½Qï¿½bï¿½g
+	&TutorialScene::AttackState,//ï¿½Uï¿½ï¿½
+	&TutorialScene::DamageState,//ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½
+	&TutorialScene::TutorialEnd,//ï¿½Iï¿½ï¿½ï¿½
 };
-//‰Šú‰»
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void TutorialScene::Initialize(DirectXCommon* dxCommon)
 {
-	//‹¤’Ê‚Ì‰Šú‰»
+	//ï¿½ï¿½ï¿½Ê‚Ìï¿½ï¿½ï¿½ï¿½ï¿½
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg
+	//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½g
 	PlayPostEffect = false;
 
-	//ƒp[ƒeƒBƒNƒ‹‘Síœ
+	//ï¿½pï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½Sï¿½íœ
 	ParticleEmitter::GetInstance()->AllDelete();
+	{
+		auto player = GameObject::CreateObject<Player>();
+		player->LoadResource();
+		player->InitState({ -8.0f,1.0f,0.0f });
+		player->Initialize();
 
-	//ƒvƒŒƒCƒ„[
-	Player::GetInstance()->LoadResource();
-	//ƒXƒLƒ‹
+		GameStateManager::GetInstance()->SetPlayer(player);
+
+	}
+	//ï¿½Xï¿½Lï¿½ï¿½
 	SkillManager::GetInstance()->Initialize();
-	//ƒQ[ƒ€‚Ìó‘Ô
+	//ï¿½Qï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½
 	GameStateManager::GetInstance()->Initialize();
-	//ƒXƒe[ƒW‚Ì°
+	//ï¿½Xï¿½eï¿½[ï¿½Wï¿½Ìï¿½
 	StagePanel::GetInstance()->LoadResource();
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
 	text_->SetConversation(TextManager::TUTORIAL_START);
-	//“G
+	//æ•µ
 	enemy = make_unique<MobEnemy>();
 	enemy->Initialize();
 	enemy->SetPosition({ 0.0f,0.1f,4.0f });
 	_nowstate = TUTORIAL_INTRO;
 
-	//ƒŠƒUƒ‹ƒgƒeƒLƒXƒg
+	//ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½gï¿½eï¿½Lï¿½Xï¿½g
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
 	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
 
 	TutorialTask::GetInstance()->SetChoiceSkill(false);
+	//ï¿½Û‰e
+	lightGroup->SetCircleShadowActive(0, true);
+	lightGroup->SetCircleShadowActive(1, true);
 }
-//XV
+//ï¿½Xï¿½V
 void TutorialScene::Update(DirectXCommon* dxCommon)
 {
 	Input* input = Input::GetInstance();
+
+	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[
+	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x, 0.5f, GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	//ï¿½{ï¿½X
+	lightGroup->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
+	lightGroup->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
+	lightGroup->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
+	lightGroup->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
 	lightGroup->Update();
-	// ‘SƒIƒuƒWƒFƒNƒgXV
+	// ï¿½Sï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Xï¿½V
 	game_object_manager_->Update();
 
-	//ŠeƒNƒ‰ƒXXV
+	//ï¿½eï¿½Nï¿½ï¿½ï¿½Xï¿½Xï¿½V
 	camerawork->Update(camera);
 	if (!GameStateManager::GetInstance()->GetIsFinish()) {
 		Player::GetInstance()->Update();
 	}
+	lightGroup->Update();
+	game_object_manager_->Update();
 	StagePanel::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
@@ -78,13 +104,13 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	if (input->TriggerButton(input->BACK)) {
 		m_End = true;
 	}
-	//“G‚ğ“|‚µ‚½‚çƒV[ƒ“ˆÈ~(‰¼)
+	//ï¿½Gï¿½ï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½[ï¿½ï¿½ï¿½È~(ï¿½ï¿½)
 	if (m_End) {
 		_ChangeType = CHANGE_TITLE;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
-	//‚Õ‚ê‚¢‚â[‚ÌHP‚ª–³‚­‚È‚Á‚Ä‚à‘JˆÚ‚·‚é
-	if (Player::GetInstance()->GetHp() <= 0.0f) {
+	//ï¿½Õ‚ê‚¢ï¿½ï¿½[ï¿½ï¿½HPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Ä‚ï¿½ï¿½Jï¿½Ú‚ï¿½ï¿½ï¿½
+	if (GameStateManager::GetInstance()->GetPlayer().lock()->GetHp() <= 0.0f) {
 		_ChangeType = CHANGE_OVER;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
@@ -96,13 +122,13 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 
-	//ó‘ÔˆÚs(state‚É‡‚í‚¹‚é)
+	//ï¿½ï¿½ÔˆÚs(stateï¿½Éï¿½ï¿½í‚¹ï¿½ï¿½)
 	(this->*stateTable[static_cast<size_t>(_nowstate)])();
 }
 
 void TutorialScene::Draw(DirectXCommon* dxCommon) {
-	//•`‰æ•û–@
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚é‚©
+	//ï¿½`ï¿½ï¿½ï¿½ï¿½@
+	//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é‚©
 	if (PlayPostEffect) {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		BackDraw(dxCommon);
@@ -125,7 +151,7 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PostDraw();
 	}
 }
-//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚©‚©‚ç‚È‚¢
+//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
@@ -133,17 +159,30 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (enemy->GetHP() <= 0.0f) {
 		resulttext->TestDraw(dxCommon);
 	}
-	////Š®‘S‚É‘O‚É‘‚­ƒXƒvƒ‰ƒCƒg
+	////ï¿½ï¿½ï¿½Sï¿½É‘Oï¿½Éï¿½ï¿½ï¿½ï¿½Xï¿½vï¿½ï¿½ï¿½Cï¿½g
 	if (Player::GetInstance()->GetNowHeight() != 0) {
 		text_->TestDraw(dxCommon);
 	}
+	////ï¿½ï¿½ï¿½Sï¿½É‘Oï¿½Éï¿½ï¿½ï¿½ï¿½Xï¿½vï¿½ï¿½ï¿½Cï¿½g
+	text_->TestDraw(dxCommon);
+	if (_nowstate == TUTORIAL_DAMAGE) {
+		resulttext->TestDraw(dxCommon);
+	}
+	ParticleEmitter::GetInstance()->FlontDrawAll();
+	GameStateManager::GetInstance()->ActUIDraw();
+	game_object_manager_->UIDraw();
+
+// 	enemyManager->UIDraw();
+// 	//Player::GetInstance()->UIDraw();
+// 	enemy->UIDraw();
+// >>>>>>> 5735619e9defc9fdb26571e999c2bcb5a575bea5
 	SceneChanger::GetInstance()->Draw();
 }
-//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚©‚©‚é
+//ï¿½|ï¿½Xï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	Player::GetInstance()->Draw(dxCommon);
+	game_object_manager_->Draw();
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
@@ -165,7 +204,7 @@ void TutorialScene::ImGuiDraw() {
 void TutorialScene::Finalize() {
 
 }
-//Å‰‚ÌŒê‚è
+//ï¿½Åï¿½ï¿½ÌŒï¿½ï¿½
 void TutorialScene::IntroState() {
 	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
 		_nowstate = TUTORIAL_MOVE;
@@ -173,7 +212,7 @@ void TutorialScene::IntroState() {
 	
 	}
 }
-//ˆÚ“®
+//ï¿½Ú“ï¿½
 void TutorialScene::MoveState() {
 	if (Helper::GetInstance()->CheckMin(m_Timer, 50, 1)) {
 		m_Timer = {};
@@ -185,7 +224,7 @@ void TutorialScene::MoveState() {
 		_nowstate = TUTORIAL_GETSKILL;
 	}
 }
-//ƒXƒLƒ‹ƒQƒbƒg
+//ï¿½Xï¿½Lï¿½ï¿½ï¿½Qï¿½bï¿½g
 void TutorialScene::GetState() {
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
@@ -194,7 +233,7 @@ void TutorialScene::GetState() {
 		m_Timer = {};
 	}
 }
-//UŒ‚
+//ï¿½Uï¿½ï¿½
 void TutorialScene::AttackState() {
 	Helper::GetInstance()->CheckMin(m_Timer, 410, 1);
 
@@ -211,7 +250,7 @@ void TutorialScene::AttackState() {
 		m_Timer = {};
 	}
 }
-//ƒ_ƒ[ƒW‚ª“ü‚Á‚½
+//ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void TutorialScene::DamageState() {
 	if (enemy->GetHP() <= 0.0f) {
 		m_Timer++;
@@ -229,7 +268,7 @@ void TutorialScene::DamageState() {
 		GameStateManager::GetInstance()->StageClearInit();
 	}
 }
-//ƒ`ƒ…[ƒgƒŠƒAƒ‹I‚í‚è
+//ï¿½`ï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½
 void TutorialScene::TutorialEnd() {
 	if (Helper::GetInstance()->CheckMin(m_Timer, 200, 1)) {
 		m_Timer = {};

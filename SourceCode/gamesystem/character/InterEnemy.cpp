@@ -94,7 +94,7 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 			std::string name = _area->GetStateName();
 
 			if (name == "DRAIN") {
-				Player::GetInstance()->HealPlayer(damage * 0.2f);		//HP回復
+				GameStateManager::GetInstance()->GetPlayer().lock()->HealPlayer(damage * 0.2f);		//HP回復
 			}
 			else if (name == "POISON") {
 				m_Poison = true;

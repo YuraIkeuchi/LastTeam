@@ -7,11 +7,7 @@
 #include <StagePanel.h>
 #include <ImageManager.h>
 #include <ParticleEmitter.h>
-Player* Player::GetInstance() {
-	static Player instance;
 
-	return &instance;
-}
 //リソース読み込み
 void Player::LoadResource() {
 	m_Object.reset(new IKEObject3d());
@@ -82,24 +78,28 @@ void (Player::* Player::stateTable[])() = {
 };
 //更新処理
 void Player::Update() {
+	if(is_title)
+	{
+		TitleUpdate();
+	}
+	else
+	{
 	const float l_GrazeMax = 2.0f;
-
-	//状態移行(charastateに合わせる)
-	(this->*stateTable[_charaState])();
 	Obj_SetParam();
 
 	BirthParticle();
 	//プレイヤーのマスを取得する
 	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
-
-	//グレイズ用にスコアを計算する
-	m_Length = Helper::GetInstance()->ChechLength(m_Position, m_GrazePos);
-	m_GrazeScore = l_GrazeMax - m_Length;
-	//最大スコアは10
-	Helper::GetInstance()->Clamp(m_GrazeScore, 0.0f, l_GrazeMax);
-	//プレイヤーの位置からスコアを加算する
-	GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
-	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
+		Obj_SetParam();
+		BirthParticle();
+		// グレイズ用にスコアを計算する
+		m_Length = Helper::GetInstance()->ChechLength(m_Position, m_GrazePos);
+		m_GrazeScore = l_GrazeMax - m_Length;
+		// 最大スコアは10
+		Helper::GetInstance()->Clamp(m_GrazeScore, 0.0f, l_GrazeMax);
+		// プレイヤーの位置からスコアを加算する
+		GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
+		GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 
 	//HPの限界値を決める
 	Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
@@ -107,6 +107,12 @@ void Player::Update() {
 	m_InterHP = (int)(m_HP);
 	if (m_HP > 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
+		//HPの限界値を決める
+		Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
+		// 表示用のHP
+		m_InterHP = (int)(m_HP);
+		for (auto i = 0; i < _drawnumber.size(); i++)
+		{
 			_drawnumber[i]->SetNumber(m_DigitNumber[i]);
 			_drawnumber[i]->Update();
 			m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
@@ -126,6 +132,11 @@ void Player::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	IKETexture::PostDraw();
+		hptex->SetPosition(m_HPPos);
+		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
+}
+//描画
+void Player::Draw() {
 	Obj_Draw();
 }
 //UIの描画

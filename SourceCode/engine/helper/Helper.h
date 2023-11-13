@@ -155,6 +155,10 @@ inline bool Helper::CheckMin(T& Num, const T Min, const T Add) {
 //乱数
 inline int Helper::GetRanNum(int min, int max)
 {
+	if (min > max) 
+	{
+		max = min;
+	}
 	// 乱数エンジンのシード値
 	std::random_device randev;
 	// メルセンヌ・ツイスター

@@ -87,6 +87,8 @@ private:
 	unique_ptr<IKESprite> frame = nullptr;
 	unique_ptr<IKESprite> chara = nullptr;
 
+	unique_ptr<IKESprite> Onomatope = nullptr;
+
 	array<array<UI, INDEX>, 20> UIs;
 	float homeY[INDEX] = { 110.f,360.f,610.f };
 	float homeX = 360.f;
@@ -108,13 +110,11 @@ private:
 	int oldPickHis = pickHierarchy;
 	int oldPickInd = pickIndex;
 
-
 	XMFLOAT2 scroll = { 0,0 };
 	int vel = 10;
 
 	std::vector<unique_ptr<IKESprite>> roads;
 	std::vector<XMFLOAT2> roadsPos;
-
 
 	std::vector<unique_ptr<IKESprite>> starRoads;
 	std::vector<XMFLOAT2> starRoadsPos;
@@ -123,12 +123,10 @@ private:
 	float mov_frame = 0.0f;
 	float kMoveFrame = 10.0f;
 
-
 	float eFrame = 0;
 	float eAdd = 0.01f;
 
 	XMFLOAT2 charaPos = { homeX ,homeY[Middle] };
 	XMFLOAT2 framePos = { homeX + interbal ,homeY[Middle] };
-
 };
 

@@ -27,6 +27,15 @@ void GameObjectManager::Draw()
 	}
 }
 
+void GameObjectManager::UIDraw()
+{
+	// Œã‚Å•`‰æ‡İ’è
+	for (std::weak_ptr<GameObject> object : game_objects_)
+	{
+		object.lock()->UIDraw();
+	}
+}
+
 void GameObjectManager::Finalize()
 {
 	for (std::weak_ptr<GameObject> object : game_objects_)
@@ -34,3 +43,12 @@ void GameObjectManager::Finalize()
 		object.lock()->Finalize();
 	}
 }
+
+void GameObjectManager::ImGuiDraw()
+{
+	for (std::weak_ptr<GameObject> object : game_objects_)
+	{
+		object.lock()->ImGuiDraw();
+	}
+}
+

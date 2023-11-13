@@ -5,6 +5,8 @@
 #include <StagePanel.h>
 #include <Easing.h>
 #include <ImageManager.h>
+#include "GameStateManager.h"
+
 EnemyBullet::EnemyBullet() {
 	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BULLET);
 	m_Object.reset(new IKEObject3d());
@@ -15,7 +17,7 @@ EnemyBullet::EnemyBullet() {
 	m_Pannel->Initialize();
 	m_Pannel->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
 }
-//‰Šú‰»
+//åˆæœŸåŒ–
 bool EnemyBullet::Initialize() {
 	m_Position = { 0.0f,0.0f,0.0f };
 	m_Rotation.y = 270.0f;
@@ -29,20 +31,20 @@ bool EnemyBullet::Initialize() {
 
 	return true;
 }
-//ó‘Ô‘JˆÚ
-/*CharaState‚ÌState•À‚Ñ‡‚É‡‚í‚¹‚é*/
+//çŠ¶æ…‹é·ç§»
+/*CharaStateã®Stateä¸¦ã³é †ã«åˆã‚ã›ã‚‹*/
 void (EnemyBullet::* EnemyBullet::stateTable[])() = {
-	&EnemyBullet::Throw,//“Š‚°‚é
+	&EnemyBullet::Throw,//æŠ•ã’ã‚‹
 };
-//XV
+//æ›´æ–°
 void EnemyBullet::Update() {
-	//ó‘ÔˆÚs(charastate‚É‡‚í‚¹‚é)
+	//çŠ¶æ…‹ç§»è¡Œ(charastateã«åˆã‚ã›ã‚‹)
 	(this->*stateTable[m_PolterType])();
-	//ƒ^ƒCƒv‚É‚æ‚Á‚ÄF‚ðˆê’U•Ï‚¦‚Ä‚é
+	//ã‚¿ã‚¤ãƒ—ã«ã‚ˆã£ã¦è‰²ã‚’ä¸€æ—¦å¤‰ãˆã¦ã‚‹
 	Obj_SetParam();
 
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
-	Collide();		//“–‚½‚è”»’è
+	Collide();		//å½“ãŸã‚Šåˆ¤å®š
 
 	m_PanelPos = {(-8.0f) + (2.0f * m_NowWidth),0.01f,(2.0f * m_NowHeight)};
 	m_Pannel->SetPosition(m_PanelPos);
@@ -52,7 +54,7 @@ void EnemyBullet::Update() {
 	m_Pannel->Update();
 	//StagePanel::GetInstance()->SetCanonChange(m_NowWidth, m_NowHeight);
 }
-//•`‰æ
+//æç”»
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	if (m_ThrowType == THROW_PLAY) {
@@ -61,7 +63,7 @@ void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 	IKEObject3d::PostDraw();
 	Obj_Draw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void EnemyBullet::ImGuiDraw() {
 	ImGui::Begin("Bullet");
 	ImGui::Text("POSX:%f,POSZ:%f", m_PanelPos.x, m_PanelPos.z);
@@ -69,13 +71,14 @@ void EnemyBullet::ImGuiDraw() {
 	ImGui::End();
 }
 
-//“–‚½‚è”»’è
+//å½“ãŸã‚Šåˆ¤å®š
 bool EnemyBullet::Collide() {
-	XMFLOAT3 l_PlayerPos = Player::GetInstance()->GetPosition();
+	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
+	XMFLOAT3 l_PlayerPos = player_data->GetPosition();
 	const float l_Damage = 0.5f;
 	const float l_Radius = 0.2f;
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
-		Player::GetInstance()->RecvDamage(5.0f);
+		player_data->RecvDamage(5.0f);
 		m_Alive = false;
 		return true;
 	}
@@ -85,14 +88,15 @@ bool EnemyBullet::Collide() {
 
 	return false;
 }
-//’Ç]
+//è¿½å¾“
 void EnemyBullet::Throw() {
+	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
 	const float l_AddFrame = 0.01f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
-	//’e‚Ìƒ}ƒX‚ðŽæ“¾‚·‚é
+	//å¼¾ã®ãƒžã‚¹ã‚’å–å¾—ã™ã‚‹
 	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
-	//’e‚ÌƒZƒbƒg(‚¾‚ñ‚¾‚ñ•‚‚©‚Ñˆ§‚Ó‚ª‚é‚æ‚¤‚ÈŠ´‚¶)
+	//å¼¾ã®ã‚»ãƒƒãƒˆ(ã ã‚“ã ã‚“æµ®ã‹ã³é€¢ãµãŒã‚‹ã‚ˆã†ãªæ„Ÿã˜)
 	if (m_ThrowType == THROW_SET) {
 		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
 			m_Frame = {};
@@ -102,7 +106,7 @@ void EnemyBullet::Throw() {
 		
 		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.15f);
 	}
-	//‘_‚¤•ûŒü‚ðŒˆ‚ß‚é
+	//ç‹™ã†æ–¹å‘ã‚’æ±ºã‚ã‚‹
 	else if (m_ThrowType == THROW_INTER) {
 		XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f };
 		XMMATRIX matRot = {};
@@ -124,16 +128,23 @@ void EnemyBullet::Throw() {
 			move = XMVector3TransformNormal(move, matRot);
 			m_Angle.x = move.m128_f32[0];
 			m_Angle.y = move.m128_f32[2];
+		if (m_ThrowTimer == l_BaseTimer + m_TargetTimer) {
+			double sb, sbx, sbz;
+			sbx = player_data->GetPosition().x - m_Position.x;
+			sbz = player_data->GetPosition().z - m_Position.z;
+			sb = sqrt(sbx * sbx + sbz * sbz);
+			m_SpeedX = sbx / sb * 0.1f;
+			m_SpeedZ = sbz / sb * 0.1f;
 			m_ThrowTimer = 0;
 			m_ThrowType = THROW_PLAY;
 		}
 	}
-	//ŽÀÛ‚É‘_‚Á‚¿‚á‚¤
+	//å®Ÿéš›ã«ç‹™ã£ã¡ã‚ƒã†
 	else {
-		//’e‚ÉƒXƒs[ƒh‚ð‰ÁŽZ
+		//å¼¾ã«ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚’åŠ ç®—
 		m_Position.x += m_Angle.x * m_AddSpeed;
 		m_Position.z += m_Angle.y * m_AddSpeed;
-		if (Helper::GetInstance()->CheckNotValueRange(m_Position.z, 0.0f, 6.0f)) {		//”½ŽË‚·‚é
+		if (Helper::GetInstance()->CheckNotValueRange(m_Position.z, 0.0f, 6.0f)) {		//åå°„ã™ã‚‹
 			m_Angle.y *= -1.0f;
 		}
 		if (Helper::GetInstance()->CheckNotValueRange(m_Position.x, -9.0f,10.0f)) {
