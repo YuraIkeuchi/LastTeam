@@ -84,6 +84,9 @@ void GameStateManager::Initialize() {
 	m_Delay = false;
 	m_Buff = false;
 	predictarea->ResetPredict();
+	//敵の生成
+	Spawn2Map();
+	//BattleStartPassive();
 }
 
 //更新
