@@ -298,6 +298,7 @@ void SkillManager::DeckCheck(const int DeckNumber, const int DeckCount) {
 	std::shuffle(m_DeckDate.begin(), m_DeckDate.end(), std::default_random_engine(seed));
 	//デッキのUIを作成
 	BirthDeckUI(DeckNumber, DeckCount);
+
 }
 void SkillManager::PushOnce2Deck(const int DeckNumber) {
 	DeckUI* newdeckUi = nullptr;

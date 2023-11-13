@@ -6,7 +6,6 @@
 #include <GameStateManager.h>
 #include <SceneChanger.h>
 
-#include "SkillManager.h"
 #include "Player.h"
 #include "BaseEnemy.h"
 #include "InterEnemy.h"
@@ -36,24 +35,19 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 		GameStateManager::GetInstance()->SetPlayer(player);
 
 	}
-	SkillManager::GetInstance()->Initialize();
 	//�Q�[���̏��
 	GameStateManager::GetInstance()->Initialize();
 	//���U���g�e�L�X�g
 	//�X�e�[�W�̏�
 	StagePanel::GetInstance()->LoadResource();
 
+	StagePanel::GetInstance()->Initialize();
+
+
 	// �G�l�~�[
 	{
 		auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
 	}
-
-	//�Q�[���̏��
-	GameStateManager::GetInstance()->Initialize();
-
-	//�X�L��
-	SkillManager::GetInstance()->Initialize();
-	StagePanel::GetInstance()->Initialize();
 
 	//リザルトテキスト
 	resulttext = make_unique<TextManager>();
@@ -71,9 +65,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	if (GameStateManager::GetInstance()->GetPoisonVenom()) {
 		enemyManager->PoizonVenom();
 	}
-	
-	//�X�e�[�W�̏�
-	StagePanel::GetInstance()->LoadResource();
+
 	GameReset({ -8.0f,0.1f,0.0f });
 }
 //�X�V
