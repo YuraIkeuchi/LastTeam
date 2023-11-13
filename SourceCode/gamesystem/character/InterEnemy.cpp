@@ -25,7 +25,11 @@ bool InterEnemy::Initialize() {
 }
 //更新
 void InterEnemy::Update() {
-	if (!m_Alive) { return; }
+
+	//各行動
+	if (m_Alive) {
+		Action();
+	}
 	const int l_BasePanelCount = 4;
 	Helper::GetInstance()->CheckMax(m_DamegeTimer, 0, -1);
 	//表示用のHP
@@ -35,11 +39,9 @@ void InterEnemy::Update() {
 
 	////敵のマスを取得する
 	if (m_EnemyTag == "Normal") {
-		StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight);
+		StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight,m_Alive);
 	}
 
-	//各行動
-	Action();
 	if (m_HP != 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
 			_drawnumber[i]->Update();

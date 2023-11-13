@@ -189,16 +189,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	/*ImGui::Begin("Test");
-	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
-	ImGui::End();
-	SkillManager::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();*/
-	ImGui::Begin("Test");
-	ImGui::Text("Finish:%d",isFinish);
-	ImGui::Text("Change:%d", isChangeScene);
-	ImGui::End();
-	haveSkill->ImGuiDraw();
+	StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {

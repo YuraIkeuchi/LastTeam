@@ -162,11 +162,7 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
-	ImGui::Begin("Battle");
-	ImGui::Text("Destory:%d", enemyManager->BossDestroy());
-	ImGui::End();
 	game_object_manager_->ImGuiDraw();
-	//SceneChanger::GetInstance()->ImGuiDraw();
 	enemyManager->ImGuiDraw();
 }
 
