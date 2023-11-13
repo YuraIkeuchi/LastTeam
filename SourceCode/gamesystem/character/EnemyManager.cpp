@@ -32,6 +32,7 @@ void EnemyManager::Update() {
 		} else {
 			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos({ 1000.0f,0.0f,0.0f });
 		}
+		enemy->Update();
 	}
 
 	for (int i = 0; i < (int)(enemys.size()); i++) {
