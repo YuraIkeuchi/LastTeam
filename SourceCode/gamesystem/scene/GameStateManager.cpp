@@ -48,6 +48,9 @@ void GameStateManager::Initialize() {
 	resultSkill->Initialize();
 	haveSkill = make_unique<HaveResultSkill>();
 	haveSkill->Initialize();
+	//
+	SkillManager::GetInstance()->Initialize();
+
 	//デッキの初期化
 	DeckInitialize();
 
