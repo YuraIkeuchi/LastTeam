@@ -43,9 +43,8 @@ void InterEnemy::Update() {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
 			_drawnumber[i]->Update();
 		}
-	}
-	else {
-		//m_Alive = false;
+	} else {
+		m_Alive = false;
 	}
 	//数値化したHP
 	HPManage();
@@ -67,8 +66,8 @@ void InterEnemy::UIDraw() {
 	//HPバー
 	hptex->Draw();
 	//HP(数字)
-	if(m_InterHP != 0)
-	_drawnumber[FIRST_DIGHT]->Draw();
+	if (m_InterHP != 0)
+		_drawnumber[FIRST_DIGHT]->Draw();
 	if (m_InterHP >= 10)
 		_drawnumber[SECOND_DIGHT]->Draw();
 	if (m_InterHP >= 100)
@@ -95,9 +94,8 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 
 			if (name == "DRAIN") {
 				GameStateManager::GetInstance()->GetPlayer().lock()->HealPlayer(damage * 0.2f);		//HP回復
-			}
-			else if (name == "POISON") {
-				//m_Poison = true;
+			} else if (name == "POISON") {
+				m_Poison = true;
 			}
 			BirthParticle();
 			_area->SetHit(true);
@@ -107,12 +105,6 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 			}
 		}
 	}
-}
-void InterEnemy::PoisonState() {
-
-
-
-
 }
 //パーティクル(ダメージ)
 void InterEnemy::BirthParticle() {
@@ -168,5 +160,27 @@ void InterEnemy::WorldDivision() {
 void InterEnemy::HPManage() {
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+	}
+}
+
+//毒
+void InterEnemy::PoisonState() {
+	if (!m_Poison) { return; }
+	int kTimerMax = 800;
+	if (m_PoisonLong) { kTimerMax *= 2; }
+	m_PoisonTimer++;
+
+	if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
+		if (!m_IsVenom) {
+			m_HP -= 1.0f;
+		} else {
+			m_HP -= 2.0f;
+		}
+		BirthPoisonParticle();//毒のエフェクト
+	}
+
+	if (m_PoisonTimer == kTimerMax) {	//一定時間立ったら毒終了
+		m_Poison = false;
+		m_PoisonTimer = {};
 	}
 }
