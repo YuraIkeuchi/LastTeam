@@ -31,6 +31,7 @@ void Player::LoadResource() {
 	shadow_tex->TextureCreate();
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
+	shadow_tex->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 }
 //初期化
 bool Player::Initialize() {
@@ -156,6 +157,8 @@ void Player::UIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
+	ImGui::Text("PosX:%f,PosY:%f,PosZ:%f", m_ShadowPos.x, m_ShadowPos.y, m_ShadowPos.z);
+	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::End();
 }
 //移動

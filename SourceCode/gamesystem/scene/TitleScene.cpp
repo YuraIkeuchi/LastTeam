@@ -32,7 +32,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	{
 		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
 		player->LoadResource();
-		player->InitState({ -4.0f,0.1f,0.0f });
+		player->InitState({ -4.0f,0.1f,2.0f });
 		player->Initialize();
 		player->SetTitleFlag(true);
 
@@ -89,16 +89,7 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 	}
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
-		if (_SceneType == PLAY) {
-			GameReset({ -8.0f,0.1f,0.0f });
-			SceneManager::GetInstance()->ChangeScene<BattleScene>();
-		} else if(_SceneType == MAP) {
-			SceneManager::GetInstance()->ChangeScene<MapScene>();
-		}
-		else {
-			GameReset({ -4.0f, 0.1f, 2.0f });
-			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
-		}
+		SceneManager::GetInstance()->ChangeScene<MapScene>();
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 

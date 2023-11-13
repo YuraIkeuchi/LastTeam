@@ -10,7 +10,7 @@
 #include <Helper.h>
 #include "BattleScene.h"
 #include "MobEnemy.h"
-
+#include "MapScene.h"
 #include <imgui.h>
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
@@ -45,8 +45,9 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	{
 		auto player = GameObject::CreateObject<Player>();
 		player->LoadResource();
+		player->Initialize();
+		player->InitState({ -4.0f,0.1f,2.0f });
 		GameStateManager::GetInstance()->SetPlayer(player);
-		GameReset({ -4.0f, 0.1f, 2.0f });
 	}
 
 	text_ = make_unique<TextManager>();
@@ -102,7 +103,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 
 	if (SceneChanger::GetInstance()->GetChange()) {
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
-		SceneManager::GetInstance()->ChangeScene<BattleScene>();
+		SceneManager::GetInstance()->PopScene();
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 
