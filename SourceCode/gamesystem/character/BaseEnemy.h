@@ -6,6 +6,7 @@
 #include "ObjCommon.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "DrawNumber.h"
+#include "AttackArea.h"
 
 using namespace behaviorTree;
 
@@ -34,6 +35,8 @@ public:
 	void ImGuiDraw() override;
 
 	XMFLOAT3 SetPannelPos(int width, int height);
+
+	void Collide(vector<AttackArea*>area);
 
 	const float GetHP() { return hitpoint_; }
 
@@ -76,6 +79,7 @@ protected:
 	// ビヘイビアツリー
 	std::unique_ptr<SimpleBehaviorTree> behavior_tree_;
 
+	bool m_Poison = false;
 	bool m_PoisonLong = false;
 	bool m_IsVenom = false;
 	int m_PoisonTimer = {};
@@ -97,6 +101,8 @@ private:
 	XMMATRIX m_MatPort = {};
 	void WorldDivision();
 	float HpPercent();
+	//パーティクル生成
+	void BirthParticle();
 };
 
 // デバック用エネミークラスです

@@ -6,6 +6,8 @@
 #include "GameStateManager.h"
 #include "ParticleEmitter.h"
 #include "ImageManager.h"
+#include <Collision.h>
+#include <TutorialTask.h>
 
 BaseEnemy::BaseEnemy():
 	GameObject("Enemy")
@@ -44,8 +46,6 @@ void BaseEnemy::Update()
 			else {
 				hitpoint_ -= 2.0f;
 			}
-		}
-		else if (m_PoisonTimer % 50 == 0) {		//毒のエフェクト
 			BirthPoisonParticle();
 		}
 
@@ -113,6 +113,37 @@ XMFLOAT3 BaseEnemy::SetPannelPos(int width, int height)
 	return StagePanel::GetInstance()->SetPositon(panel_position_.width, panel_position_.height);
 }
 
+void BaseEnemy::Collide(vector<AttackArea*> area) {
+	for (AttackArea* _area : area) {
+		if (Collision::SphereCollision(_area->GetPosition(), 0.5f, m_Position, 0.5f) &&
+			!_area->GetHit() && (hitpoint_ > 0.0f)) {
+			float damage = _area->GetDamage();
+			if (!GameStateManager::GetInstance()->GetCounter()) {
+				GameStateManager::GetInstance()->SetCounter(true);
+				damage *= 2.0f;
+			}
+			if (GameStateManager::GetInstance()->GetBuff()) {
+				damage *= 2.0f;
+			}
+			hitpoint_ -= damage;
+			std::string name = _area->GetStateName();
+
+			if (name == "DRAIN") {
+				GameStateManager::GetInstance()->GetPlayer().lock()->HealPlayer(damage * 0.2f);		//HP回復
+			} else if (name == "POISON") {
+				debuff_ += static_cast<int>(Debuff::kPoison);
+			}
+			BirthParticle();
+			_area->SetHit(true);
+			//チュートリアル専用
+			if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
+				TutorialTask::GetInstance()->SetTutorialState(TASK_DAMAGE);
+			}
+		}
+	}
+
+}
+
 XMFLOAT3 BaseEnemy::RandPanelPos()
 {
 	panel_position_ =
@@ -164,6 +195,17 @@ float BaseEnemy::HpPercent()
 	float temp = hitpoint_ / max_hitpoint_;
 	Helper::GetInstance()->Clamp(temp, 0.0f, 1.0f);
 	return temp;
+}
+
+
+void BaseEnemy::BirthParticle() {
+	const XMFLOAT4 s_color = { 1.0f,0.3f,0.0f,1.0f };
+	const XMFLOAT4 e_color = { 1.0f,0.3f,0.0f,1.0f };
+	const float s_scale = 2.0f;
+	const float e_scale = 0.0f;
+	for (int i = 0; i < 20; i++) {
+		ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
+	}
 }
 
 TestEnemy::TestEnemy()

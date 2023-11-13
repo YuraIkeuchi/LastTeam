@@ -135,7 +135,7 @@ void GameStateManager::Update() {
 	UseSkill();
 	if (m_ResetPredict) {
 		m_PredictTimer++;
-		if (m_PredictTimer  > 1) {
+		if (m_PredictTimer > 1) {
 			PredictManager();
 			m_ResetPredict = false;
 			m_PredictTimer = {};
@@ -145,14 +145,16 @@ void GameStateManager::Update() {
 	GameStateManager::GetInstance()->GetPlayer().lock()->SetDelay(m_Delay);
 
 	// エネミー削除
-	for (int i{ 0 }; i < enemys_container_.size(); ++i)
-	{
-		if (enemys_container_[i].expired())
-		{
+	for (int i{ 0 }; i < enemys_container_.size(); ++i) {
+
+		if (enemys_container_[i].expired()) {
 			enemys_container_.erase(enemys_container_.begin() + i);
 		}
 	}
+	for (auto& enemy : enemys_container_){
+		enemy.lock()->Collide(attackarea);		//当たり判定
 
+	}
 
 	_charge->SetPosition({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x,0.5f,GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z });
 	_charge->SetScale({ m_ChargeScale,m_ChargeScale,m_ChargeScale });
