@@ -53,8 +53,13 @@ public:
 	void RandomPanel(int num);
 	void ResetPanel();
 	void ResetAction();
-	//色変更
+	void EnemyHitReset();
+	//色変更(敵)
 	void SetEnemyHit(IKEObject3d* obj,int& wight, int& height);
+	//今いる位置のパネル番号を検索
+	void SetPanelSearch(IKEObject3d* obj, int& wight, int& height);
+	//敵の配置(かぶらないように)
+	XMFLOAT3 EnemySetPanel();
 private:
 	//バトル中の更新
 	void BattleUpdate();
@@ -104,4 +109,5 @@ private:
 
 	//スキルをすべて手に入れているか
 	bool m_AllDelete = false;
+
 };

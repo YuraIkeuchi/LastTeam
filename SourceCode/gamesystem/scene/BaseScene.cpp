@@ -4,7 +4,8 @@
 #include "IKEFBXObject3d.h"
 #include "ParticleEmitter.h"
 #include "Helper.h"
-
+#include <Player.h>
+#include <StagePanel.h>
 bool BaseScene::s_GameLoop = false;
 BaseScene::BaseScene()
 {
@@ -40,5 +41,10 @@ void BaseScene::BaseInitialize(DirectXCommon* dxCommon, XMFLOAT3 eye, XMFLOAT3 t
 
 	camerawork = make_unique<CameraWork>(eye, target);
 	Helper::GetInstance()->SetCamera(camera);
+}
+void BaseScene::GameReset(XMFLOAT3 pos) {
+	//Player::GetInstance()->InitState(pos);
+	//Player::GetInstance()->Initialize();
+	StagePanel::GetInstance()->Initialize();
 
 }

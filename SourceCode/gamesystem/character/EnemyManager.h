@@ -38,8 +38,6 @@ public:
 	/// </summary>
 	void PoizonVenom();
 
-	void EnemyLightInit(LightGroup* light);
-	void SetLight(LightGroup* light);
 private:
 	/// <summary>
 	/// csvでマップに敵をスポーン

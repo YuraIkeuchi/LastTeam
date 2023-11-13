@@ -1,4 +1,4 @@
-#include "MobEnemy.h"
+ï»¿#include "MobEnemy.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -7,7 +7,8 @@
 #include "Easing.h"
 #include "ImageManager.h"
 #include <GameStateManager.h>
-//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+#include <StagePanel.h>
+//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 MobEnemy::MobEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
@@ -20,8 +21,13 @@ MobEnemy::MobEnemy() {
 		_drawnumber[i] = make_unique<DrawNumber>();
 		_drawnumber[i]->Initialize();
 	}
+
+	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shadow_tex->TextureCreate();
+	shadow_tex->Initialize();
+	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
-//‰Šú‰»
+//åˆæœŸåŒ–
 bool MobEnemy::Initialize() {
 	m_Position = { 2.0f,0.1f,2.0f };
 	m_Rotation = { 0.0f,0.0f,0.0f };
@@ -29,21 +35,32 @@ bool MobEnemy::Initialize() {
 	m_Scale = { 0.5f,0.5f,0.5 };
 	m_HP = 5.0f;
 	m_MaxHP = m_HP;
+	m_EnemyTag = "Mob";
+	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	return true;
 }
 
-//s“®
+//è¡Œå‹•
 void MobEnemy::Action() {
+	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 	Obj_SetParam();
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);
+
+	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
+	shadow_tex->SetPosition(m_ShadowPos);
+	shadow_tex->SetScale(m_ShadowScale);
+	shadow_tex->Update();
 }
-//•`‰æ
+//æç”»
 void MobEnemy::Draw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	shadow_tex->Draw();
+	IKETexture::PostDraw();
 	Obj_Draw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void MobEnemy::ImGui_Origin() {
 	ImGui::Begin("Enemy");
 	ImGui::Text("POSX:%f", m_Position.x);
@@ -52,7 +69,7 @@ void MobEnemy::ImGui_Origin() {
 	ImGui::Text("Height:%d", m_NowHeight);
 	ImGui::End();
 }
-//ŠJ•ú
+//é–‹æ”¾
 void MobEnemy::Finalize() {
 
 }

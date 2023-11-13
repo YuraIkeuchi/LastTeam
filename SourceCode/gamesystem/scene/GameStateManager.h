@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "BaseEnemy.h"
 #include "ResultSkill.h"
+#include "HaveResultSkill.h"
 using namespace DirectX;
 using namespace std;
 
@@ -177,7 +178,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector<int> m_DeckNumber = { 2,6,7,8,9 };
+	vector<int> m_DeckNumber = { 0,1,6 };
 
 
 	vector<int> m_NotDeckNumber = {};
@@ -191,7 +192,7 @@ private:
 
 	bool m_ResetPredict = false;
 	std::unique_ptr<ResultSkill> resultSkill;
-
+	std::unique_ptr<HaveResultSkill> haveSkill;
 	//ディレイ関係
 	float m_ChargeScale = {};
 	int m_DelayTimer = {};
@@ -199,7 +200,11 @@ private:
 
 	//バフ(一旦一個)
 	bool m_Buff = false;
-
+	bool m_Choice = false;
+	enum ResultType {
+		GET_SKILL,
+		HAVE_SKILL,
+	}_ResultType = GET_SKILL;
 
 	///=============================
 	/// 

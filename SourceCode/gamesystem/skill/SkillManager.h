@@ -33,8 +33,8 @@ private:
 	//UI‚Ì¶¬
 	void BirthDeckUI(const int DeckNumber, const int DeckCount);
 public:
-	//ID‚ğæ‚é
-	int GetID(const int BirthNum);
+	//ID‚ğŒŸõ
+	int IDSearch(const int BirthNum);
 	void GetSkillType(int& SkillType);
 	void GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY,string& name);
 	void GetSpecialSkillDate(int& delay,string& name);
@@ -48,7 +48,7 @@ private:
 	std::vector<unique_ptr<DeckUI>> deckui;
 	std::vector<SkillBase*> skill;
 	int m_DeckNum = {};
-	int m_BirthMax = {};
+	int m_BirthNow = {};
 	int m_DeckRemain = {};
 	std::vector<int> m_DeckDate;
 };

@@ -26,20 +26,22 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 		s_GameLoop = true;
 	}
 
+
+	//�X�e�[�W�̏�
 	// プレイヤー生成
 	{
 		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
 		player->LoadResource();
-		player->InitState({ -4.0f,1.0f,0.0f });
+		player->InitState({ -4.0f,0.1f,0.0f });
 		player->Initialize();
 		player->SetTitleFlag(true);
 
 		GameStateManager::GetInstance()->SetPlayer(player);
-
-
 	}
+
 	StagePanel::GetInstance()->LoadResource();
-	StagePanel::GetInstance()->Initialize();
+	
+	GameReset({ -4.0f,0.1f,2.0f });
 
 	//敵
 	enemy = make_unique<MobEnemy>();
@@ -49,9 +51,6 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
 	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
 
-	//�ۉe
-	lightGroup->SetCircleShadowActive(0, true);
-	lightGroup->SetCircleShadowActive(1, true);
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
@@ -62,16 +61,7 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 
 	//各クラス更新
 	camerawork->Update(camera);
-	//�v���C���[
-	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x, 0.5f, GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z}));
-	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
-	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
-	//�{�X
-	lightGroup->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
-	lightGroup->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
-	lightGroup->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
+
 	lightGroup->Update();
 	game_object_manager_->Update();
 	//Player::GetInstance()->TitleUpdate();
@@ -100,11 +90,13 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	}
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		if (_SceneType == PLAY) {
+			GameReset({ -8.0f,0.1f,0.0f });
 			SceneManager::GetInstance()->ChangeScene<BattleScene>();
 		} else if(_SceneType == MAP) {
 			SceneManager::GetInstance()->ChangeScene<MapScene>();
 		}
 		else {
+			GameReset({ -4.0f, 0.1f, 2.0f });
 			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
 		}
 		SceneChanger::GetInstance()->SetChange(false);
@@ -150,17 +142,17 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	game_object_manager_->Draw();
+	game_object_manager_->Draw(dxCommon);
+
 	IKEObject3d::PostDraw();
 
 	enemy->Draw(dxCommon);
 
-	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	IKETexture::PostDraw();
 }
 //ImGui描画
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	camerawork->ImGuiDraw();
+	game_object_manager_->ImGuiDraw();
 }
 //解放
 void TitleScene::Finalize() {

@@ -29,6 +29,7 @@ void GameStateManager::Initialize() {
 	//終了関連
 	isFinish = false;
 	isChangeScene = false;
+	m_Choice = false;
 
 	//要素の全削除は一旦ここで
 	m_AllActCount = {};
@@ -45,6 +46,8 @@ void GameStateManager::Initialize() {
 
 	resultSkill = make_unique<ResultSkill>();
 	resultSkill->Initialize();
+	haveSkill = make_unique<HaveResultSkill>();
+	haveSkill->Initialize();
 	//デッキの初期化
 	DeckInitialize();
 
@@ -150,7 +153,7 @@ void GameStateManager::AttackTrigger() {
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	if (!isFinish && !isChangeScene) {
 		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-		if (m_Delay) {
+		if (m_Delay && m_Act[0].ActDelay >= 30.0f) {
 			_charge->Draw();
 		}
 		IKETexture::PostDraw();
@@ -168,7 +171,12 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 			predictarea->Draw(dxCommon);
 		}
 	}
-	resultSkill->Draw();
+	if (_ResultType == GET_SKILL) {
+		resultSkill->Draw();
+	}
+	else {
+		haveSkill->Draw();
+	}
 }
 //描画
 void GameStateManager::ImGuiDraw() {
@@ -185,8 +193,9 @@ void GameStateManager::ImGuiDraw() {
 	//	InDeck();		//デッキに入っていないカードをデッキに組み込む
 	//}
 	//ImGui::End();
-	SkillManager::GetInstance()->ImGuiDraw();
+	//SkillManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
+	haveSkill->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -435,12 +444,22 @@ bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
 
 	resultSkill->Update();
+	haveSkill->Update();
+	if (Input::GetInstance()->TriggerButton(Input::LB)) {
+		_ResultType = GET_SKILL;
+	}
+	if (Input::GetInstance()->TriggerButton(Input::RB)) {
+		_ResultType = HAVE_SKILL;
+	}
 
-	if (Input::GetInstance()->TriggerButton(Input::B)) {
+
+	if (Input::GetInstance()->TriggerButton(Input::B) && !m_Choice) {
 		resultSkill->InDeck(m_DeckNumber);
 		resultSkill->InPassive(GotPassiveIDs);
 		isChangeScene = true;
 		isFinish = false;
+		m_Choice = true;
+		TutorialTask::GetInstance()->SetChoiceSkill(true);
 	}
 	return true;
 }
@@ -464,6 +483,8 @@ bool GameStateManager::SkillRecycle() {
 
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
+	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size());
+	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size());
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
 	
 	isFinish = true;
