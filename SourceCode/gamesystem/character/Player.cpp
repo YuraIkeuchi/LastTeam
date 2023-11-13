@@ -7,7 +7,7 @@
 #include <StagePanel.h>
 #include <ImageManager.h>
 #include <ParticleEmitter.h>
-
+#include "imgui.h"
 //リソース読み込み
 void Player::LoadResource() {
 	m_Object.reset(new IKEObject3d());
@@ -78,18 +78,19 @@ void (Player::* Player::stateTable[])() = {
 };
 //更新処理
 void Player::Update() {
-	if(is_title)
+	if (is_title)
 	{
 		TitleUpdate();
 	}
 	else
 	{
-	const float l_GrazeMax = 2.0f;
-	Obj_SetParam();
-
-	BirthParticle();
-	//プレイヤーのマスを取得する
-	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
+		const float l_GrazeMax = 2.0f;
+		Obj_SetParam();
+		//状態移行(charastateに合わせる)
+		(this->*stateTable[_charaState])();
+		BirthParticle();
+		//プレイヤーのマスを取得する
+		StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 		Obj_SetParam();
 		BirthParticle();
 		// グレイズ用にスコアを計算する
@@ -101,44 +102,43 @@ void Player::Update() {
 		GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
 		GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 
-	//HPの限界値を決める
-	Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
-	//表示用のHP
-	m_InterHP = (int)(m_HP);
-	if (m_HP > 0.0f) {
-		for (auto i = 0; i < _drawnumber.size(); i++) {
 		//HPの限界値を決める
 		Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
-		// 表示用のHP
+		//表示用のHP
 		m_InterHP = (int)(m_HP);
-		for (auto i = 0; i < _drawnumber.size(); i++)
-		{
-			_drawnumber[i]->SetNumber(m_DigitNumber[i]);
-			_drawnumber[i]->Update();
-			m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+		if (m_HP > 0.0f) {
+			for (auto i = 0; i < _drawnumber.size(); i++) {
+				//HPの限界値を決める
+				Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
+				// 表示用のHP
+				m_InterHP = (int)(m_HP);
+				for (auto i = 0; i < _drawnumber.size(); i++)
+				{
+					_drawnumber[i]->SetNumber(m_DigitNumber[i]);
+					_drawnumber[i]->Update();
+					m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+				}
+			}
 		}
+		hptex->SetPosition(m_HPPos);
+		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 	}
-	hptex->SetPosition(m_HPPos);
-	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
-
 	//影
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	shadow_tex->SetPosition(m_ShadowPos);
 	shadow_tex->SetScale(m_ShadowScale);
 	shadow_tex->Update();
+
 }
+
 //描画
 void Player::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	IKETexture::PostDraw();
-		hptex->SetPosition(m_HPPos);
-		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
-}
-//描画
-void Player::Draw() {
 	Obj_Draw();
 }
+
 //UIの描画
 void Player::UIDraw() {
 	IKESprite::PreDraw();
@@ -157,6 +157,7 @@ void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
 	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSY:%f", m_Position.y);
 	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
 	ImGui::End();

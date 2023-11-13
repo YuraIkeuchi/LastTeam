@@ -28,7 +28,7 @@ void BaseEnemy::Update()
 	
 }
 
-void BaseEnemy::Draw()
+void BaseEnemy::Draw(DirectXCommon* dxCommon)
 {
 	Obj_Draw();
 }
@@ -79,11 +79,6 @@ bool TestEnemy::Initialize()
 	max_hitpoint_ = hitpoint_;
 
 	return false;
-}
-
-void TestEnemy::Draw()
-{
-	Obj_Draw();
 }
 
 void TestEnemy::UIDraw()

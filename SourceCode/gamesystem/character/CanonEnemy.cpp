@@ -1,4 +1,4 @@
-#include "CanonEnemy.h"
+ï»¿#include "CanonEnemy.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -8,7 +8,7 @@
 #include "ImageManager.h"
 #include <GameStateManager.h>
 #include <StagePanel.h>
-//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 CanonEnemy::CanonEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
@@ -27,7 +27,7 @@ CanonEnemy::CanonEnemy() {
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
-//‰Šú‰»
+//åˆæœŸåŒ–
 bool CanonEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
@@ -41,29 +41,29 @@ bool CanonEnemy::Initialize() {
 }
 
 void (CanonEnemy::* CanonEnemy::stateTable[])() = {
-	&CanonEnemy::Inter,//“®‚«‚Ì‡ŠÔ
-	&CanonEnemy::Attack,//“®‚«‚Ì‡ŠÔ
-	&CanonEnemy::Teleport,//uŠÔˆÚ“®
+	&CanonEnemy::Inter,//å‹•ãã®åˆé–“
+	&CanonEnemy::Attack,//å‹•ãã®åˆé–“
+	&CanonEnemy::Teleport,//ç¬é–“ç§»å‹•
 };
 
-//s“®
+//è¡Œå‹•
 void CanonEnemy::Action() {
 	(this->*stateTable[_charaState])();
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	Collide(_AttackArea);		//“–‚½‚è”»’è
-	PoisonState();//“Å
+	Collide(_AttackArea);		//å½“ãŸã‚Šåˆ¤å®š
+	PoisonState();//æ¯’
 
-	//“G‚Ì’e
+	//æ•µã®å¼¾
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
 		if (newbullet != nullptr) {
 			newbullet->Update();
 		}
 	}
 
-	//áŠQ•¨‚Ìíœ
+	//éšœå®³ç‰©ã®å‰Šé™¤
 	for (int i = 0; i < bullets.size(); i++) {
 		if (bullets[i] == nullptr) {
 			continue;
@@ -80,12 +80,12 @@ void CanonEnemy::Action() {
 	shadow_tex->Update();
 }
 
-//•`‰æ
+//æç”»
 void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	IKETexture::PostDraw();
-	//“G‚Ì’e
+	//æ•µã®å¼¾
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
 		if (newbullet != nullptr) {
 			newbullet->Draw(dxCommon);
@@ -93,20 +93,20 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 	}
 	Obj_Draw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void CanonEnemy::ImGui_Origin() {
-	//“G‚Ì’e
+	//æ•µã®å¼¾
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
 		if (newbullet != nullptr) {
 			newbullet->ImGuiDraw();
 		}
 	}
 }
-//ŠJ•ú
+//é–‹æ”¾
 void CanonEnemy::Finalize() {
 
 }
-//‘Ò‹@
+//å¾…æ©Ÿ
 void CanonEnemy::Inter() {
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, kIntervalMax);
@@ -116,7 +116,7 @@ void CanonEnemy::Inter() {
 		BirthBullet();
 	}
 }
-//UŒ‚
+//æ”»æ’ƒ
 void CanonEnemy::Attack() {
 	const int l_TargetTimer = 200;
 
@@ -146,7 +146,7 @@ void CanonEnemy::Attack() {
 	}
 }
 
-//ƒ[ƒv
+//ãƒ¯ãƒ¼ãƒ—
 void CanonEnemy::Teleport() {
 	const int l_TargetTimer = 200;
 	XMFLOAT3 l_RandPos = {};
@@ -159,9 +159,9 @@ void CanonEnemy::Teleport() {
 		StagePanel::GetInstance()->EnemyHitReset();
 	}
 }
-//’e‚Ì¶¬
+//å¼¾ã®ç”Ÿæˆ
 void CanonEnemy::BirthBullet() {
-		//áŠQ•¨‚Ì”­¶
+		//éšœå®³ç‰©ã®ç™ºç”Ÿ
 		EnemyBullet* newbullet;
 		newbullet = new EnemyBullet();
 		newbullet->Initialize();

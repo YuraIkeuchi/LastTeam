@@ -1,4 +1,4 @@
-#include "NormalEnemy.h"
+ï»¿#include "NormalEnemy.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -8,7 +8,7 @@
 #include "ImageManager.h"
 #include <GameStateManager.h>
 #include <StagePanel.h>
-//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 NormalEnemy::NormalEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
@@ -27,7 +27,7 @@ NormalEnemy::NormalEnemy() {
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
-//‰Šú‰»
+//åˆæœŸåŒ–
 bool NormalEnemy::Initialize() {
 
 	//m_Position = randPanelPos();
@@ -42,45 +42,45 @@ bool NormalEnemy::Initialize() {
 }
 
 void (NormalEnemy::* NormalEnemy::stateTable[])() = {
-	&NormalEnemy::Inter,//“®‚«‚Ì‡ŠÔ
-	&NormalEnemy::Attack,//“®‚«‚Ì‡ŠÔ
+	&NormalEnemy::Inter,//å‹•ãã®åˆé–“
+	&NormalEnemy::Attack,//å‹•ãã®åˆé–“
 
 };
 
-//s“®
+//è¡Œå‹•
 void NormalEnemy::Action() {
 	(this->*stateTable[_charaState])();
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	Collide(_AttackArea);		//“–‚½‚è”»’è
-	PoisonState();//“Å
+	Collide(_AttackArea);		//å½“ãŸã‚Šåˆ¤å®š
+	PoisonState();//æ¯’
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	shadow_tex->SetPosition(m_ShadowPos);
 	shadow_tex->SetScale(m_ShadowScale);
 	shadow_tex->Update();
 }
-//•`‰æ
+//æç”»
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	IKETexture::PostDraw();
 	Obj_Draw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void NormalEnemy::ImGui_Origin() {
 	ImGui::Begin("NormalEnemy");
 	ImGui::Text("Height:%d,Width:%d", m_NowHeight,m_NowWidth);
 	ImGui::Text("Timer:%d", m_PoisonTimer);
 	ImGui::End();
 }
-//ŠJ•ú
+//é–‹æ”¾
 void NormalEnemy::Finalize() {
 
 }
-//’Ç]
+//è¿½å¾“
 //void NormalEnemy::Follow() {
 //	Helper::GetInstance()->FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
 //}

@@ -66,25 +66,12 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
 
 	TutorialTask::GetInstance()->SetChoiceSkill(false);
-	//�ۉe
-	lightGroup->SetCircleShadowActive(0, true);
-	lightGroup->SetCircleShadowActive(1, true);
 }
 //�X�V
 void TutorialScene::Update(DirectXCommon* dxCommon)
 {
 	Input* input = Input::GetInstance();
 
-	//�v���C���[
-	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x, 0.5f, GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z }));
-	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
-	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
-	//�{�X
-	lightGroup->SetCircleShadowDir(1, XMVECTOR({ BosscircleShadowDir[0], BosscircleShadowDir[1], BosscircleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(1, XMFLOAT3({ enemy->GetPosition().x, 	0.5f, 	enemy->GetPosition().z }));
-	lightGroup->SetCircleShadowAtten(1, XMFLOAT3(BosscircleShadowAtten));
-	lightGroup->SetCircleShadowFactorAngle(1, XMFLOAT2(BosscircleShadowFactorAngle));
 	lightGroup->Update();
 	// �S�I�u�W�F�N�g�X�V
 	game_object_manager_->Update();
@@ -92,7 +79,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	//�e�N���X�X�V
 	camerawork->Update(camera);
 	if (!GameStateManager::GetInstance()->GetIsFinish()) {
-		Player::GetInstance()->Update();
+		//Player::GetInstance()->Update();
 	}
 	lightGroup->Update();
 	game_object_manager_->Update();
@@ -159,10 +146,10 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (enemy->GetHP() <= 0.0f) {
 		resulttext->TestDraw(dxCommon);
 	}
-	////���S�ɑO�ɏ����X�v���C�g
-	if (Player::GetInstance()->GetNowHeight() != 0) {
-		text_->TestDraw(dxCommon);
-	}
+	//////���S�ɑO�ɏ����X�v���C�g
+	//if (Player::GetInstance()->GetNowHeight() != 0) {
+	//	text_->TestDraw(dxCommon);
+	//}
 	////���S�ɑO�ɏ����X�v���C�g
 	text_->TestDraw(dxCommon);
 	if (_nowstate == TUTORIAL_DAMAGE) {
@@ -182,7 +169,7 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	game_object_manager_->Draw();
+	game_object_manager_->Draw(dxCommon);
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 

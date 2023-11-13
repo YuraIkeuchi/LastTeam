@@ -43,7 +43,8 @@ void BaseScene::BaseInitialize(DirectXCommon* dxCommon, XMFLOAT3 eye, XMFLOAT3 t
 	Helper::GetInstance()->SetCamera(camera);
 }
 void BaseScene::GameReset(XMFLOAT3 pos) {
-	Player::GetInstance()->InitState(pos);
-	Player::GetInstance()->Initialize();
+	//Player::GetInstance()->InitState(pos);
+	//Player::GetInstance()->Initialize();
 	StagePanel::GetInstance()->Initialize();
+
 }

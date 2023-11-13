@@ -380,30 +380,30 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\skill\HaveResultSkill.cpp">
       <Filter>gamesystem\skill</Filter>
+    </ClCompile>
     <ClCompile Include="lib\imgui\include\imgui.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\include\imgui_demo.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\include\imgui_draw.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\include\imgui_impl_dx12.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\include\imgui_impl_win32.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\include\imgui_tables.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\include\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\BaseEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Base</Filter>
-
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -749,29 +749,30 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\skill\HaveResultSkill.h">
       <Filter>gamesystem\skill</Filter>
+    </ClInclude>
     <ClInclude Include="lib\imgui\include\imconfig.h">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="lib\imgui\include\imgui.h">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="lib\imgui\include\imgui_impl_dx12.h">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="lib\imgui\include\imgui_impl_win32.h">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="lib\imgui\include\imgui_internal.h">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="lib\imgui\include\imstb_rectpack.h">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="lib\imgui\include\imstb_textedit.h">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="lib\imgui\include\imstb_truetype.h">
-      <Filter>ImGui</Filter>
+      <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Base</Filter>
@@ -801,6 +802,12 @@
     </None>
     <None Include="Resources\Shaders\ShadowMap.hlsli">
       <Filter>Shader\2d</Filter>
+    </None>
+    <None Include="lib\imgui\include\imgui.vcxproj">
+      <Filter>imgui</Filter>
+    </None>
+    <None Include="lib\imgui\include\imgui.vcxproj.filters">
+      <Filter>imgui</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -978,8 +985,8 @@
     <Filter Include="gamesystem\stageobj\Enemy">
       <UniqueIdentifier>{5649cc66-5a5b-4071-844a-811153c76ca2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{e2b0ba26-ce64-4f91-95e6-e4fd328f1121}</UniqueIdentifier>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{e95d12bb-687a-4d00-ae42-6a4cd3927259}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

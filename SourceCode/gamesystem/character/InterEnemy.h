@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ObjCommon.h"
 #include "AttackArea.h"
 #include "DrawNumber.h"

@@ -25,8 +25,7 @@ public:
 	//更新
 	void Update() override;
 	//描画
-	void Draw() override;
-	void Draw(DirectXCommon *dxCommon) override {};
+	void Draw(DirectXCommon *dxCommon) override;
 	//UI用
 	void UIDraw() override;
 	//ImGui

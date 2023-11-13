@@ -25,15 +25,13 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	// パテーィクル
 	ParticleEmitter::GetInstance()->AllDelete();
 
-	//�v���C���[
-	Player::GetInstance()->LoadResource();
 	
 	//�X�L��
 	// プレイヤー生成
 	{
 		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
 		player->LoadResource();
-		player->InitState({ -8.0f,1.0f,0.0f });
+		player->InitState({ -8.0f,0.1f,0.0f });
 
 		GameStateManager::GetInstance()->SetPlayer(player);
 
@@ -62,9 +60,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	resulttext->Initialize(dxCommon);
 	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
 
-	//�G
-	//丸影
-	lightGroup->SetCircleShadowActive(0, true);
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
@@ -84,11 +79,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 //�X�V
 void BattleScene::Update(DirectXCommon* dxCommon)
 {
-	//�v���C���[
-	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
-	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x, 0.5f, GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z }));
-	lightGroup->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
-	lightGroup->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
 	lightGroup->Update();
 	// �S�I�u�W�F�N�g�X�V
 	game_object_manager_->Update();
@@ -166,7 +156,6 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 		resulttext->TestDraw(dxCommon);
 	}
 	if (!enemyManager->BossDestroy()){
-		Player::GetInstance()->UIDraw();
 		enemyManager->UIDraw();
 		GameStateManager::GetInstance()->ActUIDraw();
 	}
@@ -179,13 +168,13 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 //�|�X�g�G�t�F�N�g������
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
-	game_object_manager_->Draw();
+	game_object_manager_->Draw(dxCommon);
 
 	StagePanel::GetInstance()->Draw(dxCommon);
 	GameStateManager::GetInstance()->Draw(dxCommon);
+	enemyManager->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
-	enemyManager->Draw(dxCommon);
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	IKETexture::PostDraw();
 }

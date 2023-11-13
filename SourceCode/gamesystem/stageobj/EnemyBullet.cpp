@@ -1,4 +1,4 @@
-#include "EnemyBullet.h"
+﻿#include "EnemyBullet.h"
 #include "Collision.h"
 #include "Player.h"
 #include "Helper.h"
@@ -128,13 +128,6 @@ void EnemyBullet::Throw() {
 			move = XMVector3TransformNormal(move, matRot);
 			m_Angle.x = move.m128_f32[0];
 			m_Angle.y = move.m128_f32[2];
-		if (m_ThrowTimer == l_BaseTimer + m_TargetTimer) {
-			double sb, sbx, sbz;
-			sbx = player_data->GetPosition().x - m_Position.x;
-			sbz = player_data->GetPosition().z - m_Position.z;
-			sb = sqrt(sbx * sbx + sbz * sbz);
-			m_SpeedX = sbx / sb * 0.1f;
-			m_SpeedZ = sbz / sb * 0.1f;
 			m_ThrowTimer = 0;
 			m_ThrowType = THROW_PLAY;
 		}

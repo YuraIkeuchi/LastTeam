@@ -1,15 +1,15 @@
-#pragma once
+ï»¿#pragma once
 #include "ObjCommon.h"
 
 enum PolterType {
 	TYPE_FOLLOW,
 	TYPE_BOUND,
 };
-//ƒ{ƒX‚ª¶‚ŞUŒ‚‰¹•„ƒNƒ‰ƒX
+//ãƒœã‚¹ãŒç”Ÿã‚€æ”»æ’ƒéŸ³ç¬¦ã‚¯ãƒ©ã‚¹
 class EnemyBullet :
 	public ObjCommon {
 protected:
-	// DirectX::‚ğÈ—ª
+	// DirectX::ã‚’çœç•¥
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
@@ -18,28 +18,28 @@ protected:
 public:
 	EnemyBullet();
 
-	bool Initialize() override;//‰Šú‰»
+	bool Initialize() override;//åˆæœŸåŒ–
 	/// <summary>
-	/// –ˆƒtƒŒ[ƒ€ˆ—
+	/// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
 	/// </summary>
 	void Update() override;
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw(DirectXCommon* dxCommon) override;
 
 	/// <summary>
-	/// ImGui•`‰æ
+	/// ImGuiæç”»
 	/// </summary>
 	void ImGuiDraw();
 
-	bool Collide();	//“–‚½‚è”»’è
+	bool Collide();	//å½“ãŸã‚Šåˆ¤å®š
 
-private://ƒXƒe[ƒg
+private://ã‚¹ãƒ†ãƒ¼ãƒˆ
 	static void (EnemyBullet::* stateTable[])();
 private:
-	void Throw();//“Š‚°‚é
+	void Throw();//æŠ•ã’ã‚‹
 
 public:
 	//gettersetter
@@ -52,13 +52,13 @@ public:
 
 private:
 	unique_ptr<IKEObject3d> m_Pannel = nullptr;
-	//Œ»İ‚Ìƒ}ƒX”Ô†
+	//ç¾åœ¨ã®ãƒã‚¹ç•ªå·
 	int m_NowWidth = {};
 	int m_NowHeight = {};
-	bool m_Alive = true;//¶‘¶ƒtƒ‰ƒO
+	bool m_Alive = true;//ç”Ÿå­˜ãƒ•ãƒ©ã‚°
 	int m_PolterType = TYPE_FOLLOW;
 
-	int m_TargetTimer = {};//oŒ»ŠÔ‚Ì–Ú•W
+	int m_TargetTimer = {};//å‡ºç¾æ™‚é–“ã®ç›®æ¨™
 
 	int m_ThrowTimer = {};
 
@@ -75,15 +75,15 @@ private:
 	float m_BaseScale = {};
 	XMFLOAT2 m_Angle = {};
 
-	float m_AddSpeed = {};//‰Á‘¬“x
+	float m_AddSpeed = {};//åŠ é€Ÿåº¦
 
 	int m_AliveTimer = {};
 
-	//“Š‚°‚é•ûŒü
+	//æŠ•ã’ã‚‹æ–¹å‘
 	enum ThrowDir {
-		DIR_STRAIGHT,//‚Ü‚Á‚·‚®
-		DIR_SLASHUP,//Î‚ßã
-		DIR_SLASHDOWN,//Î‚ß‚µ‚½
+		DIR_STRAIGHT,//ã¾ã£ã™ã
+		DIR_SLASHUP,//æ–œã‚ä¸Š
+		DIR_SLASHDOWN,//æ–œã‚ã—ãŸ
 	};
 	int m_ThrowDir = {};
 

@@ -18,12 +18,12 @@ void GameObjectManager::Update()
 	}
 }
 
-void GameObjectManager::Draw()
+void GameObjectManager::Draw(DirectXCommon* dxCommon)
 {
 	// Œã‚Å•`‰æ‡İ’è
 	for (std::weak_ptr<GameObject> object : game_objects_)
 	{
-		object.lock()->Draw();
+		object.lock()->Draw(dxCommon);
 	}
 }
 
