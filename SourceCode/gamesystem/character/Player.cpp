@@ -156,15 +156,12 @@ void Player::UIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
-	ImGui::Text("POSX:%f", m_Position.x);
-	ImGui::Text("POSY:%f", m_Position.y);
-	ImGui::Text("POSZ:%f", m_Position.z);
-	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
 	ImGui::End();
 }
 //移動
 void Player::Move() {
 	if (m_Delay) { return; }
+	if (GameStateManager::GetInstance()->GetResetPredict()) { return; }
 	const int l_TargetTimer = 10;
 	const float l_AddVelocity = 2.0f;
 	const float l_SubVelocity = -2.0f;

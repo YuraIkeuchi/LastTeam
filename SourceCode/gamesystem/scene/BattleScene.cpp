@@ -66,11 +66,15 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 {
 	//ライト更新
 	lightGroup->Update();
-	//ゲームオブジェクト一括更新
-	game_object_manager_->Update();
+	//�e�N���X�X�V
 	//カメラワーク更新
 	camerawork->Update(camera);
 	StagePanel::GetInstance()->Update();
+	// �S�I�u�W�F�N�g�X�V
+	game_object_manager_->Update();
+	GameStateManager::GetInstance()->Update();
+
+
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
