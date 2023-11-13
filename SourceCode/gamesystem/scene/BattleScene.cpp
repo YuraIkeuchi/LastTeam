@@ -134,7 +134,8 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	game_object_manager_->UIDraw();
 
 	if (GameStateManager::GetInstance()->EnemysDestory()) {
-		resulttext->TestDraw(dxCommon);
+		//enemyManager->UIDraw();
+		GameStateManager::GetInstance()->ActUIDraw();
 	}
 	// Player::GetInstance()->UIDraw();
 
@@ -148,7 +149,7 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	game_object_manager_->Draw(dxCommon);
 
 	GameStateManager::GetInstance()->Draw(dxCommon);
-	enemyManager->Draw(dxCommon);
+	//enemyManager->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
