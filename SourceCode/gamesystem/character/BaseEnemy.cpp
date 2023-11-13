@@ -5,13 +5,20 @@
 #include "CsvLoader.h"
 #include "GameStateManager.h"
 #include "ParticleEmitter.h"
-
+#include "ImageManager.h"
 
 BaseEnemy::BaseEnemy():
 	GameObject("Enemy")
 {
 	// ビヘイビアツリー生成
-	behavior_tree_ = std::make_unique<behaviorTree::SimpleBehaviorTree>(this);	
+	behavior_tree_ = std::make_unique<behaviorTree::SimpleBehaviorTree>(this);
+
+	for (auto i = 0; i < draw_number_.size(); i++) {
+		draw_number_[i] = make_unique<DrawNumber>();
+		draw_number_[i]->Initialize();
+	}
+	hptex_ = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+
 }
 
 bool BaseEnemy::Initialize()
@@ -51,6 +58,25 @@ void BaseEnemy::Update()
 	// ツリー更新
 	behavior_tree_->Update();
 	Obj_SetParam();
+
+	if (hitpoint_ > 0.0f)
+	{
+		for (auto i{ 0 }; i < draw_number_.size(); ++i)
+		{
+			draw_number_[i]->Update();
+		}
+	}
+	//数値化したHP
+	for (auto i = 0; i < draw_number_.size(); i++) {
+		digit_number_[i] = Helper::GetInstance()->getDigits(inter_hitpoint_, i, i);
+	}
+	//UIをワールド座標に変換する
+	WorldDivision();
+	hptex_->SetPosition(m_HPPos);
+	hptex_->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
+
+
+	inter_hitpoint_ = static_cast<int>(hitpoint_);
 	
 }
 
@@ -61,6 +87,17 @@ void BaseEnemy::Draw()
 
 void BaseEnemy::UIDraw()
 {
+	IKESprite::PreDraw();
+	//HPバー
+	hptex_->Draw();
+	//HP(数字)
+	if (inter_hitpoint_ != 0)
+		draw_number_[kFirstDight]->Draw();
+	if (inter_hitpoint_ >= 10)
+		draw_number_[kSecondDight]->Draw();
+	if (inter_hitpoint_ >= 100)
+		draw_number_[kThirdDight]->Draw();
+	IKESprite::PostDraw();
 }
 
 void BaseEnemy::ImGuiDraw()
@@ -95,6 +132,38 @@ void BaseEnemy::BirthPoisonParticle()
 	for (int i = 0; i < 3; i++) {
 		ParticleEmitter::GetInstance()->PoisonEffect(50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color);
 	}
+}
+
+void BaseEnemy::WorldDivision()
+{
+	Camera *camera = Helper::GetInstance()->GetCamera();
+	m_MatView = camera->GetViewMatrix();
+	m_MatProjection = camera->GetProjectionMatrix();
+	m_MatPort = camera->GetViewPort();
+	//HPバー
+	XMVECTOR tex2DPos = { m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.25f };
+	tex2DPos = Helper::GetInstance()->PosDivi(tex2DPos, m_MatView, false);
+	tex2DPos = Helper::GetInstance()->PosDivi(tex2DPos, m_MatProjection, true);
+	tex2DPos = Helper::GetInstance()->WDivision(tex2DPos, false);
+	tex2DPos = Helper::GetInstance()->PosDivi(tex2DPos, m_MatPort, false);
+
+	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
+
+	//描画する数字と座標をここでセットする
+	draw_number_[kFirstDight]->SetExplain({ m_Position.x + 0.55f, m_Position.y, m_Position.z - 0.55f });
+	draw_number_[kSecondDight]->SetExplain({ m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f });
+	draw_number_[kThirdDight]->SetExplain({ m_Position.x - 0.15f, m_Position.y, m_Position.z - 0.55f });
+	for (auto i = 0; i < draw_number_.size(); i++) {
+		draw_number_[i]->GetCameraData();
+		draw_number_[i]->SetNumber(digit_number_[i]);
+	}
+}
+
+float BaseEnemy::HpPercent()
+{
+	float temp = hitpoint_ / max_hitpoint_;
+	Helper::GetInstance()->Clamp(temp, 0.0f, 1.0f);
+	return temp;
 }
 
 TestEnemy::TestEnemy()
@@ -134,6 +203,7 @@ void TestEnemy::Draw()
 
 void TestEnemy::UIDraw()
 {
+	BaseEnemy::UIDraw();
 }
 
 

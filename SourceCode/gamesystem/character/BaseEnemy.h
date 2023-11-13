@@ -5,7 +5,7 @@
 #include "GameObject/GameObject.h"
 #include "ObjCommon.h"
 #include "BehaviorTree/BehaviorTree.h"
-
+#include "DrawNumber.h"
 
 using namespace behaviorTree;
 
@@ -44,8 +44,23 @@ public:
 	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
 protected:
 
+	// ランダムなパネルを取得
 	XMFLOAT3 RandPanelPos();
 	
+	//HPの表示
+	unique_ptr<IKESprite> hptex_;
+	static const int kNumberMax{ 3 };	// 桁数
+	array<unique_ptr<DrawNumber>, kNumberMax> draw_number_;
+	static const int kHpDrawNumMax{ 3 };
+	array<int, kHpDrawNumMax> digit_number_;
+	
+
+	//桁数
+	enum DightType {
+		kFirstDight,
+		kSecondDight,
+		kThirdDight
+	};
 	virtual void CreateTree() {};
 	struct Position
 	{
@@ -55,6 +70,7 @@ protected:
 
 	float hitpoint_{};		// 体力
 	float max_hitpoint_{};	// 最大体力
+	int inter_hitpoint_{};	// HP（整数）
 	bool is_alive_{ false };	// 生存確認
 
 	// ビヘイビアツリー
@@ -70,6 +86,17 @@ protected:
 
 	// ポイズンパーティクル
 	void BirthPoisonParticle();
+
+private:
+
+	//HPのUIに使う変数
+	XMFLOAT2 m_HPPos = { 1000.0f,50.0f };
+	XMFLOAT2 m_HPSize = { 100.0f,15.0f };
+	XMMATRIX m_MatView = {};
+	XMMATRIX m_MatProjection = {};
+	XMMATRIX m_MatPort = {};
+	void WorldDivision();
+	float HpPercent();
 };
 
 // デバック用エネミークラスです
