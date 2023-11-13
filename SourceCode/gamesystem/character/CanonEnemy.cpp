@@ -82,6 +82,7 @@ void CanonEnemy::Action() {
 
 //描画
 void CanonEnemy::Draw(DirectXCommon* dxCommon) {
+	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	IKETexture::PostDraw();

@@ -194,6 +194,10 @@ void GameStateManager::ImGuiDraw() {
 	ImGui::End();
 	SkillManager::GetInstance()->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();*/
+	ImGui::Begin("Test");
+	ImGui::Text("Finish:%d",isFinish);
+	ImGui::Text("Change:%d", isChangeScene);
+	ImGui::End();
 	haveSkill->ImGuiDraw();
 }
 //手に入れたUIの描画
@@ -440,12 +444,6 @@ bool GameStateManager::AttackSubAction() {
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
-	if (_ResultType == GET_SKILL) {
-		resultSkill->Update();
-	}
-	else {
-		haveSkill->Update();
-	}
 	if (Input::GetInstance()->TriggerButton(Input::LB)) {
 		_ResultType = GET_SKILL;
 	}
@@ -453,15 +451,22 @@ bool GameStateManager::ResultUpdate() {
 		_ResultType = HAVE_SKILL;
 	}
 
+	if (_ResultType == GET_SKILL) {
+		resultSkill->Update();
 
-	if (Input::GetInstance()->TriggerButton(Input::B) && !m_Choice) {
-		resultSkill->InDeck(m_DeckNumber);
-		resultSkill->InPassive(GotPassiveIDs);
-		isChangeScene = true;
-		isFinish = false;
-		m_Choice = true;
-		TutorialTask::GetInstance()->SetChoiceSkill(true);
+		if (Input::GetInstance()->TriggerButton(Input::B) && !m_Choice) {
+			resultSkill->InDeck(m_DeckNumber);
+			resultSkill->InPassive(GotPassiveIDs);
+			isChangeScene = true;
+			isFinish = false;
+			m_Choice = true;
+			TutorialTask::GetInstance()->SetChoiceSkill(true);
+		}
 	}
+	else {
+		haveSkill->Update();
+	}
+	
 	return true;
 }
 

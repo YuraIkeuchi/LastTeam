@@ -25,6 +25,7 @@ bool InterEnemy::Initialize() {
 }
 //更新
 void InterEnemy::Update() {
+	if (!m_Alive) { return; }
 	const int l_BasePanelCount = 4;
 	Helper::GetInstance()->CheckMax(m_DamegeTimer, 0, -1);
 	//表示用のHP
@@ -39,7 +40,7 @@ void InterEnemy::Update() {
 
 	//各行動
 	Action();
-	if (m_HP > 0.0f) {
+	if (m_HP != 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
 			_drawnumber[i]->Update();
 		}
@@ -63,6 +64,7 @@ void InterEnemy::ImGuiDraw() {
 }
 //UIの描画
 void InterEnemy::UIDraw() {
+	if (!m_Alive) { return; }
 	IKESprite::PreDraw();
 	//HPバー
 	hptex->Draw();
@@ -80,7 +82,7 @@ void InterEnemy::Collide(vector<AttackArea*>area) {
 	//if (m_DamegeTimer != 0) { return; }
 	//if (Player::GetInstance()->GetCharaState() != STATE_ATTACK) { return; }
 	for (AttackArea* _area : area) {
-		if (Collision::SphereCollision(_area->GetPosition(), m_Radius, m_Position, m_Radius) &&
+		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) &&
 			!_area->GetHit() && (m_HP > 0.0f)) {
 			float damage = _area->GetDamage();
 			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {

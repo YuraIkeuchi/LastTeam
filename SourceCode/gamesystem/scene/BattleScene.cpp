@@ -40,7 +40,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 
 	//ビヘイビア試しました！
 	{
-		auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
+		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
 	}
 
 	//敵
@@ -162,9 +162,12 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
-	//game_object_manager_->ImGuiDraw();
+	ImGui::Begin("Battle");
+	ImGui::Text("Destory:%d", enemyManager->BossDestroy());
+	ImGui::End();
+	game_object_manager_->ImGuiDraw();
 	//SceneChanger::GetInstance()->ImGuiDraw();
-	//enemyManager->ImGuiDraw();
+	enemyManager->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {
