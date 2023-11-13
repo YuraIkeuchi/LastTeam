@@ -67,3 +67,28 @@ public:
 protected:
 	void CreateTree()override;
 };
+
+// デバック用エネミークラスです
+class RookEnemy :
+	public BaseEnemy
+{
+public:
+	// コンストラクタ
+	RookEnemy();
+
+	//初期化
+	bool Initialize() override;
+	//描画
+	void Draw() override;
+	void Draw(DirectXCommon* dxCommon) override {};
+	//UI用
+	void UIDraw() override;
+	//ImGui
+	void ImGuiDraw() override;
+
+protected:
+	void CreateTree()override;
+private:
+	int waitingcount = 0;
+	int tacklecount = 0;
+};
