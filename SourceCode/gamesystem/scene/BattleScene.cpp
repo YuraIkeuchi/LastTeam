@@ -88,9 +88,9 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		}
 	}
 	//クリア条件に達するとプレイヤーを動かせなくする
-	if (!GameStateManager::GetInstance()->GetIsFinish()) {
-		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
-		player->SetDelay(true);
+	if (GameStateManager::GetInstance()->GetIsFinish()) {
+		auto player = GameStateManager::GetInstance()->GetPlayer();
+		player.lock()->SetDelay(true);
 	}
 	//ゲームオーバー処理
 	if (GameStateManager::GetInstance()->GetPlayer().lock()->GetHp() <= 0.0f) {
