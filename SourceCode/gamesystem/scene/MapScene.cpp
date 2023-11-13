@@ -204,7 +204,9 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 
 	text_->TestDraw(dxCommon);
-	
+	//font->Draw();
+	//Font::PostDraw();
+
 	IKESprite::PreDraw();
 	cheack->Draw();
 	IKESprite::PostDraw();
@@ -618,7 +620,7 @@ void MapScene::CheckState() {
 			SceneChanger::GetInstance()->SetChangeStart(true);
 			int num = Helper::GetInstance()->GetRanNum(1, 3);
 			std::stringstream ss;
-			ss << "Resources/csv/EnemySpawn/BattleMap0" << 1 << ".csv";
+			ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
 			std::string r_map = ss.str();
 			GameStateManager::GetInstance()->SetEnemySpawnText(r_map);
 			delayFrame = 0.f;
