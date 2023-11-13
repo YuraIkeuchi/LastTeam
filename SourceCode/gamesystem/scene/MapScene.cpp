@@ -80,9 +80,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetAnchorPoint({ 0.5f,0.5f });
 
 
-	Onomatope = IKESprite::Create(ImageManager::ONOMATO_00, { 960.f,360.f });
-	Onomatope->SetAnchorPoint({ 0.5f,0.5f });
-	Onomatope->SetSize({ 0.f,256.f });
+	onomatope = std::make_unique<Onomatope>();
 
 	//“¹‚Ìˆ—
 	{
@@ -152,6 +150,7 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	size.y = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
 	frame->SetSize(size);
 
+	onomatope->Update();
 	(this->*stateTable[(size_t)m_State])();
 }
 
@@ -201,7 +200,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!end) {
 		frame->Draw();
 	}
-	Onomatope->Draw();
+	onomatope->Draw();
 	IKESprite::PostDraw();
 
 	text_->TestDraw(dxCommon);
@@ -466,6 +465,7 @@ void MapScene::Move() {
 		nowIndex = pickIndex;
 		nowHierarchy = pickHierarchy;
 		clearHierarchy++;
+		onomatope->AddOnomato(Foot, { 640.f,360.f });
 		moved = true;
 	}
 
@@ -513,20 +513,7 @@ void MapScene::Move() {
 			}
 			return;
 		}
-		{
-			if (Helper::GetInstance()->FrameCheck(onomatoFrame, 1 / kOnomatoFrameMax)) {
-				Onomatope->SetColor({ 1.f,1.f,1.f,0.f });
-			} else {
-				Onomatope->SetColor({ 1.f,1.f,1.f,1.f });
-				XMFLOAT2 siz = Onomatope->GetSize();
-				siz.x = Ease(Out, Quad, onomatoFrame, 0.f, 256.f);
-				Onomatope->SetSize(siz);
-				XMFLOAT2 pos = Onomatope->GetPosition();
-				pos.x = Ease(Out, Quad, onomatoFrame, 640.f + scroll.x, 960.f + scroll.x);
-				pos.y = Ease(Out, Quad, onomatoFrame, 360.f, 180.f);
-				Onomatope->SetPosition(pos);
-			}
-		}
+		
 		charaPos.x = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.x);
 		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y, UIs[nowHierarchy][nowIndex].pos.y);
 		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowHierarchy][nowIndex].pos.x / 2);
