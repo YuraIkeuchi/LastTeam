@@ -6,6 +6,7 @@
 #include "Helper.h"
 #include <Player.h>
 #include <StagePanel.h>
+#include "GameStateManager.h"
 bool BaseScene::s_GameLoop = false;
 BaseScene::BaseScene()
 {
@@ -46,5 +47,6 @@ void BaseScene::GameReset(XMFLOAT3 pos) {
 	//Player::GetInstance()->InitState(pos);
 	//Player::GetInstance()->Initialize();
 	StagePanel::GetInstance()->Initialize();
-
+	GameStateManager::GetInstance()->GetPlayer().lock()->InitState(pos);
+	GameStateManager::GetInstance()->GetPlayer().lock()->Initialize();
 }

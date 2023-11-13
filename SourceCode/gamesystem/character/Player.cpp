@@ -156,10 +156,6 @@ void Player::UIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
-	ImGui::Text("POSX:%f", m_Position.x);
-	ImGui::Text("POSY:%f", m_Position.y);
-	ImGui::Text("POSZ:%f", m_Position.z);
-	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
 	ImGui::End();
 }
 //移動

@@ -30,10 +30,8 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	{
 		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
 		player->LoadResource();
-		player->InitState({ -8.0f,0.1f,0.0f });
-
 		GameStateManager::GetInstance()->SetPlayer(player);
-
+		GameReset({ -8.0f,0.1f,0.0f });
 	}
 	//�Q�[���̏��
 	GameStateManager::GetInstance()->Initialize();
@@ -72,20 +70,19 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 void BattleScene::Update(DirectXCommon* dxCommon)
 {
 	lightGroup->Update();
-	// �S�I�u�W�F�N�g�X�V
-	game_object_manager_->Update();
 
 	//�e�N���X�X�V
 	camerawork->Update(camera);
-	if (!GameStateManager::GetInstance()->GetIsFinish()) {
-		// Player::GetInstance()->Update();
-	}
 	StagePanel::GetInstance()->Update();
+	// �S�I�u�W�F�N�g�X�V
+	game_object_manager_->Update();
+	GameStateManager::GetInstance()->Update();
+
+
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
-	//enemyManager->EnemyLightUpdate(lightGroup);
-	GameStateManager::GetInstance()->Update();
+
 	//�G���|�������V�[���ȍ~(��)
 	if (enemyManager->BossDestroy()) {
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {

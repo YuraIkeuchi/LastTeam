@@ -33,24 +33,22 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	dxCommon->SetFullScreen(true);
 	//�|�X�g�G�t�F�N�g
 	PlayPostEffect = false;
-
 	//�p�[�e�B�N���S�폜
 	ParticleEmitter::GetInstance()->AllDelete();
-	{
-		auto player = GameObject::CreateObject<Player>();
-		player->LoadResource();
-		player->InitState({ -8.0f,1.0f,0.0f });
-		player->Initialize();
-
-		GameStateManager::GetInstance()->SetPlayer(player);
-
-	}
 	//�X�L��
 	SkillManager::GetInstance()->Initialize();
 	//�Q�[���̏��
 	GameStateManager::GetInstance()->Initialize();
 	//�X�e�[�W�̏�
 	StagePanel::GetInstance()->LoadResource();
+
+	{
+		auto player = GameObject::CreateObject<Player>();
+		player->LoadResource();
+		GameStateManager::GetInstance()->SetPlayer(player);
+		GameReset({ -4.0f, 0.1f, 2.0f });
+	}
+
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
 	text_->SetConversation(TextManager::TUTORIAL_START);
@@ -103,7 +101,6 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
-		GameReset({ -8.0f,0.1f,0.0f });
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 		SceneManager::GetInstance()->ChangeScene<BattleScene>();
 		SceneChanger::GetInstance()->SetChange(false);
