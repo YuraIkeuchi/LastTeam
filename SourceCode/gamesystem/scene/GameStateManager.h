@@ -82,6 +82,7 @@ public:
 
 	const bool GetPoisonSkill() { return  m_poizonLong; }
 	const bool GetPoisonVenom() { return  m_IsVenom; }
+	const bool GetResetPredict() { return  m_ResetPredict; }
 
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
@@ -191,6 +192,7 @@ private:
 	unique_ptr<PredictArea> predictarea;
 
 	bool m_ResetPredict = false;
+	int m_PredictTimer = {};
 	std::unique_ptr<ResultSkill> resultSkill;
 	std::unique_ptr<HaveResultSkill> haveSkill;
 	//ディレイ関係

@@ -161,6 +161,7 @@ void Player::ImGuiDraw() {
 //移動
 void Player::Move() {
 	if (m_Delay) { return; }
+	if (GameStateManager::GetInstance()->GetResetPredict()) { return; }
 	const int l_TargetTimer = 10;
 	const float l_AddVelocity = 2.0f;
 	const float l_SubVelocity = -2.0f;

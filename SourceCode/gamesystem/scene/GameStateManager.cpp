@@ -48,6 +48,7 @@ void GameStateManager::Initialize() {
 	resultSkill->Initialize();
 	haveSkill = make_unique<HaveResultSkill>();
 	haveSkill->Initialize();
+	m_PredictTimer = {};
 	//
 	SkillManager::GetInstance()->Initialize();
 
@@ -129,8 +130,12 @@ void GameStateManager::Update() {
 	AttackTrigger();
 	UseSkill();
 	if (m_ResetPredict) {
-		PredictManager();
-		m_ResetPredict = false;
+		m_PredictTimer++;
+		if (m_PredictTimer  > 1) {
+			PredictManager();
+			m_ResetPredict = false;
+			m_PredictTimer = {};
+		}
 	}
 	SkillManager::GetInstance()->Update();
 	GameStateManager::GetInstance()->GetPlayer().lock()->SetDelay(m_Delay);
@@ -278,7 +283,7 @@ void GameStateManager::PredictManager() {
 
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
-			
+
 			int AreaX = {};
 			int AreaY = {};
 			AreaX = l_BirthBaseX + i;
@@ -288,7 +293,6 @@ void GameStateManager::PredictManager() {
 			}
 		}
 	}
-
 	predictarea->Update();
 }
 //プレイヤーの現在パネル
@@ -479,7 +483,7 @@ void GameStateManager::StageClearInit() {
 	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size());
 	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size());
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
-	
+	m_PredictTimer = {};
 	isFinish = true;
 }
 //バフの生成
