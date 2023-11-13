@@ -26,12 +26,18 @@ void Player::LoadResource() {
 	_drawnumber[FIRST_DIGHT]->SetPosition({ 100.0f,620.0f });
 	_drawnumber[SECOND_DIGHT]->SetPosition({ 80.0f,620.0f });
 	_drawnumber[THIRD_DIGHT]->SetPosition({ 60.0f,620.0f });
+
+	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shadow_tex->TextureCreate();
+	shadow_tex->Initialize();
+	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //初期化
 bool Player::Initialize() {
 
 	LoadCSV();
 	m_MaxHP = m_HP;
+	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	//CSV読み込み
 	return true;
 }
@@ -78,14 +84,14 @@ void Player::Update() {
 	}
 	else
 	{
-		const float l_GrazeMax = 2.0f;
-		// 状態移行(charastateに合わせる)
-		(this->*stateTable[_charaState])();
+	const float l_GrazeMax = 2.0f;
+	Obj_SetParam();
 
+	BirthParticle();
+	//プレイヤーのマスを取得する
+	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 		Obj_SetParam();
-
 		BirthParticle();
-
 		// グレイズ用にスコアを計算する
 		m_Length = Helper::GetInstance()->ChechLength(m_Position, m_GrazePos);
 		m_GrazeScore = l_GrazeMax - m_Length;
@@ -95,6 +101,12 @@ void Player::Update() {
 		GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
 		GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 
+	//HPの限界値を決める
+	Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
+	//表示用のHP
+	m_InterHP = (int)(m_HP);
+	if (m_HP > 0.0f) {
+		for (auto i = 0; i < _drawnumber.size(); i++) {
 		//HPの限界値を決める
 		Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
 		// 表示用のHP
@@ -105,13 +117,26 @@ void Player::Update() {
 			_drawnumber[i]->Update();
 			m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
 		}
+	}
+	hptex->SetPosition(m_HPPos);
+	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
+
+	//影
+	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
+	shadow_tex->SetPosition(m_ShadowPos);
+	shadow_tex->SetScale(m_ShadowScale);
+	shadow_tex->Update();
+}
+//描画
+void Player::Draw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	shadow_tex->Draw();
+	IKETexture::PostDraw();
 		hptex->SetPosition(m_HPPos);
 		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
-	}
 }
 //描画
 void Player::Draw() {
-
 	Obj_Draw();
 }
 //UIの描画
@@ -119,6 +144,7 @@ void Player::UIDraw() {
 	IKESprite::PreDraw();
 	//HPバー
 	hptex->Draw();
+	if(m_InterHP != 0)
 	_drawnumber[FIRST_DIGHT]->Draw();
 	if (m_InterHP >= 10)
 		_drawnumber[SECOND_DIGHT]->Draw();
@@ -129,6 +155,7 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
+	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
 	ImGui::Text("POSX:%f", m_Position.x);
 	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::SliderFloat("HP", &m_HP, 0.0f, 100.0f);
@@ -164,16 +191,16 @@ void Player::Move() {
 	} else {			//離した瞬間
 		if (m_LimitCount == 0) {
 			if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
-				MoveCommon(m_Position.z, l_AddVelocity, m_NowHeight, l_AddSpace);
+				MoveCommon(m_Position.z, l_AddVelocity);
 				m_InputTimer[DIR_UP] = {};
 			} else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
-				MoveCommon(m_Position.z, l_SubVelocity, m_NowHeight, l_SubSpace);
+				MoveCommon(m_Position.z, l_SubVelocity);
 				m_InputTimer[DIR_DOWN] = {};
 			} else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-				MoveCommon(m_Position.x, l_AddVelocity, m_NowWidth, l_AddSpace);
+				MoveCommon(m_Position.x, l_AddVelocity);
 				m_InputTimer[DIR_RIGHT] = {};
 			} else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
-				MoveCommon(m_Position.x, l_SubVelocity, m_NowWidth, l_SubSpace);
+				MoveCommon(m_Position.x, l_SubVelocity);
 				m_InputTimer[DIR_LEFT] = {};
 			}
 		}
@@ -186,25 +213,25 @@ void Player::Move() {
 	//一定フレーム立つと選択マス移動
 	if (m_InputTimer[DIR_UP] == l_TargetTimer) {
 		if (m_NowHeight < PANEL_HEIGHT - 1) {
-			MoveCommon(m_Position.z, l_AddVelocity, m_NowHeight, l_AddSpace);
+			MoveCommon(m_Position.z, l_AddVelocity);
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_UP] = {};
 	} else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
 		if (m_NowHeight > 0) {
-			MoveCommon(m_Position.z, l_SubVelocity, m_NowHeight, l_SubSpace);
+			MoveCommon(m_Position.z, l_SubVelocity);
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_DOWN] = {};
 	} else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
 		if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-			MoveCommon(m_Position.x, l_AddVelocity, m_NowWidth, l_AddSpace);
+			MoveCommon(m_Position.x, l_AddVelocity);
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_RIGHT] = {};
 	} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
 		if (m_NowWidth > 0) {
-			MoveCommon(m_Position.x, l_SubVelocity, m_NowWidth, l_SubSpace);
+			MoveCommon(m_Position.x, l_SubVelocity);
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_LEFT] = {};
@@ -224,9 +251,8 @@ void Player::Delay() {
 
 }
 //プレイヤーの動きの基本
-void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int addspace) {
+void Player::MoveCommon(float& pos, float velocity) {
 	pos += velocity;
-	playerspace += addspace;
 	GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 	GameStateManager::GetInstance()->SetResetPredict(true);
 }
@@ -234,22 +260,33 @@ void Player::MoveCommon(float& pos, float velocity, int& playerspace,const int a
 void Player::HealPlayer(const float power) {
 	m_HP += power;
 	for (int i = 0; i < 15; i++) {
-		Particle();
+		HealParticle();
 	}
 }
 //チュートリアルの更新
+//プレイヤーのダメージ判定
+void Player::RecvDamage(float Damage) {
+	m_HP -= Damage;
+	for (int i = 0; i < 15; i++) {
+		DamageParticle();
+	}
+}
 void Player::TitleUpdate() {
 	Obj_SetParam();
 }
-//パーティクル
-void Player::Particle() {
+//パーティクル(回復)
+void Player::HealParticle() {
 	XMFLOAT4 s_color = { 0.5f,1.0f,0.1f,1.0f };
 	XMFLOAT4 e_color = { 0.5f,1.0f,0.1f,1.0f };
 	float s_scale = 1.0f;
 	float e_scale = 0.0f;
 	ParticleEmitter::GetInstance()->HealEffect(50, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
 }
-//プレイヤーのダメージ判定
-void Player::RecvDamage(float Damage) {
-	m_HP -= Damage;
+//ダメージパーティクル
+void Player::DamageParticle() {
+	const XMFLOAT4 s_color = { 0.5f,0.5f,0.5f,1.0f };
+	const XMFLOAT4 e_color = { 0.5f,0.5f,0.5f,1.0f };
+	const float s_scale = 2.0f;
+	const float e_scale = 0.0f;
+	ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
 }

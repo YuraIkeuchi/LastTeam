@@ -180,7 +180,7 @@
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\BaseEnemy.cpp" />
+
     <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp" />
@@ -210,6 +210,7 @@
     <ClCompile Include="SourceCode\gamesystem\scene\TutorialTask.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\AttackSkill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\DeckUI.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\skill\HaveResultSkill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\NormalSKill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\Passive.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\ResultSkill.cpp" />
@@ -304,7 +305,7 @@
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
-    <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h" />
+
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h" />
@@ -334,6 +335,7 @@
     <ClInclude Include="SourceCode\gamesystem\scene\TutorialTask.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\AttackSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\DeckUI.h" />
+    <ClInclude Include="SourceCode\gamesystem\skill\HaveResultSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\NormalSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\Passive.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\ResultSkill.h" />

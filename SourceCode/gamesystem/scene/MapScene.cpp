@@ -5,7 +5,7 @@
 #include <sstream>
 #include <SceneChanger.h>
 #include "SceneManager.h"
-
+#include <TutorialTask.h>
 //遷移しうるシーン
 #include "BattleScene.h"
 #include <TutorialScene.h>
@@ -603,6 +603,9 @@ void MapScene::CheckState() {
 		}
 		cheack->SetSize(size);
 		if (SceneChanger::GetInstance()->GetChange()) {
+			GameReset({ -4.0f, 0.1f, 2.0f });
+			//チュートリアルのタスク
+			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
 			SceneChanger::GetInstance()->SetChange(false);
 		}
@@ -615,6 +618,9 @@ void MapScene::CheckState() {
 		std::string r_map = ss.str();
 		GameStateManager::GetInstance()->SetEnemySpawnText(r_map);
 		if (SceneChanger::GetInstance()->GetChange()) {
+			GameReset({ -8.0f,0.1f,0.0f });
+			//チュートリアルのタスク
+			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 			SceneManager::GetInstance()->ChangeScene<BattleScene>();
 			SceneChanger::GetInstance()->SetChange(false);
 		}

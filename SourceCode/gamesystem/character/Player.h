@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "ObjCommon.h"
 #include <IKESprite.h>
+#include <IKETexture.h>
 #include <memory>
 #include <Input.h>
 #include <array>
@@ -50,11 +51,13 @@ public:
 	void HealPlayer(const float power);
 	void RecvDamage(float Damage);
 private:
-	void MoveCommon(float& pos, const float velocity, int& playerspace,const int addspace);
+	void MoveCommon(float& pos, const float velocity);
 private:
 	void LoadCSV();
-	//パーティクル
-	void Particle();
+	//パーティクル(回復)
+	void HealParticle();
+	//ダメージのパーティクル
+	void DamageParticle();
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }
@@ -87,6 +90,7 @@ public:
 		STATE_DELAY
 	};
 private:
+	unique_ptr<IKETexture> shadow_tex;
 	Input* input = Input::GetInstance();
 
 	int _charaState = STATE_MOVE;
@@ -148,5 +152,8 @@ private:
 	bool m_Delay = false;
 	string m_name = "NONE";
 
+	//影の変数
+	XMFLOAT3 m_ShadowPos = {};
+	XMFLOAT3 m_ShadowScale = {};
 	bool is_title = false;
 };

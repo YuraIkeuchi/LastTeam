@@ -26,6 +26,10 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 		s_GameLoop = true;
 	}
 
+	//�v���C���[
+	Player::GetInstance()->LoadResource();
+
+	//�X�e�[�W�̏�
 	// プレイヤー生成
 	{
 		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
@@ -35,11 +39,10 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 		player->SetTitleFlag(true);
 
 		GameStateManager::GetInstance()->SetPlayer(player);
-
-
 	}
 	StagePanel::GetInstance()->LoadResource();
-	StagePanel::GetInstance()->Initialize();
+	
+	GameReset({ -4.0f,0.1f,2.0f });
 
 	//敵
 	enemy = make_unique<MobEnemy>();
@@ -62,6 +65,7 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 
 	//各クラス更新
 	camerawork->Update(camera);
+
 	//�v���C���[
 	lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2], 0 }));
 	lightGroup->SetCircleShadowCasterPos(0, XMFLOAT3({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x, 0.5f, GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z}));
@@ -100,11 +104,13 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	}
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		if (_SceneType == PLAY) {
+			GameReset({ -8.0f,0.1f,0.0f });
 			SceneManager::GetInstance()->ChangeScene<BattleScene>();
 		} else if(_SceneType == MAP) {
 			SceneManager::GetInstance()->ChangeScene<MapScene>();
 		}
 		else {
+			GameReset({ -4.0f, 0.1f, 2.0f });
 			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
 		}
 		SceneChanger::GetInstance()->SetChange(false);

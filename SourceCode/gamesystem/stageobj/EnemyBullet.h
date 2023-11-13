@@ -1,5 +1,6 @@
 #pragma once
 #include "ObjCommon.h"
+
 enum PolterType {
 	TYPE_FOLLOW,
 	TYPE_BOUND,
@@ -38,11 +39,8 @@ public:
 private://ステート
 	static void (EnemyBullet::* stateTable[])();
 private:
-	void Particle();
-	void Follow();//追従
-public:
+	void Throw();//投げる
 
-public://getter setter
 public:
 	//gettersetter
 	const bool& GetAlive() { return m_Alive; }
@@ -51,10 +49,12 @@ public:
 	void SetPolterType(const int PolterType) { m_PolterType = PolterType; }
 
 	void SetTargetTimer(const int TargetTimer) { m_TargetTimer = TargetTimer; }
-	void SetCircleSpeed(const float CircleSpeed) { m_CircleSpeed = CircleSpeed; }
 
-	void SetBasePos(const XMFLOAT3& BasePos) { m_BasePos = BasePos; }
 private:
+	unique_ptr<IKEObject3d> m_Pannel = nullptr;
+	//現在のマス番号
+	int m_NowWidth = {};
+	int m_NowHeight = {};
 	bool m_Alive = true;//生存フラグ
 	int m_PolterType = TYPE_FOLLOW;
 
@@ -72,18 +72,20 @@ private:
 	XMFLOAT3 m_AfterPos = {};
 	float m_Frame = {};
 
-	double m_SpeedX = {};
-	double m_SpeedZ = {};
-
-	//円運動
-	XMFLOAT3 m_BasePos = {};
-	float m_CircleScale = 1.0f;
-	float m_CircleSpeed = {};
-
+	float m_BaseScale = {};
 	XMFLOAT2 m_Angle = {};
 
 	float m_AddSpeed = {};//加速度
 
 	int m_AliveTimer = {};
 
+	//投げる方向
+	enum ThrowDir {
+		DIR_STRAIGHT,//まっすぐ
+		DIR_SLASHUP,//斜め上
+		DIR_SLASHDOWN,//斜めした
+	};
+	int m_ThrowDir = {};
+
+	XMFLOAT3 m_PanelPos = {};
 };
