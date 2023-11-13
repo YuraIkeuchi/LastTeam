@@ -169,8 +169,8 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		IKESprite::PreDraw();
 		skillUI->Draw();
 		gaugeUI->Draw();
-		SkillManager::GetInstance()->UIDraw();
 		IKESprite::PostDraw();
+		SkillManager::GetInstance()->UIDraw();
 		for (auto i = 0; i < attackarea.size(); i++) {
 			if (attackarea[i] == nullptr)continue;
 			attackarea[i]->Draw(dxCommon);
@@ -202,12 +202,10 @@ void GameStateManager::ImGuiDraw() {
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
-	IKESprite::PreDraw();
 	for (auto i = 0; i < actui.size(); i++) {
 		if (actui[i] == nullptr)continue;
 		actui[i]->Draw();
 	}
-	IKESprite::PostDraw();
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		passive->Draw();
 	}
@@ -498,4 +496,8 @@ void GameStateManager::StageClearInit() {
 //バフの生成
 void GameStateManager::BirthBuff() {
 	m_Buff = true;		//一旦中身はこれだけ
+}
+void GameStateManager::DeckReset() {
+	m_DeckNumber.resize(3);
+	m_DeckNumber = { 0,1,6 };
 }

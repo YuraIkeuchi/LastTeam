@@ -44,6 +44,8 @@ public:
 	/// <param name="Enemy"></param>
 	/// <param name="作者">やぶなか</param>
 	void AddEnemy(std::weak_ptr<BaseEnemy> Enemy) { enemys_container_.emplace_back(Enemy); }
+	//デッキのリセット
+	void DeckReset();
 private:
 	void PredictManager();
 	//攻撃した瞬間

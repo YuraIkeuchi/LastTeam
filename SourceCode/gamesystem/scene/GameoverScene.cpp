@@ -56,9 +56,7 @@ void GameoverScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	sprite->Draw();
 	IKESprite::PostDraw();
-	IKESprite::PreDraw();
 	SceneChanger::GetInstance()->Draw();
-	IKESprite::PostDraw();
 }
 //”w–Ê•`‰æ
 void GameoverScene::BackDraw(DirectXCommon* dxCommon) {
