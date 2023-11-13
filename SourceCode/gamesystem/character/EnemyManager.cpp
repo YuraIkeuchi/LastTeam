@@ -1,6 +1,7 @@
 ﻿#include "EnemyManager.h"
 #include "NormalEnemy.h"
 #include "CanonEnemy.h"
+#include "BossEnemy.h"
 #include <StagePanel.h>
 #include <Player.h>
 #include <GameStateManager.h>
@@ -120,6 +121,12 @@ void EnemyManager::Spawn2Map() {
 			}
 			else if (x == '2') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<CanonEnemy>();
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '3') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy>();
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
