@@ -12,7 +12,7 @@ public:
 	ResultSkill();
 	~ResultSkill();
 
-	void Initialize();
+	void Initialize(DirectXCommon* dxCommon);
 	void Update();
 	void Draw();
 
@@ -26,7 +26,7 @@ public:
 private:
 	void Move();
 private:
-
+	unique_ptr<TextManager> resulttext;
 	struct ResultUI{
 		std::unique_ptr<IKESprite> icon;
 		std::unique_ptr<DrawNumber> number;
@@ -40,6 +40,7 @@ private:
 	ResultUI CreateUI(bool isSkill,int id,XMFLOAT2 pos);
 
 private:
+	DirectXCommon* dxCommon = nullptr;
 	bool isStart = false;
 	unique_ptr<TextManager> text_;
 	std::unique_ptr<IKESprite> backScreen;

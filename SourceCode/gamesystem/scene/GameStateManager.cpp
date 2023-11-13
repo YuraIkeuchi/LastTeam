@@ -45,7 +45,7 @@ void GameStateManager::Initialize() {
 	gaugeUI->SetSize({ basesize.x,0.f });
 
 	resultSkill = make_unique<ResultSkill>();
-	resultSkill->Initialize();
+	resultSkill->Initialize(dxCommon);
 	haveSkill = make_unique<HaveResultSkill>();
 	haveSkill->Initialize();
 	m_PredictTimer = {};
@@ -85,6 +85,7 @@ void GameStateManager::Initialize() {
 	m_Buff = false;
 	predictarea->ResetPredict();
 }
+
 //更新
 void GameStateManager::Update() {
 	if (ResultUpdate()) { return; }

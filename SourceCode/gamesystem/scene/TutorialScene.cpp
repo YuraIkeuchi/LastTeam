@@ -38,6 +38,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	//�X�L��
 	SkillManager::GetInstance()->Initialize();
 	//�Q�[���̏��
+	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
 	GameStateManager::GetInstance()->Initialize();
 	//�X�e�[�W�̏�
 	StagePanel::GetInstance()->LoadResource();
@@ -59,10 +60,6 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	enemy->SetPosition({ 0.0f,0.1f,4.0f });
 	_nowstate = TUTORIAL_INTRO;
 
-	//���U���g�e�L�X�g
-	resulttext = make_unique<TextManager>();
-	resulttext->Initialize(dxCommon);
-	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
 
 	TutorialTask::GetInstance()->SetChoiceSkill(false);
 }
@@ -141,26 +138,11 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 	enemy->UIDraw();
-	if (enemy->GetHP() <= 0.0f) {
-		resulttext->TestDraw(dxCommon);
-	}
-	//////���S�ɑO�ɏ����X�v���C�g
-	//if (Player::GetInstance()->GetNowHeight() != 0) {
-	//	text_->TestDraw(dxCommon);
-	//}
-	////���S�ɑO�ɏ����X�v���C�g
+
 	text_->TestDraw(dxCommon);
-	if (_nowstate == TUTORIAL_DAMAGE) {
-		resulttext->TestDraw(dxCommon);
-	}
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 	game_object_manager_->UIDraw();
-
-// 	enemyManager->UIDraw();
-// 	//Player::GetInstance()->UIDraw();
-// 	enemy->UIDraw();
-// >>>>>>> 5735619e9defc9fdb26571e999c2bcb5a575bea5
 	SceneChanger::GetInstance()->Draw();
 }
 //�|�X�g�G�t�F�N�g������

@@ -48,7 +48,7 @@ public:
 	weak_ptr<GameObjectManager>GetGameObjectManager() { return game_object_manager_; }
 
 public:
-	unique_ptr<TextManager> resulttext;
+
 	// ゲームオブジェクトマネージャ
 	shared_ptr<GameObjectManager> game_object_manager_;
 	///ゲームシーン用
