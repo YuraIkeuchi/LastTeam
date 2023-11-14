@@ -42,6 +42,18 @@ private:
 		int DisY = {};
 	};
 
+	struct ShineEffect {
+		unique_ptr<IKESprite> tex;
+		float frame = 0.f;
+		float kFrame = 30.f;
+		XMFLOAT2 position = { 0.f,0.f };
+		XMFLOAT2 size = { 0.f,0.f };
+		bool isVanish = false;
+	};
+
+	void RandShineInit();
+	void ShineEffectUpdate();
+
 	ResultUI CreateUI(bool isSkill,int id,XMFLOAT2 pos);
 	void BirthArea(ResultUI& resultUI);
 private:
@@ -57,6 +69,6 @@ private:
 	int oldFrame = 0;
 	XMFLOAT2 framePos = BasePos[0];
 	std::list<ResultUI> pickSkills;
-
+	std::list<ShineEffect> shines;
 };
 

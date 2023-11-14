@@ -19,6 +19,7 @@ public:
 	enum texName
 	{
 		FEED,
+		SHINE,
 		SKILLUI,
 		ACTIONUI,
 		ENEMYHPUI,
