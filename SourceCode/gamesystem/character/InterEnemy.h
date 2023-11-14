@@ -82,6 +82,7 @@ protected:
 	bool m_Poison = false;
 	bool m_PoisonLong = false;
 	bool m_IsVenom = false;
+	bool m_IsDrainUp = false;
 	int m_PoisonTimer = {};
 	bool m_Alive = true;
 
@@ -98,6 +99,7 @@ public://getter setter
 	
 	void SetPoizonLong(bool isPoison) { m_PoisonLong = isPoison; }
 	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
+	void SetDrainUp(bool IsDrainUp) { m_IsDrainUp = IsDrainUp; }
 
 	const float GetHP() { return m_HP; }
 	const bool GetAlive() { return m_Alive; }

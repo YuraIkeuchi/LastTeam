@@ -20,7 +20,7 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 		//���U���g�e�L�X�g
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
-	resulttext->SetConversation(TextManager::RESULT, { -240.0f,80.0f });
+	resulttext->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
 
 }
 
@@ -168,6 +168,7 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 		resultUI.number->SetPosition(resultUI.position);
 		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY);//IDに応じた攻撃エリア、距離を取得する
 		BirthArea(resultUI);
+		baseSentence[nowPos] = resulttext->GetSkillSentence(resultUI.ID);
 	} else {
 		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_01 + resultUI.ID, { 0.0f,0.0f });
 		baseSentence[nowPos] = resulttext->GetPasiveSentence(resultUI.ID);

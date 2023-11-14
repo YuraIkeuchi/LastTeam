@@ -91,6 +91,12 @@ void EnemyManager::PoizonVenom() {
 
 }
 
+void EnemyManager::DrainHealUp() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SetDrainUp(true);
+	}
+}
+
 void EnemyManager::Spawn2Map() {
 	string csv_ = GameStateManager::GetInstance()->GetEnemySpawnText();
 	std::string line;

@@ -381,8 +381,8 @@ void GameStateManager::PassiveCheck() {
 		case Passive::ABILITY::POIZON_DAMAGEUP:
 			m_IsVenom = true;
 			break;
-		case Passive::ABILITY::SKILL_RECYCLE:
-			//m_IsRecycle = true;
+		case Passive::ABILITY::DRAIN_HEALUP:
+			m_IsDrainUp = true;
 			break;
 		case Passive::ABILITY::RELOAD_DAMAGE:
 			m_IsReloadDamage = true;
@@ -466,14 +466,14 @@ void GameStateManager::InDeck() {
 }
 
 bool GameStateManager::SkillRecycle() {
-	if (!m_IsRecycle) { return false; }
-	if (Helper::GetInstance()->GetRanNum(0, 100) > 20) {
-		return false;
-	}
+	//if (!m_IsRecycle) { return false; }
+	//if (Helper::GetInstance()->GetRanNum(0, 100) > 20) {
+	//	return false;
+	//}
 
-	SkillManager::GetInstance()->PushOnce2Deck(actui[0]->GetID());
-	//デッキの最大数確認
-	SkillManager::GetInstance()->SetDeckState((int)(SkillManager::GetInstance()->GetDeckUISize()));
+	//SkillManager::GetInstance()->PushOnce2Deck(actui[0]->GetID());
+	////デッキの最大数確認
+	//SkillManager::GetInstance()->SetDeckState((int)(SkillManager::GetInstance()->GetDeckUISize()));
 	return true;
 }
 

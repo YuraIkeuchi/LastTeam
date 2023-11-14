@@ -37,6 +37,10 @@ public:
 	/// パッシブがあれば猛毒(バトルシーン)
 	/// </summary>
 	void PoizonVenom();
+	/// <summary>
+	/// パッシブがあればドレイン上昇(バトルシーン)
+	/// </summary>
+	void DrainHealUp();
 
 private:
 	/// <summary>
