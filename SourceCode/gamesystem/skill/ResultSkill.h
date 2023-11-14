@@ -46,13 +46,12 @@ private:
 	void BirthArea(ResultUI& resultUI);
 private:
 	bool isStart = false;
-	unique_ptr<TextManager> text_;
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;
 	int nowPos = 0;
-	XMFLOAT2 BasePos[3] = { {320.f,360.0f},{640.f,360.f},{960.f,360.f} };
-	
+	XMFLOAT2 BasePos[3] = { {320.f,240.0f},{640.f,240.f},{960.f,240.f} };
+	wchar_t* baseSentence[3] = {L"",L"",L""};
 	bool isMove = false;
 	int nowFrame = 0;
 	int oldFrame = 0;
