@@ -26,6 +26,9 @@ BossEnemy::BossEnemy() {
 	shadow_tex->TextureCreate();
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
+	//予測
+	predictarea.reset(new PredictArea());
+	predictarea->Initialize();
 }
 //初期化
 bool BossEnemy::Initialize() {
@@ -89,6 +92,7 @@ void BossEnemy::Action() {
 			attackarea.erase(cbegin(attackarea) + i);
 		}
 	}
+	
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	shadow_tex->SetPosition(m_ShadowPos);
@@ -112,29 +116,16 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 		if (attackarea[i] == nullptr)continue;
 		attackarea[i]->Draw(dxCommon);
 	}
+	predictarea->Draw(dxCommon);
 	Obj_Draw();
 }
 //ImGui描画
 void BossEnemy::ImGui_Origin() {
-	//敵の弾
-	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->ImGuiDraw();
-		}
-	}
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->ImGuiDraw();
-	}
 	ImGui::Begin("Area");
-	//for (int i = 0; i < m_Area.size(); i++) {
-	//	for (int j = 0; j < m_Area.size(); j++) {
-	//		ImGui::Text("Area[%d][%d],%d", i, j, m_Area[i][j]);
-	//	}
-	//}
 	ImGui::Text("AttackCount:%d", m_AttackCount);
 	ImGui::Text("cool:%d", coolTimer);
 	ImGui::End();
+	predictarea->ImGuiDraw();
 }
 //開放
 void BossEnemy::Finalize() {
@@ -153,6 +144,7 @@ void BossEnemy::Inter() {
 void BossEnemy::Attack() {
 	(this->*attackTable[_AttackState])();
 	PlayerCollide();
+	predictarea->Update();
 }
 
 //ワープ
@@ -212,6 +204,9 @@ void BossEnemy::BulletAttack() {
 void BossEnemy::RowAttack() {
 	const int l_TargetTimer = 120;
 	if (m_AttackCount != 4) {
+		if (coolTimer == 20) {
+			BirthPredict(m_AttackCount);
+		}
 		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
 			BirthArea(m_AttackCount);
 			coolTimer = {};
@@ -227,8 +222,6 @@ void BossEnemy::RowAttack() {
 }
 //攻撃エリア
 void BossEnemy::BirthArea(const int Height) {
-	int AreaX = {};
-	int AreaY = {};
 	for (auto i = 0; i < m_Area.size(); i++) {
 		if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 			AttackArea* newarea = nullptr;
@@ -240,10 +233,16 @@ void BossEnemy::BirthArea(const int Height) {
 			attackarea.emplace_back(newarea);
 		}
 	}
+	predictarea->ResetPredict();
 }
 //予測エリア
 void BossEnemy::BirthPredict(const int Height) {
 
+	for (auto i = 0; i < m_Area.size(); i++) {
+		if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+			predictarea->SetPredict(i, Height,true);
+		}
+	}
 }
 //スキルのCSVを読み取る
 void BossEnemy::LoadCsvSkill(std::string& FileName, const int id) {
@@ -296,7 +295,6 @@ void BossEnemy::LoadCsvSkill(std::string& FileName, const int id) {
 			break;
 		}
 	}
-
 }
 
 bool BossEnemy::CreateSkill(int id) {
