@@ -17,7 +17,7 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetPosition(framePos);
-		//���U���g�e�L�X�g
+	//���U���g�e�L�X�g
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
 	resulttext->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
@@ -31,6 +31,7 @@ void ResultSkill::Update() {
 			resultUI.number->Update();
 		}
 	}
+	ShineEffectUpdate();
 }
 
 void ResultSkill::Draw(DirectXCommon* dxCommon) {
@@ -53,6 +54,11 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 				pickAreas->Draw();
 			}
 		}
+	}
+	IKESprite::PreDraw();
+
+	for (ShineEffect& shine : shines) {
+		shine.tex->Draw();
 	}
 	IKESprite::PostDraw();
 }
@@ -101,7 +107,7 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 	//パッシブ
 	ResultUI passiveUI = CreateUI(false, noPassive[0], BasePos[nowPos]);
 	choiceSkills.push_back(std::move(passiveUI));
-	if (noDeck.size()< noPassive.size()) {
+	if (noDeck.size() < noPassive.size()) {
 		if (noPassive.size() > 1) {
 			ResultUI passiveUI2 = CreateUI(false, noPassive[1], BasePos[nowPos]);
 			choiceSkills.push_back(std::move(passiveUI2));
@@ -113,6 +119,10 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 		}
 	}
 	resulttext->SetCreateSentence(baseSentence[0], baseSentence[1], baseSentence[2]);
+	for (int i = 0; i < 5;i++) {
+		RandShineInit();
+	}
+	
 	isStart = true;
 }
 
@@ -153,6 +163,33 @@ void ResultSkill::Move() {
 		}
 	}
 
+}
+
+void ResultSkill::RandShineInit() {
+	float posX = (float)Helper::GetInstance()->GetRanNum(64, 1216);
+	float posY = (float)Helper::GetInstance()->GetRanNum(64, 240);
+	float frame = (float)Helper::GetInstance()->GetRanNum(30, 45);
+	ShineEffect itr;
+	itr.tex = IKESprite::Create(ImageManager::SHINE, { posX,posY });
+	itr.tex->SetAnchorPoint({ 0.5f,0.5f });
+	itr.tex->SetSize(itr.size);
+	itr.kFrame = frame;
+	shines.push_back(std::move(itr));
+}
+
+void ResultSkill::ShineEffectUpdate() {
+	for (ShineEffect& shine : shines) {
+		if (Helper::GetInstance()->FrameCheck(shine.frame, 1 / shine.kFrame)) {
+			RandShineInit();
+			shine.isVanish = true;
+		} else {
+			shine.size.x = Ease(Out, Quad, shine.frame, 0.f, 32.f);
+			shine.size.y = Ease(Out, Quad, shine.frame, 0.f, 32.f);
+			shine.tex->SetSize(shine.size);
+		}
+	}
+	shines.remove_if([](ShineEffect& shine) {
+		return shine.isVanish; });
 }
 
 ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) {

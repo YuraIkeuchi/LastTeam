@@ -19,7 +19,7 @@ public:
 
 	void Draw();
 
-	void AddOnomato(OnomatoPattern patten,XMFLOAT2 basePos);
+	void AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay = 1.f);
 private:
 	struct OnomatoStruct {
 		std::unique_ptr<IKESprite> Tex;
@@ -28,6 +28,8 @@ private:
 		float frame = 0.0f;
 		float kFrameMax = 10.f;
 		int pattern = -1;
+		float delayFrame = 0.f;
+		float kDelayFrameMax = 1.f;
 	};
 	//ä÷êîÉ|ÉCÉìÉ^
 	static void(Onomatope::* updateTable[])(OnomatoStruct& onomato);

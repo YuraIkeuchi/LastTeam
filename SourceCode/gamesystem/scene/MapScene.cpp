@@ -463,6 +463,7 @@ void MapScene::Move() {
 		nowHierarchy = pickHierarchy;
 		clearHierarchy++;
 		onomatope->AddOnomato(Foot, { 640.f,360.f });
+		onomatope->AddOnomato(Foot, { 100.f,700.f },10.f);
 		moved = true;
 	}
 
