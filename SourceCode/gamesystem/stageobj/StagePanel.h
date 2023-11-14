@@ -60,6 +60,8 @@ public:
 	void SetPanelSearch(IKEObject3d* obj, int& wight, int& height);
 	//敵の配置(かぶらないように)
 	XMFLOAT3 EnemySetPanel();
+	//アクションの全削除
+	void DeleteAction();
 private:
 	//バトル中の更新
 	void BattleUpdate();
@@ -109,5 +111,5 @@ private:
 
 	//スキルをすべて手に入れているか
 	bool m_AllDelete = false;
-
+	int m_ActionCount = {};
 };

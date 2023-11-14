@@ -478,6 +478,7 @@ bool GameStateManager::SkillRecycle() {
 
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
+	StagePanel::GetInstance()->DeleteAction();
 	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size());
 	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size());
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);

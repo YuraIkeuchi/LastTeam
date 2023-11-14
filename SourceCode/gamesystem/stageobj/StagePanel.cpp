@@ -52,16 +52,24 @@ void StagePanel::Update() {
 	//if (GameMode::GetInstance()->GetGameTurn() == TURN_BATTLE) {
 	BattleUpdate();
 	//}
+	//for (auto i = 0; i < actions.size(); i++) {
+	//	if (actions[i] == nullptr)continue;
+	//	actions[i]->Update();
+
+	//	if (!actions[i]->GetAlive()) {
+	//		actions.erase(cbegin(actions) + i);
+	//	}
+	//}
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Update();
-
-		if (!actions[i]->GetAlive()) {
-			actions.erase(cbegin(actions) + i);
+		if (actions[i]->GetAlive() && actions[i]->GetDelete()) {
+			m_ActionCount--;
+			actions[i]->SetAlive(false);
 		}
 	}
 
-	if (actions.size() == 0) {
+	if (m_ActionCount == 0) {
 		m_AllDelete = true;
 	}
 	else {
@@ -86,13 +94,14 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
-	ImGui::Begin("Panel");
+	/*ImGui::Begin("Panel");
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			ImGui::Text("Hit[%d][%d]:%d", i, j, panels[i][j].isEnemyHit);
+			ImGui::Text("Type[%d][%d]:%d", i, j, panels[i][j].type);
 		}
 	}
-	ImGui::End();
+	ImGui::Text("Count:%d", m_ActionCount);
+	ImGui::End();*/
 }
 
 //スキルセットの更新(バトル前)
@@ -212,6 +221,7 @@ void StagePanel::RandomPanel(int num) {
 		panels[width][height].object->Update();
 		panels[width][height].object->SetPosition(panels[width][height].position);
 		panels[width][height].object->SetColor(panels[width][height].color);
+		m_ActionCount++;
 	}
 
 	SkillManager::GetInstance()->SetDeckState(SkillManager::GetInstance()->GetDeckNum() - num);
@@ -322,4 +332,7 @@ XMFLOAT3 StagePanel::EnemySetPanel() {
 	}
 
 	return SetPositon(width, height);
+}
+void StagePanel::DeleteAction() {
+	actions.clear();
 }

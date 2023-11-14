@@ -46,6 +46,7 @@ protected:
 public:
 	//gettersetter
 	const bool GetAlive() { return m_Alive; }
+	const bool GetDelete() { return m_Delete; }
 	const int GetSkillID() { return m_SkillID; }
 	const float GetDamage() { return m_Damage; }
 	const int GetDelay() { return m_Delay; }
@@ -53,6 +54,7 @@ public:
 	const std::vector<std::vector<int>> GetArea() { return m_Area; }
 
 	void SetState(const int state) { _state= state; }
+	void SetAlive(const bool Alive) { m_Alive = Alive; }
 	void SetSkillID(const int SkillID) { m_SkillID = SkillID; }
 protected:
 	string m_Tag;
@@ -61,7 +63,7 @@ protected:
 	XMFLOAT3 m_PannelRot = { 90.0f,0.0f,0.0f };
 	float m_Radius = 0.35f;
 	bool m_Alive = true;
-
+	bool m_Delete = false;
 	float m_VanishFrame = 0.f;
 	float kVanishMax = 45.f;
 	//ä÷êîÉ|ÉCÉìÉ^

@@ -31,20 +31,19 @@ void InterAction::ImGuiDraw() {
 //プレイヤーとパネルの当たり判定
 void InterAction::Collide()
 {
+	if (m_Delete) { return; }
 	auto player = GameStateManager::GetInstance()->GetPlayer();
-	//ラッシュ中判定あり
 	if (Collision::CircleCollision(
 		m_Position.x, m_Position.z, m_Radius, 
 		player.lock()->GetPosition().x,
-		player.lock()->GetPosition().z, m_Radius) &&
-		(m_Alive)){
+		player.lock()->GetPosition().z, m_Radius)){
 		//プレイヤーの行動数を増やしパネルを戻す
 		GameStateManager::GetInstance()->AddSkill(m_SkillType,m_SkillID,m_Damage,m_Delay,m_Area,m_DistanceX,m_DistanceY,StateName);
 		StagePanel::GetInstance()->DeletePanel();
 		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
 			TutorialTask::GetInstance()->SetTutorialState(TASK_ATTACK);
 		}
-		m_Alive = false;
+		m_Delete = true;
 	}
 }
 
@@ -93,7 +92,7 @@ void InterAction::Vanish() {
 	m_Pannel->SetScale(m_PannelScale);
 	m_Pannel->Update();
 	if (Helper::GetInstance()->FrameCheck(m_VanishFrame, 1 / kVanishMax)) {
-		m_Alive = false;
+		m_Delete = true;
 		m_VanishFrame = 0;
 	}
 }
