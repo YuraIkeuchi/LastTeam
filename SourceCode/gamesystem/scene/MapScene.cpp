@@ -525,7 +525,7 @@ void MapScene::Finalize() {
 
 void MapScene::InitState() {
 	const float addFrame = 1.0f / 45.f;
-	const float addFrameS = 1.0f / 120.f;
+	const float addFrameS = 1.0f / 80.f;
 	static float scrollFrame = 0.0f;
 	static float s_frame = 0.0f;
 	static XMFLOAT2 size = {};

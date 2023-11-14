@@ -4,7 +4,7 @@
 
 //ƒŠƒ\[ƒX“Ç‚Ýž‚Ý
 ResultAreaUI::ResultAreaUI() {
-	panels.sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
+	panels.sprite = IKESprite::Create(ImageManager::RESULTATTACKAREA, { 0,0 });
 	panels.sprite->SetAnchorPoint({ 0.5f,0.5f });
 	panels.sprite->SetSize({ 64.0f,64.0f });
 
@@ -15,7 +15,7 @@ ResultAreaUI::ResultAreaUI() {
 }
 //‰Šú‰»
 bool ResultAreaUI::Initialize() {
-	const XMFLOAT2 l_BasePos = { 50.0f,550.0f };
+	const XMFLOAT2 l_BasePos = { 120.0f,360.0f+180.0f };
 	panels.position = { l_BasePos.x + (60.0f * (m_Width + m_DistanceX)),l_BasePos.y + (60.0f * (m_Height - m_DistanceY)) };
 	panels.color = { 1.0f,1.0f,1.0f,1.0f };
 	panels.sprite->SetPosition(panels.position);
