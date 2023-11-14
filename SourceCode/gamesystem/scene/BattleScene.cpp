@@ -12,7 +12,9 @@
 #include "GameoverScene.h"
 #include "TitleScene.h"
 #include "ClearScene.h"
-
+BattleScene::~BattleScene() {
+	Finalize();
+}
 // 初期化
 void BattleScene::Initialize(DirectXCommon* dxCommon)
 {
@@ -79,17 +81,16 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
 	//エネミーが全員死亡したら
-	if (enemyManager->BossDestroy() || (input->TriggerButton(input->Y))) {
+	if (enemyManager->BossDestroy()) {
 		//クリア処理が終らなかったら
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
 			//クリア処理準備
 			GameStateManager::GetInstance()->StageClearInit();
 		} else {
-		
+			//マップに戻る
+			_ChangeType = CHANGE_MAP;
+			SceneChanger::GetInstance()->SetChangeStart(true);
 		}
-		//マップに戻る
-		_ChangeType = CHANGE_MAP;
-		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
 	//クリア条件に達するとプレイヤーを動かせなくする
 	if (GameStateManager::GetInstance()->GetIsFinish()) {
@@ -176,5 +177,5 @@ void BattleScene::ImGuiDraw() {
 }
 
 void BattleScene::Finalize() {
-
+	game_object_manager_->Finalize();
 }

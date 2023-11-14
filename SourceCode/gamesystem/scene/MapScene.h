@@ -5,6 +5,8 @@
 #include <Onomatope.h>
 class MapScene : public BaseScene {
 public:
+	~MapScene() override {};
+public:
 	//‰Šú‰»
 	void Initialize(DirectXCommon* dxCommon) override;
 	//XV

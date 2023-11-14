@@ -6,6 +6,7 @@
 //“Ç‚İ‚İ
 AttackArea::AttackArea() {
 	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::PANEL);
+	Initialize();
 }
 //‰Šú‰»
 bool AttackArea::Initialize() {

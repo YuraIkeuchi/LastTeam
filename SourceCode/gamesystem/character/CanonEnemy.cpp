@@ -52,8 +52,8 @@ void CanonEnemy::Action() {
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//当たり判定
-	//vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	//Collide(_AttackArea);		//当たり判定
+	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
+	Collide(_AttackArea);		//当たり判定
 	PoisonState();//毒
 
 	//敵の弾

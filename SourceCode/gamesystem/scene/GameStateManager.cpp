@@ -255,14 +255,12 @@ void GameStateManager::BirthArea() {
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
 			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0)) && (AreaX < 8)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				AttackArea* newarea = nullptr;
-				newarea = new AttackArea();
-				newarea->Initialize();
+				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(m_Act[0].ActDamage);
 				newarea->SetName("Player");
 				newarea->SetStateName(m_Act[0].StateName);
-				attackarea.push_back(newarea);
+				attackarea.emplace_back(std::move(newarea));
 			}
 		}
 	}
@@ -303,7 +301,7 @@ void GameStateManager::UseSkill() {
 	m_ChargeScale = Helper::GetInstance()->Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
 	if (Helper::GetInstance()->CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
 		if (m_Act[0].SkillType == 0) {
-			//BirthArea();
+			BirthArea();
 		}
 		else {
 			BirthBuff();

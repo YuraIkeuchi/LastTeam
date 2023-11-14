@@ -62,8 +62,8 @@ void BossEnemy::Action() {
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//“–‚½‚è”»’è
-	//vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	//Collide(_AttackArea);		//“–‚½‚è”»’è
+	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
+	Collide(_AttackArea);		//“–‚½‚è”»’è
 	PoisonState();//“Å
 
 	//“G‚Ì’e

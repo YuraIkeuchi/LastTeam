@@ -4,6 +4,8 @@
 /// タイトルシーン
 class ClearScene : public BaseScene {
 public:
+	~ClearScene() override {};
+public:
 	/// 初期化
 	void Initialize(DirectXCommon* dxCommon) override;
 	/// 終了
