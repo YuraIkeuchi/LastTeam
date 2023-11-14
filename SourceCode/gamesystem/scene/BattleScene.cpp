@@ -148,9 +148,8 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 
-	game_object_manager_->UIDraw();
-
 	if (!enemyManager->BossDestroy()){
+		game_object_manager_->UIDraw();
 		enemyManager->UIDraw();
 		GameStateManager::GetInstance()->ActUIDraw();
 	}

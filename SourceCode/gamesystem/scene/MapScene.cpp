@@ -29,8 +29,8 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	screen->SetSize({ 1280.f,720.f });
 
 	cheack = IKESprite::Create(ImageManager::MAP_CHEACK, { 640.f,360.f });
-	cheack->SetSize({0.f,0.f});
-	cheack->SetAnchorPoint({0.5f,0.5f});
+	cheack->SetSize({ 0.f,0.f });
+	cheack->SetAnchorPoint({ 0.5f,0.5f });
 
 	UIs[0][Middle].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
 	UIs[0][Middle].pos = { homeX ,homeY[Middle] };
@@ -45,7 +45,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	//テキスト
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
-	text_->SetConversation(TextManager::MAP_01,{-300.0f,-80.0f});
+	text_->SetConversation(TextManager::MAP_01, { -300.0f,-80.0f });
 	//text_->SetConversation(TextManager::TITLE);
 
 	switch (dungeons[0]) {
@@ -135,8 +135,10 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 void MapScene::Update(DirectXCommon* dxCommon) {
 	SceneChanger::GetInstance()->Update();
-	if (m_State==State::initState&&
-		SceneChanger::GetInstance()->GetChangeState() == 1) { return; }
+	if (m_State == State::initState &&
+		SceneChanger::GetInstance()->GetChangeState() == 1) {
+		return;
+	}
 
 	if (Helper::GetInstance()->FrameCheck(eFrame, eAdd)) {
 		eAdd *= -1.0f;
@@ -175,8 +177,6 @@ void MapScene::Draw(DirectXCommon* dxCommon) {
 		ImGuiDraw();
 		dxCommon->PostDraw();
 	}
-
-
 }
 
 void MapScene::FrontDraw(DirectXCommon* dxCommon) {
@@ -204,8 +204,6 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 
 	text_->TestDraw(dxCommon);
-	//font->Draw();
-	//Font::PostDraw();
 
 	IKESprite::PreDraw();
 	cheack->Draw();
@@ -399,23 +397,23 @@ void MapScene::MapCreate() {
 	UIs[1][Middle].sprite = IKESprite::Create(ImageManager::MAP_TUTORIAL, { 0,0 });
 	UIs[1][Middle].Tag = TUTORIAL;
 	UIs[1][Middle].sprite->SetPosition(UIs[1][Middle].pos);
-	UIs[1][Middle].sprite->SetAnchorPoint({0.5f,0.5f});
+	UIs[1][Middle].sprite->SetAnchorPoint({ 0.5f,0.5f });
 }
 
 void MapScene::ImGuiDraw() {
-	ImGui::Begin("Map");
-	ImGui::Text("%f", framePos.x);
-	ImGui::Text("%f", eFrame);
-	ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
-	ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
-	ImGui::Text("PICKINDEX:%d", pickIndex);
-	ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
-	ImGui::Text("indel:%d", nowIndex);
+	//ImGui::Begin("Map");
+	//ImGui::Text("%f", framePos.x);
+	//ImGui::Text("%f", eFrame);
+	//ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
+	//ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
+	//ImGui::Text("PICKINDEX:%d", pickIndex);
+	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
+	//ImGui::Text("indel:%d", nowIndex);
 	//ImGui::Text("PICKNow:%d", pickNow);
 	//for (int i = 0; i < 3; i++) {
 	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
 	//}
-	ImGui::End();
+	//ImGui::End();
 }
 
 void MapScene::BlackOut() {
@@ -449,21 +447,18 @@ void MapScene::Move() {
 	} else if (input->PushButton(input->RB)) {
 		vel = 10;
 	}
-	if (input->TiltStick(input->L_UP)) {
-		if (moved) { return; }
+	if (input->TiltStick(input->L_UP) && !moved) {
 		if (pickNextIndex == 0) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex - 1] == -1) { return; }
 		pickNextIndex--;
 	}
-	if (input->TiltStick(input->L_DOWN)) {
-		if (moved) { return; }
+	if (input->TiltStick(input->L_DOWN) && !moved) {
 		if (pickNextIndex == 2) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex + 1] == -1) { return; }
 		pickNextIndex++;
 	}
 
-	if (input->TriggerButton(input->B)) {
-		if (moved) { return; }
+	if (input->TriggerButton(input->B) && !moved) {
 		nowIndex = pickIndex;
 		nowHierarchy = pickHierarchy;
 		clearHierarchy++;
@@ -476,19 +471,19 @@ void MapScene::Move() {
 		framePos = UIs[pickHierarchy][pickIndex].pos;
 
 		if (oldPickInd != pickIndex) {
-			wchar_t* sample=L" ふ";
+			wchar_t* sample = L" ふ";
 			switch (UIs[pickHierarchy][pickIndex].Tag) {
-				case BATTLE:
-					text_->SetConversation(TextManager::MAP_BATTLE, { -300.0f,-80.0f });
-					break;
-				case BOSS:
-					text_->SetConversation(TextManager::MAP_BOSS, { -300.0f,-80.0f });
-					break;
-				case HEAL:
-					text_->SetConversation(TextManager::MAP_HEAL, { -300.0f,-80.0f });
-					break;
-				default:
-					break;
+			case BATTLE:
+				text_->SetConversation(TextManager::MAP_BATTLE, { -300.0f,-80.0f });
+				break;
+			case BOSS:
+				text_->SetConversation(TextManager::MAP_BOSS, { -300.0f,-80.0f });
+				break;
+			case HEAL:
+				text_->SetConversation(TextManager::MAP_HEAL, { -300.0f,-80.0f });
+				break;
+			default:
+				break;
 			}
 			oldPickHis = pickHierarchy;
 			oldPickInd = pickIndex;
@@ -515,7 +510,7 @@ void MapScene::Move() {
 			}
 			return;
 		}
-		
+
 		charaPos.x = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.x);
 		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y, UIs[nowHierarchy][nowIndex].pos.y);
 		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowHierarchy][nowIndex].pos.x / 2);
@@ -544,7 +539,7 @@ void MapScene::InitState() {
 			size.y = Ease(In, Linear, s_frame, 0.f, 128.f);
 		}
 	} else {
-		scroll.x = Ease(In,Linear,scrollFrame,-lastScroll,0.f);
+		scroll.x = Ease(In, Linear, scrollFrame, -lastScroll, 0.f);
 	}
 	chara->SetSize(size);
 	for (array<UI, INDEX>& ui : UIs) {
@@ -591,7 +586,7 @@ void MapScene::CheckState() {
 		m_State = State::mainState;
 	}
 
-	if (UIs[nowHierarchy][nowIndex].Tag==TUTORIAL) {
+	if (UIs[nowHierarchy][nowIndex].Tag == TUTORIAL) {
 		if (Helper::GetInstance()->FrameCheck(delayFrame, 1 / 20.f)) {
 			if (Helper::GetInstance()->FrameCheck(s_frame, addFrame)) {
 				Input* input = Input::GetInstance();
@@ -621,14 +616,13 @@ void MapScene::CheckState() {
 			cheack->SetSize({ 0.0f,0.0f });
 		}
 	} else {
-		if (Helper::GetInstance()->FrameCheck(delayFrame, 1/20.f)) {
+		if (Helper::GetInstance()->FrameCheck(delayFrame, 1 / 20.f)) {
 			SceneChanger::GetInstance()->SetChangeStart(true);
 			int num = Helper::GetInstance()->GetRanNum(1, 2);
 			std::stringstream ss;
 			if (nowHierarchy != MaxLength) {
 				ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
-			}
-			else {
+			} else {
 				ss << "Resources/csv/EnemySpawn/BattleMap0" << 3 << ".csv";
 				s_LastStage = true;
 			}
