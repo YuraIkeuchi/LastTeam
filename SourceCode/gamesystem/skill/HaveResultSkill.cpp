@@ -176,12 +176,11 @@ void HaveResultSkill::BirthArea(const int Area) {
 	for (auto i = 0; i < haveSkills[Area].area.size(); i++) {
 		for (auto j = 0; j < haveSkills[Area].area.size(); j++) {		
 			if (haveSkills[Area].area[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				ResultAreaUI* newarea = nullptr;
-				newarea = new ResultAreaUI();
+				std::unique_ptr<ResultAreaUI> newarea = std::make_unique<ResultAreaUI>();
 				newarea->SetPanelNumber(i, j);
 				newarea->SetDistance(haveSkills[Area].DisX, haveSkills[Area].DisY);
 				newarea->Initialize();
-				haveSkills[Area].resultarea.emplace_back(newarea);
+				haveSkills[Area].resultarea.push_back(std::move(newarea));
 			}
 		}
 	}

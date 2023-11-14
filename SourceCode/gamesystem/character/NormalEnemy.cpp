@@ -44,7 +44,6 @@ bool NormalEnemy::Initialize() {
 void (NormalEnemy::* NormalEnemy::stateTable[])() = {
 	&NormalEnemy::Inter,//動きの合間
 	&NormalEnemy::Attack,//動きの合間
-
 };
 
 //行動
