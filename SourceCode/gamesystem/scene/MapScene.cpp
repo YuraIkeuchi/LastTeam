@@ -596,9 +596,12 @@ void MapScene::CheckState() {
 				if (input->TriggerButton(input->B)) {
 					size = {};
 					m_State = State::mainState;
+					s_frame = 0.f;
 					delayFrame = 0.f;
 				}
 				if (input->TriggerButton(input->A)) {
+					size = {};
+					s_frame = 0.f;
 					SceneChanger::GetInstance()->SetChangeStart(true);
 				}
 			} else {

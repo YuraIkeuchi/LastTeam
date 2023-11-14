@@ -13,7 +13,7 @@ ResultSkill::~ResultSkill() {
 }
 
 void ResultSkill::Initialize(DirectXCommon* dxCommon) {
-	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.5f });
+	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 1.0f });
 	backScreen->SetSize({ 1280.f,720.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
@@ -186,6 +186,7 @@ void ResultSkill::BirthArea(ResultUI& resultUI) {
 			if (resultUI.area[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				std::unique_ptr<ResultAreaUI> newarea = std::make_unique<ResultAreaUI>();
 				newarea->SetPanelNumber(i, j);
+				newarea->SetDistance(resultUI.DisX, resultUI.DisY);
 				newarea->Initialize();
 				resultUI.resultarea.push_back(std::move(newarea));
 			}
