@@ -104,11 +104,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="imgui\imgui.vcxproj">
-      <Project>{23101fbf-b209-43f0-bebd-d26107edea31}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="lib\imgui\include\imgui.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_demo.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_draw.cpp" />
