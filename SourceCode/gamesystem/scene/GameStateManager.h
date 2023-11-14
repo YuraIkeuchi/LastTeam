@@ -173,7 +173,7 @@ private:
 	bool m_IsReloadDamage = false;
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
-	bool m_IsRecycle = false;
+	bool m_IsDrainUp = false;
 
 
 	bool m_BirthSkill = false;
