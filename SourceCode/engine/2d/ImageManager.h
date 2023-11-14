@@ -47,6 +47,8 @@ public:
 		GAMEOVERBACK,
 		GAMECLEARBACK,
 		ONOMATO_00,
+		RESULTBACKSCREEN,
+		RESULTATTACKAREA,
 	};
 	//テクスチャの名前
 	enum tex2dName

@@ -4,6 +4,7 @@ Passive::Passive(int id, XMFLOAT2 pos, XMFLOAT2 size) {
 	this->pos = pos;
 	this->size = size;
 	CreatePassive(id);
+
 	Initialize();
 }
 

@@ -1,14 +1,6 @@
 ﻿#include "TextManager.h"
 
 
-
-TextManager* TextManager::GetInstance()
-{
-	static TextManager instance;
-	return &instance;
-}
-
-
 void TextManager::Create(DirectXCommon* dxcomon)
 {
 	conversation_.FirstFont = new Font();
@@ -51,7 +43,17 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateWord(TUTORIAL_SKILL, L"敵を倒すとスキルが手に入るぞ", L"スキルは攻撃やパッシブなどいろんな物があるぞ");
 	CreateWord(TUTORIAL_CHOICE, L"下の3つのスキルから", L"1つ選択してみよう");
 	CreateWord(TUTORIAL_END, L"手に入れたスキルを駆使して",L"敵を倒そう!");
-	CreateWord(RESULT, L"よくたおした！こんやはカツドンだ！");
+	CreateWord(RESULT, L"スキルこうか");
+
+	CreatePassiveSentence(L"リロードがはやくなるぞ");
+	CreatePassiveSentence(L"たいりょくがつよくなるぞ");
+	CreatePassiveSentence(L"リロードしてもきえないぞ");
+	CreatePassiveSentence(L"どくのじかんがながいぞ");
+	CreatePassiveSentence(L"どくのいりょくがあがるぞ");
+	CreatePassiveSentence(L"ドレインいりょくがあがるぞ");
+	CreatePassiveSentence(L"リロードしたらこうげきだ");
+
+
 	//ラスボス
 	//コンヴァージョン初期化
 	Create(dxcomon);
@@ -157,6 +159,24 @@ void TextManager::SetConversation(Name name, const XMFLOAT2& pos, const XMVECTOR
 	conversation_.ThirdFont->SetPos(l_ThirdPos);
 }
 
+void TextManager::SetCreateSentence(wchar_t* tex1, wchar_t* tex2, wchar_t* tex3) {
+	
+	CreateWord(EXTRA, tex1, tex2, tex3);
+
+	std::map<TextManager::Name, Word>::iterator itr = wordlist_.find(EXTRA);
+
+
+	for (int i = 0; i < 3; i++) {
+			flag[i] = true;
+			next_f[i] = false;
+	}
+
+	GetWordSize(itr->second);
+
+	CreateCon(conversation_, itr->second);
+
+}
+
 //名前と文字列セットで保存
 void TextManager::CreateWord(Name name, wchar_t* tex1, wchar_t* tex2, wchar_t* tex3)
 {
@@ -201,4 +221,8 @@ void TextManager::CreateCon(Conversation con, Word word)
 	con.FirstFont->SetString(word.FirstWord);
 	con.SecondFont->SetString(word.SecondWord);
 	con.ThirdFont->SetString(word.ThirdWord);
+}
+
+void TextManager::CreatePassiveSentence(wchar_t* tex1) {
+	passiveSentence.emplace_back(tex1);
 }

@@ -6,23 +6,22 @@
 #include <SkillManager.h>
 
 ResultSkill::ResultSkill() {
-
 }
 
 ResultSkill::~ResultSkill() {
 }
 
 void ResultSkill::Initialize(DirectXCommon* dxCommon) {
-	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.5f });
+	backScreen = IKESprite::Create(ImageManager::RESULTBACKSCREEN, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	backScreen->SetSize({ 1280.f,720.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetPosition(framePos);
-
-	//���U���g�e�L�X�g
+		//���U���g�e�L�X�g
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
-	resulttext->SetConversation(TextManager::RESULT, { 5.0f,280.0f });
+	resulttext->SetConversation(TextManager::RESULT, { -240.0f,80.0f });
+
 }
 
 void ResultSkill::Update() {
@@ -113,6 +112,7 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 			choiceSkills.push_back(std::move(passiveUI3));
 		}
 	}
+	resulttext->SetCreateSentence(baseSentence[0], baseSentence[1], baseSentence[2]);
 	isStart = true;
 }
 
@@ -170,6 +170,7 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 		BirthArea(resultUI);
 	} else {
 		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_01 + resultUI.ID, { 0.0f,0.0f });
+		baseSentence[nowPos] = resulttext->GetPasiveSentence(resultUI.ID);
 	}
 	resultUI.icon->SetAnchorPoint({ 0.5f,0.5f });
 	resultUI.icon->SetSize({ 128.f,128.f });
@@ -186,6 +187,7 @@ void ResultSkill::BirthArea(ResultUI& resultUI) {
 			if (resultUI.area[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				std::unique_ptr<ResultAreaUI> newarea = std::make_unique<ResultAreaUI>();
 				newarea->SetPanelNumber(i, j);
+				newarea->SetDistance(resultUI.DisX, resultUI.DisY);
 				newarea->Initialize();
 				resultUI.resultarea.push_back(std::move(newarea));
 			}
