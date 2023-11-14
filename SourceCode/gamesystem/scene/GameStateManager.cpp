@@ -190,6 +190,8 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 //描画
 void GameStateManager::ImGuiDraw() {
 	StagePanel::GetInstance()->ImGuiDraw();
+	SkillManager::GetInstance()->ImGuiDraw();
+	TutorialTask::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {

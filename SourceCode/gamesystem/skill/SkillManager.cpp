@@ -67,9 +67,9 @@ void SkillManager::ImGuiDraw() {
 	ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
 	ImGui::Text("m_DeckNum:%d", m_DeckNum);
 	ImGui::Text("m_DeckSize:%d", (int)m_DeckDate.size());
-	for (int i = 0; i < m_DeckDate.size(); i++) {
+	/*for (int i = 0; i < m_DeckDate.size(); i++) {
 		ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
-	}
+	}*/
 	ImGui::End();
 }
 
