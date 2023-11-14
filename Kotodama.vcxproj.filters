@@ -573,9 +573,6 @@
     <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.h">
       <Filter>gamesystem\particle</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scene\EditorScene.h">
-      <Filter>gamesystem\scene</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\ClearScene.h">
       <Filter>gamesystem\scene\Base\Clear</Filter>
     </ClInclude>
@@ -785,6 +782,9 @@
       <Filter>gamesystem\stageobj\Area</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\Onomatope.h" />
+    <ClInclude Include="SourceCode\gamesystem\scene\EditorScene.h">
+      <Filter>gamesystem\scene\Tutorial</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">

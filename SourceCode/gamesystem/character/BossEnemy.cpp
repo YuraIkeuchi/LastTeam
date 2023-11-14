@@ -37,6 +37,7 @@ bool BossEnemy::Initialize() {
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
+	CreateSkill(1);
 	return true;
 }
 //状態遷移
@@ -48,6 +49,7 @@ void (BossEnemy::* BossEnemy::stateTable[])() = {
 //攻撃遷移
 void (BossEnemy::* BossEnemy::attackTable[])() = {
 	&BossEnemy::BulletAttack,//弾を打つ攻撃
+	&BossEnemy::RowAttack,//列攻撃
 };
 
 //行動
@@ -78,6 +80,16 @@ void BossEnemy::Action() {
 		}
 	}
 
+	//攻撃エリアの更新(実際はスキルになると思う)
+	for (auto i = 0; i < attackarea.size(); i++) {
+		if (attackarea[i] == nullptr)continue;
+		attackarea[i]->Update();
+
+		if (!attackarea[i]->GetAlive()) {
+			attackarea.erase(cbegin(attackarea) + i);
+		}
+	}
+
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	shadow_tex->SetPosition(m_ShadowPos);
 	shadow_tex->SetScale(m_ShadowScale);
@@ -96,6 +108,10 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 			newbullet->Draw(dxCommon);
 		}
 	}
+	for (auto i = 0; i < attackarea.size(); i++) {
+		if (attackarea[i] == nullptr)continue;
+		attackarea[i]->Draw(dxCommon);
+	}
 	Obj_Draw();
 }
 //ImGui描画
@@ -106,6 +122,19 @@ void BossEnemy::ImGui_Origin() {
 			newbullet->ImGuiDraw();
 		}
 	}
+	for (auto i = 0; i < attackarea.size(); i++) {
+		if (attackarea[i] == nullptr)continue;
+		attackarea[i]->ImGuiDraw();
+	}
+	ImGui::Begin("Area");
+	//for (int i = 0; i < m_Area.size(); i++) {
+	//	for (int j = 0; j < m_Area.size(); j++) {
+	//		ImGui::Text("Area[%d][%d],%d", i, j, m_Area[i][j]);
+	//	}
+	//}
+	ImGui::Text("AttackCount:%d", m_AttackCount);
+	ImGui::Text("cool:%d", coolTimer);
+	ImGui::End();
 }
 //開放
 void BossEnemy::Finalize() {
@@ -123,6 +152,7 @@ void BossEnemy::Inter() {
 //攻撃
 void BossEnemy::Attack() {
 	(this->*attackTable[_AttackState])();
+	PlayerCollide();
 }
 
 //ワープ
@@ -177,5 +207,130 @@ void BossEnemy::BulletAttack() {
 		coolTimer = {};
 		_BossType = Boss_SET;
 		StagePanel::GetInstance()->EnemyHitReset();
+	}
+}
+void BossEnemy::RowAttack() {
+	const int l_TargetTimer = 120;
+	if (m_AttackCount != 4) {
+		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+			BirthArea(m_AttackCount);
+			coolTimer = {};
+			m_AttackCount++;
+		}
+	}
+	else {
+		StagePanel::GetInstance()->EnemyHitReset();
+		m_CheckPanel = true;
+		m_AttackCount = {};
+		_charaState = STATE_SPECIAL;
+	}
+}
+//攻撃エリア
+void BossEnemy::BirthArea(const int Height) {
+	int AreaX = {};
+	int AreaY = {};
+	for (auto i = 0; i < m_Area.size(); i++) {
+		if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+			AttackArea* newarea = nullptr;
+			newarea = new AttackArea();
+			newarea->Initialize();
+			newarea->InitState(i, Height);
+			newarea->SetDamage(20.0f);
+			newarea->SetName("Enemy");
+			attackarea.emplace_back(newarea);
+		}
+	}
+}
+//予測エリア
+void BossEnemy::BirthPredict(const int Height) {
+
+}
+//スキルのCSVを読み取る
+void BossEnemy::LoadCsvSkill(std::string& FileName, const int id) {
+
+	std::ifstream file;
+	std::stringstream popcom;
+
+	file.open(FileName);
+	popcom << file.rdbuf();
+	file.close();
+
+	std::string line;
+	//アタックエリア用
+	std::vector<std::vector<int> > MyVector;
+
+	while (std::getline(popcom, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		std::getline(line_stream, word, ',');
+
+		if (word.find("//") == 0) {
+			continue;
+		}
+
+		if (word.find("AttackArea") == 0) {
+			while (std::getline(line_stream, word)) {
+				std::vector<int> row;
+
+				for (char& x : word) {
+					int X = x - '0';
+					if (x != ' ')
+						row.push_back(X);
+				}
+				MyVector.push_back(row);
+			}
+		}
+		else if (word.find("AttackAreA") == 0) {
+			while (std::getline(line_stream, word)) {
+				std::vector<int> row;
+
+				for (char& x : word) {
+					int X = x - '0';
+					if (x != ' ')
+						row.push_back(X);
+				}
+				MyVector.push_back(row);
+			}
+
+			m_Area = MyVector;
+			break;
+		}
+	}
+
+}
+
+bool BossEnemy::CreateSkill(int id) {
+
+	std::string directory = "Resources/csv/chara/enemy/AttackArea/Boss1/AttackArea";
+
+	std::stringstream ss;
+	if (id >= 10) {
+		ss << directory << id << ".csv";
+
+	}
+	else {
+		ss << directory << "0" << id << ".csv";
+	}
+	std::string csv_ = ss.str();
+
+	LoadCsvSkill(csv_, id);
+
+	//Player::GetInstance()->SetDelayTimer(m_Delay);
+	return true;
+}
+//エリア攻撃の判定
+void BossEnemy::PlayerCollide() {
+	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
+	int l_PlayerWidth = player_data->GetNowWidth();
+	int l_PlayerHeight = player_data->GetNowHeight();
+	for (unique_ptr<AttackArea>& newarea : attackarea) {
+		if (newarea != nullptr) {
+			if ((newarea->GetNowHeight() == l_PlayerHeight && newarea->GetNowWidth() == l_PlayerWidth) &&
+				!newarea->GetHit() && (newarea->GetName() == "Enemy")) {
+				player_data->RecvDamage(20.0f);
+				newarea->SetHit(true);
+				break;
+			}
+		}
 	}
 }

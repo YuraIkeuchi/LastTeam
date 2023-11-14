@@ -258,6 +258,7 @@ void GameStateManager::BirthArea() {
 				newarea->Initialize();
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(m_Act[0].ActDamage);
+				newarea->SetName("Player");
 				newarea->SetStateName(m_Act[0].StateName);
 				attackarea.push_back(newarea);
 			}

@@ -36,6 +36,7 @@ public:
 	//gettersetter
 	const bool GetHit() { return m_Hit; }
 	const bool GetAlive() { return m_Alive; }
+	const string GetName() { return m_Name; }
 
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetNowHeight() { return m_NowHeight; }
@@ -43,9 +44,11 @@ public:
 	const std::string GetStateName() { return StateName; }
 
 	void SetHit(const bool Hit) { m_Hit = Hit; }
+	void SetName(const string name) { m_Name = name; }
 	void SetDamage(const float Damage) { m_Damage = Damage; }
 	void SetStateName(const std::string name) { StateName = name; }
 private:
+	string m_Name = "none";
 	//ê∂ë∂ä÷åW
 	bool m_Alive = false;
 	int m_AliveTimer = {};

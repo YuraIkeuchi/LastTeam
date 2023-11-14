@@ -620,7 +620,7 @@ void MapScene::CheckState() {
 			SceneChanger::GetInstance()->SetChangeStart(true);
 			int num = Helper::GetInstance()->GetRanNum(1, 3);
 			std::stringstream ss;
-			ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
+			ss << "Resources/csv/EnemySpawn/BattleMap0" << 3 << ".csv";
 			std::string r_map = ss.str();
 			GameStateManager::GetInstance()->SetEnemySpawnText(r_map);
 			delayFrame = 0.f;

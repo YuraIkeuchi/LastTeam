@@ -81,11 +81,12 @@ void InterEnemy::UIDraw() {
 }
 //当たり判定
 void InterEnemy::Collide(vector<AttackArea*>area) {
+	if (m_HP <= 0.0f) { return; }
 	//if (m_DamegeTimer != 0) { return; }
 	//if (Player::GetInstance()->GetCharaState() != STATE_ATTACK) { return; }
 	for (AttackArea* _area : area) {
 		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) &&
-			!_area->GetHit() && (m_HP > 0.0f)) {
+			!_area->GetHit() && (_area->GetName() == "Player")) {
 			float damage = _area->GetDamage();
 			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
 				GameStateManager::GetInstance()->SetCounter(true);
