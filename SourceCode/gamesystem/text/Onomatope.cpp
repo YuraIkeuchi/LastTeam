@@ -31,7 +31,7 @@ void Onomatope::Draw() {
 	IKESprite::PostDraw();
 }
 
-void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos) {
+void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay) {
 	OnomatoStruct str;
 	switch (patten) {
 	case Foot:
@@ -39,6 +39,7 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos) {
 		str.Tex->SetAnchorPoint({ 0.5f,0.5f });
 		str.Tex->SetSize({ 0.f,256.f });
 		str.kFrameMax = 15.f;
+		str.kDelayFrameMax = delay;
 		str.pattern = Foot;
 		break;
 	default:
@@ -50,6 +51,10 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos) {
 }
 
 void Onomatope::FootUpdate(OnomatoStruct& onomato) {
+	onomato.delayFrame += 1 / onomato.kDelayFrameMax;
+	if (onomato.delayFrame < 1.0f) {
+		return;
+	}
 	onomato.frame += 1 / onomato.kFrameMax;
 
 	if (onomato.frame <= 1.0f) {
