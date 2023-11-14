@@ -29,7 +29,7 @@ public:
   /// パイプライン生成
   /// </summary>
   /// <param name="cmdList"></param>
-	void CreateGraphicsPipeline(const wchar_t* vsShaderName, const wchar_t* psShaderName);
+	static void CreateGraphicsPipeline(const wchar_t* vsShaderName, const wchar_t* psShaderName);
 	//初期化
 	void Initialize();
 
@@ -63,9 +63,9 @@ private: //メンバ変数
 	//DSV用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeapDSV;
 	//グラフィックスパイプライン
-	ComPtr<ID3D12PipelineState> pipelineState;
+	static ComPtr<ID3D12PipelineState> pipelineState;
 	//ルートシグネチャ
-	ComPtr<ID3D12RootSignature> rootSignature;
+	static ComPtr<ID3D12RootSignature> rootSignature;
 	//セピア
 	static float addsepia;
 	int tex = 0;

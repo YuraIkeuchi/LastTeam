@@ -44,9 +44,10 @@ bool MobEnemy::Initialize() {
 void MobEnemy::Action() {
 	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 	Obj_SetParam();
+	//Collide();		//当たり判定
 	//当たり判定
-	vector<AttackArea*> _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	Collide(_AttackArea);
+	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
+	Collide(_AttackArea);		//当たり判定
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	shadow_tex->SetPosition(m_ShadowPos);

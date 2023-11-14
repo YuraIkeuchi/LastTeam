@@ -8,6 +8,7 @@
 #include <StagePanel.h>
 #include "GameStateManager.h"
 bool BaseScene::s_GameLoop = false;
+bool BaseScene::s_LastStage = false;
 BaseScene::BaseScene()
 {
 	game_object_manager_ = std::make_shared<GameObjectManager>();
@@ -37,9 +38,7 @@ void BaseScene::BaseInitialize(DirectXCommon* dxCommon, XMFLOAT3 eye, XMFLOAT3 t
 	//(普通)
 	postEffect = make_unique<PostEffect>();
 	postEffect->Initialize();
-	//ポストエフェクトのファイル指定
-	postEffect->CreateGraphicsPipeline(L"Resources/Shaders/PostEffectTestVS.hlsl", L"Resources/Shaders/PostEffectTestPS.hlsl");
-
+	
 	camerawork = make_unique<CameraWork>(eye, target);
 	Helper::GetInstance()->SetCamera(camera);
 }

@@ -36,6 +36,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(TITLEBACK, L"Resources/2d/sceneback/TitleBack.png");
 	IKESprite::LoadTexture(TITLETEXT, L"Resources/2d/sceneback/TitleText.png");
 	IKESprite::LoadTexture(GAMEOVERBACK, L"Resources/2d/sceneback/Gameover.png");
+	IKESprite::LoadTexture(GAMECLEARBACK, L"Resources/2d/sceneback/GameClear.png");
 	IKESprite::LoadTexture(ONOMATO_00, L"Resources/2d/objicon/Onomatope/00_Foot.png");
 
 }

@@ -8,6 +8,8 @@
 /// タイトルシーン
 class TitleScene : public BaseScene {
 public:
+	~TitleScene() override {};
+public:
 	/// 初期化
 	void Initialize(DirectXCommon* dxCommon) override;
 	/// 終了

@@ -45,6 +45,7 @@ public:
 		TITLEBACK,
 		TITLETEXT,
 		GAMEOVERBACK,
+		GAMECLEARBACK,
 		ONOMATO_00,
 	};
 	//テクスチャの名前

@@ -8,6 +8,8 @@
 class TutorialScene : public BaseScene
 {
 public:
+	~TutorialScene() override {};
+public:
 	//‰Šú‰»
 	void Initialize(DirectXCommon* dxCommon) override;
 	//XV

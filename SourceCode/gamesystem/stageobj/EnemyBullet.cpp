@@ -101,7 +101,6 @@ void EnemyBullet::Throw() {
 		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
 			m_Frame = {};
 			m_ThrowType = THROW_INTER;
-
 		}
 		
 		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.15f);

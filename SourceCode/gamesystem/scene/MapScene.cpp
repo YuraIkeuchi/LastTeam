@@ -409,6 +409,8 @@ void MapScene::ImGuiDraw() {
 	ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
 	ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
 	ImGui::Text("PICKINDEX:%d", pickIndex);
+	ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
+	ImGui::Text("indel:%d", nowIndex);
 	//ImGui::Text("PICKNow:%d", pickNow);
 	//for (int i = 0; i < 3; i++) {
 	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
@@ -621,9 +623,15 @@ void MapScene::CheckState() {
 	} else {
 		if (Helper::GetInstance()->FrameCheck(delayFrame, 1/20.f)) {
 			SceneChanger::GetInstance()->SetChangeStart(true);
-			int num = Helper::GetInstance()->GetRanNum(1, 3);
+			int num = Helper::GetInstance()->GetRanNum(1, 2);
 			std::stringstream ss;
-			ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
+			if (nowHierarchy != MaxLength) {
+				ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
+			}
+			else {
+				ss << "Resources/csv/EnemySpawn/BattleMap0" << 3 << ".csv";
+				s_LastStage = true;
+			}
 			std::string r_map = ss.str();
 			GameStateManager::GetInstance()->SetEnemySpawnText(r_map);
 			delayFrame = 0.f;

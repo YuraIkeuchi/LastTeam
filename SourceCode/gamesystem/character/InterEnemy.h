@@ -139,7 +139,7 @@ private:
 	void HPManage();
 	void BirthPoisonParticle();
 protected:
-	void Collide(vector<AttackArea*>area);
+	void Collide(vector<unique_ptr<AttackArea>>& area);
 	//毒の状態
 	void PoisonState();
 };

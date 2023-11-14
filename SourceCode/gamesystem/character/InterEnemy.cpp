@@ -80,12 +80,13 @@ void InterEnemy::UIDraw() {
 	IKESprite::PostDraw();
 }
 //当たり判定
-void InterEnemy::Collide(vector<AttackArea*>area) {
-	//if (m_DamegeTimer != 0) { return; }
-	//if (Player::GetInstance()->GetCharaState() != STATE_ATTACK) { return; }
-	for (AttackArea* _area : area) {
+void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
+	if (m_HP <= 0.0f) { return; }
+	if (area.empty()) { return; }
+
+	for (unique_ptr<AttackArea>& _area : area) {
 		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) &&
-			!_area->GetHit() && (m_HP > 0.0f)) {
+			!_area->GetHit()) {
 			float damage = _area->GetDamage();
 			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
 				GameStateManager::GetInstance()->SetCounter(true);

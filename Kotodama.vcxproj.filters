@@ -207,9 +207,6 @@
     <ClCompile Include="SourceCode\gamesystem\scene\EditorScene.cpp">
       <Filter>gamesystem\scene</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\scene\ClearScene.cpp">
-      <Filter>gamesystem\scene\Base\Clear</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\BattleScene.cpp">
       <Filter>gamesystem\scene\Play\Battle</Filter>
     </ClCompile>
@@ -409,6 +406,9 @@
       <Filter>gamesystem\stageobj\Area</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\text\Onomatope.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\scene\ClearScene.cpp">
+      <Filter>gamesystem\scene\GameClear</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -572,12 +572,6 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.h">
       <Filter>gamesystem\particle</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scene\EditorScene.h">
-      <Filter>gamesystem\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scene\ClearScene.h">
-      <Filter>gamesystem\scene\Base\Clear</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\LoadScene.h">
       <Filter>gamesystem\scene\Load</Filter>
@@ -785,6 +779,12 @@
       <Filter>gamesystem\stageobj\Area</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\Onomatope.h" />
+    <ClInclude Include="SourceCode\gamesystem\scene\EditorScene.h">
+      <Filter>gamesystem\scene\Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\scene\ClearScene.h">
+      <Filter>gamesystem\scene\GameClear</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.hlsli">
@@ -978,9 +978,6 @@
     <Filter Include="gamesystem\charactor\Player">
       <UniqueIdentifier>{67cc1ef3-c531-4952-b181-9f7044af6c4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\scene\Base\Clear">
-      <UniqueIdentifier>{836dd921-f6f8-4000-addf-b66663142475}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gamesystem\skill">
       <UniqueIdentifier>{21e0b239-fd1c-40b5-92bf-ff38bbc889cb}</UniqueIdentifier>
     </Filter>
@@ -995,6 +992,9 @@
     </Filter>
     <Filter Include="engine\3d\Fbx\Manager">
       <UniqueIdentifier>{5fa3098f-a3c1-4362-8d9a-e5454bf67630}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\scene\GameClear">
+      <UniqueIdentifier>{a98a93ac-0351-41bd-9197-cc0c41f66cd0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

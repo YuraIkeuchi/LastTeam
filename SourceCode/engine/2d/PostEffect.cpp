@@ -10,6 +10,9 @@ using namespace DirectX;
 
 const float PostEffect::clearColor[4] = {0.3f, 0.3f, 0.3f, 0.0f};
 float PostEffect::addsepia = 0.0f;
+ComPtr<ID3D12RootSignature> PostEffect::rootSignature;
+ComPtr<ID3D12PipelineState> PostEffect::pipelineState;
+
 
 PostEffect::PostEffect()
 	: IKESprite(100, {0, 0}, {500, 500}, {1, 1, 1, 1}, {0, 0}, false, false)
