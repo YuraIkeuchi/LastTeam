@@ -53,6 +53,16 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveSentence(L"ドレインいりょくがあがるぞ");
 	CreatePassiveSentence(L"リロードしたらこうげきだ");
 
+	CreateSkillSentence(L"右1マス、ドドドな攻撃");
+	CreateSkillSentence(L"右1マスすべて、ドゴンな攻撃");
+	CreateSkillSentence(L"右ナナメ2マス、シャッな攻撃");
+	CreateSkillSentence(L"ナナメクロス、駆使攻撃");
+	CreateSkillSentence(L"たてクロス、駆使攻撃");
+	CreateSkillSentence(L"右1マスすべて、バコンないち撃");
+	CreateSkillSentence(L"すべてのマス、ビクトリーないち撃");
+	CreateSkillSentence(L"どくを使う、イヤーナ攻撃");
+	CreateSkillSentence(L"回復する、ミラクルな攻撃");
+	CreateSkillSentence(L"つぎの攻撃にすべてをこめる！");
 
 	//ラスボス
 	//コンヴァージョン初期化
@@ -225,4 +235,8 @@ void TextManager::CreateCon(Conversation con, Word word)
 
 void TextManager::CreatePassiveSentence(wchar_t* tex1) {
 	passiveSentence.emplace_back(tex1);
+}
+
+void TextManager::CreateSkillSentence(wchar_t* tex1) {
+	skillSentence.emplace_back(tex1);
 }
