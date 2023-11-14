@@ -11,6 +11,7 @@
 #include "InterEnemy.h"
 #include "GameoverScene.h"
 #include "TitleScene.h"
+#include "ClearScene.h"
 
 // 初期化
 void BattleScene::Initialize(DirectXCommon* dxCommon)
@@ -57,10 +58,12 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	}
 
 	GameReset({ -8.0f,0.1f,0.0f });
+	StagePanel::GetInstance()->DeleteAction();
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
 {
+	Input* input = Input::GetInstance();
 	//ライト更新
 	lightGroup->Update();
 	//�e�N���X�X�V
@@ -76,16 +79,17 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	SceneChanger::GetInstance()->Update();
 	enemyManager->Update();
 	//エネミーが全員死亡したら
-	if (enemyManager->BossDestroy()) {
+	if (enemyManager->BossDestroy() || (input->TriggerButton(input->Y))) {
 		//クリア処理が終らなかったら
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
 			//クリア処理準備
 			GameStateManager::GetInstance()->StageClearInit();
 		} else {
-			//マップに戻る
-			_ChangeType = CHANGE_MAP;
-			SceneChanger::GetInstance()->SetChangeStart(true);
+		
 		}
+		//マップに戻る
+		_ChangeType = CHANGE_MAP;
+		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
 	//クリア条件に達するとプレイヤーを動かせなくする
 	if (GameStateManager::GetInstance()->GetIsFinish()) {
@@ -101,7 +105,12 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	if (SceneChanger::GetInstance()->GetChange()) {
 		GameReset({ -4.0f,0.1f,2.0f });
 		if (_ChangeType == CHANGE_MAP) {
-			SceneManager::GetInstance()->PopScene();
+			if (!s_LastStage) {
+				SceneManager::GetInstance()->PopScene();
+			}
+			else {
+				SceneManager::GetInstance()->ChangeScene<ClearScene>();
+			}
 		}else {
 			SceneManager::GetInstance()->ChangeScene<GameoverScene>();
 		}

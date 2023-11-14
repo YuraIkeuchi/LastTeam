@@ -7,6 +7,7 @@
 #include <TextManager.h>
 #include "IKEObject3d.h"
 #include "IKEFBXObject3d.h"
+#include "PostEffect.h"
 void Framework::Run()
 {
 	Initialize(dxcommon);
@@ -84,7 +85,8 @@ void Framework::Initialize(DirectXCommon* m_DirectXCommon)
 	//Font::StaticInitialize(dxcommon,dxcommon->GetDev(),dxcommon->GetCmdList());
 	
 	SceneSave::GetInstance()->AllReset();
-
+	//ポストエフェクトのファイル指定
+	PostEffect::CreateGraphicsPipeline(L"Resources/Shaders/PostEffectTestVS.hlsl", L"Resources/Shaders/PostEffectTestPS.hlsl");
 }
 
 void Framework::Finalize()

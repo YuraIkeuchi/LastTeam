@@ -26,7 +26,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 		s_GameLoop = true;
 	}
 
-
+	s_LastStage = false;
 	//�X�e�[�W�̏�
 	// プレイヤー生成
 	{

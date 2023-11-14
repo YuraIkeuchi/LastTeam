@@ -303,7 +303,7 @@ void GameStateManager::UseSkill() {
 	m_ChargeScale = Helper::GetInstance()->Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
 	if (Helper::GetInstance()->CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
 		if (m_Act[0].SkillType == 0) {
-			BirthArea();
+			//BirthArea();
 		}
 		else {
 			BirthBuff();
@@ -481,7 +481,6 @@ bool GameStateManager::SkillRecycle() {
 
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
-	StagePanel::GetInstance()->DeleteAction();
 	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size());
 	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size());
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
