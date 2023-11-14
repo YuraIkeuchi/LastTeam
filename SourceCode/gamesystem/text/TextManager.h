@@ -39,7 +39,19 @@ public:
 		TUTORIAL_CHOICE,
 		TUTORIAL_END,
 		RESULT,
+		EXTRA,
 	};
+	enum Passive{
+		RELOAD_UP,
+		HP_UP,
+		RELOAD_LOCK,
+		POIZON_GAUGEUP,
+		POIZON_DAMAGEUP,
+		SKILL_RECYCLE,
+		RELOAD_DAMAGE,
+		MAX_ABILITY
+	};
+
 
 	enum PosType {
 		FIRST_POS = 0,
@@ -47,8 +59,6 @@ public:
 		THIRD_POS,
 		ALL_POS,
 	};
-
-	static TextManager* GetInstance();
 
 	//
 	void Create(DirectXCommon* dxcomon);
@@ -73,18 +83,23 @@ public:
 
 	//void SetRowPosition(float posX);
 
+	void SetCreateSentence(wchar_t* tex1, wchar_t* tex2 = L" ", wchar_t* tex3 = L" ");
+
+	wchar_t* GetPasiveSentence(int ID) { return passiveSentence[ID]; };
 private:
 
 	//
 	void CreateWord(Name name, wchar_t* tex1, wchar_t* tex2 = L" ", wchar_t* tex3 = L" ");
 	//
 	Word SetWord(wchar_t* tex1, wchar_t* tex2, wchar_t* tex3);
-	//
-	Conversation CreateConversation(Word word);
 
 	void CreateCon(Conversation con, Word word);
+
+	void CreatePassiveSentence(wchar_t* tex1);
 private:
 	std::map<TextManager::Name, Word> wordlist_;
+
+	std::vector<wchar_t*> passiveSentence;
 
 	Conversation conversation_ = {};
 	Conversation old_conversation_ = {};
