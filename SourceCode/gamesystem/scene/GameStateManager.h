@@ -88,7 +88,7 @@ public:
 	void SetDxCommon(DirectXCommon* dxCommon) { this->m_dxCommon = dxCommon; }
 	const float GetPosScore() { return m_PosScore; }
 	const float GetGrazeScore() { return m_GrazeScore; }
-	vector<AttackArea*>GetAttackArea() { return attackarea; }
+	vector<unique_ptr<AttackArea>>& GetAttackArea() { return attackarea; }
 	const float GetDiameterVel() { return m_DiameterVel; }
 	std::weak_ptr<Player> GetPlayer() { return player_; }
 
@@ -140,7 +140,7 @@ private:
 	XMFLOAT2 basesize = { 45.f,400.f };
 
 	// 攻撃エリア
-	vector<AttackArea*> attackarea;
+	vector<unique_ptr<AttackArea>> attackarea;
 
 	//カウンター
 	bool m_Counter = false;

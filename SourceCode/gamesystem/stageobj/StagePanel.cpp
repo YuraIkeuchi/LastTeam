@@ -94,14 +94,10 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
-	/*ImGui::Begin("Panel");
-	for (int i = 0; i < PANEL_WIDTH; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			ImGui::Text("Type[%d][%d]:%d", i, j, panels[i][j].type);
-		}
-	}
+	ImGui::Begin("Panel");
 	ImGui::Text("Count:%d", m_ActionCount);
-	ImGui::End();*/
+	ImGui::Text("Delete:%d", m_AllDelete);
+	ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
@@ -334,5 +330,6 @@ XMFLOAT3 StagePanel::EnemySetPanel() {
 	return SetPositon(width, height);
 }
 void StagePanel::DeleteAction() {
+	m_ActionCount = {};
 	actions.clear();
 }

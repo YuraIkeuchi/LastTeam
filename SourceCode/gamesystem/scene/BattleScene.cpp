@@ -11,7 +11,10 @@
 #include "InterEnemy.h"
 #include "GameoverScene.h"
 #include "TitleScene.h"
-
+#include "ClearScene.h"
+BattleScene::~BattleScene() {
+	Finalize();
+}
 // 初期化
 void BattleScene::Initialize(DirectXCommon* dxCommon)
 {
@@ -57,10 +60,12 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	}
 
 	GameReset({ -8.0f,0.1f,0.0f });
+	StagePanel::GetInstance()->DeleteAction();
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
 {
+	Input* input = Input::GetInstance();
 	//ライト更新
 	lightGroup->Update();
 	//�e�N���X�X�V
@@ -101,7 +106,12 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	if (SceneChanger::GetInstance()->GetChange()) {
 		GameReset({ -4.0f,0.1f,2.0f });
 		if (_ChangeType == CHANGE_MAP) {
-			SceneManager::GetInstance()->PopScene();
+			if (!s_LastStage) {
+				SceneManager::GetInstance()->PopScene();
+			}
+			else {
+				SceneManager::GetInstance()->ChangeScene<ClearScene>();
+			}
 		}else {
 			SceneManager::GetInstance()->ChangeScene<GameoverScene>();
 		}
@@ -162,10 +172,10 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
-	game_object_manager_->ImGuiDraw();
-	enemyManager->ImGuiDraw();
+	//game_object_manager_->ImGuiDraw();
+	//enemyManager->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {
-
+	game_object_manager_->Finalize();
 }

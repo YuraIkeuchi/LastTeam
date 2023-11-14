@@ -160,12 +160,13 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
-	ImGui::Begin("Tutorial");
+	/*ImGui::Begin("Tutorial");
 	ImGui::Text("Timer:%d", m_Timer);
 	ImGui::Text("State:%d", _nowstate);
 	ImGui::End();
 	
-	TutorialTask::GetInstance()->ImGuiDraw();
+	TutorialTask::GetInstance()->ImGuiDraw();*/
+	GameStateManager::GetInstance()->ImGuiDraw();
 }
 
 void TutorialScene::Finalize() {

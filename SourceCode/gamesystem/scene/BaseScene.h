@@ -96,6 +96,8 @@ public:
 	float BosscircleShadowFactorAngle[2] = { 0.0f, 0.3f };
 	//ゲームループしたかどうか
 	static bool s_GameLoop;
+	//ラストステージかどうか
+	static bool s_LastStage;
 	//シーンでの遷移
 	//SceneState m_SceneState = SceneState::IntroState;
 };

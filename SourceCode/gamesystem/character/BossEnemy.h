@@ -1,7 +1,8 @@
 #pragma once
 #include"InterEnemy.h"
 #include "EnemyBullet.h"
-
+#include "AttackArea.h"
+#include "PredictArea.h"
 using namespace std;         //  名前空間指定
 //普通の敵
 class BossEnemy :public InterEnemy {
@@ -22,7 +23,17 @@ private:
 	void Attack();//攻撃
 	void Teleport();//移動
 	void BulletAttack();//弾の攻撃
+	void RowAttack();
+	void RandomAttack();
 	void BirthBullet();//
+	void BirthArea(const int Width,const int Height,const string& name);//攻撃エリア
+	void BirthPredict(const int Width,const int Height,const string& name);//予測エリア
+
+	//スキルのCSVを読み取る
+	void LoadCsvSkill(std::string& FileName, const int id);
+	//CSVを作成
+	bool CreateSkill(int id);
+	void PlayerCollide();
 private:
 	static const int BULLET_NUM = 5;
 private:
@@ -38,6 +49,16 @@ private:
 
 	enum AttackState {
 		ATTACK_BULLET,
-	}_AttackState = ATTACK_BULLET;
+		ATTACK_ROW,
+		ATTACK_RANDOM,
+	}_AttackState = ATTACK_RANDOM;
+	std::vector<std::vector<int>> m_Area = {};
+	// 攻撃エリア
+	std::vector<unique_ptr<AttackArea>> attackarea;
+	//予測エリア
+	std::unique_ptr<PredictArea> predictarea;
+
+	int m_RandWigth = {};
+	int m_RandHeight = {};
 };
 

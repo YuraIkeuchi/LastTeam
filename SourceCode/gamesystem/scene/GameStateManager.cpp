@@ -190,6 +190,8 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 //描画
 void GameStateManager::ImGuiDraw() {
 	StagePanel::GetInstance()->ImGuiDraw();
+	SkillManager::GetInstance()->ImGuiDraw();
+	TutorialTask::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -253,13 +255,12 @@ void GameStateManager::BirthArea() {
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
 			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0)) && (AreaX < 8)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				AttackArea* newarea = nullptr;
-				newarea = new AttackArea();
-				newarea->Initialize();
+				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(m_Act[0].ActDamage);
+				newarea->SetName("Player");
 				newarea->SetStateName(m_Act[0].StateName);
-				attackarea.push_back(newarea);
+				attackarea.emplace_back(std::move(newarea));
 			}
 		}
 	}
@@ -478,7 +479,6 @@ bool GameStateManager::SkillRecycle() {
 
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
-	StagePanel::GetInstance()->DeleteAction();
 	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size());
 	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size());
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);

@@ -8,6 +8,8 @@
 class BattleScene : public BaseScene
 {
 public:
+	~BattleScene() override;
+public:
 	//‰Šú‰»
 	void Initialize(DirectXCommon* dxCommon) override;
 	//XV

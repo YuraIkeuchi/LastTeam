@@ -4,6 +4,8 @@
 /// タイトルシーン
 class GameoverScene : public BaseScene {
 public:
+	~GameoverScene() override {};
+public:
 	/// 初期化
 	void Initialize(DirectXCommon* dxCommon) override;
 	/// 終了
