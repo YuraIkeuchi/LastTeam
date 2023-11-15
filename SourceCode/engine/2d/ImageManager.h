@@ -57,6 +57,7 @@ public:
 		MAGIC,
 		CHARGE,
 		SHADOW,
+		AREA,
 	};
 	enum particleName
 	{

@@ -1,15 +1,16 @@
 #include "PredictArea.h"
 #include "CsvLoader.h"
-#include "ModelManager.h"
+#include "ImageManager.h"
 
 //ÉäÉ\Å[ÉXì«Ç›çûÇ›
 PredictArea::PredictArea() {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			panels[i][j].object.reset(new IKEObject3d());
-			panels[i][j].object->Initialize();
-			panels[i][j].object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
-			panels[i][j].object->SetScale({ 2.f,0.1f,2.f });
+			panels[i][j].tex.reset(new IKETexture(ImageManager::AREA,{}, {1.f,1.f,1.f}, {1.f,1.f,1.f,1.f}));
+			panels[i][j].tex->TextureCreate();
+			panels[i][j].tex->Initialize();
+			panels[i][j].tex->SetScale({ 0.2f,0.2f,0.2f });
+			panels[i][j].tex->SetRotation({ 90.0f,0.0f,0.0f });
 		}
 	}
 }
@@ -17,7 +18,7 @@ PredictArea::PredictArea() {
 bool PredictArea::Initialize() {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			panels[i][j].position = { (2.0f * i) - (PREDICT_HEIGHT * 2.0f),0.01f,(2.0f * j) };
+			panels[i][j].position = { (2.0f * i) - (PREDICT_HEIGHT * 2.0f),0.02f,(2.0f * j) };
 			panels[i][j].color = { 1.f,1.f,1.f,1.f };
 		}
 	}
@@ -31,24 +32,24 @@ void PredictArea::Update() {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
 			panels[i][j].color = { 1.0f,0.3f,0.0f,0.5f };
-			panels[i][j].object->Update();
-			panels[i][j].object->SetPosition(panels[i][j].position);
-			panels[i][j].object->SetColor(panels[i][j].color);
+			panels[i][j].tex->Update();
+			panels[i][j].tex->SetPosition(panels[i][j].position);
+			panels[i][j].tex->SetColor(panels[i][j].color);
 		}
 	}
 }
 
 //ï`âÊ
 void PredictArea::Draw(DirectXCommon* dxCommon) {
-	IKEObject3d::PreDraw();
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
 			if (panels[i][j].predict) {
-				panels[i][j].object->Draw();
+				panels[i][j].tex->Draw();
 			}
 		}
 	}
-	IKEObject3d::PostDraw();
+	IKETexture::PostDraw();
 }
 
 //ImGui

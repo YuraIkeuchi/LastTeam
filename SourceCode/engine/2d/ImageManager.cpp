@@ -56,6 +56,7 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(MAGIC, L"Resources/2d/objicon/magic.png");
 	IKETexture::LoadTexture(CHARGE, L"Resources/2d/objicon/impact.png");
 	IKETexture::LoadTexture(SHADOW, L"Resources/2d/objicon/shadow.png");
+	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/Area.png");
 }
 
 //非同期処理でのテクスチャの読み込み

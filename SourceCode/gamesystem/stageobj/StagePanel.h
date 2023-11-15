@@ -5,6 +5,7 @@
 #include <any>
 #include <array>
 #include "IKESprite.h"
+#include "IKETexture.h"
 #include "Player.h"
 using namespace DirectX;
 using namespace std;
@@ -35,6 +36,8 @@ private:
 		bool isHit = false;
 		bool isEnemyHit = false;
 		bool predict = false;
+		bool isPoison = false;
+		int PoisonTimer = {};
 	};
 
 public:
@@ -54,21 +57,24 @@ public:
 	void ResetPanel();
 	void ResetAction();
 	void EnemyHitReset();
+	void PoisonUpdate();
 	//色変更(敵)
-	void SetEnemyHit(IKEObject3d* obj,int& wight, int& height,bool m_Alive);
+	void SetEnemyHit(IKEObject3d* obj,int& widht, int& height,bool m_Alive);
 	//今いる位置のパネル番号を検索
-	void SetPanelSearch(IKEObject3d* obj, int& wight, int& height);
+	void SetPanelSearch(IKEObject3d* obj, int& widht, int& height);
 	//敵の配置(かぶらないように)
 	XMFLOAT3 EnemySetPanel();
+	//毒の配置(かぶらないように)
+	void PoisonSetPanel();
 	//アクションの全削除
 	void DeleteAction();
+	void PoisonCollide(const int width,const int height, bool& Flag);
 private:
 	//バトル中の更新
 	void BattleUpdate();
 	//スキルセットの更新
 	void SetUpdate();
-	void Collide();
-	XMFLOAT4 ChangeColor(const int Weight, const int Height);
+	XMFLOAT4 ChangeColor(const int Widht, const int Height);
 
 public:
 	static void SetPlayer(Player* player) { StagePanel::player = player; }

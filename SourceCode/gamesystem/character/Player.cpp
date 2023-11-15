@@ -100,6 +100,7 @@ void Player::Update() {
 		StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 		Obj_SetParam();
 		BirthParticle();
+		PoisonUpdate();
 		// グレイズ用にスコアを計算する
 		m_Length = Helper::GetInstance()->ChechLength(m_Position, m_GrazePos);
 		m_GrazeScore = l_GrazeMax - m_Length;
@@ -163,7 +164,8 @@ void Player::UIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
-	ImGui::Text("PosX:%f,PosY:%f,PosZ:%f", m_ShadowPos.x, m_ShadowPos.y, m_ShadowPos.z);
+	ImGui::Text("PoisonTimer:%d", m_PoisonTimer);
+	ImGui::Text("Poison:%d", m_Poison);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::End();
 }
@@ -304,4 +306,18 @@ void Player::PlayerSave() {
 	playerofs << "STARTHP" << "," << l_StartHp << std::endl;
 	playerofs << "NOWHP" << "," << m_HP << std::endl;
 	playerofs << "MAXHP" << "," << m_MaxHP << std::endl;
+}
+//毒の更新
+void Player::PoisonUpdate() {
+	const int l_TargetTimer = 100;
+	StagePanel::GetInstance()->PoisonCollide(m_NowWidth, m_NowHeight, m_Poison);
+	if (m_Poison) {
+		if (Helper::GetInstance()->CheckMin(m_PoisonTimer, l_TargetTimer, 1)) {
+			m_PoisonTimer = {};
+			m_HP -= 2.0f;
+		}
+	}
+	else {
+		m_PoisonTimer = {};
+	}
 }

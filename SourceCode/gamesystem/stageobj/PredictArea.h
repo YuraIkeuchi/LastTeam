@@ -1,6 +1,7 @@
 #pragma once
 #include "ObjCommon.h"
 #include <array>
+#include "IKETexture.h"
 
 using namespace DirectX;
 using namespace std;
@@ -14,7 +15,7 @@ private:
 
 	//ƒpƒlƒ‹
 	struct Panel {
-		unique_ptr<IKEObject3d> object = nullptr;
+		unique_ptr<IKETexture> tex = nullptr;
 		XMFLOAT3 position = { 0,0,0 };
 		XMFLOAT4 color = { 1,1,1,1 };
 		bool predict = false;

@@ -22,7 +22,7 @@ void StagePanel::LoadResource() {
 			panels[i][j].object.reset(new IKEObject3d());
 			panels[i][j].object->Initialize();
 			panels[i][j].object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
-			panels[i][j].object->SetScale({ 2.f,0.1f,2.f });
+			panels[i][j].object->SetScale({ 2.f,0.01f,2.f });
 		}
 	}
 	for (int i = 0; i < PANEL_WIDTH; i++) {
@@ -31,7 +31,8 @@ void StagePanel::LoadResource() {
 			panels[i][j].color = { 1.f,1.f,1.f,1.f };
 			panels[i][j].type = NO_PANEL;
 			panels[i][j].isHit = false;
-	
+			panels[i][j].isPoison = false;
+			panels[i][j].PoisonTimer = {};
 		}
 	}
 }
@@ -50,6 +51,7 @@ bool StagePanel::Initialize() {
 //更新処理
 void StagePanel::Update() {
 	BattleUpdate();
+	PoisonUpdate();
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Update();
@@ -89,8 +91,11 @@ void StagePanel::ImGuiDraw() {
 		actions[i]->ImGuiDraw();
 	}
 	ImGui::Begin("Panel");
-	ImGui::Text("Count:%d", m_ActionCount);
-	ImGui::Text("Delete:%d", m_AllDelete);
+	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			ImGui::Text("Poison[%d][%d]:%d", i, j, panels[i][j].isPoison);
+		}
+	}
 	ImGui::End();
 }
 
@@ -104,18 +109,26 @@ void StagePanel::BattleUpdate() {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if (!panels[i][j].predict) {
-					panels[i][j].color = ChangeColor(i, j);
+					if (!panels[i][j].isPoison) {
+						panels[i][j].color = ChangeColor(i, j);
+					}
+					else {
+						panels[i][j].color = { 0.0f,0.3f,1.0f,1.0f };
+					}
 				}
 				else {
-					panels[i][j].color = { 1.0f,0.3f,0.0f,1.0f };
+					if (!panels[i][j].isPoison) {
+						panels[i][j].color = { 1.0f,0.3f,0.0f,1.0f };
+					}
+					else {
+						panels[i][j].color = { 0.0f,0.3f,1.0f,1.0f };
+					}
 				}
 			panels[i][j].object->Update();
 			panels[i][j].object->SetPosition(panels[i][j].position);
 			panels[i][j].object->SetColor(panels[i][j].color);
 		}
 	}
-
-	Collide();
 }
 //パネルの除去
 void StagePanel::DeletePanel() {
@@ -128,19 +141,12 @@ void StagePanel::DeletePanel() {
 	}
 }
 
-void StagePanel::Collide() {
-	m_OBB1.SetParam_Pos(player->GetPosition());
-	m_OBB1.SetParam_Rot(player->GetMatrot());
-	m_OBB1.SetParam_Scl(player->GetScale());
+void StagePanel::PoisonCollide(const int Width, const int Height, bool& Flag) {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			m_OBB2.SetParam_Pos(panels[i][j].position);
-			m_OBB2.SetParam_Rot(panels[i][j].object->GetMatrot());
-			m_OBB2.SetParam_Scl({ 0.5f,1.0f,0.5f });
-			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
-				panels[i][j].isHit = true;
-			} else {
-				panels[i][j].isHit = false;
+			if (!panels[i][j].isPoison) { continue; }
+			if ((i == Width) && (j == Height)) {
+				Flag = true;
 			}
 		}
 	}
@@ -232,7 +238,7 @@ void StagePanel::ResetAction() {
 	}
 }
 //敵とパネルの当たり判定
-void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height, bool m_Alive) {
+void StagePanel::SetEnemyHit(IKEObject3d* obj, int& width, int& height, bool m_Alive) {
 
 	m_OBB1.SetParam_Pos(obj->GetPosition());
 	m_OBB1.SetParam_Rot(obj->GetMatrot());
@@ -243,7 +249,7 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& wight, int& height, bool m_A
 			m_OBB2.SetParam_Rot(panels[i][j].object->GetMatrot());
 			m_OBB2.SetParam_Scl({ 0.5f,1.0f,0.5f });
 			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
-				wight = i;
+				width = i;
 				height = j;
 				if (m_Alive) {
 					panels[i][j].isEnemyHit = true;
@@ -274,9 +280,9 @@ void StagePanel::SetPanelSearch(IKEObject3d* obj, int& width, int& height) {
 	}
 }
 //パネルの色を決める
-XMFLOAT4 StagePanel::ChangeColor(const int Weight, const int Height) {
+XMFLOAT4 StagePanel::ChangeColor(const int Widht, const int Height) {
 	XMFLOAT4 color;
-	if (Weight % 2 == 0) {
+	if (Widht % 2 == 0) {
 		if (Height % 2 == 0) {
 			color = { 1.0f,0.9f,0.7f,1.0f };
 		}
@@ -321,6 +327,40 @@ XMFLOAT3 StagePanel::EnemySetPanel() {
 	}
 
 	return SetPositon(width, height);
+}
+void StagePanel::PoisonSetPanel() {
+	bool isSet = false;
+	//乱数の設定
+	int width = Helper::GetInstance()->GetRanNum(0, 3);
+	int height = Helper::GetInstance()->GetRanNum(0, 3);
+
+	//パネル探索（敵がいる場合は再検索）
+
+	while (!isSet) {
+		if (panels[width][height].isPoison) {
+			width = Helper::GetInstance()->GetRanNum(0, 3);
+			height = Helper::GetInstance()->GetRanNum(0, 3);
+		}
+		else {
+			panels[width][height].isPoison = true;
+			isSet = true;
+		}
+	}
+}
+void StagePanel::PoisonUpdate() {
+	const int l_TargetTimer = 500;
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			if (panels[i][j].isPoison) {
+				panels[i][j].PoisonTimer++;
+
+				if (Helper::GetInstance()->CheckMin(panels[i][j].PoisonTimer, l_TargetTimer, 1)) {
+					panels[i][j].isPoison = false;
+					panels[i][j].PoisonTimer = {};
+				}
+			}
+		}
+	}
 }
 void StagePanel::DeleteAction() {
 	m_ActionCount = {};
