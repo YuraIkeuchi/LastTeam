@@ -44,7 +44,7 @@ void GameStateManager::Initialize() {
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 
-	resultSkill = make_unique<ResultSkill>();
+	resultSkill = make_unique<ResultSkill>(player);
 	resultSkill->Initialize(m_dxCommon);
 	haveSkill = make_unique<HaveResultSkill>();
 	haveSkill->Initialize();
@@ -370,8 +370,6 @@ void GameStateManager::PassiveCheck() {
 			m_DiameterGauge = passive->GetDiameter();
 			break;
 		case Passive::ABILITY::HP_UP:
-			player->SetMaxHp(
-				player->GetMaxHp()* passive->GetDiameter());
 			break;
 		case Passive::ABILITY::RELOAD_LOCK:
 			m_IsReload = false;
