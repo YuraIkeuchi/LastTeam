@@ -111,8 +111,6 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		starRoadsPos.resize(10);
 	}
 	BlackOut();
-	lastScroll = MaxLength * interbal;
-	scroll.x = -lastScroll;
 
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
@@ -126,7 +124,15 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
-	m_State = State::initState;
+	lastScroll = MaxLength * interbal;
+	if (nowHierarchy == 0) {
+		scroll.x = -lastScroll;
+		m_State = State::initState;
+	} else {
+		m_State = State::mainState;
+		scroll.x = -(UIs[nowHierarchy][nowIndex].pos.x / 2.f);
+		chara->SetSize({ 128.f,128.f });
+	}
 
 	//‚±‚±‚ªV‚µ‚­‘‚¢‚½êŠ
 	pickHierarchy = nowHierarchy + 1;
@@ -136,10 +142,20 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	oldIndex = nowIndex;
 
 	charaPos = { UIs[nowHierarchy][nowIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.y };
-	scroll.x = -UIs[nowHierarchy][nowIndex].pos.x / 2;
 	framePos = UIs[pickHierarchy][pickIndex].pos;
 	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
+	for (array<UI, INDEX>& ui : UIs) {
+		for (int i = 0; i < INDEX; i++) {
+			if (!ui[i].sprite) { continue; }
+			ui[i].sprite->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
+			ui[i].sprite->SetColor(ui[i].color);
+			ui[i].sprite->SetSize(ui[i].size);
+		}
+	}
+	for (int i = 0; i < roads.size(); i++) {
+		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
+	}
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
