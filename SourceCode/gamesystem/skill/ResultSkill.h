@@ -16,7 +16,7 @@ public:
 	void Initialize(DirectXCommon* dxCommon);
 	void Update();
 	void Draw(DirectXCommon* dxCommon);
-
+	void ImGuiDraw();
 	void InDeck(std::vector<int>& Deck);
 	void InPassive(std::vector<int>& Passive);
 
@@ -70,5 +70,6 @@ private:
 	XMFLOAT2 framePos = BasePos[0];
 	std::list<ResultUI> pickSkills;
 	std::list<ShineEffect> shines;
+	bool m_Choice = false;
 };
 
