@@ -5,7 +5,7 @@
 #include <any>
 #include <array>
 #include "IKESprite.h"
-
+#include "Player.h"
 using namespace DirectX;
 using namespace std;
 
@@ -71,6 +71,7 @@ private:
 	XMFLOAT4 ChangeColor(const int Weight, const int Height);
 
 public:
+	static void SetPlayer(Player* player) { StagePanel::player = player; }
 	//gettersetter
 	XMFLOAT3 SetPositon(int width, int height) {
 		return panels[width][height].position;
@@ -84,6 +85,7 @@ public:
 	const bool GetAllDelete() { return m_AllDelete; }
 
 private:
+	static Player* player;
 	//パネル
 	Panel panels[PANEL_WIDTH][PANEL_HEIGHT];
 	//スキル

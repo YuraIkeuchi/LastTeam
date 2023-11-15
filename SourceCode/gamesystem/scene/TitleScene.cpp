@@ -21,6 +21,11 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	}
 
 	s_LastStage = false;
+	player_ = make_unique<Player>();
+	player_->LoadResource();
+	player_->InitState({ -4.0f,0.1f,2.0f });
+	player_->Initialize();
+	player_->SetTitleFlag(true);
 	////�X�e�[�W�̏�
 	//// プレイヤー生成
 	//{
@@ -34,18 +39,15 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//}
 
 	StagePanel::GetInstance()->LoadResource();
-	
+	StagePanel::GetInstance()->SetPlayer(player_.get());
 	GameReset({ -4.0f,0.1f,2.0f });
 
-	/*player_ = make_unique<Player>();
-	player_->LoadResource();
-	player_->InitState({ -4.0f,0.1f,2.0f });
-	player_->Initialize();
-	player_->SetTitleFlag(true);*/
-	//敵
+
+	////敵
+	InterEnemy::SetPlayer(player_.get());
 	enemy = make_unique<MobEnemy>();
 	enemy->Initialize();
-	//enemy->SetPlayer(player_.get());
+	enemy->SetPlayer(player_.get());
 
 	//カード
 	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
@@ -56,12 +58,11 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 void TitleScene::Update(DirectXCommon* dxCommon) {
 	Input* input = Input::GetInstance();
 	camerawork->Update(camera);
-	//player_->Update();
+	player_->Update();
 	//各クラス更新
 	camerawork->Update(camera);
 
 	lightGroup->Update();
-	//Player::GetInstance()->TitleUpdate();
 	StagePanel::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemy->Update();
@@ -129,14 +130,14 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	title_[TITLE_BACK]->Draw();
 	IKESprite::PostDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	//player_->Draw(dxCommon);
+	player_->Draw(dxCommon);
 	enemy->Draw(dxCommon);
 
 }
 //ImGui描画
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	camerawork->ImGuiDraw();
-	//player_->ImGuiDraw();
+	player_->ImGuiDraw();
 }
 //解放
 void TitleScene::Finalize() {

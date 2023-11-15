@@ -168,7 +168,7 @@ void BossEnemy::BirthBullet() {
 	EnemyBullet* newbullet;
 	newbullet = new EnemyBullet();
 	newbullet->Initialize();
-
+	newbullet->SetPlayer(player);
 	newbullet->SetPolterType(TYPE_FOLLOW);
 	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 	bullets.emplace_back(newbullet);
@@ -225,10 +225,9 @@ void BossEnemy::RowAttack() {
 }
 //ランダムマス攻撃
 void BossEnemy::RandomAttack() {
-	auto player_data = player;
 	//プレイヤーの現在マス
-	int l_PlayerWidth = player_data->GetNowWidth();
-	int l_PlayerHeight = player_data->GetNowHeight();
+	int l_PlayerWidth = player->GetNowWidth();
+	int l_PlayerHeight = player->GetNowHeight();
 	const int l_TargetTimer = 60;
 	if (m_AttackCount != 8) {
 		if (coolTimer == 0) {
@@ -365,14 +364,13 @@ bool BossEnemy::CreateSkill(int id) {
 }
 //エリア攻撃の判定
 void BossEnemy::PlayerCollide() {
-	auto player_data = player;
-	int l_PlayerWidth = player_data->GetNowWidth();
-	int l_PlayerHeight = player_data->GetNowHeight();
+	int l_PlayerWidth = player->GetNowWidth();
+	int l_PlayerHeight = player->GetNowHeight();
 	for (unique_ptr<AttackArea>& newarea : attackarea) {
 		if (newarea != nullptr) {
 			if ((newarea->GetNowHeight() == l_PlayerHeight && newarea->GetNowWidth() == l_PlayerWidth) &&
 				!newarea->GetHit() && (newarea->GetName() == "Enemy")) {
-				player_data->RecvDamage(20.0f);
+				player->RecvDamage(20.0f);
 				newarea->SetHit(true);
 				break;
 			}

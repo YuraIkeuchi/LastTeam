@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "ObjCommon.h"
-
+#include "Player.h"
 enum PolterType {
 	TYPE_FOLLOW,
 	TYPE_BOUND,
@@ -49,8 +49,10 @@ public:
 	void SetPolterType(const int PolterType) { m_PolterType = PolterType; }
 
 	void SetTargetTimer(const int TargetTimer) { m_TargetTimer = TargetTimer; }
+	void SetPlayer(Player* player) { this->player = player; }
 
 private:
+	Player* player;
 	unique_ptr<IKEObject3d> m_Pannel = nullptr;
 	//現在のマス番号
 	int m_NowWidth = {};

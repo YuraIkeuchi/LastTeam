@@ -166,7 +166,7 @@ void CanonEnemy::BirthBullet() {
 		EnemyBullet* newbullet;
 		newbullet = new EnemyBullet();
 		newbullet->Initialize();
-
+		newbullet->SetPlayer(player);
 		newbullet->SetPolterType(TYPE_FOLLOW);
 		newbullet->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 		bullets.emplace_back(newbullet);

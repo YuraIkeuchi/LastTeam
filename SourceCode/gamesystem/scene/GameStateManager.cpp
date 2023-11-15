@@ -7,6 +7,7 @@
 #include <SkillManager.h>
 #include <TutorialTask.h>
 
+Player* GameStateManager::player = nullptr;
 GameStateManager* GameStateManager::GetInstance() {
 	static GameStateManager instance;
 	return &instance;

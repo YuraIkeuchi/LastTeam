@@ -3,7 +3,7 @@
 #include <IKESprite.h>
 #include <IKETexture.h>
 #include <memory>
-
+#include <Input.h>
 #include <array>
 #include "DrawNumber.h"
 
@@ -88,7 +88,7 @@ public:
 	};
 private:
 	unique_ptr<IKETexture> shadow_tex;
-
+	Input* input = Input::GetInstance();
 
 	int _charaState = STATE_MOVE;
 	//移動加算値

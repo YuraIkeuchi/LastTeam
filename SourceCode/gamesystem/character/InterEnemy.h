@@ -37,7 +37,7 @@ protected:
 protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
 	unique_ptr<IKETexture> shadow_tex;
-	unique_ptr<Player> player;
+	static Player* player;
 	//桁数
 	enum DightType {
 		FIRST_DIGHT,
@@ -102,7 +102,7 @@ public://getter setter
 	void SetPoizonLong(bool isPoison) { m_PoisonLong = isPoison; }
 	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
 	void SetDrainUp(bool IsDrainUp) { m_IsDrainUp = IsDrainUp; }
-	void SetPlayer(Player* player) { this->player.reset(player); }
+	static void SetPlayer(Player* player) { InterEnemy::player = player; }
 
 	const float GetHP() { return m_HP; }
 	const bool GetAlive() { return m_Alive; }

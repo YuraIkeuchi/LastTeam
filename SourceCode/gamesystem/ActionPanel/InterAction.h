@@ -4,6 +4,7 @@
 #include <string>
 #include <IKETexture.h>
 #include <DrawNumber.h>
+#include "Player.h"
 using namespace std;         //  –¼‘O‹óŠÔŽw’è
 enum State {
 	STATE_SPAWN = 0,
@@ -56,7 +57,10 @@ public:
 	void SetState(const int state) { _state= state; }
 	void SetAlive(const bool Alive) { m_Alive = Alive; }
 	void SetSkillID(const int SkillID) { m_SkillID = SkillID; }
+	void SetPlayer(Player* player) { this->player.reset(player); }
+
 protected:
+	unique_ptr<Player> player;
 	string m_Tag;
 	unique_ptr<IKETexture> m_Pannel = nullptr;
 	XMFLOAT3 m_PannelScale = {0.15f,0.15f,0.15f};

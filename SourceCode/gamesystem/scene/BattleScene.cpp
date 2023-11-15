@@ -28,9 +28,14 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//	player->InitState({ -8.0f,0.1f,0.0f });
 	//	GameStateManager::GetInstance()->SetPlayer(player);
 	//}
+	player_ = make_unique<Player>();
+	player_->LoadResource();
+	player_->InitState({ -4.0f,0.1f,2.0f });
+	player_->Initialize();
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
 	GameStateManager::GetInstance()->Initialize();
+	GameStateManager::SetPlayer(player_.get());
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
@@ -39,12 +44,9 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	{
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
 	}
-	/*player_ = make_unique<Player>();
-	player_->LoadResource();
-	player_->InitState({ -4.0f,0.1f,2.0f });
-	player_->Initialize();
-	player_->SetTitleFlag(true);*/
+
 	//敵
+	EnemyManager::SetPlayer(player_.get());
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
 	//enemyManager->EnemyLightInit(lightGroup);
@@ -71,7 +73,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	camerawork->Update(camera);
 	StagePanel::GetInstance()->Update();
 	// �S�I�u�W�F�N�g�X�V
-	//player_->Update();
+	player_->Update();
 	GameStateManager::GetInstance()->Update();
 
 
@@ -92,11 +94,10 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	}
 	//クリア条件に達するとプレイヤーを動かせなくする
 	if (GameStateManager::GetInstance()->GetIsFinish()) {
-		auto player = GameStateManager::GetInstance()->GetPlayer();
-		player.lock()->SetDelay(true);
+		player_->SetDelay(true);
 	}
 	//ゲームオーバー処理
-	if (player->GetHp() <= 0.0f) {
+	if (player_->GetHp() <= 0.0f) {
 		_ChangeType = CHANGE_OVER;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
@@ -147,7 +148,7 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 
 	if (!enemyManager->BossDestroy()){
-		//player_->UIDraw();
+		player_->UIDraw();
 		enemyManager->UIDraw();
 		GameStateManager::GetInstance()->ActUIDraw();
 	}
@@ -157,7 +158,7 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	//player_->Draw(dxCommon);
+	player_->Draw(dxCommon);
 
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	enemyManager->Draw(dxCommon);
@@ -169,6 +170,7 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
+	player_->ImGuiDraw();
 	//game_object_manager_->ImGuiDraw();
 	//enemyManager->ImGuiDraw();
 }

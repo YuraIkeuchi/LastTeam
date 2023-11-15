@@ -47,15 +47,15 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
 	text_->SetConversation(TextManager::TUTORIAL_START);
-	/*player_ = make_unique<Player>();
+	player_ = make_unique<Player>();
 	player_->LoadResource();
 	player_->InitState({ -4.0f,0.1f,2.0f });
 	player_->Initialize();
-	player_->SetTitleFlag(true);*/
+	player_->SetTitleFlag(true);
 	//敵
 	enemy = make_unique<MobEnemy>();
 	enemy->Initialize();
-	//enemy->SetPlayer(player_.get());
+	enemy->SetPlayer(player_.get());
 
 	_nowstate = TUTORIAL_INTRO;
 
@@ -75,7 +75,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 		//Player::GetInstance()->Update();
 	}
 	lightGroup->Update();
-	//player_->Update();
+	player_->Update();
 	StagePanel::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
 	ParticleEmitter::GetInstance()->Update();
@@ -90,7 +90,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
 	//�Ղꂢ��[��HP�������Ȃ��Ă��J�ڂ���
-	if (player->GetHp() <= 0.0f) {
+	if (player_->GetHp() <= 0.0f) {
 		_ChangeType = CHANGE_OVER;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
@@ -135,7 +135,7 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
 	enemy->UIDraw();
-	//player_->UIDraw();
+	player_->UIDraw();
 	text_->TestDraw(dxCommon);
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 	GameStateManager::GetInstance()->ActUIDraw();
@@ -149,7 +149,7 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
-	//player_->Draw(dxCommon);
+	player_->Draw(dxCommon);
 	enemy->Draw(dxCommon);
 
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);

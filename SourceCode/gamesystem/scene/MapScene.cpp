@@ -6,9 +6,6 @@
 #include <SceneChanger.h>
 #include "SceneManager.h"
 #include <TutorialTask.h>
-//‘JˆÚ‚µ‚¤‚éƒV[ƒ“
-#include "BattleScene.h"
-#include <TutorialScene.h>
 #include <GameStateManager.h>
 
 void (MapScene::* MapScene::stateTable[])() = {

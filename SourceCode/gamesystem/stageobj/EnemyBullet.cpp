@@ -73,12 +73,11 @@ void EnemyBullet::ImGuiDraw() {
 
 //当たり判定
 bool EnemyBullet::Collide() {
-	auto player_data = player;
-	XMFLOAT3 l_PlayerPos = player_data->GetPosition();
+	XMFLOAT3 l_PlayerPos = player->GetPosition();
 	const float l_Damage = 0.5f;
 	const float l_Radius = 0.2f;
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
-		player_data->RecvDamage(5.0f);
+		player->RecvDamage(5.0f);
 		m_Alive = false;
 		return true;
 	}
@@ -90,7 +89,6 @@ bool EnemyBullet::Collide() {
 }
 //追従
 void EnemyBullet::Throw() {
-	auto player_data = player;
 	const float l_AddFrame = 0.01f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;

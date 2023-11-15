@@ -108,8 +108,10 @@ public:
 	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
 
 public:
-	void SetPlayer(Player* player) { this->player.reset(player); }
+	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
+
+	static Player* player;
 	DirectXCommon* m_dxCommon = nullptr;
 	unique_ptr<IKETexture> _charge;
 	bool isFinish = false;
@@ -145,7 +147,6 @@ private:
 	// 攻撃エリア
 	vector<unique_ptr<AttackArea>> attackarea;
 
-	unique_ptr<Player> player;
 	//カウンター
 	bool m_Counter = false;
 	int m_CounterTimer = {};
