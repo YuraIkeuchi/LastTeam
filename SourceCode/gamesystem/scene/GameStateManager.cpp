@@ -48,6 +48,9 @@ void GameStateManager::Initialize() {
 	resultSkill->Initialize(m_dxCommon);
 	haveSkill = make_unique<HaveResultSkill>();
 	haveSkill->Initialize();
+
+	onomatope = make_unique<Onomatope>();
+
 	m_PredictTimer = {};
 	//
 	SkillManager::GetInstance()->Initialize();
@@ -144,6 +147,8 @@ void GameStateManager::Update() {
 	_charge->SetPosition({ player->GetPosition().x,0.5f,player->GetPosition().z });
 	_charge->SetScale({ m_ChargeScale,m_ChargeScale,m_ChargeScale });
 	_charge->Update();
+	onomatope->Update();
+
 }
 //攻撃した瞬間
 void GameStateManager::AttackTrigger() {
@@ -156,6 +161,7 @@ void GameStateManager::AttackTrigger() {
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
 		AttackSubAction();
+		onomatope->AddOnomato(Attack01, { 640.f,360.f });
 		m_Delay = true;
 	}
 }
@@ -169,6 +175,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		IKESprite::PreDraw();
 		skillUI->Draw();
 		gaugeUI->Draw();
+		onomatope->Draw();
 		IKESprite::PostDraw();
 		SkillManager::GetInstance()->UIDraw();
 		for (auto i = 0; i < attackarea.size(); i++) {

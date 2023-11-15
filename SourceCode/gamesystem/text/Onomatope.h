@@ -7,7 +7,7 @@
 
 enum OnomatoPattern {
 	Foot,
-
+	Attack01,
 
 };
 class Onomatope {
@@ -35,7 +35,7 @@ private:
 	static void(Onomatope::* updateTable[])(OnomatoStruct& onomato);
 
 	void FootUpdate(OnomatoStruct& onomato);
-	//void ();
+	void BurnUpdate(OnomatoStruct& onomato);
 private:
 	std::list<OnomatoStruct> onomatoList;
 
