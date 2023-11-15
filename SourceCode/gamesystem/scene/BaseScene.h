@@ -98,6 +98,7 @@ public:
 	//マップの位置
 	static int nowIndex;
 	static int nowHierarchy;
+	static int clearHierarchy;
 
 	unique_ptr<Player> player_;
 	//シーンでの遷移

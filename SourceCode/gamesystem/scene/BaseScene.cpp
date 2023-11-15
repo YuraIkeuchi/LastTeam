@@ -11,6 +11,8 @@ bool BaseScene::s_GameLoop = false;
 bool BaseScene::s_LastStage = false;
 int BaseScene::nowHierarchy = 0;
 int BaseScene::nowIndex = 1;
+int BaseScene::clearHierarchy=1;
+
 BaseScene::BaseScene()
 {
 	//game_object_manager_ = std::make_shared<GameObjectManager>();

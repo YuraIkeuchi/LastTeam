@@ -83,7 +83,6 @@ private:
 	std::string dungeon;
 	vector<int> dungeons;
 	unique_ptr<TextManager> text_;
-	int clearHierarchy = 1;
 
 	unique_ptr<Onomatope> onomatope = nullptr;
 
