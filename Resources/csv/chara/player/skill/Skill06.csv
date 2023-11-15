@@ -5,10 +5,6 @@ Name,yabu
 StateName,NONE
 Damege,50
 DistanceX,1
-AttackArea,1 0,0,0,0,0,0
-AttackArea,1 0,0,0,0,0,0
-AttackArea,1 0,0,0,0,0,0
-AttackArea,1 0,0,0,0,0,0
-AttackArea,1 0,0,0,0,0,0
-AttackArea,1 0,0,0,0,0,0
-AttackAreA,1 0,0,0,0,0,0
+AttackArea,1 0 0
+AttackArea,0 1 0
+AttackAreA,0 0 1

@@ -122,15 +122,24 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 			ui[i].sprite->SetSize(ui[i].size);
 		}
 	}
-	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
-	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
+	
 	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
 	m_State = State::initState;
 
+	//‚±‚±‚ªV‚µ‚­‘‚¢‚½êŠ
 	pickHierarchy = nowHierarchy + 1;
 	pickIndex = nowIndex;
+
+	oldHierarchy = nowHierarchy;
+	oldIndex = nowIndex;
+
+	charaPos = { UIs[nowHierarchy][nowIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.y };
+	scroll.x = -UIs[nowHierarchy][nowIndex].pos.x / 2;
+	framePos = UIs[pickHierarchy][pickIndex].pos;
+	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
+	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
