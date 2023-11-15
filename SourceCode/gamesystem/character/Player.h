@@ -46,7 +46,10 @@ private:
 public:
 	//プレイヤーの回復
 	void HealPlayer(const float power);
+	//プレイヤーのダメージ
 	void RecvDamage(float Damage);
+	//プレイヤーの情報保存
+	void PlayerSave();
 private:
 	void MoveCommon(float& pos, const float velocity);
 private:
@@ -67,7 +70,6 @@ public:
 
 	void SetMaxHp(float maxhp) {
 		m_MaxHP = maxhp;
-		m_HP = maxhp;
 	}
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 

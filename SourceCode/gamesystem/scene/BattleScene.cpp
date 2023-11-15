@@ -104,6 +104,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		}else {
 			SceneManager::GetInstance()->ChangeScene("GAMEOVER");
 		}
+		player_->PlayerSave();
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 }

@@ -36,15 +36,13 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 //}
 	player_ = make_unique<Player>();
 	player_->LoadResource();
+	player_->SetTitleFlag(true);
 	player_->InitState({ -4.0f,0.1f,2.0f });
 	player_->Initialize();
-	player_->SetTitleFlag(true);
-
-
+	
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
 	GameReset({ -4.0f,0.1f,2.0f });
-
 
 	////敵
 	InterEnemy::SetPlayer(player_.get());
@@ -89,6 +87,7 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 	}
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
+		player_->PlayerSave();
 		SceneManager::GetInstance()->ChangeScene("MAP");
 		SceneChanger::GetInstance()->SetChange(false);
 	}

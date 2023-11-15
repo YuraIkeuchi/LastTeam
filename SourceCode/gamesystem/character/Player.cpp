@@ -44,8 +44,14 @@ bool Player::Initialize() {
 }
 //CSV読み込み
 void Player::LoadCSV() {
-	m_AddSpeed = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "speed")));
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "HP")));
+	if (is_title) {
+		m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "STARTHP")));
+		m_MaxHP = m_HP;
+	}
+	else {
+		m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "NOWHP")));
+		m_MaxHP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "MAXHP")));
+	}
 }
 //ステータスの初期化
 void Player::InitState(const XMFLOAT3& pos) {
@@ -290,4 +296,12 @@ void Player::DamageParticle() {
 	const float s_scale = 2.0f;
 	const float e_scale = 0.0f;
 	ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
+}
+//プレイヤーの情報背セーブ
+void Player::PlayerSave() {
+	const float l_StartHp = 100.0f;
+	std::ofstream playerofs("Resources/csv/chara/player/player.csv");  // ファイルパスを指定する
+	playerofs << "STARTHP" << "," << l_StartHp << std::endl;
+	playerofs << "NOWHP" << "," << m_HP << std::endl;
+	playerofs << "MAXHP" << "," << m_MaxHP << std::endl;
 }
