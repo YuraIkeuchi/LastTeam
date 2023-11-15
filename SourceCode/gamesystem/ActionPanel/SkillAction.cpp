@@ -59,6 +59,7 @@ void SkillAction::ImGui_Origin() {
 	ImGui::Begin("Skill");
 	ImGui::Text("SkillID:%d", m_SkillID);
 	ImGui::Text("Alive:%d", m_Alive);
+	ImGui::Text("Delete:%d", m_Delete);
 	ImGui::Text("POSX:%f,POSZ:%f", m_Position.x, m_Position.z);
 	ImGui::End();
 }

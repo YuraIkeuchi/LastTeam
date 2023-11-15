@@ -57,10 +57,10 @@ public:
 	void SetState(const int state) { _state= state; }
 	void SetAlive(const bool Alive) { m_Alive = Alive; }
 	void SetSkillID(const int SkillID) { m_SkillID = SkillID; }
-	void SetPlayer(Player* player) { this->player.reset(player); }
+	void SetPlayer(Player* player) { this->player = player; }
 
 protected:
-	unique_ptr<Player> player;
+	Player* player = nullptr;
 	string m_Tag;
 	unique_ptr<IKETexture> m_Pannel = nullptr;
 	XMFLOAT3 m_PannelScale = {0.15f,0.15f,0.15f};

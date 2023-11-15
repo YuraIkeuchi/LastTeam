@@ -94,6 +94,10 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 
 //ImGui
 void StagePanel::ImGuiDraw() {
+	for (auto i = 0; i < actions.size(); i++) {
+		if (actions[i] == nullptr)continue;
+		actions[i]->ImGuiDraw();
+	}
 	ImGui::Begin("Panel");
 	ImGui::Text("Count:%d", m_ActionCount);
 	ImGui::Text("Delete:%d", m_AllDelete);

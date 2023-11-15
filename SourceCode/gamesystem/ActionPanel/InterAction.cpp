@@ -36,6 +36,7 @@ void InterAction::Collide()
 		m_Position.x, m_Position.z, m_Radius, 
 		player->GetPosition().x,
 		player->GetPosition().z, m_Radius)){
+
 		//プレイヤーの行動数を増やしパネルを戻す
 		GameStateManager::GetInstance()->AddSkill(m_SkillType,m_SkillID,m_Damage,m_Delay,m_Area,m_DistanceX,m_DistanceY,StateName);
 		StagePanel::GetInstance()->DeletePanel();
