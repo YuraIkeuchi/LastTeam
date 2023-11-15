@@ -59,16 +59,15 @@ public:
 	void EnemyHitReset();
 	void PoisonUpdate();
 	//色変更(敵)
-	void SetEnemyHit(IKEObject3d* obj,int& widht, int& height,bool m_Alive);
+	void SetEnemyHit(IKEObject3d* obj,int& width, int& height,bool m_Alive);
 	//今いる位置のパネル番号を検索
-	void SetPanelSearch(IKEObject3d* obj, int& widht, int& height);
+	void SetPanelSearch(IKEObject3d* obj, int& width, int& height);
 	//敵の配置(かぶらないように)
 	XMFLOAT3 EnemySetPanel();
 	//毒の配置(かぶらないように)
-	void PoisonSetPanel();
+	void PoisonSetPanel(int& width, int& height);
 	//アクションの全削除
 	void DeleteAction();
-	void PoisonCollide(const int width,const int height, bool& Flag);
 private:
 	//バトル中の更新
 	void BattleUpdate();

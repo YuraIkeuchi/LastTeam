@@ -1,56 +1,77 @@
 #include "PoisonArea.h"
 #include <StagePanel.h>
-#include <ModelManager.h>
+#include <ImageManager.h>
 #include <GameStateManager.h>
 #include <Helper.h>
 //読み込み
 PoisonArea::PoisonArea() {
-	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::PANEL);
+	panels.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	panels.tex->TextureCreate();
+	panels.tex->Initialize();
+	panels.tex->SetScale({ 0.2f,0.2f,0.2f });
+	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 	Initialize();
 }
 //初期化
 bool PoisonArea::Initialize() {
-	m_Object.reset(new IKEObject3d());
-	m_Object->Initialize();
-	m_Object->SetModel(m_Model);
 	return true;
 }
 
 //ステータス初期化
 void PoisonArea::InitState(const int width, const int height) {
-	m_Position = SetPanelPos(width, height);
-	m_NowWidth = width, m_NowHeight = height;
-	m_Scale = { 2.0f,0.1f,2.0f };
-	m_Position.y = 0.1f;
-	m_Color = { 0.5f,0.0f,0.5f,1.0f };
-	m_Alive = true;
-	m_Hit = false;
-	m_AliveTimer = {};
+	panels.position = SetPanelPos(width, height);
+	panels.Width = width, panels.Height = height;
+	panels.position.y = 0.015f;
+	panels.color = { 0.5f,0.0f,0.5f,1.0f };
+	panels.Alive = true;
+	panels.Timer = {};
 }
 
 //更新
 void PoisonArea::Update() {
-	const int l_TargetTimer = 10;
+	const int l_TargetTimer = 300;
 
-	if (Helper::GetInstance()->CheckMin(m_AliveTimer, l_TargetTimer, 1)) {
+	if (Helper::GetInstance()->CheckMin(panels.Timer, l_TargetTimer, 1)) {
 		GameStateManager::GetInstance()->SetBuff(false);
-		m_Alive = false;
+		panels.Alive = false;
 	}
-
-	Obj_SetParam();
+	Collide();
+	panels.tex->Update();
+	panels.tex->SetPosition(panels.position);
+	panels.tex->SetColor(panels.color);
 }
 //描画
 void PoisonArea::Draw(DirectXCommon* dxCommon) {
-	Obj_Draw();
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	panels.tex->Draw();
+	IKETexture::PostDraw();
 }
 //ImGui
 void PoisonArea::ImGuiDraw() {
-	ImGui::Begin("Area");
-	ImGui::Text("POSX:%f", m_Position.x);
-	//ImGui::Text("POSZ:%f", m_Position.z);
+	ImGui::Begin("Poison");
+	ImGui::Text("PosX:%f,PosZ:%f", panels.position.x, panels.position.z);
+	ImGui::Text("Timer:%d", panels.DamageTimer);
 	ImGui::End();
 }
 //パネルの位置に置く
 XMFLOAT3 PoisonArea::SetPanelPos(const int width, const int height) {
 	return StagePanel::GetInstance()->SetPositon(width, height);;
+}
+void PoisonArea::Collide() {
+	int l_PlayerWidth = player->GetNowWidth();
+	int l_PlayerHeight = player->GetNowHeight();
+	const float l_Damage = 10.0f;
+	//毒のマスとプレイヤーが一緒だとダメージを食らう
+	if (panels.Width == l_PlayerWidth && panels.Height == l_PlayerHeight) {
+		panels.DamageTimer++;
+	}
+	else {
+		panels.DamageTimer = {};
+	}
+
+	//
+	if (panels.DamageTimer == 50) {
+		player->RecvDamage(l_Damage);
+		panels.DamageTimer = {};
+	}
 }

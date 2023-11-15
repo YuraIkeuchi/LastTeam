@@ -109,20 +109,10 @@ void StagePanel::BattleUpdate() {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if (!panels[i][j].predict) {
-					if (!panels[i][j].isPoison) {
-						panels[i][j].color = ChangeColor(i, j);
-					}
-					else {
-						panels[i][j].color = { 0.0f,0.3f,1.0f,1.0f };
-					}
+					panels[i][j].color = ChangeColor(i, j);
 				}
 				else {
-					if (!panels[i][j].isPoison) {
-						panels[i][j].color = { 1.0f,0.3f,0.0f,1.0f };
-					}
-					else {
-						panels[i][j].color = { 0.0f,0.3f,1.0f,1.0f };
-					}
+					panels[i][j].color = { 1.0f,0.3f,0.0f,1.0f };
 				}
 			panels[i][j].object->Update();
 			panels[i][j].object->SetPosition(panels[i][j].position);
@@ -140,19 +130,7 @@ void StagePanel::DeletePanel() {
 		}
 	}
 }
-
-void StagePanel::PoisonCollide(const int Width, const int Height, bool& Flag) {
-	for (int i = 0; i < PANEL_WIDTH; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			if (!panels[i][j].isPoison) { continue; }
-			if ((i == Width) && (j == Height)) {
-				Flag = true;
-			}
-		}
-	}
-}
-
-
+//パネルをセットする
 void StagePanel::RandomPanel(int num) {
 	
 	int freeNum = 0;
@@ -328,21 +306,23 @@ XMFLOAT3 StagePanel::EnemySetPanel() {
 
 	return SetPositon(width, height);
 }
-void StagePanel::PoisonSetPanel() {
+void StagePanel::PoisonSetPanel(int& width, int& height) {
 	bool isSet = false;
 	//乱数の設定
-	int width = Helper::GetInstance()->GetRanNum(0, 3);
-	int height = Helper::GetInstance()->GetRanNum(0, 3);
+	int l_width = Helper::GetInstance()->GetRanNum(0, 3);
+	int l_height = Helper::GetInstance()->GetRanNum(0, 3);
 
 	//パネル探索（敵がいる場合は再検索）
 
 	while (!isSet) {
-		if (panels[width][height].isPoison) {
-			width = Helper::GetInstance()->GetRanNum(0, 3);
-			height = Helper::GetInstance()->GetRanNum(0, 3);
+		if (panels[l_width][l_height].isPoison) {
+			l_width = Helper::GetInstance()->GetRanNum(0, 3);
+			l_height = Helper::GetInstance()->GetRanNum(0, 3);
 		}
 		else {
-			panels[width][height].isPoison = true;
+			panels[l_width][l_height].isPoison = true;
+			width = l_width;
+			height = l_height;
 			isSet = true;
 		}
 	}

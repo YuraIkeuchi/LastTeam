@@ -1,5 +1,6 @@
 #pragma once
 #include"InterEnemy.h"
+#include "PoisonArea.h"
 
 using namespace std;         //  –¼‘O‹óŠÔw’è
 //•’Ê‚Ì“G
@@ -67,5 +68,7 @@ private:
 	};
 
 	EnemyWarp enemywarp;
+
+	std::vector<unique_ptr<PoisonArea>> poisonarea;
 };
 

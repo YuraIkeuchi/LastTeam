@@ -189,6 +189,7 @@ void CanonEnemy::Teleport() {
 //弾の生成
 void CanonEnemy::BirthBullet() {
 		//障害物の発生
+		
 		EnemyBullet* newbullet;
 		newbullet = new EnemyBullet();
 		newbullet->Initialize();

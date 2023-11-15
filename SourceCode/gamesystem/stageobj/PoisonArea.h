@@ -1,13 +1,12 @@
 #pragma once
 #include"DirectXCommon.h"
-#include "ObjCommon.h"
 #include <DirectXMath.h>
-
+#include "IKETexture.h"
+#include "Player.h"
 using namespace std;         //  名前空間指定
 
 //攻撃エリアクラス
-class PoisonArea :
-	public ObjCommon {
+class PoisonArea{
 protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	// DirectX::を省略
@@ -20,44 +19,36 @@ public:
 	PoisonArea();
 public:
 	//初期化
-	bool Initialize()override;
+	bool Initialize();
 	//ステータス初期化
 	void InitState(const int width, const int height);
 	//更新
-	void Update()override;
+	void Update();
 	//描画
-	void Draw(DirectXCommon* dxCommon)override;
+	void Draw(DirectXCommon* dxCommon);
 	//ImGui
 	void ImGuiDraw();
 private:
+	void Collide();
 	XMFLOAT3 SetPanelPos(const int width, const int height);
 
 public:
 	//gettersetter
-	const bool GetHit() { return m_Hit; }
-	const bool GetAlive() { return m_Alive; }
-	const string GetName() { return m_Name; }
-
-	const int GetNowWidth() { return m_NowWidth; }
-	const int GetNowHeight() { return m_NowHeight; }
-	const float GetDamage() { return m_Damage; }
-	const std::string GetStateName() { return StateName; }
-
-	void SetHit(const bool Hit) { m_Hit = Hit; }
-	void SetName(const string name) { m_Name = name; }
-	void SetDamage(const float Damage) { m_Damage = Damage; }
-	void SetStateName(const std::string name) { StateName = name; }
+	const bool GetAlive() { return panels.Alive; }
+	void SetPlayer(Player* player) { this->player = player; }
 private:
-	string m_Name = "none";
-	//生存関係
-	bool m_Alive = false;
-	int m_AliveTimer = {};
+	Player* player;
+	//パネル
+	struct Panel {
+		unique_ptr<IKETexture> tex = nullptr;
+		XMFLOAT3 position = { 0,0,0 };
+		XMFLOAT4 color = { 1,1,1,1 };
+		bool Alive = false;
+		int Width = {};
+		int Height = {};
+		int Timer = {};
+		int DamageTimer = {};
+	};
 
-	//ヒットしたかどうか
-	bool m_Hit = false;
-
-	int m_NowWidth = {};
-	int m_NowHeight = {};
-	float m_Damage = {};
-	std::string StateName = "NONE";
+	Panel panels;
 };

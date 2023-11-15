@@ -81,6 +81,18 @@ void PoisonEnemy::Action() {
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+
+	//áŠQ•¨‚Ìíœ
+	for (int i = 0; i < poisonarea.size(); i++) {
+		if (poisonarea[i] == nullptr) {
+			continue;
+		}
+
+		poisonarea[i]->Update();
+		if (!poisonarea[i]->GetAlive()) {
+			poisonarea.erase(cbegin(poisonarea) + i);
+		}
+	}
 }
 
 //•`‰æ
@@ -90,6 +102,14 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 	shadow_tex->Draw();
 	magic.tex->Draw();
 	IKETexture::PostDraw();
+	//áŠQ•¨‚Ìíœ
+	for (int i = 0; i < poisonarea.size(); i++) {
+		if (poisonarea[i] == nullptr) {
+			continue;
+		}
+
+		poisonarea[i]->Draw(dxCommon);
+	}
 	Obj_Draw();
 }
 //ImGui•`‰æ
@@ -106,6 +126,15 @@ void PoisonEnemy::ImGui_Origin() {
 	ImGui::Text("EneScale:%f", m_Scale.x);
 	ImGui::Text("Frame:%f", enemywarp.Frame);
 	ImGui::End();
+
+	//áŠQ•¨‚Ìíœ
+	for (int i = 0; i < poisonarea.size(); i++) {
+		if (poisonarea[i] == nullptr) {
+			continue;
+		}
+
+		poisonarea[i]->ImGuiDraw();
+	}
 }
 //ŠJ•ú
 void PoisonEnemy::Finalize() {
@@ -165,7 +194,13 @@ void PoisonEnemy::Teleport() {
 }
 //“Å‚Ì¶¬
 void PoisonEnemy::BirthPoison() {
-	StagePanel::GetInstance()->PoisonSetPanel();
+	int l_RandWidth;
+	int l_RandHeight;
+	StagePanel::GetInstance()->PoisonSetPanel(l_RandWidth,l_RandHeight);
+	std::unique_ptr<PoisonArea> newarea = std::make_unique<PoisonArea>();
+	newarea->InitState(l_RandWidth, l_RandHeight);
+	newarea->SetPlayer(player);
+	poisonarea.push_back(std::move(newarea));
 }
 //–‚–@w¶¬
 void PoisonEnemy::BirthMagic() {
