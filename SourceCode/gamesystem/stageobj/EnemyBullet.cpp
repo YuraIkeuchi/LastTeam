@@ -73,7 +73,7 @@ void EnemyBullet::ImGuiDraw() {
 
 //当たり判定
 bool EnemyBullet::Collide() {
-	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
+	auto player_data = player;
 	XMFLOAT3 l_PlayerPos = player_data->GetPosition();
 	const float l_Damage = 0.5f;
 	const float l_Radius = 0.2f;
@@ -90,7 +90,7 @@ bool EnemyBullet::Collide() {
 }
 //追従
 void EnemyBullet::Throw() {
-	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
+	auto player_data = player;
 	const float l_AddFrame = 0.01f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;

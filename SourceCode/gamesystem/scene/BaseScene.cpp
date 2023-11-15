@@ -11,7 +11,7 @@ bool BaseScene::s_GameLoop = false;
 bool BaseScene::s_LastStage = false;
 BaseScene::BaseScene()
 {
-	game_object_manager_ = std::make_shared<GameObjectManager>();
+	//game_object_manager_ = std::make_shared<GameObjectManager>();
 }
 
 //‹¤’Ê‚Ì‰Šú‰»

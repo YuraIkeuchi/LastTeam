@@ -8,6 +8,7 @@
 #include "DebugText.h"
 #include "WinApp.h"
 #include "SceneManager.h"
+#include "AbstractSceneFactory.h"
 #include "Camera.h"
 #include "LightGroup.h"
 #include "IKETexture.h"
@@ -44,6 +45,7 @@ protected:
 	bool endRequst = false;
 	WinApp* winApp = nullptr;
 	Camera* camera = nullptr;
+	AbstractSceneFactory* sceneFactory_ = nullptr;
 	FPSManager* fpsManager = nullptr;
 	ShadowMap* shadowmap = nullptr;
 };

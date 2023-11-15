@@ -80,8 +80,8 @@ template<class GameObjectClass, class ...Parameter>
 inline std::shared_ptr<GameObjectClass> GameObject::CreateObject(Parameter ...param)
 {
 	std::shared_ptr<GameObjectClass> object = std::make_shared<GameObjectClass>(param...);
-	SceneManager::GetInstance()->GetTopScene()->GetGameObjectManager().lock()->GetContainer().push_back(object);
-	object->Initialize();
+	//SceneManager::GetInstance()->GetTopScene()->GetGameObjectManager().lock()->GetContainer().push_back(object);
+	//object->Initialize();
 	
 	return object;
 }

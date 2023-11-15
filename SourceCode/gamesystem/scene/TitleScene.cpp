@@ -1,16 +1,10 @@
 ﻿#include "TitleScene.h"
 #include "input.h"
 #include "ImageManager.h"
-#include <Player.h>
 #include <StagePanel.h>
-#include <SceneManager.h>
 #include "MobEnemy.h"
 #include "TutorialTask.h"
 #include "GameStateManager.h"
-// 遷移しうるシーン
-#include "BattleScene.h"
-#include "MapScene.h"
-#include "TutorialScene.h"
 #include "TextManager.h"
 //初期化
 void TitleScene::Initialize(DirectXCommon* dxCommon) {
@@ -27,25 +21,31 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	}
 
 	s_LastStage = false;
-	//�X�e�[�W�̏�
-	// プレイヤー生成
-	{
-		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
-		player->LoadResource();
-		player->InitState({ -4.0f,0.1f,2.0f });
-		player->Initialize();
-		player->SetTitleFlag(true);
+	////�X�e�[�W�̏�
+	//// プレイヤー生成
+	//{
+	//	auto player = GameObject::CreateObject<Player>();	// �v���C���[����
+	//	player->LoadResource();
+	//	player->InitState({ -4.0f,0.1f,2.0f });
+	//	player->Initialize();
+	//	player->SetTitleFlag(true);
 
-		GameStateManager::GetInstance()->SetPlayer(player);
-	}
+	//	GameStateManager::GetInstance()->SetPlayer(player);
+	//}
 
 	StagePanel::GetInstance()->LoadResource();
 	
 	GameReset({ -4.0f,0.1f,2.0f });
 
+	/*player_ = make_unique<Player>();
+	player_->LoadResource();
+	player_->InitState({ -4.0f,0.1f,2.0f });
+	player_->Initialize();
+	player_->SetTitleFlag(true);*/
 	//敵
 	enemy = make_unique<MobEnemy>();
 	enemy->Initialize();
+	//enemy->SetPlayer(player_.get());
 
 	//カード
 	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
@@ -56,14 +56,11 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 void TitleScene::Update(DirectXCommon* dxCommon) {
 	Input* input = Input::GetInstance();
 	camerawork->Update(camera);
-	// 全オブジェクト更新
-	game_object_manager_->Update();
-
+	//player_->Update();
 	//各クラス更新
 	camerawork->Update(camera);
 
 	lightGroup->Update();
-	game_object_manager_->Update();
 	//Player::GetInstance()->TitleUpdate();
 	StagePanel::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
@@ -89,7 +86,7 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 	}
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
-		SceneManager::GetInstance()->ChangeScene<MapScene>();
+		SceneManager::GetInstance()->ChangeScene("MAP");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 
@@ -132,15 +129,14 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	title_[TITLE_BACK]->Draw();
 	IKESprite::PostDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	
-	game_object_manager_->Draw(dxCommon);
+	//player_->Draw(dxCommon);
 	enemy->Draw(dxCommon);
 
 }
 //ImGui描画
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	camerawork->ImGuiDraw();
-	game_object_manager_->ImGuiDraw();
+	//player_->ImGuiDraw();
 }
 //解放
 void TitleScene::Finalize() {

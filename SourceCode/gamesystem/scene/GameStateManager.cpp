@@ -5,7 +5,6 @@
 #include <Easing.h>
 #include <ImageManager.h>
 #include <SkillManager.h>
-#include <Player.h>
 #include <TutorialTask.h>
 
 GameStateManager* GameStateManager::GetInstance() {
@@ -139,9 +138,9 @@ void GameStateManager::Update() {
 		}
 	}
 	SkillManager::GetInstance()->Update();
-	GameStateManager::GetInstance()->GetPlayer().lock()->SetDelay(m_Delay);
+	player->SetDelay(m_Delay);
 
-	_charge->SetPosition({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x,0.5f,GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z });
+	_charge->SetPosition({ player->GetPosition().x,0.5f,player->GetPosition().z });
 	_charge->SetScale({ m_ChargeScale,m_ChargeScale,m_ChargeScale });
 	_charge->Update();
 }
@@ -150,7 +149,7 @@ void GameStateManager::AttackTrigger() {
 	Input* input = Input::GetInstance();
 	if (m_AllActCount == 0) { return; }
 	if (actui[0]->GetUse()) { return; }
-	if (player_.lock()->GetCharaState() == 1) { return; }
+	if (player->GetCharaState() == 1) { return; }
 	if (isFinish) { return; }
 	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える
@@ -369,8 +368,8 @@ void GameStateManager::PassiveCheck() {
 			m_DiameterGauge = passive->GetDiameter();
 			break;
 		case Passive::ABILITY::HP_UP:
-			player_.lock()->SetMaxHp(
-				player_.lock()->GetMaxHp()* passive->GetDiameter());
+			player->SetMaxHp(
+				player->GetMaxHp()* passive->GetDiameter());
 			break;
 		case Passive::ABILITY::RELOAD_LOCK:
 			m_IsReload = false;

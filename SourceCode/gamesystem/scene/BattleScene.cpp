@@ -2,16 +2,10 @@
 
 #include <ParticleEmitter.h>
 #include <StagePanel.h>
-#include <SceneManager.h>
 #include <GameStateManager.h>
 #include <SceneChanger.h>
 
-#include "Player.h"
-#include "BaseEnemy.h"
 #include "InterEnemy.h"
-#include "GameoverScene.h"
-#include "TitleScene.h"
-#include "ClearScene.h"
 BattleScene::~BattleScene() {
 	Finalize();
 }
@@ -26,14 +20,14 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	
 	// パーティクル
 	ParticleEmitter::GetInstance()->AllDelete();
-	// プレイヤー生成
-	{
-		auto player = GameObject::CreateObject<Player>();	// �v���C���[����
-		player->LoadResource();
-		player->Initialize();
-		player->InitState({ -8.0f,0.1f,0.0f });
-		GameStateManager::GetInstance()->SetPlayer(player);
-	}
+	//// プレイヤー生成
+	//{
+	//	auto player = GameObject::CreateObject<Player>();	// �v���C���[����
+	//	player->LoadResource();
+	//	player->Initialize();
+	//	player->InitState({ -8.0f,0.1f,0.0f });
+	//	GameStateManager::GetInstance()->SetPlayer(player);
+	//}
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
 	GameStateManager::GetInstance()->Initialize();
@@ -45,7 +39,11 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	{
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
 	}
-
+	/*player_ = make_unique<Player>();
+	player_->LoadResource();
+	player_->InitState({ -4.0f,0.1f,2.0f });
+	player_->Initialize();
+	player_->SetTitleFlag(true);*/
 	//敵
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
@@ -73,7 +71,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	camerawork->Update(camera);
 	StagePanel::GetInstance()->Update();
 	// �S�I�u�W�F�N�g�X�V
-	game_object_manager_->Update();
+	//player_->Update();
 	GameStateManager::GetInstance()->Update();
 
 
@@ -98,7 +96,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		player.lock()->SetDelay(true);
 	}
 	//ゲームオーバー処理
-	if (GameStateManager::GetInstance()->GetPlayer().lock()->GetHp() <= 0.0f) {
+	if (player->GetHp() <= 0.0f) {
 		_ChangeType = CHANGE_OVER;
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
@@ -107,13 +105,13 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		GameReset({ -4.0f,0.1f,2.0f });
 		if (_ChangeType == CHANGE_MAP) {
 			if (!s_LastStage) {
-				SceneManager::GetInstance()->PopScene();
+				SceneManager::GetInstance()->ChangeScene("MAP");
 			}
 			else {
-				SceneManager::GetInstance()->ChangeScene<ClearScene>();
+				SceneManager::GetInstance()->ChangeScene("CLEAR");
 			}
 		}else {
-			SceneManager::GetInstance()->ChangeScene<GameoverScene>();
+			SceneManager::GetInstance()->ChangeScene("GAMEOVER");
 		}
 		SceneChanger::GetInstance()->SetChange(false);
 	}
@@ -149,7 +147,7 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	ParticleEmitter::GetInstance()->FlontDrawAll();
 
 	if (!enemyManager->BossDestroy()){
-		game_object_manager_->UIDraw();
+		//player_->UIDraw();
 		enemyManager->UIDraw();
 		GameStateManager::GetInstance()->ActUIDraw();
 	}
@@ -159,7 +157,7 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	game_object_manager_->Draw(dxCommon);
+	//player_->Draw(dxCommon);
 
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	enemyManager->Draw(dxCommon);
@@ -176,5 +174,5 @@ void BattleScene::ImGuiDraw() {
 }
 
 void BattleScene::Finalize() {
-	game_object_manager_->Finalize();
+	
 }

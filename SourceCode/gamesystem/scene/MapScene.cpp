@@ -612,7 +612,7 @@ void MapScene::CheckState() {
 			GameReset({ -4.0f, 0.1f, 2.0f });
 			//チュートリアルのタスク
 			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
-			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
+			SceneManager::GetInstance()->ChangeScene("TUTORIAL");
 			SceneChanger::GetInstance()->SetChange(false);
 			cheack->SetSize({ 0.0f,0.0f });
 		}
@@ -635,7 +635,7 @@ void MapScene::CheckState() {
 			GameReset({ -8.0f,0.1f,0.0f });
 			//チュートリアルのタスク
 			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
-			SceneManager::GetInstance()->ChangeScene<BattleScene>();
+			SceneManager::GetInstance()->ChangeScene("BATTLE");
 			SceneChanger::GetInstance()->SetChange(false);
 		}
 	}

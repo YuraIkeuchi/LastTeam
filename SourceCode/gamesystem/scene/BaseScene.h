@@ -4,12 +4,13 @@
 #include "LightGroup.h"
 #include "DirectXCommon.h"
 #include "PostEffect.h"
-#include "GameObject/GameObjectManager.h"
 #include "ParticleManager.h"
 #include "CameraWork.h"
 #include "SceneChanger.h"
 #include "TextManager.h"
 #include<SceneSave.h>
+#include <memory>
+#include "Player.h"
 
 using namespace std;         //  名前空間指定
 //前方宣言
@@ -44,13 +45,8 @@ public:
 	void BaseInitialize(DirectXCommon* dxCommon, XMFLOAT3 eye = { 2.0f, 45.0f, 2.0f }, XMFLOAT3 target = { 2.0f, 0.0f, 3.0f });
 	//ゲームのリセットに必要なやつ
 	void GameReset(XMFLOAT3 pos);
-
-	weak_ptr<GameObjectManager>GetGameObjectManager() { return game_object_manager_; }
-
 public:
 
-	// ゲームオブジェクトマネージャ
-	shared_ptr<GameObjectManager> game_object_manager_;
 	///ゲームシーン用
 	DebugCamera* camera = nullptr;
 	//ポストエフェクトをかけるか
@@ -98,6 +94,7 @@ public:
 	static bool s_GameLoop;
 	//ラストステージかどうか
 	static bool s_LastStage;
+	unique_ptr<Player> player_;
 	//シーンでの遷移
 	//SceneState m_SceneState = SceneState::IntroState;
 };

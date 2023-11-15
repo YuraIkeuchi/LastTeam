@@ -163,6 +163,7 @@ void Player::ImGuiDraw() {
 }
 //移動
 void Player::Move() {
+	Input* input = Input::GetInstance();
 	if (m_Delay) { return; }
 	if (GameStateManager::GetInstance()->GetResetPredict()) { return; }
 	const int l_TargetTimer = 10;

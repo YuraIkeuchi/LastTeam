@@ -3,16 +3,14 @@
 #include <IKESprite.h>
 #include <IKETexture.h>
 #include <memory>
-#include <Input.h>
+
 #include <array>
 #include "DrawNumber.h"
-#include "GameObject/GameObject.h"
 
 using namespace DirectX;
 
 class Player :
-	public ObjCommon,
-	public GameObject
+	public ObjCommon
 {
 private:
 	static void (Player::* stateTable[])();
@@ -27,9 +25,9 @@ public:
 	//描画
 	void Draw(DirectXCommon *dxCommon) override;
 	//UI用
-	void UIDraw() override;
+	void UIDraw();
 	//ImGui
-	void ImGuiDraw() override;
+	void ImGuiDraw();
 	//チュートリアルの更新
 	void TitleUpdate();
 
@@ -90,7 +88,7 @@ public:
 	};
 private:
 	unique_ptr<IKETexture> shadow_tex;
-	Input* input = Input::GetInstance();
+
 
 	int _charaState = STATE_MOVE;
 	//移動加算値

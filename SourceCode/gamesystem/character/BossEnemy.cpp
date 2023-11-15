@@ -225,7 +225,7 @@ void BossEnemy::RowAttack() {
 }
 //ランダムマス攻撃
 void BossEnemy::RandomAttack() {
-	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
+	auto player_data = player;
 	//プレイヤーの現在マス
 	int l_PlayerWidth = player_data->GetNowWidth();
 	int l_PlayerHeight = player_data->GetNowHeight();
@@ -365,7 +365,7 @@ bool BossEnemy::CreateSkill(int id) {
 }
 //エリア攻撃の判定
 void BossEnemy::PlayerCollide() {
-	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
+	auto player_data = player;
 	int l_PlayerWidth = player_data->GetNowWidth();
 	int l_PlayerHeight = player_data->GetNowHeight();
 	for (unique_ptr<AttackArea>& newarea : attackarea) {

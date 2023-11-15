@@ -90,7 +90,7 @@ public:
 	const float GetGrazeScore() { return m_GrazeScore; }
 	vector<unique_ptr<AttackArea>>& GetAttackArea() { return attackarea; }
 	const float GetDiameterVel() { return m_DiameterVel; }
-	std::weak_ptr<Player> GetPlayer() { return player_; }
+	//std::weak_ptr<Player> GetPlayer() { return player_; }
 
 	/// <summary>
 	/// 敵を倒したら最初の処理
@@ -103,9 +103,12 @@ public:
 	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
 	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
-	void SetPlayer(std::weak_ptr<Player> player) { player_ = player; }
+	//void SetPlayer(std::weak_ptr<Player> player) { player_ = player; }
 	// 仮
 	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
+
+public:
+	void SetPlayer(Player* player) { this->player.reset(player); }
 private:
 	DirectXCommon* m_dxCommon = nullptr;
 	unique_ptr<IKETexture> _charge;
@@ -142,6 +145,7 @@ private:
 	// 攻撃エリア
 	vector<unique_ptr<AttackArea>> attackarea;
 
+	unique_ptr<Player> player;
 	//カウンター
 	bool m_Counter = false;
 	int m_CounterTimer = {};
@@ -220,8 +224,7 @@ private:
 	/// <summary>
 	/// プレイヤーのポインタ
 	/// </summary>
-	std::weak_ptr<Player> player_;
-
+	
 	//プレイヤーの現在パネル
 	int m_NowHeight = {};		// Yパネル座標
 	int m_NowWidth = {};		// Xパネル座標

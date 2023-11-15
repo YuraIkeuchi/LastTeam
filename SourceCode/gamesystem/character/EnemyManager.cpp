@@ -29,9 +29,9 @@ void EnemyManager::Update() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 
 		if (enemy->GetState() == STATE_ATTACK) {			//��U�U���ȊO�͎��Ȃ�
-			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos(enemy->GetPosition());
+			player->SetGrazePos(enemy->GetPosition());
 		} else {
-			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos({ 1000.0f,0.0f,0.0f });
+			player->SetGrazePos({ 1000.0f,0.0f,0.0f });
 		}
 		enemy->Update();
 	}
