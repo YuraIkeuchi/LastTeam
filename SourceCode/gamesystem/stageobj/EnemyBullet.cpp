@@ -13,9 +13,11 @@ EnemyBullet::EnemyBullet() {
 	m_Object->Initialize();
 	m_Object->SetModel(m_Model);
 
-	m_Pannel.reset(new IKEObject3d());
-	m_Pannel->Initialize();
-	m_Pannel->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
+	panels.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	panels.tex->TextureCreate();
+	panels.tex->Initialize();
+	panels.tex->SetScale({ 0.2f,0.2f,0.2f });
+	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //初期化
 bool EnemyBullet::Initialize() {
@@ -29,6 +31,8 @@ bool EnemyBullet::Initialize() {
 	m_ThrowType = THROW_SET;
 	m_AliveTimer = {};
 
+	panels.position = {};
+	panels.color = { 1.f,1.f,1.f,1.f };
 	return true;
 }
 //状態遷移
@@ -46,29 +50,20 @@ void EnemyBullet::Update() {
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//当たり判定
 
-	m_PanelPos = {(-8.0f) + (2.0f * m_NowWidth),0.01f,(2.0f * m_NowHeight)};
-	m_Pannel->SetPosition(m_PanelPos);
-	m_Pannel->SetScale({2.0f,0.1f,2.0f});
-	m_Pannel->SetColor({1.0f,0.3f,0.0f,1.0f});
-	//m_Pannel->SetRotation({ 90.0f,0.0f,0.0f });
-	m_Pannel->Update();
-	//StagePanel::GetInstance()->SetCanonChange(m_NowWidth, m_NowHeight);
+	panels.position = {(-8.0f) + (2.0f * m_NowWidth),0.02f,(2.0f * m_NowHeight)};
+	panels.tex->SetPosition(panels.position);
+	panels.tex->SetColor({1.0f,0.3f,0.0f,1.0f});
+	panels.tex->Update();
 }
 //描画
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
-	IKEObject3d::PreDraw();
-	if (m_ThrowType == THROW_PLAY) {
-		m_Pannel->Draw();
-	}
-	IKEObject3d::PostDraw();
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	panels.tex->Draw();
+	IKETexture::PostDraw();
 	Obj_Draw();
 }
 //ImGui描画
 void EnemyBullet::ImGuiDraw() {
-	ImGui::Begin("Bullet");
-	ImGui::Text("POSX:%f,POSZ:%f", m_PanelPos.x, m_PanelPos.z);
-	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight,m_NowWidth);
-	ImGui::End();
 }
 
 //当たり判定
