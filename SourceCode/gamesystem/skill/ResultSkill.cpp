@@ -5,7 +5,10 @@
 #include <Easing.h>
 #include <SkillManager.h>
 
-ResultSkill::ResultSkill() {
+Player* ResultSkill::player_ = nullptr;
+
+ResultSkill::ResultSkill(Player* player) {
+	player_ = player;
 }
 
 ResultSkill::~ResultSkill() {
@@ -85,6 +88,10 @@ void ResultSkill::InPassive(std::vector<int>& Passive) {
 	std::vector<int> itr = Passive;
 	for (ResultUI& resultUI : pickSkills) {
 		if (resultUI.isSkill) { continue; }
+		if (resultUI.ID==1) {
+			player_->SetMaxHp(
+			player_->GetMaxHp() * 1.3f);
+		}
 		itr.push_back(resultUI.ID);
 	}
 	Passive.resize(itr.size());

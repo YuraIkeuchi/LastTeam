@@ -7,10 +7,11 @@
 #include "DrawNumber.h"
 #include <TextManager.h>
 #include <ResultAreaUI.h>
+#include <Player.h>
 
 class ResultSkill {
 public:
-	ResultSkill();
+	ResultSkill(Player* player);
 	~ResultSkill();
 
 	void Initialize(DirectXCommon* dxCommon);
@@ -58,6 +59,7 @@ private:
 	void BirthArea(ResultUI& resultUI);
 private:
 	bool isStart = false;
+	static Player* player_;
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;

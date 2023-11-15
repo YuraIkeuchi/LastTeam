@@ -14,6 +14,7 @@
 #include "BaseEnemy.h"
 #include "ResultSkill.h"
 #include "HaveResultSkill.h"
+#include <Onomatope.h>
 using namespace DirectX;
 using namespace std;
 
@@ -147,6 +148,7 @@ private:
 	// 攻撃エリア
 	vector<unique_ptr<AttackArea>> attackarea;
 
+	unique_ptr<Onomatope> onomatope = nullptr;
 	//カウンター
 	bool m_Counter = false;
 	int m_CounterTimer = {};
