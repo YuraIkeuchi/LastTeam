@@ -8,7 +8,7 @@ DrawNumber::DrawNumber() {
 	const float l_Height_Cut = 64.0f;
 
 
-	for (int i = 0; i < _Number.size(); i++) {
+	for (auto i = 0; i < NUMBER_MAX; i++) {
 		//“Ç‚Ýž‚Ý
 		_Number[i] = IKESprite::Create(ImageManager::HPNUMBERUI, { 0.0f,0.0f });
 		int number_index_y = i / NumberCount;

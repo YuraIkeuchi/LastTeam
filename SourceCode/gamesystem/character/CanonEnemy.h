@@ -22,6 +22,9 @@ private:
 	void Attack();//çUåÇ
 	void Teleport();//à⁄ìÆ
 	void BirthBullet();//
+	void WarpEnemy();//ìGÇÃÉèÅ[Évèàóù
+	//ñÇñ@êw
+	void BirthMagic();
 private:
 static const int BULLET_NUM = 3;
 private:
@@ -34,5 +37,39 @@ private:
 		CANON_THROW,
 		CANON_END,
 	}_CanonType = CANON_SET;
+
+	//ñÇñ@êwån
+	enum MagicState {
+		MAGIC_BIRTH,
+		MAGIC_VANISH,
+	};
+
+	struct Magic {
+		unique_ptr<IKETexture> tex;
+		float Frame = {};
+		float Scale = {};
+		float AfterScale = {};
+		XMFLOAT3 Pos = {};
+		bool Alive = false;
+		int State = {};
+		int Timer = {};
+	};
+	Magic magic;
+
+	bool m_Warp = false;
+
+	enum WarpState {
+		WARP_START,
+		WARP_END,
+	};
+
+	struct EnemyWarp {
+		float Frame = {};
+		float Scale = {};
+		float AfterScale = 0.5f;
+		int State = {};
+	};
+
+	EnemyWarp enemywarp;
 };
 
