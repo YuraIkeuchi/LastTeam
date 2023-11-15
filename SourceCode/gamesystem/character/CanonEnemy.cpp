@@ -202,7 +202,7 @@ void CanonEnemy::BirthMagic() {
 	if (!magic.Alive) { return; }
 	static float addFrame = 1.f / 15.f;
 	const int l_TargetTimer = 20;
-	if (magic.State == MAGIC_BIRTH) {
+	if (magic.State == MAGIC_BIRTH) {			//魔法陣を広げる
 		magic.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
 		
 		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
@@ -216,7 +216,7 @@ void CanonEnemy::BirthMagic() {
 		}
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
-	else {
+	else {			//魔法陣を縮める
 		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
@@ -230,7 +230,7 @@ void CanonEnemy::WarpEnemy() {
 	XMFLOAT3 l_RandPos = {};
 	l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
 	static float addFrame = 1.f / 15.f;
-	if (enemywarp.State == WARP_START) {
+	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
 		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.5f;
@@ -241,7 +241,7 @@ void CanonEnemy::WarpEnemy() {
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
-	else {
+	else {			//キャラが大きくなっている
 		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
