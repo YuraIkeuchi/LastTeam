@@ -20,23 +20,26 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 		s_GameLoop = true;
 	}
 
+	nowHierarchy = 0;
+	nowIndex = 1;
 	s_LastStage = false;
+	////�X�e�[�W�̏�
+//// プレイヤー生成
+//{
+//	auto player = GameObject::CreateObject<Player>();	// �v���C���[����
+//	player->LoadResource();
+//	player->InitState({ -4.0f,0.1f,2.0f });
+//	player->Initialize();
+//	player->SetTitleFlag(true);
+
+//	GameStateManager::GetInstance()->SetPlayer(player);
+//}
 	player_ = make_unique<Player>();
 	player_->LoadResource();
 	player_->InitState({ -4.0f,0.1f,2.0f });
 	player_->Initialize();
 	player_->SetTitleFlag(true);
-	////�X�e�[�W�̏�
-	//// プレイヤー生成
-	//{
-	//	auto player = GameObject::CreateObject<Player>();	// �v���C���[����
-	//	player->LoadResource();
-	//	player->InitState({ -4.0f,0.1f,2.0f });
-	//	player->Initialize();
-	//	player->SetTitleFlag(true);
 
-	//	GameStateManager::GetInstance()->SetPlayer(player);
-	//}
 
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
@@ -47,7 +50,6 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	InterEnemy::SetPlayer(player_.get());
 	enemy = make_unique<MobEnemy>();
 	enemy->Initialize();
-	enemy->SetPlayer(player_.get());
 
 	//カード
 	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });

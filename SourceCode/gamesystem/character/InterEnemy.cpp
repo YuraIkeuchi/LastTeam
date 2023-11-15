@@ -40,8 +40,8 @@ void InterEnemy::Update() {
 
 	////敵のマスを取得する
 	if (m_EnemyTag == "Normal") {
-		StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight,m_Alive);
 	}
+	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight,m_Alive);
 
 	if (m_HP != 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {

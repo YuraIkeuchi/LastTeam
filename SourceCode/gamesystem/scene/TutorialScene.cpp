@@ -28,37 +28,35 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	PlayPostEffect = false;
 	//�p�[�e�B�N���S�폜
 	ParticleEmitter::GetInstance()->AllDelete();
-	//�X�L��
-	SkillManager::GetInstance()->Initialize();
-	//�Q�[���̏��
-	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
-	GameStateManager::GetInstance()->Initialize();
-	//�X�e�[�W�̏�
-	StagePanel::GetInstance()->LoadResource();
 
-	//{
-	//	auto player = GameObject::CreateObject<Player>();
-	//	player->LoadResource();
-	//	player->Initialize();
-	//	player->InitState({ -4.0f,0.1f,2.0f });
-	//	GameStateManager::GetInstance()->SetPlayer(player);
-	//}
 
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
 	text_->SetConversation(TextManager::TUTORIAL_START);
+
+	_nowstate = TUTORIAL_INTRO;
+
 	player_ = make_unique<Player>();
 	player_->LoadResource();
 	player_->InitState({ -4.0f,0.1f,2.0f });
 	player_->Initialize();
-	player_->SetTitleFlag(true);
+	//ゲームステート初期化
+	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
+	GameStateManager::GetInstance()->Initialize();
+	GameStateManager::SetPlayer(player_.get());
+	//ステージパネルの初期化
+	StagePanel::GetInstance()->LoadResource();
+	StagePanel::GetInstance()->Initialize();
+	StagePanel::GetInstance()->SetPlayer(player_.get());
+	//ビヘイビア試しました！
+	{
+		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
+	}
+
 	//敵
-	enemy = make_unique<MobEnemy>();
+	InterEnemy::SetPlayer(player_.get());
+	enemy = std::make_unique<MobEnemy>();
 	enemy->Initialize();
-	enemy->SetPlayer(player_.get());
-
-	_nowstate = TUTORIAL_INTRO;
-
 
 	TutorialTask::GetInstance()->SetChoiceSkill(false);
 }
@@ -68,19 +66,15 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	Input* input = Input::GetInstance();
 
 	lightGroup->Update();
-	
 	//�e�N���X�X�V
 	camerawork->Update(camera);
-	if (!GameStateManager::GetInstance()->GetIsFinish()) {
-		//Player::GetInstance()->Update();
-	}
-	lightGroup->Update();
 	player_->Update();
-	StagePanel::GetInstance()->Update();
 	GameStateManager::GetInstance()->Update();
+
+	StagePanel::GetInstance()->Update();
+	enemy->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	enemy->Update();
 	if (input->TriggerButton(input->BACK)) {
 		m_End = true;
 	}
@@ -132,13 +126,14 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 }
 //�|�X�g�G�t�F�N�g������Ȃ�
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
-	ParticleEmitter::GetInstance()->FlontDrawAll();
-	GameStateManager::GetInstance()->ActUIDraw();
-	enemy->UIDraw();
-	player_->UIDraw();
+	if (enemy->GetHP() > 0.0f) {
+		ParticleEmitter::GetInstance()->FlontDrawAll();
+
+		GameStateManager::GetInstance()->ActUIDraw();
+		enemy->UIDraw();
+		player_->UIDraw();
+	}
 	text_->TestDraw(dxCommon);
-	ParticleEmitter::GetInstance()->FlontDrawAll();
-	GameStateManager::GetInstance()->ActUIDraw();
 
 	SceneChanger::GetInstance()->Draw();
 }
@@ -149,11 +144,11 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
-	player_->Draw(dxCommon);
-	enemy->Draw(dxCommon);
+	if (enemy->GetHP() > 0.0f) {
+		player_->Draw(dxCommon);
+		enemy->Draw(dxCommon);
+	}
 
-	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	IKETexture::PostDraw();
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {

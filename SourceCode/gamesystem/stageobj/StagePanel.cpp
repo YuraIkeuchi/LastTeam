@@ -49,17 +49,7 @@ bool StagePanel::Initialize() {
 
 //更新処理
 void StagePanel::Update() {
-	//if (GameMode::GetInstance()->GetGameTurn() == TURN_BATTLE) {
 	BattleUpdate();
-	//}
-	//for (auto i = 0; i < actions.size(); i++) {
-	//	if (actions[i] == nullptr)continue;
-	//	actions[i]->Update();
-
-	//	if (!actions[i]->GetAlive()) {
-	//		actions.erase(cbegin(actions) + i);
-	//	}
-	//}
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Update();

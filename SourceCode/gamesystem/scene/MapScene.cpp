@@ -128,6 +128,9 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
 	m_State = State::initState;
+
+	pickHierarchy = nowHierarchy + 1;
+	pickIndex = nowIndex;
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
@@ -398,19 +401,19 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	//ImGui::Begin("Map");
-	//ImGui::Text("%f", framePos.x);
-	//ImGui::Text("%f", eFrame);
-	//ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
-	//ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
-	//ImGui::Text("PICKINDEX:%d", pickIndex);
-	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
-	//ImGui::Text("indel:%d", nowIndex);
-	//ImGui::Text("PICKNow:%d", pickNow);
-	//for (int i = 0; i < 3; i++) {
-	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
-	//}
-	//ImGui::End();
+	ImGui::Begin("Map");
+	ImGui::Text("%f", framePos.x);
+	ImGui::Text("%f", eFrame);
+	ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
+	ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
+	ImGui::Text("PICKINDEX:%d", pickIndex);
+	ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
+	ImGui::Text("nowindel:%d", nowIndex);
+	ImGui::Text("nowHie:%d", nowHierarchy);
+	for (int i = 0; i < 3; i++) {
+		ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
+	}
+	ImGui::End();
 }
 
 void MapScene::BlackOut() {

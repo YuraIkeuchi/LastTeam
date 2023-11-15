@@ -94,6 +94,11 @@ public:
 	static bool s_GameLoop;
 	//ラストステージかどうか
 	static bool s_LastStage;
+
+	//マップの位置
+	static int nowIndex;
+	static int nowHierarchy;
+
 	unique_ptr<Player> player_;
 	//シーンでの遷移
 	//SceneState m_SceneState = SceneState::IntroState;

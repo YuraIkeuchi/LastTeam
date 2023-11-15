@@ -20,14 +20,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	
 	// パーティクル
 	ParticleEmitter::GetInstance()->AllDelete();
-	//// プレイヤー生成
-	//{
-	//	auto player = GameObject::CreateObject<Player>();	// �v���C���[����
-	//	player->LoadResource();
-	//	player->Initialize();
-	//	player->InitState({ -8.0f,0.1f,0.0f });
-	//	GameStateManager::GetInstance()->SetPlayer(player);
-	//}
+
 	player_ = make_unique<Player>();
 	player_->LoadResource();
 	player_->InitState({ -4.0f,0.1f,2.0f });
@@ -39,7 +32,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
-
+	StagePanel::GetInstance()->SetPlayer(player_.get());
 	//ビヘイビア試しました！
 	{
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
@@ -49,7 +42,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	EnemyManager::SetPlayer(player_.get());
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
-	//enemyManager->EnemyLightInit(lightGroup);
 	
 	//パッシブスキルによるエネミーの能力変更
 	if (GameStateManager::GetInstance()->GetPoisonSkill()) {
@@ -71,15 +63,13 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	//�e�N���X�X�V
 	//カメラワーク更新
 	camerawork->Update(camera);
-
-	// �S�I�u�W�F�N�g�X�V
 	player_->Update();
 	GameStateManager::GetInstance()->Update();
 
 	StagePanel::GetInstance()->Update();
+	enemyManager->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	enemyManager->Update();
 	//エネミーが全員死亡したら
 	if (enemyManager->BossDestroy()) {
 		//クリア処理が終らなかったら

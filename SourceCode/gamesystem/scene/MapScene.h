@@ -103,9 +103,7 @@ private:
 	float homeX = 360.f;
 	float interbal = 300.f;
 
-	int nowIndex = Middle;
-	int nowHierarchy = 0;
-
+	
 	int oldIndex = Middle;
 	int oldHierarchy = 0;
 
