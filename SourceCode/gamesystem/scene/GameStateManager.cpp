@@ -488,8 +488,8 @@ bool GameStateManager::SkillRecycle() {
 
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
-	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size());
-	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size());
+	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size(),m_dxCommon);
+	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size(), m_dxCommon);
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
 	m_PredictTimer = {};
 	isFinish = true;

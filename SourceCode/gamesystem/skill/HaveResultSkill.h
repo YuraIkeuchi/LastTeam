@@ -19,13 +19,13 @@ public:
 	void Move();
 	//持っているスキル
 	void HaveAttackSkill(std::vector<int> Deck,
-		int DeckSize);
+		int DeckSize,DirectXCommon* dxCommon);
 
 	//持っているパッシブ
 	void HavePassiveSkill(std::vector<int> Passive,
-		int PassiveSize);
-	void CreateAttackSkill(const int num,const int id);
-	void CreatePassiveSkill(const int num, const int id);
+		int PassiveSize, DirectXCommon* dxCommon);
+	void CreateAttackSkill(const int num,const int id, DirectXCommon* dxCommon);
+	void CreatePassiveSkill(const int num, const int id, DirectXCommon* dxCommon);
 	void BirthArea(const int num);
 private:
 private:
@@ -33,6 +33,7 @@ private:
 	struct HaveUI {
 		std::unique_ptr<IKESprite> icon;
 		std::unique_ptr<DrawNumber> number;
+		std::unique_ptr<TextManager> text_;
 		vector<std::unique_ptr<ResultAreaUI>> resultarea;
 		XMFLOAT2 position = { 640.f,320.f };
 		XMFLOAT2 size = { 128.f,128.f };
@@ -42,10 +43,10 @@ private:
 		vector<std::vector<int>> area;	//範囲
 		int DisX = {};
 		int DisY = {};
+		wchar_t* baseSentence = L"";
 	};
 	
 private:
-	unique_ptr<TextManager> resulttext;
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::vector<HaveUI> haveSkills;
@@ -58,7 +59,6 @@ private:
 
 	XMFLOAT2 m_SelectPos = {};
 
-	wchar_t* baseSentence = L"";
-
+	
 };
 
