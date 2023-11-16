@@ -47,7 +47,7 @@ void GameStateManager::Initialize() {
 	resultSkill = make_unique<ResultSkill>(player);
 	resultSkill->Initialize(m_dxCommon);
 	haveSkill = make_unique<HaveResultSkill>();
-	haveSkill->Initialize();
+	haveSkill->Initialize(m_dxCommon);
 
 	onomatope = make_unique<Onomatope>();
 
@@ -190,7 +190,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		resultSkill->Draw(dxCommon);
 	}
 	else {
-		haveSkill->Draw();
+		haveSkill->Draw(dxCommon);
 	}
 }
 //描画
@@ -198,7 +198,10 @@ void GameStateManager::ImGuiDraw() {
 	//StagePanel::GetInstance()->ImGuiDraw();
 	//SkillManager::GetInstance()->ImGuiDraw();
 	//TutorialTask::GetInstance()->ImGuiDraw();
-	resultSkill->ImGuiDraw();
+	//resultSkill->ImGuiDraw();
+	if (_ResultType == HAVE_SKILL) {
+		haveSkill->ImGuiDraw();
+	}
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {

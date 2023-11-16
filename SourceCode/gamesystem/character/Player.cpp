@@ -271,10 +271,14 @@ void Player::HealPlayer(const float power) {
 }
 //チュートリアルの更新
 //プレイヤーのダメージ判定
-void Player::RecvDamage(float Damage) {
+void Player::RecvDamage(const float Damage,const string& name) {
 	m_HP -= Damage;
-	for (int i = 0; i < 15; i++) {
+	//ダメージの種類によってパーティクルを変える
+	if (name == "NORMAL") {
 		DamageParticle();
+	}
+	else if (name == "POISON") {
+		BirthPoisonParticle();
 	}
 }
 void Player::TitleUpdate() {
@@ -286,7 +290,9 @@ void Player::HealParticle() {
 	XMFLOAT4 e_color = { 0.5f,1.0f,0.1f,1.0f };
 	float s_scale = 1.0f;
 	float e_scale = 0.0f;
-	ParticleEmitter::GetInstance()->HealEffect(50, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
+	for (int i = 0; i < 15; i++) {
+		ParticleEmitter::GetInstance()->HealEffect(50, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
+	}
 }
 //ダメージパーティクル
 void Player::DamageParticle() {
@@ -294,9 +300,20 @@ void Player::DamageParticle() {
 	const XMFLOAT4 e_color = { 0.5f,0.5f,0.5f,1.0f };
 	const float s_scale = 2.0f;
 	const float e_scale = 0.0f;
-	ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
+	for (int i = 0; i < 15; i++) {
+		ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
+	}
 }
-//プレイヤーの情報背セーブ
+void Player::BirthPoisonParticle() {
+	const XMFLOAT4 s_color = { 0.5f,0.0f,0.5f,1.0f };
+	const XMFLOAT4 e_color = { 0.5f,0.0f,0.5f,1.0f };
+	const float s_scale = 1.0f;
+	const float e_scale = 0.0f;
+	for (int i = 0; i < 3; i++) {
+		ParticleEmitter::GetInstance()->PoisonEffect(50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color);
+	}
+}
+//プレイヤーの情報をセーブ
 void Player::PlayerSave() {
 	const float l_StartHp = 100.0f;
 	std::ofstream playerofs("Resources/csv/chara/player/player.csv");  // ファイルパスを指定する

@@ -394,7 +394,7 @@ void BossEnemy::PlayerCollide() {
 		if (newarea != nullptr) {
 			if ((newarea->GetNowHeight() == l_PlayerHeight && newarea->GetNowWidth() == l_PlayerWidth) &&
 				!newarea->GetHit() && (newarea->GetName() == "Enemy")) {
-				player->RecvDamage(20.0f);
+				player->RecvDamage(20.0f,"NORMAL");
 				newarea->SetHit(true);
 				break;
 			}

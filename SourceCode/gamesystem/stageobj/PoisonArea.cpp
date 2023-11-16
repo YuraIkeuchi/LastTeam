@@ -21,7 +21,7 @@ bool PoisonArea::Initialize() {
 void PoisonArea::InitState(const int width, const int height) {
 	panels.position = SetPanelPos(width, height);
 	panels.Width = width, panels.Height = height;
-	panels.position.y = 0.015f;
+	panels.position.y = 0.011f;
 	panels.color = { 0.5f,0.0f,0.5f,1.0f };
 	panels.Alive = true;
 	panels.Timer = {};
@@ -71,7 +71,7 @@ void PoisonArea::Collide() {
 
 	//
 	if (panels.DamageTimer == 50) {
-		player->RecvDamage(l_Damage);
+		player->RecvDamage(l_Damage,"POISON");
 		panels.DamageTimer = {};
 	}
 }

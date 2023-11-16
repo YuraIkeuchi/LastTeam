@@ -647,7 +647,7 @@ void MapScene::CheckState() {
 			int num = Helper::GetInstance()->GetRanNum(1, 2);
 			std::stringstream ss;
 			if (nowHierarchy != MaxLength) {
-				ss << "Resources/csv/EnemySpawn/BattleMap0" << 3 << ".csv";
+				ss << "Resources/csv/EnemySpawn/BattleMap0" << 1 << ".csv";
 			} else {
 				ss << "Resources/csv/EnemySpawn/BattleMap0" << 3 << ".csv";
 				s_LastStage = true;

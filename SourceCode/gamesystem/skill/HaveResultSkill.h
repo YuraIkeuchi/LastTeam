@@ -12,9 +12,9 @@ public:
 	HaveResultSkill();
 	~HaveResultSkill();
 
-	void Initialize();
+	void Initialize(DirectXCommon* dxCommon);
 	void Update();
-	void Draw();
+	void Draw(DirectXCommon* dxCommon);
 	void ImGuiDraw();
 	void Move();
 	//éùÇ¡ÇƒÇ¢ÇÈÉXÉLÉã
@@ -45,7 +45,7 @@ private:
 	};
 	
 private:
-	unique_ptr<TextManager> text_;
+	unique_ptr<TextManager> resulttext;
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::vector<HaveUI> haveSkills;
@@ -57,6 +57,8 @@ private:
 	bool m_isMove = false;
 
 	XMFLOAT2 m_SelectPos = {};
+
+	wchar_t* baseSentence = L"";
 
 };
 

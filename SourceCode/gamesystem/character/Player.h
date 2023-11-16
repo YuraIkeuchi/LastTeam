@@ -47,7 +47,7 @@ public:
 	//プレイヤーの回復
 	void HealPlayer(const float power);
 	//プレイヤーのダメージ
-	void RecvDamage(float Damage);
+	void RecvDamage(const float Damage,const string& name);
 	//プレイヤーの情報保存
 	void PlayerSave();
 private:
@@ -58,6 +58,8 @@ private:
 	void HealParticle();
 	//ダメージのパーティクル
 	void DamageParticle();
+	//毒のパーティクル
+	void BirthPoisonParticle();
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }

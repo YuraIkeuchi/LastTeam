@@ -11,13 +11,16 @@ HaveResultSkill::HaveResultSkill() {
 HaveResultSkill::~HaveResultSkill() {
 }
 
-void HaveResultSkill::Initialize() {
-	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.5f });
+void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
+	backScreen = IKESprite::Create(ImageManager::RESULTBACKSCREEN, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	backScreen->SetSize({ 1280.f,720.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetSize({ 90.0f,90.0f });
 	selectFrame->SetPosition({ 640.0f,150.0f });
+
+	resulttext = make_unique<TextManager>();
+	resulttext->Initialize(dxCommon);
 }
 
 void HaveResultSkill::Update() {
@@ -37,7 +40,7 @@ void HaveResultSkill::Update() {
 	Move();
 }
 
-void HaveResultSkill::Draw() {
+void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
@@ -48,37 +51,23 @@ void HaveResultSkill::Draw() {
 			resultUI.number->Draw();
 		}
 	}
+	
+	for (HaveUI& PassiveUI : havePassive) {
+		PassiveUI.icon->Draw();
+	}
+
+	resulttext->TestDraw(dxCommon);
 	if (m_SelectCount < (int)(haveSkills.size())) {
 		for (auto i = 0; i < haveSkills[m_SelectCount].resultarea.size(); i++) {
 			haveSkills[m_SelectCount].resultarea[i]->Draw();
 		}
 	}
 
-
-	for (HaveUI& PassiveUI : havePassive) {
-		PassiveUI.icon->Draw();
-	}
-
 	IKESprite::PostDraw();
 }
 void HaveResultSkill::ImGuiDraw() {
 	ImGui::Begin("Have");
-	ImGui::Text("Add:%f", m_AddPosX);
-	ImGui::Text("PosX:%f,PosY:%f", selectFrame->GetPosition().x, selectFrame->GetPosition().y);
-	ImGui::Text("Num:%d", (int)(haveSkills.size()) + (int)(havePassive.size()));
-	if (!haveSkills.empty()) {
-		for (auto i = 0; i < haveSkills.size(); i++) {
-			ImGui::Text("HaveID[%d]:%d", i, haveSkills[i].ID);
-			ImGui::Text("DisX[%d]:%d", i, haveSkills[i].DisX);
-			ImGui::Text("DisY[%d]:%d", i, haveSkills[i].DisY);
-			ImGui::Text("Size[%d]:%d", i, haveSkills[i].area.size());
-		}
-	}
-	if (!havePassive.empty()) {
-		for (auto i = 0; i < havePassive.size(); i++) {
-			ImGui::Text("PassiveHaveID[%d]:%d", i, havePassive[i].ID);
-		}
-	}
+	ImGui::Text("ID:%d", haveSkills[m_SelectCount].ID);
 	ImGui::End();
 }
 
@@ -116,6 +105,9 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id) {
 	haveSkills[num].number->SetPosition(haveSkills[num].position);
 	m_SelectCount = {};
 	m_AddPosX = {};
+
+	baseSentence = resulttext->GetSkillSentence(haveSkills[0].ID);
+	resulttext->SetCreateSentence(baseSentence);
 }
 
 //パッシブスキルの表示
@@ -139,6 +131,8 @@ void HaveResultSkill::Move() {
 		static float addFrame = 1.f / 15.f;
 
 		if (Helper::GetInstance()->FrameCheck(frame, addFrame)) {
+			baseSentence = resulttext->GetSkillSentence(haveSkills[m_SelectCount].ID);
+			resulttext->SetCreateSentence(baseSentence);
 			m_isMove = false;
 			frame = 0.f;
 		}

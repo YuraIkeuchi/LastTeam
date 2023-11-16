@@ -50,7 +50,7 @@ void EnemyBullet::Update() {
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//当たり判定
 
-	panels.position = {(-8.0f) + (2.0f * m_NowWidth),0.015f,(2.0f * m_NowHeight)};
+	panels.position = {(-8.0f) + (2.0f * m_NowWidth),0.011f,(2.0f * m_NowHeight)};
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor({1.0f,0.3f,0.0f,1.0f});
 	panels.tex->Update();
@@ -74,7 +74,7 @@ bool EnemyBullet::Collide() {
 	const float l_Damage = 0.5f;
 	const float l_Radius = 0.2f;
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
-		player->RecvDamage(5.0f);
+		player->RecvDamage(5.0f,"NORMAL");
 		m_Alive = false;
 		return true;
 	}
