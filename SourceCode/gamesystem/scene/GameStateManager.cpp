@@ -39,11 +39,11 @@ void GameStateManager::Initialize() {
 	//一旦クリア方式で
 	GotPassives.clear();
 	PassiveCheck();
-	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.9f,0.9f,0.9f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize(basesize);
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
-
+	gaugeCover= IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f+32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	resultSkill = make_unique<ResultSkill>(player);
 	resultSkill->Initialize(m_dxCommon);
 	haveSkill = make_unique<HaveResultSkill>();
@@ -174,6 +174,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		IKESprite::PreDraw();
 		skillUI->Draw();
 		gaugeUI->Draw();
+		gaugeCover->Draw();
 		onomatope->Draw();
 		IKESprite::PostDraw();
 		SkillManager::GetInstance()->UIDraw();
