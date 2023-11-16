@@ -55,13 +55,13 @@ Helper::XMFLOAT3 Helper::Float3SubFloat3(const XMFLOAT3& Num, const XMFLOAT3& Su
 	return l_Result;
 }
 //線形補間
-float Helper::Lerp(const float s_scale, const float e_scale, const int nowtime, const int targettime) {
+float Helper::Lerp(const float start, const float end, const int nowtime, const int targettime) {
 	float l_timer = {};
 	float result = {};
 
 	l_timer = (float)nowtime / (float)targettime;
 
-	return s_scale + (e_scale - s_scale) * l_timer;
+	return start + (end - start) * l_timer;
 }
 //割合を返す
 float Helper::GetPercent(const float amount, const float num)

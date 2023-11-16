@@ -1,6 +1,7 @@
 #include "PredictArea.h"
 #include "CsvLoader.h"
-#include "ImageManager.h"
+#include <ImageManager.h>
+#include <Helper.h>
 
 //リソース読み込み
 PredictArea::PredictArea(const string& name) {
@@ -18,13 +19,14 @@ PredictArea::PredictArea(const string& name) {
 			panels[i][j].tex->SetRotation({ 90.0f,0.0f,0.0f });
 		}
 	}
+
+	this->name = name;
 }
 //初期化
 bool PredictArea::Initialize() {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
 			panels[i][j].position = { (2.0f * i) - (PREDICT_HEIGHT * 2.0f),0.02f,(2.0f * j) };
-			panels[i][j].color = { 1.f,1.f,1.f,1.f };
 		}
 	}
 	//CSV読み込み
@@ -36,11 +38,15 @@ void PredictArea::Update() {
 	//プレイヤーが居るマスが黄色くなる
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			panels[i][j].color = { 1.0f,0.3f,0.0f,0.5f };
 			panels[i][j].tex->Update();
 			panels[i][j].tex->SetPosition(panels[i][j].position);
 			panels[i][j].tex->SetColor(panels[i][j].color);
 		}
+	}
+
+	//敵の予測エリアのみ処理
+	if (name == "ENEMY") {
+		FlashArea();
 	}
 }
 
@@ -60,9 +66,13 @@ void PredictArea::Draw(DirectXCommon* dxCommon) {
 //ImGui
 void PredictArea::ImGuiDraw() {
 	ImGui::Begin("Pre");
+	ImGui::Text("Start:%d", m_FlashStart);
+	ImGui::Text("Angle:%f", m_SinAngle);
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			ImGui::Text("Flag[%d][%d]:%d", i, j, panels[i][j].predict);
+			if (panels[i][j].predict) {
+				ImGui::Text("Alpha[%d][%d]:%f", i, j, panels[i][j].color.w);
+			}
 		}
 	}
 	ImGui::End();
@@ -73,5 +83,23 @@ void PredictArea::ResetPredict() {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
 			panels[i][j].predict = false;
 		}
+	}
+	m_FlashStart = false;
+}
+//予測エリアのフラッシュ
+void PredictArea::FlashArea() {
+	if (m_FlashStart) {
+		m_AddAngle = Helper::GetInstance()->Lerp(10.0f, 20.0f,m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
+		//sin波によって上下に動く
+		m_SinAngle += m_AddAngle;
+		m_SinAngle2 = m_SinAngle * (3.14f / 180.0f);
+		for (int i = 0; i < PREDICT_WIDTH; i++) {
+			for (int j = 0; j < PREDICT_HEIGHT; j++) {
+				panels[i][j].color.w = (sin(m_SinAngle2) * 0.5f + 0.5f);
+			}
+		}
+	}
+	else {
+		m_SinAngle = 0.0f;
 	}
 }

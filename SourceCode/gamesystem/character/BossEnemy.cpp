@@ -165,6 +165,7 @@ void BossEnemy::Attack() {
 	(this->*attackTable[_AttackState])();
 	PlayerCollide();
 	predictarea->Update();
+	predictarea->SetTimer(coolTimer);
 }
 
 //ワープ
@@ -239,6 +240,8 @@ void BossEnemy::RowAttack() {
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
 	}
+
+	predictarea->SetTargetTimer(l_TargetTimer);
 }
 //ランダムマス攻撃
 void BossEnemy::RandomAttack() {
@@ -269,6 +272,8 @@ void BossEnemy::RandomAttack() {
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
 	}
+
+	predictarea->SetTargetTimer(l_TargetTimer);
 }
 //攻撃エリア
 void BossEnemy::BirthArea(const int Width, const int Height, const string& name) {
@@ -293,6 +298,7 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 		attackarea.emplace_back(std::move(newarea));
 	}
 	predictarea->ResetPredict();
+
 }
 //予測エリア
 void BossEnemy::BirthPredict(const int Width, const int Height, const string& name) {
@@ -306,6 +312,7 @@ void BossEnemy::BirthPredict(const int Width, const int Height, const string& na
 	else {//ランダム(プレイヤーから近います)
 		predictarea->SetPredict(Width, Height, true);
 	}
+	predictarea->SetFlashStart(true);
 }
 //スキルのCSVを読み取る
 void BossEnemy::LoadCsvSkill(std::string& FileName, const int id) {

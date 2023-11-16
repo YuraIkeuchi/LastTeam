@@ -48,7 +48,7 @@ public:
 	//XMFLOAT3‚ÆXMFLOAT3‚ğŒ¸Z‚·‚éŠÖ”
 	XMFLOAT3 Float3SubFloat3(const XMFLOAT3& Num, const XMFLOAT3& Sub);
 	//üŒ`•âŠÔ‚Å•Ô‚·
-	float Lerp(const float s_scale, const float e_scale, const int nowtime, const int targettime);
+	float Lerp(const float start, const float end, const int nowtime, const int targettime);
 	//’Ç]ŠÖ”
 	void FollowMove(XMFLOAT3& pos, const XMFLOAT3& pos2, const float vel);
 	//Sin”g
