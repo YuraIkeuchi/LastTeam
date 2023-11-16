@@ -50,7 +50,7 @@ void EnemyBullet::Update() {
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//当たり判定
 
-	panels.position = {(-8.0f) + (2.0f * m_NowWidth),0.02f,(2.0f * m_NowHeight)};
+	panels.position = {(-8.0f) + (2.0f * m_NowWidth),0.015f,(2.0f * m_NowHeight)};
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor({1.0f,0.3f,0.0f,1.0f});
 	panels.tex->Update();
@@ -58,7 +58,9 @@ void EnemyBullet::Update() {
 //描画
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	panels.tex->Draw();
+	if (m_NowWidth <= 3) {
+		panels.tex->Draw();
+	}
 	IKETexture::PostDraw();
 	Obj_Draw();
 }

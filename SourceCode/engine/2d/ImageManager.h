@@ -59,6 +59,8 @@ public:
 		CHARGE,
 		SHADOW,
 		AREA,
+		ENEMYPREDICT,
+		PLAYERPREDICT,
 	};
 	enum particleName
 	{

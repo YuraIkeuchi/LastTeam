@@ -3,10 +3,15 @@
 #include "ImageManager.h"
 
 //ƒŠƒ\[ƒX“Ç‚İ‚İ
-PredictArea::PredictArea() {
+PredictArea::PredictArea(const string& name) {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			panels[i][j].tex.reset(new IKETexture(ImageManager::AREA,{}, {1.f,1.f,1.f}, {1.f,1.f,1.f,1.f}));
+			if (name == "ENEMY") {
+				panels[i][j].tex.reset(new IKETexture(ImageManager::ENEMYPREDICT, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+			}
+			else if(name == "PLAYER") {
+				panels[i][j].tex.reset(new IKETexture(ImageManager::PLAYERPREDICT, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+			}
 			panels[i][j].tex->TextureCreate();
 			panels[i][j].tex->Initialize();
 			panels[i][j].tex->SetScale({ 0.2f,0.2f,0.2f });

@@ -58,6 +58,8 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(CHARGE, L"Resources/2d/objicon/impact.png");
 	IKETexture::LoadTexture(SHADOW, L"Resources/2d/objicon/shadow.png");
 	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/Area.png");
+	IKETexture::LoadTexture(ENEMYPREDICT, L"Resources/2d/objicon/Predict.png");
+	IKETexture::LoadTexture(PLAYERPREDICT, L"Resources/2d/objicon/PlayerPredict.png");
 }
 
 //非同期処理でのテクスチャの読み込み

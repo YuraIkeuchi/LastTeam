@@ -10,7 +10,7 @@ static const int PREDICT_HEIGHT = 4;
 static const int PREDICT_WIDTH = 8;
 class PredictArea {
 public:
-	PredictArea();
+	PredictArea(const string& name);
 private:
 
 	//ƒpƒlƒ‹

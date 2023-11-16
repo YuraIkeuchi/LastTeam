@@ -71,7 +71,7 @@ void GameStateManager::Initialize() {
 		break;
 	}
 	//予測
-	predictarea.reset(new PredictArea());
+	predictarea.reset(new PredictArea("PLAYER"));
 	predictarea->Initialize();
 
 	//右のゲージ
@@ -161,7 +161,6 @@ void GameStateManager::AttackTrigger() {
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->A)) {
 		AttackSubAction();
-		onomatope->AddOnomato(Attack01, { 640.f,360.f });
 		m_Delay = true;
 	}
 }
@@ -320,6 +319,7 @@ void GameStateManager::UseSkill() {
 		m_Delay = false;
 		m_DelayTimer = {};
 		m_ChargeScale = 5;
+		onomatope->AddOnomato(Attack01, { 640.f,360.f });
 	}
 }
 //行動の終了

@@ -186,8 +186,6 @@ void InterEnemy::PoisonState() {
 		} else {
 			m_HP -= 2.0f;
 		}
-	}
-	else if (m_PoisonTimer % 50 == 0) {		//毒のエフェクト
 		BirthPoisonParticle();
 	}
 
