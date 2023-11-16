@@ -31,7 +31,6 @@ PoisonEnemy::PoisonEnemy() {
 	shadow_tex->TextureCreate();
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
-
 }
 //‰Šú‰»
 bool PoisonEnemy::Initialize() {
@@ -102,6 +101,7 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 	shadow_tex->Draw();
 	magic.tex->Draw();
 	IKETexture::PostDraw();
+
 	//áŠQ•¨‚Ìíœ
 	for (int i = 0; i < poisonarea.size(); i++) {
 		if (poisonarea[i] == nullptr) {
@@ -114,19 +114,6 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void PoisonEnemy::ImGui_Origin() {
-	//“G‚Ì’e
-	/*for (unique_ptr<EnemyPoison>& newPoison : Poisons) {
-		if (newPoison != nullptr) {
-			newPoison->ImGuiDraw();
-		}
-	}*/
-	ImGui::Begin("Poison");
-	ImGui::Text("WARP:%d", enemywarp.State);
-	ImGui::Text("Scale:%f", enemywarp.AfterScale);
-	ImGui::Text("EneScale:%f", m_Scale.x);
-	ImGui::Text("Frame:%f", enemywarp.Frame);
-	ImGui::End();
-
 	//áŠQ•¨‚Ìíœ
 	for (int i = 0; i < poisonarea.size(); i++) {
 		if (poisonarea[i] == nullptr) {
@@ -198,6 +185,7 @@ void PoisonEnemy::BirthPoison() {
 	int l_RandHeight;
 	StagePanel::GetInstance()->PoisonSetPanel(l_RandWidth,l_RandHeight);
 	std::unique_ptr<PoisonArea> newarea = std::make_unique<PoisonArea>();
+	newarea->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 	newarea->InitState(l_RandWidth, l_RandHeight);
 	newarea->SetPlayer(player);
 	poisonarea.push_back(std::move(newarea));

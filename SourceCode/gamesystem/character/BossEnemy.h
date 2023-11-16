@@ -2,7 +2,7 @@
 #include"InterEnemy.h"
 #include "EnemyBullet.h"
 #include "AttackArea.h"
-#include "PredictArea.h"
+
 using namespace std;         //  名前空間指定
 //普通の敵
 class BossEnemy :public InterEnemy {
@@ -58,8 +58,7 @@ private:
 	std::vector<std::vector<int>> m_Area = {};
 	// 攻撃エリア
 	std::vector<unique_ptr<AttackArea>> attackarea;
-	//予測エリア
-	std::unique_ptr<PredictArea> predictarea;
+	
 
 	int m_RandWigth = {};
 	int m_RandHeight = {};

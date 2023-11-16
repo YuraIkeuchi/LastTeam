@@ -57,4 +57,5 @@ private:
 	}_nowstate = TUTORIAL_INTRO;
 
 	bool m_End = false;
+	bool m_Skip = false;
 };

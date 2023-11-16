@@ -27,8 +27,8 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	player_->Initialize();
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
-	GameStateManager::GetInstance()->Initialize();
 	GameStateManager::SetPlayer(player_.get());
+	GameStateManager::GetInstance()->Initialize();
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
@@ -154,14 +154,11 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	enemyManager->Draw(dxCommon);
 	IKEObject3d::PostDraw();
-
-	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	IKETexture::PostDraw();
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	GameStateManager::GetInstance()->ImGuiDraw();
-	//player_->ImGuiDraw();
+	player_->ImGuiDraw();
+	//GameStateManager::GetInstance()->ImGuiDraw();
 	//game_object_manager_->ImGuiDraw();
 	//enemyManager->ImGuiDraw();
 }

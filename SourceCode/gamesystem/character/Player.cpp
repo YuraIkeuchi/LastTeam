@@ -37,7 +37,6 @@ void Player::LoadResource() {
 bool Player::Initialize() {
 
 	LoadCSV();
-	m_MaxHP = m_HP;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	//CSV読み込み
 	return true;
@@ -265,9 +264,7 @@ void Player::MoveCommon(float& pos, float velocity) {
 //プレイヤーのHP回復
 void Player::HealPlayer(const float power) {
 	m_HP += power;
-	for (int i = 0; i < 15; i++) {
-		HealParticle();
-	}
+	HealParticle();
 }
 //チュートリアルの更新
 //プレイヤーのダメージ判定

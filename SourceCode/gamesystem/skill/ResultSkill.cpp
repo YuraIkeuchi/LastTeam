@@ -4,11 +4,7 @@
 #include <Input.h>
 #include <Easing.h>
 #include <SkillManager.h>
-
-Player* ResultSkill::player_ = nullptr;
-
-ResultSkill::ResultSkill(Player* player) {
-	player_ = player;
+ResultSkill::ResultSkill() {
 }
 
 ResultSkill::~ResultSkill() {
