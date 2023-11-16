@@ -143,6 +143,7 @@ private:
 	unique_ptr<IKESprite> skillUI = nullptr;
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 	unique_ptr<IKESprite> gaugeCover = nullptr;
+	std::unique_ptr<IKESprite> handsFrame;
 
 	XMFLOAT2 basesize = { 46.f,400.f };
 

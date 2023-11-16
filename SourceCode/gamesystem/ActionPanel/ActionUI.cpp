@@ -37,6 +37,7 @@ void ActionUI::Update() {
 		m_Color = { 0.0f,1.0f,0.0f,1.0f };
 	}
 	tex->SetColor(m_Color);
+	tex->SetSize(m_Size);
 	tex->SetPosition(m_Position);
 
 	_drawnumber->SetPosition(m_Position);
@@ -61,9 +62,17 @@ void ActionUI::ImGuiDraw() {
 //UI‚Ì“®‚«
 void ActionUI::UiMove() {
 	const float l_AddFrame = 0.1f;
-	m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (20.f + 32.f + ((m_ActCount) * 64.0f)));
+	if (m_ActCount==0) {
+		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (20.f + 32.f));
+		float size_=Ease(Out,Quad,0.5f, m_Size.x,64.f);
+		m_Size = { size_,size_ };
+	} else {
+		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (41.f + 32.f + ((m_ActCount) * 48.0f)));	
+		float size_ = Ease(Out, Quad, 0.5f, m_Size.x, 48.f);
+		m_Size = { size_,size_ };
+	}
 	if (!m_Use) {
-		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 680.0f);
+		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 670.0f);
 	} else {
 		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
