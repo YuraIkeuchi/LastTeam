@@ -23,6 +23,7 @@ private:
 	void Teleport();//ˆÚ“®
 	void BirthPoison();//
 	void WarpEnemy();//“G‚Ìƒ[ƒvˆ—
+
 	//–‚–@w
 	void BirthMagic();
 private:

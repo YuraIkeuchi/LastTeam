@@ -11,7 +11,7 @@
 
 class ResultSkill {
 public:
-	ResultSkill(Player* player);
+	ResultSkill();
 	~ResultSkill();
 
 	void Initialize(DirectXCommon* dxCommon);
@@ -57,9 +57,12 @@ private:
 
 	ResultUI CreateUI(bool isSkill,int id,XMFLOAT2 pos);
 	void BirthArea(ResultUI& resultUI);
+public:
+	void SetPlayer(Player* player) { this->player_ = player; }
+
 private:
 	bool isStart = false;
-	static Player* player_;
+	Player* player_;
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;

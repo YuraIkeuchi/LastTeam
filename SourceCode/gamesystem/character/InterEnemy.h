@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "ObjCommon.h"
 #include "AttackArea.h"
+#include "PredictArea.h"
 #include "DrawNumber.h"
 #include <memory>
 #include <IKESprite.h>
@@ -95,6 +96,8 @@ protected:
 	//影の変数
 	XMFLOAT3 m_ShadowPos = {};
 	XMFLOAT3 m_ShadowScale = {};
+	//予測エリア
+	std::unique_ptr<PredictArea> predictarea;
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };

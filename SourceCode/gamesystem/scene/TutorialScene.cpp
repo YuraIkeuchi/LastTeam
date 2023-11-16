@@ -42,8 +42,8 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	player_->Initialize();
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
-	GameStateManager::GetInstance()->Initialize();
 	GameStateManager::SetPlayer(player_.get());
+	GameStateManager::GetInstance()->Initialize();
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
@@ -72,11 +72,15 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	GameStateManager::GetInstance()->Update();
 
 	StagePanel::GetInstance()->Update();
-	enemy->Update();
+	if (!m_Skip) {
+		enemy->Update();
+	}
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	if (input->TriggerButton(input->BACK)) {
-		m_End = true;
+		m_Skip = true;
+		_nowstate = TUTORIAL_DAMAGE;
+		m_Timer = {};
 	}
 	//�G��|������V�[���ȍ~(��)
 	if (m_End) {
@@ -90,6 +94,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
+		player_->PlayerSave();
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 		SceneManager::GetInstance()->ChangeScene("MAP");
 		SceneChanger::GetInstance()->SetChange(false);
@@ -126,14 +131,16 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 }
 //�|�X�g�G�t�F�N�g������Ȃ�
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
-	if (enemy->GetHP() > 0.0f) {
+	if (enemy->GetHP() > 0.0f && !m_Skip) {
 		ParticleEmitter::GetInstance()->FlontDrawAll();
 
 		GameStateManager::GetInstance()->ActUIDraw();
 		enemy->UIDraw();
 		player_->UIDraw();
 	}
-	text_->TestDraw(dxCommon);
+	if (player_->GetNowHeight() != 0) {
+		text_->TestDraw(dxCommon);
+	}
 
 	SceneChanger::GetInstance()->Draw();
 }
@@ -144,7 +151,7 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
-	if (enemy->GetHP() > 0.0f) {
+	if (enemy->GetHP() > 0.0f && !m_Skip) {
 		player_->Draw(dxCommon);
 		enemy->Draw(dxCommon);
 	}
@@ -158,7 +165,7 @@ void TutorialScene::ImGuiDraw() {
 	ImGui::End();
 	
 	TutorialTask::GetInstance()->ImGuiDraw();*/
-	//player_->ImGuiDraw();
+	player_->ImGuiDraw();
 	GameStateManager::GetInstance()->ImGuiDraw();
 }
 
@@ -213,7 +220,7 @@ void TutorialScene::AttackState() {
 }
 //�_���[�W��������
 void TutorialScene::DamageState() {
-	if (enemy->GetHP() <= 0.0f) {
+	if (enemy->GetHP() <= 0.0f || m_Skip) {
 		m_Timer++;
 		if (m_Timer == 1) {
 			text_->SetConversation(TextManager::TUTORIAL_SKILL);

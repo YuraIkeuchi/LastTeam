@@ -44,8 +44,9 @@ void GameStateManager::Initialize() {
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 	gaugeCover= IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f+32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
-	resultSkill = make_unique<ResultSkill>(player);
+	resultSkill = make_unique<ResultSkill>();
 	resultSkill->Initialize(m_dxCommon);
+	resultSkill->SetPlayer(player);
 	haveSkill = make_unique<HaveResultSkill>();
 	haveSkill->Initialize(m_dxCommon);
 
@@ -196,10 +197,6 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	//StagePanel::GetInstance()->ImGuiDraw();
-	//SkillManager::GetInstance()->ImGuiDraw();
-	//TutorialTask::GetInstance()->ImGuiDraw();
-	//resultSkill->ImGuiDraw();
 	if (_ResultType == HAVE_SKILL) {
 		haveSkill->ImGuiDraw();
 	}

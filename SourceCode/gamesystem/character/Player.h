@@ -72,6 +72,7 @@ public:
 
 	void SetMaxHp(float maxhp) {
 		m_MaxHP = maxhp;
+		m_HP = maxhp;
 	}
 
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
