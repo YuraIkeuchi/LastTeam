@@ -14,7 +14,7 @@ SkillAction::SkillAction() {
 	m_Pannel->TextureCreate();
 	m_Pannel->Initialize();
 
-	m_SkillID = Helper::GetInstance()->GetRanNum(0, 3);
+	m_SkillID = Helper::GetRanNum(0, 3);
 	//ID用のスプライト
 	_drawnumber = make_unique<DrawNumber>();
 	_drawnumber->Initialize();

@@ -102,21 +102,21 @@ void PoisonArea::Move() {
 
 	if (_PoisonState == POISON_THROW) {			//ã‚Éã‚°‚é
 		BirthPredict(panels.Width, panels.Height);
-		if (Helper::GetInstance()->CheckMin(m_Position.y, l_TargetPosY, l_ThrowSpeed)) {
+		if (Helper::CheckMin(m_Position.y, l_TargetPosY, l_ThrowSpeed)) {
 			_PoisonState = POISON_DROP;
 			m_Position = { panels.position.x,l_TargetPosY,panels.position.z };
 		}
 	}
 	else if (_PoisonState == POISON_DROP) {		//—Ž‚¿‚Ä‚­‚é
-		if (Helper::GetInstance()->CheckMax(m_Position.y, 0.0f, -l_ThrowSpeed)) {
+		if (Helper::CheckMax(m_Position.y, 0.0f, -l_ThrowSpeed)) {
 			_PoisonState = POISON_WIDE;
 			m_BulletAlive = false;
 		}
 	}
 	else if (_PoisonState == POISON_WIDE) {		//L‚ª‚é
 		static float addFrame = 1.f / 15.f;
-		if (Helper::GetInstance()->FrameCheck(panels.frame, addFrame)) {		//L‚ª‚é‚½‚ß‚ÌƒC[ƒWƒ“ƒO
-			if (Helper::GetInstance()->CheckMin(panels.Timer, l_TargetTimer, 1)) {		//L‚ª‚èØ‚Á‚½‚çƒJƒEƒ“ƒg‚ð‰ÁŽZ‚·‚é
+		if (Helper::FrameCheck(panels.frame, addFrame)) {		//L‚ª‚é‚½‚ß‚ÌƒC[ƒWƒ“ƒO
+			if (Helper::CheckMin(panels.Timer, l_TargetTimer, 1)) {		//L‚ª‚èØ‚Á‚½‚çƒJƒEƒ“ƒg‚ð‰ÁŽZ‚·‚é
 				GameStateManager::GetInstance()->SetBuff(false);
 				_PoisonState = POISON_END;
 				panels.frame = {};
@@ -128,7 +128,7 @@ void PoisonArea::Move() {
 	}
 	else {		//‚È‚­‚È‚é
 		static float addFrame = 1.f / 15.f;
-		if (Helper::GetInstance()->FrameCheck(panels.frame, addFrame)) {
+		if (Helper::FrameCheck(panels.frame, addFrame)) {
 			panels.Alive = false;
 		}
 		panels.scale = Ease(In, Cubic, panels.frame, panels.scale, panels.afterscale);

@@ -81,7 +81,7 @@ void NormalEnemy::Finalize() {
 }
 //追従
 //void NormalEnemy::Follow() {
-//	Helper::GetInstance()->FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
+//	Helper::FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
 //}
 
 void NormalEnemy::Inter() {

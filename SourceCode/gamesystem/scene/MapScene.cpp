@@ -19,10 +19,10 @@ void (MapScene::* MapScene::stateTable[])() = {
 
 
 void MapScene::Initialize(DirectXCommon* dxCommon) {
-	//‹¤’Ê‚Ì‰Šú‰»
+	//å…±é€šã®åˆæœŸåŒ–
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 	PlayPostEffect = false;
 
 	screen = IKESprite::Create(ImageManager::MAPSCREEN, { 0,0 });
@@ -49,7 +49,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	}
 	MapCreate();
 
-	//ƒeƒLƒXƒg
+	//ãƒ†ã‚­ã‚¹ãƒˆ
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
 	text_->SetConversation(TextManager::MAP_01, { -300.0f,-80.0f });
@@ -89,7 +89,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 	onomatope = std::make_unique<Onomatope>();
 
-	//“¹‚Ìˆ—
+	//é“ã®å‡¦ç†
 	{
 		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < INDEX; j++) {
@@ -144,7 +144,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		chara->SetSize({ 128.f,128.f });
 	}
 
-	//‚±‚±‚ªV‚µ‚­‘‚¢‚½êŠ
+	//ã“ã“ãŒæ–°ã—ãæ›¸ã„ãŸå ´æ‰€
 	pickHierarchy = nowHierarchy + 1;
 	pickIndex = nowIndex;
 
@@ -175,7 +175,7 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 		return;
 	}
 
-	if (Helper::GetInstance()->FrameCheck(eFrame, eAdd)) {
+	if (Helper::FrameCheck(eFrame, eAdd)) {
 		eAdd *= -1.0f;
 		eFrame = 0.99f;
 	}
@@ -192,7 +192,7 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 }
 
 void MapScene::Draw(DirectXCommon* dxCommon) {
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚é‚©
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ã‚‹ã‹
 	if (PlayPostEffect) {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		BackDraw(dxCommon);
@@ -253,7 +253,7 @@ void MapScene::BackDraw(DirectXCommon* dxCommon) {
 MapScene::UI MapScene::RandPannel() {
 	int min = ImageManager::MAP_NORMAL;
 	int max = ImageManager::MAP_BOSS;
-	int r = Helper::GetInstance()->GetRanNum(min, max);
+	int r = Helper::GetRanNum(min, max);
 
 	UI itr;
 	if (r == min) {
@@ -316,25 +316,25 @@ void MapScene::RoadUpdate() {
 
 void MapScene::MapCreate() {
 	string csv_ = "Resources/csv/map.csv";
-	int r_num = Helper::GetInstance()->GetRanNum(0, 3);
-	//ƒeƒXƒgƒvƒŒƒC—p
+	int r_num = Helper::GetRanNum(0, 3);
+	//ãƒ†ã‚¹ãƒˆãƒ—ãƒ¬ã‚¤ç”¨
 	r_num = 4;
-	//map‚Ì‚ ‚Æ‚É”š‚ğ‚­‚Á‚Â‚¯‚é
+	//mapã®ã‚ã¨ã«æ•°å­—ã‚’ãã£ã¤ã‘ã‚‹
 	std::stringstream ss;
 	ss << "map" << r_num;
 	std::string r_map = ss.str();
-	//w’è‚µ‚ÄƒQƒbƒg‚·‚é
+	//æŒ‡å®šã—ã¦ã‚²ãƒƒãƒˆã™ã‚‹
 	LoadCSV::LoadCsvParam_String(csv_, dungeon, r_map);
-	//‚¯‚½‚·‚¤‚µ‚ã‚Æ‚­‚·‚é
+	//ã‘ãŸã™ã†ã—ã‚…ã¨ãã™ã‚‹
 	int Len = (int)dungeon.length();
 	MaxLength = Len;
 	dungeons.resize(Len);
-	//1•¶š‚¸‚ÂŠi”[
+	//1æ–‡å­—ãšã¤æ ¼ç´
 	for (int i = 0; i < Len; ++i) {
 		dungeons[i] = (int)(dungeon[i] - '0');
 	}
 	for (int i = 0; i < Len; ++i) {
-		//‚±‚Ì+1‚ÍƒXƒ^[ƒg‚ğœ‚­
+		//ã“ã®+1ã¯ã‚¹ã‚¿ãƒ¼ãƒˆã‚’é™¤ã
 		size_t hierarchy = (size_t)i + 1;
 		switch (dungeons[i]) {
 		case 1: {
@@ -456,7 +456,7 @@ void MapScene::MapCreate() {
 		}
 		homeX += interbal;
 	}
-	//ƒ`ƒ…[ƒgƒŠƒAƒ‹(Œã‚Å•Ï‚¦‚é)
+	//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«(å¾Œã§å¤‰ãˆã‚‹)
 	UIs[1][Middle].sprite = IKESprite::Create(ImageManager::MAP_TUTORIAL, { 0,0 });
 	UIs[1][Middle].Tag = TUTORIAL;
 	UIs[1][Middle].sprite->SetPosition(UIs[1][Middle].pos);
@@ -535,7 +535,7 @@ void MapScene::Move() {
 		framePos = UIs[pickHierarchy][pickIndex].pos;
 
 		if (oldPickInd != pickIndex) {
-			wchar_t* sample = L" ‚Ó";
+			wchar_t* sample = L" ãµ";
 			switch (UIs[pickHierarchy][pickIndex].Tag) {
 			case BATTLE:
 				text_->SetConversation(TextManager::MAP_BATTLE, { -300.0f,-80.0f });
@@ -555,7 +555,7 @@ void MapScene::Move() {
 
 	}
 	if (moved) {
-		if (Helper::GetInstance()->FrameCheck(mov_frame, 1 / kMoveFrame)) {
+		if (Helper::FrameCheck(mov_frame, 1 / kMoveFrame)) {
 			moved = false;
 			onomatoFrame = 0.f;
 			m_State = State::checkState;
@@ -593,8 +593,8 @@ void MapScene::InitState() {
 	static float scrollFrame = 0.0f;
 	static float s_frame = 0.0f;
 	static XMFLOAT2 size = {};
-	if (Helper::GetInstance()->FrameCheck(scrollFrame, addFrameS)) {
-		if (Helper::GetInstance()->FrameCheck(s_frame, addFrame)) {
+	if (Helper::FrameCheck(scrollFrame, addFrameS)) {
+		if (Helper::FrameCheck(s_frame, addFrame)) {
 			m_State = State::mainState;
 			scrollFrame = 0.0f;
 			s_frame = 0.0f;
@@ -651,8 +651,8 @@ void MapScene::CheckState() {
 	}
 
 	if (UIs[nowHierarchy][nowIndex].Tag == TUTORIAL) {
-		if (Helper::GetInstance()->FrameCheck(delayFrame, 1 / 20.f)) {
-			if (Helper::GetInstance()->FrameCheck(s_frame, addFrame)) {
+		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
+			if (Helper::FrameCheck(s_frame, addFrame)) {
 				Input* input = Input::GetInstance();
 				if (input->TriggerButton(input->B)) {
 					size = {};
@@ -673,22 +673,21 @@ void MapScene::CheckState() {
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
 			GameReset({ -4.0f, 0.1f, 2.0f });
-			//ƒ`ƒ…[ƒgƒŠƒAƒ‹‚Ìƒ^ƒXƒN
+			//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¿ã‚¹ã‚¯
 			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 			SceneManager::GetInstance()->ChangeScene("TUTORIAL");
 			SceneChanger::GetInstance()->SetChange(false);
 			cheack->SetSize({ 0.0f,0.0f });
 		}
 	} else {
-		if (Helper::GetInstance()->FrameCheck(delayFrame, 1 / 20.f)) {
+		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
 			SceneChanger::GetInstance()->SetChangeStart(true);
+			int num = Helper::GetRanNum(1, 2);
 			std::stringstream ss;
 			if (nowHierarchy == MaxLength) {
 				ss << "Resources/csv/EnemySpawn/BattleMap0" << 3 << ".csv";
 				s_LastStage = true;
 			}
-
-			int num = Helper::GetInstance()->GetRanNum(1, 2);
 			bool isBattle = true;
 			if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
 				ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
@@ -704,7 +703,7 @@ void MapScene::CheckState() {
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
 			GameReset({ -8.0f,0.1f,0.0f });
-			//ƒ`ƒ…[ƒgƒŠƒAƒ‹‚Ìƒ^ƒXƒN
+			//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¿ã‚¹ã‚¯
 			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 			SceneManager::GetInstance()->ChangeScene("BATTLE");
 			SceneChanger::GetInstance()->SetChange(false);

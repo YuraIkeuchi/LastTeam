@@ -52,7 +52,7 @@ void Feed::FeedIn(FeedType type, float feedspeed, bool& feedf) {
 
 	FeedTex->SetColor({ Color_RGB.x,Color_RGB.y,Color_RGB.z,m_Alpha });
 	//アルファ値の範囲指定
-	Helper::GetInstance()->Clamp(m_Alpha, 0.f, 1.f);
+	Helper::Clamp(m_Alpha, 0.f, 1.f);
 }
 
 void Feed::Draw() {
@@ -124,7 +124,7 @@ void Feed2::FeedIn2(FeedType2 type, float feedspeed, bool& feedf)
 
 	FeedTex->SetColor({ Color_RGB.x,Color_RGB.y,Color_RGB.z,m_Alpha });
 	//アルファ値の範囲指定
-	Helper::GetInstance()->Clamp(m_Alpha, 0.f, 1.f);
+	Helper::Clamp(m_Alpha, 0.f, 1.f);
 }
 
 void Feed2::Draw2()

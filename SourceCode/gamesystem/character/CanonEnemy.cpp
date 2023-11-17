@@ -149,7 +149,7 @@ void CanonEnemy::Attack() {
 	const int l_TargetTimer = 200;
 
 	if (_CanonType == CANON_SET) {
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			coolTimer = {};
 			_CanonType = CANON_THROW;
 		}
@@ -178,7 +178,7 @@ void CanonEnemy::Attack() {
 void CanonEnemy::Teleport() {
 	const int l_TargetTimer = 200;
 	
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -206,8 +206,8 @@ void CanonEnemy::BirthMagic() {
 	if (magic.State == MAGIC_BIRTH) {			//魔法陣を広げる
 		magic.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
 		
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
-			if (Helper::GetInstance()->CheckMin(magic.Timer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
+			if (Helper::CheckMin(magic.Timer, l_TargetTimer, 1)) {
 				m_Warp = true;
 				magic.Frame = {};
 				magic.AfterScale = {};
@@ -218,7 +218,7 @@ void CanonEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 	else {			//魔法陣を縮める
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
 			magic.Alive = false;
@@ -232,7 +232,7 @@ void CanonEnemy::WarpEnemy() {
 	l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.5f;
 			enemywarp.State = WARP_END;
@@ -243,7 +243,7 @@ void CanonEnemy::WarpEnemy() {
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
 	else {			//キャラが大きくなっている
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
 			m_Warp = false;
