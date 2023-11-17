@@ -9,8 +9,8 @@
 Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
 	//本当は4~7
-	int width = Helper::GetInstance()->GetRanNum(4, 4);
-	int height = Helper::GetInstance()->GetRanNum(0, 3);
+	int width = Helper::GetRanNum(4, 4);
+	int height = Helper::GetRanNum(0, 3);
 	m_NowHeight = height;
 	m_NowWidth = width;
 	return StagePanel::GetInstance()->SetPositon(m_NowWidth, m_NowHeight);
@@ -32,9 +32,9 @@ void InterEnemy::Update() {
 		Action();
 	}
 	const int l_BasePanelCount = 4;
-	Helper::GetInstance()->CheckMax(m_DamegeTimer, 0, -1);
+	Helper::CheckMax(m_DamegeTimer, 0, -1);
 	//表示用のHP
-	Helper::GetInstance()->Clamp(m_HP, 0.0f, m_MaxHP);
+	Helper::Clamp(m_HP, 0.0f, m_MaxHP);
 
 	m_InterHP = (int)(m_HP);
 
@@ -165,21 +165,21 @@ void InterEnemy::BirthPoisonParticle() {
 //HPの割合
 float InterEnemy::HpPercent() {
 	float temp = m_HP / m_MaxHP;
-	Helper::GetInstance()->Clamp(temp, 0.0f, 1.0f);
+	Helper::Clamp(temp, 0.0f, 1.0f);
 	return temp;
 }
 //スプライトを敵の市に出す
 void InterEnemy::WorldDivision() {
-	Camera* camera = Helper::GetInstance()->GetCamera();
+	Camera* camera = Helper::GetCamera();
 	m_MatView = camera->GetViewMatrix();
 	m_MatProjection = camera->GetProjectionMatrix();
 	m_MatPort = camera->GetViewPort();
 	//HPバー
 	XMVECTOR tex2DPos = { m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.25f };
-	tex2DPos = Helper::GetInstance()->PosDivi(tex2DPos, m_MatView, false);
-	tex2DPos = Helper::GetInstance()->PosDivi(tex2DPos, m_MatProjection, true);
-	tex2DPos = Helper::GetInstance()->WDivision(tex2DPos, false);
-	tex2DPos = Helper::GetInstance()->PosDivi(tex2DPos, m_MatPort, false);
+	tex2DPos = Helper::PosDivi(tex2DPos, m_MatView, false);
+	tex2DPos = Helper::PosDivi(tex2DPos, m_MatProjection, true);
+	tex2DPos = Helper::WDivision(tex2DPos, false);
+	tex2DPos = Helper::PosDivi(tex2DPos, m_MatPort, false);
 
 	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 
@@ -195,7 +195,7 @@ void InterEnemy::WorldDivision() {
 //UIのためのHP管理
 void InterEnemy::HPManage() {
 	for (auto i = 0; i < _drawnumber.size(); i++) {
-		m_DigitNumber[i] = Helper::GetInstance()->getDigits(m_InterHP, i, i);
+		m_DigitNumber[i] = Helper::getDigits(m_InterHP, i, i);
 	}
 }
 
@@ -240,7 +240,7 @@ void InterEnemy::BirthDamage(const float Damage) {
 	else {
 		int l_DightDamage[DAMAGE_MAX];
 		for (auto i = 0; i < DAMAGE_MAX; i++) {
-			l_DightDamage[i] = Helper::GetInstance()->getDigits(l_InterDamage, i, i);
+			l_DightDamage[i] = Helper::getDigits(l_InterDamage, i, i);
 			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
 			_newnumber->GetCameraData();
 			if (i == 0) {

@@ -142,7 +142,7 @@ void ResultSkill::Move() {
 		static float frame = 0.f;
 		static float addFrame = 1.f / 15.f;
 
-		if (Helper::GetInstance()->FrameCheck(frame, addFrame)) {
+		if (Helper::FrameCheck(frame, addFrame)) {
 			oldFrame = nowFrame;
 			isMove = false;
 			frame = 0.f;
@@ -177,9 +177,9 @@ void ResultSkill::Move() {
 }
 
 void ResultSkill::RandShineInit() {
-	float posX = (float)Helper::GetInstance()->GetRanNum(64, 1216);
-	float posY = (float)Helper::GetInstance()->GetRanNum(64, 240);
-	float frame = (float)Helper::GetInstance()->GetRanNum(30, 45);
+	float posX = (float)Helper::GetRanNum(64, 1216);
+	float posY = (float)Helper::GetRanNum(64, 240);
+	float frame = (float)Helper::GetRanNum(30, 45);
 	ShineEffect itr;
 	itr.tex = IKESprite::Create(ImageManager::SHINE, { posX,posY });
 	itr.tex->SetAnchorPoint({ 0.5f,0.5f });
@@ -190,7 +190,7 @@ void ResultSkill::RandShineInit() {
 
 void ResultSkill::ShineEffectUpdate() {
 	for (ShineEffect& shine : shines) {
-		if (Helper::GetInstance()->FrameCheck(shine.frame, 1 / shine.kFrame)) {
+		if (Helper::FrameCheck(shine.frame, 1 / shine.kFrame)) {
 			RandShineInit();
 			shine.isVanish = true;
 		} else {

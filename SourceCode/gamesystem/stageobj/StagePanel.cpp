@@ -156,22 +156,22 @@ void StagePanel::RandomPanel(int num) {
 	for (int i = 0; i < num; i++) {
 		bool isSet = false;
 		//乱数の設定
-		int width = Helper::GetInstance()->GetRanNum(0, 3);
-		int height = Helper::GetInstance()->GetRanNum(0, 3);
+		int width = Helper::GetRanNum(0, 3);
+		int height = Helper::GetRanNum(0, 3);
 
 		//パネル探索（開いてるのが3追加の場合書いてない）
 
 		while (!isSet) {
 			if (panels[width][height].type != NO_PANEL ||
 				(width == p_width && height == p_height)) {
-				width = Helper::GetInstance()->GetRanNum(0, 3);
-				height = Helper::GetInstance()->GetRanNum(0, 3);
+				width = Helper::GetRanNum(0, 3);
+				height = Helper::GetRanNum(0, 3);
 			} else {
 				isSet = true;
 			}
 		}
 		//これは変えなくていい
-		int r_type = Helper::GetInstance()->GetRanNum(1, 3);
+		int r_type = Helper::GetRanNum(1, 3);
 
 		panels[width][height].type = SKILL_PANEL;
 		//アクションのセット
@@ -289,15 +289,15 @@ void StagePanel::EnemyHitReset() {
 XMFLOAT3 StagePanel::EnemySetPanel() {
 	bool isSet = false;
 	//乱数の設定
-	int width = Helper::GetInstance()->GetRanNum(4, 7);
-	int height = Helper::GetInstance()->GetRanNum(0, 3);
+	int width = Helper::GetRanNum(4, 7);
+	int height = Helper::GetRanNum(0, 3);
 
 	//パネル探索（敵がいる場合は再検索）
 
 	while (!isSet) {
 		if (panels[width][height].isEnemyHit) {
-			width = Helper::GetInstance()->GetRanNum(4, 7);
-			height = Helper::GetInstance()->GetRanNum(0, 3);
+			width = Helper::GetRanNum(4, 7);
+			height = Helper::GetRanNum(0, 3);
 		}
 		else {
 			isSet = true;
@@ -309,15 +309,15 @@ XMFLOAT3 StagePanel::EnemySetPanel() {
 void StagePanel::PoisonSetPanel(int& width, int& height) {
 	bool isSet = false;
 	//乱数の設定
-	int l_width = Helper::GetInstance()->GetRanNum(0, 3);
-	int l_height = Helper::GetInstance()->GetRanNum(0, 3);
+	int l_width = Helper::GetRanNum(0, 3);
+	int l_height = Helper::GetRanNum(0, 3);
 
 	//パネル探索（敵がいる場合は再検索）
 
 	while (!isSet) {
 		if (panels[l_width][l_height].isPoison) {
-			l_width = Helper::GetInstance()->GetRanNum(0, 3);
-			l_height = Helper::GetInstance()->GetRanNum(0, 3);
+			l_width = Helper::GetRanNum(0, 3);
+			l_height = Helper::GetRanNum(0, 3);
 		}
 		else {
 			panels[l_width][l_height].isPoison = true;
@@ -334,7 +334,7 @@ void StagePanel::PoisonUpdate() {
 			if (panels[i][j].isPoison) {
 				panels[i][j].PoisonTimer++;
 
-				if (Helper::GetInstance()->CheckMin(panels[i][j].PoisonTimer, l_TargetTimer, 1)) {
+				if (Helper::CheckMin(panels[i][j].PoisonTimer, l_TargetTimer, 1)) {
 					panels[i][j].isPoison = false;
 					panels[i][j].PoisonTimer = {};
 				}

@@ -143,7 +143,7 @@ void HaveResultSkill::Move() {
 		static float frame = 0.f;
 		static float addFrame = 1.f / 15.f;
 
-		if (Helper::GetInstance()->FrameCheck(frame, addFrame)) {
+		if (Helper::FrameCheck(frame, addFrame)) {
 			m_isMove = false;
 			frame = 0.f;
 		}

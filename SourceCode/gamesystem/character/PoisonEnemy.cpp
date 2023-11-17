@@ -142,7 +142,7 @@ void PoisonEnemy::Attack() {
 	const int l_TargetTimer = 200;
 
 	if (_PoisonType == Poison_SET) {
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			coolTimer = {};
 			_PoisonType = Poison_THROW;
 		}
@@ -171,7 +171,7 @@ void PoisonEnemy::Attack() {
 void PoisonEnemy::Teleport() {
 	const int l_TargetTimer = 200;
 
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -198,8 +198,8 @@ void PoisonEnemy::BirthMagic() {
 	if (magic.State == MAGIC_BIRTH) {			//–‚–@w‚ðL‚°‚é
 		magic.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
 
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
-			if (Helper::GetInstance()->CheckMin(magic.Timer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
+			if (Helper::CheckMin(magic.Timer, l_TargetTimer, 1)) {
 				m_Warp = true;
 				magic.Frame = {};
 				magic.AfterScale = {};
@@ -210,7 +210,7 @@ void PoisonEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 	else {			//–‚–@w‚ðk‚ß‚é
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
 			magic.Alive = false;
@@ -224,7 +224,7 @@ void PoisonEnemy::WarpEnemy() {
 	l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//ƒLƒƒƒ‰‚ª¬‚³‚­‚È‚é
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.5f;
 			enemywarp.State = WARP_END;
@@ -235,7 +235,7 @@ void PoisonEnemy::WarpEnemy() {
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
 	else {			//ƒLƒƒƒ‰‚ª‘å‚«‚­‚È‚Á‚Ä‚¢‚é
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
 			m_Warp = false;

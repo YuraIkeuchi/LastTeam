@@ -32,7 +32,7 @@ void AttackArea::InitState(const int width, const int height) {
 void AttackArea::Update() {
 	const int l_TargetTimer = 10;
 
-	if (Helper::GetInstance()->CheckMin(m_AliveTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(m_AliveTimer, l_TargetTimer, 1)) {
 		GameStateManager::GetInstance()->SetBuff(false);
 		m_Alive = false;
 	}

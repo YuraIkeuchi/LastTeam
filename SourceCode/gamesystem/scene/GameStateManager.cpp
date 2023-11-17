@@ -105,7 +105,7 @@ void GameStateManager::Update() {
 		}
 		m_CounterTimer++;
 
-		if (Helper::GetInstance()->CheckMin(m_CounterTimer, 20, 1)) {		//一定フレームでカウンター終了
+		if (Helper::CheckMin(m_CounterTimer, 20, 1)) {		//一定フレームでカウンター終了
 			m_Counter = false;
 			m_CounterTimer = {};
 		}
@@ -309,8 +309,8 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 void GameStateManager::UseSkill() {
 	if (m_AllActCount == 0) { return; }
 	if (!m_Delay) { return; }
-	m_ChargeScale = Helper::GetInstance()->Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
-	if (Helper::GetInstance()->CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
+	m_ChargeScale = Helper::Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
+	if (Helper::CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
 		if (m_Act[0].SkillType == 0) {
 			BirthArea();
 		}
@@ -477,7 +477,7 @@ void GameStateManager::InDeck() {
 
 bool GameStateManager::SkillRecycle() {
 	//if (!m_IsRecycle) { return false; }
-	//if (Helper::GetInstance()->GetRanNum(0, 100) > 20) {
+	//if (Helper::GetRanNum(0, 100) > 20) {
 	//	return false;
 	//}
 

@@ -174,7 +174,7 @@ void TutorialScene::Finalize() {
 }
 //�ŏ��̌��
 void TutorialScene::IntroState() {
-	if (Helper::GetInstance()->CheckMin(m_Timer, 150, 1)) {
+	if (Helper::CheckMin(m_Timer, 150, 1)) {
 		_nowstate = TUTORIAL_MOVE;
 		m_Timer = {};
 	
@@ -182,7 +182,7 @@ void TutorialScene::IntroState() {
 }
 //�ړ�
 void TutorialScene::MoveState() {
-	if (Helper::GetInstance()->CheckMin(m_Timer, 50, 1)) {
+	if (Helper::CheckMin(m_Timer, 50, 1)) {
 		m_Timer = {};
 		TutorialTask::GetInstance()->SetTutorialState(TASK_BIRTH_BEFORE);
 	}
@@ -203,7 +203,7 @@ void TutorialScene::GetState() {
 }
 //�U��
 void TutorialScene::AttackState() {
-	Helper::GetInstance()->CheckMin(m_Timer, 410, 1);
+	Helper::CheckMin(m_Timer, 410, 1);
 
 	if (m_Timer == 200) {
 		text_->SetConversation(TextManager::TUTORIAL_MARK);
@@ -238,7 +238,7 @@ void TutorialScene::DamageState() {
 }
 //�`���[�g���A���I���
 void TutorialScene::TutorialEnd() {
-	if (Helper::GetInstance()->CheckMin(m_Timer, 200, 1)) {
+	if (Helper::CheckMin(m_Timer, 200, 1)) {
 		m_Timer = {};
 		m_End = true;
 	}

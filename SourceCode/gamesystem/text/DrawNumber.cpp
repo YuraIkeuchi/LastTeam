@@ -42,16 +42,16 @@ void DrawNumber::SetExplain(const XMFLOAT3& pos) {
 	//ワールド座標に変換する
 	XMVECTOR texHPFirst;
 	texHPFirst = { pos.x, pos.y, pos.z };
-	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatView, false);
-	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatProjection, true);
-	texHPFirst = Helper::GetInstance()->WDivision(texHPFirst, false);
-	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatPort, false);
+	texHPFirst = Helper::PosDivi(texHPFirst, m_MatView, false);
+	texHPFirst = Helper::PosDivi(texHPFirst, m_MatProjection, true);
+	texHPFirst = Helper::WDivision(texHPFirst, false);
+	texHPFirst = Helper::PosDivi(texHPFirst, m_MatPort, false);
 
 	m_Position = { texHPFirst.m128_f32[0],texHPFirst.m128_f32[1] };
 }
 //カメラ情報
 void DrawNumber::GetCameraData() {
-	Camera* camera = Helper::GetInstance()->GetCamera();
+	Camera* camera = Helper::GetCamera();
 	m_MatView = camera->GetViewMatrix();
 	m_MatProjection = camera->GetProjectionMatrix();
 	m_MatPort = camera->GetViewPort();

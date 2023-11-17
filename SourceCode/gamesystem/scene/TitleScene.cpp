@@ -12,9 +12,6 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
 
-	text_ = make_unique<TextManager>();
-	text_->Initialize(dxCommon);
-	text_->SetConversation(TextManager::TITLE);
 	if (!s_GameLoop) {
 		SceneChanger::GetInstance()->Initialize();
 		s_GameLoop = true;
@@ -50,8 +47,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	enemy->Initialize();
 
 	//カード
-	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
-	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
+	title_ = IKESprite::Create(ImageManager::TITLETEXT, { 0.0f,0.0f });
 	GameStateManager::GetInstance()->DeckReset();
 }
 //更新
@@ -118,9 +114,8 @@ void TitleScene::Draw(DirectXCommon* dxCommon) {
 }
 //前面描画
 void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
-	text_->TestDraw(dxCommon);
 	IKESprite::PreDraw();
-	title_[TITLE_TEXT]->Draw();
+	title_->Draw();
 	IKESprite::PostDraw();
 	SceneChanger::GetInstance()->Draw();
 
@@ -128,7 +123,7 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 //背面描画
 void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
-	title_[TITLE_BACK]->Draw();
+	//title_[TITLE_BACK]->Draw();
 	IKESprite::PostDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
 	player_->Draw(dxCommon);

@@ -89,7 +89,7 @@ void PredictArea::ResetPredict() {
 //予測エリアのフラッシュ
 void PredictArea::FlashArea() {
 	if (m_FlashStart) {
-		m_AddAngle = Helper::GetInstance()->Lerp(10.0f, 20.0f,m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
+		m_AddAngle = Helper::Lerp(10.0f, 20.0f,m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
 		//sin波によって上下に動く
 		m_SinAngle += m_AddAngle;
 		m_SinAngle2 = m_SinAngle * (3.14f / 180.0f);

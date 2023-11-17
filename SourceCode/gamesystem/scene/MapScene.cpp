@@ -165,7 +165,7 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 		return;
 	}
 
-	if (Helper::GetInstance()->FrameCheck(eFrame, eAdd)) {
+	if (Helper::FrameCheck(eFrame, eAdd)) {
 		eAdd *= -1.0f;
 		eFrame = 0.99f;
 	}
@@ -243,7 +243,7 @@ void MapScene::BackDraw(DirectXCommon* dxCommon) {
 MapScene::UI MapScene::RandPannel() {
 	int min = ImageManager::MAP_NORMAL;
 	int max = ImageManager::MAP_BOSS;
-	int r = Helper::GetInstance()->GetRanNum(min, max);
+	int r = Helper::GetRanNum(min, max);
 
 	UI itr;
 	if (r == min) {
@@ -278,7 +278,7 @@ void MapScene::RoadUpdate() {
 
 void MapScene::MapCreate() {
 	string csv_ = "Resources/csv/map.csv";
-	int r_num = Helper::GetInstance()->GetRanNum(0, 3);
+	int r_num = Helper::GetRanNum(0, 3);
 	//テストプレイ用
 	r_num = 4;
 	//mapのあとに数字をくっつける
@@ -517,7 +517,7 @@ void MapScene::Move() {
 
 	}
 	if (moved) {
-		if (Helper::GetInstance()->FrameCheck(mov_frame, 1 / kMoveFrame)) {
+		if (Helper::FrameCheck(mov_frame, 1 / kMoveFrame)) {
 			moved = false;
 			onomatoFrame = 0.f;
 			m_State = State::checkState;
@@ -555,8 +555,8 @@ void MapScene::InitState() {
 	static float scrollFrame = 0.0f;
 	static float s_frame = 0.0f;
 	static XMFLOAT2 size = {};
-	if (Helper::GetInstance()->FrameCheck(scrollFrame, addFrameS)) {
-		if (Helper::GetInstance()->FrameCheck(s_frame, addFrame)) {
+	if (Helper::FrameCheck(scrollFrame, addFrameS)) {
+		if (Helper::FrameCheck(s_frame, addFrame)) {
 			m_State = State::mainState;
 			scrollFrame = 0.0f;
 			s_frame = 0.0f;
@@ -613,8 +613,8 @@ void MapScene::CheckState() {
 	}
 
 	if (UIs[nowHierarchy][nowIndex].Tag == TUTORIAL) {
-		if (Helper::GetInstance()->FrameCheck(delayFrame, 1 / 20.f)) {
-			if (Helper::GetInstance()->FrameCheck(s_frame, addFrame)) {
+		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
+			if (Helper::FrameCheck(s_frame, addFrame)) {
 				Input* input = Input::GetInstance();
 				if (input->TriggerButton(input->B)) {
 					size = {};
@@ -642,9 +642,9 @@ void MapScene::CheckState() {
 			cheack->SetSize({ 0.0f,0.0f });
 		}
 	} else {
-		if (Helper::GetInstance()->FrameCheck(delayFrame, 1 / 20.f)) {
+		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
 			SceneChanger::GetInstance()->SetChangeStart(true);
-			int num = Helper::GetInstance()->GetRanNum(1, 2);
+			int num = Helper::GetRanNum(1, 2);
 			std::stringstream ss;
 			if (nowHierarchy != MaxLength) {
 				ss << "Resources/csv/EnemySpawn/BattleMap0" << 1 << ".csv";
