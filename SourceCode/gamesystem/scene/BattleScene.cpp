@@ -156,6 +156,7 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	enemyManager->Draw(dxCommon);
+	StagePanel::GetInstance()->ActDraw(dxCommon);
 	IKEObject3d::PostDraw();
 }
 //ImGui
@@ -163,7 +164,8 @@ void BattleScene::ImGuiDraw() {
 	//player_->ImGuiDraw();
 	//GameStateManager::GetInstance()->ImGuiDraw();
 	//game_object_manager_->ImGuiDraw();
-	enemyManager->ImGuiDraw();
+	//enemyManager->ImGuiDraw();
+	StagePanel::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

@@ -66,11 +66,22 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(MAGIC, L"Resources/2d/objicon/magic.png");
 	IKETexture::LoadTexture(CHARGE, L"Resources/2d/objicon/impact.png");
 	IKETexture::LoadTexture(SHADOW, L"Resources/2d/objicon/shadow.png");
+	IKETexture::LoadTexture(SHADOW2, L"Resources/2d/objicon/shadow2.png");
 	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/DamageArea.png"); 
 	IKETexture::LoadTexture(PLAYERAREA, L"Resources/2d/objicon/PlayerAttack.png");
 	IKETexture::LoadTexture(POISONAREA, L"Resources/2d/objicon/PoizonAttack.png");
 	IKETexture::LoadTexture(ENEMYPREDICT, L"Resources/2d/objicon/Predict.png");
 	IKETexture::LoadTexture(PLAYERPREDICT, L"Resources/2d/objicon/PlayerPredict.png");
+	IKETexture::LoadTexture(ATTACK_TEX_0, L"Resources/2d/objicon/AttackSKill/Skill0.png");
+	IKETexture::LoadTexture(ATTACK_TEX_1, L"Resources/2d/objicon/AttackSKill/Skill1.png");
+	IKETexture::LoadTexture(ATTACK_TEX_2, L"Resources/2d/objicon/AttackSKill/Skill2.png");
+	IKETexture::LoadTexture(ATTACK_TEX_3, L"Resources/2d/objicon/AttackSKill/Skill3.png");
+	IKETexture::LoadTexture(ATTACK_TEX_4, L"Resources/2d/objicon/AttackSKill/Skill4.png");
+	IKETexture::LoadTexture(ATTACK_TEX_5, L"Resources/2d/objicon/AttackSKill/Skill5.png");
+	IKETexture::LoadTexture(ATTACK_TEX_6, L"Resources/2d/objicon/AttackSKill/Skill6.png");
+	IKETexture::LoadTexture(ATTACK_TEX_7, L"Resources/2d/objicon/AttackSKill/Skill7.png");
+	IKETexture::LoadTexture(ATTACK_TEX_8, L"Resources/2d/objicon/AttackSKill/Skill8.png");
+	IKETexture::LoadTexture(ATTACK_TEX_9, L"Resources/2d/objicon/AttackSKill/Skill9.png");
 }
 
 //非同期処理でのテクスチャの読み込み

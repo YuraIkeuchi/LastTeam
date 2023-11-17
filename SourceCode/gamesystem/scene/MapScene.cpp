@@ -1,4 +1,4 @@
-#include "MapScene.h"
+﻿#include "MapScene.h"
 #include <ImageManager.h>
 #include <Helper.h>
 #include "CsvLoader.h"

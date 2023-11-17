@@ -155,6 +155,7 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 		player_->Draw(dxCommon);
 		enemy->Draw(dxCommon);
 	}
+	StagePanel::GetInstance()->ActDraw(dxCommon);
 
 }
 //ImGui
