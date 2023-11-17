@@ -266,10 +266,9 @@ void GameStateManager::BirthArea() {
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
 			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0)) && (AreaX < 8)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
+				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player");
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(m_Act[0].ActDamage);
-				newarea->SetName("Player");
 				newarea->SetStateName(m_Act[0].StateName);
 				attackarea.emplace_back(std::move(newarea));
 			}

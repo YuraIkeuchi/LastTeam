@@ -59,7 +59,9 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(MAGIC, L"Resources/2d/objicon/magic.png");
 	IKETexture::LoadTexture(CHARGE, L"Resources/2d/objicon/impact.png");
 	IKETexture::LoadTexture(SHADOW, L"Resources/2d/objicon/shadow.png");
-	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/DamageArea.png");
+	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/DamageArea.png"); 
+	IKETexture::LoadTexture(PLAYERAREA, L"Resources/2d/objicon/PlayerAttack.png");
+	IKETexture::LoadTexture(POISONAREA, L"Resources/2d/objicon/PoizonAttack.png");
 	IKETexture::LoadTexture(ENEMYPREDICT, L"Resources/2d/objicon/Predict.png");
 	IKETexture::LoadTexture(PLAYERPREDICT, L"Resources/2d/objicon/PlayerPredict.png");
 }
