@@ -266,10 +266,9 @@ void GameStateManager::BirthArea() {
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
 			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0)) && (AreaX < 8)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
+				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player");
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(m_Act[0].ActDamage);
-				newarea->SetName("Player");
 				newarea->SetStateName(m_Act[0].StateName);
 				attackarea.emplace_back(std::move(newarea));
 			}
@@ -344,7 +343,8 @@ void GameStateManager::GaugeUpdate() {
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReloadDamage) {
-			//エネミーに5ダメージ
+			//エネミーに3ダメージ
+			m_ReloadDamage = true;
 		}
 		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();
@@ -491,6 +491,7 @@ void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
 	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size(),m_dxCommon);
 	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size(), m_dxCommon);
+	resultSkill->SetIsBattle(isBattleFromMap);
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
 	m_PredictTimer = {};
 	isFinish = true;

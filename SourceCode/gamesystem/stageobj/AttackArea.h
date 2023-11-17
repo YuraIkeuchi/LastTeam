@@ -16,7 +16,7 @@ protected:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	AttackArea();
+	AttackArea(string& m_Name);
 public:
 	//‰Šú‰»
 	bool Initialize();

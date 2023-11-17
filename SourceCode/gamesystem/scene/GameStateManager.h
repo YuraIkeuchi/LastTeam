@@ -97,7 +97,7 @@ public:
 	/// 敵を倒したら最初の処理
 	/// </summary>
 	void StageClearInit();
-	void SetEnemySpawnText(string& text) { enemySpawnText = text; }
+	void SetEnemySpawnText(string& text, bool isBattle=true) { enemySpawnText = text; isBattleFromMap = isBattle; }
 	string& GetEnemySpawnText() { return enemySpawnText; }
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetResetPredict(const bool ResetPredict) { this->m_ResetPredict = ResetPredict; }
@@ -107,6 +107,10 @@ public:
 	//void SetPlayer(std::weak_ptr<Player> player) { player_ = player; }
 	// 仮
 	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
+
+
+	void SetIsReloadDamage(bool flag) { m_ReloadDamage = flag; }
+	bool GetIsReloadDamage() { return m_ReloadDamage; }
 
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
@@ -166,7 +170,7 @@ private:
 
 
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
-
+	bool isBattleFromMap = true;
 	enum SkillType {
 		SKILL_NORMAL,
 		SKILL_STRONG,
@@ -180,6 +184,7 @@ private:
 	float kGaugeCountMax = 180;
 	bool m_IsReload = true;
 	bool m_IsReloadDamage = false;
+	bool m_ReloadDamage = false;
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
 	bool m_IsDrainUp = false;
@@ -193,7 +198,6 @@ private:
 
 	vector <int> m_StartNumber = { 0,1,2 };
 	vector<int> m_DeckNumber = m_StartNumber;
-
 
 	vector<int> m_NotDeckNumber = {};
 

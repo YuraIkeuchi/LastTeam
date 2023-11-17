@@ -4,8 +4,13 @@
 #include <GameStateManager.h>
 #include <Helper.h>
 //“Ç‚Ýž‚Ý
-AttackArea::AttackArea() {
-	panels.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+AttackArea::AttackArea(string& m_Name) {
+	this->m_Name = m_Name;
+	UINT texNum = ImageManager::AREA;
+	if (this->m_Name =="Player") {
+		texNum = ImageManager::PLAYERAREA;
+	}
+	panels.tex = std::make_unique<IKETexture>(texNum, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
 	panels.tex->TextureCreate();
 	panels.tex->Initialize();
 	panels.tex->SetScale({ 0.2f,0.2f,0.2f });
@@ -38,6 +43,9 @@ void AttackArea::Update() {
 	}
 
 	panels.color = { 1.0f,0.3f,0.0f,1.0f };
+	if (this->m_Name == "Player") {
+		panels.color = { 1.0f,1.0f,1.0f,1.0f };
+	}
 	panels.tex->Update();
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor(panels.color);

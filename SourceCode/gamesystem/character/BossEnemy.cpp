@@ -280,21 +280,19 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 	if (name == "Row") {			//横一列
 		for (auto i = 0; i < m_Area.size(); i++) {
 			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
+				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Enemy");
 				newarea->Initialize();
 				newarea->InitState(i, Height);
 				newarea->SetDamage(20.0f);
-				newarea->SetName("Enemy");
 				attackarea.emplace_back(std::move(newarea));
 			}
 		}
 	}
 	else {		//ランダム(プレイヤーから近います)
-		std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
+		std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Enemy");
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
 		newarea->SetDamage(20.0f);
-		newarea->SetName("Enemy");
 		attackarea.emplace_back(std::move(newarea));
 	}
 	predictarea->ResetPredict();

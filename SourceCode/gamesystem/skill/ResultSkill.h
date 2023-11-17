@@ -59,10 +59,10 @@ private:
 	void BirthArea(ResultUI& resultUI);
 public:
 	void SetPlayer(Player* player) { this->player_ = player; }
-
+	void SetIsBattle(bool isBattle) { this->isBattle = isBattle; }
 private:
 	bool isStart = false;
-	Player* player_;
+	Player* player_=nullptr;
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;
@@ -76,5 +76,6 @@ private:
 	std::list<ResultUI> pickSkills;
 	std::list<ShineEffect> shines;
 	bool m_Choice = false;
+	bool isBattle = false;
 };
 

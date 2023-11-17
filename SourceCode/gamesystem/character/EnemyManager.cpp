@@ -98,6 +98,12 @@ void EnemyManager::DrainHealUp() {
 	}
 }
 
+void EnemyManager::ReLoadDamage() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SimpleDamege(3.f);
+	}
+}
+
 void EnemyManager::Spawn2Map() {
 	string csv_ = GameStateManager::GetInstance()->GetEnemySpawnText();
 	std::string line;
