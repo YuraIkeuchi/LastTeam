@@ -304,10 +304,9 @@ void SkillManager::DeckCheck(const int DeckNumber, const int DeckCount) {
 }
 void SkillManager::PushOnce2Deck(const int DeckNumber) {
 	DeckUI* newdeckUi = nullptr;
-	newdeckUi = new DeckUI();
+	newdeckUi = new DeckUI(DeckNumber);
 	newdeckUi->Initialize();
 	newdeckUi->InitState((int)deckui.size());
-	newdeckUi->SetID(DeckNumber);
 	newdeckUi->SetType((int)skill[DeckNumber]->GetSkillType());
 	deckui.emplace_back(newdeckUi);
 	m_DeckNum = (int)deckui.size();
@@ -329,13 +328,12 @@ void SkillManager::SetDeckState(const int DeckNum) {
 void SkillManager::BirthDeckUI(const int DeckNumber, const int DeckCount) {
 	//デッキUIのセット
 	DeckUI* newdeckUi = nullptr;
-	newdeckUi = new DeckUI();
+	newdeckUi = new DeckUI(DeckNumber);
 	newdeckUi->Initialize();
 	newdeckUi->InitState(DeckCount);
 	deckui.emplace_back(newdeckUi);
 	//手に入れたスキルのUIの更新
 	for (auto i = 0; i < m_DeckDate.size(); i++) {
-		deckui[i]->SetID(m_DeckDate[i]);
 		deckui[i]->SetType((int)skill[m_DeckDate[i]]->GetSkillType());
 	}
 }

@@ -209,7 +209,7 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	resultUI.position = pos;
 	resultUI.isSkill = isSkill;
 	if (resultUI.isSkill) {
-		resultUI.icon = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
+		resultUI.icon = IKESprite::Create(ImageManager::ATTACK_0 + id, { 0.0f,0.0f });
 		resultUI.number = make_unique<DrawNumber>();
 		resultUI.number->Initialize();
 		resultUI.number->SetNumber(resultUI.ID);

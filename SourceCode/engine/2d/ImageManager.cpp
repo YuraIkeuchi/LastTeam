@@ -12,7 +12,6 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(FEED, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(SHINE, L"Resources/2d/effect/shine.png");
 	IKESprite::LoadTexture(SKILLUI, L"Resources/2d/objicon/skill.png");
-	IKESprite::LoadTexture(ACTIONUI, L"Resources/2d/objicon/action.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 	IKESprite::LoadTexture(HPNUMBERUI, L"Resources/2d/objicon/Num.png");
 	IKESprite::LoadTexture(MAPSCREEN, L"Resources/2d/sceneback/mapscreen.png");
@@ -45,7 +44,16 @@ void ImageManager::StartLoad2D()
 
 	IKESprite::LoadTexture(RESULTBACKSCREEN, L"Resources/2d/sceneback/ResultSkill_BS.png");
 	IKESprite::LoadTexture(RESULTATTACKAREA, L"Resources/2d/objicon/AttackArea.png");
-
+	IKESprite::LoadTexture(ATTACK_0, L"Resources/2d/objicon/AttackSKill/Skill0.png");
+	IKESprite::LoadTexture(ATTACK_1, L"Resources/2d/objicon/AttackSKill/Skill1.png");
+	IKESprite::LoadTexture(ATTACK_2, L"Resources/2d/objicon/AttackSKill/Skill2.png");
+	IKESprite::LoadTexture(ATTACK_3, L"Resources/2d/objicon/AttackSKill/Skill3.png");
+	IKESprite::LoadTexture(ATTACK_4, L"Resources/2d/objicon/AttackSKill/Skill4.png");
+	IKESprite::LoadTexture(ATTACK_5, L"Resources/2d/objicon/AttackSKill/Skill5.png");
+	IKESprite::LoadTexture(ATTACK_6, L"Resources/2d/objicon/AttackSKill/Skill6.png");
+	IKESprite::LoadTexture(ATTACK_7, L"Resources/2d/objicon/AttackSKill/Skill7.png");
+	IKESprite::LoadTexture(ATTACK_8, L"Resources/2d/objicon/AttackSKill/Skill8.png");
+	IKESprite::LoadTexture(ATTACK_9, L"Resources/2d/objicon/AttackSKill/Skill9.png");
 }
 
 //非同期処理で読み込むスプライト

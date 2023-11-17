@@ -244,9 +244,9 @@ void GameStateManager::AddSkill(const int SkillType,const int ID, const float da
 void GameStateManager::BirthActUI(const int ID,const int Type) {
 	//アクションUIのセット
 	ActionUI* newactUi = nullptr;
-	newactUi = new ActionUI();
+	newactUi = new ActionUI(ID);
 	newactUi->Initialize();
-	newactUi->InitState(m_AllActCount,ID,Type);
+	newactUi->InitState(m_AllActCount,Type);
 	actui.emplace_back(newactUi);
 
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);
@@ -500,6 +500,6 @@ void GameStateManager::BirthBuff() {
 	m_Buff = true;		//一旦中身はこれだけ
 }
 void GameStateManager::DeckReset() {
-	m_DeckNumber.resize(3);
-	m_DeckNumber = { 0,1,6 };
+	m_DeckNumber.resize((int)(m_StartNumber.size()));
+	m_DeckNumber = m_StartNumber;
 }

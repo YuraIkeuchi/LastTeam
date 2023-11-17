@@ -15,12 +15,12 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	ActionUI();
+	ActionUI(const int ID);
 
 	//初期化
 	void Initialize();
 	//ステータスセット
-	void InitState(const int ActCount,const int ID,const int Type);
+	void InitState(const int ActCount,const int Type);
 	//更新
 	void Update();
 	//UIの動き

@@ -100,7 +100,7 @@ void HaveResultSkill::HavePassiveSkill(std::vector<int> Passive,
 void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommon* dxCommon) {
 	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
 	haveSkills[num].position = { l_BasePos.x + (num * 100.0f),l_BasePos.y };
-	haveSkills[num].icon = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
+	haveSkills[num].icon = IKESprite::Create(ImageManager::ATTACK_0 + id, { 0.0f,0.0f });
 	haveSkills[num].icon->SetSize({ 64.0f,64.0f });
 	haveSkills[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	haveSkills[num].icon->SetPosition(haveSkills[num].position);

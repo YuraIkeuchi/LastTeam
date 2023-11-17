@@ -3,11 +3,13 @@
 #include "Easing.h"
 #include <GameStateManager.h>
 #include <Helper.h>
-ActionUI::ActionUI() {
+ActionUI::ActionUI(const int ID) {
+	m_ID = ID;
 	//カード
-	tex = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
+	tex = IKESprite::Create(ImageManager::ATTACK_0 + m_ID, { 0.0f,0.0f });
 	tex->SetAnchorPoint({ 0.5f,0.5f });
 	tex->SetPosition({ -100.0f,800.0f });
+	tex->SetSize({ 64.0f,64.0f });
 
 	//ID用のスプライト
 	_drawnumber = make_unique<DrawNumber>();
@@ -22,20 +24,13 @@ void ActionUI::Initialize() {
 	
 }
 //ステータス初期化
-void ActionUI::InitState(const int ActCount, const int ID,const int Type) {
+void ActionUI::InitState(const int ActCount,const int Type) {
 	m_ActCount = ActCount;
-	m_ID = ID;
 	m_Type = Type;
 }
 //更新
 void ActionUI::Update() {
 	UiMove();
-	if (m_Type == 0) {
-		m_Color = { 1.0f,0.0f,0.0f,1.0f };
-	}
-	else {
-		m_Color = { 0.0f,1.0f,0.0f,1.0f };
-	}
 	tex->SetColor(m_Color);
 	tex->SetSize(m_Size);
 	tex->SetPosition(m_Position);

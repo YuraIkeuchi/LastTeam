@@ -21,7 +21,6 @@ public:
 		FEED,
 		SHINE,
 		SKILLUI,
-		ACTIONUI,
 		ENEMYHPUI,
 		HPNUMBERUI,
 		MAPSCREEN,
@@ -53,6 +52,16 @@ public:
 		ONOMATO_01,
 		RESULTBACKSCREEN,
 		RESULTATTACKAREA,
+		ATTACK_0,
+		ATTACK_1,
+		ATTACK_2,
+		ATTACK_3,
+		ATTACK_4,
+		ATTACK_5,
+		ATTACK_6,
+		ATTACK_7,
+		ATTACK_8,
+		ATTACK_9,
 	};
 	//テクスチャの名前
 	enum tex2dName
