@@ -3,12 +3,13 @@
 #include "Easing.h"
 #include <GameStateManager.h>
 #include <Helper.h>
-DeckUI::DeckUI() {
+DeckUI::DeckUI(const int ID) {
+	m_ID = ID;
 	//カード
-	tex = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
+	tex = IKESprite::Create(ImageManager::ATTACK_0 + m_ID, { 0.0f,0.0f });
 	tex->SetAnchorPoint({ 0.5f,0.5f });
 	tex->SetPosition({ -100.0f,800.0f });
-
+	tex->SetSize({ 64.0f,64.0f });
 	//ID用のスプライト
 	_drawnumber = make_unique<DrawNumber>();
 	_drawnumber->Initialize();
@@ -27,12 +28,6 @@ void DeckUI::InitState(const int ActCount) {
 //更新
 void DeckUI::Update() {
 	UiMove();
-	if (m_Type == 0) {
-		m_Color = { 1.0f,0.0f,0.0f,1.0f };
-	}
-	else {
-		m_Color = { 0.0f,1.0f,0.0f,1.0f };
-	}
 	tex->SetColor(m_Color);
 	tex->SetPosition(m_Position);
 

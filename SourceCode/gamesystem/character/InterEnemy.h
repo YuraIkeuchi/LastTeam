@@ -10,14 +10,13 @@
 #include "Player.h"
 
 using namespace std;         //  名前空間指定
-
-
 //キャラの状態
 enum CharaState {
 	STATE_INTER,
 	STATE_ATTACK,
 	STATE_SPECIAL,
 };
+
 //敵基底
 class InterEnemy :
 	public ObjCommon

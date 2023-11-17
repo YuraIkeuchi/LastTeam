@@ -15,7 +15,7 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	DeckUI();
+	DeckUI(const int ID);
 
 	//èâä˙âª
 	void Initialize();
@@ -35,7 +35,6 @@ public:
 	const bool GetUse() { return m_Use; }
 	void SetActCount(const int ActCount) { m_ActCount = ActCount; }
 	void SetUse(const bool Use) { m_Use = Use; }
-	void SetID(const int ID) { m_ID = ID; }
 	void SetType(const int Type) { m_Type = Type; }
 private:
 	static const int TEX_MAX = 3;
