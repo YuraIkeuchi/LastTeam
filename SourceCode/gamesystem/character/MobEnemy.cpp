@@ -42,7 +42,7 @@ bool MobEnemy::Initialize() {
 
 //行動
 void MobEnemy::Action() {
-	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
+	//StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 	Obj_SetParam();
 	//Collide();		//当たり判定
 	//当たり判定

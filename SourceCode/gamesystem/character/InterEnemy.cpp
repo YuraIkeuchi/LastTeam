@@ -6,6 +6,7 @@
 #include <GameStateManager.h>
 #include <ParticleEmitter.h>
 #include <TutorialTask.h>
+Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
 	//本当は4~7
 	int width = Helper::GetInstance()->GetRanNum(4, 4);
@@ -39,8 +40,8 @@ void InterEnemy::Update() {
 
 	////敵のマスを取得する
 	if (m_EnemyTag == "Normal") {
-		StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight,m_Alive);
 	}
+	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight,m_Alive);
 
 	if (m_HP != 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
@@ -101,7 +102,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			if (name == "DRAIN") {
 				float rate = 0.2f;
 				if (m_IsDrainUp) { rate *= 2.f; }
-				GameStateManager::GetInstance()->GetPlayer().lock()->HealPlayer(damage * rate);		//HP回復
+				player->HealPlayer(damage * rate);		//HP回復
 			}
 			else if (name == "POISON") {
 				m_Poison = true;
@@ -185,8 +186,6 @@ void InterEnemy::PoisonState() {
 		} else {
 			m_HP -= 2.0f;
 		}
-	}
-	else if (m_PoisonTimer % 50 == 0) {		//毒のエフェクト
 		BirthPoisonParticle();
 	}
 

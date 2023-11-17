@@ -45,6 +45,8 @@ private:
 
 	XMFLOAT2 m_Position = {};
 	XMFLOAT4 m_Color = { 1.0f,1.0f,1.0f,1.0f };
+	XMFLOAT2 m_Size = { 64.f,64.f };
+
 	int m_ActCount = {};
 
 	int m_Type = {};

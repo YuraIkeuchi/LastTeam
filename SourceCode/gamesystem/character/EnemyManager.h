@@ -3,7 +3,7 @@
 #include<list>
 #include<memory>
 #include "CsvLoader.h"
-
+#include "Player.h"
 #include "LightGroup.h"
 class EnemyManager {
 protected:
@@ -47,7 +47,11 @@ private:
 	/// csvでマップに敵をスポーン
 	/// </summary>
 	void Spawn2Map();
+public:
+	static void SetPlayer(Player* player) { EnemyManager::player = player; }
+
 private:
+	static Player* player;
 	std::vector<unique_ptr<InterEnemy>> enemys;
 	//丸影(ボス)
 	float BosscircleShadowDir[3] = { 0,-1,0 };

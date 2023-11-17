@@ -1,6 +1,5 @@
 #include "IkeGame.h"
-
-#include "TitleScene.h"
+#include "SceneFactory.h"
 
 using namespace DirectX;
 
@@ -24,7 +23,9 @@ void IkeGame::Initialize(DirectXCommon* dxCommon)
 	//基底クラスの初期化
 	Framework::Initialize(dxCommon);
 	//マネージャーセット
-	SceneManager::GetInstance()->ChangeScene<TitleScene>();
+	sceneFactory_ = new SceneFactory();
+	SceneManager::GetInstance()->SetSceneFactory(sceneFactory_);
+	SceneManager::GetInstance()->ChangeScene("TITLE");
 }
 
 void IkeGame::Update(DirectXCommon* dxCommon)

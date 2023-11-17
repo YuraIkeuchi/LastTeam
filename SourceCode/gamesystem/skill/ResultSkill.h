@@ -7,6 +7,7 @@
 #include "DrawNumber.h"
 #include <TextManager.h>
 #include <ResultAreaUI.h>
+#include <Player.h>
 
 class ResultSkill {
 public:
@@ -16,7 +17,7 @@ public:
 	void Initialize(DirectXCommon* dxCommon);
 	void Update();
 	void Draw(DirectXCommon* dxCommon);
-
+	void ImGuiDraw();
 	void InDeck(std::vector<int>& Deck);
 	void InPassive(std::vector<int>& Passive);
 
@@ -56,8 +57,12 @@ private:
 
 	ResultUI CreateUI(bool isSkill,int id,XMFLOAT2 pos);
 	void BirthArea(ResultUI& resultUI);
+public:
+	void SetPlayer(Player* player) { this->player_ = player; }
+
 private:
 	bool isStart = false;
+	Player* player_;
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;
@@ -70,5 +75,6 @@ private:
 	XMFLOAT2 framePos = BasePos[0];
 	std::list<ResultUI> pickSkills;
 	std::list<ShineEffect> shines;
+	bool m_Choice = false;
 };
 

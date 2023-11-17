@@ -1,13 +1,12 @@
 #pragma once
 #include"DirectXCommon.h"
-#include "ObjCommon.h"
+#include "IKETexture.h"
 #include <DirectXMath.h>
 
 using namespace std;         //  名前空間指定
 
 //攻撃エリアクラス
-class AttackArea :
-public ObjCommon{
+class AttackArea{
 protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	// DirectX::を省略
@@ -20,13 +19,13 @@ public:
 	AttackArea();
 public:
 	//初期化
-	bool Initialize()override;
+	bool Initialize();
 	//ステータス初期化
 	void InitState(const int width, const int height);
 	//更新
-	void Update()override;
+	void Update();
 	//描画
-	void Draw(DirectXCommon* dxCommon)override;
+	void Draw(DirectXCommon* dxCommon);
 	//ImGui
 	void ImGuiDraw();
 private:
@@ -48,6 +47,14 @@ public:
 	void SetDamage(const float Damage) { m_Damage = Damage; }
 	void SetStateName(const std::string name) { StateName = name; }
 private:
+	//パネル
+	struct Panel {
+		unique_ptr<IKETexture> tex = nullptr;
+		XMFLOAT3 position = { 0,0,0 };
+		XMFLOAT4 color = { 1,1,1,1 };
+		bool predict = false;
+	};
+	Panel panels;
 	string m_Name = "none";
 	//生存関係
 	bool m_Alive = false;

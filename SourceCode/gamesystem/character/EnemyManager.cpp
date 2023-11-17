@@ -2,12 +2,13 @@
 #include "NormalEnemy.h"
 #include "CanonEnemy.h"
 #include "BossEnemy.h"
+#include "PoisonEnemy.h"
 #include <StagePanel.h>
-#include <Player.h>
 #include <GameStateManager.h>
 #include <Helper.h>
-
+Player* EnemyManager::player = nullptr;
 EnemyManager::EnemyManager() {
+
 }
 
 EnemyManager::~EnemyManager() {
@@ -29,9 +30,9 @@ void EnemyManager::Update() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 
 		if (enemy->GetState() == STATE_ATTACK) {			//��U�U���ȊO�͎��Ȃ�
-			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos(enemy->GetPosition());
+			player->SetGrazePos(enemy->GetPosition());
 		} else {
-			GameStateManager::GetInstance()->GetPlayer().lock()->SetGrazePos({ 1000.0f,0.0f,0.0f });
+			player->SetGrazePos({ 1000.0f,0.0f,0.0f });
 		}
 		enemy->Update();
 	}
@@ -121,18 +122,28 @@ void EnemyManager::Spawn2Map() {
 				width++;
 			} else if (x == '1') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<NormalEnemy>();
+				enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '2') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<CanonEnemy>();
+				enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '3') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<PoisonEnemy>();
+				enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '4') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy>();
+				enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;

@@ -23,9 +23,9 @@ void Player::LoadResource() {
 		_drawnumber[i] = make_unique<DrawNumber>();
 		_drawnumber[i]->Initialize();
 	}
-	_drawnumber[FIRST_DIGHT]->SetPosition({ 100.0f,620.0f });
-	_drawnumber[SECOND_DIGHT]->SetPosition({ 80.0f,620.0f });
-	_drawnumber[THIRD_DIGHT]->SetPosition({ 60.0f,620.0f });
+	_drawnumber[FIRST_DIGHT]->SetPosition({ 100.0f,600.0f });
+	_drawnumber[SECOND_DIGHT]->SetPosition({ 80.0f,600.0f });
+	_drawnumber[THIRD_DIGHT]->SetPosition({ 60.0f,600.0f });
 
 	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();
@@ -37,15 +37,20 @@ void Player::LoadResource() {
 bool Player::Initialize() {
 
 	LoadCSV();
-	m_MaxHP = m_HP;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	//CSV読み込み
 	return true;
 }
 //CSV読み込み
 void Player::LoadCSV() {
-	m_AddSpeed = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "speed")));
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "HP")));
+	if (is_title) {
+		m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "STARTHP")));
+		m_MaxHP = m_HP;
+	}
+	else {
+		m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "NOWHP")));
+		m_MaxHP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "MAXHP")));
+	}
 }
 //ステータスの初期化
 void Player::InitState(const XMFLOAT3& pos) {
@@ -157,7 +162,6 @@ void Player::UIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight, m_NowWidth);
-	ImGui::Text("PosX:%f,PosY:%f,PosZ:%f", m_ShadowPos.x, m_ShadowPos.y, m_ShadowPos.z);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::End();
 }
@@ -260,16 +264,18 @@ void Player::MoveCommon(float& pos, float velocity) {
 //プレイヤーのHP回復
 void Player::HealPlayer(const float power) {
 	m_HP += power;
-	for (int i = 0; i < 15; i++) {
-		HealParticle();
-	}
+	HealParticle();
 }
 //チュートリアルの更新
 //プレイヤーのダメージ判定
-void Player::RecvDamage(float Damage) {
+void Player::RecvDamage(const float Damage,const string& name) {
 	m_HP -= Damage;
-	for (int i = 0; i < 15; i++) {
+	//ダメージの種類によってパーティクルを変える
+	if (name == "NORMAL") {
 		DamageParticle();
+	}
+	else if (name == "POISON") {
+		BirthPoisonParticle();
 	}
 }
 void Player::TitleUpdate() {
@@ -281,7 +287,9 @@ void Player::HealParticle() {
 	XMFLOAT4 e_color = { 0.5f,1.0f,0.1f,1.0f };
 	float s_scale = 1.0f;
 	float e_scale = 0.0f;
-	ParticleEmitter::GetInstance()->HealEffect(50, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
+	for (int i = 0; i < 15; i++) {
+		ParticleEmitter::GetInstance()->HealEffect(50, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
+	}
 }
 //ダメージパーティクル
 void Player::DamageParticle() {
@@ -289,5 +297,24 @@ void Player::DamageParticle() {
 	const XMFLOAT4 e_color = { 0.5f,0.5f,0.5f,1.0f };
 	const float s_scale = 2.0f;
 	const float e_scale = 0.0f;
-	ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
+	for (int i = 0; i < 15; i++) {
+		ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
+	}
+}
+void Player::BirthPoisonParticle() {
+	const XMFLOAT4 s_color = { 0.5f,0.0f,0.5f,1.0f };
+	const XMFLOAT4 e_color = { 0.5f,0.0f,0.5f,1.0f };
+	const float s_scale = 1.0f;
+	const float e_scale = 0.0f;
+	for (int i = 0; i < 3; i++) {
+		ParticleEmitter::GetInstance()->PoisonEffect(50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color);
+	}
+}
+//プレイヤーの情報をセーブ
+void Player::PlayerSave() {
+	const float l_StartHp = 100.0f;
+	std::ofstream playerofs("Resources/csv/chara/player/player.csv");  // ファイルパスを指定する
+	playerofs << "STARTHP" << "," << l_StartHp << std::endl;
+	playerofs << "NOWHP" << "," << m_HP << std::endl;
+	playerofs << "MAXHP" << "," << m_MaxHP << std::endl;
 }

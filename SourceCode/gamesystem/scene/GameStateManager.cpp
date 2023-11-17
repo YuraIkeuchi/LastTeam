@@ -5,9 +5,9 @@
 #include <Easing.h>
 #include <ImageManager.h>
 #include <SkillManager.h>
-#include <Player.h>
 #include <TutorialTask.h>
 
+Player* GameStateManager::player = nullptr;
 GameStateManager* GameStateManager::GetInstance() {
 	static GameStateManager instance;
 	return &instance;
@@ -39,15 +39,21 @@ void GameStateManager::Initialize() {
 	//一旦クリア方式で
 	GotPassives.clear();
 	PassiveCheck();
-	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.9f,0.9f,0.9f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize(basesize);
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
+	gaugeCover= IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f+32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 52.f,670.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
 	resultSkill = make_unique<ResultSkill>();
 	resultSkill->Initialize(m_dxCommon);
+	resultSkill->SetPlayer(player);
 	haveSkill = make_unique<HaveResultSkill>();
-	haveSkill->Initialize();
+	haveSkill->Initialize(m_dxCommon);
+
+	onomatope = make_unique<Onomatope>();
+
 	m_PredictTimer = {};
 	//
 	SkillManager::GetInstance()->Initialize();
@@ -68,7 +74,7 @@ void GameStateManager::Initialize() {
 		break;
 	}
 	//予測
-	predictarea.reset(new PredictArea());
+	predictarea.reset(new PredictArea("PLAYER"));
 	predictarea->Initialize();
 
 	//右のゲージ
@@ -139,18 +145,20 @@ void GameStateManager::Update() {
 		}
 	}
 	SkillManager::GetInstance()->Update();
-	GameStateManager::GetInstance()->GetPlayer().lock()->SetDelay(m_Delay);
+	player->SetDelay(m_Delay);
 
-	_charge->SetPosition({ GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().x,0.5f,GameStateManager::GetInstance()->GetPlayer().lock()->GetPosition().z });
+	_charge->SetPosition({ player->GetPosition().x,0.5f,player->GetPosition().z });
 	_charge->SetScale({ m_ChargeScale,m_ChargeScale,m_ChargeScale });
 	_charge->Update();
+	onomatope->Update();
+
 }
 //攻撃した瞬間
 void GameStateManager::AttackTrigger() {
 	Input* input = Input::GetInstance();
 	if (m_AllActCount == 0) { return; }
 	if (actui[0]->GetUse()) { return; }
-	if (player_.lock()->GetCharaState() == 1) { return; }
+	if (player->GetCharaState() == 1) { return; }
 	if (isFinish) { return; }
 	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える
@@ -167,8 +175,11 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		}
 		IKETexture::PostDraw();
 		IKESprite::PreDraw();
+		handsFrame->Draw();
 		skillUI->Draw();
 		gaugeUI->Draw();
+		//gaugeCover->Draw();
+		onomatope->Draw();
 		IKESprite::PostDraw();
 		SkillManager::GetInstance()->UIDraw();
 		for (auto i = 0; i < attackarea.size(); i++) {
@@ -184,14 +195,14 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		resultSkill->Draw(dxCommon);
 	}
 	else {
-		haveSkill->Draw();
+		haveSkill->Draw(dxCommon);
 	}
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	StagePanel::GetInstance()->ImGuiDraw();
-	SkillManager::GetInstance()->ImGuiDraw();
-	TutorialTask::GetInstance()->ImGuiDraw();
+	if (_ResultType == HAVE_SKILL) {
+		haveSkill->ImGuiDraw();
+	}
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -312,6 +323,7 @@ void GameStateManager::UseSkill() {
 		m_Delay = false;
 		m_DelayTimer = {};
 		m_ChargeScale = 5;
+		onomatope->AddOnomato(Attack01, { 640.f,360.f });
 	}
 }
 //行動の終了
@@ -369,8 +381,6 @@ void GameStateManager::PassiveCheck() {
 			m_DiameterGauge = passive->GetDiameter();
 			break;
 		case Passive::ABILITY::HP_UP:
-			player_.lock()->SetMaxHp(
-				player_.lock()->GetMaxHp()* passive->GetDiameter());
 			break;
 		case Passive::ABILITY::RELOAD_LOCK:
 			m_IsReload = false;
@@ -479,8 +489,8 @@ bool GameStateManager::SkillRecycle() {
 
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
-	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size());
-	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size());
+	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size(),m_dxCommon);
+	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size(), m_dxCommon);
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
 	m_PredictTimer = {};
 	isFinish = true;

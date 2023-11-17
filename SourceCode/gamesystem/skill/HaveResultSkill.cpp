@@ -11,8 +11,8 @@ HaveResultSkill::HaveResultSkill() {
 HaveResultSkill::~HaveResultSkill() {
 }
 
-void HaveResultSkill::Initialize() {
-	backScreen = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.5f });
+void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
+	backScreen = IKESprite::Create(ImageManager::RESULTBACKSCREEN, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	backScreen->SetSize({ 1280.f,720.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
@@ -37,7 +37,7 @@ void HaveResultSkill::Update() {
 	Move();
 }
 
-void HaveResultSkill::Draw() {
+void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
@@ -48,62 +48,56 @@ void HaveResultSkill::Draw() {
 			resultUI.number->Draw();
 		}
 	}
+	
+	for (HaveUI& PassiveUI : havePassive) {
+		PassiveUI.icon->Draw();
+	}
+
+	//resulttext->TestDraw(dxCommon);
 	if (m_SelectCount < (int)(haveSkills.size())) {
 		for (auto i = 0; i < haveSkills[m_SelectCount].resultarea.size(); i++) {
 			haveSkills[m_SelectCount].resultarea[i]->Draw();
 		}
+		for (auto i = 0; i < haveSkills.size(); i++) {
+			haveSkills[m_SelectCount].text_->Draw(dxCommon);
+		}
 	}
-
-
-	for (HaveUI& PassiveUI : havePassive) {
-		PassiveUI.icon->Draw();
+	else {
+		for (auto i = 0; i < havePassive.size(); i++) {
+			havePassive[m_SelectCount - (int)(haveSkills.size())].text_->Draw(dxCommon);
+		}
 	}
 
 	IKESprite::PostDraw();
 }
 void HaveResultSkill::ImGuiDraw() {
 	ImGui::Begin("Have");
-	ImGui::Text("Add:%f", m_AddPosX);
-	ImGui::Text("PosX:%f,PosY:%f", selectFrame->GetPosition().x, selectFrame->GetPosition().y);
-	ImGui::Text("Num:%d", (int)(haveSkills.size()) + (int)(havePassive.size()));
-	if (!haveSkills.empty()) {
-		for (auto i = 0; i < haveSkills.size(); i++) {
-			ImGui::Text("HaveID[%d]:%d", i, haveSkills[i].ID);
-			ImGui::Text("DisX[%d]:%d", i, haveSkills[i].DisX);
-			ImGui::Text("DisY[%d]:%d", i, haveSkills[i].DisY);
-			ImGui::Text("Size[%d]:%d", i, haveSkills[i].area.size());
-		}
-	}
-	if (!havePassive.empty()) {
-		for (auto i = 0; i < havePassive.size(); i++) {
-			ImGui::Text("PassiveHaveID[%d]:%d", i, havePassive[i].ID);
-		}
-	}
+	ImGui::Text("ID:%d", haveSkills[m_SelectCount].ID);
 	ImGui::End();
 }
 
 //持っているスキルの検索
 void HaveResultSkill::HaveAttackSkill(std::vector<int> Deck,
-	int DeckSize) {
+	int DeckSize, DirectXCommon* dxCommon) {
 	haveSkills.resize(DeckSize);
 	for (auto i = 0; i < haveSkills.size(); i++) {
 		haveSkills[i].ID = Deck[i];
-		CreateAttackSkill(i, haveSkills[i].ID);
+		CreateAttackSkill(i, haveSkills[i].ID, dxCommon);
 		SkillManager::GetInstance()->HandResultData(Deck[i], haveSkills[i].area, haveSkills[i].DisX, haveSkills[i].DisY);//IDに応じた攻撃エリア、距離を取得する
 		BirthArea(i);		//エリアを作成(持ってるスキル分)
 	}
 }
 //持っているパッシブ
 void HaveResultSkill::HavePassiveSkill(std::vector<int> Passive,
-	int PassiveSize) {
+	int PassiveSize, DirectXCommon* dxCommon) {
 	havePassive.resize(PassiveSize);
 	for (auto i = 0; i < havePassive.size(); i++) {
 		havePassive[i].ID = Passive[i];
-		CreatePassiveSkill(i, havePassive[i].ID);
+		CreatePassiveSkill(i, havePassive[i].ID,dxCommon);
 	}
 }
 //攻撃スキルの表示
-void HaveResultSkill::CreateAttackSkill(const int num,const int id) {
+void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommon* dxCommon) {
 	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
 	haveSkills[num].position = { l_BasePos.x + (num * 100.0f),l_BasePos.y };
 	haveSkills[num].icon = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
@@ -114,12 +108,17 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id) {
 	haveSkills[num].number->Initialize();
 	haveSkills[num].number->SetNumber(haveSkills[num].ID);
 	haveSkills[num].number->SetPosition(haveSkills[num].position);
+	haveSkills[num].text_ = make_unique<TextManager>();
+	haveSkills[num].text_->Initialize(dxCommon);
+	haveSkills[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
+	haveSkills[num].baseSentence = haveSkills[num].text_->GetSkillSentence(haveSkills[num].ID);
+	haveSkills[num].text_->SetCreateSentence(haveSkills[num].baseSentence);
 	m_SelectCount = {};
 	m_AddPosX = {};
 }
 
 //パッシブスキルの表示
-void HaveResultSkill::CreatePassiveSkill(const int num, const int id) {
+void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCommon* dxCommon) {
 	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
 	havePassive[num].position = { l_BasePos.x + ((num + (int)haveSkills.size()) * 100.0f),l_BasePos.y };
 	havePassive[num].icon = IKESprite::Create(ImageManager::PASSIVE_01 + havePassive[num].ID, {0.0f,0.0f});
@@ -130,6 +129,11 @@ void HaveResultSkill::CreatePassiveSkill(const int num, const int id) {
 	havePassive[num].number->Initialize();
 	havePassive[num].number->SetNumber(havePassive[num].ID);
 	havePassive[num].number->SetPosition(havePassive[num].position);
+	havePassive[num].text_ = make_unique<TextManager>();
+	havePassive[num].text_->Initialize(dxCommon);
+	havePassive[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
+	havePassive[num].baseSentence = havePassive[num].text_->GetPasiveSentence(havePassive[num].ID);
+	havePassive[num].text_->SetCreateSentence(havePassive[num].baseSentence);
 }
 //移動
 void HaveResultSkill::Move() {

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "ObjCommon.h"
-
+#include "IKETexture.h"
+#include "Player.h"
 enum PolterType {
 	TYPE_FOLLOW,
 	TYPE_BOUND,
@@ -49,9 +50,18 @@ public:
 	void SetPolterType(const int PolterType) { m_PolterType = PolterType; }
 
 	void SetTargetTimer(const int TargetTimer) { m_TargetTimer = TargetTimer; }
+	void SetPlayer(Player* player) { this->player = player; }
 
 private:
-	unique_ptr<IKEObject3d> m_Pannel = nullptr;
+	Player* player;
+	//パネル
+	struct Panel {
+		unique_ptr<IKETexture> tex = nullptr;
+		XMFLOAT3 position = { 0,0,0 };
+		XMFLOAT4 color = { 1,1,1,1 };
+		bool predict = false;
+	};
+	Panel panels;
 	//現在のマス番号
 	int m_NowWidth = {};
 	int m_NowHeight = {};
@@ -86,6 +96,4 @@ private:
 		DIR_SLASHDOWN,//斜めした
 	};
 	int m_ThrowDir = {};
-
-	XMFLOAT3 m_PanelPos = {};
 };

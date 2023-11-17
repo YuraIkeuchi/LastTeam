@@ -2,7 +2,7 @@
 #include"InterEnemy.h"
 #include "EnemyBullet.h"
 #include "AttackArea.h"
-#include "PredictArea.h"
+
 using namespace std;         //  –¼‘O‹óŠÔw’è
 //•’Ê‚Ì“G
 class BossEnemy :public InterEnemy {
@@ -34,6 +34,9 @@ private:
 	//CSV‚ğì¬
 	bool CreateSkill(int id);
 	void PlayerCollide();
+	void WarpEnemy();//“G‚Ìƒ[ƒvˆ—
+//–‚–@w
+	void BirthMagic();
 private:
 	static const int BULLET_NUM = 5;
 private:
@@ -55,10 +58,43 @@ private:
 	std::vector<std::vector<int>> m_Area = {};
 	// UŒ‚ƒGƒŠƒA
 	std::vector<unique_ptr<AttackArea>> attackarea;
-	//—\‘ªƒGƒŠƒA
-	std::unique_ptr<PredictArea> predictarea;
+	
 
 	int m_RandWigth = {};
 	int m_RandHeight = {};
+
+	//–‚–@wŒn
+	enum MagicState {
+		MAGIC_BIRTH,
+		MAGIC_VANISH,
+	};
+
+	struct Magic {
+		unique_ptr<IKETexture> tex;
+		float Frame = {};
+		float Scale = {};
+		float AfterScale = {};
+		XMFLOAT3 Pos = {};
+		bool Alive = false;
+		int State = {};
+		int Timer = {};
+	};
+	Magic magic;
+
+	bool m_Warp = false;
+
+	enum WarpState {
+		WARP_START,
+		WARP_END,
+	};
+
+	struct EnemyWarp {
+		float Frame = {};
+		float Scale = {};
+		float AfterScale = 0.5f;
+		int State = {};
+	};
+
+	EnemyWarp enemywarp;
 };
 

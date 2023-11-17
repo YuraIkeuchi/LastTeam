@@ -6,9 +6,6 @@
 #include <SceneChanger.h>
 #include "SceneManager.h"
 #include <TutorialTask.h>
-//遷移しうるシーン
-#include "BattleScene.h"
-#include <TutorialScene.h>
 #include <GameStateManager.h>
 
 void (MapScene::* MapScene::stateTable[])() = {
@@ -114,8 +111,6 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		starRoadsPos.resize(10);
 	}
 	BlackOut();
-	lastScroll = MaxLength * interbal;
-	scroll.x = -lastScroll;
 
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
@@ -125,12 +120,42 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 			ui[i].sprite->SetSize(ui[i].size);
 		}
 	}
-	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
-	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
+	
 	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
-	m_State = State::initState;
+	lastScroll = MaxLength * interbal;
+	if (nowHierarchy == 0) {
+		scroll.x = -lastScroll;
+		m_State = State::initState;
+	} else {
+		m_State = State::mainState;
+		scroll.x = -(UIs[nowHierarchy][nowIndex].pos.x / 2.f);
+		chara->SetSize({ 128.f,128.f });
+	}
+
+	//ここが新しく書いた場所
+	pickHierarchy = nowHierarchy + 1;
+	pickIndex = nowIndex;
+
+	oldHierarchy = nowHierarchy;
+	oldIndex = nowIndex;
+
+	charaPos = { UIs[nowHierarchy][nowIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.y };
+	framePos = UIs[pickHierarchy][pickIndex].pos;
+	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
+	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
+	for (array<UI, INDEX>& ui : UIs) {
+		for (int i = 0; i < INDEX; i++) {
+			if (!ui[i].sprite) { continue; }
+			ui[i].sprite->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
+			ui[i].sprite->SetColor(ui[i].color);
+			ui[i].sprite->SetSize(ui[i].size);
+		}
+	}
+	for (int i = 0; i < roads.size(); i++) {
+		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
+	}
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
@@ -401,19 +426,19 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	//ImGui::Begin("Map");
-	//ImGui::Text("%f", framePos.x);
-	//ImGui::Text("%f", eFrame);
-	//ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
-	//ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
-	//ImGui::Text("PICKINDEX:%d", pickIndex);
-	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
-	//ImGui::Text("indel:%d", nowIndex);
-	//ImGui::Text("PICKNow:%d", pickNow);
-	//for (int i = 0; i < 3; i++) {
-	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
-	//}
-	//ImGui::End();
+	ImGui::Begin("Map");
+	ImGui::Text("%f", framePos.x);
+	ImGui::Text("%f", eFrame);
+	ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
+	ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
+	ImGui::Text("PICKINDEX:%d", pickIndex);
+	ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
+	ImGui::Text("nowindel:%d", nowIndex);
+	ImGui::Text("nowHie:%d", nowHierarchy);
+	for (int i = 0; i < 3; i++) {
+		ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
+	}
+	ImGui::End();
 }
 
 void MapScene::BlackOut() {
@@ -612,7 +637,7 @@ void MapScene::CheckState() {
 			GameReset({ -4.0f, 0.1f, 2.0f });
 			//チュートリアルのタスク
 			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
-			SceneManager::GetInstance()->ChangeScene<TutorialScene>();
+			SceneManager::GetInstance()->ChangeScene("TUTORIAL");
 			SceneChanger::GetInstance()->SetChange(false);
 			cheack->SetSize({ 0.0f,0.0f });
 		}
@@ -622,7 +647,7 @@ void MapScene::CheckState() {
 			int num = Helper::GetInstance()->GetRanNum(1, 2);
 			std::stringstream ss;
 			if (nowHierarchy != MaxLength) {
-				ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
+				ss << "Resources/csv/EnemySpawn/BattleMap0" << 1 << ".csv";
 			} else {
 				ss << "Resources/csv/EnemySpawn/BattleMap0" << 3 << ".csv";
 				s_LastStage = true;
@@ -635,7 +660,7 @@ void MapScene::CheckState() {
 			GameReset({ -8.0f,0.1f,0.0f });
 			//チュートリアルのタスク
 			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
-			SceneManager::GetInstance()->ChangeScene<BattleScene>();
+			SceneManager::GetInstance()->ChangeScene("BATTLE");
 			SceneChanger::GetInstance()->SetChange(false);
 		}
 	}

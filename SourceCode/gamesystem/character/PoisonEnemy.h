@@ -1,12 +1,12 @@
 #pragma once
 #include"InterEnemy.h"
-#include "EnemyBullet.h"
+#include "PoisonArea.h"
 
 using namespace std;         //  名前空間指定
 //普通の敵
-class CanonEnemy :public InterEnemy {
+class PoisonEnemy :public InterEnemy {
 public:
-	CanonEnemy();
+	PoisonEnemy();
 	bool Initialize() override;//初期化
 	void Finalize() override;//開放
 	void Action()override;//更新
@@ -15,28 +15,26 @@ public:
 	void Draw(DirectXCommon* dxCommon) override;//描画
 private:
 	//関数ポインタ
-	static void(CanonEnemy::* stateTable[])();
+	static void(PoisonEnemy::* stateTable[])();
 
 private:
 	void Inter();//待機
 	void Attack();//攻撃
 	void Teleport();//移動
-	void BirthBullet();//
+	void BirthPoison();//
 	void WarpEnemy();//敵のワープ処理
+
 	//魔法陣
 	void BirthMagic();
 private:
-static const int BULLET_NUM = 3;
-private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
-	vector<unique_ptr<EnemyBullet>> bullets;//ポルターガイスト
 
-	enum CanonType {
-		CANON_SET,
-		CANON_THROW,
-		CANON_END,
-	}_CanonType = CANON_SET;
+	enum PoisonType {
+		Poison_SET,
+		Poison_THROW,
+		Poison_END,
+	}_PoisonType = Poison_SET;
 
 	//魔法陣系
 	enum MagicState {
@@ -71,5 +69,7 @@ private:
 	};
 
 	EnemyWarp enemywarp;
+
+	std::vector<unique_ptr<PoisonArea>> poisonarea;
 };
 

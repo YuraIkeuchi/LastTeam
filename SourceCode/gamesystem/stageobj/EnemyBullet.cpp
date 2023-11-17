@@ -13,9 +13,11 @@ EnemyBullet::EnemyBullet() {
 	m_Object->Initialize();
 	m_Object->SetModel(m_Model);
 
-	m_Pannel.reset(new IKEObject3d());
-	m_Pannel->Initialize();
-	m_Pannel->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
+	panels.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	panels.tex->TextureCreate();
+	panels.tex->Initialize();
+	panels.tex->SetScale({ 0.2f,0.2f,0.2f });
+	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //初期化
 bool EnemyBullet::Initialize() {
@@ -29,6 +31,8 @@ bool EnemyBullet::Initialize() {
 	m_ThrowType = THROW_SET;
 	m_AliveTimer = {};
 
+	panels.position = {};
+	panels.color = { 1.f,1.f,1.f,1.f };
 	return true;
 }
 //状態遷移
@@ -46,39 +50,31 @@ void EnemyBullet::Update() {
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//当たり判定
 
-	m_PanelPos = {(-8.0f) + (2.0f * m_NowWidth),0.01f,(2.0f * m_NowHeight)};
-	m_Pannel->SetPosition(m_PanelPos);
-	m_Pannel->SetScale({2.0f,0.1f,2.0f});
-	m_Pannel->SetColor({1.0f,0.3f,0.0f,1.0f});
-	//m_Pannel->SetRotation({ 90.0f,0.0f,0.0f });
-	m_Pannel->Update();
-	//StagePanel::GetInstance()->SetCanonChange(m_NowWidth, m_NowHeight);
+	panels.position = {(-8.0f) + (2.0f * m_NowWidth),0.011f,(2.0f * m_NowHeight)};
+	panels.tex->SetPosition(panels.position);
+	panels.tex->SetColor({1.0f,0.3f,0.0f,1.0f});
+	panels.tex->Update();
 }
 //描画
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
-	IKEObject3d::PreDraw();
-	if (m_ThrowType == THROW_PLAY) {
-		m_Pannel->Draw();
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	if (m_NowWidth <= 3) {
+		panels.tex->Draw();
 	}
-	IKEObject3d::PostDraw();
+	IKETexture::PostDraw();
 	Obj_Draw();
 }
 //ImGui描画
 void EnemyBullet::ImGuiDraw() {
-	ImGui::Begin("Bullet");
-	ImGui::Text("POSX:%f,POSZ:%f", m_PanelPos.x, m_PanelPos.z);
-	ImGui::Text("NowHeight:%d,NowWidth:%d", m_NowHeight,m_NowWidth);
-	ImGui::End();
 }
 
 //当たり判定
 bool EnemyBullet::Collide() {
-	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
-	XMFLOAT3 l_PlayerPos = player_data->GetPosition();
+	XMFLOAT3 l_PlayerPos = player->GetPosition();
 	const float l_Damage = 0.5f;
 	const float l_Radius = 0.2f;
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
-		player_data->RecvDamage(5.0f);
+		player->RecvDamage(5.0f,"NORMAL");
 		m_Alive = false;
 		return true;
 	}
@@ -90,7 +86,6 @@ bool EnemyBullet::Collide() {
 }
 //追従
 void EnemyBullet::Throw() {
-	auto player_data = GameStateManager::GetInstance()->GetPlayer().lock();
 	const float l_AddFrame = 0.01f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;

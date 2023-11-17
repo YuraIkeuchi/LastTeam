@@ -1,28 +1,28 @@
 #include "AttackArea.h"
 #include <StagePanel.h>
-#include <ModelManager.h>
+#include <ImageManager.h>
 #include <GameStateManager.h>
 #include <Helper.h>
 //読み込み
 AttackArea::AttackArea() {
-	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::PANEL);
+	panels.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	panels.tex->TextureCreate();
+	panels.tex->Initialize();
+	panels.tex->SetScale({ 0.2f,0.2f,0.2f });
+	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 	Initialize();
 }
 //初期化
 bool AttackArea::Initialize() {
-	m_Object.reset(new IKEObject3d());
-	m_Object->Initialize();
-	m_Object->SetModel(m_Model);
 	return true;
 }
 
 //ステータス初期化
 void AttackArea::InitState(const int width, const int height) {
-	m_Position = SetPanelPos(width, height);
+	panels.position = SetPanelPos(width, height);
+	panels.color = { 1.f,1.f,1.f,1.f };
 	m_NowWidth = width, m_NowHeight = height;
-	m_Scale = { 2.0f,0.1f,2.0f };
-	m_Position.y = 0.1f;
-	m_Color = { 1.0f,0.3f,0.0f,1.0f };
+	panels.position.y = 0.03f;
 	m_Alive = true;
 	m_Hit = false;
 	m_AliveTimer = {};
@@ -37,18 +37,20 @@ void AttackArea::Update() {
 		m_Alive = false;
 	}
 
-	Obj_SetParam();
+	panels.color = { 1.0f,0.3f,0.0f,1.0f };
+	panels.tex->Update();
+	panels.tex->SetPosition(panels.position);
+	panels.tex->SetColor(panels.color);
 }
 //描画
 void AttackArea::Draw(DirectXCommon* dxCommon) {
-	Obj_Draw();
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	panels.tex->Draw();
+	IKETexture::PostDraw();
 }
 //ImGui
 void AttackArea::ImGuiDraw() {
-	ImGui::Begin("Area");
-	ImGui::Text("POSX:%f", m_Position.x);
-	//ImGui::Text("POSZ:%f", m_Position.z);
-	ImGui::End();
+
 }
 //パネルの位置に置く
 XMFLOAT3 AttackArea::SetPanelPos(const int width, const int height) {

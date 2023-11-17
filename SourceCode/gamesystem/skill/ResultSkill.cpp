@@ -4,7 +4,6 @@
 #include <Input.h>
 #include <Easing.h>
 #include <SkillManager.h>
-
 ResultSkill::ResultSkill() {
 }
 
@@ -62,7 +61,13 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 	}
 	IKESprite::PostDraw();
 }
-
+void ResultSkill::ImGuiDraw() {
+	ImGui::Begin("Result");
+	ImGui::Text("Frame:%d", nowFrame);
+	ImGui::Text("OldFrame:%d", oldFrame);
+	ImGui::Text("PosX:%f", framePos.x);
+	ImGui::End();
+}
 void ResultSkill::InDeck(std::vector<int>& Deck) {
 	std::vector<int> itr = Deck;
 	for (ResultUI& resultUI : pickSkills) {
@@ -79,6 +84,10 @@ void ResultSkill::InPassive(std::vector<int>& Passive) {
 	std::vector<int> itr = Passive;
 	for (ResultUI& resultUI : pickSkills) {
 		if (resultUI.isSkill) { continue; }
+		if (resultUI.ID==1) {
+			player_->SetMaxHp(
+			player_->GetMaxHp() * 1.3f);
+		}
 		itr.push_back(resultUI.ID);
 	}
 	Passive.resize(itr.size());
@@ -127,6 +136,7 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 }
 
 void ResultSkill::Move() {
+	if (m_Choice) { return; }
 	Input* input = Input::GetInstance();
 	if (isMove) {
 		static float frame = 0.f;
@@ -161,6 +171,7 @@ void ResultSkill::Move() {
 				pickSkills.push_back(std::move(n));
 			}
 		}
+		m_Choice = true;
 	}
 
 }

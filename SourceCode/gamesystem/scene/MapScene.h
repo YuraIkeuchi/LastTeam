@@ -83,7 +83,6 @@ private:
 	std::string dungeon;
 	vector<int> dungeons;
 	unique_ptr<TextManager> text_;
-	int clearHierarchy = 1;
 
 	unique_ptr<Onomatope> onomatope = nullptr;
 
@@ -103,9 +102,7 @@ private:
 	float homeX = 360.f;
 	float interbal = 300.f;
 
-	int nowIndex = Middle;
-	int nowHierarchy = 0;
-
+	
 	int oldIndex = Middle;
 	int oldHierarchy = 0;
 

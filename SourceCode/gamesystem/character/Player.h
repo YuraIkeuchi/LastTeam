@@ -6,13 +6,11 @@
 #include <Input.h>
 #include <array>
 #include "DrawNumber.h"
-#include "GameObject/GameObject.h"
 
 using namespace DirectX;
 
 class Player :
-	public ObjCommon,
-	public GameObject
+	public ObjCommon
 {
 private:
 	static void (Player::* stateTable[])();
@@ -27,9 +25,9 @@ public:
 	//描画
 	void Draw(DirectXCommon *dxCommon) override;
 	//UI用
-	void UIDraw() override;
+	void UIDraw();
 	//ImGui
-	void ImGuiDraw() override;
+	void ImGuiDraw();
 	//チュートリアルの更新
 	void TitleUpdate();
 
@@ -48,7 +46,10 @@ private:
 public:
 	//プレイヤーの回復
 	void HealPlayer(const float power);
-	void RecvDamage(float Damage);
+	//プレイヤーのダメージ
+	void RecvDamage(const float Damage,const string& name);
+	//プレイヤーの情報保存
+	void PlayerSave();
 private:
 	void MoveCommon(float& pos, const float velocity);
 private:
@@ -57,6 +58,8 @@ private:
 	void HealParticle();
 	//ダメージのパーティクル
 	void DamageParticle();
+	//毒のパーティクル
+	void BirthPoisonParticle();
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }
@@ -71,6 +74,7 @@ public:
 		m_MaxHP = maxhp;
 		m_HP = maxhp;
 	}
+
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 
 	void SetDelay(const bool Delay) { m_Delay = Delay; }
@@ -138,7 +142,7 @@ private:
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//整数にしたHP
 
-	XMFLOAT2 m_HPPos = { 25.f,600.0f };
+	XMFLOAT2 m_HPPos = { 25.f,580.0f };
 	XMFLOAT2 m_HPSize = { 400.0f,40.0f };
 	//桁数
 	enum DightType {

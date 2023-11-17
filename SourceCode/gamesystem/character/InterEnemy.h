@@ -1,11 +1,13 @@
 ﻿#pragma once
 #include "ObjCommon.h"
 #include "AttackArea.h"
+#include "PredictArea.h"
 #include "DrawNumber.h"
 #include <memory>
 #include <IKESprite.h>
 #include <array>
 #include "IKETexture.h"
+#include "Player.h"
 
 using namespace std;         //  名前空間指定
 
@@ -36,6 +38,7 @@ protected:
 protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
 	unique_ptr<IKETexture> shadow_tex;
+	static Player* player;
 	//桁数
 	enum DightType {
 		FIRST_DIGHT,
@@ -93,6 +96,8 @@ protected:
 	//影の変数
 	XMFLOAT3 m_ShadowPos = {};
 	XMFLOAT3 m_ShadowScale = {};
+	//予測エリア
+	std::unique_ptr<PredictArea> predictarea;
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -100,6 +105,7 @@ public://getter setter
 	void SetPoizonLong(bool isPoison) { m_PoisonLong = isPoison; }
 	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
 	void SetDrainUp(bool IsDrainUp) { m_IsDrainUp = IsDrainUp; }
+	static void SetPlayer(Player* player) { InterEnemy::player = player; }
 
 	const float GetHP() { return m_HP; }
 	const bool GetAlive() { return m_Alive; }

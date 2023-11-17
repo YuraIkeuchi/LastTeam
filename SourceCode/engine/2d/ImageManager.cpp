@@ -34,11 +34,14 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(PASSIVE_07, L"Resources/2d/objicon/Passive/Passive_07.png");
 	IKESprite::LoadTexture(PASSIVE_FRAME, L"Resources/2d/objicon/Passive_Frame.png");
 	IKESprite::LoadTexture(GAUGE, L"Resources/2d/effect/white1x1.png");
+	IKESprite::LoadTexture(GAUGECOVER, L"Resources/2d/objicon/SkillGauge.png");
+	IKESprite::LoadTexture(HANDSCOVER, L"Resources/2d/objicon/HandsCover.png");
 	IKESprite::LoadTexture(TITLEBACK, L"Resources/2d/sceneback/TitleBack.png");
 	IKESprite::LoadTexture(TITLETEXT, L"Resources/2d/sceneback/TitleText.png");
 	IKESprite::LoadTexture(GAMEOVERBACK, L"Resources/2d/sceneback/Gameover.png");
 	IKESprite::LoadTexture(GAMECLEARBACK, L"Resources/2d/sceneback/GameClear.png");
 	IKESprite::LoadTexture(ONOMATO_00, L"Resources/2d/objicon/Onomatope/00_Foot.png");
+	IKESprite::LoadTexture(ONOMATO_01, L"Resources/2d/objicon/Onomatope/01_Attack01.png");
 
 	IKESprite::LoadTexture(RESULTBACKSCREEN, L"Resources/2d/sceneback/ResultSkill_BS.png");
 	IKESprite::LoadTexture(RESULTATTACKAREA, L"Resources/2d/objicon/AttackArea.png");
@@ -56,6 +59,9 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(MAGIC, L"Resources/2d/objicon/magic.png");
 	IKETexture::LoadTexture(CHARGE, L"Resources/2d/objicon/impact.png");
 	IKETexture::LoadTexture(SHADOW, L"Resources/2d/objicon/shadow.png");
+	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/DamageArea.png");
+	IKETexture::LoadTexture(ENEMYPREDICT, L"Resources/2d/objicon/Predict.png");
+	IKETexture::LoadTexture(PLAYERPREDICT, L"Resources/2d/objicon/PlayerPredict.png");
 }
 
 //非同期処理でのテクスチャの読み込み
