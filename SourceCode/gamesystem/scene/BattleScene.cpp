@@ -136,9 +136,8 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 
 //前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
-	ParticleEmitter::GetInstance()->FlontDrawAll();
-
 	if (!enemyManager->BossDestroy()){
+		ParticleEmitter::GetInstance()->FlontDrawAll();
 		player_->UIDraw();
 		enemyManager->UIDraw();
 		GameStateManager::GetInstance()->ActUIDraw();
