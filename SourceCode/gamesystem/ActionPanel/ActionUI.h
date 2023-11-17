@@ -44,7 +44,7 @@ private:
 	unique_ptr<IKESprite> tex;
 
 	XMFLOAT2 m_Position = {};
-	XMFLOAT4 m_Color = { 1.3f,1.3f,1.3f,1.0f };
+	XMFLOAT4 m_Color = { 1.0f,1.0f,1.0f,1.0f };
 	XMFLOAT2 m_Size = { 64.f,64.f };
 
 	int m_ActCount = {};
