@@ -501,5 +501,5 @@ void GameStateManager::BirthBuff() {
 }
 void GameStateManager::DeckReset() {
 	m_DeckNumber.resize(3);
-	m_DeckNumber = { 0,1,6 };
+	m_DeckNumber = { 1,2,4 };
 }
