@@ -8,6 +8,9 @@
 #include <TutorialTask.h>
 #include <GameStateManager.h>
 
+
+array<array<int, 3>, 10> MapScene::mapKinds;
+
 void (MapScene::* MapScene::stateTable[])() = {
 	&MapScene::InitState,//
 	&MapScene::MainState,//
@@ -37,6 +40,13 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	UIs[0][Middle].sprite->SetAnchorPoint({ 0.5f,0.5f });
 	homeX += interbal;
 
+	if (nowHierarchy == 0) {
+		mapKinds[1] = { BATTLE,BATTLE,BATTLE };
+		mapKinds[2] = { BATTLE,-1,PASSIVE };
+		mapKinds[3] = { -1,BATTLE,-1 };
+		mapKinds[4] = { PASSIVE,-1,BATTLE };
+		mapKinds[5] = { -1,BOSS,-1 };
+	}
 	MapCreate();
 
 	//テキスト
@@ -120,7 +130,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 			ui[i].sprite->SetSize(ui[i].size);
 		}
 	}
-	
+
 	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
@@ -254,12 +264,40 @@ MapScene::UI MapScene::RandPannel() {
 		itr.Tag = BOSS;
 	} else {
 		itr.sprite = IKESprite::Create(ImageManager::MAP_HEAL, { 0,0 });
-		itr.Tag = HEAL;
+		itr.Tag = PASSIVE;
 
 	}
 	itr.size = { 128.f,128.f };
 	itr.sprite->SetAnchorPoint({ 0.5f,0.5f });
 
+	return itr;
+}
+
+MapScene::UI MapScene::TestPannel(int Index, int Hierarchy) {
+	//[nowHierarchy] [nowIndex]
+	int r = mapKinds[Hierarchy][Index];
+
+	UI itr;
+	switch (r) {
+	case BATTLE:
+		itr.sprite = IKESprite::Create(ImageManager::MAP_NORMAL, { 0,0 });
+		itr.Tag = BATTLE;
+		break;
+	case PASSIVE:
+		itr.sprite = IKESprite::Create(ImageManager::MAP_HEAL, { 0,0 });
+		itr.Tag = PASSIVE;
+		break;
+	case BOSS:
+		itr.sprite = IKESprite::Create(ImageManager::MAP_BOSS, { 0,0 });
+		itr.Tag = BOSS;
+		break;
+	default:
+		assert(0);
+		break;
+	}
+
+	itr.size = { 128.f,128.f };
+	itr.sprite->SetAnchorPoint({ 0.5f,0.5f });
 	return itr;
 }
 
@@ -300,7 +338,7 @@ void MapScene::MapCreate() {
 		size_t hierarchy = (size_t)i + 1;
 		switch (dungeons[i]) {
 		case 1: {
-			UIs[hierarchy][Middle] = RandPannel();
+			UIs[hierarchy][Middle] = TestPannel(Middle, (int)hierarchy);
 			UIs[hierarchy][Middle].pos = { homeX ,homeY[Middle] };
 			UIs[hierarchy][Middle].hierarchy = i + 1;
 			if (i != Len - 1) {
@@ -332,11 +370,11 @@ void MapScene::MapCreate() {
 			break;
 		}
 		case 2: {
-			UIs[hierarchy][Top] = RandPannel();
+			UIs[hierarchy][Top] = TestPannel(Top, (int)hierarchy);
 			UIs[hierarchy][Top].pos = { homeX ,homeY[Top] };
 			UIs[hierarchy][Top].hierarchy = i + 1;
 
-			UIs[hierarchy][Bottom] = RandPannel();
+			UIs[hierarchy][Bottom] = TestPannel(Bottom, (int)hierarchy);
 			UIs[hierarchy][Bottom].pos = { homeX ,homeY[Bottom] };
 			UIs[hierarchy][Bottom].hierarchy = i + 1;
 
@@ -382,7 +420,7 @@ void MapScene::MapCreate() {
 		}
 		case 3: {
 			for (int j = 0; j < 3; j++) {
-				UIs[hierarchy][j] = RandPannel();
+				UIs[hierarchy][j] = TestPannel(j, (int)hierarchy);
 				UIs[hierarchy][j].pos = { homeX ,homeY[j] };
 				UIs[hierarchy][j].hierarchy = i + 1;
 				if (i != Len - 1) {
@@ -488,7 +526,7 @@ void MapScene::Move() {
 		nowHierarchy = pickHierarchy;
 		clearHierarchy++;
 		onomatope->AddOnomato(Foot, { 640.f,360.f });
-		onomatope->AddOnomato(Foot, { 100.f,700.f },10.f);
+		onomatope->AddOnomato(Foot, { 100.f,700.f }, 10.f);
 		moved = true;
 	}
 
@@ -505,8 +543,8 @@ void MapScene::Move() {
 			case BOSS:
 				text_->SetConversation(TextManager::MAP_BOSS, { -300.0f,-80.0f });
 				break;
-			case HEAL:
-				text_->SetConversation(TextManager::MAP_HEAL, { -300.0f,-80.0f });
+			case PASSIVE:
+				text_->SetConversation(TextManager::MAP_PASSIVE, { -300.0f,-80.0f });
 				break;
 			default:
 				break;
@@ -603,7 +641,7 @@ void MapScene::MainState() {
 }
 
 void MapScene::CheckState() {
-	const float addFrame = 1.0f / 45.f;
+	const float addFrame = 1.0f / 15.f;
 	static float s_frame = 0.0f;
 	static XMFLOAT2 size = {};
 
@@ -628,8 +666,8 @@ void MapScene::CheckState() {
 					SceneChanger::GetInstance()->SetChangeStart(true);
 				}
 			} else {
-				size.x = Ease(Out, Elastic, s_frame, 0.f, 640.f);
-				size.y = Ease(Out, Elastic, s_frame, 0.f, 480.f);
+				size.x = Ease(Out, Quint, s_frame, 0.f, 640.f);
+				size.y = Ease(Out, Quint, s_frame, 0.f, 480.f);
 			}
 			cheack->SetSize(size);
 		}
@@ -644,14 +682,19 @@ void MapScene::CheckState() {
 	} else {
 		if (Helper::GetInstance()->FrameCheck(delayFrame, 1 / 20.f)) {
 			SceneChanger::GetInstance()->SetChangeStart(true);
-			int num = Helper::GetInstance()->GetRanNum(1, 2);
 			std::stringstream ss;
-			if (nowHierarchy != MaxLength) {
-				ss << "Resources/csv/EnemySpawn/BattleMap0" << 1 << ".csv";
-			} else {
+			if (nowHierarchy == MaxLength) {
 				ss << "Resources/csv/EnemySpawn/BattleMap0" << 3 << ".csv";
 				s_LastStage = true;
 			}
+
+			int num = Helper::GetInstance()->GetRanNum(1, 2);
+			if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
+				ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
+			} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
+				ss << "Resources/csv/EnemySpawn/PassiveMap0" << num << ".csv";
+			}
+
 			std::string r_map = ss.str();
 			GameStateManager::GetInstance()->SetEnemySpawnText(r_map);
 			delayFrame = 0.f;

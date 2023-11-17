@@ -48,6 +48,13 @@ private:
 	};
 
 	UI  RandPannel();
+	/// <summary>
+	/// プレイ会用パネル
+	/// </summary>
+	/// <param name="Index"></param>
+	/// <param name="Hierarchy"></param>
+	/// <returns></returns>
+	UI  TestPannel(int Index,int Hierarchy);
 
 	void RoadUpdate();
 
@@ -68,8 +75,8 @@ private:
 	};
 	enum {
 		BATTLE = 1,
+		PASSIVE,
 		BOSS,
-		HEAL,
 		TUTORIAL,
 	};
 
@@ -86,7 +93,7 @@ private:
 
 	unique_ptr<Onomatope> onomatope = nullptr;
 
-
+	static array<array<int, 3>, 10> mapKinds;
 	unique_ptr<IKESprite> screen = nullptr;
 	unique_ptr<IKESprite> cheack= nullptr;
 	unique_ptr<IKESprite> frame = nullptr;
