@@ -689,14 +689,17 @@ void MapScene::CheckState() {
 			}
 
 			int num = Helper::GetInstance()->GetRanNum(1, 2);
+			bool isBattle = true;
 			if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
 				ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
+				isBattle = true;
 			} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
 				ss << "Resources/csv/EnemySpawn/PassiveMap0" << num << ".csv";
+				isBattle = false;
 			}
 
 			std::string r_map = ss.str();
-			GameStateManager::GetInstance()->SetEnemySpawnText(r_map);
+			GameStateManager::GetInstance()->SetEnemySpawnText(r_map, isBattle);
 			delayFrame = 0.f;
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {

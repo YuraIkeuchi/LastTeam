@@ -110,13 +110,22 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 	std::shuffle(noDeck.begin(), noDeck.end(), engine);
 	std::shuffle(noPassive.begin(), noPassive.end(), engine);
 
+	
 	//スキル
 	ResultUI resultUI = CreateUI(true, noDeck[0], BasePos[nowPos]);
 	choiceSkills.push_back(std::move(resultUI));
+	if (isBattle) {
+		ResultUI resultUI = CreateUI(true, noDeck[1], BasePos[nowPos]);
+		choiceSkills.push_back(std::move(resultUI));
+	}
 	//パッシブ
 	ResultUI passiveUI = CreateUI(false, noPassive[0], BasePos[nowPos]);
 	choiceSkills.push_back(std::move(passiveUI));
-	if (noDeck.size() < noPassive.size()) {
+	if (!isBattle) {
+		ResultUI passiveUI = CreateUI(false, noPassive[1], BasePos[nowPos]);
+		choiceSkills.push_back(std::move(passiveUI));
+	}
+	/*if (noDeck.size() < noPassive.size()) {
 		if (noPassive.size() > 1) {
 			ResultUI passiveUI2 = CreateUI(false, noPassive[1], BasePos[nowPos]);
 			choiceSkills.push_back(std::move(passiveUI2));
@@ -126,7 +135,7 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 			ResultUI passiveUI3 = CreateUI(true, noDeck[1], BasePos[nowPos]);
 			choiceSkills.push_back(std::move(passiveUI3));
 		}
-	}
+	}*/
 	resulttext->SetCreateSentence(baseSentence[0], baseSentence[1], baseSentence[2]);
 	for (int i = 0; i < 5;i++) {
 		RandShineInit();

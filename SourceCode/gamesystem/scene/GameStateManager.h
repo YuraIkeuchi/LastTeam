@@ -97,7 +97,7 @@ public:
 	/// 敵を倒したら最初の処理
 	/// </summary>
 	void StageClearInit();
-	void SetEnemySpawnText(string& text) { enemySpawnText = text; }
+	void SetEnemySpawnText(string& text, bool isBattle=true) { enemySpawnText = text; isBattleFromMap = isBattle; }
 	string& GetEnemySpawnText() { return enemySpawnText; }
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetResetPredict(const bool ResetPredict) { this->m_ResetPredict = ResetPredict; }
@@ -166,7 +166,7 @@ private:
 
 
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
-
+	bool isBattleFromMap = true;
 	enum SkillType {
 		SKILL_NORMAL,
 		SKILL_STRONG,
@@ -192,7 +192,6 @@ private:
 	string m_Name;
 
 	vector<int> m_DeckNumber = { 0,1,6 };
-
 
 	vector<int> m_NotDeckNumber = {};
 
