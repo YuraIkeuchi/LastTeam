@@ -71,8 +71,7 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 //ImGui描画
 void NormalEnemy::ImGui_Origin() {
 	ImGui::Begin("NormalEnemy");
-	ImGui::Text("Height:%d,Width:%d", m_NowHeight,m_NowWidth);
-	ImGui::Text("Timer:%d", m_PoisonTimer);
+	ImGui::Text("Last:%d", m_LastEnemy);
 	ImGui::End();
 }
 //開放

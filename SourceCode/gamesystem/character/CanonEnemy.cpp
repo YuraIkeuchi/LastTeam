@@ -124,10 +124,7 @@ void CanonEnemy::ImGui_Origin() {
 		}
 	}*/
 	ImGui::Begin("Canon");
-	ImGui::Text("WARP:%d", enemywarp.State);
-	ImGui::Text("Scale:%f", enemywarp.AfterScale);
-	ImGui::Text("EneScale:%f", m_Scale.x);
-	ImGui::Text("Frame:%f", enemywarp.Frame);
+	ImGui::Text("Last:%d", m_LastEnemy);
 	ImGui::End();
 }
 //開放

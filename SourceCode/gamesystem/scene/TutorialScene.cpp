@@ -154,9 +154,8 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 	if (enemy->GetHP() > 0.0f && !m_Skip) {
 		player_->Draw(dxCommon);
 		enemy->Draw(dxCommon);
+		StagePanel::GetInstance()->ActDraw(dxCommon);
 	}
-	StagePanel::GetInstance()->ActDraw(dxCommon);
-
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
