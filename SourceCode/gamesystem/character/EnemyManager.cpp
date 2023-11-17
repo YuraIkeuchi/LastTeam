@@ -1,6 +1,7 @@
 ﻿#include "EnemyManager.h"
 #include "NormalEnemy.h"
 #include "CanonEnemy.h"
+#include "TackleEnemy.h"
 #include "BossEnemy.h"
 #include "PoisonEnemy.h"
 #include <StagePanel.h>
@@ -135,7 +136,7 @@ void EnemyManager::Spawn2Map() {
 				width++;
 			}
 			else if (x == '3') {
-				unique_ptr<InterEnemy> enemy_ = std::make_unique<PoisonEnemy>();
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<TackleEnemy>();
 				enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));

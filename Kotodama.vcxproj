@@ -186,6 +186,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\Player.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\MobEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\PoisonEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\TackleEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\gamecamera\CameraWork.cpp" />
     <ClCompile Include="SourceCode\gamesystem\MessageWindow\MessageWindow.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.cpp" />
@@ -318,6 +319,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\Player.h" />
     <ClInclude Include="SourceCode\gamesystem\character\MobEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\PoisonEnemy.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\TackleEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h" />
     <ClInclude Include="SourceCode\gamesystem\MessageWindow\MessageWindow.h" />
     <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.h" />
