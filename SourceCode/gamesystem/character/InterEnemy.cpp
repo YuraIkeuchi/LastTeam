@@ -51,6 +51,18 @@ void InterEnemy::Update() {
 	else {
 		m_Alive = false;
 	}
+
+	//障害物の削除
+	for (int i = 0; i < _damagenumber.size(); i++) {
+		if (_damagenumber[i] == nullptr) {
+			continue;
+		}
+
+		_damagenumber[i]->Update();
+		if (!_damagenumber[i]->GetAlive()) {
+			_damagenumber.erase(cbegin(_damagenumber) + i);
+		}
+	}
 	//数値化したHP
 	HPManage();
 	//UIをワールド座標に変換する
@@ -63,21 +75,34 @@ void InterEnemy::Draw(DirectXCommon* dxCommon) {
 }
 
 void InterEnemy::ImGuiDraw() {
-	ImGui_Origin();
+	//ImGui_Origin();
+	//敵のダメージテキスト
+	for (unique_ptr<DrawDamageNumber>& newnumber : _damagenumber) {
+		if (newnumber != nullptr) {
+			newnumber->ImGuiDraw();
+		}
+	}
 }
 //UIの描画
 void InterEnemy::UIDraw() {
-	if (!m_Alive) { return; }
 	IKESprite::PreDraw();
-	//HPバー
-	hptex->Draw();
-	//HP(数字)
-	if(m_InterHP != 0)
-	_drawnumber[FIRST_DIGHT]->Draw();
-	if (m_InterHP >= 10)
-		_drawnumber[SECOND_DIGHT]->Draw();
-	if (m_InterHP >= 100)
-		_drawnumber[THIRD_DIGHT]->Draw();
+	if (m_Alive) {
+		//HPバー
+		hptex->Draw();
+		//HP(数字)
+		if (m_InterHP != 0)
+			_drawnumber[FIRST_DIGHT]->Draw();
+		if (m_InterHP >= 10)
+			_drawnumber[SECOND_DIGHT]->Draw();
+		if (m_InterHP >= 100)
+			_drawnumber[THIRD_DIGHT]->Draw();
+	}
+	//敵のダメージテキスト
+	for (unique_ptr<DrawDamageNumber>& newnumber : _damagenumber) {
+		if (newnumber != nullptr) {
+			newnumber->Draw();
+		}
+	}
 	IKESprite::PostDraw();
 }
 //当たり判定
@@ -87,7 +112,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 
 	for (unique_ptr<AttackArea>& _area : area) {
 		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) &&
-			!_area->GetHit()) {
+			!_area->GetHit() && _area->GetName() == "Player") {
 			float damage = _area->GetDamage();
 			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
 				GameStateManager::GetInstance()->SetCounter(true);
@@ -97,6 +122,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				damage *= 2.0f;
 			}
 			m_HP -= damage;
+			BirthDamage(damage);
 			std::string name = _area->GetStateName();
 
 			if (name == "DRAIN") {
@@ -175,6 +201,7 @@ void InterEnemy::HPManage() {
 
 //毒
 void InterEnemy::PoisonState() {
+	float damage = {};
 	if (!m_Poison) { return; }
 	int kTimerMax = 800;
 	if (m_PoisonLong) { kTimerMax *= 2; }
@@ -182,10 +209,13 @@ void InterEnemy::PoisonState() {
 
 	if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
 		if (!m_IsVenom) {
-			m_HP -= 1.0f;
+			damage = 1.0f;
+			m_HP -= damage;
 		} else {
-			m_HP -= 2.0f;
+			damage = 2.0f;
+			m_HP -= damage;
 		}
+		BirthDamage(damage);
 		BirthPoisonParticle();
 	}
 
@@ -193,4 +223,36 @@ void InterEnemy::PoisonState() {
 		m_Poison = false;
 		m_PoisonTimer = {};
 	}
+}
+//ダメージテキスト
+void InterEnemy::BirthDamage(const float Damage) {
+	int l_InterDamage = {};//int変換したダメージ
+	l_InterDamage = (int)Damage;
+
+	if (l_InterDamage < 10) {
+		unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
+		_newnumber->GetCameraData();
+		_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
+		_newnumber->Initialize();
+		_newnumber->SetNumber(l_InterDamage);
+		_damagenumber.push_back(std::move(_newnumber));
+	}
+	else {
+		int l_DightDamage[DAMAGE_MAX];
+		for (auto i = 0; i < DAMAGE_MAX; i++) {
+			l_DightDamage[i] = Helper::GetInstance()->getDigits(l_InterDamage, i, i);
+			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			else {
+				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_damagenumber.push_back(std::move(_newnumber));
+		}
+	}
+
 }

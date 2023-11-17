@@ -35,7 +35,7 @@ void PoisonArea::InitState(const int width, const int height) {
 	panels.position.y = 0.011f;
 	panels.color = { 0.5f,0.0f,0.5f,1.0f };
 	panels.Alive = true;
-	panels.Timer = {};
+	panels.Timer = 40;
 	//弾
 	m_BulletAlive = true;
 	m_Scale = { 0.2f,0.2f,0.2f };
@@ -66,7 +66,7 @@ void PoisonArea::Draw(DirectXCommon* dxCommon) {
 void PoisonArea::ImGuiDraw() {
 	ImGui::Begin("Poison");
 	ImGui::Text("PosX:%f,PosZ:%f", panels.position.x, panels.position.z);
-	ImGui::Text("Timer:%d", predict.Timer);
+	ImGui::Text("Timer:%d", panels.DamageTimer);
 	ImGui::End();
 }
 //パネルの位置に置く
@@ -83,13 +83,16 @@ void PoisonArea::Collide() {
 		panels.DamageTimer++;
 	}
 	else {
-		panels.DamageTimer = {};
+		if (panels.Damage) {
+			panels.DamageTimer = {};
+		}
 	}
 
 	//
 	if (panels.DamageTimer == 50) {
 		player->RecvDamage(l_Damage,"POISON");
 		panels.DamageTimer = {};
+		panels.Damage = true;
 	}
 }
 void PoisonArea::Move() {
