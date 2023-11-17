@@ -55,7 +55,7 @@ void DeckUI::UiMove() {
 		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, 110.0f);
 	}
 	else {
-		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 		}
 		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, 300.0f);

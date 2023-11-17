@@ -85,7 +85,7 @@ void SceneChanger::FeedChange() {
 	const int l_MaxTimer = 5;
 	m_Color.x = 1.0f;
 	if (_ChangeState == CHANGE_START) {			//徐々に暗くなる
-		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Change = true;
 			_ChangeState = CHANGE_FINISH;
 			m_Frame = {};
@@ -93,7 +93,7 @@ void SceneChanger::FeedChange() {
 		}
 	}
 	else {		//フェード終わり、徐々に明るくなる
-		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Frame = {};
 			m_ChangeStart = false;
 			_ChangeState = CHANGE_START;
@@ -110,7 +110,7 @@ void SceneChanger::WideChange() {
 	const int l_MaxTimer = 5;
 	m_Color.w = 1.0f;
 	if (_ChangeState == CHANGE_START) {			//徐々に暗くなる
-		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Change = true;
 			_ChangeState = CHANGE_FINISH;
 			m_Frame = {};
@@ -118,7 +118,7 @@ void SceneChanger::WideChange() {
 		}
 	}
 	else {		//フェード終わり、徐々に明るくなる
-		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Frame = {};
 			m_ChangeStart = false;
 			_ChangeState = CHANGE_START;

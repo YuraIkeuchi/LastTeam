@@ -8,6 +8,7 @@
 #include <array>
 #include "IKETexture.h"
 #include "Player.h"
+#include "DrawDamageNumber.h"
 
 using namespace std;         //  名前空間指定
 //キャラの状態
@@ -33,9 +34,10 @@ protected:
 protected:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
-
+	static const int DAMAGE_MAX = 2;
 protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
+	std::vector<unique_ptr<DrawDamageNumber>> _damagenumber;
 	unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
 	//桁数
@@ -148,6 +150,7 @@ private:
 	//UIのためのHPの管理
 	void HPManage();
 	void BirthPoisonParticle();
+	void BirthDamage(const float Damage);//
 protected:
 	void Collide(vector<unique_ptr<AttackArea>>& area);
 	//毒の状態

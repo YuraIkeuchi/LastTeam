@@ -35,7 +35,7 @@ void PoisonArea::InitState(const int width, const int height) {
 	panels.position.y = 0.011f;
 	panels.color = { 1.0f,1.0f,1.0f,1.0f };
 	panels.Alive = true;
-	panels.Timer = {};
+	panels.Timer = 40;
 	//弾
 	m_BulletAlive = true;
 	m_Scale = { 0.2f,0.2f,0.2f };
@@ -66,7 +66,7 @@ void PoisonArea::Draw(DirectXCommon* dxCommon) {
 void PoisonArea::ImGuiDraw() {
 	ImGui::Begin("Poison");
 	ImGui::Text("PosX:%f,PosZ:%f", panels.position.x, panels.position.z);
-	ImGui::Text("Timer:%d", predict.Timer);
+	ImGui::Text("Timer:%d", panels.DamageTimer);
 	ImGui::End();
 }
 //パネルの位置に置く
@@ -83,13 +83,16 @@ void PoisonArea::Collide() {
 		panels.DamageTimer++;
 	}
 	else {
-		panels.DamageTimer = {};
+		if (panels.Damage) {
+			panels.DamageTimer = {};
+		}
 	}
 
 	//
 	if (panels.DamageTimer == 50) {
 		player->RecvDamage(l_Damage,"POISON");
 		panels.DamageTimer = {};
+		panels.Damage = true;
 	}
 }
 void PoisonArea::Move() {
@@ -99,21 +102,21 @@ void PoisonArea::Move() {
 
 	if (_PoisonState == POISON_THROW) {			//上に上げる
 		BirthPredict(panels.Width, panels.Height);
-		if (Helper::GetInstance()->CheckMin(m_Position.y, l_TargetPosY, l_ThrowSpeed)) {
+		if (Helper::CheckMin(m_Position.y, l_TargetPosY, l_ThrowSpeed)) {
 			_PoisonState = POISON_DROP;
 			m_Position = { panels.position.x,l_TargetPosY,panels.position.z };
 		}
 	}
 	else if (_PoisonState == POISON_DROP) {		//落ちてくる
-		if (Helper::GetInstance()->CheckMax(m_Position.y, 0.0f, -l_ThrowSpeed)) {
+		if (Helper::CheckMax(m_Position.y, 0.0f, -l_ThrowSpeed)) {
 			_PoisonState = POISON_WIDE;
 			m_BulletAlive = false;
 		}
 	}
 	else if (_PoisonState == POISON_WIDE) {		//広がる
 		static float addFrame = 1.f / 15.f;
-		if (Helper::GetInstance()->FrameCheck(panels.frame, addFrame)) {		//広がるためのイージング
-			if (Helper::GetInstance()->CheckMin(panels.Timer, l_TargetTimer, 1)) {		//広がり切ったらカウントを加算する
+		if (Helper::FrameCheck(panels.frame, addFrame)) {		//広がるためのイージング
+			if (Helper::CheckMin(panels.Timer, l_TargetTimer, 1)) {		//広がり切ったらカウントを加算する
 				GameStateManager::GetInstance()->SetBuff(false);
 				_PoisonState = POISON_END;
 				panels.frame = {};
@@ -125,7 +128,7 @@ void PoisonArea::Move() {
 	}
 	else {		//なくなる
 		static float addFrame = 1.f / 15.f;
-		if (Helper::GetInstance()->FrameCheck(panels.frame, addFrame)) {
+		if (Helper::FrameCheck(panels.frame, addFrame)) {
 			panels.Alive = false;
 		}
 		panels.scale = Ease(In, Cubic, panels.frame, panels.scale, panels.afterscale);

@@ -59,7 +59,7 @@ void InterAction::Spawn() {
 	m_Pannel->SetRotation(m_PannelRot);
 	m_Pannel->SetColor(m_Color);
 	m_Pannel->Update();
-	if (Helper::GetInstance()->FrameCheck(m_VanishFrame, 1 / kVanishMax)) {
+	if (Helper::FrameCheck(m_VanishFrame, 1 / kVanishMax)) {
 		_state = STATE_ALIVE;
 		m_VanishFrame = 0;
 	}
@@ -91,7 +91,7 @@ void InterAction::Vanish() {
 	m_Pannel->SetRotation(m_PannelRot);
 	m_Pannel->SetScale(m_PannelScale);
 	m_Pannel->Update();
-	if (Helper::GetInstance()->FrameCheck(m_VanishFrame, 1 / kVanishMax)) {
+	if (Helper::FrameCheck(m_VanishFrame, 1 / kVanishMax)) {
 		m_Delete = true;
 		m_VanishFrame = 0;
 	}

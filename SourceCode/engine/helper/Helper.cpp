@@ -1,12 +1,7 @@
 ﻿#include "Helper.h"
 #include"WinApp.h"	
 #include "Easing.h"
-Helper* Helper::GetInstance()
-{
-	static Helper instance;
-
-	return &instance;
-}
+Camera* Helper::m_Camera = nullptr;
 bool Helper::FrameCheck(float& frame, const float addframe) {
 	if (frame < m_FrameMax) {
 		frame += addframe;

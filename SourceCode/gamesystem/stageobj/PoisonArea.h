@@ -54,7 +54,8 @@ private:
 		float scale = {};
 		float afterscale = 0.2f;
 		float frame = {};
-		int DamageTimer = {};
+		int DamageTimer = 49;
+		bool Damage = false;
 	};
 
 	Panel panels;

@@ -1,12 +1,12 @@
-#include "DrawNumber.h"
+#include "DrawDamageNumber.h"
 #include <ImageManager.h>
 #include <Helper.h>
+#include <Easing.h>
 
-DrawNumber::DrawNumber() {
+DrawDamageNumber::DrawDamageNumber() {
 	const int NumberCount = NUMBER_MAX;
 	const float l_Width_Cut = 64.0f;
 	const float l_Height_Cut = 64.0f;
-
 
 	for (auto i = 0; i < NUMBER_MAX; i++) {
 		//読み込み
@@ -23,22 +23,32 @@ DrawNumber::DrawNumber() {
 }
 
 //初期化
-void DrawNumber::Initialize() {
-	m_Number = {};
-	m_Position = {};
+void DrawDamageNumber::Initialize() {
+	m_AfterPos = { m_Position.x,m_Position.y - 120.0f };
+	m_Alive = true;
 }
 //更新
-void DrawNumber::Update() {
+void DrawDamageNumber::Update() {
 	for (int i = 0; i < _Number.size(); i++) {
 		_Number[i]->SetPosition(m_Position);
+		_Number[i]->SetSize(m_Size);
 	}
+
+	NumberMove();
 }
 //描画
-void DrawNumber::Draw() {
+void DrawDamageNumber::Draw() {
 	_Number[m_Number]->Draw();
 }
+//ImGui描画
+void DrawDamageNumber::ImGuiDraw() {
+	ImGui::Begin("Damage");
+	ImGui::Text("SizeX:%f", m_Size.x);
+	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::End();
+}
 //数字とか座標の設定
-void DrawNumber::SetExplain(const XMFLOAT3& pos) {
+void DrawDamageNumber::SetExplain(const XMFLOAT3& pos) {
 	//ワールド座標に変換する
 	XMVECTOR texHPFirst;
 	texHPFirst = { pos.x, pos.y, pos.z };
@@ -50,9 +60,23 @@ void DrawNumber::SetExplain(const XMFLOAT3& pos) {
 	m_Position = { texHPFirst.m128_f32[0],texHPFirst.m128_f32[1] };
 }
 //カメラ情報
-void DrawNumber::GetCameraData() {
+void DrawDamageNumber::GetCameraData() {
 	Camera* camera = Helper::GetCamera();
 	m_MatView = camera->GetViewMatrix();
 	m_MatProjection = camera->GetProjectionMatrix();
 	m_MatPort = camera->GetViewPort();
+}
+//動き
+void DrawDamageNumber::NumberMove() {
+	static float addFrame = 1.f / 30.f;
+	if (Helper::FrameCheck(m_Frame, addFrame)) {
+		m_Alive = false;
+	}
+
+	m_Position = { m_Position.x,
+	Ease(In,Cubic,m_Frame,m_Position.y,m_AfterPos.y) };
+
+	m_Size = { Ease(In,Cubic,m_Frame,m_Size.x,m_AfterSize),
+		Ease(In,Cubic,m_Frame,m_Size.y,m_AfterSize),
+	};
 }

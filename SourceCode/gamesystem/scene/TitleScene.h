@@ -34,10 +34,5 @@ private:
 
 	unique_ptr<InterEnemy> enemy = nullptr;
 
-	array<unique_ptr<IKESprite>, 2> title_;
-
-	enum TitleParts {
-		TITLE_BACK,
-		TITLE_TEXT
-	};
+	unique_ptr<IKESprite> title_;
 };

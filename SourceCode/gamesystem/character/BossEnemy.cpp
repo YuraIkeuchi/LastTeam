@@ -153,10 +153,10 @@ void BossEnemy::Finalize() {
 //‘Ò‹@
 void BossEnemy::Inter() {
 	const int l_TargetTimer = 120;
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = Helper::GetInstance()->GetRanNum(0, 2);
+		int l_RandState = Helper::GetRanNum(0, 2);
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -172,7 +172,7 @@ void BossEnemy::Attack() {
 void BossEnemy::Teleport() {
 	const int l_TargetTimer = 200;
 
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -197,7 +197,7 @@ void BossEnemy::BulletAttack() {
 	const int l_TargetTimer = 70;
 
 	if (_BossType == Boss_SET) {
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			coolTimer = {};
 			_BossType = Boss_THROW;
 		}
@@ -228,7 +228,7 @@ void BossEnemy::RowAttack() {
 		if (coolTimer == 0) {		//—\‘ªƒGƒŠƒA
 			BirthPredict({}, m_AttackCount,"Row");
 		}
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {		//ŽÀÛ‚ÌUŒ‚
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//ŽÀÛ‚ÌUŒ‚
 			BirthArea({}, m_AttackCount, "Row");
 			coolTimer = {};
 			m_AttackCount++;
@@ -252,15 +252,15 @@ void BossEnemy::RandomAttack() {
 	if (m_AttackCount != 8) {
 		if (coolTimer == 0) {
 			//ƒvƒŒƒCƒ„[‚©‚ç‚Ì‹——£(-1~1)
-			int l_RandWigth = Helper::GetInstance()->GetRanNum(-1, 1);
-			int l_RandHeight = Helper::GetInstance()->GetRanNum(-1, 1);
+			int l_RandWigth = Helper::GetRanNum(-1, 1);
+			int l_RandHeight = Helper::GetRanNum(-1, 1);
 			m_RandWigth = l_PlayerWidth + l_RandWigth;
 			m_RandHeight = l_PlayerHeight + l_RandHeight;
-			Helper::GetInstance()->Clamp(m_RandWigth, 0, 3);
-			Helper::GetInstance()->Clamp(m_RandHeight, 0, 3);
+			Helper::Clamp(m_RandWigth, 0, 3);
+			Helper::Clamp(m_RandHeight, 0, 3);
 			BirthPredict(m_RandWigth, m_RandHeight, "Random");
 		}
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			BirthArea(m_RandWigth, m_RandHeight, "Random");
 			coolTimer = {};
 			m_AttackCount++;
@@ -407,8 +407,8 @@ void BossEnemy::BirthMagic() {
 	if (magic.State == MAGIC_BIRTH) {			//–‚–@w‚ðL‚°‚é
 		magic.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
 
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
-			if (Helper::GetInstance()->CheckMin(magic.Timer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
+			if (Helper::CheckMin(magic.Timer, l_TargetTimer, 1)) {
 				m_Warp = true;
 				magic.Frame = {};
 				magic.AfterScale = {};
@@ -419,7 +419,7 @@ void BossEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 	else {			//–‚–@w‚ðk‚ß‚é
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
 			magic.Alive = false;
@@ -433,7 +433,7 @@ void BossEnemy::WarpEnemy() {
 	l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//ƒLƒƒƒ‰‚ª¬‚³‚­‚È‚é
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.5f;
 			enemywarp.State = WARP_END;
@@ -444,7 +444,7 @@ void BossEnemy::WarpEnemy() {
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
 	else {			//ƒLƒƒƒ‰‚ª‘å‚«‚­‚È‚Á‚Ä‚¢‚é
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
 			m_Warp = false;

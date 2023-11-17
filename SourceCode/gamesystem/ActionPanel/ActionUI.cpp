@@ -68,7 +68,7 @@ void ActionUI::UiMove() {
 	if (!m_Use) {
 		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 670.0f);
 	} else {
-		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 		}
 		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 630.0f);

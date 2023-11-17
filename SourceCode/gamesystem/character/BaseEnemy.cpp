@@ -45,8 +45,8 @@ XMFLOAT3 BaseEnemy::RandPanelPos()
 {
 	panel_position_ =
 	{
-		Helper::GetInstance()->GetRanNum(4, 7),
-		Helper::GetInstance()->GetRanNum(0, 3)
+		Helper::GetRanNum(4, 7),
+		Helper::GetRanNum(0, 3)
 	};
 	return StagePanel::GetInstance()->SetPositon(panel_position_.width, panel_position_.height);
 }
@@ -143,7 +143,7 @@ void TestEnemy::CreateTree()
 				panel_position_ =
 				{
 					7,
-					Helper::GetInstance()->GetRanNum(0, 3)
+					Helper::GetRanNum(0, 3)
 				};
 				m_Position = StagePanel::GetInstance()->SetPositon(panel_position_.width, panel_position_.height);
 				init_flag = false;
