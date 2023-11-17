@@ -23,9 +23,9 @@ void Player::LoadResource() {
 		_drawnumber[i] = make_unique<DrawNumber>();
 		_drawnumber[i]->Initialize();
 	}
-	_drawnumber[FIRST_DIGHT]->SetPosition({ 100.0f,620.0f });
-	_drawnumber[SECOND_DIGHT]->SetPosition({ 80.0f,620.0f });
-	_drawnumber[THIRD_DIGHT]->SetPosition({ 60.0f,620.0f });
+	_drawnumber[FIRST_DIGHT]->SetPosition({ 100.0f,600.0f });
+	_drawnumber[SECOND_DIGHT]->SetPosition({ 80.0f,600.0f });
+	_drawnumber[THIRD_DIGHT]->SetPosition({ 60.0f,600.0f });
 
 	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();

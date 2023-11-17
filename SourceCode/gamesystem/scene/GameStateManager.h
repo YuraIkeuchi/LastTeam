@@ -142,8 +142,10 @@ private:
 
 	unique_ptr<IKESprite> skillUI = nullptr;
 	unique_ptr<IKESprite> gaugeUI = nullptr;
+	unique_ptr<IKESprite> gaugeCover = nullptr;
+	std::unique_ptr<IKESprite> handsFrame;
 
-	XMFLOAT2 basesize = { 45.f,400.f };
+	XMFLOAT2 basesize = { 46.f,400.f };
 
 	// 攻撃エリア
 	vector<unique_ptr<AttackArea>> attackarea;
