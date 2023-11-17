@@ -421,6 +421,9 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\PoisonArea.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\text\DrawDamageNumber.cpp">
+      <Filter>gamesystem\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -808,6 +811,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\PoisonArea.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\text\DrawDamageNumber.h">
+      <Filter>gamesystem\Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
