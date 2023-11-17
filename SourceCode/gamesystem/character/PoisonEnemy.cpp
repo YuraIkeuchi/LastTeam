@@ -81,7 +81,7 @@ void PoisonEnemy::Action() {
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
 
-	//áŠQ•¨‚Ìíœ
+	//‚Ç‚­‚Ìíœ
 	for (int i = 0; i < poisonarea.size(); i++) {
 		if (poisonarea[i] == nullptr) {
 			continue;
@@ -114,14 +114,17 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void PoisonEnemy::ImGui_Origin() {
-	//áŠQ•¨‚Ìíœ
-	for (int i = 0; i < poisonarea.size(); i++) {
-		if (poisonarea[i] == nullptr) {
-			continue;
-		}
+	////‚Ç‚­‚Ìíœ
+	//for (int i = 0; i < poisonarea.size(); i++) {
+	//	if (poisonarea[i] == nullptr) {
+	//		continue;
+	//	}
 
-		poisonarea[i]->ImGuiDraw();
-	}
+	//	poisonarea[i]->ImGuiDraw();
+	//}
+	ImGui::Begin("Poison");
+	ImGui::Text("Last:%d", m_LastEnemy);
+	ImGui::End();
 }
 //ŠJ•ú
 void PoisonEnemy::Finalize() {

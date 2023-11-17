@@ -93,6 +93,7 @@ protected:
 	bool m_CheckPanel = false;
 
 	string m_EnemyTag = "Normal";
+	bool m_LastEnemy = false;
 
 	//影の変数
 	XMFLOAT3 m_ShadowPos = {};
@@ -106,11 +107,12 @@ public://getter setter
 	void SetPoizonLong(bool isPoison) { m_PoisonLong = isPoison; }
 	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
 	void SetDrainUp(bool IsDrainUp) { m_IsDrainUp = IsDrainUp; }
+	void SetLastEnemy(bool LastEnemy) { m_LastEnemy = LastEnemy; }
 	static void SetPlayer(Player* player) { InterEnemy::player = player; }
 
 	const float GetHP() { return m_HP; }
 	const bool GetAlive() { return m_Alive; }
-
+	const bool GetLastEnemy() { return m_LastEnemy; }
 
 	void SimpleDamege(float damage = 3.f);
 public:

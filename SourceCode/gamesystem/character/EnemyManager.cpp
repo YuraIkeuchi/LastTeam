@@ -36,6 +36,21 @@ void EnemyManager::Update() {
 		}
 		enemy->Update();
 	}
+
+	//敵の削除
+	for (int i = 0; i < enemys.size(); i++) {
+		if (enemys[i] == nullptr) {
+			continue;
+		}
+		if (!enemys[i]->GetAlive()) {
+			enemys.erase(cbegin(enemys) + i);
+		}
+	}
+
+	if (enemys.size() == 1) {
+		enemys[0]->SetLastEnemy(true);
+	}
+
 }
 
 void EnemyManager::Draw(DirectXCommon* dxCommon) {
@@ -49,7 +64,7 @@ void EnemyManager::SetCount() {
 
 void EnemyManager::ImGuiDraw() {
 	ImGui::Begin("Enemys");
-	ImGui::Text("size:%d", enemys.size());
+	ImGui::Text("size:%d", m_DeathCount);
 	ImGui::End();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->ImGuiDraw();
@@ -64,6 +79,7 @@ void EnemyManager::UIDraw() {
 //ステージのエネミー残存
 bool EnemyManager::BossDestroy() {
 	int num = (int)enemys.size();
+
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		if (enemy->GetAlive()) {
 			return false;
@@ -73,7 +89,6 @@ bool EnemyManager::BossDestroy() {
 	}
 	if (num == 0) {
 		return true;
-		enemys.clear();
 	} else {
 		return false;
 	}

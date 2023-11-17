@@ -4,7 +4,7 @@
 #include <StagePanel.h>
 #include <GameStateManager.h>
 #include <SceneChanger.h>
-
+#include <Helper.h>
 #include "InterEnemy.h"
 BattleScene::~BattleScene() {
 	Finalize();
@@ -53,6 +53,9 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 
 	GameReset({ -8.0f,0.1f,0.0f });
 	StagePanel::GetInstance()->DeleteAction();
+
+	Feed* feed_ = new Feed();
+	feed.reset(feed_);
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
@@ -74,18 +77,33 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	enemyManager->Update();
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
+
+	//後々変更する(酷い処理)
 	//エネミーが全員死亡したら
-	if (enemyManager->BossDestroy()) {
+	if (enemyManager->BossDestroy() && !m_FeedStart) {
+		m_Feed = true;
+		m_FeedStart = true;
+	}
+	if (m_Feed) {
+		feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 30.0f, m_Feed);
+	}
+	if (feed->GetFeedEnd()) {
+		m_FeedEnd = true;
+	}
+
+	if (m_FeedEnd) {
 		//クリア処理が終らなかったら
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
 			//クリア処理準備
 			GameStateManager::GetInstance()->StageClearInit();
-		} else {
+		}
+		else {
 			//マップに戻る
 			_ChangeType = CHANGE_MAP;
 			SceneChanger::GetInstance()->SetChangeStart(true);
 		}
 	}
+
 	//クリア条件に達するとプレイヤーを動かせなくする
 	if (GameStateManager::GetInstance()->GetIsFinish()) {
 		player_->SetDelay(true);
@@ -146,6 +164,9 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 		enemyManager->UIDraw();
 		GameStateManager::GetInstance()->ActUIDraw();
 	}
+	if (m_Feed) {
+		feed->Draw();
+	}
 	SceneChanger::GetInstance()->Draw();
 }
 //後方描画(主にSprite)
@@ -156,7 +177,9 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	enemyManager->Draw(dxCommon);
-	StagePanel::GetInstance()->ActDraw(dxCommon);
+	if (!enemyManager->BossDestroy()) {
+		StagePanel::GetInstance()->ActDraw(dxCommon);
+	}
 	IKEObject3d::PostDraw();
 }
 //ImGui
@@ -164,8 +187,12 @@ void BattleScene::ImGuiDraw() {
 	//player_->ImGuiDraw();
 	//GameStateManager::GetInstance()->ImGuiDraw();
 	//game_object_manager_->ImGuiDraw();
-	//enemyManager->ImGuiDraw();
+	enemyManager->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
+	/*ImGui::Begin("Battle");
+	ImGui::Text("Timer:%d", m_FinishTimer);
+	ImGui::Text("Finish:%d", m_Finish);
+	ImGui::End();*/
 }
 
 void BattleScene::Finalize() {
