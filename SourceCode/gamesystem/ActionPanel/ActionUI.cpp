@@ -10,7 +10,6 @@ ActionUI::ActionUI(const int ID) {
 	tex->SetAnchorPoint({ 0.5f,0.5f });
 	tex->SetPosition({ -100.0f,800.0f });
 	tex->SetSize({ 64.0f,64.0f });
-
 	//ID用のスプライト
 	_drawnumber = make_unique<DrawNumber>();
 	_drawnumber->Initialize();

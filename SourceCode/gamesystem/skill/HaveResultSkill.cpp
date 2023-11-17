@@ -104,6 +104,7 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 	haveSkills[num].icon->SetSize({ 64.0f,64.0f });
 	haveSkills[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	haveSkills[num].icon->SetPosition(haveSkills[num].position);
+	haveSkills[num].icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
 	haveSkills[num].number = make_unique<DrawNumber>();
 	haveSkills[num].number->Initialize();
 	haveSkills[num].number->SetNumber(haveSkills[num].ID);
