@@ -1,0 +1,11 @@
+ID,3
+SkillType,0
+Delay,20
+Name,Death
+StateName,NONE
+Damege,3
+DistanceX,1
+DistanceY,1
+AttackArea,1
+AttackArea,1
+AttackAreA,1
