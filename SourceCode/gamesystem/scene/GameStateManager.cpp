@@ -344,7 +344,8 @@ void GameStateManager::GaugeUpdate() {
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReloadDamage) {
-			//エネミーに5ダメージ
+			//エネミーに3ダメージ
+			m_ReloadDamage = true;
 		}
 		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();

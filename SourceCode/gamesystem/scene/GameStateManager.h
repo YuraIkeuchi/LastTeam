@@ -108,6 +108,10 @@ public:
 	// 仮
 	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
 
+
+	void SetIsReloadDamage(bool flag) { m_ReloadDamage = flag; }
+	bool GetIsReloadDamage() { return m_ReloadDamage; }
+
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -180,6 +184,7 @@ private:
 	float kGaugeCountMax = 180;
 	bool m_IsReload = true;
 	bool m_IsReloadDamage = false;
+	bool m_ReloadDamage = false;
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
 	bool m_IsDrainUp = false;

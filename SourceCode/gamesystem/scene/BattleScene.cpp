@@ -65,6 +65,10 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	camerawork->Update(camera);
 	player_->Update();
 	GameStateManager::GetInstance()->Update();
+	if (GameStateManager::GetInstance()->GetIsReloadDamage()) {
+		enemyManager->ReLoadDamage();
+		GameStateManager::GetInstance()->SetIsReloadDamage(false);
+	}
 
 	StagePanel::GetInstance()->Update();
 	enemyManager->Update();

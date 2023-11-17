@@ -41,7 +41,10 @@ public:
 	/// パッシブがあればドレイン上昇(バトルシーン)
 	/// </summary>
 	void DrainHealUp();
-
+	/// <summary>
+	/// 
+	/// </summary>
+	void ReLoadDamage();
 private:
 	/// <summary>
 	/// csvでマップに敵をスポーン
