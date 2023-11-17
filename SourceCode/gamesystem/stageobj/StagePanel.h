@@ -48,6 +48,8 @@ public:
 	void Update();
 	//描画
 	void Draw(DirectXCommon* dxCommon);
+	//行動カードの描画
+	void ActDraw(DirectXCommon* dxCommon);
 	//ImGui
 	void ImGuiDraw();
 	//パネルを戻す

@@ -77,26 +77,28 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 			panels[i][j].object->Draw();
 		}
 	}
+	IKEObject3d::PostDraw();
+}
+//カードの描画
+void StagePanel::ActDraw(DirectXCommon* dxCommon) {
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Draw(dxCommon);
 	}
-	IKEObject3d::PostDraw();
 }
-
 //ImGui
 void StagePanel::ImGuiDraw() {
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->ImGuiDraw();
 	}
-	ImGui::Begin("Panel");
-	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			ImGui::Text("Poison[%d][%d]:%d", i, j, panels[i][j].isPoison);
-		}
-	}
-	ImGui::End();
+	//ImGui::Begin("Panel");
+	//for (int i = 0; i < PANEL_WIDTH / 2; i++) {
+	//	for (int j = 0; j < PANEL_HEIGHT; j++) {
+	//		ImGui::Text("Poison[%d][%d]:%d", i, j, panels[i][j].isPoison);
+	//	}
+	//}
+	//ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
@@ -178,7 +180,7 @@ void StagePanel::RandomPanel(int num) {
 		InterAction* newAction = nullptr;
 		switch (panels[width][height].type) {
 		case SKILL_PANEL:
-			newAction = new SkillAction();
+			newAction = new SkillAction(SkillManager::GetInstance()->IDSearch(i));
 			break;
 		default:
 			break;
@@ -186,7 +188,6 @@ void StagePanel::RandomPanel(int num) {
 		newAction->Initialize();
 		newAction->SetPlayer(player);
 		//ステージに配布されるパネルに情報を読み取ってる
-		newAction->SetSkillID(SkillManager::GetInstance()->IDSearch(i));
 		newAction->GetSkillData();
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);

@@ -3,7 +3,6 @@
 #include "CollisionPrimitive.h"
 #include <string>
 #include <IKETexture.h>
-#include <DrawNumber.h>
 #include "Player.h"
 using namespace std;         //  ñºëOãÛä‘éwíË
 enum State {
@@ -56,15 +55,15 @@ public:
 
 	void SetState(const int state) { _state= state; }
 	void SetAlive(const bool Alive) { m_Alive = Alive; }
-	void SetSkillID(const int SkillID) { m_SkillID = SkillID; }
 	void SetPlayer(Player* player) { this->player = player; }
 
 protected:
 	Player* player = nullptr;
 	string m_Tag;
 	unique_ptr<IKETexture> m_Pannel = nullptr;
+
 	XMFLOAT3 m_PannelScale = {0.15f,0.15f,0.15f};
-	XMFLOAT3 m_PannelRot = { 90.0f,0.0f,0.0f };
+	XMFLOAT3 m_PannelRot = { 0.0f,0.0f,0.0f };
 	float m_Radius = 0.35f;
 	bool m_Alive = true;
 	bool m_Delete = false;
@@ -81,7 +80,15 @@ protected:
 	int m_DistanceX = {};
 	int m_DistanceY = {};
 	string StateName = {};
-	unique_ptr<DrawNumber> _drawnumber;
+
+	struct Shadow {
+		unique_ptr<IKETexture> tex;
+		//âeÇÃïœêî
+		XMFLOAT3 Position = {};
+		XMFLOAT3 Scale = {};
+	};
+
+	Shadow shadow;
 private:
 	void Spawn();//ë“ã@
 	void Alive();
