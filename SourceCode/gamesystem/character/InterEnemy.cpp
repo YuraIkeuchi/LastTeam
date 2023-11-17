@@ -142,6 +142,11 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 		}
 	}
 }
+void InterEnemy::SimpleDamege(float damage) {
+	if (m_HP <= 0.0f) { return; }
+	m_HP -= damage;
+	BirthParticle();
+}
 //パーティクル(ダメージ)
 void InterEnemy::BirthParticle() {
 	const XMFLOAT4 s_color = { 1.0f,0.3f,0.0f,1.0f };

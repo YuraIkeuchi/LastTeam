@@ -8,7 +8,8 @@ PredictArea::PredictArea(const string& name) {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
 			if (name == "ENEMY") {
-				panels[i][j].tex.reset(new IKETexture(ImageManager::ENEMYPREDICT, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+				panels[i][j].tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,0.4f,0.4f,1.f }));
+				panels[i][j].color = { 1.f,0.4f,0.4f,1.f };
 			}
 			else if(name == "PLAYER") {
 				panels[i][j].tex.reset(new IKETexture(ImageManager::PLAYERPREDICT, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));

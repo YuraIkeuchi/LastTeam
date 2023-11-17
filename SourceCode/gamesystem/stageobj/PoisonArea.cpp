@@ -6,7 +6,7 @@
 #include <Helper.h>
 //ì«Ç›çûÇ›
 PoisonArea::PoisonArea() {
-	panels.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	panels.tex.reset(new IKETexture(ImageManager::POISONAREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	panels.tex->TextureCreate();
 	panels.tex->Initialize();
 	panels.tex->SetScale({});
@@ -33,13 +33,13 @@ void PoisonArea::InitState(const int width, const int height) {
 	panels.position = SetPanelPos(width, height);
 	panels.Width = width, panels.Height = height;
 	panels.position.y = 0.011f;
-	panels.color = { 0.5f,0.0f,0.5f,1.0f };
+	panels.color = { 1.0f,1.0f,1.0f,1.0f };
 	panels.Alive = true;
 	panels.Timer = 40;
 	//íe
 	m_BulletAlive = true;
 	m_Scale = { 0.2f,0.2f,0.2f };
-	m_Color = { 0.5f,0.0f,0.5f,1.0f };
+	m_Color = { 0.5f,1.0f,0.5f,1.0f };
 }
 
 //çXêV

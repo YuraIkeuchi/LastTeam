@@ -110,6 +110,9 @@ public://getter setter
 
 	const float GetHP() { return m_HP; }
 	const bool GetAlive() { return m_Alive; }
+
+
+	void SimpleDamege(float damage = 3.f);
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>
