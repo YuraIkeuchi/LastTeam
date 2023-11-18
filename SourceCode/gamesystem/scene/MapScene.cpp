@@ -138,6 +138,12 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	lastScroll = MaxLength * interbal;
 	if (nowHierarchy == 0) {
 		scroll.x = -lastScroll;
+		for (int i = 0; i < MaxLength; i++) {
+			for (int j = 0; j < INDEX; j++) {
+				UIs[i][j].open = false;
+			}
+		}
+		chara->SetSize({0.f,0.f});
 		m_State = State::initState;
 	} else {
 		m_State = State::mainState;

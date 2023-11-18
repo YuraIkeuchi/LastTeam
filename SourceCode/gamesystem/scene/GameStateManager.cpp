@@ -44,7 +44,7 @@ void GameStateManager::Initialize() {
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 	gaugeCover= IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f+32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
-	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 52.f,670.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
+	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
 	resultSkill = make_unique<ResultSkill>();
 	resultSkill->Initialize(m_dxCommon);
@@ -433,7 +433,7 @@ void GameStateManager::DeckInitialize() {
 
 void GameStateManager::GetPassive(int ID) {
 	float posX = GotPassives.size() * 70.0f;
-	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,0.0f})));
+	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,50.0f})));
 }
 
 
