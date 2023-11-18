@@ -20,7 +20,6 @@ public:
 	{
 		FEED,
 		SHINE,
-		SKILLUI,
 		ENEMYHPUI,
 		HPNUMBERUI,
 		SLASH,
