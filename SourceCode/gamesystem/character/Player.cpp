@@ -298,7 +298,7 @@ void Player::DamageParticle() {
 	const float s_scale = 2.0f;
 	const float e_scale = 0.0f;
 	for (int i = 0; i < 15; i++) {
-		ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 8.0f);
+		ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 5.0f);
 	}
 }
 void Player::BirthPoisonParticle() {
@@ -307,7 +307,7 @@ void Player::BirthPoisonParticle() {
 	const float s_scale = 1.0f;
 	const float e_scale = 0.0f;
 	for (int i = 0; i < 3; i++) {
-		ParticleEmitter::GetInstance()->PoisonEffect(50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color);
+		ParticleEmitter::GetInstance()->PoisonEffect(50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color, 0.02f, 3.0f);
 	}
 }
 //プレイヤーの情報をセーブ

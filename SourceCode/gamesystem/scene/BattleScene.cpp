@@ -85,7 +85,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		m_FeedStart = true;
 	}
 	if (m_Feed) {
-		feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 30.0f, m_Feed);
+		feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 60.0f, m_Feed);
 	}
 	if (feed->GetFeedEnd()) {
 		m_FeedEnd = true;
@@ -158,7 +158,7 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 
 //前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
-	if (!enemyManager->BossDestroy()){
+	if (!m_FeedEnd){
 		ParticleEmitter::GetInstance()->FlontDrawAll();
 		player_->UIDraw();
 		enemyManager->UIDraw();
