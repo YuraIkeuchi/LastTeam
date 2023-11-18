@@ -56,3 +56,17 @@ void DrawNumber::GetCameraData() {
 	m_MatProjection = camera->GetProjectionMatrix();
 	m_MatPort = camera->GetViewPort();
 }
+
+void DrawNumber::SetColor(XMFLOAT4 color) {
+	for (unique_ptr<IKESprite>& num:_Number) {
+		num->SetColor(color);
+	}
+}
+
+void DrawNumber::SetSize(XMFLOAT2 size) {
+	for (unique_ptr<IKESprite>& num : _Number) {
+		num->SetSize(size);
+	}
+
+}
+
