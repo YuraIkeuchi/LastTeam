@@ -45,8 +45,10 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 	for (HaveUI& resultUI : haveSkills) {
 		resultUI.icon->Draw();
 		if (resultUI.isSkill) {
-			resultUI.DamageNumber[0]->Draw();
-			if (resultUI.Damage >= 10) {
+			if (resultUI.Damage != 0) {			//UŒ‚—Í‚ª0‚È‚ç•`‰æ‚µ‚È‚¢
+				resultUI.DamageNumber[0]->Draw();
+			}
+			if (resultUI.Damage >= 10) {		//“ñŒ…‚ß
 				resultUI.DamageNumber[1]->Draw();
 			}
 		}
@@ -109,6 +111,7 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 	haveSkills[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	haveSkills[num].icon->SetPosition(haveSkills[num].position);
 	haveSkills[num].icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
+	//ƒ_ƒ[ƒW”‚É‚æ‚Á‚Ä•`‰æ‚·‚éŒ…”‚ªˆá‚¤
 	if (haveSkills[num].Damage < 10) {
 		haveSkills[num].DamageNumber[0] = make_unique<DrawNumber>(0.4f);
 		haveSkills[num].DamageNumber[0]->Initialize();

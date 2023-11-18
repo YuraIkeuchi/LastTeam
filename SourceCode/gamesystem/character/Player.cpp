@@ -22,7 +22,7 @@ void Player::LoadResource() {
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
-		_MaxHp[i] = make_unique<DrawNumber>();
+		_MaxHp[i] = make_unique<DrawNumber>(0.5f);
 		_MaxHp[i]->Initialize();
 	}
 
