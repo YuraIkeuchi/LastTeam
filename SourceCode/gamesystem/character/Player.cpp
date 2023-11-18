@@ -8,6 +8,8 @@
 #include <ImageManager.h>
 #include <ParticleEmitter.h>
 #include "imgui.h"
+
+float Player::startHP = 0.f;
 //リソース読み込み
 void Player::LoadResource() {
 	m_Object.reset(new IKEObject3d());
@@ -55,7 +57,9 @@ bool Player::Initialize() {
 void Player::LoadCSV() {
 	if (is_title) {
 		m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "STARTHP")));
+		startHP = m_HP;
 		m_MaxHP = m_HP;
+		m_OldHP = m_HP;
 	} else {
 		m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "NOWHP")));
 		m_MaxHP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "MAXHP")));
@@ -118,6 +122,13 @@ void Player::Update() {
 
 		//HPの限界値を決める
 		Helper::Clamp(m_HP, 0.0f, m_MaxHP);
+		//どこが初期化かわからん
+		if (m_MaxHP > startHP) {
+			_MaxHp[FIRST_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
+			_MaxHp[SECOND_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
+			_MaxHp[THIRD_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
+		}
+		HPEffect();
 		//表示用のHP
 		m_InterHP = (int)(m_HP);
 		m_InterMaxHP = (int)m_MaxHP;
@@ -334,6 +345,46 @@ void Player::BirthPoisonParticle() {
 	for (int i = 0; i < 3; i++) {
 		ParticleEmitter::GetInstance()->PoisonEffect(50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color, 0.02f, 3.0f);
 	}
+}
+bool Player::HPEffect() {
+	if (m_OldHP == m_HP) { return false; }
+	static float frame = 0.f;
+	static float frameMax = 1 / 10.0f;
+	if (isHeal || isDamage) {
+		if (Helper::FrameCheck(frame, frameMax)) {
+			XMFLOAT2 size = { 32.f,32.f };
+			_drawnumber[FIRST_DIGHT]->SetSize(size);
+			_drawnumber[SECOND_DIGHT]->SetSize(size);
+			_drawnumber[THIRD_DIGHT]->SetSize(size);
+			_drawnumber[FIRST_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
+			_drawnumber[SECOND_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
+			_drawnumber[THIRD_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
+			frame = 0.f;
+			isHeal = false;
+			isDamage = false;
+			m_OldHP = m_HP;
+			return false;
+		} else {
+			XMFLOAT2 size = {64.f,64.f};
+			size.x=Ease(Out,Quad,frame,64.f,32.f);
+			size.y=Ease(Out,Quad,frame,64.f,32.f);
+			_drawnumber[FIRST_DIGHT]->SetSize(size);
+			_drawnumber[SECOND_DIGHT] ->SetSize(size);
+			_drawnumber[THIRD_DIGHT]->SetSize(size);
+		}
+	}
+	if (m_OldHP < m_HP) {
+		isHeal = true;
+		_drawnumber[FIRST_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
+		_drawnumber[SECOND_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
+		_drawnumber[THIRD_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
+	} else {
+		isDamage = true;
+		_drawnumber[FIRST_DIGHT]->SetColor({ 1.f,0.0f,0.f,1.0f });
+		_drawnumber[SECOND_DIGHT]->SetColor({ 1.f,0.0f,0.f,1.0f });
+		_drawnumber[THIRD_DIGHT]->SetColor({ 1.f,0.0f,0.f,1.0f });
+	}
+	return true;
 }
 //プレイヤーの情報をセーブ
 void Player::PlayerSave() {
