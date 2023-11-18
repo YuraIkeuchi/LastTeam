@@ -203,6 +203,7 @@ void GameStateManager::ImGuiDraw() {
 	if (_ResultType == HAVE_SKILL) {
 		haveSkill->ImGuiDraw();
 	}
+	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {

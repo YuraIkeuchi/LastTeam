@@ -24,7 +24,7 @@ public:
 	
 	void PushOnce2Deck(const int DeckNumber);
 	//リザルト画面に渡すためのデータ
-	void HandResultData(const int DeckID,vector<std::vector<int>>& area, int& DisX, int& DisY);
+	void HandResultData(const int DeckID,vector<std::vector<int>>& area, int& DisX, int& DisY,int& Damage);
 	//デッキのクリア
 	void DeckClear();
 private:

@@ -11,7 +11,7 @@ ActionUI::ActionUI(const int ID) {
 	tex->SetPosition({ -100.0f,800.0f });
 	tex->SetSize({ 64.0f,64.0f });
 	//ID用のスプライト
-	_drawnumber = make_unique<DrawNumber>();
+	_drawnumber = make_unique<DrawNumber>(0.5f);
 	_drawnumber->Initialize();
 }
 //初期化

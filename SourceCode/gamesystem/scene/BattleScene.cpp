@@ -185,15 +185,10 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	//player_->ImGuiDraw();
-	//GameStateManager::GetInstance()->ImGuiDraw();
-	//game_object_manager_->ImGuiDraw();
+	GameStateManager::GetInstance()->ImGuiDraw();
 	enemyManager->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
 	camerawork->ImGuiDraw();
-	/*ImGui::Begin("Battle");
-	ImGui::Text("Timer:%d", m_FinishTimer);
-	ImGui::Text("Finish:%d", m_Finish);
-	ImGui::End();*/
 }
 
 void BattleScene::Finalize() {

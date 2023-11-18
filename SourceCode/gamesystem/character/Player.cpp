@@ -20,7 +20,7 @@ void Player::LoadResource() {
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>();
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 		_MaxHp[i] = make_unique<DrawNumber>();
 		_MaxHp[i]->Initialize();

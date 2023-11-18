@@ -2,7 +2,7 @@
 #include <ImageManager.h>
 #include <Helper.h>
 
-DrawNumber::DrawNumber() {
+DrawNumber::DrawNumber(const float scale) {
 	const int NumberCount = NUMBER_MAX;
 	const float l_Width_Cut = 64.0f;
 	const float l_Height_Cut = 64.0f;
@@ -18,7 +18,7 @@ DrawNumber::DrawNumber() {
 			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
 		_Number[i]->SetAnchorPoint({ 0.5f,0.5f });
 		_Number[i]->SetSize({ l_Width_Cut,l_Height_Cut });
-		_Number[i]->SetScale(0.5f);
+		_Number[i]->SetScale(scale);
 	}
 }
 
