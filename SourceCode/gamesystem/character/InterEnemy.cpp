@@ -159,7 +159,7 @@ void InterEnemy::BirthParticle() {
 	//最後の敵かどうかでパーティクルが変わる
 	if (!m_LastEnemy) {
 		l_Life = 50;
-		l_Divi = 8.0f;
+		l_Divi = 5.0f;
 	}
 	else {
 		if (m_HP == 0.0f) {
@@ -181,8 +181,26 @@ void InterEnemy::BirthPoisonParticle() {
 	const XMFLOAT4 e_color = { 0.5f,0.0f,0.5f,1.0f };
 	const float s_scale = 1.0f;
 	const float e_scale = 0.0f;
+	int l_Life = {};
+	float l_Divi = {};
+
+	//最後の敵かどうかでパーティクルが変わる
+	if (!m_LastEnemy) {
+		l_Life = 50;
+		l_Divi = 3.0f;
+	}
+	else {
+		if (m_HP == 0.0f) {
+			l_Life = 500;
+			l_Divi = 20.0f;
+		}
+		else {
+			l_Life = 50;
+			l_Divi = 8.0f;
+		}
+	}
 	for (int i = 0; i < 3; i++) {
-		ParticleEmitter::GetInstance()->PoisonEffect(50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color);
+		ParticleEmitter::GetInstance()->PoisonEffect(l_Life, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color,0.02f,l_Divi);
 	}
 }
 //HPの割合
