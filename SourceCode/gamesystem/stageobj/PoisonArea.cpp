@@ -38,7 +38,8 @@ void PoisonArea::InitState(const int width, const int height) {
 	panels.Timer = 40;
 	//’e
 	m_BulletAlive = true;
-	m_Scale = { 0.2f,0.2f,0.2f };
+	float baseScale = PANEL_SIZE * 0.1f;
+	m_Scale = { baseScale,baseScale,baseScale };
 	m_Color = { 0.5f,1.0f,0.5f,1.0f };
 }
 

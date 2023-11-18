@@ -7,6 +7,7 @@
 #include "SceneManager.h"
 #include <TutorialTask.h>
 #include <GameStateManager.h>
+#include <StagePanel.h>
 
 
 array<array<int, 3>, 10> MapScene::mapKinds;
@@ -137,6 +138,12 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	lastScroll = MaxLength * interbal;
 	if (nowHierarchy == 0) {
 		scroll.x = -lastScroll;
+		for (int i = 0; i < MaxLength; i++) {
+			for (int j = 0; j < INDEX; j++) {
+				UIs[i][j].open = false;
+			}
+		}
+		chara->SetSize({0.f,0.f});
 		m_State = State::initState;
 	} else {
 		m_State = State::mainState;
@@ -672,7 +679,7 @@ void MapScene::CheckState() {
 			cheack->SetSize(size);
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
-			GameReset({ -4.0f, 0.1f, 2.0f });
+			GameReset({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 			//チュートリアルのタスク
 			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 			SceneManager::GetInstance()->ChangeScene("TUTORIAL");

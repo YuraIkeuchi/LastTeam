@@ -38,7 +38,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 
 	player_ = make_unique<Player>();
 	player_->LoadResource();
-	player_->InitState({ -4.0f,0.1f,2.0f });
+	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 	player_->Initialize();
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);

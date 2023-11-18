@@ -20,9 +20,9 @@ public:
 	{
 		FEED,
 		SHINE,
-		SKILLUI,
 		ENEMYHPUI,
 		HPNUMBERUI,
+		SLASH,
 		MAPSCREEN,
 		MAPROAD,
 		MAP_CHARA,

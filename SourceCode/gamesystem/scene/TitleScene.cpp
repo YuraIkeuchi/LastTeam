@@ -34,12 +34,12 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	player_ = make_unique<Player>();
 	player_->LoadResource();
 	player_->SetTitleFlag(true);
-	player_->InitState({ -4.0f,0.1f,2.0f });
+	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 	player_->Initialize();
 	
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
-	GameReset({ -4.0f,0.1f,2.0f });
+	GameReset({ -PANEL_SIZE*2.f,0.1f,PANEL_SIZE });
 
 	////敵
 	InterEnemy::SetPlayer(player_.get());
