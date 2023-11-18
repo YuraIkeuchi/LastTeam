@@ -16,7 +16,8 @@ EnemyBullet::EnemyBullet() {
 	panels.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	panels.tex->TextureCreate();
 	panels.tex->Initialize();
-	panels.tex->SetScale({ 0.2f,0.2f,0.2f });
+	float baseScale = PANEL_SIZE * 0.1f;
+	panels.tex->SetScale({ baseScale,baseScale,baseScale });
 	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //初期化
@@ -72,7 +73,7 @@ void EnemyBullet::ImGuiDraw() {
 bool EnemyBullet::Collide() {
 	XMFLOAT3 l_PlayerPos = player->GetPosition();
 	const float l_Damage = 0.5f;
-	const float l_Radius = 0.2f;
+	const float l_Radius = 0.15f;
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
 		player->RecvDamage(5.0f,"NORMAL");
 		m_Alive = false;

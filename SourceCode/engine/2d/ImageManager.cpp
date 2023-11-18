@@ -14,6 +14,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(SKILLUI, L"Resources/2d/objicon/skill.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 	IKESprite::LoadTexture(HPNUMBERUI, L"Resources/2d/objicon/Num.png");
+	IKESprite::LoadTexture(SLASH, L"Resources/2d/objicon/slash.png");
 	IKESprite::LoadTexture(MAPSCREEN, L"Resources/2d/sceneback/mapscreen.png");
 	IKESprite::LoadTexture(MAPROAD, L"Resources/2d/objicon/map_road.png");
 	IKESprite::LoadTexture(MAP_CHARA, L"Resources/2d/objicon/map_chara.png");
