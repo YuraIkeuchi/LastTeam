@@ -5,7 +5,7 @@
 #include <Helper.h>
 DeckUI::DeckUI() {
 	//ID用のスプライト
-	_drawnumber = make_unique<DrawNumber>();
+	_drawnumber = make_unique<DrawNumber>(0.5f);
 	_drawnumber->Initialize();
 }
 void DeckUI::BirthIcon() {

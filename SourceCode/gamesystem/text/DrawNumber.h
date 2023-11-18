@@ -20,7 +20,7 @@ protected: // エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	DrawNumber();
+	DrawNumber(const float scale);
 	//初期化
 	void Initialize();
 	//更新
