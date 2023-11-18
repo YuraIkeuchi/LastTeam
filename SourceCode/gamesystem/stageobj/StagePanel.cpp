@@ -22,12 +22,12 @@ void StagePanel::LoadResource() {
 			panels[i][j].object.reset(new IKEObject3d());
 			panels[i][j].object->Initialize();
 			panels[i][j].object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
-			panels[i][j].object->SetScale({ 2.f,0.01f,2.f });
+			panels[i][j].object->SetScale({ PANEL_SIZE,0.01f,PANEL_SIZE });
 		}
 	}
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			panels[i][j].position = { (2.0f * i) - (PANEL_HEIGHT * 2.0f),0.0f,(2.0f * j) };
+			panels[i][j].position = { (PANEL_SIZE * i) - (PANEL_HEIGHT * PANEL_SIZE),0.0f,(PANEL_SIZE * j) };
 			panels[i][j].color = { 1.f,1.f,1.f,1.f };
 			panels[i][j].type = NO_PANEL;
 			panels[i][j].isHit = false;

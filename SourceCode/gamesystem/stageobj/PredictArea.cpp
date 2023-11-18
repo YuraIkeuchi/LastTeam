@@ -2,7 +2,7 @@
 #include "CsvLoader.h"
 #include <ImageManager.h>
 #include <Helper.h>
-
+#include "StagePanel.h"
 //ÉäÉ\Å[ÉXì«Ç›çûÇ›
 PredictArea::PredictArea(const string& name) {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
@@ -16,7 +16,7 @@ PredictArea::PredictArea(const string& name) {
 			}
 			panels[i][j].tex->TextureCreate();
 			panels[i][j].tex->Initialize();
-			panels[i][j].tex->SetScale({ 0.2f,0.2f,0.2f });
+			panels[i][j].tex->SetScale({ 0.15f,0.15f,0.15f });
 			panels[i][j].tex->SetRotation({ 90.0f,0.0f,0.0f });
 		}
 	}
@@ -27,7 +27,7 @@ PredictArea::PredictArea(const string& name) {
 bool PredictArea::Initialize() {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			panels[i][j].position = { (2.0f * i) - (PREDICT_HEIGHT * 2.0f),0.02f,(2.0f * j) };
+			panels[i][j].position = { (PANEL_SIZE * i) - (PREDICT_HEIGHT * PANEL_SIZE),0.02f,(PANEL_SIZE * j) };
 		}
 	}
 	//CSVì«Ç›çûÇ›

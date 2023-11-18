@@ -23,7 +23,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 
 	player_ = make_unique<Player>();
 	player_->LoadResource();
-	player_->InitState({ -4.0f,0.1f,2.0f });
+	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 	player_->Initialize();
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
@@ -115,7 +115,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	}
 	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
-		GameReset({ -4.0f,0.1f,2.0f });
+		GameReset({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 		if (_ChangeType == CHANGE_MAP) {
 			if (!s_LastStage) {
 				SceneManager::GetInstance()->ChangeScene("MAP");

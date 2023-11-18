@@ -7,6 +7,7 @@
 #include "SceneManager.h"
 #include <TutorialTask.h>
 #include <GameStateManager.h>
+#include <StagePanel.h>
 
 
 array<array<int, 3>, 10> MapScene::mapKinds;
@@ -672,7 +673,7 @@ void MapScene::CheckState() {
 			cheack->SetSize(size);
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
-			GameReset({ -4.0f, 0.1f, 2.0f });
+			GameReset({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 			//チュートリアルのタスク
 			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 			SceneManager::GetInstance()->ChangeScene("TUTORIAL");

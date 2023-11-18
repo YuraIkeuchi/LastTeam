@@ -14,7 +14,7 @@ void Player::LoadResource() {
 	m_Object->Initialize();
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
 	m_Object->SetScale({ 2.f,2.f,2.f });
-	m_Object->SetPosition({ 0.0f,2.0f,0.0f });
+	m_Object->SetPosition({ 0.0f,PANEL_SIZE,0.0f });
 	m_Object->SetLightEffect(false);
 
 	//HPII
@@ -170,8 +170,8 @@ void Player::Move() {
 	if (m_Delay) { return; }
 	if (GameStateManager::GetInstance()->GetResetPredict()) { return; }
 	const int l_TargetTimer = 10;
-	const float l_AddVelocity = 2.0f;
-	const float l_SubVelocity = -2.0f;
+	const float l_AddVelocity = PANEL_SIZE;
+	const float l_SubVelocity = -PANEL_SIZE;
 	const int l_AddSpace = 1;
 	const int l_SubSpace = -1;
 	//ボタンでマスを移動する
