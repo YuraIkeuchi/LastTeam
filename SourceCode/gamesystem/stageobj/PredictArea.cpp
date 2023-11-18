@@ -16,7 +16,8 @@ PredictArea::PredictArea(const string& name) {
 			}
 			panels[i][j].tex->TextureCreate();
 			panels[i][j].tex->Initialize();
-			panels[i][j].tex->SetScale({ 0.15f,0.15f,0.15f });
+			float baseScale = PANEL_SIZE * 0.1f;
+			panels[i][j].tex->SetScale({ baseScale,baseScale,baseScale });
 			panels[i][j].tex->SetRotation({ 90.0f,0.0f,0.0f });
 		}
 	}

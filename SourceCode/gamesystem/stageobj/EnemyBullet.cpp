@@ -16,7 +16,8 @@ EnemyBullet::EnemyBullet() {
 	panels.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	panels.tex->TextureCreate();
 	panels.tex->Initialize();
-	panels.tex->SetScale({ 0.15f,0.15f,0.15f });
+	float baseScale = PANEL_SIZE * 0.1f;
+	panels.tex->SetScale({ baseScale,baseScale,baseScale });
 	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //初期化

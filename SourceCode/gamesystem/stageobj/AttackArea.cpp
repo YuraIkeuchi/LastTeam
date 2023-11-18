@@ -13,7 +13,8 @@ AttackArea::AttackArea(string& m_Name) {
 	panels.tex = std::make_unique<IKETexture>(texNum, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
 	panels.tex->TextureCreate();
 	panels.tex->Initialize();
-	panels.tex->SetScale({ 0.15f,0.15f,0.15f });
+	float baseScale = PANEL_SIZE * 0.1f;
+	panels.tex->SetScale({ baseScale,baseScale,baseScale });
 	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 	Initialize();
 }

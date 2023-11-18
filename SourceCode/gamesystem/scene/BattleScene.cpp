@@ -189,6 +189,7 @@ void BattleScene::ImGuiDraw() {
 	//game_object_manager_->ImGuiDraw();
 	enemyManager->ImGuiDraw();
 	StagePanel::GetInstance()->ImGuiDraw();
+	camerawork->ImGuiDraw();
 	/*ImGui::Begin("Battle");
 	ImGui::Text("Timer:%d", m_FinishTimer);
 	ImGui::Text("Finish:%d", m_Finish);
