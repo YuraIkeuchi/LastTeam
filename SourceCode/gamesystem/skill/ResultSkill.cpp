@@ -27,7 +27,10 @@ void ResultSkill::Update() {
 	Move();
 	for (ResultUI& resultUI : choiceSkills) {
 		if (resultUI.isSkill) {
-			resultUI.number->Update();
+			resultUI.DamageNumber[0]->Update();
+			if (resultUI.Damage >= 10) {
+				resultUI.DamageNumber[1]->Update();
+			}
 		}
 	}
 	ShineEffectUpdate();
@@ -42,7 +45,10 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 	for (ResultUI& resultUI : choiceSkills) {
 		resultUI.icon->Draw();
 		if (resultUI.isSkill) {
-			resultUI.number->Draw();
+			resultUI.DamageNumber[0]->Draw();
+			if (resultUI.Damage >= 10) {
+				resultUI.DamageNumber[1]->Draw();
+			}
 		}
 	}
 	resulttext->TestDraw(dxCommon);
@@ -220,11 +226,25 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	if (resultUI.isSkill) {
 		resultUI.icon = IKESprite::Create(ImageManager::ATTACK_0 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
-		resultUI.number = make_unique<DrawNumber>();
-		resultUI.number->Initialize();
-		resultUI.number->SetNumber(resultUI.ID);
-		resultUI.number->SetPosition(resultUI.position);
-		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY);//IDに応じた攻撃エリア、距離を取得する
+		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY,resultUI.Damage);//IDに応じた攻撃エリア、距離を取得する
+		if (resultUI.Damage < 10) {
+			resultUI.DamageNumber[0] = make_unique<DrawNumber>();
+			resultUI.DamageNumber[0]->Initialize();
+			resultUI.DamageNumber[0]->SetNumber(resultUI.Damage);
+			resultUI.DamageNumber[0]->SetPosition(resultUI.position);
+		}
+		else {
+			int l_DightDamage[S_DAMAGEMAX];
+			for (auto i = 0; i < S_DAMAGEMAX; i++) {
+				resultUI.DamageNumber[i] = make_unique<DrawNumber>();
+				resultUI.DamageNumber[i]->Initialize();
+				l_DightDamage[i] = Helper::getDigits(resultUI.Damage, i, i);
+				resultUI.DamageNumber[i]->SetNumber(l_DightDamage[i]);
+			}
+
+			resultUI.DamageNumber[0]->SetPosition({ resultUI.position.x + 20.0f,resultUI.position.y });
+			resultUI.DamageNumber[1]->SetPosition(resultUI.position);
+		}
 		BirthArea(resultUI);
 		baseSentence[nowPos] = resulttext->GetSkillSentence(resultUI.ID);
 	} else {

@@ -200,9 +200,9 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	/*if (_ResultType == HAVE_SKILL) {
+	if (_ResultType == HAVE_SKILL) {
 		haveSkill->ImGuiDraw();
-	}*/
+	}
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画

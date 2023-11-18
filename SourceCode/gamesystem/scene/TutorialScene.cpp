@@ -171,7 +171,8 @@ void TutorialScene::ImGuiDraw() {
 	/*
 	TutorialTask::GetInstance()->ImGuiDraw();
 	player_->ImGuiDraw();
-	GameStateManager::GetInstance()->ImGuiDraw();*/
+	*/
+	GameStateManager::GetInstance()->ImGuiDraw();
 }
 
 void TutorialScene::Finalize() {
