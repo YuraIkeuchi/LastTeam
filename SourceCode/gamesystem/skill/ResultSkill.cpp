@@ -45,7 +45,9 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 	for (ResultUI& resultUI : choiceSkills) {
 		resultUI.icon->Draw();
 		if (resultUI.isSkill) {
-			resultUI.DamageNumber[0]->Draw();
+			if (resultUI.Damage != 0) {
+				resultUI.DamageNumber[0]->Draw();
+			}
 			if (resultUI.Damage >= 10) {
 				resultUI.DamageNumber[1]->Draw();
 			}
@@ -226,7 +228,8 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	if (resultUI.isSkill) {
 		resultUI.icon = IKESprite::Create(ImageManager::ATTACK_0 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
-		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY,resultUI.Damage);//IDに応じた攻撃エリア、距離を取得する
+		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY,resultUI.Damage);//IDに応じた攻撃エリア、距離、ダメージを取得する
+			//桁数によって描画する桁数が違う
 		if (resultUI.Damage < 10) {
 			resultUI.DamageNumber[0] = make_unique<DrawNumber>(0.5f);
 			resultUI.DamageNumber[0]->Initialize();
