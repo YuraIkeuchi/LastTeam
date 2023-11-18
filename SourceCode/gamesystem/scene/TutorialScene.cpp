@@ -59,6 +59,9 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	enemy->Initialize();
 
 	TutorialTask::GetInstance()->SetChoiceSkill(false);
+
+	Feed* feed_ = new Feed();
+	feed.reset(feed_);
 }
 //�X�V
 void TutorialScene::Update(DirectXCommon* dxCommon)
@@ -131,17 +134,19 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 }
 //�|�X�g�G�t�F�N�g������Ȃ�
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
-	if (enemy->GetHP() > 0.0f && !m_Skip) {
+	if (!m_FeedEnd) {
 		ParticleEmitter::GetInstance()->FlontDrawAll();
 
 		GameStateManager::GetInstance()->ActUIDraw();
 		enemy->UIDraw();
 		player_->UIDraw();
 	}
-	if (player_->GetNowHeight() != 0) {
+	if (player_->GetNowHeight() != 0 || m_FeedEnd) {
 		text_->TestDraw(dxCommon);
 	}
-
+	if (m_Feed) {
+		feed->Draw();
+	}
 	SceneChanger::GetInstance()->Draw();
 }
 //�|�X�g�G�t�F�N�g������
@@ -154,19 +159,19 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 	if (enemy->GetHP() > 0.0f && !m_Skip) {
 		player_->Draw(dxCommon);
 		enemy->Draw(dxCommon);
+		StagePanel::GetInstance()->ActDraw(dxCommon);
 	}
-
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
-	/*ImGui::Begin("Tutorial");
+	ImGui::Begin("Tutorial");
 	ImGui::Text("Timer:%d", m_Timer);
 	ImGui::Text("State:%d", _nowstate);
 	ImGui::End();
-	
-	TutorialTask::GetInstance()->ImGuiDraw();*/
+	/*
+	TutorialTask::GetInstance()->ImGuiDraw();
 	player_->ImGuiDraw();
-	GameStateManager::GetInstance()->ImGuiDraw();
+	GameStateManager::GetInstance()->ImGuiDraw();*/
 }
 
 void TutorialScene::Finalize() {
@@ -221,19 +226,33 @@ void TutorialScene::AttackState() {
 //�_���[�W��������
 void TutorialScene::DamageState() {
 	if (enemy->GetHP() <= 0.0f || m_Skip) {
-		m_Timer++;
-		if (m_Timer == 1) {
-			text_->SetConversation(TextManager::TUTORIAL_SKILL);
+		if (!m_FeedStart) {
+			m_Feed = true;
+			m_FeedStart = true;
 		}
-		else if (m_Timer == 200) {
-			text_->SetConversation(TextManager::TUTORIAL_CHOICE);
+		if (m_Feed) {
+			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 60.0f, m_Feed);
 		}
-		if (TutorialTask::GetInstance()->GetChoiceSkill()) {
-			text_->SetConversation(TextManager::TUTORIAL_END);
-			_nowstate = TUTORIAL_FINISH;
+		if (feed->GetFeedEnd()) {
+			m_FeedEnd = true;
 			m_Timer = {};
 		}
-		GameStateManager::GetInstance()->StageClearInit();
+
+		if (m_FeedEnd) {
+			m_Timer++;
+			if (m_Timer == 1) {
+				text_->SetConversation(TextManager::TUTORIAL_SKILL);
+			}
+			else if (m_Timer == 200) {
+				text_->SetConversation(TextManager::TUTORIAL_CHOICE);
+			}
+			if (TutorialTask::GetInstance()->GetChoiceSkill()) {
+				text_->SetConversation(TextManager::TUTORIAL_END);
+				_nowstate = TUTORIAL_FINISH;
+				m_Timer = {};
+			}
+			GameStateManager::GetInstance()->StageClearInit();
+		}
 	}
 }
 //�`���[�g���A���I���

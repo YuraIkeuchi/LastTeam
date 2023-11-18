@@ -48,7 +48,7 @@ void ParticleEmitter::FireEffect(const int life, const XMFLOAT3& l_pos, const fl
 	circleParticle->Add(life, { pos.x,pos.y,pos.z }, vel, {}, startscale, endscale, startcolor, endcolor,{});
 }
 //毒のパーティクル
-void ParticleEmitter::PoisonEffect(const int life, const XMFLOAT3& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor)
+void ParticleEmitter::PoisonEffect(const int life, const XMFLOAT3& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const float Gravity, float divi)
 {
 	XMFLOAT3 pos = l_pos;
 	const float rnd_vel = 0.05f;
@@ -57,7 +57,7 @@ void ParticleEmitter::PoisonEffect(const int life, const XMFLOAT3& l_pos, const 
 	vel.y = (float)rand() / RAND_MAX * rnd_vel * 2.0f;// -rnd_vel / 2.0f;
 	vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 
-	poisonParticle->Add(life, { pos.x,pos.y,pos.z }, vel, {}, startscale, endscale, startcolor, endcolor, {});
+	poisonParticle->Add(life, { pos.x,pos.y,pos.z }, vel, {}, startscale, endscale, startcolor, endcolor, Gravity,divi);
 }
 //ダメージ時のエフェクト
 void ParticleEmitter::Break(const int life, const XMFLOAT3& pos, const float startscale, const float endscale,

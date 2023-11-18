@@ -48,8 +48,8 @@ void InterAction::Collide()
 }
 
 void InterAction::Spawn() {
-	float Psca = Ease(Out, Elastic, m_VanishFrame, 0.f, 0.15f);
-	float sca = Ease(Out, Elastic, m_VanishFrame, 0.f, 0.5f);
+	float Psca = Ease(Out, Elastic, m_VanishFrame, 0.f, 0.1f);
+	float sca = Ease(Out, Elastic, m_VanishFrame, 0.f, 0.3f);
 	m_PannelScale = { Psca,Psca,Psca };
 	m_Scale = { sca,sca,sca };
 	m_Rotation.y += 3.0f;
@@ -69,7 +69,7 @@ void InterAction::Spawn() {
 
 void InterAction::Alive() {
 	{
-		m_PannelRot.y += 0.3f;
+		//m_PannelRot.y += 0.3f;
 		m_Pannel->SetPosition({ m_Position.x,m_Position.y + 0.1f,m_Position.z });
 		m_Pannel->SetScale(m_PannelScale);
 		m_Pannel->SetRotation(m_PannelRot);
@@ -81,12 +81,12 @@ void InterAction::Alive() {
 void InterAction::Vanish() {
 
 	float Psca = Ease(In,Quad, m_VanishFrame,0.15f,0.f);
-	float sca = Ease(In, Quad, m_VanishFrame, 0.5f, 0.f);
+	float sca = Ease(In, Quad, m_VanishFrame, 0.3f, 0.f);
 	
 	m_Position.y = Ease(In, Quad, m_VanishFrame, 0.0f, -3.0f);
 	m_PannelScale = { Psca,Psca,Psca };
 	m_Scale= { sca,sca,sca };
-	m_PannelRot.y += 0.6f;
+	//m_PannelRot.y += 0.6f;
 	m_Rotation.y += 3.0f;
 	m_Pannel->SetRotation(m_PannelRot);
 	m_Pannel->SetScale(m_PannelScale);

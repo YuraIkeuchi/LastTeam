@@ -4,7 +4,7 @@
 class SkillAction :
 	public InterAction {
 public:
-	SkillAction();
+	SkillAction(const int SkillID);
 	bool Initialize() override;//‰Šú‰»
 	void Pause() override;//ƒ|[ƒY
 
