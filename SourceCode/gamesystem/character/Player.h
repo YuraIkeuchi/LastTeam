@@ -141,8 +141,10 @@ private:
 	//数値化したHP表示のための変数
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//整数にしたHP
+	array<int, NUMBER_MAX> m_DigitNumberMax;
+	int m_InterMaxHP = {};//整数にしたHP
 
-	XMFLOAT2 m_HPPos = { 25.f,580.0f };
+	XMFLOAT2 m_HPPos = { 10.f,5.0f };
 	XMFLOAT2 m_HPSize = { 400.0f,40.0f };
 	//桁数
 	enum DightType {
@@ -151,7 +153,9 @@ private:
 		THIRD_DIGHT
 	};
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
-	
+	unique_ptr<IKESprite> slash_;
+	array<unique_ptr<DrawNumber>, NUMBER_MAX> _MaxHp;
+
 	bool m_Delay = false;
 	string m_name = "NONE";
 

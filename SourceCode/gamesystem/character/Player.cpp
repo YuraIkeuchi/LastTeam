@@ -22,10 +22,20 @@ void Player::LoadResource() {
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i] = make_unique<DrawNumber>();
 		_drawnumber[i]->Initialize();
+		_MaxHp[i] = make_unique<DrawNumber>();
+		_MaxHp[i]->Initialize();
 	}
-	_drawnumber[FIRST_DIGHT]->SetPosition({ 100.0f,600.0f });
-	_drawnumber[SECOND_DIGHT]->SetPosition({ 80.0f,600.0f });
-	_drawnumber[THIRD_DIGHT]->SetPosition({ 60.0f,600.0f });
+
+	_drawnumber[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 80.0f,m_HPPos.y + 20.0f });
+	_drawnumber[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 60.0f,m_HPPos.y + 20.0f });
+	_drawnumber[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 40.f, m_HPPos.y + 20.0f });
+	slash_ = IKESprite::Create(ImageManager::SLASH, { m_HPPos.x + 100.f,m_HPPos.y + 20.0f });
+	slash_->SetScale(0.5f);
+	slash_->SetAnchorPoint({ 0.5f,0.5f });
+	_MaxHp[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 160.0f,m_HPPos.y + 20.0f });
+	_MaxHp[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 140.0f,m_HPPos.y + 20.0f });
+	_MaxHp[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 120.f, m_HPPos.y + 20.0f });
+
 
 	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();
@@ -46,8 +56,7 @@ void Player::LoadCSV() {
 	if (is_title) {
 		m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "STARTHP")));
 		m_MaxHP = m_HP;
-	}
-	else {
+	} else {
 		m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "NOWHP")));
 		m_MaxHP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/player/player.csv", "MAXHP")));
 	}
@@ -71,7 +80,9 @@ void Player::InitState(const XMFLOAT3& pos) {
 	//数値化したHP表示のための変数
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		m_DigitNumber[i] = {};
+		m_DigitNumberMax[i] = {};
 	}
+	m_InterMaxHP = {};//整数にしたHP
 	m_InterHP = {};//整数にしたHP
 
 	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
@@ -84,12 +95,9 @@ void (Player::* Player::stateTable[])() = {
 };
 //更新処理
 void Player::Update() {
-	if (is_title)
-	{
+	if (is_title) {
 		TitleUpdate();
-	}
-	else
-	{
+	} else {
 		const float l_GrazeMax = 2.0f;
 		Obj_SetParam();
 		//状態移行(charastateに合わせる)
@@ -112,17 +120,21 @@ void Player::Update() {
 		Helper::Clamp(m_HP, 0.0f, m_MaxHP);
 		//表示用のHP
 		m_InterHP = (int)(m_HP);
+		m_InterMaxHP = (int)m_MaxHP;
 		if (m_HP > 0.0f) {
 			for (auto i = 0; i < _drawnumber.size(); i++) {
 				//HPの限界値を決める
 				Helper::Clamp(m_HP, 0.0f, m_MaxHP);
 				// 表示用のHP
 				m_InterHP = (int)(m_HP);
-				for (auto i = 0; i < _drawnumber.size(); i++)
-				{
+				m_InterMaxHP = (int)m_MaxHP;
+				for (auto i = 0; i < _drawnumber.size(); i++) {
 					_drawnumber[i]->SetNumber(m_DigitNumber[i]);
 					_drawnumber[i]->Update();
+					_MaxHp[i]->SetNumber(m_DigitNumberMax[i]);
+					_MaxHp[i]->Update();
 					m_DigitNumber[i] = Helper::getDigits(m_InterHP, i, i);
+					m_DigitNumberMax[i] = Helper::getDigits(m_InterMaxHP, i, i);
 				}
 			}
 		}
@@ -150,12 +162,26 @@ void Player::UIDraw() {
 	IKESprite::PreDraw();
 	//HPバー
 	hptex->Draw();
-	if(m_InterHP != 0)
-	_drawnumber[FIRST_DIGHT]->Draw();
-	if (m_InterHP >= 10)
+	if (m_InterHP != 0) {
+		_drawnumber[FIRST_DIGHT]->Draw();
+	}
+	if (m_InterHP >= 10) {
 		_drawnumber[SECOND_DIGHT]->Draw();
-	if (m_InterHP >= 100)
+	}
+	if (m_InterHP >= 100) {
 		_drawnumber[THIRD_DIGHT]->Draw();
+	}
+	slash_->Draw();
+	if (m_InterMaxHP != 0) {
+		_MaxHp[FIRST_DIGHT]->Draw();
+	}
+	if (m_InterMaxHP >= 10) {
+		_MaxHp[SECOND_DIGHT]->Draw();
+	}
+	if (m_InterMaxHP >= 100) {
+		_MaxHp[THIRD_DIGHT]->Draw();
+	}
+
 	IKESprite::PostDraw();
 }
 //ImGui
@@ -179,18 +205,18 @@ void Player::Move() {
 		input->PushButton(input->DOWN) ||
 		input->PushButton(input->RIGHT) ||
 		input->PushButton(input->LEFT) ||
-		input->TiltPushStick(input->L_UP)||
+		input->TiltPushStick(input->L_UP) ||
 		input->TiltPushStick(input->L_DOWN) ||
 		input->TiltPushStick(input->L_LEFT) ||
 		input->TiltPushStick(input->L_RIGHT)
 		) {
-		if (input->PushButton(input->UP)|| input->TiltPushStick(input->L_UP)) {
+		if (input->PushButton(input->UP) || input->TiltPushStick(input->L_UP)) {
 			m_InputTimer[DIR_UP]++;
-		} else if (input->PushButton(input->DOWN)|| input->TiltPushStick(input->L_DOWN)) {
+		} else if (input->PushButton(input->DOWN) || input->TiltPushStick(input->L_DOWN)) {
 			m_InputTimer[DIR_DOWN]++;
-		} else if (input->PushButton(input->RIGHT)|| input->TiltPushStick(input->L_RIGHT)) {
+		} else if (input->PushButton(input->RIGHT) || input->TiltPushStick(input->L_RIGHT)) {
 			m_InputTimer[DIR_RIGHT]++;
-		} else if (input->PushButton(input->LEFT)|| input->TiltPushStick(input->L_LEFT)) {
+		} else if (input->PushButton(input->LEFT) || input->TiltPushStick(input->L_LEFT)) {
 			m_InputTimer[DIR_LEFT]++;
 		}
 	} else {			//離した瞬間
@@ -268,13 +294,12 @@ void Player::HealPlayer(const float power) {
 }
 //チュートリアルの更新
 //プレイヤーのダメージ判定
-void Player::RecvDamage(const float Damage,const string& name) {
+void Player::RecvDamage(const float Damage, const string& name) {
 	m_HP -= Damage;
 	//ダメージの種類によってパーティクルを変える
 	if (name == "NORMAL") {
 		DamageParticle();
-	}
-	else if (name == "POISON") {
+	} else if (name == "POISON") {
 		BirthPoisonParticle();
 	}
 }
