@@ -15,10 +15,12 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	DeckUI(const int ID);
+	DeckUI();
 
 	//初期化
 	void Initialize();
+	//IDに合わせたIconの作成
+	void BirthIcon();
 	//ステータスセット
 	void InitState(const int ActCount);
 	//更新
@@ -36,6 +38,7 @@ public:
 	void SetActCount(const int ActCount) { m_ActCount = ActCount; }
 	void SetUse(const bool Use) { m_Use = Use; }
 	void SetType(const int Type) { m_Type = Type; }
+	void SetID(const int ID) { m_ID = ID; }
 private:
 	static const int TEX_MAX = 3;
 private:

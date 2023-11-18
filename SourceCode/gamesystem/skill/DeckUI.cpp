@@ -3,16 +3,17 @@
 #include "Easing.h"
 #include <GameStateManager.h>
 #include <Helper.h>
-DeckUI::DeckUI(const int ID) {
-	m_ID = ID;
+DeckUI::DeckUI() {
+	//ID用のスプライト
+	_drawnumber = make_unique<DrawNumber>();
+	_drawnumber->Initialize();
+}
+void DeckUI::BirthIcon() {
 	//カード
 	tex = IKESprite::Create(ImageManager::ATTACK_0 + m_ID, { 0.0f,0.0f });
 	tex->SetAnchorPoint({ 0.5f,0.5f });
 	tex->SetPosition({ -100.0f,800.0f });
 	tex->SetSize({ 64.0f,64.0f });
-	//ID用のスプライト
-	_drawnumber = make_unique<DrawNumber>();
-	_drawnumber->Initialize();
 }
 //初期化
 void DeckUI::Initialize() {
@@ -44,7 +45,8 @@ void DeckUI::Draw() {
 }
 //ImGui
 void DeckUI::ImGuiDraw() {
-	ImGui::Begin("ActUI");
+	ImGui::Begin("DeckUI");
+	ImGui::Text("ID:%d", m_ID);
 	ImGui::End();
 }
 //UIの動き
