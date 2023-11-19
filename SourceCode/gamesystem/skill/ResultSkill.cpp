@@ -19,7 +19,7 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	//���U���g�e�L�X�g
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
-	resulttext->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
+	resulttext->SetConversation(TextManager::RESULT, { -235.0f,80.0f });
 
 }
 
