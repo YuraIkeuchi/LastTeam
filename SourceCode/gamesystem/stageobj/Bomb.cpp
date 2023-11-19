@@ -1,4 +1,4 @@
-ï»¿#include "TackleEnemy.h"
+#include "Bomb.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -8,12 +8,14 @@
 #include "ImageManager.h"
 #include <GameStateManager.h>
 #include <StagePanel.h>
-//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
-TackleEnemy::TackleEnemy() {
+
+//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+Bomb::Bomb() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
 	m_Object->SetLightEffect(false);
+
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 
@@ -27,82 +29,76 @@ TackleEnemy::TackleEnemy() {
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
-//åˆæœŸåŒ–
-bool TackleEnemy::Initialize() {
-
+//‰Šú‰»
+bool Bomb::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5 };
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/TackleEnemy.csv", "hp")));
+	m_Scale = { 0.5f,0.5f,0.5f };
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "hp")));
 	m_MaxHP = m_HP;
-	StagePanel::GetInstance()->EnemyHitReset();
+	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	return true;
 }
 
-void (TackleEnemy::* TackleEnemy::stateTable[])() = {
-	&TackleEnemy::Inter,//å‹•ãã®åˆé–“
-	&TackleEnemy::Attack,//å‹•ãã®åˆé–“
+void (Bomb::* Bomb::stateTable[])() = {
+	&Bomb::Inter,//“®‚«‚Ì‡ŠÔ
+	&Bomb::Attack,//“®‚«‚Ì‡ŠÔ
 };
 
-//è¡Œå‹•
-void TackleEnemy::Action() {
+//s“®
+void Bomb::Action() {
 	(this->*stateTable[_charaState])();
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
+	//“–‚½‚è”»’è
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	Collide(_AttackArea);		//å½“ãŸã‚Šåˆ¤å®š
-	PoisonState();//æ¯’
+	Collide(_AttackArea);		//“–‚½‚è”»’è
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	shadow_tex->SetPosition(m_ShadowPos);
 	shadow_tex->SetScale(m_ShadowScale);
 	shadow_tex->Update();
 }
-//æç”»
-void TackleEnemy::Draw(DirectXCommon* dxCommon) {
+
+//•`‰æ
+void Bomb::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	IKETexture::PostDraw();
+
 	Obj_Draw();
 }
-//ImGuiæç”»
-void TackleEnemy::ImGui_Origin() {
-	ImGui::Begin("TackleEnemy");
-	ImGui::Text("Height:%d,Width:%d", m_NowHeight, m_NowWidth);
-	ImGui::Text("Timer:%d", m_PoisonTimer);
-	ImGui::End();
+//ImGui•`‰æ
+void Bomb::ImGui_Origin() {
 }
-//é–‹æ”¾
-void TackleEnemy::Finalize() {
+//ŠJ•ú
+void Bomb::Finalize() {
 
 }
-//è¿½å¾“
-//void NormalEnemy::Follow() {
-//	Helper::GetInstance()->FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
-//}
-
-void TackleEnemy::Inter() {
+//‘Ò‹@
+void Bomb::Inter() {
+	//§ŒÀŠÔ
 	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, kIntervalMax);
-	if (coolTimer == kIntervalMax) {
-		_charaState = STATE_ATTACK;
+	coolTimer = clamp(coolTimer, 0, 300);
+	//ŠÔØ‚ê
+	if (coolTimer == 300) {
 		coolTimer = 0;
+		_charaState = STATE_ATTACK;
 	}
 }
-
-void TackleEnemy::Attack() {
-	m_Position.x -= 0.4f;
-	if (m_Position.x < -10.0f) {
-		XMFLOAT3 l_RandPos = {};
-		l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
-		StagePanel::GetInstance()->EnemyHitReset();
-		_charaState = STATE_INTER;
-		m_Position = l_RandPos;
+//UŒ‚
+void Bomb::Attack() {
+	//§ŒÀŠÔˆÈ“à‚ÉHP‚ª–³‚­‚È‚Á‚½‚ç“G‘S‘Ì‚Éƒ_ƒ[ƒW
+	if (!m_Alive) {
+		//ƒ_ƒ[ƒWŠÖ”(“Gˆø”)
+		m_Alive = false;
 	}
-}
-
-void TackleEnemy::Standby() {
+	//HP‚ğí‚èØ‚ê‚¸‚É§ŒÀŠÔ‚ğ’´‚¦‚½‚çƒvƒŒƒCƒ„[‚Éƒ_ƒ[ƒW
+	else if ( m_Alive) {
+		//ƒ_ƒ[ƒWŠÖ”(ƒvƒŒƒCƒ„[ˆø”)
+		m_Alive = false;
+	}
 }
