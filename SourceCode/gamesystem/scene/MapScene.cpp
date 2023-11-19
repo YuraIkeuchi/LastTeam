@@ -661,11 +661,22 @@ void MapScene::CheckState() {
 		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
 			if (Helper::FrameCheck(s_frame, addFrame)) {
 				Input* input = Input::GetInstance();
+				if (isClose) {
+					if (Helper::FrameCheck(closeFrame, addFrame)) {
+						m_State = State::mainState;
+						s_frame = 0.f;
+						delayFrame = 0.f;
+						closeFrame = 0.f;
+						isClose = false;
+					} else {
+						size.x = Ease(Out, Quint, closeFrame, 640.f, 0.f);
+						size.y = Ease(Out, Quint, closeFrame, 480.f, 0.f);
+					}
+					cheack->SetSize(size);
+					return;
+				}
 				if (input->TriggerButton(input->B)) {
-					size = {};
-					m_State = State::mainState;
-					s_frame = 0.f;
-					delayFrame = 0.f;
+					isClose = true;
 				}
 				if (input->TriggerButton(input->A)) {
 					size = {};
