@@ -3,9 +3,7 @@ SkillType,0
 Delay,8
 Name,kick
 StateName,NONE
-Damege,1
+Damege,7
 DistanceX,1
-AttackArea,1 0 0 0
-AttackArea,1 0 0 0
-AttackArea,1 0 0 0
-AttackAreA,1 0 0 0
+AttackArea,1 0
+AttackAreA,1 0
