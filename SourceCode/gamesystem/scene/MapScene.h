@@ -138,6 +138,8 @@ private:
 
 	bool isClose = false;
 	float closeFrame = 0.f;
+
+	XMFLOAT2 charaSize = {};
 	float eFrame = 0;
 	float eAdd = 0.01f;
 

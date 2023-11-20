@@ -139,6 +139,7 @@ private:
 
 	//HPの表示
 	unique_ptr<IKESprite> hptex;
+	unique_ptr<IKESprite> hptex_under;
 	float m_HP = {};
 	float m_OldHP = m_HP;
 	bool isDamage = false;
