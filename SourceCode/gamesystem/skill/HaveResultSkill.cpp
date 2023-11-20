@@ -16,21 +16,21 @@ void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
 	backScreen->SetSize({ 1280.f,720.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
-	selectFrame->SetSize({ 90.0f,90.0f });
-	selectFrame->SetPosition({ 640.0f,150.0f });
+	selectFrame->SetSize({ 128.0f,128.0f });
+	selectFrame->SetPosition({ 640.0f,250.0f });
 }
 
 void HaveResultSkill::Update() {
 	for (HaveUI& resultUI : haveSkills) {
 		if (resultUI.isSkill) {
-			resultUI.number->Update();
+			resultUI.DamageNumber[0]->Update();
+			if (resultUI.Damage >= 10) {
+				resultUI.DamageNumber[1]->Update();
+			}
 		}
 	}
 	
 	for (HaveUI& PassiveUI : havePassive) {
-		if (PassiveUI.isSkill) {
-			PassiveUI.number->Update();
-		}
 	}
 
 	//動き
@@ -45,7 +45,12 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 	for (HaveUI& resultUI : haveSkills) {
 		resultUI.icon->Draw();
 		if (resultUI.isSkill) {
-			resultUI.number->Draw();
+			if (resultUI.Damage != 0) {			//攻撃力が0なら描画しない
+				resultUI.DamageNumber[0]->Draw();
+			}
+			if (resultUI.Damage >= 10) {		//二桁め
+				resultUI.DamageNumber[1]->Draw();
+			}
 		}
 	}
 	
@@ -73,6 +78,7 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 void HaveResultSkill::ImGuiDraw() {
 	ImGui::Begin("Have");
 	ImGui::Text("ID:%d", haveSkills[m_SelectCount].ID);
+	ImGui::Text("ID:%d", haveSkills[m_SelectCount].Damage);
 	ImGui::End();
 }
 
@@ -82,8 +88,8 @@ void HaveResultSkill::HaveAttackSkill(std::vector<int> Deck,
 	haveSkills.resize(DeckSize);
 	for (auto i = 0; i < haveSkills.size(); i++) {
 		haveSkills[i].ID = Deck[i];
+		SkillManager::GetInstance()->HandResultData(Deck[i], haveSkills[i].area, haveSkills[i].DisX, haveSkills[i].DisY,haveSkills[i].Damage);//IDに応じた攻撃エリア、距離を取得する
 		CreateAttackSkill(i, haveSkills[i].ID, dxCommon);
-		SkillManager::GetInstance()->HandResultData(Deck[i], haveSkills[i].area, haveSkills[i].DisX, haveSkills[i].DisY);//IDに応じた攻撃エリア、距離を取得する
 		BirthArea(i);		//エリアを作成(持ってるスキル分)
 	}
 }
@@ -98,16 +104,32 @@ void HaveResultSkill::HavePassiveSkill(std::vector<int> Passive,
 }
 //攻撃スキルの表示
 void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommon* dxCommon) {
-	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
-	haveSkills[num].position = { l_BasePos.x + (num * 100.0f),l_BasePos.y };
-	haveSkills[num].icon = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
-	haveSkills[num].icon->SetSize({ 64.0f,64.0f });
+	XMFLOAT2 l_BasePos = { 640.0f,250.0f };
+	haveSkills[num].position = { l_BasePos.x + (num * 150.0f),l_BasePos.y };
+	haveSkills[num].icon = IKESprite::Create(ImageManager::ATTACK_0 + id, { 0.0f,0.0f });
+	haveSkills[num].icon->SetSize({ 100.0f,100.0f });
 	haveSkills[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	haveSkills[num].icon->SetPosition(haveSkills[num].position);
-	haveSkills[num].number = make_unique<DrawNumber>();
-	haveSkills[num].number->Initialize();
-	haveSkills[num].number->SetNumber(haveSkills[num].ID);
-	haveSkills[num].number->SetPosition(haveSkills[num].position);
+	haveSkills[num].icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
+	//ダメージ数によって描画する桁数が違う
+	if (haveSkills[num].Damage < 10) {
+		haveSkills[num].DamageNumber[0] = make_unique<DrawNumber>(0.4f);
+		haveSkills[num].DamageNumber[0]->Initialize();
+		haveSkills[num].DamageNumber[0]->SetNumber(haveSkills[num].Damage);
+		haveSkills[num].DamageNumber[0]->SetPosition({ haveSkills[num].position.x - 10.0f, haveSkills[num].position.y});
+	}
+	else {
+		int l_DightDamage[S_DAMAGEMAX];
+		for (auto i = 0; i < S_DAMAGEMAX; i++) {
+			haveSkills[num].DamageNumber[i] = make_unique<DrawNumber>(0.4f);
+			haveSkills[num].DamageNumber[i]->Initialize();
+			l_DightDamage[i] = Helper::getDigits(haveSkills[num].Damage, i, i);
+			haveSkills[num].DamageNumber[i]->SetNumber(l_DightDamage[i]);
+		}
+
+		haveSkills[num].DamageNumber[0]->SetPosition({ haveSkills[num].position.x + 10.0f, haveSkills[num].position.y});
+		haveSkills[num].DamageNumber[1]->SetPosition({ haveSkills[num].position.x - 10.0f, haveSkills[num].position.y});
+	}
 	haveSkills[num].text_ = make_unique<TextManager>();
 	haveSkills[num].text_->Initialize(dxCommon);
 	haveSkills[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
@@ -116,7 +138,6 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 	m_SelectCount = {};
 	m_AddPosX = {};
 }
-
 //パッシブスキルの表示
 void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCommon* dxCommon) {
 	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
@@ -125,10 +146,6 @@ void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCom
 	havePassive[num].icon->SetSize({ 64.0f,64.0f });
 	havePassive[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	havePassive[num].icon->SetPosition(havePassive[num].position);
-	havePassive[num].number = make_unique<DrawNumber>();
-	havePassive[num].number->Initialize();
-	havePassive[num].number->SetNumber(havePassive[num].ID);
-	havePassive[num].number->SetPosition(havePassive[num].position);
 	havePassive[num].text_ = make_unique<TextManager>();
 	havePassive[num].text_->Initialize(dxCommon);
 	havePassive[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
@@ -142,21 +159,23 @@ void HaveResultSkill::Move() {
 		static float frame = 0.f;
 		static float addFrame = 1.f / 15.f;
 
-		if (Helper::GetInstance()->FrameCheck(frame, addFrame)) {
+		if (Helper::FrameCheck(frame, addFrame)) {
 			m_isMove = false;
 			frame = 0.f;
 		}
 		else {
-			m_AddPosX = Ease(InOut, Circ, frame, m_AddPosX, 100.0f * m_SelectCount);
+			m_AddPosX = Ease(InOut, Circ, frame, m_AddPosX, 150.0f * m_SelectCount);
 		}
 
 		for (auto i = 0; i < haveSkills.size(); i++) {
 			haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
-			haveSkills[i].number->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
+			haveSkills[i].DamageNumber[0]->SetPosition({ (haveSkills[i].position.x + 10.0f) - m_AddPosX,haveSkills[i].position.y});
+			if (haveSkills[i].Damage >= 10) {
+				haveSkills[i].DamageNumber[1]->SetPosition({ (haveSkills[i].position.x - 10.0f) - m_AddPosX,haveSkills[i].position.y});
+			}
 		}
 		for (auto i = 0; i < havePassive.size(); i++) {
 			havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
-			havePassive[i].number->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
 		}
 	}
 

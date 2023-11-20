@@ -15,12 +15,12 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	ActionUI();
+	ActionUI(const int ID);
 
 	//初期化
 	void Initialize();
 	//ステータスセット
-	void InitState(const int ActCount,const int ID,const int Type);
+	void InitState(const int ActCount,const int Type);
 	//更新
 	void Update();
 	//UIの動き
@@ -44,7 +44,7 @@ private:
 	unique_ptr<IKESprite> tex;
 
 	XMFLOAT2 m_Position = {};
-	XMFLOAT4 m_Color = { 1.0f,1.0f,1.0f,1.0f };
+	XMFLOAT4 m_Color = { 1.3f,1.3f,1.3f,1.0f };
 	XMFLOAT2 m_Size = { 64.f,64.f };
 
 	int m_ActCount = {};

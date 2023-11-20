@@ -20,7 +20,7 @@ protected: // エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	DrawNumber();
+	DrawNumber(const float scale);
 	//初期化
 	void Initialize();
 	//更新
@@ -34,7 +34,8 @@ public:
 public:
 	void SetPosition(const XMFLOAT2& Position) { m_Position = Position; }
 	void SetNumber(const int Number) { m_Number = Number; }
-private:
+	void SetColor(XMFLOAT4 color);
+	void SetSize(XMFLOAT2 size);
 private:
 	static const int NUMBER_MAX = 10;
 private:

@@ -33,4 +33,6 @@ private:
 		CHANGE_MAP,
 		CHANGE_OVER,
 	}_ChangeType = CHANGE_MAP;
+
+
 };

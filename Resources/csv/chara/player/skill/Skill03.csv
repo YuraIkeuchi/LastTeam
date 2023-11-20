@@ -3,7 +3,11 @@ SkillType,0
 Delay,15
 Name,hit
 StateName,NONE
+<<<<<<< HEAD
 Damege,3
+=======
+Damege,12
+>>>>>>> main
 DistanceX,1
 AttackArea,1 0 0 0
 AttackArea,1 0 0 0

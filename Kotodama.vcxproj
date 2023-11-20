@@ -222,6 +222,7 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\ResultAreaUI.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\text\DrawDamageNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\Onomatope.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
@@ -354,6 +355,7 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\ResultAreaUI.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h" />
+    <ClInclude Include="SourceCode\gamesystem\text\DrawDamageNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\Onomatope.h" />
     <ClInclude Include="SourceCode\gamesystem\text\TextManager.h" />

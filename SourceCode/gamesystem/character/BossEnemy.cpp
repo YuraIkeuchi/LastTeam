@@ -22,7 +22,7 @@ BossEnemy::BossEnemy() {
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 
 	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>();
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 	}
 
@@ -153,10 +153,10 @@ void BossEnemy::Finalize() {
 //待機
 void BossEnemy::Inter() {
 	const int l_TargetTimer = 120;
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = Helper::GetInstance()->GetRanNum(0, 2);
+		int l_RandState = Helper::GetRanNum(0, 2);
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -172,7 +172,7 @@ void BossEnemy::Attack() {
 void BossEnemy::Teleport() {
 	const int l_TargetTimer = 200;
 
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -197,7 +197,7 @@ void BossEnemy::BulletAttack() {
 	const int l_TargetTimer = 70;
 
 	if (_BossType == Boss_SET) {
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			coolTimer = {};
 			_BossType = Boss_THROW;
 		}
@@ -228,7 +228,7 @@ void BossEnemy::RowAttack() {
 		if (coolTimer == 0) {		//予測エリア
 			BirthPredict({}, m_AttackCount,"Row");
 		}
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {		//実際の攻撃
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//実際の攻撃
 			BirthArea({}, m_AttackCount, "Row");
 			coolTimer = {};
 			m_AttackCount++;
@@ -252,15 +252,15 @@ void BossEnemy::RandomAttack() {
 	if (m_AttackCount != 8) {
 		if (coolTimer == 0) {
 			//プレイヤーからの距離(-1~1)
-			int l_RandWigth = Helper::GetInstance()->GetRanNum(-1, 1);
-			int l_RandHeight = Helper::GetInstance()->GetRanNum(-1, 1);
+			int l_RandWigth = Helper::GetRanNum(-1, 1);
+			int l_RandHeight = Helper::GetRanNum(-1, 1);
 			m_RandWigth = l_PlayerWidth + l_RandWigth;
 			m_RandHeight = l_PlayerHeight + l_RandHeight;
-			Helper::GetInstance()->Clamp(m_RandWigth, 0, 3);
-			Helper::GetInstance()->Clamp(m_RandHeight, 0, 3);
+			Helper::Clamp(m_RandWigth, 0, 3);
+			Helper::Clamp(m_RandHeight, 0, 3);
 			BirthPredict(m_RandWigth, m_RandHeight, "Random");
 		}
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			BirthArea(m_RandWigth, m_RandHeight, "Random");
 			coolTimer = {};
 			m_AttackCount++;
@@ -280,21 +280,19 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 	if (name == "Row") {			//横一列
 		for (auto i = 0; i < m_Area.size(); i++) {
 			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
+				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Enemy");
 				newarea->Initialize();
 				newarea->InitState(i, Height);
 				newarea->SetDamage(20.0f);
-				newarea->SetName("Enemy");
 				attackarea.emplace_back(std::move(newarea));
 			}
 		}
 	}
 	else {		//ランダム(プレイヤーから近います)
-		std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
+		std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Enemy");
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
 		newarea->SetDamage(20.0f);
-		newarea->SetName("Enemy");
 		attackarea.emplace_back(std::move(newarea));
 	}
 	predictarea->ResetPredict();
@@ -409,8 +407,8 @@ void BossEnemy::BirthMagic() {
 	if (magic.State == MAGIC_BIRTH) {			//魔法陣を広げる
 		magic.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
 
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
-			if (Helper::GetInstance()->CheckMin(magic.Timer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
+			if (Helper::CheckMin(magic.Timer, l_TargetTimer, 1)) {
 				m_Warp = true;
 				magic.Frame = {};
 				magic.AfterScale = {};
@@ -421,7 +419,7 @@ void BossEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 	else {			//魔法陣を縮める
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
 			magic.Alive = false;
@@ -435,7 +433,7 @@ void BossEnemy::WarpEnemy() {
 	l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.5f;
 			enemywarp.State = WARP_END;
@@ -446,7 +444,7 @@ void BossEnemy::WarpEnemy() {
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
 	else {			//キャラが大きくなっている
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
 			m_Warp = false;

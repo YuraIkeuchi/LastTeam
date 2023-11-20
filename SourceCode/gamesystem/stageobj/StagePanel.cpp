@@ -22,12 +22,12 @@ void StagePanel::LoadResource() {
 			panels[i][j].object.reset(new IKEObject3d());
 			panels[i][j].object->Initialize();
 			panels[i][j].object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
-			panels[i][j].object->SetScale({ 2.f,0.01f,2.f });
+			panels[i][j].object->SetScale({ PANEL_SIZE,0.01f,PANEL_SIZE });
 		}
 	}
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			panels[i][j].position = { (2.0f * i) - (PANEL_HEIGHT * 2.0f),0.0f,(2.0f * j) };
+			panels[i][j].position = { (PANEL_SIZE * i) - (PANEL_HEIGHT * PANEL_SIZE),0.0f,(PANEL_SIZE * j) };
 			panels[i][j].color = { 1.f,1.f,1.f,1.f };
 			panels[i][j].type = NO_PANEL;
 			panels[i][j].isHit = false;
@@ -77,26 +77,28 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 			panels[i][j].object->Draw();
 		}
 	}
+	IKEObject3d::PostDraw();
+}
+//カードの描画
+void StagePanel::ActDraw(DirectXCommon* dxCommon) {
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Draw(dxCommon);
 	}
-	IKEObject3d::PostDraw();
 }
-
 //ImGui
 void StagePanel::ImGuiDraw() {
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->ImGuiDraw();
 	}
-	ImGui::Begin("Panel");
-	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			ImGui::Text("Poison[%d][%d]:%d", i, j, panels[i][j].isPoison);
-		}
-	}
-	ImGui::End();
+	//ImGui::Begin("Panel");
+	//for (int i = 0; i < PANEL_WIDTH / 2; i++) {
+	//	for (int j = 0; j < PANEL_HEIGHT; j++) {
+	//		ImGui::Text("Poison[%d][%d]:%d", i, j, panels[i][j].isPoison);
+	//	}
+	//}
+	//ImGui::End();
 }
 
 //スキルセットの更新(バトル前)
@@ -156,29 +158,29 @@ void StagePanel::RandomPanel(int num) {
 	for (int i = 0; i < num; i++) {
 		bool isSet = false;
 		//乱数の設定
-		int width = Helper::GetInstance()->GetRanNum(0, 3);
-		int height = Helper::GetInstance()->GetRanNum(0, 3);
+		int width = Helper::GetRanNum(0, 3);
+		int height = Helper::GetRanNum(0, 3);
 
 		//パネル探索（開いてるのが3追加の場合書いてない）
 
 		while (!isSet) {
 			if (panels[width][height].type != NO_PANEL ||
 				(width == p_width && height == p_height)) {
-				width = Helper::GetInstance()->GetRanNum(0, 3);
-				height = Helper::GetInstance()->GetRanNum(0, 3);
+				width = Helper::GetRanNum(0, 3);
+				height = Helper::GetRanNum(0, 3);
 			} else {
 				isSet = true;
 			}
 		}
 		//これは変えなくていい
-		int r_type = Helper::GetInstance()->GetRanNum(1, 3);
+		int r_type = Helper::GetRanNum(1, 3);
 
 		panels[width][height].type = SKILL_PANEL;
 		//アクションのセット
 		InterAction* newAction = nullptr;
 		switch (panels[width][height].type) {
 		case SKILL_PANEL:
-			newAction = new SkillAction();
+			newAction = new SkillAction(SkillManager::GetInstance()->IDSearch(i));
 			break;
 		default:
 			break;
@@ -186,7 +188,6 @@ void StagePanel::RandomPanel(int num) {
 		newAction->Initialize();
 		newAction->SetPlayer(player);
 		//ステージに配布されるパネルに情報を読み取ってる
-		newAction->SetSkillID(SkillManager::GetInstance()->IDSearch(i));
 		newAction->GetSkillData();
 		newAction->SetPosition({ panels[width][height].position.x,0.5f,panels[width][height].position.z });
 		actions.emplace_back(newAction);
@@ -289,15 +290,15 @@ void StagePanel::EnemyHitReset() {
 XMFLOAT3 StagePanel::EnemySetPanel() {
 	bool isSet = false;
 	//乱数の設定
-	int width = Helper::GetInstance()->GetRanNum(4, 7);
-	int height = Helper::GetInstance()->GetRanNum(0, 3);
+	int width = Helper::GetRanNum(4, 7);
+	int height = Helper::GetRanNum(0, 3);
 
 	//パネル探索（敵がいる場合は再検索）
 
 	while (!isSet) {
 		if (panels[width][height].isEnemyHit) {
-			width = Helper::GetInstance()->GetRanNum(4, 7);
-			height = Helper::GetInstance()->GetRanNum(0, 3);
+			width = Helper::GetRanNum(4, 7);
+			height = Helper::GetRanNum(0, 3);
 		}
 		else {
 			isSet = true;
@@ -309,15 +310,15 @@ XMFLOAT3 StagePanel::EnemySetPanel() {
 void StagePanel::PoisonSetPanel(int& width, int& height) {
 	bool isSet = false;
 	//乱数の設定
-	int l_width = Helper::GetInstance()->GetRanNum(0, 3);
-	int l_height = Helper::GetInstance()->GetRanNum(0, 3);
+	int l_width = Helper::GetRanNum(0, 3);
+	int l_height = Helper::GetRanNum(0, 3);
 
 	//パネル探索（敵がいる場合は再検索）
 
 	while (!isSet) {
 		if (panels[l_width][l_height].isPoison) {
-			l_width = Helper::GetInstance()->GetRanNum(0, 3);
-			l_height = Helper::GetInstance()->GetRanNum(0, 3);
+			l_width = Helper::GetRanNum(0, 3);
+			l_height = Helper::GetRanNum(0, 3);
 		}
 		else {
 			panels[l_width][l_height].isPoison = true;
@@ -334,7 +335,7 @@ void StagePanel::PoisonUpdate() {
 			if (panels[i][j].isPoison) {
 				panels[i][j].PoisonTimer++;
 
-				if (Helper::GetInstance()->CheckMin(panels[i][j].PoisonTimer, l_TargetTimer, 1)) {
+				if (Helper::CheckMin(panels[i][j].PoisonTimer, l_TargetTimer, 1)) {
 					panels[i][j].isPoison = false;
 					panels[i][j].PoisonTimer = {};
 				}

@@ -56,21 +56,25 @@ void SkillManager::UIDraw() {
 }
 
 void SkillManager::ImGuiDraw() {
-	for (SkillBase* newskill : skill) {
-		if (newskill != nullptr) {
-			newskill->ImGuiDraw();
-		}
-	}
+	//for (SkillBase* newskill : skill) {
+	//	if (newskill != nullptr) {
+	//		newskill->ImGuiDraw();
+	//	}
+	//}
 
 	ImGui::Begin("Mana");
 	//ImGui::Text("Num:%d", m_DeckNum);
-	ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
-	ImGui::Text("m_DeckNum:%d", m_DeckNum);
-	ImGui::Text("m_DeckSize:%d", (int)m_DeckDate.size());
-	/*for (int i = 0; i < m_DeckDate.size(); i++) {
+	//ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
+	//ImGui::Text("m_DeckNum:%d", m_DeckNum);
+	//ImGui::Text("m_DeckSize:%d", (int)m_DeckDate.size());
+	for (int i = 0; i < m_DeckDate.size(); i++) {
 		ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
-	}*/
+	}
 	ImGui::End();
+	for (auto i = 0; i < deckui.size(); i++) {
+		if (deckui[i] == nullptr)continue;
+		deckui[i]->ImGuiDraw();
+	}
 }
 
 int SkillManager::IDSearch(const int BirthNum) {
@@ -300,14 +304,12 @@ void SkillManager::DeckCheck(const int DeckNumber, const int DeckCount) {
 	std::shuffle(m_DeckDate.begin(), m_DeckDate.end(), std::default_random_engine(seed));
 	//デッキのUIを作成
 	BirthDeckUI(DeckNumber, DeckCount);
-
 }
 void SkillManager::PushOnce2Deck(const int DeckNumber) {
 	DeckUI* newdeckUi = nullptr;
 	newdeckUi = new DeckUI();
 	newdeckUi->Initialize();
 	newdeckUi->InitState((int)deckui.size());
-	newdeckUi->SetID(DeckNumber);
 	newdeckUi->SetType((int)skill[DeckNumber]->GetSkillType());
 	deckui.emplace_back(newdeckUi);
 	m_DeckNum = (int)deckui.size();
@@ -328,19 +330,22 @@ void SkillManager::SetDeckState(const int DeckNum) {
 //UIの生成
 void SkillManager::BirthDeckUI(const int DeckNumber, const int DeckCount) {
 	//デッキUIのセット
-	DeckUI* newdeckUi = nullptr;
-	newdeckUi = new DeckUI();
-	newdeckUi->Initialize();
-	newdeckUi->InitState(DeckCount);
-	deckui.emplace_back(newdeckUi);
+	unique_ptr<DeckUI> newdeckui = make_unique<DeckUI>();
+	newdeckui->Initialize();
+	newdeckui->InitState(DeckCount);
+	deckui.push_back(std::move(newdeckui));
 	//手に入れたスキルのUIの更新
 	for (auto i = 0; i < m_DeckDate.size(); i++) {
 		deckui[i]->SetID(m_DeckDate[i]);
-		deckui[i]->SetType((int)skill[m_DeckDate[i]]->GetSkillType());
+		deckui[i]->BirthIcon();
 	}
+	////手に入れたスキルのUIの更新
+	//for (auto i = 0; i < m_DeckDate.size(); i++) {
+	//	deckui[i]->SetType((int)skill[m_DeckDate[i]]->GetSkillType());
+	//}
 }
 //リザルトに渡すデータ
-void SkillManager::HandResultData(const int DeckID, vector<std::vector<int>>& area, int& DisX, int& DisY) {
+void SkillManager::HandResultData(const int DeckID, vector<std::vector<int>>& area, int& DisX, int& DisY,int& Damage) {
 	if (skill[DeckID]->GetSkillType() == SkillType::damege) {
 		AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[DeckID]);
 		area = atkSkill->GetArea();		//範囲
@@ -351,6 +356,7 @@ void SkillManager::HandResultData(const int DeckID, vector<std::vector<int>>& ar
 		l_DistanceY = atkSkill->GetDistanceY();
 		DisX = l_DistanceX;
 		DisY = l_DistanceY; 
+		Damage = (int)atkSkill->GetDamege();
 	}
 	else {
 		return;

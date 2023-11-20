@@ -61,7 +61,7 @@ bool SceneSave::AllClear() {
 	else {
 		return false;
 	}
-	//if (Helper::GetInstance()->All_OfF(temp, kFirstStage)) {
+	//if (Helper::All_OfF(temp, kFirstStage)) {
 	//	
 	//}
 }

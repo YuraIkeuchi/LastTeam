@@ -15,8 +15,8 @@ void VolumManager::Initialize() {
 
 void VolumManager::Update() {
 	//‰¹—Ê‚Í“Á’è‚Ü‚Å‚µ‚©“®‚©‚È‚¢
-	Helper::GetInstance()->Clamp(m_SEVolum, 0.0f, 1.0f);
-	Helper::GetInstance()->Clamp(m_BGMVolum, 0.0f, 1.0f);
+	Helper::Clamp(m_SEVolum, 0.0f, 1.0f);
+	Helper::Clamp(m_BGMVolum, 0.0f, 1.0f);
 }
 
 void VolumManager::Draw() {

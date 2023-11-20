@@ -3,14 +3,15 @@
 #include "Easing.h"
 #include <GameStateManager.h>
 #include <Helper.h>
-ActionUI::ActionUI() {
+ActionUI::ActionUI(const int ID) {
+	m_ID = ID;
 	//カード
-	tex = IKESprite::Create(ImageManager::ACTIONUI, { 0.0f,0.0f });
+	tex = IKESprite::Create(ImageManager::ATTACK_0 + m_ID, { 0.0f,0.0f });
 	tex->SetAnchorPoint({ 0.5f,0.5f });
 	tex->SetPosition({ -100.0f,800.0f });
-
+	tex->SetSize({ 64.0f,64.0f });
 	//ID用のスプライト
-	_drawnumber = make_unique<DrawNumber>();
+	_drawnumber = make_unique<DrawNumber>(0.5f);
 	_drawnumber->Initialize();
 }
 //初期化
@@ -19,23 +20,16 @@ void ActionUI::Initialize() {
 	m_Use = false;
 	m_Frame = {};
 	m_Alive = true;
-	
+
 }
 //ステータス初期化
-void ActionUI::InitState(const int ActCount, const int ID,const int Type) {
+void ActionUI::InitState(const int ActCount, const int Type) {
 	m_ActCount = ActCount;
-	m_ID = ID;
 	m_Type = Type;
 }
 //更新
 void ActionUI::Update() {
 	UiMove();
-	if (m_Type == 0) {
-		m_Color = { 1.0f,0.0f,0.0f,1.0f };
-	}
-	else {
-		m_Color = { 0.0f,1.0f,0.0f,1.0f };
-	}
 	tex->SetColor(m_Color);
 	tex->SetSize(m_Size);
 	tex->SetPosition(m_Position);
@@ -62,19 +56,20 @@ void ActionUI::ImGuiDraw() {
 //UIの動き
 void ActionUI::UiMove() {
 	const float l_AddFrame = 0.1f;
-	if (m_ActCount==0) {
-		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (20.f + 32.f));
-		float size_=Ease(Out,Quad,0.5f, m_Size.x,64.f);
+	const float l_size = 128.f;
+	if (m_ActCount == 0) {
+		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (16.f + 64.f));
+		float size_ = Ease(Out, Quad, 0.5f, m_Size.x, l_size);
 		m_Size = { size_,size_ };
 	} else {
-		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (41.f + 32.f + ((m_ActCount) * 48.0f)));	
-		float size_ = Ease(Out, Quad, 0.5f, m_Size.x, 48.f);
+		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (44.f + 64.f + ((m_ActCount) * 100.0f)));
+		float size_ = Ease(Out, Quad, 0.5f, m_Size.x, l_size * 0.75f);
 		m_Size = { size_,size_ };
 	}
 	if (!m_Use) {
-		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 670.0f);
+		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 640.0f);
 	} else {
-		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 		}
 		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 630.0f);

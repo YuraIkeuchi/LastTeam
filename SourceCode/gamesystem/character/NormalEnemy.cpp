@@ -18,7 +18,7 @@ NormalEnemy::NormalEnemy() {
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 
 	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>();
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 	}
 
@@ -71,8 +71,7 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 //ImGui描画
 void NormalEnemy::ImGui_Origin() {
 	ImGui::Begin("NormalEnemy");
-	ImGui::Text("Height:%d,Width:%d", m_NowHeight,m_NowWidth);
-	ImGui::Text("Timer:%d", m_PoisonTimer);
+	ImGui::Text("Last:%d", m_LastEnemy);
 	ImGui::End();
 }
 //開放
@@ -81,7 +80,7 @@ void NormalEnemy::Finalize() {
 }
 //追従
 //void NormalEnemy::Follow() {
-//	Helper::GetInstance()->FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
+//	Helper::FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
 //}
 
 void NormalEnemy::Inter() {

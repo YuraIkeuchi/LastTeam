@@ -11,6 +11,7 @@
 #include<SceneSave.h>
 #include <memory>
 #include "Player.h"
+#include <Feed.h>
 
 using namespace std;         //  名前空間指定
 //前方宣言
@@ -101,6 +102,10 @@ public:
 	static int clearHierarchy;
 
 	unique_ptr<Player> player_;
+	unique_ptr<Feed> feed;
+	bool m_Feed = false;
+	bool m_FeedStart = false;
+	bool m_FeedEnd = false;
 	//シーンでの遷移
 	//SceneState m_SceneState = SceneState::IntroState;
 };

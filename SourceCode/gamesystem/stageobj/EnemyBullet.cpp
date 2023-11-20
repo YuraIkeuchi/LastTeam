@@ -16,7 +16,8 @@ EnemyBullet::EnemyBullet() {
 	panels.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	panels.tex->TextureCreate();
 	panels.tex->Initialize();
-	panels.tex->SetScale({ 0.2f,0.2f,0.2f });
+	float baseScale = PANEL_SIZE * 0.1f;
+	panels.tex->SetScale({ baseScale,baseScale,baseScale });
 	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //初期化
@@ -72,7 +73,7 @@ void EnemyBullet::ImGuiDraw() {
 bool EnemyBullet::Collide() {
 	XMFLOAT3 l_PlayerPos = player->GetPosition();
 	const float l_Damage = 0.5f;
-	const float l_Radius = 0.2f;
+	const float l_Radius = 0.15f;
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
 		player->RecvDamage(5.0f,"NORMAL");
 		m_Alive = false;
@@ -93,7 +94,7 @@ void EnemyBullet::Throw() {
 	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 	//弾のセット(だんだん浮かび逢ふがるような感じ)
 	if (m_ThrowType == THROW_SET) {
-		if (Helper::GetInstance()->FrameCheck(m_Frame, l_AddFrame)) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Frame = {};
 			m_ThrowType = THROW_INTER;
 		}
@@ -108,7 +109,7 @@ void EnemyBullet::Throw() {
 		m_ThrowTimer++;
 		if (m_ThrowTimer == l_BaseTimer) {
 			float l_Rot = {};
-			int num = Helper::GetInstance()->GetRanNum(0, 2);
+			int num = Helper::GetRanNum(0, 2);
 			if (num == DIR_STRAIGHT) {
 				l_Rot = -90.0f;
 			}
@@ -131,10 +132,10 @@ void EnemyBullet::Throw() {
 		//弾にスピードを加算
 		m_Position.x += m_Angle.x * m_AddSpeed;
 		m_Position.z += m_Angle.y * m_AddSpeed;
-		if (Helper::GetInstance()->CheckNotValueRange(m_Position.z, 0.0f, 6.0f)) {		//反射する
+		if (Helper::CheckNotValueRange(m_Position.z, 0.0f, 6.0f)) {		//反射する
 			m_Angle.y *= -1.0f;
 		}
-		if (Helper::GetInstance()->CheckNotValueRange(m_Position.x, -9.0f,10.0f)) {
+		if (Helper::CheckNotValueRange(m_Position.x, -9.0f,10.0f)) {
 			m_Alive = false;
 		}
 	}

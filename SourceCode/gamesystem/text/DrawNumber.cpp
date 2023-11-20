@@ -2,7 +2,7 @@
 #include <ImageManager.h>
 #include <Helper.h>
 
-DrawNumber::DrawNumber() {
+DrawNumber::DrawNumber(const float scale) {
 	const int NumberCount = NUMBER_MAX;
 	const float l_Width_Cut = 64.0f;
 	const float l_Height_Cut = 64.0f;
@@ -18,7 +18,7 @@ DrawNumber::DrawNumber() {
 			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
 		_Number[i]->SetAnchorPoint({ 0.5f,0.5f });
 		_Number[i]->SetSize({ l_Width_Cut,l_Height_Cut });
-		_Number[i]->SetScale(0.5f);
+		_Number[i]->SetScale(scale);
 	}
 }
 
@@ -42,17 +42,31 @@ void DrawNumber::SetExplain(const XMFLOAT3& pos) {
 	//ワールド座標に変換する
 	XMVECTOR texHPFirst;
 	texHPFirst = { pos.x, pos.y, pos.z };
-	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatView, false);
-	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatProjection, true);
-	texHPFirst = Helper::GetInstance()->WDivision(texHPFirst, false);
-	texHPFirst = Helper::GetInstance()->PosDivi(texHPFirst, m_MatPort, false);
+	texHPFirst = Helper::PosDivi(texHPFirst, m_MatView, false);
+	texHPFirst = Helper::PosDivi(texHPFirst, m_MatProjection, true);
+	texHPFirst = Helper::WDivision(texHPFirst, false);
+	texHPFirst = Helper::PosDivi(texHPFirst, m_MatPort, false);
 
 	m_Position = { texHPFirst.m128_f32[0],texHPFirst.m128_f32[1] };
 }
 //カメラ情報
 void DrawNumber::GetCameraData() {
-	Camera* camera = Helper::GetInstance()->GetCamera();
+	Camera* camera = Helper::GetCamera();
 	m_MatView = camera->GetViewMatrix();
 	m_MatProjection = camera->GetProjectionMatrix();
 	m_MatPort = camera->GetViewPort();
 }
+
+void DrawNumber::SetColor(XMFLOAT4 color) {
+	for (unique_ptr<IKESprite>& num:_Number) {
+		num->SetColor(color);
+	}
+}
+
+void DrawNumber::SetSize(XMFLOAT2 size) {
+	for (unique_ptr<IKESprite>& num : _Number) {
+		num->SetSize(size);
+	}
+
+}
+

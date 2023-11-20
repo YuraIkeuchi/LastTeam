@@ -19,6 +19,8 @@ public:
 
 	//初期化
 	void Initialize();
+	//IDに合わせたIconの作成
+	void BirthIcon();
 	//ステータスセット
 	void InitState(const int ActCount);
 	//更新
@@ -35,15 +37,15 @@ public:
 	const bool GetUse() { return m_Use; }
 	void SetActCount(const int ActCount) { m_ActCount = ActCount; }
 	void SetUse(const bool Use) { m_Use = Use; }
-	void SetID(const int ID) { m_ID = ID; }
 	void SetType(const int Type) { m_Type = Type; }
+	void SetID(const int ID) { m_ID = ID; }
 private:
 	static const int TEX_MAX = 3;
 private:
 	unique_ptr<IKESprite> tex;
 
 	XMFLOAT2 m_Position = {};
-	XMFLOAT4 m_Color = { 1.0f,1.0f,1.0f,1.0f };
+	XMFLOAT4 m_Color = { 1.3f,1.3f,1.3f,1.0f };
 	int m_ActCount = {};
 
 	int m_Type = {};

@@ -41,7 +41,10 @@ public:
 	/// パッシブがあればドレイン上昇(バトルシーン)
 	/// </summary>
 	void DrainHealUp();
-
+	/// <summary>
+	/// 
+	/// </summary>
+	void ReLoadDamage();
 private:
 	/// <summary>
 	/// csvでマップに敵をスポーン
@@ -57,5 +60,6 @@ private:
 	float BosscircleShadowDir[3] = { 0,-1,0 };
 	float BosscircleShadowAtten[3] = { 0.5f,0.6f,0.0f };
 	float BosscircleShadowFactorAngle[2] = { 0.0f, 0.3f };
+	int m_DeathCount = {};
 };
 

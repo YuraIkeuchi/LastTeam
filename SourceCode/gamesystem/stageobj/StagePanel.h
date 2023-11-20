@@ -12,6 +12,7 @@ using namespace std;
 
 static const int PANEL_HEIGHT = 4;
 static const int PANEL_WIDTH = 8;
+static const float PANEL_SIZE = 1.5f;
 class StagePanel {
 public:
 	static StagePanel* GetInstance();
@@ -48,6 +49,8 @@ public:
 	void Update();
 	//描画
 	void Draw(DirectXCommon* dxCommon);
+	//行動カードの描画
+	void ActDraw(DirectXCommon* dxCommon);
 	//ImGui
 	void ImGuiDraw();
 	//パネルを戻す

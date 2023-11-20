@@ -81,11 +81,14 @@ public:
 
 	void Setname(const string name) { m_name = name; }
 
+	bool HPEffect();
 private:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
 
 	static const int DIR_MAX = 4;
+
+	static float startHP;
 public:
 	//キャラの状態
 	enum CharaState {
@@ -137,12 +140,17 @@ private:
 	//HPの表示
 	unique_ptr<IKESprite> hptex;
 	float m_HP = {};
+	float m_OldHP = m_HP;
+	bool isDamage = false;
+	bool isHeal = false;
 	float m_MaxHP = {};
 	//数値化したHP表示のための変数
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//整数にしたHP
+	array<int, NUMBER_MAX> m_DigitNumberMax;
+	int m_InterMaxHP = {};//整数にしたHP
 
-	XMFLOAT2 m_HPPos = { 25.f,580.0f };
+	XMFLOAT2 m_HPPos = { 10.f,5.0f };
 	XMFLOAT2 m_HPSize = { 400.0f,40.0f };
 	//桁数
 	enum DightType {
@@ -151,7 +159,9 @@ private:
 		THIRD_DIGHT
 	};
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
-	
+	unique_ptr<IKESprite> slash_;
+	array<unique_ptr<DrawNumber>, NUMBER_MAX> _MaxHp;
+
 	bool m_Delay = false;
 	string m_name = "NONE";
 
