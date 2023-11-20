@@ -21,6 +21,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	nowHierarchy = 0;
 	nowIndex = 1;
 	s_LastStage = false;
+
 	////�X�e�[�W�̏�
 //// プレイヤー生成
 //{
@@ -52,6 +53,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//カード
 	title_ = IKESprite::Create(ImageManager::TITLETEXT, { 0.0f,0.0f });
 	GameStateManager::GetInstance()->DeckReset();
+
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {

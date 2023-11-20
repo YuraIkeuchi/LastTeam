@@ -93,6 +93,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	}
 
 	if (m_FeedEnd) {
+		Audio::GetInstance()->StopWave(AUDIO_MAIN);
 		//クリア処理が終らなかったら
 		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
 			//クリア処理準備
@@ -173,7 +174,6 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 //後方描画(主にSprite)
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
-	//title_[TITLE_BACK]->Draw();
 	StageBack::GetInstance()->Draw(dxCommon);
 	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
@@ -189,11 +189,11 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	//player_->ImGuiDraw();
-	GameStateManager::GetInstance()->ImGuiDraw();
-	enemyManager->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
-	camerawork->ImGuiDraw();
+	player_->ImGuiDraw();
+	//GameStateManager::GetInstance()->ImGuiDraw();
+	//enemyManager->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
+	//camerawork->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

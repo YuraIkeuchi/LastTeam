@@ -8,6 +8,7 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 	//ã§í ÇÃèâä˙âª
 	BaseInitialize(dxCommon);
 	sprite = IKESprite::Create(ImageManager::GAMEOVERBACK, { 0.0f,0.0f });
+	Audio::GetInstance()->StopWave(AUDIO_MAIN);
 }
 //çXêV
 void GameoverScene::Update(DirectXCommon* dxCommon) {

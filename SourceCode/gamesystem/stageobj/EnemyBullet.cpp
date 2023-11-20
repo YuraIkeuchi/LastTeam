@@ -132,10 +132,10 @@ void EnemyBullet::Throw() {
 		//弾にスピードを加算
 		m_Position.x += m_Angle.x * m_AddSpeed;
 		m_Position.z += m_Angle.y * m_AddSpeed;
-		if (Helper::CheckNotValueRange(m_Position.z, 0.0f, 6.0f)) {		//反射する
+		if (Helper::CheckNotValueRange(m_Position.z, 0.0f, 4.5f)) {		//反射する
 			m_Angle.y *= -1.0f;
 		}
-		if (Helper::CheckNotValueRange(m_Position.x, -7.0f,10.0f)) {
+		if (Helper::CheckNotValueRange(m_Position.x, -6.0f,10.0f)) {
 			m_Alive = false;
 		}
 	}

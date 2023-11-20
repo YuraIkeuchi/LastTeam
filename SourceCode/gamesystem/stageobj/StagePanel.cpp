@@ -111,7 +111,12 @@ void StagePanel::BattleUpdate() {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if (!panels[i][j].predict) {
-					panels[i][j].color = ChangeColor(i, j);
+					if (!panels[i][j].isEnemyHit) {
+						panels[i][j].color = ChangeColor(i, j);
+					}
+					else {
+						panels[i][j].color = { 1.0f,0.3f,0.0f,1.0f };
+					}
 				}
 				else {
 					panels[i][j].color = { 1.0f,0.3f,0.0f,1.0f };
