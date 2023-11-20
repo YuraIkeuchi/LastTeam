@@ -287,17 +287,28 @@ void StagePanel::EnemyHitReset() {
 		}
 	}
 }
-XMFLOAT3 StagePanel::EnemySetPanel() {
+XMFLOAT3 StagePanel::EnemySetPanel(const bool LastEnemy) {
 	bool isSet = false;
 	//乱数の設定
-	int width = Helper::GetRanNum(4, 7);
+	int width = 0;
+	if (!LastEnemy) {
+		width = Helper::GetRanNum(4, 7);
+	}
+	else {		//最後の敵はなるべく前にワープさせる(ぐだらないように)
+		width = Helper::GetRanNum(4, 5);
+	}
 	int height = Helper::GetRanNum(0, 3);
 
 	//パネル探索（敵がいる場合は再検索）
 
 	while (!isSet) {
 		if (panels[width][height].isEnemyHit) {
-			width = Helper::GetRanNum(4, 7);
+			if (!LastEnemy) {
+				width = Helper::GetRanNum(4, 7);
+			}
+			else {		//最後の敵はなるべく前にワープさせる(ぐだらないように)
+				width = Helper::GetRanNum(4, 5);
+			}
 			height = Helper::GetRanNum(0, 3);
 		}
 		else {

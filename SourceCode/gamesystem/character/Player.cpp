@@ -131,6 +131,7 @@ void Player::Update() {
 			_MaxHp[THIRD_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
 		}
 		HPEffect();
+		DamageUpdate();
 		//表示用のHP
 		m_InterHP = (int)(m_HP);
 		m_InterMaxHP = (int)m_MaxHP;
@@ -317,6 +318,8 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	} else if (name == "POISON") {
 		BirthPoisonParticle();
 	}
+	m_Damege = true;
+	m_DamageTimer = {};
 }
 void Player::TitleUpdate() {
 	Obj_SetParam();
@@ -335,7 +338,7 @@ void Player::HealParticle() {
 void Player::DamageParticle() {
 	const XMFLOAT4 s_color = { 0.5f,0.5f,0.5f,1.0f };
 	const XMFLOAT4 e_color = { 0.5f,0.5f,0.5f,1.0f };
-	const float s_scale = 2.0f;
+	const float s_scale = 1.0f;
 	const float e_scale = 0.0f;
 	for (int i = 0; i < 15; i++) {
 		ParticleEmitter::GetInstance()->Break(50, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, 5.0f);
@@ -397,4 +400,26 @@ void Player::PlayerSave() {
 	playerofs << "STARTHP" << "," << l_StartHp << std::endl;
 	playerofs << "NOWHP" << "," << m_HP << std::endl;
 	playerofs << "MAXHP" << "," << m_MaxHP << std::endl;
+}
+//ダメージ関係
+void Player::DamageUpdate() {
+	const int l_TargetTimer = 80;
+	if (!m_Damege) { return; }
+	if (Helper::CheckMin(m_DamageTimer, l_TargetTimer, 1)) {
+		m_DamageTimer = {};
+		m_FlashCount = {};
+		m_Damege = false;
+	}
+
+	//一定フレームのときは見えないようにする
+	if (m_DamageTimer % 10 == 0) {
+		m_FlashCount++;
+	}
+
+	if (m_FlashCount % 2 != 0) {
+		m_Color.w = 1.0f;
+	}
+	else {
+		m_Color.w = 0.0f;
+	}
 }

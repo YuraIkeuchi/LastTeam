@@ -100,6 +100,11 @@ protected:
 	XMFLOAT3 m_ShadowScale = {};
 	//予測エリア
 	std::unique_ptr<PredictArea> predictarea;
+
+	//ダメージ関係
+	bool m_Damege = false;
+	int m_DamageTimer = {};
+	int m_FlashCount = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -153,6 +158,8 @@ private:
 	void HPManage();
 	void BirthPoisonParticle();
 	void BirthDamage(const float Damage);//
+	//ダメージの更新
+	void DamageUpdate();
 protected:
 	void Collide(vector<unique_ptr<AttackArea>>& area);
 	//毒の状態

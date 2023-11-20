@@ -227,7 +227,7 @@ void CanonEnemy::BirthMagic() {
 }
 void CanonEnemy::WarpEnemy() {
 	XMFLOAT3 l_RandPos = {};
-	l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
+	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy);
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
