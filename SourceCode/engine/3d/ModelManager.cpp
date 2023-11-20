@@ -18,7 +18,7 @@ void ModelManager::StartInitialize()
 	LoadModel(SKYDOME, "skydome");
 	LoadModel(PANEL, "box1x1x1");
 	LoadModel(BULLET, "UVSphere");
-	LoadFBXModel(PLAYER, "kotoko");
+	LoadModel(ENEMYMODEL, "chr_knight");
 }
 
 //モデル読み込み(非同期処理で読み込むもの)
