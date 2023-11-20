@@ -502,6 +502,8 @@ void GameStateManager::BirthBuff() {
 	m_Buff = true;		//一旦中身はこれだけ
 }
 void GameStateManager::DeckReset() {
+	m_DeckNumber.resize(3);
+	m_DeckNumber = { 1,2,4 };
 	m_DeckNumber.resize((int)(m_StartNumber.size()));
 	m_DeckNumber = m_StartNumber;
 }

@@ -13,6 +13,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(SHINE, L"Resources/2d/effect/shine.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 	IKESprite::LoadTexture(HPNUMBERUI, L"Resources/2d/objicon/Numbers/Num.png");
+	IKESprite::LoadTexture(DAMAGENUMBER, L"Resources/2d/objicon/Numbers/Num_Damage.png");
 	IKESprite::LoadTexture(SLASH, L"Resources/2d/objicon/Numbers/slash.png");
 	IKESprite::LoadTexture(MAPSCREEN, L"Resources/2d/sceneback/mapscreen.png");
 	IKESprite::LoadTexture(MAPROAD, L"Resources/2d/objicon/Map/map_road.png");

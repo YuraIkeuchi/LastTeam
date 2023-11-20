@@ -121,6 +121,11 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		}
 		starRoadsPos.resize(10);
 	}
+	for (int i = 0; i < MaxLength; i++) {
+		for (int j = 0; j < INDEX; j++) {
+			UIs[i][j].open = false;
+		}
+	}
 	BlackOut();
 
 	for (array<UI, INDEX>& ui : UIs) {
@@ -143,12 +148,14 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 				UIs[i][j].open = false;
 			}
 		}
-		chara->SetSize({0.f,0.f});
+		charaSize = { 0.f,0.f };
+		chara->SetSize(charaSize);
 		m_State = State::initState;
 	} else {
 		m_State = State::mainState;
 		scroll.x = -(UIs[nowHierarchy][nowIndex].pos.x / 2.f);
-		chara->SetSize({ 128.f,128.f });
+		charaSize = { 128.f,128.f };
+		chara->SetSize(charaSize);
 	}
 
 	//ここが新しく書いた場所
@@ -599,20 +606,19 @@ void MapScene::InitState() {
 	const float addFrameS = 1.0f / 80.f;
 	static float scrollFrame = 0.0f;
 	static float s_frame = 0.0f;
-	static XMFLOAT2 size = {};
 	if (Helper::FrameCheck(scrollFrame, addFrameS)) {
 		if (Helper::FrameCheck(s_frame, addFrame)) {
 			m_State = State::mainState;
 			scrollFrame = 0.0f;
 			s_frame = 0.0f;
 		} else {
-			size.x = Ease(In, Elastic, s_frame, 0.f, 128.f);
-			size.y = Ease(In, Linear, s_frame, 0.f, 128.f);
+			charaSize.x = Ease(In, Elastic, s_frame, 0.f, 128.f);
+			charaSize.y = Ease(In, Linear, s_frame, 0.f, 128.f);
 		}
 	} else {
 		scroll.x = Ease(In, Linear, scrollFrame, -lastScroll, 0.f);
 	}
-	chara->SetSize(size);
+	chara->SetSize(charaSize);
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
@@ -661,11 +667,22 @@ void MapScene::CheckState() {
 		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
 			if (Helper::FrameCheck(s_frame, addFrame)) {
 				Input* input = Input::GetInstance();
+				if (isClose) {
+					if (Helper::FrameCheck(closeFrame, addFrame)) {
+						m_State = State::mainState;
+						s_frame = 0.f;
+						delayFrame = 0.f;
+						closeFrame = 0.f;
+						isClose = false;
+					} else {
+						size.x = Ease(Out, Quint, closeFrame, 640.f, 0.f);
+						size.y = Ease(Out, Quint, closeFrame, 480.f, 0.f);
+					}
+					cheack->SetSize(size);
+					return;
+				}
 				if (input->TriggerButton(input->B)) {
-					size = {};
-					m_State = State::mainState;
-					s_frame = 0.f;
-					delayFrame = 0.f;
+					isClose = true;
 				}
 				if (input->TriggerButton(input->A)) {
 					size = {};

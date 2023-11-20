@@ -19,7 +19,7 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	//���U���g�e�L�X�g
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
-	resulttext->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
+	resulttext->SetConversation(TextManager::RESULT, { -235.0f,80.0f });
 
 }
 
@@ -194,8 +194,8 @@ void ResultSkill::Move() {
 }
 
 void ResultSkill::RandShineInit() {
-	float posX = (float)Helper::GetRanNum(64, 1216);
-	float posY = (float)Helper::GetRanNum(64, 240);
+	float posX = (float)Helper::GetRanNum(128, 1150);
+	float posY = (float)Helper::GetRanNum(128, 360);
 	float frame = (float)Helper::GetRanNum(30, 45);
 	ShineEffect itr;
 	itr.tex = IKESprite::Create(ImageManager::SHINE, { posX,posY });

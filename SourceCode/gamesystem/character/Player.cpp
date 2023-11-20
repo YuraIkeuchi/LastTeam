@@ -21,6 +21,8 @@ void Player::LoadResource() {
 
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	hptex_under = IKESprite::Create(ImageManager::FEED, { 0.0f,0.0f });
+	hptex_under->SetSize(m_HPSize);
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
@@ -150,6 +152,7 @@ void Player::Update() {
 			}
 		}
 		hptex->SetPosition(m_HPPos);
+		hptex_under->SetPosition(m_HPPos);
 		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 	}
 	//影
@@ -172,6 +175,7 @@ void Player::Draw(DirectXCommon* dxCommon) {
 void Player::UIDraw() {
 	IKESprite::PreDraw();
 	//HPバー
+	hptex_under->Draw();
 	hptex->Draw();
 	if (m_InterHP != 0) {
 		_drawnumber[FIRST_DIGHT]->Draw();
