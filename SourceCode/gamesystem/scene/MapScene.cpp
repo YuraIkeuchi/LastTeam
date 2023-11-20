@@ -714,7 +714,7 @@ void MapScene::CheckState() {
 			}
 			bool isBattle = true;
 			if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
-				ss << "Resources/csv/EnemySpawn/BattleMap0" << num << ".csv";
+				ss << "Resources/csv/EnemySpawn/BattleMap0" << 1 << ".csv";
 				isBattle = true;
 			} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
 				ss << "Resources/csv/EnemySpawn/PassiveMap0" << num << ".csv";

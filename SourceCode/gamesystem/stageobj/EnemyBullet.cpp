@@ -51,7 +51,7 @@ void EnemyBullet::Update() {
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//当たり判定
 
-	panels.position = {(-8.0f) + (PANEL_SIZE * m_NowWidth),0.011f,(PANEL_SIZE * m_NowHeight)};
+	panels.position = {(PANEL_SIZE * m_NowWidth) - (PANEL_HEIGHT * PANEL_SIZE) ,0.011f,(PANEL_SIZE * m_NowHeight)};
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor({1.0f,0.3f,0.0f,1.0f});
 	panels.tex->Update();
@@ -135,7 +135,7 @@ void EnemyBullet::Throw() {
 		if (Helper::CheckNotValueRange(m_Position.z, 0.0f, 6.0f)) {		//反射する
 			m_Angle.y *= -1.0f;
 		}
-		if (Helper::CheckNotValueRange(m_Position.x, -9.0f,10.0f)) {
+		if (Helper::CheckNotValueRange(m_Position.x, -7.0f,10.0f)) {
 			m_Alive = false;
 		}
 	}

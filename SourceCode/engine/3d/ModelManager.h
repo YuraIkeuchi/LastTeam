@@ -19,10 +19,11 @@ public:
 		SKYDOME,
 		PANEL,
 		BULLET,
+		ENEMYMODEL,
 	};
 	//FBXの名前
 	enum FBXName {
-		PLAYER,
+	
 	};
 
 public:

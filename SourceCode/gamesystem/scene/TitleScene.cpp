@@ -6,6 +6,7 @@
 #include "TutorialTask.h"
 #include "GameStateManager.h"
 #include "TextManager.h"
+#include <StageBack.h>
 //初期化
 void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
@@ -39,6 +40,8 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
+	//背景画像
+	StageBack::GetInstance()->LoadResource();
 	GameReset({ -PANEL_SIZE*2.f,0.1f,PANEL_SIZE });
 
 	////敵
@@ -124,6 +127,7 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	//title_[TITLE_BACK]->Draw();
+	StageBack::GetInstance()->Draw(dxCommon);
 	IKESprite::PostDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
 	player_->Draw(dxCommon);

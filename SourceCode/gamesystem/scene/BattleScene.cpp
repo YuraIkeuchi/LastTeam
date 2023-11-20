@@ -6,6 +6,7 @@
 #include <SceneChanger.h>
 #include <Helper.h>
 #include "InterEnemy.h"
+#include <StageBack.h>
 BattleScene::~BattleScene() {
 	Finalize();
 }
@@ -171,6 +172,10 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 }
 //後方描画(主にSprite)
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
+	IKESprite::PreDraw();
+	//title_[TITLE_BACK]->Draw();
+	StageBack::GetInstance()->Draw(dxCommon);
+	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
 	player_->Draw(dxCommon);
