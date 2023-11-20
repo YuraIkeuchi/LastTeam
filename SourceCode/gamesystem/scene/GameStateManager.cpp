@@ -506,4 +506,6 @@ void GameStateManager::DeckReset() {
 	m_DeckNumber = { 1,2,4 };
 	m_DeckNumber.resize((int)(m_StartNumber.size()));
 	m_DeckNumber = m_StartNumber;
+	GotPassives.clear();
+	GotPassiveIDs = {};
 }

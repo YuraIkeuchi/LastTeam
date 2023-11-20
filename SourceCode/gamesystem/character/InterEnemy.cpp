@@ -63,6 +63,8 @@ void InterEnemy::Update() {
 			_damagenumber.erase(cbegin(_damagenumber) + i);
 		}
 	}
+	//だめーじ関係
+	DamageUpdate();
 	//数値化したHP
 	HPManage();
 	//UIをワールド座標に変換する
@@ -121,6 +123,8 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			if (GameStateManager::GetInstance()->GetBuff()) {
 				damage *= 2.0f;
 			}
+			m_Damege = true;
+			m_DamageTimer = {};
 			m_HP -= damage;
 			BirthDamage(damage);
 			std::string name = _area->GetStateName();
@@ -151,7 +155,7 @@ void InterEnemy::SimpleDamege(float damage) {
 void InterEnemy::BirthParticle() {
 	const XMFLOAT4 s_color = { 1.0f,0.3f,0.0f,1.0f };
 	const XMFLOAT4 e_color = { 1.0f,0.3f,0.0f,1.0f };
-	const float s_scale = 2.0f;
+	const float s_scale = 1.0f;
 	const float e_scale = 0.0f;
 	int l_Life = {};
 	float l_Divi = {};
@@ -295,5 +299,26 @@ void InterEnemy::BirthDamage(const float Damage) {
 			_damagenumber.push_back(std::move(_newnumber));
 		}
 	}
+}
+//ダメージ関係
+void InterEnemy::DamageUpdate() {
+	const int l_TargetTimer = 80;
+	if (!m_Damege) { return; }
+	if (Helper::CheckMin(m_DamageTimer, l_TargetTimer, 1)) {
+		m_DamageTimer = {};
+		m_FlashCount = {};
+		m_Damege = false;
+	}
 
+	//一定フレームのときは見えないようにする
+	if (m_DamageTimer % 10 == 0) {
+		m_FlashCount++;
+	}
+
+	if (m_FlashCount % 2 != 0) {
+		m_Color.w = 1.0f;
+	}
+	else {
+		m_Color.w = 0.0f;
+	}
 }

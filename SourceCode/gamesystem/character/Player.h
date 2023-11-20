@@ -60,6 +60,8 @@ private:
 	void DamageParticle();
 	//毒のパーティクル
 	void BirthPoisonParticle();
+	//ダメージの更新
+	void DamageUpdate();
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }
@@ -170,4 +172,9 @@ private:
 	XMFLOAT3 m_ShadowPos = {};
 	XMFLOAT3 m_ShadowScale = {};
 	bool is_title = false;
+
+	//ダメージ関係
+	bool m_Damege = false;
+	int m_DamageTimer = {};
+	int m_FlashCount = {};
 };
