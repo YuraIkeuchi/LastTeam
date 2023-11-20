@@ -14,7 +14,7 @@ ModelManager* ModelManager::GetInstance()
 void ModelManager::StartInitialize()
 {
 	LoadModel(GROUND, "ground");
-	LoadModel(PLAYERMODEL, "chr_knight");
+	LoadModel(PLAYERMODEL, "pawn");
 	LoadModel(SKYDOME, "skydome");
 	LoadModel(PANEL, "box1x1x1");
 	LoadModel(BULLET, "UVSphere");

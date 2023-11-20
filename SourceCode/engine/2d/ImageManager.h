@@ -63,6 +63,7 @@ public:
 		ATTACK_7,
 		ATTACK_8,
 		ATTACK_9,
+		TUTORIAL_WINDOW,
 	};
 	//テクスチャの名前
 	enum tex2dName

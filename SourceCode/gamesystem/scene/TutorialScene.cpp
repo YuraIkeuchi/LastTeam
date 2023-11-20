@@ -3,7 +3,7 @@
 #include <StagePanel.h>
 #include <GameStateManager.h>
 #include <SceneChanger.h>
-#include "SkillManager.h"
+#include <ImageManager.h>
 #include <TutorialTask.h>
 #include <Helper.h>
 #include "MobEnemy.h"
@@ -33,7 +33,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
-	text_->SetConversation(TextManager::TUTORIAL_START);
+	text_->SetConversation(TextManager::TUTORIAL_START, m_TextPos);
 
 	_nowstate = TUTORIAL_INTRO;
 
@@ -53,6 +53,10 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	{
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
 	}
+
+	window.sprite = IKESprite::Create(ImageManager::TUTORIAL_WINDOW, { 0.0f,0.0f });
+	window.sprite->SetAnchorPoint({0.5f,0.5f});
+	window.m_Pos = { 750.0f,630.0f };
 
 	//敵
 	InterEnemy::SetPlayer(player_.get());
@@ -98,6 +102,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
+		TutorialTask::GetInstance()->SetViewSkill(true);
 		player_->PlayerSave();
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 		SceneManager::GetInstance()->ChangeScene("MAP");
@@ -106,6 +111,16 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 
 	//��Ԉڍs(state�ɍ��킹��)
 	(this->*stateTable[static_cast<size_t>(_nowstate)])();
+
+	//ウィンドウの拡大
+	if (Helper::FrameCheck(window.m_Frame, 0.1f)) {
+		window.m_Frame = 1.0f;
+	}
+
+	window.m_Size = { Ease(In,Cubic,window.m_Frame,0.0f,960.0f),
+	Ease(In,Cubic,window.m_Frame,0.0f,164.0f), };
+	window.sprite->SetSize(window.m_Size);
+	window.sprite->SetPosition(window.m_Pos);
 }
 
 void TutorialScene::Draw(DirectXCommon* dxCommon) {
@@ -142,7 +157,8 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 		enemy->UIDraw();
 		player_->UIDraw();
 	}
-	if (player_->GetNowHeight() != 0 || m_FeedEnd) {
+	if (!TutorialTask::GetInstance()->GetViewSkill()) {
+		window.sprite->Draw();
 		text_->TestDraw(dxCommon);
 	}
 	if (m_Feed) {
@@ -197,7 +213,7 @@ void TutorialScene::MoveState() {
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
-		text_->SetConversation(TextManager::TUTORIAL_GET);
+		text_->SetConversation(TextManager::TUTORIAL_GET, m_TextPos);
 		_nowstate = TUTORIAL_GETSKILL;
 	}
 }
@@ -205,7 +221,7 @@ void TutorialScene::MoveState() {
 void TutorialScene::GetState() {
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
-		text_->SetConversation(TextManager::TUTORIAL_EXPLAIN);
+		text_->SetConversation(TextManager::TUTORIAL_EXPLAIN, m_TextPos);
 		_nowstate = TUTORIAL_ATTACK;
 		m_Timer = {};
 	}
@@ -215,14 +231,14 @@ void TutorialScene::AttackState() {
 	Helper::CheckMin(m_Timer, 410, 1);
 
 	if (m_Timer == 200) {
-		text_->SetConversation(TextManager::TUTORIAL_MARK);
+		text_->SetConversation(TextManager::TUTORIAL_MARK, m_TextPos);
 	}
 	else if (m_Timer == 400) {
-		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK);
+		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK, m_TextPos);
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
-		text_->SetConversation(TextManager::TUTORIAL_TEXT_DAMAGE);
+		text_->SetConversation(TextManager::TUTORIAL_TEXT_DAMAGE, m_TextPos);
 		_nowstate = TUTORIAL_DAMAGE;
 		m_Timer = {};
 	}
@@ -243,16 +259,23 @@ void TutorialScene::DamageState() {
 		}
 
 		if (m_FeedEnd) {
+			window.m_Pos = { 640.0f,550.0f };
 			Audio::GetInstance()->StopWave(AUDIO_MAIN);
 			m_Timer++;
 			if (m_Timer == 1) {
-				text_->SetConversation(TextManager::TUTORIAL_SKILL);
+				m_TextPos = { 120.0f,20.f };
+				text_->SetConversation(TextManager::TUTORIAL_SKILL, m_TextPos);
 			}
 			else if (m_Timer == 200) {
-				text_->SetConversation(TextManager::TUTORIAL_CHOICE);
+				m_TextPos = { 10.0f,20.f };
+				text_->SetConversation(TextManager::TUTORIAL_CHOICE, m_TextPos);
+			}
+			else if (m_Timer == 350) {
+				TutorialTask::GetInstance()->SetViewSkill(true);
 			}
 			if (TutorialTask::GetInstance()->GetChoiceSkill()) {
-				text_->SetConversation(TextManager::TUTORIAL_END);
+				TutorialTask::GetInstance()->SetViewSkill(false);
+				text_->SetConversation(TextManager::TUTORIAL_END, m_TextPos);
 				_nowstate = TUTORIAL_FINISH;
 				m_Timer = {};
 			}
