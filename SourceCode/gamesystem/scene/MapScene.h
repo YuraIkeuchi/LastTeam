@@ -136,6 +136,8 @@ private:
 	float mov_frame = 0.0f;
 	float kMoveFrame = 30.0f;
 
+	bool isClose = false;
+	float closeFrame = 0.f;
 	float eFrame = 0;
 	float eAdd = 0.01f;
 

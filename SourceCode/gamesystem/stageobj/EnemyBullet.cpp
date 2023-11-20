@@ -51,7 +51,7 @@ void EnemyBullet::Update() {
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//当たり判定
 
-	panels.position = {(-8.0f) + (2.0f * m_NowWidth),0.011f,(2.0f * m_NowHeight)};
+	panels.position = {(-8.0f) + (PANEL_SIZE * m_NowWidth),0.011f,(PANEL_SIZE * m_NowHeight)};
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor({1.0f,0.3f,0.0f,1.0f});
 	panels.tex->Update();
