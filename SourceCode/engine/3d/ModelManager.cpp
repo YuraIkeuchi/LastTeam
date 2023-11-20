@@ -19,6 +19,7 @@ void ModelManager::StartInitialize()
 	LoadModel(PANEL, "box1x1x1");
 	LoadModel(BULLET, "UVSphere");
 	LoadModel(ENEMYMODEL, "chr_knight");
+	LoadModel(THORN, "Thorn");
 }
 
 //モデル読み込み(非同期処理で読み込むもの)

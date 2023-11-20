@@ -19,7 +19,7 @@ StagePanel* StagePanel::GetInstance() {
 void StagePanel::LoadResource() {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			panels[i][j].object.reset(new IKEObject3d());
+			panels[i][j].object = make_unique<IKEObject3d>();
 			panels[i][j].object->Initialize();
 			panels[i][j].object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
 			panels[i][j].object->SetScale({ PANEL_SIZE,0.01f,PANEL_SIZE });

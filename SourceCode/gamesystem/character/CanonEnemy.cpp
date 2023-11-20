@@ -173,9 +173,10 @@ void CanonEnemy::Attack() {
 
 //ワープ
 void CanonEnemy::Teleport() {
-	const int l_TargetTimer = 200;
+	const int l_RandTimer = Helper::GetRanNum(0, 30);
+	const int l_BaseTimer = 200;
 	
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_BaseTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 

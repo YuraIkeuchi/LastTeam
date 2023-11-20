@@ -8,6 +8,7 @@
 #include <Helper.h>
 #include "MobEnemy.h"
 #include <SceneManager.h>
+#include <StageBack.h>
 //��ԑJ��
 /*state�̕��я��ɍ��킹��*/
 void (TutorialScene::* TutorialScene::stateTable[])() = {
@@ -151,9 +152,11 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 }
 //�|�X�g�G�t�F�N�g������
 void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
+	IKESprite::PreDraw();
+	StageBack::GetInstance()->Draw(dxCommon);
+	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
 	if (enemy->GetHP() > 0.0f && !m_Skip) {
@@ -240,6 +243,7 @@ void TutorialScene::DamageState() {
 		}
 
 		if (m_FeedEnd) {
+			Audio::GetInstance()->StopWave(AUDIO_MAIN);
 			m_Timer++;
 			if (m_Timer == 1) {
 				text_->SetConversation(TextManager::TUTORIAL_SKILL);

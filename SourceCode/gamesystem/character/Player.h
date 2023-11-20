@@ -47,7 +47,7 @@ public:
 	//プレイヤーの回復
 	void HealPlayer(const float power);
 	//プレイヤーのダメージ
-	void RecvDamage(const float Damage,const string& name);
+	void RecvDamage(const float Damage,const string& name = "NORMAL");
 	//プレイヤーの情報保存
 	void PlayerSave();
 private:

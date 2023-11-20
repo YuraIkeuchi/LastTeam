@@ -20,6 +20,7 @@ public:
 		PANEL,
 		BULLET,
 		ENEMYMODEL,
+		THORN,
 	};
 	//FBXの名前
 	enum FBXName {
