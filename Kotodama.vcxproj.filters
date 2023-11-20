@@ -427,6 +427,9 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\StageBack.cpp">
       <Filter>gamesystem\stageobj\Common</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -820,6 +823,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\StageBack.h">
       <Filter>gamesystem\stageobj\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

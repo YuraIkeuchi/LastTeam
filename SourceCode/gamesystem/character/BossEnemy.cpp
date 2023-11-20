@@ -98,12 +98,12 @@ void BossEnemy::Action() {
 	}
 
 	//攻撃エリアの更新(実際はスキルになると思う)
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->Update();
+	for (auto i = 0; i < enethorn.size(); i++) {
+		if (enethorn[i] == nullptr)continue;
+		enethorn[i]->Update();
 
-		if (!attackarea[i]->GetAlive()) {
-			attackarea.erase(cbegin(attackarea) + i);
+		if (!enethorn[i]->GetAlive()) {
+			enethorn.erase(cbegin(enethorn) + i);
 		}
 	}
 	
@@ -131,9 +131,9 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 			newbullet->Draw(dxCommon);
 		}
 	}
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->Draw(dxCommon);
+	for (auto i = 0; i < enethorn.size(); i++) {
+		if (enethorn[i] == nullptr)continue;
+		enethorn[i]->Draw(dxCommon);
 	}
 	predictarea->Draw(dxCommon);
 	Obj_Draw();
@@ -281,20 +281,20 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 	if (name == "Row") {			//横一列
 		for (auto i = 0; i < m_Area.size(); i++) {
 			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Enemy");
+				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
 				newarea->Initialize();
 				newarea->InitState(i, Height);
-				newarea->SetDamage(20.0f);
-				attackarea.emplace_back(std::move(newarea));
+				newarea->SetPlayer(player);
+				enethorn.emplace_back(std::move(newarea));
 			}
 		}
 	}
 	else {		//ランダム(プレイヤーから近います)
-		std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Enemy");
+		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
-		newarea->SetDamage(20.0f);
-		attackarea.emplace_back(std::move(newarea));
+		newarea->SetPlayer(player);
+		enethorn.emplace_back(std::move(newarea));
 	}
 	predictarea->ResetPredict();
 
@@ -387,7 +387,7 @@ bool BossEnemy::CreateSkill(int id) {
 }
 //エリア攻撃の判定
 void BossEnemy::PlayerCollide() {
-	int l_PlayerWidth = player->GetNowWidth();
+	/*int l_PlayerWidth = player->GetNowWidth();
 	int l_PlayerHeight = player->GetNowHeight();
 	for (unique_ptr<AttackArea>& newarea : attackarea) {
 		if (newarea != nullptr) {
@@ -398,7 +398,7 @@ void BossEnemy::PlayerCollide() {
 				break;
 			}
 		}
-	}
+	}*/
 }
 //魔法陣生成
 void BossEnemy::BirthMagic() {
