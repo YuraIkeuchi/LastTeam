@@ -26,7 +26,7 @@ bool EnemyBullet::Initialize() {
 	m_Rotation.y = 270.0f;
 	m_Scale = { 0.0f,0.0f,0.0f };
 	m_BaseScale = {};
-	m_Color = { 1.0f,1.0f,1.0f,1.0f };
+	m_Color = { 0.6f,0.1f,0.1f,1.0f };
 	m_AddSpeed = 1.0f;
 	m_Alive = true;
 	m_ThrowType = THROW_SET;
@@ -99,7 +99,7 @@ void EnemyBullet::Throw() {
 			m_ThrowType = THROW_INTER;
 		}
 		
-		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.15f);
+		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.10f);
 	}
 	//狙う方向を決める
 	else if (m_ThrowType == THROW_INTER) {
@@ -129,6 +129,7 @@ void EnemyBullet::Throw() {
 	}
 	//実際に狙っちゃう
 	else {
+		m_Rotation.x += 5.0f;
 		//弾にスピードを加算
 		m_Position.x += m_Angle.x * m_AddSpeed;
 		m_Position.z += m_Angle.y * m_AddSpeed;

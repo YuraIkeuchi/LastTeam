@@ -70,9 +70,9 @@ void Player::LoadCSV() {
 //ステータスの初期化
 void Player::InitState(const XMFLOAT3& pos) {
 	m_Position = pos;
-	m_Rotation = { 0.0f,0.0f,0.0f };
+	m_Rotation = { 0.0f,90.0f,0.0f };
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5 };
+	m_Scale = { 0.5f,0.5f,0.5f };
 	_charaState = STATE_MOVE;
 	//攻撃先
 	m_TargetPos = {};
