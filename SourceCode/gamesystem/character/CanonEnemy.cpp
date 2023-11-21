@@ -90,6 +90,11 @@ void CanonEnemy::Action() {
 		}
 	}
 
+	//弾がなくなったら死亡(後で話し合う)
+	//if (!m_Alive && bullets.empty()) {
+	//	m_Death = true;
+	//}
+
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	shadow_tex->SetPosition(m_ShadowPos);
 	shadow_tex->SetScale(m_ShadowScale);

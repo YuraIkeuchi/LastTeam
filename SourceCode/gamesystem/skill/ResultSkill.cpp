@@ -4,6 +4,7 @@
 #include <Input.h>
 #include <Easing.h>
 #include <SkillManager.h>
+#include <TutorialTask.h>
 ResultSkill::ResultSkill() {
 }
 
@@ -41,24 +42,26 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
-	selectFrame->Draw();
-	for (ResultUI& resultUI : choiceSkills) {
-		resultUI.icon->Draw();
-		if (resultUI.isSkill) {
-			if (resultUI.Damage != 0) {
-				resultUI.DamageNumber[0]->Draw();
-			}
-			if (resultUI.Damage >= 10) {
-				resultUI.DamageNumber[1]->Draw();
+	if (TutorialTask::GetInstance()->GetViewSkill()) {
+		selectFrame->Draw();
+		for (ResultUI& resultUI : choiceSkills) {
+			resultUI.icon->Draw();
+			if (resultUI.isSkill) {
+				if (resultUI.Damage != 0) {
+					resultUI.DamageNumber[0]->Draw();
+				}
+				if (resultUI.Damage >= 10) {
+					resultUI.DamageNumber[1]->Draw();
+				}
 			}
 		}
-	}
-	resulttext->TestDraw(dxCommon);
-	for (ResultUI& itr : choiceSkills) {
-		if (itr.no == nowFrame) {
-			if (!itr.isSkill) { continue; }
-			for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
-				pickAreas->Draw();
+		resulttext->TestDraw(dxCommon);
+		for (ResultUI& itr : choiceSkills) {
+			if (itr.no == nowFrame) {
+				if (!itr.isSkill) { continue; }
+				for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
+					pickAreas->Draw();
+				}
 			}
 		}
 	}
@@ -154,6 +157,7 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 
 void ResultSkill::Move() {
 	if (m_Choice) { return; }
+	if (!TutorialTask::GetInstance()->GetViewSkill()) { return; }
 	Input* input = Input::GetInstance();
 	if (isMove) {
 		static float frame = 0.f;

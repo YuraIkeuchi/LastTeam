@@ -13,11 +13,9 @@ ModelManager* ModelManager::GetInstance()
 //モデル読み込み(最初から読み込むもの)
 void ModelManager::StartInitialize()
 {
-	LoadModel(GROUND, "ground");
-	LoadModel(PLAYERMODEL, "chr_knight");
-	LoadModel(SKYDOME, "skydome");
+	LoadModel(PLAYERMODEL, "pawn");
 	LoadModel(PANEL, "box1x1x1");
-	LoadModel(BULLET, "UVSphere");
+	LoadModel(BULLET, "EnemyBullet");
 	LoadModel(ENEMYMODEL, "chr_knight");
 	LoadModel(THORN, "Thorn");
 }

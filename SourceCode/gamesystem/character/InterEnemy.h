@@ -89,6 +89,7 @@ protected:
 	bool m_IsDrainUp = false;
 	int m_PoisonTimer = {};
 	bool m_Alive = true;
+	bool m_Death = false;
 
 	bool m_CheckPanel = false;
 
@@ -117,6 +118,7 @@ public://getter setter
 
 	const float GetHP() { return m_HP; }
 	const bool GetAlive() { return m_Alive; }
+	const bool GetDeath() { return m_Death; }
 	const bool GetLastEnemy() { return m_LastEnemy; }
 
 	void SimpleDamege(float damage = 3.f);

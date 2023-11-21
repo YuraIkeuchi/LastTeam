@@ -40,6 +40,7 @@ private:
 
 	unique_ptr<IKESprite> ui = nullptr;
 
+
 	enum ChangeType {
 		CHANGE_TITLE,
 		CHANGE_OVER,
@@ -58,4 +59,14 @@ private:
 
 	bool m_End = false;
 	bool m_Skip = false;
+
+	struct Window {
+		unique_ptr<IKESprite> sprite;
+		XMFLOAT2 m_Size = {};
+		XMFLOAT2 m_Pos = {};
+		float m_Frame = {};
+	};
+
+	Window window;
+	XMFLOAT2 m_TextPos = { -60.0f,-30.f };
 };

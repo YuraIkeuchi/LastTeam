@@ -14,9 +14,7 @@ private:
 public:
 	//OBJの名前
 	enum ModelName {
-		GROUND,
 		PLAYERMODEL,
-		SKYDOME,
 		PANEL,
 		BULLET,
 		ENEMYMODEL,
