@@ -33,6 +33,7 @@ bool EnemyBullet::Initialize() {
 	m_AliveTimer = {};
 
 	panels.position = {};
+	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "BULLET_DAMAGE")));
 	panels.color = { 1.f,1.f,1.f,1.f };
 	return true;
 }
@@ -75,7 +76,7 @@ bool EnemyBullet::Collide() {
 	const float l_Damage = 0.5f;
 	const float l_Radius = 0.15f;
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
-		player->RecvDamage(5.0f,"NORMAL");
+		player->RecvDamage(m_Damage,"NORMAL");
 		m_Alive = false;
 		return true;
 	}
