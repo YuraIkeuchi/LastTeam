@@ -4,6 +4,7 @@
 #include <Input.h>
 #include <Easing.h>
 #include <SkillManager.h>
+#include <Audio.h>
 HaveResultSkill::HaveResultSkill() {
 
 }
@@ -190,6 +191,7 @@ void HaveResultSkill::Move() {
 			if (m_SelectCount == 0) { return; }
 			m_SelectCount--;
 		}
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		m_isMove = true;
 	}
 }

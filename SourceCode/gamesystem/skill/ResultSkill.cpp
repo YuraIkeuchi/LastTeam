@@ -183,6 +183,7 @@ void ResultSkill::Move() {
 			if (nowFrame == 0) { return; }
 			nowFrame--;
 		}
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		isMove = true;
 	}
 	if (input->TriggerButton(Input::B)) {
@@ -192,6 +193,7 @@ void ResultSkill::Move() {
 				pickSkills.push_back(std::move(n));
 			}
 		}
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 		m_Choice = true;
 	}
 

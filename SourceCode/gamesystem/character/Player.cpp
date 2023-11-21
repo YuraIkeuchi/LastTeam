@@ -360,7 +360,7 @@ void Player::RecvDamage(const float Damage, const string& name) {
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	} else if (name == "POISON") {
 		BirthPoisonParticle();
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.05f);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.04f);
 	}
 	m_Damege = true;
 	m_DamageTimer = {};

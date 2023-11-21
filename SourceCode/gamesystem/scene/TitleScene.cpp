@@ -73,20 +73,9 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		_SceneType = PLAY;
 		//チュートリアルのタスク
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
-
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 	}
-	if (input->TriggerKey(DIK_SPACE)) {			//マップ
-		SceneChanger::GetInstance()->SetChangeStart(true);
-		_SceneType = MAP;
-		//チュートリアルのタスク
-		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
-	}
-	if (input->TriggerButton(input->X)) {			//チュートリアル
-		SceneChanger::GetInstance()->SetChangeStart(true);
-		_SceneType = TUTORIAL;
-		//チュートリアルのタスク
-		TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
-	}
+	
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		player_->PlayerSave();
 		SceneManager::GetInstance()->ChangeScene("MAP");
