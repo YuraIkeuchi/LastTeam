@@ -250,7 +250,7 @@ void GameStateManager::BirthActUI(const int ID,const int Type) {
 	newactUi->InitState(m_AllActCount,Type);
 	actui.emplace_back(newactUi);
 
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.15f);
 }
 
 //攻撃エリアの生成(無理やり処理)
@@ -318,7 +318,7 @@ void GameStateManager::UseSkill() {
 			BirthBuff();
 		}
 		FinishAct();
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.1f);
 		m_ResetPredict = true;
 		m_Delay = false;
 		m_DelayTimer = {};

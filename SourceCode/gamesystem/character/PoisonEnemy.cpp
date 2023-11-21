@@ -37,9 +37,15 @@ bool PoisonEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5f };
+	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "hp")));
 	m_MaxHP = m_HP;
+	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "LIMIT_NUM")));
+
+	m_Limit.resize(LimitSize);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/PoisonEnemy.csv", m_Limit, "Interval");
+	m_BulletNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "POISON_NUM")));
+
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 
@@ -132,9 +138,11 @@ void PoisonEnemy::Finalize() {
 }
 //ë“ã@
 void PoisonEnemy::Inter() {
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_INTER];
 	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, kIntervalMax);
-	if (coolTimer == kIntervalMax) {
+	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
+	if (coolTimer == l_TargetTimer) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		BirthPoison();
@@ -142,7 +150,8 @@ void PoisonEnemy::Inter() {
 }
 //çUåÇ
 void PoisonEnemy::Attack() {
-	const int l_TargetTimer = 200;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_ATTACK];
 
 	if (_PoisonType == Poison_SET) {
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
@@ -153,7 +162,7 @@ void PoisonEnemy::Attack() {
 	else if (_PoisonType == Poison_THROW) {
 		m_AttackCount++;
 		BirthPoison();
-		if (m_AttackCount != 2) {
+		if (m_AttackCount != m_BulletNum) {
 			_PoisonType = Poison_SET;
 		}
 		else {
@@ -173,9 +182,10 @@ void PoisonEnemy::Attack() {
 //ÉèÅ[Év
 void PoisonEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
-	const int l_BaseTimer = 230;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
-	if (Helper::CheckMin(coolTimer, l_BaseTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_RandTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 

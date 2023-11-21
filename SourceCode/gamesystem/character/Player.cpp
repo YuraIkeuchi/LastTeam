@@ -357,8 +357,10 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	//ダメージの種類によってパーティクルを変える
 	if (name == "NORMAL") {
 		DamageParticle();
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	} else if (name == "POISON") {
 		BirthPoisonParticle();
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.05f);
 	}
 	m_Damege = true;
 	m_DamageTimer = {};

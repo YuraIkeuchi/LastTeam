@@ -24,7 +24,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
 
-	Audio::GetInstance()->LoopWave(AUDIO_MAIN, 0.05f);
+	Audio::GetInstance()->LoopWave(AUDIO_MAIN, 0.02f);
 	//ポストエフェクト
 	PlayPostEffect = false;
 
@@ -544,6 +544,7 @@ void MapScene::Move() {
 		onomatope->AddOnomato(Foot, { 640.f,360.f });
 		onomatope->AddOnomato(Foot, { 100.f,700.f }, 10.f);
 		moved = true;
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Run.wav", 0.15f);
 	}
 
 	if (!end) {

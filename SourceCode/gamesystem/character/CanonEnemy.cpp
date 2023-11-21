@@ -12,7 +12,7 @@
 CanonEnemy::CanonEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::ENEMYMODEL));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
 	m_Object->SetLightEffect(false);
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
@@ -38,7 +38,7 @@ bool CanonEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5f };
+	m_Scale = { 0.4f,0.4f,0.4f };
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "LIMIT_NUM")));
 
 	m_Limit.resize(LimitSize);
@@ -148,8 +148,8 @@ void CanonEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
 	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, kIntervalMax);
-	if (coolTimer == kIntervalMax) {
+	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
+	if (coolTimer == l_TargetTimer) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		BirthBullet();

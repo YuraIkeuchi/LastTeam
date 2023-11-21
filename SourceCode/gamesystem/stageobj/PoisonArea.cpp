@@ -24,6 +24,8 @@ PoisonArea::PoisonArea() {
 }
 //初期化
 bool PoisonArea::Initialize() {
+	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "POISON_DAMAGE")));
+	m_TargetTimer = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "POISON_TIMER")));
 	return true;
 }
 
@@ -77,7 +79,6 @@ XMFLOAT3 PoisonArea::SetPanelPos(const int width, const int height) {
 void PoisonArea::Collide() {
 	int l_PlayerWidth = player->GetNowWidth();
 	int l_PlayerHeight = player->GetNowHeight();
-	const float l_Damage = 10.0f;
 	if (_PoisonState != POISON_WIDE) { return; }
 	//毒のマスとプレイヤーが一緒だとダメージを食らう
 	if (panels.Width == l_PlayerWidth && panels.Height == l_PlayerHeight) {
@@ -91,7 +92,7 @@ void PoisonArea::Collide() {
 
 	//
 	if (panels.DamageTimer == 50) {
-		player->RecvDamage(l_Damage,"POISON");
+		player->RecvDamage(m_Damage,"POISON");
 		panels.DamageTimer = {};
 		panels.Damage = true;
 	}
@@ -99,7 +100,6 @@ void PoisonArea::Collide() {
 void PoisonArea::Move() {
 	const float l_TargetPosY = 15.0f;
 	const float l_ThrowSpeed = 0.25f;
-	const int l_TargetTimer = 300;
 
 	if (_PoisonState == POISON_THROW) {			//上に上げる
 		BirthPredict(panels.Width, panels.Height);
@@ -117,7 +117,7 @@ void PoisonArea::Move() {
 	else if (_PoisonState == POISON_WIDE) {		//広がる
 		static float addFrame = 1.f / 15.f;
 		if (Helper::FrameCheck(panels.frame, addFrame)) {		//広がるためのイージング
-			if (Helper::CheckMin(panels.Timer, l_TargetTimer, 1)) {		//広がり切ったらカウントを加算する
+			if (Helper::CheckMin(panels.Timer, m_TargetTimer, 1)) {		//広がり切ったらカウントを加算する
 				GameStateManager::GetInstance()->SetBuff(false);
 				_PoisonState = POISON_END;
 				panels.frame = {};
