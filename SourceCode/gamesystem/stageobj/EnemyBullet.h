@@ -96,4 +96,6 @@ private:
 		DIR_SLASHDOWN,//斜めした
 	};
 	int m_ThrowDir = {};
+
+	float m_Damage = {};
 };

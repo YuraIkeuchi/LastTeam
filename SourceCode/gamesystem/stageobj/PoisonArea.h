@@ -75,4 +75,7 @@ private:
 	};
 
 	PredictState predict;
+
+	float m_Damage = {};
+	int m_TargetTimer = {};
 };

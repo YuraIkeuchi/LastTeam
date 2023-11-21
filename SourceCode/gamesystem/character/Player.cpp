@@ -242,21 +242,25 @@ void Player::Move() {
 	} else {			//離した瞬間
 		if (m_LimitCount == 0) {
 			if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
+				m_Rotation.y = 0.0f;
 				//MoveCommon(m_Position.z, l_AddVelocity);
 				m_Move = true;
 				m_AfterPos.z = m_Position.z + l_AddVelocity;
 				m_InputTimer[DIR_UP] = {};
 			} else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
+				m_Rotation.y = 180.0f;
 				//MoveCommon(m_Position.z, l_SubVelocity);
 				m_AfterPos.z = m_Position.z + l_SubVelocity;
 				m_Move = true;
 				m_InputTimer[DIR_DOWN] = {};
 			} else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
+				m_Rotation.y = 90.0f;
 				//MoveCommon(m_Position.x, l_AddVelocity);
 				m_AfterPos.x = m_Position.x + l_AddVelocity;
 				m_Move = true;
 				m_InputTimer[DIR_RIGHT] = {};
 			} else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
+				m_Rotation.y = 270.0f;
 				//MoveCommon(m_Position.x, l_SubVelocity);
 				m_AfterPos.x = m_Position.x + l_SubVelocity;
 				m_Move = true;
@@ -304,8 +308,9 @@ void Player::Move() {
 		m_InputTimer[DIR_LEFT] = {};
 	}
 
+	//イージングで移動するためのもの
 	if (m_Move) {
-		if (Helper::FrameCheck(m_MoveFrame, 0.2f)) {
+		if (Helper::FrameCheck(m_MoveFrame, 0.15f)) {
 			m_MoveFrame = {};
 			m_Move = false;
 			for (int i = 0; i < 4; i++) {
@@ -313,11 +318,12 @@ void Player::Move() {
 			}
 			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 			GameStateManager::GetInstance()->SetResetPredict(true);
+			m_Rotation.y = 90.0f;
 		}
 
-		m_Position = { Ease(In,Cubic,m_MoveFrame,m_Position.x,m_AfterPos.x),
+		m_Position = { Ease(Out,Cubic,m_MoveFrame,m_Position.x,m_AfterPos.x),
 		m_Position.y,
-		Ease(In,Cubic,m_MoveFrame,m_Position.z,m_AfterPos.z) };
+		Ease(Out,Cubic,m_MoveFrame,m_Position.z,m_AfterPos.z) };
 	}
 }
 
@@ -351,8 +357,10 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	//ダメージの種類によってパーティクルを変える
 	if (name == "NORMAL") {
 		DamageParticle();
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	} else if (name == "POISON") {
 		BirthPoisonParticle();
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.04f);
 	}
 	m_Damege = true;
 	m_DamageTimer = {};

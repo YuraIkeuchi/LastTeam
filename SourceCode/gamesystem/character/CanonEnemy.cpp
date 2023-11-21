@@ -12,7 +12,7 @@
 CanonEnemy::CanonEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::ENEMYMODEL));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
 	m_Object->SetLightEffect(false);
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
@@ -38,8 +38,15 @@ bool CanonEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5f };
+	m_Scale = { 0.4f,0.4f,0.4f };
+	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "LIMIT_NUM")));
+
+	m_Limit.resize(LimitSize);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/CanonEnemy.csv", m_Limit, "Interval");
+
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "hp")));
+	m_BulletNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "BULLET_NUM")));
+
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -138,9 +145,11 @@ void CanonEnemy::Finalize() {
 }
 //待機
 void CanonEnemy::Inter() {
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_INTER];
 	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, kIntervalMax);
-	if (coolTimer == kIntervalMax) {
+	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
+	if (coolTimer == l_TargetTimer) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		BirthBullet();
@@ -148,7 +157,8 @@ void CanonEnemy::Inter() {
 }
 //攻撃
 void CanonEnemy::Attack() {
-	const int l_TargetTimer = 200;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_ATTACK];
 
 	if (_CanonType == CANON_SET) {
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
@@ -159,7 +169,7 @@ void CanonEnemy::Attack() {
 	else if (_CanonType == CANON_THROW) {
 		m_AttackCount++;
 		BirthBullet();
-		if (m_AttackCount != 2) {
+		if (m_AttackCount != m_BulletNum) {
 			_CanonType = CANON_SET;
 		}
 		else {
@@ -179,9 +189,10 @@ void CanonEnemy::Attack() {
 //ワープ
 void CanonEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
-	const int l_BaseTimer = 200;
-	
-	if (Helper::CheckMin(coolTimer, l_BaseTimer + l_RandTimer, 1)) {
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_SPECIAL];
+
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -192,7 +203,6 @@ void CanonEnemy::Teleport() {
 //弾の生成
 void CanonEnemy::BirthBullet() {
 		//障害物の発生
-		
 		EnemyBullet* newbullet;
 		newbullet = new EnemyBullet();
 		newbullet->Initialize();

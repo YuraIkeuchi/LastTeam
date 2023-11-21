@@ -71,5 +71,9 @@ private:
 	EnemyWarp enemywarp;
 
 	std::vector<unique_ptr<PoisonArea>> poisonarea;
+
+	//‹­‰»‘O
+	vector<int>m_Limit;
+	int m_BulletNum = {};
 };
 

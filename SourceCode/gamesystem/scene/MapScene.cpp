@@ -24,7 +24,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
 
-	Audio::GetInstance()->LoopWave(AUDIO_MAIN, 0.05f);
+	Audio::GetInstance()->LoopWave(AUDIO_MAIN, 0.02f);
 	//ポストエフェクト
 	PlayPostEffect = false;
 
@@ -530,11 +530,13 @@ void MapScene::Move() {
 		if (pickNextIndex == 0) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex - 1] == -1) { return; }
 		pickNextIndex--;
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 	if (input->TiltStick(input->L_DOWN) && !moved) {
 		if (pickNextIndex == 2) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex + 1] == -1) { return; }
 		pickNextIndex++;
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 
 	if (input->TriggerButton(input->B) && !moved) {
@@ -544,6 +546,7 @@ void MapScene::Move() {
 		onomatope->AddOnomato(Foot, { 640.f,360.f });
 		onomatope->AddOnomato(Foot, { 100.f,700.f }, 10.f);
 		moved = true;
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Run.wav", 0.05f);
 	}
 
 	if (!end) {
@@ -690,6 +693,7 @@ void MapScene::CheckState() {
 					size = {};
 					s_frame = 0.f;
 					SceneChanger::GetInstance()->SetChangeStart(true);
+					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 				}
 			} else {
 				size.x = Ease(Out, Quint, s_frame, 0.f, 640.f);
