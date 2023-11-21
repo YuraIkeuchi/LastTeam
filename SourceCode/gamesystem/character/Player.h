@@ -102,9 +102,6 @@ private:
 	Input* input = Input::GetInstance();
 
 	int _charaState = STATE_MOVE;
-	//移動加算値
-	float m_AddSpeed;
-	XMFLOAT3 m_MoveRot = {};
 
 	//プレイヤーの現在位置
 	XMFLOAT3 m_PanelPos = {};
@@ -177,4 +174,8 @@ private:
 	bool m_Damege = false;
 	int m_DamageTimer = {};
 	int m_FlashCount = {};
+	bool m_Move = false;
+	float m_MoveFrame = 0.0f;
+	float m_AfterFrame = {};
+	XMFLOAT3 m_AfterPos = {};
 };

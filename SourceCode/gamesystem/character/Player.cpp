@@ -70,6 +70,7 @@ void Player::LoadCSV() {
 //ステータスの初期化
 void Player::InitState(const XMFLOAT3& pos) {
 	m_Position = pos;
+	m_AfterPos = m_Position;
 	m_Rotation = { 0.0f,90.0f,0.0f };
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5f };
@@ -204,6 +205,8 @@ void Player::UIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("POSX:%f,poSZ:%f", m_Position.x, m_Position.z);
+	ImGui::Text("AFTERPOSX:%f,AFTERpoSZ:%f", m_AfterPos.x, m_AfterPos.z);
+	ImGui::Text("Move:%d", m_Move);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::End();
 }
@@ -216,6 +219,7 @@ void Player::Move() {
 	const float l_SubVelocity = -PANEL_SIZE;
 	const int l_AddSpace = 1;
 	const int l_SubSpace = -1;
+	//明日イージングにしてみよう
 	//ボタンでマスを移動する
 	if (input->PushButton(input->UP) ||
 		input->PushButton(input->DOWN) ||
@@ -225,7 +229,7 @@ void Player::Move() {
 		input->TiltPushStick(input->L_DOWN) ||
 		input->TiltPushStick(input->L_LEFT) ||
 		input->TiltPushStick(input->L_RIGHT)
-		) {
+		&& !m_Move) {
 		if (input->PushButton(input->UP) || input->TiltPushStick(input->L_UP)) {
 			m_InputTimer[DIR_UP]++;
 		} else if (input->PushButton(input->DOWN) || input->TiltPushStick(input->L_DOWN)) {
@@ -238,16 +242,24 @@ void Player::Move() {
 	} else {			//離した瞬間
 		if (m_LimitCount == 0) {
 			if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
-				MoveCommon(m_Position.z, l_AddVelocity);
+				//MoveCommon(m_Position.z, l_AddVelocity);
+				m_Move = true;
+				m_AfterPos.z = m_Position.z + l_AddVelocity;
 				m_InputTimer[DIR_UP] = {};
 			} else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
-				MoveCommon(m_Position.z, l_SubVelocity);
+				//MoveCommon(m_Position.z, l_SubVelocity);
+				m_AfterPos.z = m_Position.z + l_SubVelocity;
+				m_Move = true;
 				m_InputTimer[DIR_DOWN] = {};
 			} else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-				MoveCommon(m_Position.x, l_AddVelocity);
+				//MoveCommon(m_Position.x, l_AddVelocity);
+				m_AfterPos.x = m_Position.x + l_AddVelocity;
+				m_Move = true;
 				m_InputTimer[DIR_RIGHT] = {};
 			} else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
-				MoveCommon(m_Position.x, l_SubVelocity);
+				//MoveCommon(m_Position.x, l_SubVelocity);
+				m_AfterPos.x = m_Position.x + l_SubVelocity;
+				m_Move = true;
 				m_InputTimer[DIR_LEFT] = {};
 			}
 		}
@@ -260,28 +272,52 @@ void Player::Move() {
 	//一定フレーム立つと選択マス移動
 	if (m_InputTimer[DIR_UP] == l_TargetTimer) {
 		if (m_NowHeight < PANEL_HEIGHT - 1) {
-			MoveCommon(m_Position.z, l_AddVelocity);
+			//MoveCommon(m_Position.z, l_AddVelocity);
+			m_AfterPos.z = m_Position.z + l_AddVelocity;
+			m_Move = true;
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_UP] = {};
 	} else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
 		if (m_NowHeight > 0) {
-			MoveCommon(m_Position.z, l_SubVelocity);
+			//MoveCommon(m_Position.z, l_SubVelocity);
+			m_AfterPos.z = m_Position.z + l_SubVelocity;
+			m_Move = true;
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_DOWN] = {};
 	} else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
 		if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-			MoveCommon(m_Position.x, l_AddVelocity);
+			//MoveCommon(m_Position.x, l_AddVelocity);
+			m_AfterPos.x = m_Position.x + l_AddVelocity;
+			m_Move = true;
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_RIGHT] = {};
 	} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
 		if (m_NowWidth > 0) {
-			MoveCommon(m_Position.x, l_SubVelocity);
+			//MoveCommon(m_Position.x, l_SubVelocity);
+			m_AfterPos.x = m_Position.x + l_SubVelocity;
+			m_Move = true;
 			m_LimitCount++;
 		}
 		m_InputTimer[DIR_LEFT] = {};
+	}
+
+	if (m_Move) {
+		if (Helper::FrameCheck(m_MoveFrame, 0.2f)) {
+			m_MoveFrame = {};
+			m_Move = false;
+			for (int i = 0; i < 4; i++) {
+				m_InputTimer[i] = {};
+			}
+			GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+			GameStateManager::GetInstance()->SetResetPredict(true);
+		}
+
+		m_Position = { Ease(In,Cubic,m_MoveFrame,m_Position.x,m_AfterPos.x),
+		m_Position.y,
+		Ease(In,Cubic,m_MoveFrame,m_Position.z,m_AfterPos.z) };
 	}
 }
 
