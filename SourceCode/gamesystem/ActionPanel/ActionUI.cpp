@@ -42,7 +42,7 @@ void ActionUI::Update() {
 void ActionUI::Draw() {
 	IKESprite::PreDraw();
 	tex->Draw();
-	_drawnumber->Draw();
+	//_drawnumber->Draw();
 	IKESprite::PostDraw();
 }
 //ImGui

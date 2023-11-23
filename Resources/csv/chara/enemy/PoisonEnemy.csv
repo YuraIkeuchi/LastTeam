@@ -17,10 +17,10 @@ Interval,200
 *---------------------------*
 
 //敵の毒の撃つ数
-POISON_NUM,2
+POISON_NUM,1
 
 //毒のダメージ
 POISON_DAMAGE,10
 
 //毒の継続時間
-POISON_TIMER,300
+POISON_TIMER,200

@@ -21,7 +21,7 @@ float4 main(VSOutput input) : SV_TARGET
 
 	// シェーディングによる色
 	float4 shadecolor = float4(ambientColor * ambient, m_alpha);
-
+	float4 disolvecolor = float4(ambientColor * ambient, m_alpha);
 	int i = 0;
 	// 平行光源
 	for (i = 0; i < DIRLIGHT_NUM; i++)
@@ -39,6 +39,16 @@ float4 main(VSOutput input) : SV_TARGET
 
 			// 全て加算する
 			shadecolor.rgb += (diffuse + specular) * dirLights[i].lightcolor;
+			//ディゾルブのために別計算
+			// ライトに向かうベクトルと法線の内積
+			float3 dotlightnormal2 = dot(dirLights[i].lightv, input.normal);
+			// 反射光ベクトル
+			float3 reflect2 = normalize(-dirLights[i].lightv + 2 * dotlightnormal2 * input.normal);
+			// 拡散反射光
+			float3 diffuse2 = dotlightnormal2 * m_diffuse;
+			// 鏡面反射光
+			float3 specular2 = pow(saturate(dot(reflect2, eyedir)), shininess) * m_specular;
+			disolvecolor.rgb = shadecolor.rgb += (diffuse2 + specular2) * dirLights[i].lightcolor;
 		}
 	}
 
@@ -145,6 +155,18 @@ float4 main(VSOutput input) : SV_TARGET
 			}
 		}
 	}
+	//ディゾルブ
+	float l_Disolve = Disolve;
+	float Limit = disolvecolor.r * 0.2 + disolvecolor.g * 0.2 + disolvecolor.b * 0.2;
+
+	//だんだん消える
+	if (Limit > l_Disolve) {
+		shadecolor.a = 1.0f;
+	}
+	else {
+		shadecolor.a = 0.0f;
+	}
+
 
 	float4 pixcolor;
 	pixcolor = shadecolor * texcolor * color;

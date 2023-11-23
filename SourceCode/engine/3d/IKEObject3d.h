@@ -48,6 +48,7 @@ public: // サブクラス
 		XMFLOAT4 color;//色情報
 		float uvval;
 		bool LightEffect;//ライトの影響受けるか
+		float Disolve;//ディゾルブ値
 	};
 
 private: // 定数

@@ -243,9 +243,10 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& width, int& height, bool m_A
 }
 //敵の弾とパネルの当たり判定
 void StagePanel::SetPanelSearch(IKEObject3d* obj, int& width, int& height) {
+	float l_BaseScale = 0.4f;
 	m_OBB1.SetParam_Pos({ obj->GetPosition().x, 0.0f, obj->GetPosition().z });
 	m_OBB1.SetParam_Rot(obj->GetMatrot());
-	m_OBB1.SetParam_Scl({0.45f,0.45f,0.45f});
+	m_OBB1.SetParam_Scl({ l_BaseScale,l_BaseScale,l_BaseScale });
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			m_OBB2.SetParam_Pos({ panels[i][j].position.x, 0.0f, panels[i][j].position.z });
