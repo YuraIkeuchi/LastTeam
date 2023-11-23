@@ -72,7 +72,7 @@ private:
 
 	std::vector<unique_ptr<PoisonArea>> poisonarea;
 
-	//強化前
+	//インターバルとか
 	vector<int>m_Limit;
 	int m_BulletNum = {};
 };

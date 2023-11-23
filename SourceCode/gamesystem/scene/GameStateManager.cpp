@@ -152,6 +152,7 @@ void GameStateManager::Update() {
 	_charge->Update();
 	onomatope->Update();
 
+	PowerUpEffectUpdate();
 }
 //攻撃した瞬間
 void GameStateManager::AttackTrigger() {
@@ -180,6 +181,12 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		gaugeUI->Draw();
 		//gaugeCover->Draw();
 		onomatope->Draw();
+		IKESprite::PostDraw();
+		IKESprite::PreDraw();
+
+		for (PowerUpEffect& power : powerup) {
+			power.tex->Draw();
+		}
 		IKESprite::PostDraw();
 		SkillManager::GetInstance()->UIDraw();
 		for (auto i = 0; i < attackarea.size(); i++) {
@@ -315,6 +322,9 @@ void GameStateManager::UseSkill() {
 			BirthArea();
 		}
 		else {
+			for (int i = 0; i < 2; i++) {
+				RandPowerUpInit();
+			}
 			BirthBuff();
 		}
 		FinishAct();
@@ -445,6 +455,7 @@ bool GameStateManager::AttackSubAction() {
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
+	if (!TutorialTask::GetInstance()->GetViewSkill()) { return false; }
 	if (Input::GetInstance()->TriggerButton(Input::LB)) {
 		_ResultType = GET_SKILL;
 	}
@@ -508,4 +519,38 @@ void GameStateManager::DeckReset() {
 	m_DeckNumber = m_StartNumber;
 	GotPassives.clear();
 	GotPassiveIDs = {};
+}
+//パワーアップのエフェクトの初期化
+void GameStateManager::RandPowerUpInit() {
+	float posX = (float)Helper::GetRanNum(0, 200);
+	float posY = (float)Helper::GetRanNum(550, 700);
+	float frame = (float)Helper::GetRanNum(30, 45);
+	PowerUpEffect itr;
+	itr.tex = IKESprite::Create(ImageManager::POWERUP, {});
+	itr.position = { posX,posY };
+	itr.tex->SetAnchorPoint({ 0.5f,0.5f });
+	itr.tex->SetSize(itr.size);
+	itr.tex->SetColor(itr.color);
+	itr.afterpos = { itr.position.x,itr.position.y - 50.0f };
+	itr.kFrame = 1 / frame;
+	powerup.push_back(std::move(itr));
+}
+
+void GameStateManager::PowerUpEffectUpdate() {
+	for (PowerUpEffect& power : powerup) {
+		if (Helper::FrameCheck(power.frame, power.kFrame)) {
+			if (m_Buff) {
+				RandPowerUpInit();
+			}
+			power.isVanish = true;
+		}
+		else {
+			power.position.y = Ease(Out, Quad, power.frame, power.position.y, power.afterpos.y);
+			power.color.w = Ease(Out, Quad, power.frame, 1.0f, 0.0f);
+			power.tex->SetPosition(power.position);
+			power.tex->SetColor(power.color);
+		}
+	}
+	powerup.remove_if([](PowerUpEffect& shine) {
+		return shine.isVanish; });
 }

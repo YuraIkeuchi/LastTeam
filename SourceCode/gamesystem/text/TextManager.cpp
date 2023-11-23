@@ -45,24 +45,24 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateWord(TUTORIAL_END, L"手に入れたスキルを駆使して",L"敵を倒そう!");
 	CreateWord(RESULT, L"スキルこうか");
 
-	CreatePassiveSentence(L"リロードがはやくなるぞ");
-	CreatePassiveSentence(L"たいりょくがつよくなるぞ");
-	CreatePassiveSentence(L"リロードしてもきえないぞ");
-	CreatePassiveSentence(L"どくのじかんがながいぞ");
-	CreatePassiveSentence(L"どくのいりょくがあがるぞ");
-	CreatePassiveSentence(L"ドレインいりょくがあがるぞ");
-	CreatePassiveSentence(L"リロードしたらこうげきだ");
+	CreatePassiveSentence(L"リロードが早くなるぞ");
+	CreatePassiveSentence(L"体力が強くなるぞ");
+	CreatePassiveSentence(L"リロードしても消えないぞ");
+	CreatePassiveSentence(L"毒の時間が長いぞ");
+	CreatePassiveSentence(L"毒の威力が上がるぞ");
+	CreatePassiveSentence(L"ドレイン威力が上がるぞ");
+	CreatePassiveSentence(L"リロードしたら攻撃だ");
 
-	CreateSkillSentence(L"右1マス、ドドドな攻撃");
-	CreateSkillSentence(L"右1マスすべて、ドゴンな攻撃");
-	CreateSkillSentence(L"右ナナメ2マス、シャッな攻撃");
-	CreateSkillSentence(L"ナナメクロス、駆使攻撃");
-	CreateSkillSentence(L"たてクロス、駆使攻撃");
-	CreateSkillSentence(L"右1マスすべて、バコンないち撃");
+	CreateSkillSentence(L"ドドドな近距離攻撃");
+	CreateSkillSentence(L"ドゴンな近中距離攻撃");
+	CreateSkillSentence(L"バコン!な一列攻撃");
+	CreateSkillSentence(L"ザクッな近距離攻撃");
+	CreateSkillSentence(L"少し強い近中距離攻撃");
+	CreateSkillSentence(L"少し強い中遠距離攻撃");
 	CreateSkillSentence(L"すべてのマス、ビクトリーないち撃");
-	CreateSkillSentence(L"どくを使う、イヤーナ攻撃");
-	CreateSkillSentence(L"回復する、ミラクルな攻撃");
-	CreateSkillSentence(L"つぎの攻撃にすべてをこめる！");
+	CreateSkillSentence(L"イヤーナ毒攻撃だ");
+	CreateSkillSentence(L"回復できる攻撃だ");
+	CreateSkillSentence(L"次の攻撃を強く!");
 
 	//ラスボス
 	//コンヴァージョン初期化

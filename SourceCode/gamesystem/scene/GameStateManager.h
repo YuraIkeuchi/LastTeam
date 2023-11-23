@@ -75,6 +75,9 @@ private:
 
 	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
+	void RandPowerUpInit();
+	void PowerUpEffectUpdate();
+
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -196,7 +199,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 0,1,2,3 };
+	vector <int> m_StartNumber = { 0,1,2,3,4,5,6,7,8,9 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -224,6 +227,18 @@ private:
 		GET_SKILL,
 		HAVE_SKILL,
 	}_ResultType = GET_SKILL;
+
+	struct PowerUpEffect {
+		unique_ptr<IKESprite> tex;
+		float frame = 0.f;
+		float kFrame = 30.f;
+		XMFLOAT2 position = { 0.f,0.f };
+		XMFLOAT2 afterpos = {};
+		XMFLOAT2 size = { 32.f,32.f };
+		XMFLOAT4 color = { 1.5f,1.5f,1.5f,1.0f };
+		bool isVanish = false;
+	};
+	std::list<PowerUpEffect> powerup;
 
 	///=============================
 	/// 

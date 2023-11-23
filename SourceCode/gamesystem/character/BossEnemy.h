@@ -96,5 +96,10 @@ private:
 	};
 
 	EnemyWarp enemywarp;
+	//インターバルとか
+	vector<int>m_Limit;
+	//攻撃のインターバルとか
+	vector<int>m_AttackLimit;
+	int m_BulletNum = {};
 };
 

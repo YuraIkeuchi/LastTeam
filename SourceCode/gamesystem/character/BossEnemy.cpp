@@ -41,6 +41,18 @@ bool BossEnemy::Initialize() {
 	m_Color = { 0.0f,1.0f,0.5f,1.0f };
 	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "hp")));
+	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "LIMIT_NUM")));
+
+	m_Limit.resize(LimitSize);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/BossEnemy.csv", m_Limit, "Interval");
+
+	auto AttackLimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "ATTACK_LIMIT_NUM")));
+
+	m_AttackLimit.resize(AttackLimitSize);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/BossEnemy.csv", m_AttackLimit, "Attack_Interval");
+
+	m_BulletNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "BULLET_NUM")));
+
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -152,7 +164,8 @@ void BossEnemy::Finalize() {
 }
 //待機
 void BossEnemy::Inter() {
-	const int l_TargetTimer = 120;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_INTER];
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
@@ -171,9 +184,10 @@ void BossEnemy::Attack() {
 //ワープ
 void BossEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
-	const int l_BaseTimer = 130;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
 
-	if (Helper::CheckMin(coolTimer, l_BaseTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -195,7 +209,8 @@ void BossEnemy::BirthBullet() {
 //攻撃遷移
 //弾
 void BossEnemy::BulletAttack() {
-	const int l_TargetTimer = 70;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_BULLET];
 
 	if (_BossType == Boss_SET) {
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
@@ -206,7 +221,7 @@ void BossEnemy::BulletAttack() {
 	else if (_BossType == Boss_THROW) {
 		m_AttackCount++;
 		BirthBullet();
-		if (m_AttackCount != 5) {
+		if (m_AttackCount != m_BulletNum) {
 			_BossType = Boss_SET;
 		}
 		else {
@@ -224,7 +239,8 @@ void BossEnemy::BulletAttack() {
 }
 //横一列
 void BossEnemy::RowAttack() {
-	const int l_TargetTimer = 60;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_ROW];
 	if (m_AttackCount != 4) {
 		if (coolTimer == 0) {		//予測エリア
 			BirthPredict({}, m_AttackCount,"Row");
@@ -249,7 +265,8 @@ void BossEnemy::RandomAttack() {
 	//プレイヤーの現在マス
 	int l_PlayerWidth = player->GetNowWidth();
 	int l_PlayerHeight = player->GetNowHeight();
-	const int l_TargetTimer = 60;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_RANDOM];
 	if (m_AttackCount != 8) {
 		if (coolTimer == 0) {
 			//プレイヤーからの距離(-1~1)
