@@ -7,6 +7,7 @@ float3 cameraPos; // カメラ座標（ワールド座標）
 float4 color; //色情報
 float uvval;
 bool LightEffect;//影の影響受ける
+float Disolve;//ディゾルブ値
 };
 
 cbuffer cbuff1 : register(b1)

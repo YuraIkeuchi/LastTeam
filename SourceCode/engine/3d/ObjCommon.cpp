@@ -25,6 +25,7 @@ void ObjCommon::Obj_SetParam()
 	m_Object->SetRotation(m_Rotation);
 	m_Object->SetScale(m_Scale);
 	m_Object->SetColor(m_Color);
+	m_Object->SetDisolve(m_AddDisolve);
 	m_Object->Update();
 	UpdateWorldMatrix();
 }

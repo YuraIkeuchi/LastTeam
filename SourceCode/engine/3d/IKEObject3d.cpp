@@ -337,6 +337,7 @@ void IKEObject3d::Update()
 	constMap->color = color;
 	constMap->uvval = uv;
 	constMap->LightEffect = LightEffect;
+	constMap->Disolve = Disolve;
 	constBuffB0->Unmap(0, nullptr);
 	//当たり判定更新
 	if (collider)
@@ -368,6 +369,7 @@ void IKEObject3d::FollowUpdate(XMMATRIX matworld)
 	constMap->cameraPos = cameraPos;
 	constMap->color = color;
 	constMap->uvval = uv;
+	constMap->Disolve = Disolve;
 	constBuffB0->Unmap(0, nullptr);
 	//当たり判定更新
 	if (collider)
@@ -402,6 +404,7 @@ void IKEObject3d::AffineUpdate()
 	constMap->cameraPos = cameraPos;
 	constMap->color = color;
 	constMap->uvval = uv;
+	constMap->Disolve = Disolve;
 	constBuffB0->Unmap(0, nullptr);
 	//当たり判定更新
 	if (collider)

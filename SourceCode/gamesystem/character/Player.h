@@ -178,4 +178,10 @@ private:
 	float m_MoveFrame = 0.0f;
 	float m_AfterFrame = {};
 	XMFLOAT3 m_AfterPos = {};
+
+	enum MoveType {
+		MOVE_NONE,//普通
+		MOVE_EASE,
+		MOVE_DISOLVE,
+	}_MoveType = MOVE_NONE;
 };
