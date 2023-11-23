@@ -28,6 +28,7 @@ Bomb::Bomb() {
 	shadow_tex->TextureCreate();
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
+	kIntervalMax = 450;
 }
 //初期化
 bool Bomb::Initialize() {
@@ -35,7 +36,7 @@ bool Bomb::Initialize() {
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5f };
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "hp")));
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "hp")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -68,11 +69,12 @@ void Bomb::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	IKETexture::PostDraw();
-
+	UIDraw();
 	Obj_Draw();
 }
 //ImGui描画
 void Bomb::ImGui_Origin() {
+
 }
 //開放
 void Bomb::Finalize() {
@@ -82,23 +84,15 @@ void Bomb::Finalize() {
 void Bomb::Inter() {
 	//制限時間
 	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, 300);
+	coolTimer = clamp(coolTimer, 0, kIntervalMax);
 	//時間切れ
-	if (coolTimer == 300) {
+	if (coolTimer == kIntervalMax) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 	}
 }
 //攻撃
 void Bomb::Attack() {
-	//制限時間以内にHPが無くなったら敵全体にダメージ
-	if (!m_Alive) {
-		//ダメージ関数(敵引数)
-		m_Alive = false;
-	}
-	//HPを削り切れずに制限時間を超えたらプレイヤーにダメージ
-	else if ( m_Alive) {
-		//ダメージ関数(プレイヤー引数)
-		m_Alive = false;
-	}
+	//プレイヤーにダメージ
+	player->RecvDamage(10, "NORMAL");
 }

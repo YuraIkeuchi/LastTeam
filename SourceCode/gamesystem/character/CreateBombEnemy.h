@@ -69,6 +69,7 @@ private:
 	};
 
 	EnemyWarp enemywarp;
+	bool isBombThrow;
 
 	std::vector<unique_ptr<Bomb>> bomb;
 };

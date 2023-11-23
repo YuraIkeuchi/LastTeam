@@ -88,8 +88,12 @@ void CreateBombEnemy::Action() {
 		if (bomb[i] == nullptr) {
 			continue;
 		}
-
-		bomb[i]->Action();
+		if (bomb[i]->GetHP() <= 0) {
+			//敵全てにダメージ
+			//interEnemy42のエネミータグを使う？(そうなるとここじゃない所で処理した方がよさそう
+			//アタックエリアでbombを作ってばらまく？
+		}
+		bomb[i]->Update();
 		if (!bomb[i]->GetAlive()) {
 			bomb.erase(cbegin(bomb) + i);
 		}
@@ -136,7 +140,7 @@ void CreateBombEnemy::Inter() {
 	if (coolTimer == kIntervalMax) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		BirthBomb();
+		//BirthBomb();
 	}
 }
 //攻撃
@@ -150,12 +154,13 @@ void CreateBombEnemy::Attack() {
 		}
 	}
 	else if (_BombType == Bomb_THROW) {
-		m_AttackCount++;
-		BirthBomb();
-		if (m_AttackCount != 2) {
+		if (!isBombThrow) {
+			BirthBomb();
+			isBombThrow = true;
 			_BombType = Bomb_SET;
 		}
 		else {
+			isBombThrow = false;
 			_BombType = Bomb_END;
 		}
 	}
@@ -188,7 +193,8 @@ void CreateBombEnemy::BirthBomb() {
 	StagePanel::GetInstance()->PoisonSetPanel(l_RandWidth,l_RandHeight);
 	//ボム生成
 	std::unique_ptr<Bomb> newBomb = std::make_unique<Bomb>();
-	newBomb->SetPosition({static_cast<float>(l_RandWidth),static_cast<float>(l_RandHeight),m_Position.z });
+	newBomb->Initialize();
+	newBomb->SetPosition(StagePanel::GetInstance()->EnemySetPanel());
 	newBomb->SetPlayer(player);
 	bomb.push_back(std::move(newBomb));
 }
