@@ -20,6 +20,7 @@ public:
 	{
 		FEED,
 		SHINE,
+		POWERUP,
 		ENEMYHPUI,
 		HPNUMBERUI,
 		DAMAGENUMBER,

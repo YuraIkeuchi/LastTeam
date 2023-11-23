@@ -118,7 +118,6 @@ void PoisonArea::Move() {
 		static float addFrame = 1.f / 15.f;
 		if (Helper::FrameCheck(panels.frame, addFrame)) {		//広がるためのイージング
 			if (Helper::CheckMin(panels.Timer, m_TargetTimer, 1)) {		//広がり切ったらカウントを加算する
-				GameStateManager::GetInstance()->SetBuff(false);
 				_PoisonState = POISON_END;
 				panels.frame = {};
 				panels.afterscale = {};
