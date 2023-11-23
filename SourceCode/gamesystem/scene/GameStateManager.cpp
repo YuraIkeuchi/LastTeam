@@ -455,6 +455,7 @@ bool GameStateManager::AttackSubAction() {
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
+	if (!TutorialTask::GetInstance()->GetViewSkill()) { return false; }
 	if (Input::GetInstance()->TriggerButton(Input::LB)) {
 		_ResultType = GET_SKILL;
 	}
