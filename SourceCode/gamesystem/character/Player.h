@@ -6,6 +6,7 @@
 #include <Input.h>
 #include <array>
 #include "DrawNumber.h"
+#include "ImagePlayer.h"
 
 using namespace DirectX;
 
@@ -62,6 +63,7 @@ private:
 	void BirthPoisonParticle();
 	//ダメージの更新
 	void DamageUpdate();
+	void BirthImagePlayer();
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }
@@ -174,6 +176,7 @@ private:
 	bool m_Damege = false;
 	int m_DamageTimer = {};
 	int m_FlashCount = {};
+	//移動関係
 	bool m_Move = false;
 	float m_MoveFrame = 0.0f;
 	float m_AfterFrame = {};
@@ -181,7 +184,10 @@ private:
 
 	enum MoveType {
 		MOVE_NONE,//普通
-		MOVE_EASE,
-		MOVE_DISOLVE,
+		MOVE_EASE,//イージング
+		MOVE_DISOLVE,//残像
 	}_MoveType = MOVE_NONE;
+
+	//残像用のプレイヤー
+	std::vector<unique_ptr<ImagePlayer>> imageplayer;
 };

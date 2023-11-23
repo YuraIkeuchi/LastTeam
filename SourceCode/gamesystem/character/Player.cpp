@@ -15,9 +15,7 @@ void Player::LoadResource() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
-	m_Object->SetScale({ 2.f,2.f,2.f });
 	m_Object->SetPosition({ 0.0f,PANEL_SIZE,0.0f });
-	m_Object->SetLightEffect(false);
 
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
@@ -156,6 +154,16 @@ void Player::Update() {
 		hptex->SetPosition(m_HPPos);
 		hptex_under->SetPosition(m_HPPos);
 		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
+
+		//手に入れたスキルのUIの更新
+		for (auto i = 0; i < imageplayer.size(); i++) {
+			if (imageplayer[i] == nullptr)continue;
+			imageplayer[i]->Update();
+
+			if (!imageplayer[i]->GetAlive()) {
+				imageplayer.erase(cbegin(imageplayer) + i);
+			}
+		}
 	}
 	//影
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
@@ -170,6 +178,11 @@ void Player::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	IKETexture::PostDraw();
+	//手に入れたスキルのUIの更新
+	for (auto i = 0; i < imageplayer.size(); i++) {
+		if (imageplayer[i] == nullptr)continue;
+		imageplayer[i]->Draw(dxCommon);
+	}
 	Obj_Draw();
 }
 
@@ -415,6 +428,94 @@ void Player::Move() {
 			Ease(Out,Cubic,m_MoveFrame,m_Position.z,m_AfterPos.z) };
 		}
 	}
+	//残像
+	else {
+		//ボタンでマスを移動する
+		if (input->PushButton(input->UP) ||
+			input->PushButton(input->DOWN) ||
+			input->PushButton(input->RIGHT) ||
+			input->PushButton(input->LEFT) ||
+			input->TiltPushStick(input->L_UP) ||
+			input->TiltPushStick(input->L_DOWN) ||
+			input->TiltPushStick(input->L_LEFT) ||
+			input->TiltPushStick(input->L_RIGHT)
+			) {
+			if (input->PushButton(input->UP) || input->TiltPushStick(input->L_UP)) {
+				m_InputTimer[DIR_UP]++;
+			}
+			else if (input->PushButton(input->DOWN) || input->TiltPushStick(input->L_DOWN)) {
+				m_InputTimer[DIR_DOWN]++;
+			}
+			else if (input->PushButton(input->RIGHT) || input->TiltPushStick(input->L_RIGHT)) {
+				m_InputTimer[DIR_RIGHT]++;
+			}
+			else if (input->PushButton(input->LEFT) || input->TiltPushStick(input->L_LEFT)) {
+				m_InputTimer[DIR_LEFT]++;
+			}
+		}
+		else {			//離した瞬間
+			if (m_LimitCount == 0) {
+				if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
+					BirthImagePlayer();
+					MoveCommon(m_Position.z, l_AddVelocity);
+					m_InputTimer[DIR_UP] = {};
+				}
+				else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
+					BirthImagePlayer();
+					MoveCommon(m_Position.z, l_SubVelocity);
+					m_InputTimer[DIR_DOWN] = {};
+				}
+				else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
+					BirthImagePlayer();
+					MoveCommon(m_Position.x, l_AddVelocity);
+					m_InputTimer[DIR_RIGHT] = {};
+				}
+				else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
+					BirthImagePlayer();
+					MoveCommon(m_Position.x, l_SubVelocity);
+					m_InputTimer[DIR_LEFT] = {};
+				}
+			}
+			for (int i = 0; i < DIR_MAX; i++) {
+				m_InputTimer[i] = {};
+			}
+			m_LimitCount = {};
+		}
+
+		//一定フレーム立つと選択マス移動
+		if (m_InputTimer[DIR_UP] == l_TargetTimer) {
+			if (m_NowHeight < PANEL_HEIGHT - 1) {
+				BirthImagePlayer();
+				MoveCommon(m_Position.z, l_AddVelocity);
+				m_LimitCount++;
+			}
+			m_InputTimer[DIR_UP] = {};
+		}
+		else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
+			if (m_NowHeight > 0) {
+				BirthImagePlayer();
+				MoveCommon(m_Position.z, l_SubVelocity);
+				m_LimitCount++;
+			}
+			m_InputTimer[DIR_DOWN] = {};
+		}
+		else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
+			if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
+				BirthImagePlayer();
+				MoveCommon(m_Position.x, l_AddVelocity);
+				m_LimitCount++;
+			}
+			m_InputTimer[DIR_RIGHT] = {};
+		}
+		else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
+			if (m_NowWidth > 0) {
+				BirthImagePlayer();
+				MoveCommon(m_Position.x, l_SubVelocity);
+				m_LimitCount++;
+			}
+			m_InputTimer[DIR_LEFT] = {};
+		}
+	}
 }
 
 void Player::BirthParticle() {
@@ -556,4 +657,11 @@ void Player::DamageUpdate() {
 	else {
 		m_Color.w = 0.0f;
 	}
+}
+//残像作る
+void Player::BirthImagePlayer() {
+	std::unique_ptr<ImagePlayer> newimage = std::make_unique<ImagePlayer>();
+	newimage->Initialize();
+	newimage->SetPosition(m_Position);
+	imageplayer.push_back(std::move(newimage));
 }

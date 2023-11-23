@@ -430,6 +430,9 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\ImagePlayer.cpp">
+      <Filter>gamesystem\charactor\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -826,6 +829,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\ImagePlayer.h">
+      <Filter>gamesystem\charactor\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
