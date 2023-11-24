@@ -15,8 +15,9 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 //更新
 void ClearScene::Update(DirectXCommon* dxCommon) {
 	Input* input = Input::GetInstance();
-	if ((input->TriggerButton(input->B))) {			//バトル
+	if ((input->TriggerButton(input->B)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
 		SceneChanger::GetInstance()->SetChangeStart(true);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
