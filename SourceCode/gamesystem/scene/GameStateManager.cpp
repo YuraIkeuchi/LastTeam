@@ -319,12 +319,14 @@ void GameStateManager::UseSkill() {
 	if (Helper::CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
 		if (m_Act[0].SkillType == 0) {
 			BirthArea();
+			onomatope->AddOnomato(Attack01, { 640.f,360.f });
 		}
 		else {
 			for (int i = 0; i < 2; i++) {
 				RandPowerUpInit();
 			}
 			BirthBuff();
+			onomatope->AddOnomato(AttackCharge, { 640.f,360.f });
 		}
 		FinishAct();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.1f);
@@ -332,7 +334,6 @@ void GameStateManager::UseSkill() {
 		m_Delay = false;
 		m_DelayTimer = {};
 		m_ChargeScale = 5;
-		onomatope->AddOnomato(Attack01, { 640.f,360.f });
 	}
 }
 //行動の終了
