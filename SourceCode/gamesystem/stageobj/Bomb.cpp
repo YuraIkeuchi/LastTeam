@@ -20,7 +20,7 @@ Bomb::Bomb() {
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 
 	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>();
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 	}
 
@@ -36,7 +36,7 @@ bool Bomb::Initialize() {
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5f };
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "hp")));
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "hp")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_EnemyTag = "Bomb";
@@ -51,16 +51,16 @@ void (Bomb::* Bomb::stateTable[])() = {
 
 //行動
 void Bomb::Action() {
-	if (m_HP <= 0) {
-		_charaState = STATE_ATTACK;
-	}
-
 	(this->*stateTable[_charaState])();
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//当たり判定
+
+	if (m_HP <= 0.0f) {
+		Attack();
+	}
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	shadow_tex->SetPosition(m_ShadowPos);
@@ -100,7 +100,7 @@ void Bomb::Inter() {
 void Bomb::Attack() {
 	if (m_HP <= 0) {
 		//敵全体にダメージ
-
+		GameStateManager::GetInstance()->SetIsBombDamage(true);
 		_charaState = STATE_INTER;
 	}
 	else {

@@ -8,6 +8,7 @@
 #include "ImageManager.h"
 #include <GameStateManager.h>
 #include <StagePanel.h>
+
 //モデル読み込み
 CanonEnemy::CanonEnemy() {
 	m_Object.reset(new IKEObject3d());

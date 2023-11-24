@@ -18,7 +18,7 @@ TackleEnemy::TackleEnemy() {
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 
 	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>();
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 	}
 
@@ -97,7 +97,7 @@ void TackleEnemy::Attack() {
 	m_Position.x -= 0.4f;
 	if (m_Position.x < -10.0f) {
 		XMFLOAT3 l_RandPos = {};
-		l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
+		l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy);
 		StagePanel::GetInstance()->EnemyHitReset();
 		_charaState = STATE_INTER;
 		m_Position = l_RandPos;

@@ -45,6 +45,8 @@ public:
 	/// 
 	/// </summary>
 	void ReLoadDamage();
+
+	void BombDamage();
 private:
 	/// <summary>
 	/// csvでマップに敵をスポーン

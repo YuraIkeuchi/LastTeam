@@ -122,6 +122,12 @@ void EnemyManager::ReLoadDamage() {
 	}
 }
 
+void EnemyManager::BombDamage() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SimpleDamege(5.f);
+	}
+}
+
 void EnemyManager::Spawn2Map() {
 	string csv_ = GameStateManager::GetInstance()->GetEnemySpawnText();
 	std::string line;
