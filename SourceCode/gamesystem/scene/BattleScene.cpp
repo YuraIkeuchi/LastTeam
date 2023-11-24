@@ -71,6 +71,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	camerawork->Update(camera);
 	//ゲームオーバー処理
 	if (player_->GetHp() <= 0.0f) {
+		Audio::GetInstance()->StopWave(AUDIO_MAIN);
 		_ChangeType = CHANGE_OVER;
 		player_->GameOverUpdate();
 		if (player_->GetFinishGameOver()) {
