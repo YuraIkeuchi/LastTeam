@@ -30,10 +30,10 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	//ワード追加
 	CreateWord(NONE, L"");
 	CreateWord(TITLE, L"Bボタン:ゲーム");
-	CreateWord(MAP_01, L"はじめようここから！");
+	CreateWord(MAP_01, L"始めようここから！");
 	CreateWord(MAP_BATTLE, L"バトルカードいっぱい！");
-	CreateWord(MAP_PASSIVE, L"パッシブがほしいあなたへ！");
-	CreateWord(MAP_BOSS, L"てごわそうだ！");
+	CreateWord(MAP_PASSIVE, L"パッシブが欲しいあなたへ！");
+	CreateWord(MAP_BOSS, L"手強そうだ！");
 	CreateWord(TUTORIAL_START, L"ここでは戦い方を教える", L"まずは方向パッドで移動してみろ");
 	CreateWord(TUTORIAL_GET, L"ステージに何か出てきたぞ、取ってみろ");
 	CreateWord(TUTORIAL_EXPLAIN, L"下にカードが出ただろう", L"そのカードに応じてプレイヤーは動ける");
@@ -43,7 +43,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateWord(TUTORIAL_SKILL, L"敵を倒すとスキルが手に入るぞ", L"スキルは攻撃やパッシブなどいろんな物があるぞ");
 	CreateWord(TUTORIAL_CHOICE, L"下の3つのスキルから", L"1つ選択してみよう");
 	CreateWord(TUTORIAL_END, L"手に入れたスキルを駆使して",L"敵を倒そう!");
-	CreateWord(RESULT, L"スキルこうか");
+	CreateWord(RESULT, L"スキル効果");
 
 	CreatePassiveSentence(L"リロードが早くなるぞ");
 	CreatePassiveSentence(L"体力が強くなるぞ");

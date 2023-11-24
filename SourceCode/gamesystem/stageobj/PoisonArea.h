@@ -54,7 +54,7 @@ private:
 		float scale = {};
 		float afterscale = 0.15f;
 		float frame = {};
-		int DamageTimer = 49;
+		int DamageTimer = 19;
 		bool Damage = false;
 	};
 
