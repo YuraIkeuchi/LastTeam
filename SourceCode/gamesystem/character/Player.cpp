@@ -238,7 +238,7 @@ void Player::ImGuiDraw() {
 void Player::Move() {
 	if (m_Delay) { return; }
 	if (GameStateManager::GetInstance()->GetResetPredict()) { return; }
-	const int l_TargetTimer = 10;
+	const int l_TargetTimer = 8;
 	const float l_AddVelocity = PANEL_SIZE;
 	const float l_SubVelocity = -PANEL_SIZE;
 	const int l_AddSpace = 1;
