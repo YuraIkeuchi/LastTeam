@@ -39,8 +39,11 @@ private:
 	unique_ptr<InterEnemy> enemy = nullptr;
 
 	unique_ptr<IKESprite> ui = nullptr;
-
-
+	unique_ptr<IKESprite> skipUI = nullptr;
+	unique_ptr<IKESprite> skipUnder = nullptr;
+	unique_ptr<IKESprite> skipBack = nullptr;
+	float scale_skip = 0.7f;
+	float frame = 0.f;
 	enum ChangeType {
 		CHANGE_TITLE,
 		CHANGE_OVER,
@@ -59,7 +62,7 @@ private:
 
 	bool m_End = false;
 	bool m_Skip = false;
-
+	bool m_IsBackKey = false;
 	struct Window {
 		unique_ptr<IKESprite> sprite;
 		XMFLOAT2 m_Size = {};
