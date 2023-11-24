@@ -92,13 +92,13 @@ void StagePanel::ImGuiDraw() {
 		if (actions[i] == nullptr)continue;
 		actions[i]->ImGuiDraw();
 	}
-	//ImGui::Begin("Panel");
-	//for (int i = 0; i < PANEL_WIDTH / 2; i++) {
-	//	for (int j = 0; j < PANEL_HEIGHT; j++) {
-	//		ImGui::Text("Poison[%d][%d]:%d", i, j, panels[i][j].isPoison);
-	//	}
-	//}
-	//ImGui::End();
+	ImGui::Begin("Panel");
+	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			ImGui::Text("Poison[%d][%d]:%d", i, j, panels[i][j].type);
+		}
+	}
+	ImGui::End();
 }
 
 //スキルセットの更新(バトル前)

@@ -94,6 +94,7 @@ public:
 		ATTACK_TEX_7,
 		ATTACK_TEX_8,
 		ATTACK_TEX_9,
+		SHOCKWAVE,
 	};
 	enum particleName
 	{

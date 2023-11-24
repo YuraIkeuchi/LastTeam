@@ -56,7 +56,9 @@ void InterEnemy::Update() {
 		}
 	}
 	else {
-		m_Alive = false;
+		if (m_EnemyTag != "Bomb") {
+			m_Alive = false;
+		}
 	}
 
 	//障害物の削除

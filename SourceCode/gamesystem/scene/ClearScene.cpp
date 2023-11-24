@@ -1,11 +1,16 @@
 #include "ClearScene.h"
 #include "ImageManager.h"
 #include <SceneManager.h>
+#include <Helper.h>
 //‰Šú‰»
 void ClearScene::Initialize(DirectXCommon* dxCommon) {
 	//‹¤’Ê‚Ì‰Šú‰»
 	BaseInitialize(dxCommon);
 	sprite = IKESprite::Create(ImageManager::GAMECLEARBACK, { 0.0f,0.0f });
+
+	for (int i = 0; i < 3; i++) {
+		RandShineInit();
+	}
 }
 //XV
 void ClearScene::Update(DirectXCommon* dxCommon) {
@@ -20,6 +25,7 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 
+	ShineEffectUpdate();
 	SceneChanger::GetInstance()->Update();
 }
 //•`‰æ
@@ -50,7 +56,11 @@ void ClearScene::Draw(DirectXCommon* dxCommon) {
 void ClearScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	sprite->Draw();
+	for (ShineEffect& shine : shines) {
+		shine.tex->Draw();
+	}
 	IKESprite::PostDraw();
+
 	SceneChanger::GetInstance()->Draw();
 }
 //”w–Ê•`‰æ
@@ -65,4 +75,32 @@ void ClearScene::ImGuiDraw(DirectXCommon* dxCommon) {
 }
 //‰ğ•ú
 void ClearScene::Finalize() {
+}
+
+void ClearScene::RandShineInit() {
+	float posX = (float)Helper::GetRanNum(128, 1150);
+	float posY = (float)Helper::GetRanNum(128, 360);
+	float frame = (float)Helper::GetRanNum(30, 45);
+	ShineEffect itr;
+	itr.tex = IKESprite::Create(ImageManager::SHINE, { posX,posY });
+	itr.tex->SetAnchorPoint({ 0.5f,0.5f });
+	itr.tex->SetSize(itr.size);
+	itr.kFrame = frame;
+	shines.push_back(std::move(itr));
+}
+
+void ClearScene::ShineEffectUpdate() {
+	for (ShineEffect& shine : shines) {
+		if (Helper::FrameCheck(shine.frame, 1 / shine.kFrame)) {
+			RandShineInit();
+			shine.isVanish = true;
+		}
+		else {
+			shine.size.x = Ease(Out, Quad, shine.frame, 0.f, 32.f);
+			shine.size.y = Ease(Out, Quad, shine.frame, 0.f, 32.f);
+			shine.tex->SetSize(shine.size);
+		}
+	}
+	shines.remove_if([](ShineEffect& shine) {
+		return shine.isVanish; });
 }

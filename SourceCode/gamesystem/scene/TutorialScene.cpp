@@ -239,6 +239,7 @@ void TutorialScene::MoveState() {
 	}
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
+		m_TextPos = { -30.0f,-30.0f };
 		text_->SetConversation(TextManager::TUTORIAL_GET, m_TextPos);
 		_nowstate = TUTORIAL_GETSKILL;
 	}
@@ -247,6 +248,7 @@ void TutorialScene::MoveState() {
 void TutorialScene::GetState() {
 
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
+		m_TextPos = { -10.0f,-30.0f };
 		text_->SetConversation(TextManager::TUTORIAL_EXPLAIN, m_TextPos);
 		_nowstate = TUTORIAL_ATTACK;
 		m_Timer = {};
@@ -255,8 +257,8 @@ void TutorialScene::GetState() {
 //�U��
 void TutorialScene::AttackState() {
 	Helper::CheckMin(m_Timer, 410, 1);
-
 	if (m_Timer == 120) {
+	m_TextPos = { -10.0f,-30.f };
 		text_->SetConversation(TextManager::TUTORIAL_MARK, m_TextPos);
 	} else if (m_Timer == 240) {
 		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK, m_TextPos);

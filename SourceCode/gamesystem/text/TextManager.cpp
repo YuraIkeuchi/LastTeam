@@ -38,15 +38,15 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateWord(TUTORIAL_GET, L"ステージに何か出てきたぞ、取ってみろ");
 	CreateWord(TUTORIAL_EXPLAIN, L"下にカードが出ただろう", L"そのカードに応じてプレイヤーは動ける");
 	CreateWord(TUTORIAL_MARK, L"赤いエリアが出てきただろう", L"それが攻撃エリアだと思ってくれればいい");
-	CreateWord(TUTORIAL_TEXT_ATTACK, L"エリアに敵を収めてAボタンで攻撃してみろ");
+	CreateWord(TUTORIAL_TEXT_ATTACK, L"エリアに敵を収めて",L"Aボタンで攻撃してみろ");
 	CreateWord(TUTORIAL_TEXT_DAMAGE, L"よし、よくできた", L"じゃあ敵を倒してみよう");
-	CreateWord(TUTORIAL_SKILL, L"敵を倒すとスキルが手に入るぞ", L"スキルは攻撃やパッシブなどいろんな物があるぞ");
+	CreateWord(TUTORIAL_SKILL, L"敵を倒すとスキルが手に入るぞ", L"スキルは攻撃やパッシブなどがあるぞ");
 	CreateWord(TUTORIAL_CHOICE, L"下の3つのスキルから", L"1つ選択してみよう");
 	CreateWord(TUTORIAL_END, L"手に入れたスキルを駆使して",L"敵を倒そう!");
 	CreateWord(RESULT, L"スキル効果");
 
 	CreatePassiveSentence(L"リロードが早くなるぞ");
-	CreatePassiveSentence(L"体力が強くなるぞ");
+	CreatePassiveSentence(L"全回復、体力増加");
 	CreatePassiveSentence(L"リロードしても消えないぞ");
 	CreatePassiveSentence(L"毒の時間が長いぞ");
 	CreatePassiveSentence(L"毒の威力が上がるぞ");

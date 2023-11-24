@@ -766,16 +766,24 @@ void MapScene::CheckState() {
 			SceneChanger::GetInstance()->SetChangeStart(true);
 			int num = Helper::GetRanNum(1, 2);
 			std::stringstream ss;
+			const std::string BaseName = "Resources/csv/EnemySpawn/";
+			string levelName = "None";
 			if (nowHierarchy == MaxLength) {
-				ss << "Resources/csv/EnemySpawn/BattleMap0" << 3 << ".csv";
+				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
 				s_LastStage = true;
 			}
 			bool isBattle = true;
+			if (nowHierarchy < (MaxLength / 2) + 2) {	//なんマス目に居るかで難易度が変わる
+				levelName = "Weak";
+			}
+			else {
+				levelName = "Strong";
+			}
 			if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
-				ss << "Resources/csv/EnemySpawn/BattleMap0" << 1 << ".csv";
+				ss << BaseName + levelName + "/BattleMap0" << 2 << ".csv";
 				isBattle = true;
 			} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
-				ss << "Resources/csv/EnemySpawn/PassiveMap0" << num << ".csv";
+				ss << BaseName + levelName + "/PassiveMap0" << 2 << ".csv";
 				isBattle = false;
 			}
 
