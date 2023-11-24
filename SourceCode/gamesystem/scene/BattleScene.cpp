@@ -222,10 +222,10 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	//player_->ImGuiDraw();
-	GameStateManager::GetInstance()->ImGuiDraw();
+	player_->ImGuiDraw();
+	//GameStateManager::GetInstance()->ImGuiDraw();
 	//enemyManager->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
 	//camerawork->ImGuiDraw();
 }
 
