@@ -193,8 +193,8 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	player_->Draw(dxCommon);
 
 	if (player_->GetHp() > 0.0f) {
-		GameStateManager::GetInstance()->Draw(dxCommon);
 		enemyManager->Draw(dxCommon);
+		GameStateManager::GetInstance()->Draw(dxCommon);
 		if (!enemyManager->BossDestroy()) {
 			StagePanel::GetInstance()->ActDraw(dxCommon);
 		}

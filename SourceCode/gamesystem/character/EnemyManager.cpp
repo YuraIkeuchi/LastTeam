@@ -6,6 +6,7 @@
 #include "Bomb.h"
 #include "BossEnemy.h"
 #include "PoisonEnemy.h"
+#include "TackleEnemy.h"
 #include <StagePanel.h>
 #include <GameStateManager.h>
 #include <Helper.h>
@@ -148,32 +149,40 @@ void EnemyManager::Spawn2Map() {
 			if (x == ',') {
 				break;
 			}
+			InterEnemy::SetPlayer(player);
 			if (x == '0') {
 				width++;
 			} else if (x == '1') {
-				unique_ptr<InterEnemy> enemy_ = std::make_unique<NormalEnemy>();
-				enemy_->SetPlayer(player);
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<TackleEnemy>();
+				//enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '2') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<CanonEnemy>();
-				enemy_->SetPlayer(player);
+				//enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '3') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<CreateBombEnemy>();
-				enemy_->SetPlayer(player);
+				//enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '4') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<PoisonEnemy>();
+				//enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '5') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy>();
-				enemy_->SetPlayer(player);
+				//enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;

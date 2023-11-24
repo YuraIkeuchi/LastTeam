@@ -13,7 +13,7 @@
 Bomb::Bomb() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::BULLET));
 	m_Object->SetLightEffect(false);
 
 	//HPII
