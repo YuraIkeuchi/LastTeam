@@ -20,7 +20,7 @@ Interval,200
 POISON_NUM,1
 
 //毒のダメージ
-POISON_DAMAGE,10
+POISON_DAMAGE,2
 
 //毒の継続時間
 POISON_TIMER,200

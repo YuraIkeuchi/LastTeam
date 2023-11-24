@@ -67,58 +67,64 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	//�e�N���X�X�V
 	//カメラワーク更新
 	camerawork->Update(camera);
-	player_->Update();
-	GameStateManager::GetInstance()->Update();
-	if (GameStateManager::GetInstance()->GetIsReloadDamage()) {
-		enemyManager->ReLoadDamage();
-		GameStateManager::GetInstance()->SetIsReloadDamage(false);
+	//ゲームオーバー処理
+	if (player_->GetHp() <= 0.0f) {
+		_ChangeType = CHANGE_OVER;
+		player_->GameOverUpdate();
+		if (player_->GetFinishGameOver()) {
+			SceneChanger::GetInstance()->SetChangeStart(true);
+		}
 	}
-	if (GameStateManager::GetInstance()->GetIsBombDamage()) {
+	else {
+		player_->Update();
+		GameStateManager::GetInstance()->Update();
+		if (GameStateManager::GetInstance()->GetIsReloadDamage()) {
+			enemyManager->ReLoadDamage();
+			GameStateManager::GetInstance()->SetIsReloadDamage(false);
+		}
+
+    if (GameStateManager::GetInstance()->GetIsBombDamage()) {
 		enemyManager->BombDamage();
 		GameStateManager::GetInstance()->SetIsBombDamage(false);
 	}
 
-	StagePanel::GetInstance()->Update();
-	enemyManager->Update();
-	ParticleEmitter::GetInstance()->Update();
+		StagePanel::GetInstance()->Update();
+		enemyManager->Update();
+		ParticleEmitter::GetInstance()->Update();
+
+		//後々変更する(酷い処理)
+		//エネミーが全員死亡したら
+		if (enemyManager->BossDestroy() && !m_FeedStart) {
+			m_Feed = true;
+			m_FeedStart = true;
+		}
+		if (m_Feed) {
+			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 60.0f, m_Feed);
+		}
+		if (feed->GetFeedEnd()) {
+			m_FeedEnd = true;
+		}
+
+		if (m_FeedEnd) {
+			Audio::GetInstance()->StopWave(AUDIO_MAIN);
+			//クリア処理が終らなかったら
+			if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
+				//クリア処理準備
+				GameStateManager::GetInstance()->StageClearInit();
+			}
+			else {
+				//マップに戻る
+				_ChangeType = CHANGE_MAP;
+				SceneChanger::GetInstance()->SetChangeStart(true);
+			}
+		}
+
+		//クリア条件に達するとプレイヤーを動かせなくする
+		if (GameStateManager::GetInstance()->GetIsFinish()) {
+			player_->SetDelay(true);
+		}
+	}
 	SceneChanger::GetInstance()->Update();
-
-	//後々変更する(酷い処理)
-	//エネミーが全員死亡したら
-	if (enemyManager->BossDestroy() && !m_FeedStart) {
-		m_Feed = true;
-		m_FeedStart = true;
-	}
-	if (m_Feed) {
-		feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 60.0f, m_Feed);
-	}
-	if (feed->GetFeedEnd()) {
-		m_FeedEnd = true;
-	}
-
-	if (m_FeedEnd) {
-		Audio::GetInstance()->StopWave(AUDIO_MAIN);
-		//クリア処理が終らなかったら
-		if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
-			//クリア処理準備
-			GameStateManager::GetInstance()->StageClearInit();
-		}
-		else {
-			//マップに戻る
-			_ChangeType = CHANGE_MAP;
-			SceneChanger::GetInstance()->SetChangeStart(true);
-		}
-	}
-
-	//クリア条件に達するとプレイヤーを動かせなくする
-	if (GameStateManager::GetInstance()->GetIsFinish()) {
-		player_->SetDelay(true);
-	}
-	//ゲームオーバー処理
-	if (player_->GetHp() <= 0.0f) {
-		_ChangeType = CHANGE_OVER;
-		SceneChanger::GetInstance()->SetChangeStart(true);
-	}
 	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
 		GameReset({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
@@ -165,10 +171,12 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 //前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_FeedEnd){
-		ParticleEmitter::GetInstance()->FlontDrawAll();
-		player_->UIDraw();
-		enemyManager->UIDraw();
-		GameStateManager::GetInstance()->ActUIDraw();
+		if (player_->GetHp() > 0.0f) {
+			ParticleEmitter::GetInstance()->FlontDrawAll();
+			player_->UIDraw();
+			enemyManager->UIDraw();
+			GameStateManager::GetInstance()->ActUIDraw();
+		}
 	}
 	if (m_Feed) {
 		feed->Draw();
@@ -184,10 +192,12 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->Draw(dxCommon);
 	player_->Draw(dxCommon);
 
-	GameStateManager::GetInstance()->Draw(dxCommon);
-	enemyManager->Draw(dxCommon);
-	if (!enemyManager->BossDestroy()) {
-		StagePanel::GetInstance()->ActDraw(dxCommon);
+	if (player_->GetHp() > 0.0f) {
+		GameStateManager::GetInstance()->Draw(dxCommon);
+		enemyManager->Draw(dxCommon);
+		if (!enemyManager->BossDestroy()) {
+			StagePanel::GetInstance()->ActDraw(dxCommon);
+		}
 	}
 	IKEObject3d::PostDraw();
 }

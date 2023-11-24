@@ -91,7 +91,7 @@ void PoisonArea::Collide() {
 	}
 
 	//
-	if (panels.DamageTimer == 50) {
+	if (panels.DamageTimer == 20) {
 		player->RecvDamage(m_Damage,"POISON");
 		panels.DamageTimer = {};
 		panels.Damage = true;
