@@ -19,6 +19,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	}
 
 	nowHierarchy = 0;
+	clearHierarchy = 1;
 	nowIndex = 1;
 	s_LastStage = false;
 
