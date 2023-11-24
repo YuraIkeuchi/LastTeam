@@ -111,7 +111,6 @@ public:
 	// 仮
 	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
 
-
 	void SetIsReloadDamage(bool flag) { m_ReloadDamage = flag; }
 	bool GetIsReloadDamage() { return m_ReloadDamage; }
 
@@ -147,7 +146,7 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector<int> GotPassiveIDs = {};
+	std::vector<int> GotPassiveIDs = {2};
 	std::vector<int> NotPassiveIDs;
 
 	unique_ptr<IKESprite> skillUI = nullptr;
@@ -203,7 +202,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 9,6 };
+	vector <int> m_StartNumber = { 0,1,2 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
