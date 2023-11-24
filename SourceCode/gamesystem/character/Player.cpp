@@ -217,7 +217,8 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("Move:%d", m_Move);
+	ImGui::Text("ROTZ:%f", m_Rotation.z);
+	ImGui::Text("GameOver:%d", m_FinishGameOver);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::SliderFloat("Disolve", &m_AddDisolve, 0, 2);
 	if (ImGui::Button("MOVE_NONE", ImVec2(100, 100)))
@@ -664,4 +665,12 @@ void Player::BirthImagePlayer() {
 	newimage->Initialize();
 	newimage->SetPosition(m_Position);
 	imageplayer.push_back(std::move(newimage));
+}
+//ゲームーオーバー時
+void Player::GameOverUpdate() {
+	m_Color.w = 1.0f;
+	if (Helper::CheckMin(m_Rotation.z, 45.0f, 0.5f)) {
+		m_FinishGameOver = true;
+	}
+	Obj_SetParam();
 }

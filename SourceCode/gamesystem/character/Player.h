@@ -25,6 +25,7 @@ public:
 	void Update() override;
 	//描画
 	void Draw(DirectXCommon *dxCommon) override;
+	void GameOverUpdate();
 	//UI用
 	void UIDraw();
 	//ImGui
@@ -70,6 +71,7 @@ public:
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetCharaState() { return _charaState; }
 	const bool GetDelay() { return m_Delay; }
+	const bool GetFinishGameOver() { return m_FinishGameOver; }
 
 	float GetMaxHp() { return m_MaxHP; }
 	float GetHp() { return m_HP; }
@@ -190,4 +192,6 @@ private:
 
 	//残像用のプレイヤー
 	std::vector<unique_ptr<ImagePlayer>> imageplayer;
+
+	bool m_FinishGameOver = false;
 };
