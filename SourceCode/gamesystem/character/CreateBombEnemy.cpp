@@ -40,6 +40,10 @@ bool CreateBombEnemy::Initialize() {
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CreateBombEnemy.csv", "hp")));
+	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CreateBombEnemy.csv", "LIMIT_NUM")));
+
+	m_Limit.resize(LimitSize);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/CreateBombEnemy.csv", m_Limit, "Interval");
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -129,9 +133,11 @@ void CreateBombEnemy::Finalize() {
 }
 //ë“ã@
 void CreateBombEnemy::Inter() {
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_INTER];
 	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, kIntervalMax);
-	if (coolTimer == kIntervalMax) {
+	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
+	if (coolTimer == l_TargetTimer) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		//BirthBomb();
@@ -139,8 +145,9 @@ void CreateBombEnemy::Inter() {
 }
 //çUåÇ
 void CreateBombEnemy::Attack() {
-	const int l_TargetTimer = 200;
-
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_ATTACK];
+	
 	if (_BombType == Bomb_SET) {
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			coolTimer = {};
@@ -170,9 +177,11 @@ void CreateBombEnemy::Attack() {
 
 //ÉèÅ[Év
 void CreateBombEnemy::Teleport() {
-	const int l_TargetTimer = 200;
-
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	const int l_RandTimer = Helper::GetRanNum(0, 30);
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_SPECIAL];
+	
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 

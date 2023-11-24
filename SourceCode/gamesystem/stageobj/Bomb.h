@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include"InterEnemy.h"
 
 using namespace std;         //  名前空間指定
@@ -30,4 +30,6 @@ private:
 	XMFLOAT3 m_shockWaveScale = { 0.0f,0.0f,0.0f };
 	int m_shockWaveTimer = 0;
 	float m_BaseScale = {};
+	float m_Damage = 0.0f;
+
 };

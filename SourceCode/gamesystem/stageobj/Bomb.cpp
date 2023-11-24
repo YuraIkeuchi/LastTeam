@@ -1,4 +1,4 @@
-#include "Bomb.h"
+﻿#include "Bomb.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -33,7 +33,7 @@ Bomb::Bomb() {
 	shadow_tex->TextureCreate();
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
-	kIntervalMax = 450;
+
 }
 //初期化
 bool Bomb::Initialize() {
@@ -41,6 +41,8 @@ bool Bomb::Initialize() {
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.0f,0.0f,0.0f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "hp")));
+	kIntervalMax = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "Interval")));;
+	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "Damage")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_EnemyTag = "Bomb";
@@ -121,7 +123,7 @@ void Bomb::Attack() {
 	}
 	else {
 		//プレイヤーにダメージ
-		player->RecvDamage(10, "NORMAL");
+		player->RecvDamage(m_Damage, "NORMAL");
 		m_shockWaveColor = { 1.0f,0.0f,0.0f,1.0f };
 	}
 	//setcolor
