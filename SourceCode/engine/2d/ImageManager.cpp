@@ -86,6 +86,7 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(ATTACK_TEX_7, L"Resources/2d/objicon/AttackSKill/Skill7.png");
 	IKETexture::LoadTexture(ATTACK_TEX_8, L"Resources/2d/objicon/AttackSKill/Skill8.png");
 	IKETexture::LoadTexture(ATTACK_TEX_9, L"Resources/2d/objicon/AttackSKill/Skill9.png");
+	IKETexture::LoadTexture(SHOCKWAVE, L"Resources/2d/objicon/ShockWave.png");
 }
 
 //非同期処理でのテクスチャの読み込み

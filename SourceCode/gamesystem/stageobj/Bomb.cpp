@@ -13,8 +13,13 @@
 Bomb::Bomb() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::BULLET));
 	m_Object->SetLightEffect(false);
+
+	shockWaveTex.reset(new IKETexture(ImageManager::SHOCKWAVE, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shockWaveTex->TextureCreate();
+	shockWaveTex->Initialize();
+	shockWaveTex->SetRotation({ 90.0f,0.0f,0.0f });
 
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
@@ -36,7 +41,7 @@ bool Bomb::Initialize() {
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5f };
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "hp")));
+	m_HP = 1.0f;//static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "hp")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_EnemyTag = "Bomb";
@@ -47,6 +52,7 @@ bool Bomb::Initialize() {
 void (Bomb::* Bomb::stateTable[])() = {
 	&Bomb::Inter,//動きの合間
 	&Bomb::Attack,//動きの合間
+	&Bomb::ShockWave,
 };
 
 //行動
@@ -58,7 +64,7 @@ void Bomb::Action() {
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//当たり判定
 
-	if (m_HP <= 0.0f) {
+	if (m_HP <= 0.0f && _charaState != STATE_SPECIAL) {
 		Attack();
 	}
 
@@ -73,6 +79,10 @@ void Bomb::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
+	if (_charaState == STATE_SPECIAL) {
+		//衝撃波の描画
+		shockWaveTex->Draw();
+	}
 	IKETexture::PostDraw();
 	UIDraw();
 	Obj_Draw();
@@ -87,6 +97,8 @@ void Bomb::Finalize() {
 }
 //待機
 void Bomb::Inter() {
+	//衝撃波出してる間は時間進まないように
+
 	//制限時間
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, kIntervalMax);
@@ -101,11 +113,35 @@ void Bomb::Attack() {
 	if (m_HP <= 0) {
 		//敵全体にダメージ
 		GameStateManager::GetInstance()->SetIsBombDamage(true);
-		_charaState = STATE_INTER;
+		m_shockWaveColor = { 0.0f,0.0f,1.0f,1.0f };
 	}
 	else {
 		//プレイヤーにダメージ
 		player->RecvDamage(10, "NORMAL");
-		_charaState = STATE_INTER;
+		m_shockWaveColor = { 1.0f,0.0f,0.0f,1.0f };
 	}
+	//setcolor
+	_charaState = STATE_SPECIAL;
+}
+
+void Bomb::ShockWave()
+{
+	shockWaveTex->SetPosition(m_Position.x, m_Position.y + 0.2f, m_Position.z);
+	shockWaveTex->SetScale(m_shockWaveScale);
+	shockWaveTex->SetColor(m_shockWaveColor);
+	shockWaveTex->Update();
+
+	m_shockWaveTimer++;
+	m_shockWaveTimer = clamp(m_shockWaveTimer, 0, 30);
+	//タイマーに応じて衝撃波の大きさ変更処理
+	m_shockWaveScale.x += 0.15f;
+	m_shockWaveScale.y += 0.15f;
+	m_shockWaveScale.z += 0.15f;
+	//時間切れ
+	if (m_shockWaveTimer == 30) {
+		m_Alive = false;
+		m_shockWaveTimer = 0;
+	}
+	//衝撃波を出す
+	//出し終わったらm_aliveをfalseに
 }

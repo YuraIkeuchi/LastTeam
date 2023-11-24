@@ -19,15 +19,14 @@ private:
 private:
 	void Inter();//ë“ã@
 	void Attack();//çUåÇ
+	void ShockWave();
 private:
+	unique_ptr<IKETexture> shockWaveTex;
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
 	bool _isPlayerDamage = false;
 	bool _isEnemyDamage = false;
-
-	enum BombType {
-		Bomb_SET,
-		Bomb_THROW,
-		Bomb_END,
-	}_BombType = Bomb_SET;
+	XMFLOAT4 m_shockWaveColor = { 1.0f,1.0f,1.0f,1.0f };
+	XMFLOAT3 m_shockWaveScale = { 0.0f,0.0f,0.0f };
+	int m_shockWaveTimer = 0;
 };
