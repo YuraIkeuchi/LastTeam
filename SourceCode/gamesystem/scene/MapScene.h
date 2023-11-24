@@ -65,6 +65,9 @@ private:
 	void BlackOut();
 
 	void Move();
+
+
+	bool TutorialClosed();
 private:
 	enum {
 		StartMAP = 0,
@@ -96,6 +99,13 @@ private:
 	static array<array<int, 3>, 10> mapKinds;
 	unique_ptr<IKESprite> screen = nullptr;
 	unique_ptr<IKESprite> cheack= nullptr;
+	unique_ptr<IKESprite> cheack_OK[2] = {};
+	unique_ptr<IKESprite> cheack_NO[2] = {};
+	int nowCheack = 0;
+	float cFrame = 0;
+	float cAdd = 0.03f;
+
+
 	unique_ptr<IKESprite> frame = nullptr;
 	unique_ptr<IKESprite> chara = nullptr;
 
