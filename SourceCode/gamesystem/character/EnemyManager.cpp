@@ -1,6 +1,9 @@
 ﻿#include "EnemyManager.h"
 #include "NormalEnemy.h"
 #include "CanonEnemy.h"
+#include "TackleEnemy.h"
+#include "CreateBombEnemy.h"
+#include "Bomb.h"
 #include "BossEnemy.h"
 #include "PoisonEnemy.h"
 #include <StagePanel.h>
@@ -119,6 +122,12 @@ void EnemyManager::ReLoadDamage() {
 	}
 }
 
+void EnemyManager::BombDamage() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SimpleDamege(5.f);
+	}
+}
+
 void EnemyManager::Spawn2Map() {
 	string csv_ = GameStateManager::GetInstance()->GetEnemySpawnText();
 	std::string line;
@@ -156,7 +165,7 @@ void EnemyManager::Spawn2Map() {
 				width++;
 			}
 			else if (x == '3') {
-				unique_ptr<InterEnemy> enemy_ = std::make_unique<PoisonEnemy>();
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<CreateBombEnemy>();
 				enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
