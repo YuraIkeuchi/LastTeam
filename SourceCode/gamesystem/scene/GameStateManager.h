@@ -115,6 +115,9 @@ public:
 	void SetIsReloadDamage(bool flag) { m_ReloadDamage = flag; }
 	bool GetIsReloadDamage() { return m_ReloadDamage; }
 
+	void SetIsBombDamage(bool flag) { m_BombDamage = flag; }
+	bool GetIsBombDamage() { return m_BombDamage; }
+
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -188,6 +191,7 @@ private:
 	bool m_IsReload = true;
 	bool m_IsReloadDamage = false;
 	bool m_ReloadDamage = false;
+	bool m_BombDamage = false;
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
 	bool m_IsDrainUp = false;

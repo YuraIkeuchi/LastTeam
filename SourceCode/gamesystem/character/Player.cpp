@@ -217,7 +217,8 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("Move:%d", m_Move);
+	ImGui::Text("ROTZ:%f", m_Rotation.z);
+	ImGui::Text("GameOver:%d", m_FinishGameOver);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::SliderFloat("Disolve", &m_AddDisolve, 0, 2);
 	if (ImGui::Button("MOVE_NONE", ImVec2(100, 100)))
@@ -664,4 +665,26 @@ void Player::BirthImagePlayer() {
 	newimage->Initialize();
 	newimage->SetPosition(m_Position);
 	imageplayer.push_back(std::move(newimage));
+}
+//ゲームーオーバー時
+void Player::GameOverUpdate() {
+	const float l_AddRotZ = 0.5f;
+	const float l_AddFrame = 0.005f;
+	float RotPower = 5.0f;
+	m_Color.w = 1.0f;
+
+	if (Helper::FrameCheck(m_Frame, l_AddFrame)) {		//最初はイージングで回す
+		m_Frame = 1.0f;
+		if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+			m_FinishGameOver = true;
+		}
+	}
+	else {
+		RotPower = Ease(In, Cubic, m_Frame, RotPower, 20.0f);
+		m_Rotation.z =Ease(In,Cubic,m_Frame,m_Rotation.z,45.0f);
+		m_Rotation.y += RotPower;
+		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.5f);
+	}
+	
+	Obj_SetParam();
 }

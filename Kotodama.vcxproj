@@ -180,6 +180,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\BaseEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\BossEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\CreateBombEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\ImagePlayer.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\Player.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\MobEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\PoisonEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\TackleEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\gamecamera\CameraWork.cpp" />
     <ClCompile Include="SourceCode\gamesystem\MessageWindow\MessageWindow.cpp" />
     <ClCompile Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.cpp" />
@@ -218,6 +220,7 @@
     <ClCompile Include="SourceCode\gamesystem\skill\SkillManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\SpecialSkill.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\AttackArea.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\Bomb.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyBullet.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PoisonArea.cpp" />
@@ -316,6 +319,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\BossEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\CreateBombEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
     <ClInclude Include="SourceCode\gamesystem\character\ImagePlayer.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h" />
@@ -323,6 +327,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\Player.h" />
     <ClInclude Include="SourceCode\gamesystem\character\MobEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\PoisonEnemy.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\TackleEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h" />
     <ClInclude Include="SourceCode\gamesystem\MessageWindow\MessageWindow.h" />
     <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.h" />
@@ -354,6 +359,7 @@
     <ClInclude Include="SourceCode\gamesystem\skill\SkillManager.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\SpecialSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\AttackArea.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\Bomb.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyBullet.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PoisonArea.h" />
