@@ -182,6 +182,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\CreateBombEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\ImagePlayer.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\NormalEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\Player.cpp" />
@@ -221,10 +222,13 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\AttackArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\Bomb.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyBullet.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PoisonArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\ResultAreaUI.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\StageBack.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\text\DrawDamageNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\Onomatope.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
@@ -317,6 +321,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CreateBombEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\ImagePlayer.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\NormalEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\Player.h" />
@@ -356,10 +361,13 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\AttackArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\Bomb.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyBullet.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PoisonArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\ResultAreaUI.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\StageBack.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h" />
+    <ClInclude Include="SourceCode\gamesystem\text\DrawDamageNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\Onomatope.h" />
     <ClInclude Include="SourceCode\gamesystem\text\TextManager.h" />

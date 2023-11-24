@@ -44,7 +44,7 @@ void GameStateManager::Initialize() {
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 	gaugeCover= IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f+32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
-	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 52.f,670.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
+	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
 	resultSkill = make_unique<ResultSkill>();
 	resultSkill->Initialize(m_dxCommon);
@@ -105,7 +105,7 @@ void GameStateManager::Update() {
 		}
 		m_CounterTimer++;
 
-		if (Helper::GetInstance()->CheckMin(m_CounterTimer, 20, 1)) {		//一定フレームでカウンター終了
+		if (Helper::CheckMin(m_CounterTimer, 20, 1)) {		//一定フレームでカウンター終了
 			m_Counter = false;
 			m_CounterTimer = {};
 		}
@@ -152,6 +152,7 @@ void GameStateManager::Update() {
 	_charge->Update();
 	onomatope->Update();
 
+	PowerUpEffectUpdate();
 }
 //攻撃した瞬間
 void GameStateManager::AttackTrigger() {
@@ -203,6 +204,7 @@ void GameStateManager::ImGuiDraw() {
 	if (_ResultType == HAVE_SKILL) {
 		haveSkill->ImGuiDraw();
 	}
+	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -213,6 +215,11 @@ void GameStateManager::ActUIDraw() {
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		passive->Draw();
 	}
+	IKESprite::PreDraw();
+	for (PowerUpEffect& power : powerup) {
+		power.tex->Draw();
+	}
+	IKESprite::PostDraw();
 }
 //スキルを入手(InterActionCPPで使ってます)
 void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name) {
@@ -244,12 +251,12 @@ void GameStateManager::AddSkill(const int SkillType,const int ID, const float da
 void GameStateManager::BirthActUI(const int ID,const int Type) {
 	//アクションUIのセット
 	ActionUI* newactUi = nullptr;
-	newactUi = new ActionUI();
+	newactUi = new ActionUI(ID);
 	newactUi->Initialize();
-	newactUi->InitState(m_AllActCount,ID,Type);
+	newactUi->InitState(m_AllActCount,Type);
 	actui.emplace_back(newactUi);
 
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.3f);
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.15f);
 }
 
 //攻撃エリアの生成(無理やり処理)
@@ -266,10 +273,9 @@ void GameStateManager::BirthArea() {
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
 			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0)) && (AreaX < 8)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
+				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player");
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(m_Act[0].ActDamage);
-				newarea->SetName("Player");
 				newarea->SetStateName(m_Act[0].StateName);
 				attackarea.emplace_back(std::move(newarea));
 			}
@@ -309,16 +315,19 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 void GameStateManager::UseSkill() {
 	if (m_AllActCount == 0) { return; }
 	if (!m_Delay) { return; }
-	m_ChargeScale = Helper::GetInstance()->Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
-	if (Helper::GetInstance()->CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
+	m_ChargeScale = Helper::Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
+	if (Helper::CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
 		if (m_Act[0].SkillType == 0) {
 			BirthArea();
 		}
 		else {
+			for (int i = 0; i < 2; i++) {
+				RandPowerUpInit();
+			}
 			BirthBuff();
 		}
 		FinishAct();
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.3f);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.1f);
 		m_ResetPredict = true;
 		m_Delay = false;
 		m_DelayTimer = {};
@@ -344,7 +353,8 @@ void GameStateManager::GaugeUpdate() {
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReloadDamage) {
-			//エネミーに5ダメージ
+			//エネミーに3ダメージ
+			m_ReloadDamage = true;
 		}
 		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();
@@ -433,7 +443,7 @@ void GameStateManager::DeckInitialize() {
 
 void GameStateManager::GetPassive(int ID) {
 	float posX = GotPassives.size() * 70.0f;
-	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,0.0f})));
+	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,50.0f})));
 }
 
 
@@ -444,6 +454,7 @@ bool GameStateManager::AttackSubAction() {
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
+	if (!TutorialTask::GetInstance()->GetViewSkill()) { return false; }
 	if (Input::GetInstance()->TriggerButton(Input::LB)) {
 		_ResultType = GET_SKILL;
 	}
@@ -477,7 +488,7 @@ void GameStateManager::InDeck() {
 
 bool GameStateManager::SkillRecycle() {
 	//if (!m_IsRecycle) { return false; }
-	//if (Helper::GetInstance()->GetRanNum(0, 100) > 20) {
+	//if (Helper::GetRanNum(0, 100) > 20) {
 	//	return false;
 	//}
 
@@ -491,6 +502,7 @@ void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
 	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size(),m_dxCommon);
 	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size(), m_dxCommon);
+	resultSkill->SetIsBattle(isBattleFromMap);
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
 	m_PredictTimer = {};
 	isFinish = true;
@@ -501,5 +513,43 @@ void GameStateManager::BirthBuff() {
 }
 void GameStateManager::DeckReset() {
 	m_DeckNumber.resize(3);
-	m_DeckNumber = { 0,1,6 };
+	m_DeckNumber = { 1,2,4 };
+	m_DeckNumber.resize((int)(m_StartNumber.size()));
+	m_DeckNumber = m_StartNumber;
+	GotPassives.clear();
+	GotPassiveIDs = {};
+}
+//パワーアップのエフェクトの初期化
+void GameStateManager::RandPowerUpInit() {
+	float posX = (float)Helper::GetRanNum(0, 200);
+	float posY = (float)Helper::GetRanNum(550, 700);
+	float frame = (float)Helper::GetRanNum(30, 45);
+	PowerUpEffect itr;
+	itr.tex = IKESprite::Create(ImageManager::POWERUP, {});
+	itr.position = { posX,posY };
+	itr.tex->SetAnchorPoint({ 0.5f,0.5f });
+	itr.tex->SetSize(itr.size);
+	itr.tex->SetColor(itr.color);
+	itr.afterpos = { itr.position.x,itr.position.y - 50.0f };
+	itr.kFrame = 1 / frame;
+	powerup.push_back(std::move(itr));
+}
+
+void GameStateManager::PowerUpEffectUpdate() {
+	for (PowerUpEffect& power : powerup) {
+		if (Helper::FrameCheck(power.frame, power.kFrame)) {
+			if (m_Buff) {
+				RandPowerUpInit();
+			}
+			power.isVanish = true;
+		}
+		else {
+			power.position.y = Ease(In, Exp, power.frame, power.position.y, power.afterpos.y);
+			power.color.w = Ease(In, Exp, power.frame, 1.0f, 0.0f);
+			power.tex->SetPosition(power.position);
+			power.tex->SetColor(power.color);
+		}
+	}
+	powerup.remove_if([](PowerUpEffect& shine) {
+		return shine.isVanish; });
 }

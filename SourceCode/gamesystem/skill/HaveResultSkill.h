@@ -28,11 +28,12 @@ public:
 	void CreatePassiveSkill(const int num, const int id, DirectXCommon* dxCommon);
 	void BirthArea(const int num);
 private:
+	static const int S_DAMAGEMAX = 2;
 private:
 
 	struct HaveUI {
 		std::unique_ptr<IKESprite> icon;
-		std::unique_ptr<DrawNumber> number;
+		std::unique_ptr<DrawNumber> DamageNumber[S_DAMAGEMAX];
 		std::unique_ptr<TextManager> text_;
 		vector<std::unique_ptr<ResultAreaUI>> resultarea;
 		XMFLOAT2 position = { 640.f,320.f };
@@ -44,6 +45,7 @@ private:
 		int DisX = {};
 		int DisY = {};
 		wchar_t* baseSentence = L"";
+		int Damage = {};
 	};
 	
 private:

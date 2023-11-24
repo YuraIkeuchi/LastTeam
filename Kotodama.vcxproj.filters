@@ -97,7 +97,7 @@
       <Filter>engine\3d\Fbx</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\engine\3d\ModelManager.cpp">
-      <Filter>engine\3d\Fbx\Manager</Filter>
+      <Filter>engine\3d\Manager</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\engine\3d\ObjCommon.cpp">
       <Filter>engine\3d\Base</Filter>
@@ -421,6 +421,18 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\PoisonArea.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\text\DrawDamageNumber.cpp">
+      <Filter>gamesystem\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\StageBack.cpp">
+      <Filter>gamesystem\stageobj\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\ImagePlayer.cpp">
+      <Filter>gamesystem\charactor\Player</Filter>
+    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\TackleEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
@@ -469,7 +481,7 @@
       <Filter>engine\3d\Fbx</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\3d\ModelManager.h">
-      <Filter>engine\3d\Fbx\Manager</Filter>
+      <Filter>engine\3d\Manager</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\3d\ObjCommon.h">
       <Filter>engine\3d\Base</Filter>
@@ -818,6 +830,18 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\PoisonArea.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\text\DrawDamageNumber.h">
+      <Filter>gamesystem\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\StageBack.h">
+      <Filter>gamesystem\stageobj\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\ImagePlayer.h">
+      <Filter>gamesystem\charactor\Player</Filter>
+    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\TackleEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
@@ -1032,11 +1056,14 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{e95d12bb-687a-4d00-ae42-6a4cd3927259}</UniqueIdentifier>
     </Filter>
-    <Filter Include="engine\3d\Fbx\Manager">
-      <UniqueIdentifier>{5fa3098f-a3c1-4362-8d9a-e5454bf67630}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gamesystem\scene\GameClear">
       <UniqueIdentifier>{a98a93ac-0351-41bd-9197-cc0c41f66cd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\stageobj\Common">
+      <UniqueIdentifier>{87e08fa5-9a91-43ec-acda-167de2e45f0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\3d\Manager">
+      <UniqueIdentifier>{5fa3098f-a3c1-4362-8d9a-e5454bf67630}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

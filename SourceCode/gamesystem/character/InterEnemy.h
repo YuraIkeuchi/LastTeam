@@ -8,16 +8,16 @@
 #include <array>
 #include "IKETexture.h"
 #include "Player.h"
+#include "DrawDamageNumber.h"
 
 using namespace std;         //  名前空間指定
-
-
 //キャラの状態
 enum CharaState {
 	STATE_INTER,
 	STATE_ATTACK,
 	STATE_SPECIAL,
 };
+
 //敵基底
 class InterEnemy :
 	public ObjCommon
@@ -34,9 +34,10 @@ protected:
 protected:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
-
+	static const int DAMAGE_MAX = 2;
 protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
+	std::vector<unique_ptr<DrawDamageNumber>> _damagenumber;
 	unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
 	//桁数
@@ -88,16 +89,23 @@ protected:
 	bool m_IsDrainUp = false;
 	int m_PoisonTimer = {};
 	bool m_Alive = true;
+	bool m_Death = false;
 
 	bool m_CheckPanel = false;
 
 	string m_EnemyTag = "Normal";
+	bool m_LastEnemy = false;
 
 	//影の変数
 	XMFLOAT3 m_ShadowPos = {};
 	XMFLOAT3 m_ShadowScale = {};
 	//予測エリア
 	std::unique_ptr<PredictArea> predictarea;
+
+	//ダメージ関係
+	bool m_Damege = false;
+	int m_DamageTimer = {};
+	int m_FlashCount = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -105,10 +113,15 @@ public://getter setter
 	void SetPoizonLong(bool isPoison) { m_PoisonLong = isPoison; }
 	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
 	void SetDrainUp(bool IsDrainUp) { m_IsDrainUp = IsDrainUp; }
+	void SetLastEnemy(bool LastEnemy) { m_LastEnemy = LastEnemy; }
 	static void SetPlayer(Player* player) { InterEnemy::player = player; }
 
 	const float GetHP() { return m_HP; }
 	const bool GetAlive() { return m_Alive; }
+	const bool GetDeath() { return m_Death; }
+	const bool GetLastEnemy() { return m_LastEnemy; }
+
+	void SimpleDamege(float damage = 3.f);
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>
@@ -146,6 +159,9 @@ private:
 	//UIのためのHPの管理
 	void HPManage();
 	void BirthPoisonParticle();
+	void BirthDamage(const float Damage);//
+	//ダメージの更新
+	void DamageUpdate();
 protected:
 	void Collide(vector<unique_ptr<AttackArea>>& area);
 	//毒の状態

@@ -2,20 +2,22 @@
 #include "CsvLoader.h"
 #include <ImageManager.h>
 #include <Helper.h>
-
+#include "StagePanel.h"
 //リソース読み込み
 PredictArea::PredictArea(const string& name) {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
 			if (name == "ENEMY") {
-				panels[i][j].tex.reset(new IKETexture(ImageManager::ENEMYPREDICT, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+				panels[i][j].tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,0.4f,0.4f,1.f }));
+				panels[i][j].color = { 1.f,0.4f,0.4f,1.f };
 			}
 			else if(name == "PLAYER") {
 				panels[i][j].tex.reset(new IKETexture(ImageManager::PLAYERPREDICT, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 			}
 			panels[i][j].tex->TextureCreate();
 			panels[i][j].tex->Initialize();
-			panels[i][j].tex->SetScale({ 0.2f,0.2f,0.2f });
+			float baseScale = PANEL_SIZE * 0.1f;
+			panels[i][j].tex->SetScale({ baseScale,baseScale,baseScale });
 			panels[i][j].tex->SetRotation({ 90.0f,0.0f,0.0f });
 		}
 	}
@@ -26,7 +28,7 @@ PredictArea::PredictArea(const string& name) {
 bool PredictArea::Initialize() {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			panels[i][j].position = { (2.0f * i) - (PREDICT_HEIGHT * 2.0f),0.02f,(2.0f * j) };
+			panels[i][j].position = { (PANEL_SIZE * i) - (PREDICT_HEIGHT * PANEL_SIZE),0.02f,(PANEL_SIZE * j) };
 		}
 	}
 	//CSV読み込み
@@ -89,7 +91,7 @@ void PredictArea::ResetPredict() {
 //予測エリアのフラッシュ
 void PredictArea::FlashArea() {
 	if (m_FlashStart) {
-		m_AddAngle = Helper::GetInstance()->Lerp(10.0f, 20.0f,m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
+		m_AddAngle = Helper::Lerp(10.0f, 30.0f,m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
 		//sin波によって上下に動く
 		m_SinAngle += m_AddAngle;
 		m_SinAngle2 = m_SinAngle * (3.14f / 180.0f);

@@ -21,10 +21,13 @@ public:
 	//setter getter
 	const int GetTutorialState() { return m_TutorialState; }
 	const bool GetChoiceSkill() { return m_ChoiceSkill; }
+	const bool GetViewSkill() { return m_ViewSkill; }
 	void SetTutorialState(const int TutorialState) { m_TutorialState = TutorialState; }
 	void SetChoiceSkill(const bool ChoiceSkill) { m_ChoiceSkill = ChoiceSkill; }
+	void SetViewSkill(const bool ViewSkill) { m_ViewSkill = ViewSkill; }
 private:
 
 	int m_TutorialState = TASK_MOVE;
 	bool m_ChoiceSkill = false;
+	bool m_ViewSkill = false;
 };

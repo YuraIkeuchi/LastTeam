@@ -6,15 +6,13 @@
 #include "TutorialTask.h"
 #include "GameStateManager.h"
 #include "TextManager.h"
+#include <StageBack.h>
 //初期化
 void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
 
-	text_ = make_unique<TextManager>();
-	text_->Initialize(dxCommon);
-	text_->SetConversation(TextManager::TITLE);
 	if (!s_GameLoop) {
 		SceneChanger::GetInstance()->Initialize();
 		s_GameLoop = true;
@@ -23,6 +21,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	nowHierarchy = 0;
 	nowIndex = 1;
 	s_LastStage = false;
+
 	////�X�e�[�W�̏�
 //// プレイヤー生成
 //{
@@ -37,12 +36,14 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	player_ = make_unique<Player>();
 	player_->LoadResource();
 	player_->SetTitleFlag(true);
-	player_->InitState({ -4.0f,0.1f,2.0f });
+	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 	player_->Initialize();
 	
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
-	GameReset({ -4.0f,0.1f,2.0f });
+	//背景画像
+	StageBack::GetInstance()->LoadResource();
+	GameReset({ -PANEL_SIZE*2.f,0.1f,PANEL_SIZE });
 
 	////敵
 	InterEnemy::SetPlayer(player_.get());
@@ -50,9 +51,9 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	enemy->Initialize();
 
 	//カード
-	title_[TITLE_BACK] = IKESprite::Create(ImageManager::TITLEBACK, { 0.0f,0.0f });
-	title_[TITLE_TEXT] = IKESprite::Create(ImageManager::TITLETEXT, { 640.0f,200.0f },{1.0f,1.0f,1.0f,1.0f},{0.5f,0.5f});
+	title_ = IKESprite::Create(ImageManager::TITLETEXT, { 0.0f,0.0f });
 	GameStateManager::GetInstance()->DeckReset();
+
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
@@ -72,20 +73,9 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		_SceneType = PLAY;
 		//チュートリアルのタスク
 		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
-
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 	}
-	if (input->TriggerKey(DIK_SPACE)) {			//マップ
-		SceneChanger::GetInstance()->SetChangeStart(true);
-		_SceneType = MAP;
-		//チュートリアルのタスク
-		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
-	}
-	if (input->TriggerButton(input->X)) {			//チュートリアル
-		SceneChanger::GetInstance()->SetChangeStart(true);
-		_SceneType = TUTORIAL;
-		//チュートリアルのタスク
-		TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
-	}
+	
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		player_->PlayerSave();
 		SceneManager::GetInstance()->ChangeScene("MAP");
@@ -118,9 +108,8 @@ void TitleScene::Draw(DirectXCommon* dxCommon) {
 }
 //前面描画
 void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
-	text_->TestDraw(dxCommon);
 	IKESprite::PreDraw();
-	title_[TITLE_TEXT]->Draw();
+	title_->Draw();
 	IKESprite::PostDraw();
 	SceneChanger::GetInstance()->Draw();
 
@@ -128,7 +117,8 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 //背面描画
 void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
-	title_[TITLE_BACK]->Draw();
+	//title_[TITLE_BACK]->Draw();
+	StageBack::GetInstance()->Draw(dxCommon);
 	IKESprite::PostDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
 	player_->Draw(dxCommon);

@@ -15,7 +15,7 @@ ResultAreaUI::ResultAreaUI() {
 }
 //‰Šú‰»
 bool ResultAreaUI::Initialize() {
-	const XMFLOAT2 l_BasePos = { 120.0f,360.0f+180.0f };
+	const XMFLOAT2 l_BasePos = { 220.0f,360.0f + 135.0f };
 	panels.position = { l_BasePos.x + (60.0f * (m_Width + m_DistanceX)),l_BasePos.y + (60.0f * (m_Height - m_DistanceY)) };
 	panels.color = { 1.0f,1.0f,1.0f,1.0f };
 	panels.sprite->SetPosition(panels.position);

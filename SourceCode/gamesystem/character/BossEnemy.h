@@ -1,7 +1,7 @@
 #pragma once
 #include"InterEnemy.h"
 #include "EnemyBullet.h"
-#include "AttackArea.h"
+#include "EnemyThorn.h"
 
 using namespace std;         //  名前空間指定
 //普通の敵
@@ -57,7 +57,7 @@ private:
 	}_AttackState = ATTACK_RANDOM;
 	std::vector<std::vector<int>> m_Area = {};
 	// 攻撃エリア
-	std::vector<unique_ptr<AttackArea>> attackarea;
+	std::vector<unique_ptr<EnemyThorn>> enethorn;
 	
 
 	int m_RandWigth = {};
@@ -96,5 +96,10 @@ private:
 	};
 
 	EnemyWarp enemywarp;
+	//インターバルとか
+	vector<int>m_Limit;
+	//攻撃のインターバルとか
+	vector<int>m_AttackLimit;
+	int m_BulletNum = {};
 };
 

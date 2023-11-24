@@ -28,10 +28,12 @@ public:
 private:
 	void Move();
 private:
+	static const int S_DAMAGEMAX = 2;
+private:
 	unique_ptr<TextManager> resulttext;
 	struct ResultUI{
 		std::unique_ptr<IKESprite> icon;
-		std::unique_ptr<DrawNumber> number;
+		std::unique_ptr<DrawNumber> DamageNumber[S_DAMAGEMAX];
 		XMFLOAT2 position = { 640.f,320.f };
 		XMFLOAT2 size = { 128.f,128.f };
 		int no = -1;
@@ -41,6 +43,7 @@ private:
 		vector<std::vector<int>> area;	//”ÍˆÍ
 		int DisX = {};
 		int DisY = {};
+		int Damage = {};
 	};
 
 	struct ShineEffect {
@@ -59,10 +62,10 @@ private:
 	void BirthArea(ResultUI& resultUI);
 public:
 	void SetPlayer(Player* player) { this->player_ = player; }
-
+	void SetIsBattle(bool isBattle) { this->isBattle = isBattle; }
 private:
 	bool isStart = false;
-	Player* player_;
+	Player* player_=nullptr;
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;
@@ -76,5 +79,6 @@ private:
 	std::list<ResultUI> pickSkills;
 	std::list<ShineEffect> shines;
 	bool m_Choice = false;
+	bool isBattle = false;
 };
 

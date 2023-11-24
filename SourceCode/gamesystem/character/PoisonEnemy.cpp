@@ -23,7 +23,7 @@ PoisonEnemy::PoisonEnemy() {
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 
 	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>();
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 	}
 
@@ -37,9 +37,15 @@ bool PoisonEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5f };
+	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "hp")));
 	m_MaxHP = m_HP;
+	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "LIMIT_NUM")));
+
+	m_Limit.resize(LimitSize);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/PoisonEnemy.csv", m_Limit, "Interval");
+	m_BulletNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "POISON_NUM")));
+
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 
@@ -81,7 +87,7 @@ void PoisonEnemy::Action() {
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
 
-	//è·äQï®ÇÃçÌèú
+	//Ç«Ç≠ÇÃçÌèú
 	for (int i = 0; i < poisonarea.size(); i++) {
 		if (poisonarea[i] == nullptr) {
 			continue;
@@ -114,14 +120,17 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGuiï`âÊ
 void PoisonEnemy::ImGui_Origin() {
-	//è·äQï®ÇÃçÌèú
-	for (int i = 0; i < poisonarea.size(); i++) {
-		if (poisonarea[i] == nullptr) {
-			continue;
-		}
+	////Ç«Ç≠ÇÃçÌèú
+	//for (int i = 0; i < poisonarea.size(); i++) {
+	//	if (poisonarea[i] == nullptr) {
+	//		continue;
+	//	}
 
-		poisonarea[i]->ImGuiDraw();
-	}
+	//	poisonarea[i]->ImGuiDraw();
+	//}
+	ImGui::Begin("Poison");
+	ImGui::Text("Last:%d", m_LastEnemy);
+	ImGui::End();
 }
 //äJï˙
 void PoisonEnemy::Finalize() {
@@ -129,9 +138,11 @@ void PoisonEnemy::Finalize() {
 }
 //ë“ã@
 void PoisonEnemy::Inter() {
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_INTER];
 	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, kIntervalMax);
-	if (coolTimer == kIntervalMax) {
+	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
+	if (coolTimer == l_TargetTimer) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		BirthPoison();
@@ -139,10 +150,11 @@ void PoisonEnemy::Inter() {
 }
 //çUåÇ
 void PoisonEnemy::Attack() {
-	const int l_TargetTimer = 200;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_ATTACK];
 
 	if (_PoisonType == Poison_SET) {
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			coolTimer = {};
 			_PoisonType = Poison_THROW;
 		}
@@ -150,7 +162,7 @@ void PoisonEnemy::Attack() {
 	else if (_PoisonType == Poison_THROW) {
 		m_AttackCount++;
 		BirthPoison();
-		if (m_AttackCount != 2) {
+		if (m_AttackCount != m_BulletNum) {
 			_PoisonType = Poison_SET;
 		}
 		else {
@@ -169,9 +181,11 @@ void PoisonEnemy::Attack() {
 
 //ÉèÅ[Év
 void PoisonEnemy::Teleport() {
-	const int l_TargetTimer = 200;
+	const int l_RandTimer = Helper::GetRanNum(0, 30);
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_RandTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -198,8 +212,8 @@ void PoisonEnemy::BirthMagic() {
 	if (magic.State == MAGIC_BIRTH) {			//ñÇñ@êwÇçLÇ∞ÇÈ
 		magic.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
 
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
-			if (Helper::GetInstance()->CheckMin(magic.Timer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
+			if (Helper::CheckMin(magic.Timer, l_TargetTimer, 1)) {
 				m_Warp = true;
 				magic.Frame = {};
 				magic.AfterScale = {};
@@ -210,7 +224,7 @@ void PoisonEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 	else {			//ñÇñ@êwÇèkÇﬂÇÈ
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
 			magic.Alive = false;
@@ -221,10 +235,10 @@ void PoisonEnemy::BirthMagic() {
 }
 void PoisonEnemy::WarpEnemy() {
 	XMFLOAT3 l_RandPos = {};
-	l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
+	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy);
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//ÉLÉÉÉâÇ™è¨Ç≥Ç≠Ç»ÇÈ
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.5f;
 			enemywarp.State = WARP_END;
@@ -235,7 +249,7 @@ void PoisonEnemy::WarpEnemy() {
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
 	else {			//ÉLÉÉÉâÇ™ëÂÇ´Ç≠Ç»Ç¡ÇƒÇ¢ÇÈ
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
 			m_Warp = false;

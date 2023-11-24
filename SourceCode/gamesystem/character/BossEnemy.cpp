@@ -22,7 +22,7 @@ BossEnemy::BossEnemy() {
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 
 	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>();
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 	}
 
@@ -39,8 +39,20 @@ bool BossEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 0.0f,1.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5f };
+	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "hp")));
+	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "LIMIT_NUM")));
+
+	m_Limit.resize(LimitSize);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/BossEnemy.csv", m_Limit, "Interval");
+
+	auto AttackLimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "ATTACK_LIMIT_NUM")));
+
+	m_AttackLimit.resize(AttackLimitSize);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/BossEnemy.csv", m_AttackLimit, "Attack_Interval");
+
+	m_BulletNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "BULLET_NUM")));
+
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -98,12 +110,12 @@ void BossEnemy::Action() {
 	}
 
 	//攻撃エリアの更新(実際はスキルになると思う)
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->Update();
+	for (auto i = 0; i < enethorn.size(); i++) {
+		if (enethorn[i] == nullptr)continue;
+		enethorn[i]->Update();
 
-		if (!attackarea[i]->GetAlive()) {
-			attackarea.erase(cbegin(attackarea) + i);
+		if (!enethorn[i]->GetAlive()) {
+			enethorn.erase(cbegin(enethorn) + i);
 		}
 	}
 	
@@ -131,9 +143,9 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 			newbullet->Draw(dxCommon);
 		}
 	}
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->Draw(dxCommon);
+	for (auto i = 0; i < enethorn.size(); i++) {
+		if (enethorn[i] == nullptr)continue;
+		enethorn[i]->Draw(dxCommon);
 	}
 	predictarea->Draw(dxCommon);
 	Obj_Draw();
@@ -152,11 +164,12 @@ void BossEnemy::Finalize() {
 }
 //待機
 void BossEnemy::Inter() {
-	const int l_TargetTimer = 120;
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_INTER];
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = Helper::GetInstance()->GetRanNum(0, 2);
+		int l_RandState = Helper::GetRanNum(0, 2);
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -170,9 +183,11 @@ void BossEnemy::Attack() {
 
 //ワープ
 void BossEnemy::Teleport() {
-	const int l_TargetTimer = 200;
+	const int l_RandTimer = Helper::GetRanNum(0, 30);
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
 
-	if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -194,10 +209,11 @@ void BossEnemy::BirthBullet() {
 //攻撃遷移
 //弾
 void BossEnemy::BulletAttack() {
-	const int l_TargetTimer = 70;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_BULLET];
 
 	if (_BossType == Boss_SET) {
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			coolTimer = {};
 			_BossType = Boss_THROW;
 		}
@@ -205,7 +221,7 @@ void BossEnemy::BulletAttack() {
 	else if (_BossType == Boss_THROW) {
 		m_AttackCount++;
 		BirthBullet();
-		if (m_AttackCount != 5) {
+		if (m_AttackCount != m_BulletNum) {
 			_BossType = Boss_SET;
 		}
 		else {
@@ -223,12 +239,13 @@ void BossEnemy::BulletAttack() {
 }
 //横一列
 void BossEnemy::RowAttack() {
-	const int l_TargetTimer = 60;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_ROW];
 	if (m_AttackCount != 4) {
 		if (coolTimer == 0) {		//予測エリア
 			BirthPredict({}, m_AttackCount,"Row");
 		}
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {		//実際の攻撃
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//実際の攻撃
 			BirthArea({}, m_AttackCount, "Row");
 			coolTimer = {};
 			m_AttackCount++;
@@ -248,19 +265,20 @@ void BossEnemy::RandomAttack() {
 	//プレイヤーの現在マス
 	int l_PlayerWidth = player->GetNowWidth();
 	int l_PlayerHeight = player->GetNowHeight();
-	const int l_TargetTimer = 60;
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_RANDOM];
 	if (m_AttackCount != 8) {
 		if (coolTimer == 0) {
 			//プレイヤーからの距離(-1~1)
-			int l_RandWigth = Helper::GetInstance()->GetRanNum(-1, 1);
-			int l_RandHeight = Helper::GetInstance()->GetRanNum(-1, 1);
+			int l_RandWigth = Helper::GetRanNum(-1, 1);
+			int l_RandHeight = Helper::GetRanNum(-1, 1);
 			m_RandWigth = l_PlayerWidth + l_RandWigth;
 			m_RandHeight = l_PlayerHeight + l_RandHeight;
-			Helper::GetInstance()->Clamp(m_RandWigth, 0, 3);
-			Helper::GetInstance()->Clamp(m_RandHeight, 0, 3);
+			Helper::Clamp(m_RandWigth, 0, 3);
+			Helper::Clamp(m_RandHeight, 0, 3);
 			BirthPredict(m_RandWigth, m_RandHeight, "Random");
 		}
-		if (Helper::GetInstance()->CheckMin(coolTimer, l_TargetTimer, 1)) {
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			BirthArea(m_RandWigth, m_RandHeight, "Random");
 			coolTimer = {};
 			m_AttackCount++;
@@ -280,22 +298,20 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 	if (name == "Row") {			//横一列
 		for (auto i = 0; i < m_Area.size(); i++) {
 			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
+				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
 				newarea->Initialize();
 				newarea->InitState(i, Height);
-				newarea->SetDamage(20.0f);
-				newarea->SetName("Enemy");
-				attackarea.emplace_back(std::move(newarea));
+				newarea->SetPlayer(player);
+				enethorn.emplace_back(std::move(newarea));
 			}
 		}
 	}
 	else {		//ランダム(プレイヤーから近います)
-		std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>();
+		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
-		newarea->SetDamage(20.0f);
-		newarea->SetName("Enemy");
-		attackarea.emplace_back(std::move(newarea));
+		newarea->SetPlayer(player);
+		enethorn.emplace_back(std::move(newarea));
 	}
 	predictarea->ResetPredict();
 
@@ -388,7 +404,7 @@ bool BossEnemy::CreateSkill(int id) {
 }
 //エリア攻撃の判定
 void BossEnemy::PlayerCollide() {
-	int l_PlayerWidth = player->GetNowWidth();
+	/*int l_PlayerWidth = player->GetNowWidth();
 	int l_PlayerHeight = player->GetNowHeight();
 	for (unique_ptr<AttackArea>& newarea : attackarea) {
 		if (newarea != nullptr) {
@@ -399,7 +415,7 @@ void BossEnemy::PlayerCollide() {
 				break;
 			}
 		}
-	}
+	}*/
 }
 //魔法陣生成
 void BossEnemy::BirthMagic() {
@@ -409,8 +425,8 @@ void BossEnemy::BirthMagic() {
 	if (magic.State == MAGIC_BIRTH) {			//魔法陣を広げる
 		magic.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
 
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
-			if (Helper::GetInstance()->CheckMin(magic.Timer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
+			if (Helper::CheckMin(magic.Timer, l_TargetTimer, 1)) {
 				m_Warp = true;
 				magic.Frame = {};
 				magic.AfterScale = {};
@@ -421,7 +437,7 @@ void BossEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 	else {			//魔法陣を縮める
-		if (Helper::GetInstance()->FrameCheck(magic.Frame, addFrame)) {
+		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
 			magic.Alive = false;
@@ -432,10 +448,10 @@ void BossEnemy::BirthMagic() {
 }
 void BossEnemy::WarpEnemy() {
 	XMFLOAT3 l_RandPos = {};
-	l_RandPos = StagePanel::GetInstance()->EnemySetPanel();
+	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy);
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.5f;
 			enemywarp.State = WARP_END;
@@ -446,7 +462,7 @@ void BossEnemy::WarpEnemy() {
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
 	else {			//キャラが大きくなっている
-		if (Helper::GetInstance()->FrameCheck(enemywarp.Frame, addFrame)) {
+		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
 			m_Warp = false;

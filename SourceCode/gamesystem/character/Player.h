@@ -6,6 +6,7 @@
 #include <Input.h>
 #include <array>
 #include "DrawNumber.h"
+#include "ImagePlayer.h"
 
 using namespace DirectX;
 
@@ -47,7 +48,7 @@ public:
 	//プレイヤーの回復
 	void HealPlayer(const float power);
 	//プレイヤーのダメージ
-	void RecvDamage(const float Damage,const string& name);
+	void RecvDamage(const float Damage,const string& name = "NORMAL");
 	//プレイヤーの情報保存
 	void PlayerSave();
 private:
@@ -60,6 +61,9 @@ private:
 	void DamageParticle();
 	//毒のパーティクル
 	void BirthPoisonParticle();
+	//ダメージの更新
+	void DamageUpdate();
+	void BirthImagePlayer();
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }
@@ -81,11 +85,14 @@ public:
 
 	void Setname(const string name) { m_name = name; }
 
+	bool HPEffect();
 private:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
 
 	static const int DIR_MAX = 4;
+
+	static float startHP;
 public:
 	//キャラの状態
 	enum CharaState {
@@ -97,9 +104,6 @@ private:
 	Input* input = Input::GetInstance();
 
 	int _charaState = STATE_MOVE;
-	//移動加算値
-	float m_AddSpeed;
-	XMFLOAT3 m_MoveRot = {};
 
 	//プレイヤーの現在位置
 	XMFLOAT3 m_PanelPos = {};
@@ -136,13 +140,19 @@ private:
 
 	//HPの表示
 	unique_ptr<IKESprite> hptex;
+	unique_ptr<IKESprite> hptex_under;
 	float m_HP = {};
+	float m_OldHP = m_HP;
+	bool isDamage = false;
+	bool isHeal = false;
 	float m_MaxHP = {};
 	//数値化したHP表示のための変数
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//整数にしたHP
+	array<int, NUMBER_MAX> m_DigitNumberMax;
+	int m_InterMaxHP = {};//整数にしたHP
 
-	XMFLOAT2 m_HPPos = { 25.f,580.0f };
+	XMFLOAT2 m_HPPos = { 10.f,5.0f };
 	XMFLOAT2 m_HPSize = { 400.0f,40.0f };
 	//桁数
 	enum DightType {
@@ -151,7 +161,9 @@ private:
 		THIRD_DIGHT
 	};
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
-	
+	unique_ptr<IKESprite> slash_;
+	array<unique_ptr<DrawNumber>, NUMBER_MAX> _MaxHp;
+
 	bool m_Delay = false;
 	string m_name = "NONE";
 
@@ -159,4 +171,23 @@ private:
 	XMFLOAT3 m_ShadowPos = {};
 	XMFLOAT3 m_ShadowScale = {};
 	bool is_title = false;
+
+	//ダメージ関係
+	bool m_Damege = false;
+	int m_DamageTimer = {};
+	int m_FlashCount = {};
+	//移動関係
+	bool m_Move = false;
+	float m_MoveFrame = 0.0f;
+	float m_AfterFrame = {};
+	XMFLOAT3 m_AfterPos = {};
+
+	enum MoveType {
+		MOVE_NONE,//普通
+		MOVE_EASE,//イージング
+		MOVE_DISOLVE,//残像
+	}_MoveType = MOVE_NONE;
+
+	//残像用のプレイヤー
+	std::vector<unique_ptr<ImagePlayer>> imageplayer;
 };

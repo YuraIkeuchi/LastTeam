@@ -14,15 +14,15 @@ private:
 public:
 	//OBJの名前
 	enum ModelName {
-		GROUND,
 		PLAYERMODEL,
-		SKYDOME,
 		PANEL,
 		BULLET,
+		ENEMYMODEL,
+		THORN,
 	};
 	//FBXの名前
 	enum FBXName {
-		PLAYER,
+	
 	};
 
 public:

@@ -18,7 +18,7 @@ MobEnemy::MobEnemy() {
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 
 	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>();
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 	}
 
@@ -29,10 +29,10 @@ MobEnemy::MobEnemy() {
 }
 //初期化
 bool MobEnemy::Initialize() {
-	m_Position = { 2.0f,0.1f,2.0f };
+	m_Position = StagePanel::GetInstance()->SetPositon(4,1);
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5 };
+	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = 5.0f;
 	m_MaxHP = m_HP;
 	m_EnemyTag = "Mob";

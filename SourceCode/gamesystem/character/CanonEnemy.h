@@ -71,5 +71,9 @@ private:
 	};
 
 	EnemyWarp enemywarp;
+
+	//インターバルとか
+	vector<int>m_Limit;
+	int m_BulletNum = {};
 };
 
