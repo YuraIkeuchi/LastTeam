@@ -183,6 +183,7 @@ void Player::Draw(DirectXCommon* dxCommon) {
 		if (imageplayer[i] == nullptr)continue;
 		imageplayer[i]->Draw(dxCommon);
 	}
+	if(m_Color.w != 0.0f)
 	Obj_Draw();
 }
 

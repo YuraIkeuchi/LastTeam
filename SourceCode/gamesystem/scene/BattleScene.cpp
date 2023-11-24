@@ -1,5 +1,5 @@
 ﻿#include "BattleScene.h"
-
+#include <ImageManager.h>
 #include <ParticleEmitter.h>
 #include <StagePanel.h>
 #include <GameStateManager.h>
@@ -57,6 +57,8 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 
 	Feed* feed_ = new Feed();
 	feed.reset(feed_);
+
+	gameoversprite = IKESprite::Create(ImageManager::GAMEOVERBACK, { 0.0f,0.0f });
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
@@ -72,10 +74,19 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		_ChangeType = CHANGE_OVER;
 		player_->GameOverUpdate();
 		if (player_->GetFinishGameOver()) {
-			SceneChanger::GetInstance()->SetChangeStart(true);
+			if (Helper::FrameCheck(m_GameOverFrame, 0.01f)) {
+				m_ChangeTimer++;
+			}
+			else {
+				m_GameOverPos.y = { Ease(In,Cubic,m_GameOverFrame,m_GameOverPos.y,0.0f) };
+			}
+
+			if (m_ChangeTimer == 100) {
+				SceneChanger::GetInstance()->SetChangeStart(true);
+			}
 		}
 	}
-	else {
+	else {		//ゲームオーバー以外
 		player_->Update();
 		GameStateManager::GetInstance()->Update();
 		if (GameStateManager::GetInstance()->GetIsReloadDamage()) {
@@ -124,6 +135,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			player_->SetDelay(true);
 		}
 	}
+
+	//共通の更新
 	SceneChanger::GetInstance()->Update();
 	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
@@ -136,13 +149,15 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 				SceneManager::GetInstance()->ChangeScene("CLEAR");
 			}
 		}else {
-			SceneManager::GetInstance()->ChangeScene("GAMEOVER");
+			SceneManager::GetInstance()->ChangeScene("TITLE");
 		}
 		player_->PlayerSave();
 		SceneChanger::GetInstance()->SetChange(false);
 	}
-}
 
+	gameoversprite->SetPosition(m_GameOverPos);
+}
+//描画
 void BattleScene::Draw(DirectXCommon* dxCommon) {
 	//ポストエフェクトをかけるか
 	if (PlayPostEffect) {
@@ -167,7 +182,6 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PostDraw();
 	}
 }
-
 //前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_FeedEnd){
@@ -178,6 +192,11 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 			GameStateManager::GetInstance()->ActUIDraw();
 		}
 	}
+	IKESprite::PreDraw();
+	if (player_->GetFinishGameOver()) {
+		gameoversprite->Draw();
+	}
+	IKESprite::PostDraw();
 	if (m_Feed) {
 		feed->Draw();
 	}
@@ -193,8 +212,8 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	player_->Draw(dxCommon);
 
 	if (player_->GetHp() > 0.0f) {
-		GameStateManager::GetInstance()->Draw(dxCommon);
 		enemyManager->Draw(dxCommon);
+		GameStateManager::GetInstance()->Draw(dxCommon);
 		if (!enemyManager->BossDestroy()) {
 			StagePanel::GetInstance()->ActDraw(dxCommon);
 		}
