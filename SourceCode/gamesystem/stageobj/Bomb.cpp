@@ -13,7 +13,7 @@
 Bomb::Bomb() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::BULLET));
 	m_Object->SetLightEffect(false);
 
 	//HPII
@@ -32,15 +32,15 @@ Bomb::Bomb() {
 }
 //èâä˙âª
 bool Bomb::Initialize() {
-	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5f };
+	m_Scale = { 0.0f,0.0f,0.0f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "hp")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_EnemyTag = "Bomb";
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
+	m_BaseScale = {};
 	return true;
 }
 
@@ -51,6 +51,10 @@ void (Bomb::* Bomb::stateTable[])() = {
 
 //çsìÆ
 void Bomb::Action() {
+	const float l_AfterScale = 0.2f;
+	m_BaseScale = Ease(In, Cubic, 0.5f, m_BaseScale, l_AfterScale);
+
+	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	(this->*stateTable[_charaState])();
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();

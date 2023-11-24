@@ -30,4 +30,5 @@ private:
 		Bomb_THROW,
 		Bomb_END,
 	}_BombType = Bomb_SET;
+	float m_BaseScale = {};
 };

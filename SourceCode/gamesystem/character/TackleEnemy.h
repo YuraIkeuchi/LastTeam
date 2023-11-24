@@ -18,11 +18,54 @@ private:
 private:
 	void Inter();//待機
 	void Attack();
-	void Standby();
-protected:
+	void Teleport();//移動
+
+	void WarpEnemy();//敵のワープ処理
+	//魔法陣
+	void BirthMagic();
+
+	bool TackleCollide();
 
 private:
-	
-	int _charaState = STATE_INTER;
+
+	//魔法陣系
+	enum MagicState {
+		MAGIC_BIRTH,
+		MAGIC_VANISH,
+	};
+
+	struct Magic {
+		unique_ptr<IKETexture> tex;
+		float Frame = {};
+		float Scale = {};
+		float AfterScale = {};
+		XMFLOAT3 Pos = {};
+		bool Alive = false;
+		int State = {};
+		int Timer = {};
+	};
+	Magic magic;
+
+	bool m_Warp = false;
+
+	enum WarpState {
+		WARP_START,
+		WARP_END,
+	};
+
+	struct EnemyWarp {
+		float Frame = {};
+		float Scale = {};
+		float AfterScale = 0.5f;
+		int State = {};
+	};
+
+	EnemyWarp enemywarp;
+
+	//インターバルとか
+	vector<int>m_Limit;
+	float m_Speed = {};
+	float m_Damage = {};
+	bool m_Hit = false;
 };
 

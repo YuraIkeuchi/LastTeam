@@ -34,5 +34,8 @@ private:
 		CHANGE_OVER,
 	}_ChangeType = CHANGE_MAP;
 
-
+	unique_ptr<IKESprite> gameoversprite;
+	XMFLOAT2 m_GameOverPos = { 0.0f,-1280.0f };
+	float m_GameOverFrame = {};
+	int m_ChangeTimer = {};
 };
