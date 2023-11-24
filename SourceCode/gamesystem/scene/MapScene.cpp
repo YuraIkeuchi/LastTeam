@@ -35,6 +35,30 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	cheack->SetSize({ 0.f,0.f });
 	cheack->SetAnchorPoint({ 0.5f,0.5f });
 
+	const int NumberCount = 2;
+	const float l_Width_Cut = 320.0f;
+	const float l_Height_Cut = 64.0f;
+	for (auto i = 0; i < NumberCount; i++) {
+		cheack_OK[i] = IKESprite::Create(ImageManager::MAP_CHEACK_OK, { 640.f,392.f });
+		cheack_NO[i] = IKESprite::Create(ImageManager::MAP_CHEACK_NO, { 640.f,492.f });
+
+		int number_index_y = i / NumberCount;
+		int number_index_x = i % NumberCount;
+		cheack_OK[i]->SetTextureRect(
+			{ static_cast<float>(number_index_x) * l_Width_Cut, static_cast<float>(number_index_y) * l_Height_Cut },
+			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
+		cheack_NO[i]->SetTextureRect(
+			{ static_cast<float>(number_index_x) * l_Width_Cut, static_cast<float>(number_index_y) * l_Height_Cut },
+			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
+
+		cheack_OK[i]->SetSize({ 0.f,0.f });
+		cheack_OK[i]->SetAnchorPoint({ 0.5f,0.5f });
+
+		cheack_NO[i]->SetSize({ 0.f,0.f });
+		cheack_NO[i]->SetAnchorPoint({ 0.5f,0.5f });
+	}
+
+
 	UIs[0][Middle].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
 	UIs[0][Middle].pos = { homeX ,homeY[Middle] };
 	UIs[0][Middle].open = true;
@@ -258,6 +282,9 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 
 	IKESprite::PreDraw();
 	cheack->Draw();
+	cheack_OK[1 - nowCheack]->Draw();
+	cheack_NO[nowCheack]->Draw();
+
 	IKESprite::PostDraw();
 
 	SceneChanger::GetInstance()->Draw();
@@ -662,44 +689,53 @@ void MapScene::CheckState() {
 	const float addFrame = 1.0f / 15.f;
 	static float s_frame = 0.0f;
 	static XMFLOAT2 size = {};
-
+	static XMFLOAT2 cheackSize = {};
 	if (SceneChanger::GetInstance()->GetChangeState() == 1) {
 		delayFrame = 0.f;
 		m_State = State::mainState;
 	}
 
 	if (UIs[nowHierarchy][nowIndex].Tag == TUTORIAL) {
+		if (TutorialClosed()) { return; }
 		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
 			if (Helper::FrameCheck(s_frame, addFrame)) {
 				Input* input = Input::GetInstance();
-				if (isClose) {
-					if (Helper::FrameCheck(closeFrame, addFrame)) {
-						m_State = State::mainState;
-						s_frame = 0.f;
-						delayFrame = 0.f;
-						closeFrame = 0.f;
-						isClose = false;
-					} else {
-						size.x = Ease(Out, Quint, closeFrame, 640.f, 0.f);
-						size.y = Ease(Out, Quint, closeFrame, 480.f, 0.f);
-					}
-					cheack->SetSize(size);
-					return;
+
+				if (input->TiltStick(input->L_UP) &&
+					nowCheack == 1) {
+					nowCheack--;
+					cFrame = 0.f;
+					cAdd = 0.03f;
+					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 				}
+				if (input->TiltStick(input->L_DOWN) &&
+					nowCheack == 0) {
+					nowCheack++;
+					cFrame = 0.f;
+					cAdd = 0.03f;
+					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
+				}
+
 				if (input->TriggerButton(input->B)) {
-					isClose = true;
-				}
-				if (input->TriggerButton(input->A)) {
-					size = {};
-					s_frame = 0.f;
-					SceneChanger::GetInstance()->SetChangeStart(true);
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+					if (nowCheack == 0) {
+						SceneChanger::GetInstance()->SetChangeStart(true);
+					} else {
+						isClose = true;
+					}
 				}
 			} else {
 				size.x = Ease(Out, Quint, s_frame, 0.f, 640.f);
 				size.y = Ease(Out, Quint, s_frame, 0.f, 480.f);
+				cheack->SetSize(size);
+				cheackSize.x = Ease(Out, Quint, s_frame, 0.f, 320.f);
+				cheackSize.y = Ease(Out, Quint, s_frame, 0.f, 64.f);
+				for (int i = 0; i < 2; i++) {
+					cheack_OK[i]->SetSize(cheackSize);
+					cheack_NO[i]->SetSize(cheackSize);
+				}
 			}
-			cheack->SetSize(size);
+
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
 			GameReset({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
@@ -709,6 +745,21 @@ void MapScene::CheckState() {
 			SceneManager::GetInstance()->ChangeScene("TUTORIAL");
 			SceneChanger::GetInstance()->SetChange(false);
 			cheack->SetSize({ 0.0f,0.0f });
+		} else {
+			if (s_frame==1.0f) {
+				if (Helper::FrameCheck(cFrame, cAdd)) {
+					cAdd *= -1.0f;
+					cFrame = 0.99f;
+				}
+				if (cFrame == 0.0f) {
+					cAdd *= -1.0f;
+				}
+				XMFLOAT2 cheackSize_ = cheack_OK[1]->GetSize();
+				cheackSize_.x = Ease(InOut, Quad, cFrame, 320.f, 320.f * 1.1f);
+				cheackSize_.y = Ease(InOut, Quad, cFrame, 64.f, 64.f * 1.1f);
+				cheack_OK[1]->SetSize(cheackSize_);
+				cheack_NO[1]->SetSize(cheackSize_);
+			}
 		}
 	} else {
 		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
@@ -750,4 +801,30 @@ void MapScene::CheckState() {
 		}
 	}
 
+}
+
+bool MapScene::TutorialClosed() {
+	if (!isClose) { return false; }
+	const float addFrame = 1.0f / 15.f;
+
+	if (Helper::FrameCheck(closeFrame, addFrame)) {
+		m_State = State::mainState;
+		delayFrame = 0.f;
+		closeFrame = 0.f;
+		isClose = false;
+		return true;
+	} else {
+		XMFLOAT2 l_size = {};
+		XMFLOAT2 c_size = {};
+		l_size.x = Ease(Out, Quint, closeFrame, 640.f, 0.f);
+		l_size.y = Ease(Out, Quint, closeFrame, 480.f, 0.f);
+		c_size.x = Ease(Out, Quint, closeFrame, 320.f, 0.f);
+		c_size.y = Ease(Out, Quint, closeFrame, 64.f, 0.f);
+		cheack->SetSize(l_size);
+		for (int i = 0; i < 2; i++) {
+			cheack_OK[i]->SetSize(c_size);
+			cheack_NO[i]->SetSize(c_size);
+		}
+		return true;
+	}
 }
