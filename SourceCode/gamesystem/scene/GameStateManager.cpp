@@ -433,6 +433,7 @@ void GameStateManager::PassiveCheck() {
 }
 //デッキの初期化
 void GameStateManager::DeckInitialize() {
+	StagePanel::GetInstance()->ResetPanel();
 	SkillManager::GetInstance()->DeckClear();
 	//デッキに入っているカードの確認
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
@@ -518,7 +519,7 @@ void GameStateManager::DeckReset() {
 	m_DeckNumber.resize((int)(m_StartNumber.size()));
 	m_DeckNumber = m_StartNumber;
 	GotPassives.clear();
-	GotPassiveIDs = {};
+	GotPassiveIDs = {2};
 }
 //パワーアップのエフェクトの初期化
 void GameStateManager::RandPowerUpInit() {
