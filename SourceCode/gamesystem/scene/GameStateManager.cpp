@@ -182,12 +182,6 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		//gaugeCover->Draw();
 		onomatope->Draw();
 		IKESprite::PostDraw();
-		IKESprite::PreDraw();
-
-		for (PowerUpEffect& power : powerup) {
-			power.tex->Draw();
-		}
-		IKESprite::PostDraw();
 		SkillManager::GetInstance()->UIDraw();
 		for (auto i = 0; i < attackarea.size(); i++) {
 			if (attackarea[i] == nullptr)continue;
@@ -221,6 +215,11 @@ void GameStateManager::ActUIDraw() {
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		passive->Draw();
 	}
+	IKESprite::PreDraw();
+	for (PowerUpEffect& power : powerup) {
+		power.tex->Draw();
+	}
+	IKESprite::PostDraw();
 }
 //スキルを入手(InterActionCPPで使ってます)
 void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name) {
@@ -545,8 +544,8 @@ void GameStateManager::PowerUpEffectUpdate() {
 			power.isVanish = true;
 		}
 		else {
-			power.position.y = Ease(Out, Quad, power.frame, power.position.y, power.afterpos.y);
-			power.color.w = Ease(Out, Quad, power.frame, 1.0f, 0.0f);
+			power.position.y = Ease(In, Exp, power.frame, power.position.y, power.afterpos.y);
+			power.color.w = Ease(In, Exp, power.frame, 1.0f, 0.0f);
 			power.tex->SetPosition(power.position);
 			power.tex->SetColor(power.color);
 		}
