@@ -1,34 +1,33 @@
 #pragma once
 #include"InterEnemy.h"
 
-using namespace std;         //  –¼‘O‹óŠÔw’è
-//•’Ê‚Ì“G
+using namespace std;         //  åå‰ç©ºé–“æŒ‡å®š
+//æ™®é€šã®æ•µ
 class Bomb :public InterEnemy {
 public:
 	Bomb();
-	bool Initialize() override;//‰Šú‰»
-	void Finalize() override;//ŠJ•ú
-	void Action()override;//XV
+	bool Initialize() override;//åˆæœŸåŒ–
+	void Finalize() override;//é–‹æ”¾
+	void Action()override;//æ›´æ–°
 	void ImGui_Origin()override;
 
-	void Draw(DirectXCommon* dxCommon) override;//•`‰æ
+	void Draw(DirectXCommon* dxCommon) override;//æç”»
 private:
-	//ŠÖ”ƒ|ƒCƒ“ƒ^
+	//é–¢æ•°ãƒã‚¤ãƒ³ã‚¿
 	static void(Bomb::* stateTable[])();
 
 private:
-	void Inter();//‘Ò‹@
-	void Attack();//UŒ‚
+	void Inter();//å¾…æ©Ÿ
+	void Attack();//æ”»æ’ƒ
+	void ShockWave();
 private:
+	unique_ptr<IKETexture> shockWaveTex;
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
 	bool _isPlayerDamage = false;
 	bool _isEnemyDamage = false;
-
-	enum BombType {
-		Bomb_SET,
-		Bomb_THROW,
-		Bomb_END,
-	}_BombType = Bomb_SET;
+	XMFLOAT4 m_shockWaveColor = { 1.0f,1.0f,1.0f,1.0f };
+	XMFLOAT3 m_shockWaveScale = { 0.0f,0.0f,0.0f };
+	int m_shockWaveTimer = 0;
 	float m_BaseScale = {};
 };

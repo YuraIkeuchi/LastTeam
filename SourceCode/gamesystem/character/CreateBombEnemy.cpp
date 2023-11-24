@@ -42,7 +42,6 @@ bool CreateBombEnemy::Initialize() {
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CreateBombEnemy.csv", "hp")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
-	m_EnemyTag = "Bomb";
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 
 	magic.Alive = false;
