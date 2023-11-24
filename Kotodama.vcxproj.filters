@@ -282,9 +282,6 @@
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionUI.cpp">
       <Filter>gamesystem\Action\ActionUI</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp">
-      <Filter>gamesystem\charactor\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\MapScene.cpp">
       <Filter>gamesystem\scene\mapScene</Filter>
     </ClCompile>
@@ -441,6 +438,9 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\CreateBombEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp">
+      <Filter>gamesystem\charactor\Enemy\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -679,9 +679,6 @@
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h">
       <Filter>gamesystem\Action\ActionUI</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h">
-      <Filter>gamesystem\charactor\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\MapScene.h">
       <Filter>gamesystem\scene\mapScene</Filter>
     </ClInclude>
@@ -850,6 +847,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\CreateBombEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h">
+      <Filter>gamesystem\charactor\Enemy\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1064,6 +1064,9 @@
     </Filter>
     <Filter Include="engine\3d\Manager">
       <UniqueIdentifier>{5fa3098f-a3c1-4362-8d9a-e5454bf67630}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\charactor\Enemy\Manager">
+      <UniqueIdentifier>{d31deffb-52c3-486f-b558-eecde09d90ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

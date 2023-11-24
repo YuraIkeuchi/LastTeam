@@ -764,7 +764,7 @@ void MapScene::CheckState() {
 	} else {
 		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
 			SceneChanger::GetInstance()->SetChangeStart(true);
-			int num = Helper::GetRanNum(1, 2);
+			int num = Helper::GetRanNum(1, 3);
 			std::stringstream ss;
 			const std::string BaseName = "Resources/csv/EnemySpawn/";
 			string levelName = "None";
@@ -780,10 +780,10 @@ void MapScene::CheckState() {
 				levelName = "Strong";
 			}
 			if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
-				ss << BaseName + levelName + "/BattleMap0" << 1 << ".csv";
+				ss << BaseName + levelName + "/BattleMap0" << num << ".csv";
 				isBattle = true;
 			} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
-				ss << BaseName + levelName + "/PassiveMap0" << 1 << ".csv";
+				ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
 				isBattle = false;
 			}
 

@@ -163,7 +163,7 @@ void GameStateManager::AttackTrigger() {
 	if (isFinish) { return; }
 	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える
-	if (input->TriggerButton(input->A)) {
+	if (input->TriggerButton(input->B)) {
 		AttackSubAction();
 		m_Delay = true;
 	}
@@ -514,12 +514,11 @@ void GameStateManager::BirthBuff() {
 	m_Buff = true;		//一旦中身はこれだけ
 }
 void GameStateManager::DeckReset() {
-	m_DeckNumber.resize(3);
-	m_DeckNumber = { 1,2,4 };
 	m_DeckNumber.resize((int)(m_StartNumber.size()));
 	m_DeckNumber = m_StartNumber;
 	GotPassives.clear();
-	GotPassiveIDs = {2};
+	GotPassiveIDs.resize((int)(m_StartPassive.size()));
+	GotPassiveIDs = m_StartPassive;
 }
 //パワーアップのエフェクトの初期化
 void GameStateManager::RandPowerUpInit() {
