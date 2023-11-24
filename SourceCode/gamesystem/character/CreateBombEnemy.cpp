@@ -88,11 +88,6 @@ void CreateBombEnemy::Action() {
 		if (bomb[i] == nullptr) {
 			continue;
 		}
-		if (bomb[i]->GetHP() <= 0) {
-			//敵全てにダメージ
-			//interEnemy42のエネミータグを使う？(そうなるとここじゃない所で処理した方がよさそう
-			//アタックエリアでbombを作ってばらまく？
-		}
 		bomb[i]->Update();
 		if (!bomb[i]->GetAlive()) {
 			bomb.erase(cbegin(bomb) + i);

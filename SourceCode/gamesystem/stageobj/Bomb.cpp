@@ -39,6 +39,7 @@ bool Bomb::Initialize() {
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "hp")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
+	m_EnemyTag = "Bomb";
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	return true;
 }
@@ -50,6 +51,10 @@ void (Bomb::* Bomb::stateTable[])() = {
 
 //行動
 void Bomb::Action() {
+	if (m_HP <= 0) {
+		_charaState = STATE_ATTACK;
+	}
+
 	(this->*stateTable[_charaState])();
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
@@ -93,6 +98,14 @@ void Bomb::Inter() {
 }
 //攻撃
 void Bomb::Attack() {
-	//プレイヤーにダメージ
-	player->RecvDamage(10, "NORMAL");
+	if (m_HP <= 0) {
+		//敵全体にダメージ
+
+		_charaState = STATE_INTER;
+	}
+	else {
+		//プレイヤーにダメージ
+		player->RecvDamage(10, "NORMAL");
+		_charaState = STATE_INTER;
+	}
 }

@@ -27,10 +27,17 @@ bool InterEnemy::Initialize() {
 //更新
 void InterEnemy::Update() {
 
-	//各行動
-	if (m_Alive) {
+	if (m_EnemyTag != "Bomb") {
+		if (m_Alive) {
+			Action();
+		}
+	}
+	else {
 		Action();
 	}
+
+	//各行動
+
 	const int l_BasePanelCount = 4;
 	Helper::GetInstance()->CheckMax(m_DamegeTimer, 0, -1);
 	//表示用のHP
