@@ -183,6 +183,7 @@ void Player::Draw(DirectXCommon* dxCommon) {
 		if (imageplayer[i] == nullptr)continue;
 		imageplayer[i]->Draw(dxCommon);
 	}
+	if(m_Color.w != 0.0f)
 	Obj_Draw();
 }
 
@@ -668,9 +669,23 @@ void Player::BirthImagePlayer() {
 }
 //ゲームーオーバー時
 void Player::GameOverUpdate() {
+	const float l_AddRotZ = 0.5f;
+	const float l_AddFrame = 0.005f;
+	float RotPower = 5.0f;
 	m_Color.w = 1.0f;
-	if (Helper::CheckMin(m_Rotation.z, 45.0f, 0.5f)) {
-		m_FinishGameOver = true;
+
+	if (Helper::FrameCheck(m_Frame, l_AddFrame)) {		//最初はイージングで回す
+		m_Frame = 1.0f;
+		if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+			m_FinishGameOver = true;
+		}
 	}
+	else {
+		RotPower = Ease(In, Cubic, m_Frame, RotPower, 20.0f);
+		m_Rotation.z =Ease(In,Cubic,m_Frame,m_Rotation.z,45.0f);
+		m_Rotation.y += RotPower;
+		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.5f);
+	}
+	
 	Obj_SetParam();
 }

@@ -26,6 +26,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(MAP_HEAL, L"Resources/2d/objicon/Map/map_03.png");
 	IKESprite::LoadTexture(MAP_TUTORIAL, L"Resources/2d/objicon/Map/map_04.png");
 	IKESprite::LoadTexture(MAP_CHEACK, L"Resources/2d/objicon/Map/map_cheack.png");
+	IKESprite::LoadTexture(TUTORIAL_SKIPUI, L"Resources/2d/objicon/SKIP.png");
 	IKESprite::LoadTexture(PASSIVE_01, L"Resources/2d/objicon/Passive/Passive_01.png");
 	IKESprite::LoadTexture(PASSIVE_02, L"Resources/2d/objicon/Passive/Passive_02.png");
 	IKESprite::LoadTexture(PASSIVE_03, L"Resources/2d/objicon/Passive/Passive_03.png");
@@ -42,7 +43,9 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(GAMECLEARBACK, L"Resources/2d/sceneback/GameClear.png");
 	IKESprite::LoadTexture(ONOMATO_00, L"Resources/2d/objicon/Onomatope/00_Foot.png");
 	IKESprite::LoadTexture(ONOMATO_01, L"Resources/2d/objicon/Onomatope/01_Attack01.png");
-
+	IKESprite::LoadTexture(ONOMATO_02, L"Resources/2d/objicon/Onomatope/02_BOSSSPAWN.png");
+	IKESprite::LoadTexture(ONOMATO_03, L"Resources/2d/objicon/Onomatope/03_GAMEOVER.png");
+	IKESprite::LoadTexture(ONOMATO_04, L"Resources/2d/objicon/Onomatope/04_Charged.png");
 	IKESprite::LoadTexture(RESULTBACKSCREEN, L"Resources/2d/sceneback/ResultSkill_BS.png");
 	IKESprite::LoadTexture(RESULTATTACKAREA, L"Resources/2d/objicon/Areas/AttackArea.png");
 	IKESprite::LoadTexture(STAGEBACK, L"Resources/2d/sceneback/1.png");

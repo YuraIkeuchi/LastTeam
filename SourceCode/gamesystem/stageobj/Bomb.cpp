@@ -9,7 +9,7 @@
 #include <GameStateManager.h>
 #include <StagePanel.h>
 
-//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 Bomb::Bomb() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
@@ -35,34 +35,38 @@ Bomb::Bomb() {
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 	kIntervalMax = 450;
 }
-//‰Šú‰»
+//åˆæœŸåŒ–
 bool Bomb::Initialize() {
-	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5f };
-	m_HP = 1.0f;//static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "hp")));
+	m_Scale = { 0.0f,0.0f,0.0f };
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "hp")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_EnemyTag = "Bomb";
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
+	m_BaseScale = {};
 	return true;
 }
 
 void (Bomb::* Bomb::stateTable[])() = {
-	&Bomb::Inter,//“®‚«‚Ì‡ŠÔ
-	&Bomb::Attack,//“®‚«‚Ì‡ŠÔ
+	&Bomb::Inter,//å‹•ãã®åˆé–“
+	&Bomb::Attack,//å‹•ãã®åˆé–“
 	&Bomb::ShockWave,
 };
 
-//s“®
+//è¡Œå‹•
 void Bomb::Action() {
+	const float l_AfterScale = 0.2f;
+	m_BaseScale = Ease(In, Cubic, 0.5f, m_BaseScale, l_AfterScale);
+
+	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	(this->*stateTable[_charaState])();
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	Collide(_AttackArea);		//“–‚½‚è”»’è
+	Collide(_AttackArea);		//å½“ãŸã‚Šåˆ¤å®š
 
 	if (m_HP <= 0.0f && _charaState != STATE_SPECIAL) {
 		Attack();
@@ -74,49 +78,49 @@ void Bomb::Action() {
 	shadow_tex->Update();
 }
 
-//•`‰æ
+//æç”»
 void Bomb::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	shadow_tex->Draw();
 	if (_charaState == STATE_SPECIAL) {
-		//ÕŒ‚”g‚Ì•`‰æ
+		//è¡æ’ƒæ³¢ã®æç”»
 		shockWaveTex->Draw();
 	}
 	IKETexture::PostDraw();
 	UIDraw();
 	Obj_Draw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void Bomb::ImGui_Origin() {
 
 }
-//ŠJ•ú
+//é–‹æ”¾
 void Bomb::Finalize() {
 
 }
-//‘Ò‹@
+//å¾…æ©Ÿ
 void Bomb::Inter() {
-	//ÕŒ‚”go‚µ‚Ä‚éŠÔ‚ÍŠÔi‚Ü‚È‚¢‚æ‚¤‚É
+	//è¡æ’ƒæ³¢å‡ºã—ã¦ã‚‹é–“ã¯æ™‚é–“é€²ã¾ãªã„ã‚ˆã†ã«
 
-	//§ŒÀŠÔ
+	//åˆ¶é™æ™‚é–“
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, kIntervalMax);
-	//ŠÔØ‚ê
+	//æ™‚é–“åˆ‡ã‚Œ
 	if (coolTimer == kIntervalMax) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 	}
 }
-//UŒ‚
+//æ”»æ’ƒ
 void Bomb::Attack() {
 	if (m_HP <= 0) {
-		//“G‘S‘Ì‚Éƒ_ƒ[ƒW
+		//æ•µå…¨ä½“ã«ãƒ€ãƒ¡ãƒ¼ã‚¸
 		GameStateManager::GetInstance()->SetIsBombDamage(true);
 		m_shockWaveColor = { 0.0f,0.0f,1.0f,1.0f };
 	}
 	else {
-		//ƒvƒŒƒCƒ„[‚Éƒ_ƒ[ƒW
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ãƒ€ãƒ¡ãƒ¼ã‚¸
 		player->RecvDamage(10, "NORMAL");
 		m_shockWaveColor = { 1.0f,0.0f,0.0f,1.0f };
 	}
@@ -133,15 +137,15 @@ void Bomb::ShockWave()
 
 	m_shockWaveTimer++;
 	m_shockWaveTimer = clamp(m_shockWaveTimer, 0, 30);
-	//ƒ^ƒCƒ}[‚É‰‚¶‚ÄÕŒ‚”g‚Ì‘å‚«‚³•ÏXˆ—
+	//ã‚¿ã‚¤ãƒãƒ¼ã«å¿œã˜ã¦è¡æ’ƒæ³¢ã®å¤§ãã•å¤‰æ›´å‡¦ç†
 	m_shockWaveScale.x += 0.15f;
 	m_shockWaveScale.y += 0.15f;
 	m_shockWaveScale.z += 0.15f;
-	//ŠÔØ‚ê
+	//æ™‚é–“åˆ‡ã‚Œ
 	if (m_shockWaveTimer == 30) {
 		m_Alive = false;
 		m_shockWaveTimer = 0;
 	}
-	//ÕŒ‚”g‚ğo‚·
-	//o‚µI‚í‚Á‚½‚çm_alive‚ğfalse‚É
+	//è¡æ’ƒæ³¢ã‚’å‡ºã™
+	//å‡ºã—çµ‚ã‚ã£ãŸã‚‰m_aliveã‚’falseã«
 }

@@ -8,6 +8,10 @@
 enum OnomatoPattern {
 	Foot,
 	Attack01,
+	BossSpawn,
+	GameOver,
+	AttackCharge,
+	
 
 };
 class Onomatope {
@@ -36,6 +40,10 @@ private:
 
 	void FootUpdate(OnomatoStruct& onomato);
 	void BurnUpdate(OnomatoStruct& onomato);
+	void BossSpawnUpdate(OnomatoStruct& onomato);
+	void GameOverUpdate(OnomatoStruct& onomato);
+	void AttackChargeUpdate(OnomatoStruct& onomato);
+
 private:
 	std::list<OnomatoStruct> onomatoList;
 
