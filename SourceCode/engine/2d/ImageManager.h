@@ -35,6 +35,7 @@ public:
 		MAP_HEAL,
 		MAP_TUTORIAL,
 		MAP_CHEACK,
+		TUTORIAL_SKIPUI,
 		PASSIVE_01,
 		PASSIVE_02,
 		PASSIVE_03,
@@ -91,6 +92,7 @@ public:
 		ATTACK_TEX_7,
 		ATTACK_TEX_8,
 		ATTACK_TEX_9,
+		SHOCKWAVE,
 	};
 	enum particleName
 	{

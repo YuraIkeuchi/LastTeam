@@ -20,8 +20,7 @@ void (TutorialScene::* TutorialScene::stateTable[])() = {
 	&TutorialScene::TutorialEnd,//�I���
 };
 //������
-void TutorialScene::Initialize(DirectXCommon* dxCommon)
-{
+void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 	//���ʂ̏�����
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
@@ -54,8 +53,16 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
 	}
 
+	skipUI = IKESprite::Create(ImageManager::TUTORIAL_SKIPUI, { 940.f ,5.f });
+	skipUnder = IKESprite::Create(ImageManager::FEED, { 940.f + (128.f* scale_skip) ,5.f });
+	skipBack = IKESprite::Create(ImageManager::FEED, { 940.f +  (128.f * scale_skip),5.f });
+	skipUI->SetSize({ 472.f * scale_skip ,96.f * scale_skip });
+	skipUnder->SetSize({ 0.f,96.f * scale_skip });
+	skipUnder->SetColor({ 0,1,1,1 });
+	skipBack->SetSize({ 344.f * scale_skip,96.f * scale_skip });
+
 	window.sprite = IKESprite::Create(ImageManager::TUTORIAL_WINDOW, { 0.0f,0.0f });
-	window.sprite->SetAnchorPoint({0.5f,0.5f});
+	window.sprite->SetAnchorPoint({ 0.5f,0.5f });
 	window.m_Pos = { 750.0f,630.0f };
 
 	//敵
@@ -69,8 +76,20 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon)
 	feed.reset(feed_);
 }
 //�X�V
-void TutorialScene::Update(DirectXCommon* dxCommon)
-{
+void TutorialScene::Update(DirectXCommon* dxCommon) {
+	if (m_IsBackKey) {
+		const float frameMax = 5.f;
+		if (Helper::FrameCheck(frame, 1 / frameMax)) {
+			m_Skip = true;
+			m_IsBackKey = false;
+			_nowstate = TUTORIAL_DAMAGE;
+		} else {
+			float siz = 0.f;
+			siz = Ease(In, Quad, frame, 0.f, 344.f);
+			skipUnder->SetSize({ siz * scale_skip,96.f * scale_skip });
+		}
+		return;
+	}
 	Input* input = Input::GetInstance();
 
 	lightGroup->Update();
@@ -85,9 +104,10 @@ void TutorialScene::Update(DirectXCommon* dxCommon)
 	}
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	if (input->TriggerButton(input->BACK)) {
-		m_Skip = true;
-		_nowstate = TUTORIAL_DAMAGE;
+	if (input->TriggerButton(input->BACK) &&
+		!m_IsBackKey &&
+		!m_Skip) {
+		m_IsBackKey = true;
 		m_Timer = {};
 	}
 	//�G��|������V�[���ȍ~(��)
@@ -136,8 +156,7 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 		postEffect->Draw(dxCommon->GetCmdList());
 		ImGuiDraw();
 		dxCommon->PostDraw();
-	}
-	else {
+	} else {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		postEffect->Draw(dxCommon->GetCmdList());
 		postEffect->PostDrawScene(dxCommon->GetCmdList());
@@ -160,6 +179,13 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!TutorialTask::GetInstance()->GetViewSkill()) {
 		window.sprite->Draw();
 		text_->TestDraw(dxCommon);
+	}
+	if (!m_FeedEnd) {
+		IKESprite::PreDraw();
+		skipBack->Draw();
+		skipUnder->Draw();
+		skipUI->Draw();
+		IKESprite::PostDraw();
 	}
 	if (m_Feed) {
 		feed->Draw();
@@ -202,7 +228,7 @@ void TutorialScene::IntroState() {
 	if (Helper::CheckMin(m_Timer, 150, 1)) {
 		_nowstate = TUTORIAL_MOVE;
 		m_Timer = {};
-	
+
 	}
 }
 //�ړ�
@@ -231,15 +257,12 @@ void TutorialScene::GetState() {
 //�U��
 void TutorialScene::AttackState() {
 	Helper::CheckMin(m_Timer, 410, 1);
-
-	if (m_Timer == 200) {
-		m_TextPos = { -10.0f,-30.f };
+	if (m_Timer == 120) {
+	m_TextPos = { -10.0f,-30.f };
 		text_->SetConversation(TextManager::TUTORIAL_MARK, m_TextPos);
-	}
-	else if (m_Timer == 400) {
+	} else if (m_Timer == 240) {
 		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK, m_TextPos);
 	}
-
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
 		text_->SetConversation(TextManager::TUTORIAL_TEXT_DAMAGE, m_TextPos);
 		_nowstate = TUTORIAL_DAMAGE;
@@ -268,12 +291,10 @@ void TutorialScene::DamageState() {
 			if (m_Timer == 1) {
 				m_TextPos = { 120.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_SKILL, m_TextPos);
-			}
-			else if (m_Timer == 200) {
+			} else if (m_Timer == 120) {
 				m_TextPos = { 10.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_CHOICE, m_TextPos);
-			}
-			else if (m_Timer == 350) {
+			} else if (m_Timer == 170) {
 				TutorialTask::GetInstance()->SetViewSkill(true);
 			}
 			if (TutorialTask::GetInstance()->GetChoiceSkill()) {
@@ -288,7 +309,7 @@ void TutorialScene::DamageState() {
 }
 //�`���[�g���A���I���
 void TutorialScene::TutorialEnd() {
-	if (Helper::CheckMin(m_Timer, 200, 1)) {
+	if (Helper::CheckMin(m_Timer, 100, 1)) {
 		m_Timer = {};
 		m_End = true;
 	}

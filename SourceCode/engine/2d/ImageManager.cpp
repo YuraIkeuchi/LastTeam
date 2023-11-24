@@ -26,6 +26,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(MAP_HEAL, L"Resources/2d/objicon/Map/map_03.png");
 	IKESprite::LoadTexture(MAP_TUTORIAL, L"Resources/2d/objicon/Map/map_04.png");
 	IKESprite::LoadTexture(MAP_CHEACK, L"Resources/2d/objicon/Map/map_cheack.png");
+	IKESprite::LoadTexture(TUTORIAL_SKIPUI, L"Resources/2d/objicon/SKIP.png");
 	IKESprite::LoadTexture(PASSIVE_01, L"Resources/2d/objicon/Passive/Passive_01.png");
 	IKESprite::LoadTexture(PASSIVE_02, L"Resources/2d/objicon/Passive/Passive_02.png");
 	IKESprite::LoadTexture(PASSIVE_03, L"Resources/2d/objicon/Passive/Passive_03.png");
@@ -88,6 +89,7 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(ATTACK_TEX_7, L"Resources/2d/objicon/AttackSKill/Skill7.png");
 	IKETexture::LoadTexture(ATTACK_TEX_8, L"Resources/2d/objicon/AttackSKill/Skill8.png");
 	IKETexture::LoadTexture(ATTACK_TEX_9, L"Resources/2d/objicon/AttackSKill/Skill9.png");
+	IKETexture::LoadTexture(SHOCKWAVE, L"Resources/2d/objicon/ShockWave.png");
 }
 
 //非同期処理でのテクスチャの読み込み
