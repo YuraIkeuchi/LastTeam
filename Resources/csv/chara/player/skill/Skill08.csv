@@ -3,7 +3,7 @@ SkillType,0
 Delay,35
 Name,yabu
 StateName,POISON
-Damege,5
+Damege,3
 DistanceX,1
 DistanceY,1
 AttackArea,1 1 1
