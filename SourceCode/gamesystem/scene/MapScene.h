@@ -99,6 +99,9 @@ private:
 	static array<array<int, 3>, 10> mapKinds;
 	unique_ptr<IKESprite> screen = nullptr;
 	unique_ptr<IKESprite> cheack= nullptr;
+	XMFLOAT2 size_c = {};
+	float s_frame = 0.0f;
+	XMFLOAT2 cheackSize = {};
 	unique_ptr<IKESprite> cheack_OK[2] = {};
 	unique_ptr<IKESprite> cheack_NO[2] = {};
 	int nowCheack = 0;

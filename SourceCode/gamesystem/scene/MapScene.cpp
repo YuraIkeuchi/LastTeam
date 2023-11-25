@@ -687,9 +687,6 @@ void MapScene::MainState() {
 
 void MapScene::CheckState() {
 	const float addFrame = 1.0f / 15.f;
-	static float s_frame = 0.0f;
-	static XMFLOAT2 size = {};
-	static XMFLOAT2 cheackSize = {};
 	if (SceneChanger::GetInstance()->GetChangeState() == 1) {
 		delayFrame = 0.f;
 		m_State = State::mainState;
@@ -725,9 +722,9 @@ void MapScene::CheckState() {
 					}
 				}
 			} else {
-				size.x = Ease(Out, Quint, s_frame, 0.f, 640.f);
-				size.y = Ease(Out, Quint, s_frame, 0.f, 480.f);
-				cheack->SetSize(size);
+				size_c.x = Ease(Out, Quint, s_frame, 0.f, 640.f);
+				size_c.y = Ease(Out, Quint, s_frame, 0.f, 480.f);
+				cheack->SetSize(size_c);
 				cheackSize.x = Ease(Out, Quint, s_frame, 0.f, 320.f);
 				cheackSize.y = Ease(Out, Quint, s_frame, 0.f, 64.f);
 				for (int i = 0; i < 2; i++) {
@@ -814,16 +811,14 @@ bool MapScene::TutorialClosed() {
 		isClose = false;
 		return true;
 	} else {
-		XMFLOAT2 l_size = {};
-		XMFLOAT2 c_size = {};
-		l_size.x = Ease(Out, Quint, closeFrame, 640.f, 0.f);
-		l_size.y = Ease(Out, Quint, closeFrame, 480.f, 0.f);
-		c_size.x = Ease(Out, Quint, closeFrame, 320.f, 0.f);
-		c_size.y = Ease(Out, Quint, closeFrame, 64.f, 0.f);
-		cheack->SetSize(l_size);
+		size_c.x = Ease(Out, Quint, closeFrame, 640.f, 0.f);
+		size_c.y = Ease(Out, Quint, closeFrame, 480.f, 0.f);
+		cheackSize.x = Ease(Out, Quint, closeFrame, 320.f, 0.f);
+		cheackSize.y = Ease(Out, Quint, closeFrame, 64.f, 0.f);
+		cheack->SetSize(size_c);
 		for (int i = 0; i < 2; i++) {
-			cheack_OK[i]->SetSize(c_size);
-			cheack_NO[i]->SetSize(c_size);
+			cheack_OK[i]->SetSize(cheackSize);
+			cheack_NO[i]->SetSize(cheackSize);
 		}
 		return true;
 	}
