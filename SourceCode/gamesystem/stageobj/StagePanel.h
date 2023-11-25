@@ -31,6 +31,7 @@ private:
 	//ƒpƒlƒ‹
 	struct Panel {
 		unique_ptr<IKEObject3d> object = nullptr;
+		unique_ptr<IKETexture> line = nullptr;
 		XMFLOAT3 position = { 0,0,0 };
 		XMFLOAT4 color = { 1,1,1,1 };
 		int type = NO_PANEL;

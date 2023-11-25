@@ -17,12 +17,18 @@ StagePanel* StagePanel::GetInstance() {
 }
 //リソース読み込み
 void StagePanel::LoadResource() {
+	float scale = PANEL_SIZE * 0.1f;
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			panels[i][j].object = make_unique<IKEObject3d>();
 			panels[i][j].object->Initialize();
 			panels[i][j].object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
 			panels[i][j].object->SetScale({ PANEL_SIZE,0.01f,PANEL_SIZE });
+			panels[i][j].line = make_unique<IKETexture>(ImageManager::PANNELLINE,XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+			panels[i][j].line->TextureCreate();
+			panels[i][j].line->Initialize();
+			panels[i][j].line->SetScale({ scale ,scale ,scale });
+			panels[i][j].line->SetRotation({ 90.0f,0.0f,0.0f });
 		}
 	}
 	for (int i = 0; i < PANEL_WIDTH; i++) {
@@ -78,6 +84,13 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 		}
 	}
 	IKEObject3d::PostDraw();
+	IKETexture::PreDraw2(dxCommon, AddBlendType);
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			panels[i][j].line->Draw();
+		}
+	}
+	IKETexture::PostDraw();
 }
 //カードの描画
 void StagePanel::ActDraw(DirectXCommon* dxCommon) {
@@ -119,6 +132,13 @@ void StagePanel::BattleUpdate() {
 			panels[i][j].object->Update();
 			panels[i][j].object->SetPosition(panels[i][j].position);
 			panels[i][j].object->SetColor(panels[i][j].color);
+			panels[i][j].line->Update();
+			panels[i][j].line->SetPosition({ panels[i][j].position.x, panels[i][j].position.y+0.05f, panels[i][j].position.z });
+			if (i < PANEL_WIDTH / 2) {
+				panels[i][j].line->SetColor({ 0.f,0.f,1.f,1.f });
+			} else {
+				panels[i][j].line->SetColor({ 1.f,0.f,0.f,1.f });
+			}
 		}
 	}
 }
