@@ -4,6 +4,7 @@
 #include <ModelManager.h>
 #include <GameStateManager.h>
 #include <Helper.h>
+#include <ParticleEmitter.h>
 //“Ç‚Ýž‚Ý
 PoisonArea::PoisonArea() {
 	panels.tex.reset(new IKETexture(ImageManager::POISONAREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
@@ -42,12 +43,18 @@ void PoisonArea::InitState(const int width, const int height) {
 	m_BulletAlive = true;
 	float baseScale = PANEL_SIZE * 0.1f;
 	m_Scale = { baseScale,baseScale,baseScale };
-	m_Color = { 0.5f,1.0f,0.5f,1.0f };
+	m_Color = { 1.0f,0.5f,0.5f,1.0f };
 }
 
 //XV
 void PoisonArea::Update() {
-	
+	const XMFLOAT4 s_color = { 1.f,0.0f,0.0f,1.0f };
+	const XMFLOAT4 e_color = { 1.f,0.5f,0.0f,1.0f };
+	const float s_scale = 1.0f;
+	const float e_scale = 0.0f;
+	ParticleEmitter::GetInstance()->PoisonEffect(
+	50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color, 0.1f, 3.0f);
+
 	Obj_SetParam();
 	Collide();
 	Move();
