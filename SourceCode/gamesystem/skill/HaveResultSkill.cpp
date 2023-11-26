@@ -183,9 +183,12 @@ void HaveResultSkill::Move() {
 	}
 
 	if (input->TiltPushStick(input->L_LEFT) ||
-		input->TiltPushStick(input->L_RIGHT)) {
+		input->TiltPushStick(input->L_RIGHT)||
+		input->PushButton(input->LEFT)||
+		input->PushButton(input->RIGHT)) {
 		if (m_isMove) { return; }
-		if (input->TiltPushStick(input->L_RIGHT)) {
+		if (input->TiltPushStick(input->L_RIGHT)||
+			input->PushButton(input->RIGHT)) {
 			if (m_SelectCount == ((int)(haveSkills.size()) + (int)(havePassive.size())) - 1) { return; }
 			m_SelectCount++;
 		}

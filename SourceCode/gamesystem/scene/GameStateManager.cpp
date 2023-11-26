@@ -164,7 +164,8 @@ void GameStateManager::AttackTrigger() {
 	if (isFinish) { return; }
 	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える
-	if (input->TriggerButton(input->B)) {
+	if (input->TriggerButton(input->B)||
+		input->TriggerKey(DIK_SPACE)) {
 		AttackSubAction();
 		m_Delay = true;
 	}
@@ -458,17 +459,19 @@ bool GameStateManager::AttackSubAction() {
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
 	if (!TutorialTask::GetInstance()->GetViewSkill()) { return false; }
-	if (Input::GetInstance()->TriggerButton(Input::LB)) {
+	if (Input::GetInstance()->TriggerButton(Input::LB)||
+		Input::GetInstance()->TriggerKey(DIK_LEFT)) {
 		_ResultType = GET_SKILL;
 	}
-	if (Input::GetInstance()->TriggerButton(Input::RB)) {
+	if (Input::GetInstance()->TriggerButton(Input::RB)||
+		Input::GetInstance()->TriggerKey(DIK_RIGHT)) {
 		_ResultType = HAVE_SKILL;
 	}
 
 	if (_ResultType == GET_SKILL) {
 		resultSkill->Update();
 
-		if (Input::GetInstance()->TriggerButton(Input::B) && !m_Choice) {
+		if ((Input::GetInstance()->TriggerButton(Input::B)|| Input::GetInstance()->TriggerKey(DIK_SPACE)) && !m_Choice) {
 			resultSkill->InDeck(m_DeckNumber);
 			resultSkill->InPassive(GotPassiveIDs);
 			isChangeScene = true;

@@ -37,6 +37,14 @@ public:
 private:
 	//動き
 	void Move();
+
+	bool MoveButtonKey();
+	bool UpButtonKey();
+	bool DownButtonKey();
+	bool RightButtonKey();
+	bool LeftButtonKey();
+
+
 	//動きが止まる
 	void Delay();
 
