@@ -160,6 +160,7 @@ private:
 	void HPManage();
 	void BirthPoisonParticle();
 	void BirthDamage(const float Damage);//
+	void BirthHeal(const float Heal);
 	//ダメージの更新
 	void DamageUpdate();
 protected:
