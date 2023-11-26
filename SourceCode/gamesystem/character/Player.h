@@ -188,7 +188,7 @@ private:
 		MOVE_NONE,//普通
 		MOVE_EASE,//イージング
 		MOVE_DISOLVE,//残像
-	}_MoveType = MOVE_NONE;
+	}_MoveType = MOVE_EASE;
 
 	//残像用のプレイヤー
 	std::vector<unique_ptr<ImagePlayer>> imageplayer;

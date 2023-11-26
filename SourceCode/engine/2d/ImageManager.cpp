@@ -26,6 +26,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(MAP_HEAL, L"Resources/2d/objicon/Map/map_03.png");
 	IKESprite::LoadTexture(MAP_TUTORIAL, L"Resources/2d/objicon/Map/map_04.png");
 	IKESprite::LoadTexture(MAP_CHEACK, L"Resources/2d/objicon/Map/map_cheack.png");
+	IKESprite::LoadTexture(MAP_CHEACK_OK, L"Resources/2d/objicon/Map/T_OK.png");
+	IKESprite::LoadTexture(MAP_CHEACK_NO, L"Resources/2d/objicon/Map/T_Cancel.png");
 	IKESprite::LoadTexture(TUTORIAL_SKIPUI, L"Resources/2d/objicon/SKIP.png");
 	IKESprite::LoadTexture(PASSIVE_01, L"Resources/2d/objicon/Passive/Passive_01.png");
 	IKESprite::LoadTexture(PASSIVE_02, L"Resources/2d/objicon/Passive/Passive_02.png");
@@ -46,8 +48,11 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ONOMATO_02, L"Resources/2d/objicon/Onomatope/02_BOSSSPAWN.png");
 	IKESprite::LoadTexture(ONOMATO_03, L"Resources/2d/objicon/Onomatope/03_GAMEOVER.png");
 	IKESprite::LoadTexture(ONOMATO_04, L"Resources/2d/objicon/Onomatope/04_Charged.png");
+	IKESprite::LoadTexture(ONOMATO_05, L"Resources/2d/objicon/Onomatope/05_Counter.png");
 	IKESprite::LoadTexture(RESULTBACKSCREEN, L"Resources/2d/sceneback/ResultSkill_BS.png");
 	IKESprite::LoadTexture(RESULTATTACKAREA, L"Resources/2d/objicon/Areas/AttackArea.png");
+	IKESprite::LoadTexture(RESULTNOWCHECK, L"Resources/2d/objicon/SkillCheackNow.png");
+	IKESprite::LoadTexture(RESULTBACKCHECK, L"Resources/2d/objicon/SkillCheackBack.png");
 	IKESprite::LoadTexture(STAGEBACK, L"Resources/2d/sceneback/1.png");
 	IKESprite::LoadTexture(ATTACK_0, L"Resources/2d/objicon/AttackSKill/Skill0.png");
 	IKESprite::LoadTexture(ATTACK_1, L"Resources/2d/objicon/AttackSKill/Skill1.png");
@@ -74,7 +79,8 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(CHARGE, L"Resources/2d/objicon/impact.png");
 	IKETexture::LoadTexture(SHADOW, L"Resources/2d/objicon/shadow.png");
 	IKETexture::LoadTexture(SHADOW2, L"Resources/2d/objicon/shadow2.png");
-	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/Areas/DamageArea.png"); 
+	IKETexture::LoadTexture(PANNELLINE, L"Resources/2d/objicon/Areas/AreaLine.png");
+	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/Areas/DamageArea.png");
 	IKETexture::LoadTexture(PLAYERAREA, L"Resources/2d/objicon/Areas/PlayerAttack.png");
 	IKETexture::LoadTexture(POISONAREA, L"Resources/2d/objicon/Areas/PoizonAttack.png");
 	IKETexture::LoadTexture(ENEMYPREDICT, L"Resources/2d/objicon/Areas/Predict.png");

@@ -107,6 +107,7 @@ void GameStateManager::Update() {
 
 		if (Helper::CheckMin(m_CounterTimer, 20, 1)) {		//一定フレームでカウンター終了
 			m_Counter = false;
+			onomatope->AddOnomato(Counter, {640.f,660.f});
 			m_CounterTimer = {};
 		}
 	}
@@ -163,7 +164,7 @@ void GameStateManager::AttackTrigger() {
 	if (isFinish) { return; }
 	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える
-	if (input->TriggerButton(input->A)) {
+	if (input->TriggerButton(input->B)) {
 		AttackSubAction();
 		m_Delay = true;
 	}
@@ -433,6 +434,7 @@ void GameStateManager::PassiveCheck() {
 }
 //デッキの初期化
 void GameStateManager::DeckInitialize() {
+	StagePanel::GetInstance()->ResetPanel();
 	SkillManager::GetInstance()->DeckClear();
 	//デッキに入っているカードの確認
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
@@ -513,12 +515,11 @@ void GameStateManager::BirthBuff() {
 	m_Buff = true;		//一旦中身はこれだけ
 }
 void GameStateManager::DeckReset() {
-	m_DeckNumber.resize(3);
-	m_DeckNumber = { 1,2,4 };
 	m_DeckNumber.resize((int)(m_StartNumber.size()));
 	m_DeckNumber = m_StartNumber;
 	GotPassives.clear();
-	GotPassiveIDs = {};
+	GotPassiveIDs.resize((int)(m_StartPassive.size()));
+	GotPassiveIDs = m_StartPassive;
 }
 //パワーアップのエフェクトの初期化
 void GameStateManager::RandPowerUpInit() {

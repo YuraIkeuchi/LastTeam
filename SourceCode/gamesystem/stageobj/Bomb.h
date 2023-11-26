@@ -32,4 +32,9 @@ private:
 	int m_shockWaveTimer = 0;
 	int m_maxShockWaveTimer = 30;
 	float m_BaseScale = {};
+	float m_Damage = 0.0f;
+	float m_SinAngle = {};
+	float m_SinAngle2 = {};
+	bool m_FlashStart = false;
+	float m_AddAngle = {};
 };

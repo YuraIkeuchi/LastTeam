@@ -33,14 +33,15 @@ Bomb::Bomb() {
 	shadow_tex->TextureCreate();
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
-	kIntervalMax = 450;
+
 }
 //初期化
 bool Bomb::Initialize() {
 	m_Rotation = { 0.0f,0.0f,0.0f };
-	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.0f,0.0f,0.0f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "hp")));
+	kIntervalMax = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "Interval")));;
+	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Bomb.csv", "Damage")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_EnemyTag = "Bomb";
@@ -102,7 +103,6 @@ void Bomb::Finalize() {
 //待機
 void Bomb::Inter() {
 	//衝撃波出してる間は時間進まないように
-
 	//制限時間
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, kIntervalMax);
@@ -111,6 +111,13 @@ void Bomb::Inter() {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 	}
+
+	m_AddAngle = Helper::Lerp(10.0f, 30.0f, coolTimer, kIntervalMax);		//線形補間でチャージを表してる
+		//sin波によって上下に動く
+	m_SinAngle += m_AddAngle;
+	m_SinAngle2 = m_SinAngle * (3.14f / 180.0f);
+	m_Color.y = (sin(m_SinAngle2) * 0.5f + 0.5f);
+	m_Color.z = (sin(m_SinAngle2) * 0.5f + 0.5f);
 }
 //攻撃
 void Bomb::Attack() {
@@ -121,7 +128,7 @@ void Bomb::Attack() {
 	}
 	else {
 		//プレイヤーにダメージ
-		player->RecvDamage(10, "NORMAL");
+		player->RecvDamage(m_Damage, "NORMAL");
 		m_shockWaveColor = { 1.0f,0.0f,0.0f,1.0f };
 	}
 	//setcolor

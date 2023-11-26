@@ -172,7 +172,6 @@ void Player::Update() {
 	shadow_tex->Update();
 
 }
-
 //描画
 void Player::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
@@ -186,7 +185,6 @@ void Player::Draw(DirectXCommon* dxCommon) {
 	if(m_Color.w != 0.0f)
 	Obj_Draw();
 }
-
 //UIの描画
 void Player::UIDraw() {
 	IKESprite::PreDraw();
@@ -218,8 +216,10 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("ROTZ:%f", m_Rotation.z);
-	ImGui::Text("GameOver:%d", m_FinishGameOver);
+	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSZ:%f", m_Position.z);
+	ImGui::Text("Frame:%f", m_MoveFrame);
+	ImGui::Text("Move:%d", m_Move);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::SliderFloat("Disolve", &m_AddDisolve, 0, 2);
 	if (ImGui::Button("MOVE_NONE", ImVec2(100, 100)))
@@ -240,7 +240,7 @@ void Player::ImGuiDraw() {
 void Player::Move() {
 	if (m_Delay) { return; }
 	if (GameStateManager::GetInstance()->GetResetPredict()) { return; }
-	const int l_TargetTimer = 8;
+	const int l_TargetTimer = 5;
 	const float l_AddVelocity = PANEL_SIZE;
 	const float l_SubVelocity = -PANEL_SIZE;
 	const int l_AddSpace = 1;
@@ -350,7 +350,7 @@ void Player::Move() {
 			}
 		}
 		else {			//離した瞬間
-			if (m_LimitCount == 0) {
+			if (m_LimitCount == 0 && !m_Move) {
 				if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
 					m_Move = true;
 					m_AfterPos.z = m_Position.z + l_AddVelocity;
@@ -379,42 +379,45 @@ void Player::Move() {
 		}
 
 		//一定フレーム立つと選択マス移動
-		if (m_InputTimer[DIR_UP] == l_TargetTimer) {
-			if (m_NowHeight < PANEL_HEIGHT - 1) {
-				m_AfterPos.z = m_Position.z + l_AddVelocity;
-				m_Move = true;
-				m_LimitCount++;
+		if (!m_Move) {
+			if (m_InputTimer[DIR_UP] == l_TargetTimer) {
+				if (m_NowHeight < PANEL_HEIGHT - 1) {
+					m_AfterPos.z = m_Position.z + l_AddVelocity;
+					m_Move = true;
+					m_LimitCount++;
+				}
+				m_InputTimer[DIR_UP] = {};
 			}
-			m_InputTimer[DIR_UP] = {};
-		}
-		else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
-			if (m_NowHeight > 0) {
-				m_AfterPos.z = m_Position.z + l_SubVelocity;
-				m_Move = true;
-				m_LimitCount++;
+			else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
+				if (m_NowHeight > 0) {
+					m_AfterPos.z = m_Position.z + l_SubVelocity;
+					m_Move = true;
+					m_LimitCount++;
+				}
+				m_InputTimer[DIR_DOWN] = {};
 			}
-			m_InputTimer[DIR_DOWN] = {};
-		}
-		else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
-			if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-				m_AfterPos.x = m_Position.x + l_AddVelocity;
-				m_Move = true;
-				m_LimitCount++;
+			else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
+				if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
+					m_AfterPos.x = m_Position.x + l_AddVelocity;
+					m_Move = true;
+					m_LimitCount++;
+				}
+				m_InputTimer[DIR_RIGHT] = {};
 			}
-			m_InputTimer[DIR_RIGHT] = {};
-		}
-		else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
-			if (m_NowWidth > 0) {
-				m_AfterPos.x = m_Position.x + l_SubVelocity;
-				m_Move = true;
-				m_LimitCount++;
+			else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
+				if (m_NowWidth > 0) {
+					m_AfterPos.x = m_Position.x + l_SubVelocity;
+					m_Move = true;
+					m_LimitCount++;
+				}
+				m_InputTimer[DIR_LEFT] = {};
 			}
-			m_InputTimer[DIR_LEFT] = {};
 		}
+
 
 		//イージングで移動するためのもの
 		if (m_Move) {
-			if (Helper::FrameCheck(m_MoveFrame, 0.15f)) {
+			if (Helper::FrameCheck(m_MoveFrame, 0.2f)) {
 				m_MoveFrame = {};
 				m_Move = false;
 				for (int i = 0; i < 4; i++) {
@@ -582,8 +585,8 @@ void Player::DamageParticle() {
 	}
 }
 void Player::BirthPoisonParticle() {
-	const XMFLOAT4 s_color = { 0.5f,0.0f,0.5f,1.0f };
-	const XMFLOAT4 e_color = { 0.5f,0.0f,0.5f,1.0f };
+	const XMFLOAT4 s_color = { 1.f,0.0f,0.0f,1.0f };
+	const XMFLOAT4 e_color = { 1.f,0.5f,0.0f,1.0f };
 	const float s_scale = 1.0f;
 	const float e_scale = 0.0f;
 	for (int i = 0; i < 3; i++) {
