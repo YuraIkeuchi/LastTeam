@@ -53,6 +53,7 @@ public:
 	void SetPlayer(Player* player) { this->player = player; }
 
 private:
+	unique_ptr<IKETexture> shadow_tex;
 	Player* player;
 	//パネル
 	struct Panel {
@@ -98,4 +99,9 @@ private:
 	int m_ThrowDir = {};
 
 	float m_Damage = {};
+
+
+	//影の変数
+	XMFLOAT3 m_ShadowPos = {};
+	XMFLOAT3 m_ShadowScale = {};
 };
