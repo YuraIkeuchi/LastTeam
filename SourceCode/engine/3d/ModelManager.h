@@ -22,6 +22,7 @@ public:
 		CANNON,
 		SQUID,
 		MISSILE,
+		BOMBER
 
 	};
 	//FBXの名前
