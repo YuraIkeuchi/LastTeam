@@ -67,6 +67,7 @@ private:
 	bool isStart = false;
 	Player* player_=nullptr;
 	std::unique_ptr<IKESprite> backScreen;
+	std::unique_ptr<IKESprite> skillCheack;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;
 	int nowPos = 0;

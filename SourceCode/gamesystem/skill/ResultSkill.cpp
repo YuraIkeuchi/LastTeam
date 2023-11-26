@@ -17,6 +17,8 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetPosition(framePos);
+	skillCheack = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 1280.f,720.f });
+	skillCheack->SetAnchorPoint({ 1.f,1.f });
 	//���U���g�e�L�X�g
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
@@ -42,6 +44,8 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
+	skillCheack->Draw();
+
 	if (TutorialTask::GetInstance()->GetViewSkill()) {
 		selectFrame->Draw();
 		for (ResultUI& resultUI : choiceSkills) {
