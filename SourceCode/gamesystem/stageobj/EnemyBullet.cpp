@@ -99,7 +99,7 @@ bool EnemyBullet::Collide() {
 }
 //追従
 void EnemyBullet::Throw() {
-	const float l_AddFrame = 0.01f;
+	const float l_AddFrame = 0.1f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
 	//弾のマスを取得する
@@ -121,11 +121,10 @@ void EnemyBullet::Throw() {
 		m_ThrowTimer++;
 		if (m_ThrowTimer == l_BaseTimer) {
 			float l_Rot = {};
-			int num = Helper::GetRanNum(0, 2);
-			if (num == DIR_STRAIGHT) {
+			if (m_ShotDir == DIR_STRAIGHT) {
 				l_Rot = -90.0f;
 			}
-			else if (num == DIR_SLASHUP) {
+			else if (m_ShotDir == DIR_SLASHUP) {
 				l_Rot = -45.0f;
 			}
 			else {

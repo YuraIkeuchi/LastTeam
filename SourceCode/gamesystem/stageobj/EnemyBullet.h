@@ -50,6 +50,7 @@ public:
 	void SetPolterType(const int PolterType) { m_PolterType = PolterType; }
 
 	void SetTargetTimer(const int TargetTimer) { m_TargetTimer = TargetTimer; }
+	void SetShotDir(const int ShotDir) { m_ShotDir = ShotDir; }
 	void SetPlayer(Player* player) { this->player = player; }
 
 private:
@@ -104,4 +105,5 @@ private:
 	//影の変数
 	XMFLOAT3 m_ShadowPos = {};
 	XMFLOAT3 m_ShadowScale = {};
+	int m_ShotDir = {};
 };
