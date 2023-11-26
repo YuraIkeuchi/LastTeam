@@ -48,7 +48,7 @@ bool TackleEnemy::Initialize() {
 
 	m_MaxHP = m_HP;
 	StagePanel::GetInstance()->EnemyHitReset();
-	m_ShadowScale = { 0.05f,0.05f,0.05f };
+	m_ShadowScale = { 0.03f,0.03f,0.03f };
 
 
 	magic.Alive = false;
