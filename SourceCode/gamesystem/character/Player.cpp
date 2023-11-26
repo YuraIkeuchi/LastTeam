@@ -248,26 +248,17 @@ void Player::Move() {
 	//普通
 	if (_MoveType == MOVE_NONE) {
 		//ボタンでマスを移動する
-		if (input->PushButton(input->UP) ||
-			input->PushButton(input->DOWN) ||
-			input->PushButton(input->RIGHT) ||
-			input->PushButton(input->LEFT) ||
-			input->TiltPushStick(input->L_UP) ||
-			input->TiltPushStick(input->L_DOWN) ||
-			input->TiltPushStick(input->L_LEFT) ||
-			input->TiltPushStick(input->L_RIGHT)||
-			input->TriggerKey(DIK_W)
-			) {
-			if (input->PushButton(input->UP) || input->TiltPushStick(input->L_UP)) {
+		if (MoveButtonKey()) {
+			if (UpButtonKey()) {
 				m_InputTimer[DIR_UP]++;
 			}
-			else if (input->PushButton(input->DOWN) || input->TiltPushStick(input->L_DOWN)) {
+			else if (DownButtonKey()) {
 				m_InputTimer[DIR_DOWN]++;
 			}
-			else if (input->PushButton(input->RIGHT) || input->TiltPushStick(input->L_RIGHT)) {
+			else if (RightButtonKey()) {
 				m_InputTimer[DIR_RIGHT]++;
 			}
-			else if (input->PushButton(input->LEFT) || input->TiltPushStick(input->L_LEFT)) {
+			else if (LeftButtonKey()) {
 				m_InputTimer[DIR_LEFT]++;
 			}
 		}
@@ -328,25 +319,18 @@ void Player::Move() {
 	}
 	//イージング
 	else if (_MoveType == MOVE_EASE) {
-		if (input->PushButton(input->UP) ||
-			input->PushButton(input->DOWN) ||
-			input->PushButton(input->RIGHT) ||
-			input->PushButton(input->LEFT) ||
-			input->TiltPushStick(input->L_UP) ||
-			input->TiltPushStick(input->L_DOWN) ||
-			input->TiltPushStick(input->L_LEFT) ||
-			input->TiltPushStick(input->L_RIGHT)
+		if (MoveButtonKey()
 			&& !m_Move) {
-			if (input->PushButton(input->UP) || input->TiltPushStick(input->L_UP)) {
+			if (UpButtonKey()) {
 				m_InputTimer[DIR_UP]++;
 			}
-			else if (input->PushButton(input->DOWN) || input->TiltPushStick(input->L_DOWN)) {
+			else if (DownButtonKey()) {
 				m_InputTimer[DIR_DOWN]++;
 			}
-			else if (input->PushButton(input->RIGHT) || input->TiltPushStick(input->L_RIGHT)) {
+			else if (RightButtonKey()) {
 				m_InputTimer[DIR_RIGHT]++;
 			}
-			else if (input->PushButton(input->LEFT) || input->TiltPushStick(input->L_LEFT)) {
+			else if (LeftButtonKey()) {
 				m_InputTimer[DIR_LEFT]++;
 			}
 		}
@@ -437,25 +421,17 @@ void Player::Move() {
 	//残像
 	else {
 		//ボタンでマスを移動する
-		if (input->PushButton(input->UP) ||
-			input->PushButton(input->DOWN) ||
-			input->PushButton(input->RIGHT) ||
-			input->PushButton(input->LEFT) ||
-			input->TiltPushStick(input->L_UP) ||
-			input->TiltPushStick(input->L_DOWN) ||
-			input->TiltPushStick(input->L_LEFT) ||
-			input->TiltPushStick(input->L_RIGHT)
-			) {
-			if (input->PushButton(input->UP) || input->TiltPushStick(input->L_UP)) {
+		if (MoveButtonKey()) {
+			if (UpButtonKey()) {
 				m_InputTimer[DIR_UP]++;
 			}
-			else if (input->PushButton(input->DOWN) || input->TiltPushStick(input->L_DOWN)) {
+			else if (DownButtonKey()) {
 				m_InputTimer[DIR_DOWN]++;
 			}
-			else if (input->PushButton(input->RIGHT) || input->TiltPushStick(input->L_RIGHT)) {
+			else if (RightButtonKey()) {
 				m_InputTimer[DIR_RIGHT]++;
 			}
-			else if (input->PushButton(input->LEFT) || input->TiltPushStick(input->L_LEFT)) {
+			else if (LeftButtonKey()) {
 				m_InputTimer[DIR_LEFT]++;
 			}
 		}
@@ -521,6 +497,58 @@ void Player::Move() {
 			}
 			m_InputTimer[DIR_LEFT] = {};
 		}
+	}
+}
+
+bool Player::MoveButtonKey() {
+	if (input->PushButton(input->UP) ||
+		input->PushButton(input->DOWN) ||
+		input->PushButton(input->RIGHT) ||
+		input->PushButton(input->LEFT) ||
+		input->TiltPushStick(input->L_UP) ||
+		input->TiltPushStick(input->L_DOWN) ||
+		input->TiltPushStick(input->L_LEFT) ||
+		input->TiltPushStick(input->L_RIGHT) ||
+		input->TriggerKey(DIK_W) ||
+		input->TriggerKey(DIK_A) ||
+		input->TriggerKey(DIK_S) ||
+		input->TriggerKey(DIK_D)
+		) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool Player::UpButtonKey() {
+	if (input->PushButton(input->UP) || input->TiltPushStick(input->L_UP) || input->Pushkey(DIK_W)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool Player::DownButtonKey() {
+	if (input->PushButton(input->DOWN) || input->TiltPushStick(input->L_DOWN) || input->Pushkey(DIK_S)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool Player::RightButtonKey() {
+	if (input->PushButton(input->RIGHT) || input->TiltPushStick(input->L_RIGHT) || input->Pushkey(DIK_D)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool Player::LeftButtonKey() {
+	if (input->PushButton(input->LEFT) || input->TiltPushStick(input->L_LEFT) || input->Pushkey(DIK_A)) {
+		return true;
+	} else {
+		return false;
 	}
 }
 
