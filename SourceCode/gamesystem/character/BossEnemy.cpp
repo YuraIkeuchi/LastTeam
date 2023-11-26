@@ -158,7 +158,8 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 		enethorn[i]->Draw(dxCommon);
 	}
 	predictarea->Draw(dxCommon);
-	Obj_Draw();
+	if (m_Color.w != 0.0f)
+		Obj_Draw();
 }
 //ImGui•`‰æ
 void BossEnemy::ImGui_Origin() {

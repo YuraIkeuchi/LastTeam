@@ -124,7 +124,8 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 			newbullet->Draw(dxCommon);
 		}
 	}
-	Obj_Draw();
+	if (m_Color.w != 0.0f)
+		Obj_Draw();
 }
 //ImGui描画
 void CanonEnemy::ImGui_Origin() {
