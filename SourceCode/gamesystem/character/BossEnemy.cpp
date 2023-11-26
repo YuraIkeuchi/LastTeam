@@ -90,6 +90,17 @@ void BossEnemy::Action() {
 	Collide(_AttackArea);		//“–‚½‚è”»’è
 	PoisonState();//“Å
 	BirthMagic();//–‚–@w
+	AttackMove();//UŒ‚‚Ì“®‚«
+	//UŒ‚ƒWƒƒƒ“ƒv‚·‚é
+	if (m_Jump) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_AddPower = {};
+			m_Jump = false;
+			m_Position.y = 0.1f;
+		}
+	}
+
 	//“G‚Ì’e
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
 		if (newbullet != nullptr) {
@@ -169,7 +180,7 @@ void BossEnemy::Inter() {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		int l_RandState = Helper::GetRanNum(0, 2);
-		_AttackState = (AttackState)(0);
+		_AttackState = (AttackState)(l_RandState);
 	}
 }
 //UŒ‚
@@ -271,6 +282,9 @@ void BossEnemy::RowAttack() {
 			BirthPredict({}, m_AttackCount,"Row");
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//ÀÛ‚ÌUŒ‚
+			m_Jump = true;
+			m_AddPower = 0.2f;
+			m_Rot = true;
 			BirthArea({}, m_AttackCount, "Row");
 			coolTimer = {};
 			m_AttackCount++;
@@ -307,6 +321,9 @@ void BossEnemy::RandomAttack() {
 			BirthArea(m_RandWigth, m_RandHeight, "Random");
 			coolTimer = {};
 			m_AttackCount++;
+			m_Jump = true;
+			m_AddPower = 0.2f;
+			m_Rot = true;
 		}
 	}
 	else {
@@ -429,18 +446,7 @@ bool BossEnemy::CreateSkill(int id) {
 }
 //ƒGƒŠƒAUŒ‚‚Ì”»’è
 void BossEnemy::PlayerCollide() {
-	/*int l_PlayerWidth = player->GetNowWidth();
-	int l_PlayerHeight = player->GetNowHeight();
-	for (unique_ptr<AttackArea>& newarea : attackarea) {
-		if (newarea != nullptr) {
-			if ((newarea->GetNowHeight() == l_PlayerHeight && newarea->GetNowWidth() == l_PlayerWidth) &&
-				!newarea->GetHit() && (newarea->GetName() == "Enemy")) {
-				player->RecvDamage(20.0f,"NORMAL");
-				newarea->SetHit(true);
-				break;
-			}
-		}
-	}*/
+
 }
 //–‚–@w¶¬
 void BossEnemy::BirthMagic() {
@@ -500,4 +506,16 @@ void BossEnemy::WarpEnemy() {
 	}
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
+}
+//UŒ‚‚Ì“®‚«
+void BossEnemy::AttackMove() {
+	if (!m_Rot) { return; }
+	const float l_AddFrame = 1 / 20.0f;
+	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
+		m_Rotation.y = 270.0f;
+		m_Rot = false;
+		m_AttackFrame = {};
+	}
+
+	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
 }

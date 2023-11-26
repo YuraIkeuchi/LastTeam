@@ -1,11 +1,11 @@
 ID,6
 SkillType,0
-Delay,55
+Delay,35
 Name,yabu2
 StateName,NONE
-Damege,1
+Damege,5
 DistanceX,1
-AttackArea,1 1 1 1
-AttackArea,1 1 1 1
-AttackArea,1 1 1 1
-AttackAreA,1 1 1 1
+DistanceY,1
+AttackArea,1 1 1
+AttackArea,1 1 1
+AttackAreA,1 1 1

@@ -35,6 +35,7 @@ private:
 	bool CreateSkill(int id);
 	void PlayerCollide();
 	void WarpEnemy();//敵のワープ処理
+	void AttackMove();//攻撃時の動き
 //魔法陣
 	void BirthMagic();
 private:
@@ -106,5 +107,13 @@ private:
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};
+
+	bool m_Jump = false;
+	//上昇度
+	float m_AddPower = 0.0f;
+	//重力加速度
+	float m_Gravity = 0.02f;
+	bool m_Rot = false;
+	float m_AttackFrame = {};
 };
 
