@@ -182,6 +182,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\CreateBombEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\HealEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\ImagePlayer.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\InterEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\NormalEnemy.cpp" />
@@ -321,6 +322,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CreateBombEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\HealEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\ImagePlayer.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\NormalEnemy.h" />

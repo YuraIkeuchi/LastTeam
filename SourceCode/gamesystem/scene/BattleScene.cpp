@@ -18,7 +18,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	dxCommon->SetFullScreen(true);
 	// ポストエフェクト
 	PlayPostEffect = false;
-	
+
 	// パーティクル
 	ParticleEmitter::GetInstance()->AllDelete();
 
@@ -43,7 +43,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	EnemyManager::SetPlayer(player_.get());
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
-	
+
 	//パッシブスキルによるエネミーの能力変更
 	if (GameStateManager::GetInstance()->GetPoisonSkill()) {
 		enemyManager->PoizonGauge();
@@ -95,10 +95,15 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			GameStateManager::GetInstance()->SetIsReloadDamage(false);
 		}
 
-    if (GameStateManager::GetInstance()->GetIsBombDamage()) {
-		enemyManager->BombDamage();
-		GameStateManager::GetInstance()->SetIsBombDamage(false);
-	}
+		if (GameStateManager::GetInstance()->GetIsBombDamage()) {
+			enemyManager->BombDamage();
+			GameStateManager::GetInstance()->SetIsBombDamage(false);
+		}
+
+		if (GameStateManager::GetInstance()->GetIsHeal()) {
+			enemyManager->Heal();
+			GameStateManager::GetInstance()->SetIsHeal(false);
+		}
 
 		StagePanel::GetInstance()->Update();
 		enemyManager->Update();
@@ -149,7 +154,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			else {
 				SceneManager::GetInstance()->ChangeScene("CLEAR");
 			}
-		}else {
+		}
+		else {
 			SceneManager::GetInstance()->ChangeScene("TITLE");
 		}
 		player_->PlayerSave();
@@ -185,7 +191,7 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 }
 //前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
-	if (!m_FeedEnd){
+	if (!m_FeedEnd) {
 		if (player_->GetHp() > 0.0f) {
 			ParticleEmitter::GetInstance()->FlontDrawAll();
 			player_->UIDraw();
@@ -231,5 +237,5 @@ void BattleScene::ImGuiDraw() {
 }
 
 void BattleScene::Finalize() {
-	
+
 }

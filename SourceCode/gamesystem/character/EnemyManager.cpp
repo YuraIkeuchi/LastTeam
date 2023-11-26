@@ -2,11 +2,11 @@
 #include "NormalEnemy.h"
 #include "CanonEnemy.h"
 #include "TackleEnemy.h"
+#include "PoisonEnemy.h"
 #include "CreateBombEnemy.h"
 #include "Bomb.h"
+#include "HealEnemy.h"
 #include "BossEnemy.h"
-#include "PoisonEnemy.h"
-#include "TackleEnemy.h"
 #include <StagePanel.h>
 #include <GameStateManager.h>
 #include <Helper.h>
@@ -126,6 +126,13 @@ void EnemyManager::ReLoadDamage() {
 void EnemyManager::BombDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimpleDamege(5.f);
+	}
+}
+
+void EnemyManager::Heal()
+{
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SimpleDamege(-5.f);
 	}
 }
 
