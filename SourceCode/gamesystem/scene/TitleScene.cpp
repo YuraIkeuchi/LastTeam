@@ -128,8 +128,8 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	camerawork->ImGuiDraw();
-	player_->ImGuiDraw();
+	//camerawork->ImGuiDraw();
+	//player_->ImGuiDraw();
 }
 //解放
 void TitleScene::Finalize() {
