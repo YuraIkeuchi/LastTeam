@@ -217,6 +217,7 @@ void Player::UIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::Text("Frame:%f", m_MoveFrame);
 	ImGui::Text("Move:%d", m_Move);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);

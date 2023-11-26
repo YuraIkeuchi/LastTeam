@@ -107,6 +107,7 @@ void GameStateManager::Update() {
 
 		if (Helper::CheckMin(m_CounterTimer, 20, 1)) {		//一定フレームでカウンター終了
 			m_Counter = false;
+			onomatope->AddOnomato(Counter, {640.f,660.f});
 			m_CounterTimer = {};
 		}
 	}

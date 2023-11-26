@@ -187,7 +187,7 @@ private:
 	//
 	float m_DiameterGauge = 1.0f;
 	//ゲージマックス
-	float kGaugeCountMax = 180;
+	float kGaugeCountMax = 130;
 	bool m_IsReload = true;
 	bool m_IsReloadDamage = false;
 	bool m_ReloadDamage = false;
