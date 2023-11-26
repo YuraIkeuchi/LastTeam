@@ -216,7 +216,7 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("ScaleX:%f", m_Scale.x);
 	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::Text("Frame:%f", m_MoveFrame);
 	ImGui::Text("Move:%d", m_Move);
@@ -402,6 +402,13 @@ void Player::Move() {
 
 		//イージングで移動するためのもの
 		if (m_Move) {
+			float l_AddScale = 0.1f;
+			if (m_MoveFrame < m_FrameMax / 2) {
+				m_Scale = Helper::Float3SubFloat(m_Scale, l_AddScale);
+			}
+			else {
+				m_Scale = Helper::Float3AddFloat(m_Scale, l_AddScale);
+			}
 			if (Helper::FrameCheck(m_MoveFrame, 0.2f)) {
 				m_MoveFrame = {};
 				m_Move = false;
@@ -411,6 +418,7 @@ void Player::Move() {
 				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 				GameStateManager::GetInstance()->SetResetPredict(true);
 				m_Rotation.y = 90.0f;
+				m_Scale = { 0.5f,0.5f,0.5f };
 			}
 
 			m_Position = { Ease(Out,Cubic,m_MoveFrame,m_Position.x,m_AfterPos.x),
@@ -585,7 +593,7 @@ void Player::RecvDamage(const float Damage, const string& name) {
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	} else if (name == "POISON") {
 		BirthPoisonParticle();
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.04f);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Fire.wav", 0.04f);
 	}
 	m_Damege = true;
 	m_DamageTimer = {};
