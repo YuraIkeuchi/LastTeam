@@ -104,7 +104,8 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	}
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	if (input->TriggerButton(input->BACK) &&
+	if ((input->TriggerButton(input->BACK)||
+		input->TriggerKey(DIK_BACK)) &&
 		!m_IsBackKey &&
 		!m_Skip) {
 		m_IsBackKey = true;

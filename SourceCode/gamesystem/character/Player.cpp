@@ -255,7 +255,8 @@ void Player::Move() {
 			input->TiltPushStick(input->L_UP) ||
 			input->TiltPushStick(input->L_DOWN) ||
 			input->TiltPushStick(input->L_LEFT) ||
-			input->TiltPushStick(input->L_RIGHT)
+			input->TiltPushStick(input->L_RIGHT)||
+			input->TriggerKey(DIK_W)
 			) {
 			if (input->PushButton(input->UP) || input->TiltPushStick(input->L_UP)) {
 				m_InputTimer[DIR_UP]++;

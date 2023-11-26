@@ -69,7 +69,7 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	SceneChanger::GetInstance()->Update();
 	enemy->Update();
 
-	if ((input->TriggerButton(input->B)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
+	if ((input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = PLAY;
 		//チュートリアルのタスク

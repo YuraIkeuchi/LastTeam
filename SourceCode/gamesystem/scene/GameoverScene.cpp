@@ -13,7 +13,7 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 //更新
 void GameoverScene::Update(DirectXCommon* dxCommon) {
 	Input* input = Input::GetInstance();
-	if ((input->TriggerButton(input->B))) {			//バトル
+	if ((input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE))) {			//バトル
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
 

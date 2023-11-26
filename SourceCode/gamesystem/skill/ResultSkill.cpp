@@ -178,9 +178,15 @@ void ResultSkill::Move() {
 	}
 
 	if (input->TiltPushStick(input->L_LEFT) ||
-		input->TiltPushStick(input->L_RIGHT)) {
+		input->TiltPushStick(input->L_RIGHT) ||
+		input->TriggerKey(DIK_A)||
+		input->TriggerKey(DIK_D)||
+		input->PushButton(input->LEFT)||
+		input->PushButton(input->RIGHT)) {
 		if (isMove) { return; }
-		if (input->TiltPushStick(input->L_RIGHT)) {
+		if (input->TiltPushStick(input->L_RIGHT)||
+			input->TriggerKey(DIK_D)||
+			input->PushButton(input->RIGHT)) {
 			if (nowFrame == 2) { return; }
 			nowFrame++;
 		} else {
@@ -190,7 +196,8 @@ void ResultSkill::Move() {
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		isMove = true;
 	}
-	if (input->TriggerButton(Input::B)) {
+	if (input->TriggerButton(Input::B)||
+		input->TriggerKey(DIK_SPACE)) {
 		for (ResultUI& itr : choiceSkills) {
 			if (itr.no == nowFrame) {
 				ResultUI n = CreateUI(itr.isSkill, itr.ID, itr.position);

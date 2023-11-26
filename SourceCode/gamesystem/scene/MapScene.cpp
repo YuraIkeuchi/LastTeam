@@ -547,26 +547,23 @@ void MapScene::BlackOut() {
 void MapScene::Move() {
 	Input* input = Input::GetInstance();
 	if (end) { return; }
-	int vel = 0;
-	if (input->PushButton(input->LB)) {
-		vel = -10;
-	} else if (input->PushButton(input->RB)) {
-		vel = 10;
-	}
-	if (input->TiltStick(input->L_UP) && !moved) {
+
+	if ((input->TiltStick(input->L_UP) || input->PushButton(input->UP) ||input->TriggerKey(DIK_W))
+		&& !moved) {
 		if (pickNextIndex == 0) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex - 1] == -1) { return; }
 		pickNextIndex--;
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
-	if (input->TiltStick(input->L_DOWN) && !moved) {
+	if ((input->TiltStick(input->L_DOWN)|| input->PushButton(input->DOWN) ||input->TriggerKey(DIK_S))
+		&& !moved) {
 		if (pickNextIndex == 2) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex + 1] == -1) { return; }
 		pickNextIndex++;
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 
-	if (input->TriggerButton(input->B) && !moved) {
+	if ((input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) && !moved) {
 		nowIndex = pickIndex;
 		nowHierarchy = pickHierarchy;
 		clearHierarchy++;
@@ -698,14 +695,14 @@ void MapScene::CheckState() {
 			if (Helper::FrameCheck(s_frame, addFrame)) {
 				Input* input = Input::GetInstance();
 
-				if (input->TiltStick(input->L_UP) &&
+				if ((input->TiltStick(input->L_UP)|| input->PushButton(input->UP) ||input->TriggerKey(DIK_W)) &&
 					nowCheack == 1) {
 					nowCheack--;
 					cFrame = 0.f;
 					cAdd = 0.03f;
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 				}
-				if (input->TiltStick(input->L_DOWN) &&
+				if ((input->TiltStick(input->L_DOWN)|| input->PushButton(input->DOWN) || input->TriggerKey(DIK_S)) &&
 					nowCheack == 0) {
 					nowCheack++;
 					cFrame = 0.f;
@@ -713,7 +710,7 @@ void MapScene::CheckState() {
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 				}
 
-				if (input->TriggerButton(input->B)) {
+				if (input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) {
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 					if (nowCheack == 0) {
 						SceneChanger::GetInstance()->SetChangeStart(true);
