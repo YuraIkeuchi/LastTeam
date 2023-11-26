@@ -173,7 +173,7 @@ void GameStateManager::AttackTrigger() {
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	if (!isFinish && !isChangeScene) {
 		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-		if (m_Delay && m_Act[0].ActDelay >= 30.0f) {
+		if (m_Delay && m_Act[0].ActDelay >= 30) {
 			_charge->Draw();
 		}
 		IKETexture::PostDraw();
@@ -331,6 +331,12 @@ void GameStateManager::UseSkill() {
 			onomatope->AddOnomato(AttackCharge, { 640.f,360.f });
 		}
 		FinishAct();
+		if (m_AllActCount == 0) {
+			player->AttackCheck(true);
+		}
+		else {
+			player->AttackCheck(false);
+		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.1f);
 		m_ResetPredict = true;
 		m_Delay = false;
