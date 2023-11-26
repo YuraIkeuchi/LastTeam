@@ -115,7 +115,8 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 
 		poisonarea[i]->Draw(dxCommon);
 	}
-	Obj_Draw();
+	if (m_Color.w != 0.0f)
+		Obj_Draw();
 }
 //ImGui•`‰æ
 void PoisonEnemy::ImGui_Origin() {

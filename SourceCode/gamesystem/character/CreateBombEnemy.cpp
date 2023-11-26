@@ -114,7 +114,8 @@ void CreateBombEnemy::Draw(DirectXCommon* dxCommon) {
 
 		bomb[i]->Draw(dxCommon);
 	}
-	Obj_Draw();
+	if (m_Color.w != 0.0f)
+		Obj_Draw();
 }
 //ImGui•`‰æ
 void CreateBombEnemy::ImGui_Origin() {

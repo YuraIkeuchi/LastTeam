@@ -95,6 +95,7 @@ void TackleEnemy::Draw(DirectXCommon* dxCommon) {
 	shadow_tex->Draw();
 	magic.tex->Draw();
 	IKETexture::PostDraw();
+	if (m_Color.w != 0.0f)
 	Obj_Draw();
 }
 //ImGui描画
