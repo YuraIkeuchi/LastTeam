@@ -19,6 +19,10 @@ public:
 		BULLET,
 		ENEMYMODEL,
 		THORN,
+		CANNON,
+		SQUID,
+		MISSILE,
+
 	};
 	//FBXの名前
 	enum FBXName {

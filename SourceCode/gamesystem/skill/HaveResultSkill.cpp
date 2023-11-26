@@ -141,8 +141,8 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 }
 //パッシブスキルの表示
 void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCommon* dxCommon) {
-	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
-	havePassive[num].position = { l_BasePos.x + ((num + (int)haveSkills.size()) * 100.0f),l_BasePos.y };
+	XMFLOAT2 l_BasePos = { 640.0f,250.0f };
+	havePassive[num].position = { l_BasePos.x + ((num + (int)haveSkills.size()) * 150.0f),l_BasePos.y };
 	havePassive[num].icon = IKESprite::Create(ImageManager::PASSIVE_01 + havePassive[num].ID, {0.0f,0.0f});
 	havePassive[num].icon->SetSize({ 64.0f,64.0f });
 	havePassive[num].icon->SetAnchorPoint({ 0.5f,0.5f });
