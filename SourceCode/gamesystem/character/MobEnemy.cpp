@@ -33,7 +33,7 @@ bool MobEnemy::Initialize() {
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.4f,0.4f,0.4f };
-	m_HP = 5.0f;
+	m_HP = 15.0f;
 	m_MaxHP = m_HP;
 	m_EnemyTag = "Mob";
 	m_ShadowScale = { 0.05f,0.05f,0.05f };

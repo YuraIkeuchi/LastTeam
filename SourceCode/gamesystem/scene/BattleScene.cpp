@@ -77,6 +77,9 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		if (player_->GetFinishGameOver()) {
 			if (Helper::FrameCheck(m_GameOverFrame, 0.01f)) {
 				m_ChangeTimer++;
+				if (m_ChangeTimer == 1) {
+					Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameOver.wav", 0.1f);
+				}
 			}
 			else {
 				m_GameOverPos.y = { Ease(In,Cubic,m_GameOverFrame,m_GameOverPos.y,0.0f) };
@@ -223,9 +226,9 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	//player_->ImGuiDraw();
+	player_->ImGuiDraw();
 	//GameStateManager::GetInstance()->ImGuiDraw();
-	enemyManager->ImGuiDraw();
+	//enemyManager->ImGuiDraw();
 	//StagePanel::GetInstance()->ImGuiDraw();
 	//camerawork->ImGuiDraw();
 }

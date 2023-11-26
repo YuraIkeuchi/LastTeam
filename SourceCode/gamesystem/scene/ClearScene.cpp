@@ -11,6 +11,7 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 	for (int i = 0; i < 3; i++) {
 		RandShineInit();
 	}
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameClear.wav", 0.04f);
 }
 //çXêV
 void ClearScene::Update(DirectXCommon* dxCommon) {
