@@ -13,7 +13,7 @@
 CanonEnemy::CanonEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::MISSILE));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::CANNON));
 	m_Object->SetLightEffect(false);
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
@@ -37,8 +37,8 @@ CanonEnemy::CanonEnemy() {
 //初期化
 bool CanonEnemy::Initialize() {
 	//m_Position = randPanelPos();
-	m_Rotation = { 0.0f,0.0f,0.0f };
-	m_Scale = { 0.4f,0.4f,0.4f };
+	m_Rotation = { 0.0f,270.0f,0.0f };
+	m_Scale = { 0.6f,0.6f,0.6f };
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "LIMIT_NUM")));
 
 	m_Limit.resize(LimitSize);
@@ -72,7 +72,6 @@ void (CanonEnemy::* CanonEnemy::stateTable[])() = {
 //行動
 void CanonEnemy::Action() {
 	(this->*stateTable[_charaState])();
-	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -125,7 +124,8 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 			newbullet->Draw(dxCommon);
 		}
 	}
-	Obj_Draw();
+	if (m_Color.w != 0.0f)
+		Obj_Draw();
 }
 //ImGui描画
 void CanonEnemy::ImGui_Origin() {
@@ -136,7 +136,8 @@ void CanonEnemy::ImGui_Origin() {
 		}
 	}*/
 	ImGui::Begin("Canon");
-	ImGui::Text("Last:%d", m_LastEnemy);
+	ImGui::Text("Height:%d", m_NowHeight);
+	ImGui::Text("ShotDir:%d", m_ShotDir);
 	ImGui::End();
 }
 //開放
@@ -150,20 +151,46 @@ void CanonEnemy::Inter() {
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
 	if (coolTimer == l_TargetTimer) {
-		coolTimer = 0;
+		coolTimer = 100;
 		_charaState = STATE_ATTACK;
-		BirthBullet();
 	}
 }
 //攻撃
 void CanonEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
-
+	const float l_AddFrame = 1 / 30.0f;
+	
+	//弾の生成関係
 	if (_CanonType == CANON_SET) {
+		if (coolTimer == 101) {		//ここで撃つ方向を決める
+			m_ShotDir = Helper::GetRanNum(0, 2);
+			//敵が端にいた場合反射によって回転が変に見えるから指定する
+			if (m_NowHeight == 0 && m_ShotDir == 2) {
+				m_ShotDir = 1;
+			}
+			else if (m_NowHeight == 3 && m_ShotDir == 1) {
+				m_ShotDir = 2;
+			}
+			//弾を撃つ方向で向きが変わる
+			if (m_ShotDir == 0) {
+				m_AfterRotY = 270.0f;
+			}
+			else if (m_ShotDir == 1) {
+				m_AfterRotY = 315.0f;
+			}
+			else {
+				m_AfterRotY = 225.0f;
+			}
+		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-			coolTimer = {};
-			_CanonType = CANON_THROW;
+			if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
+				m_RotFrame = {};
+				coolTimer = {};
+				_CanonType = CANON_THROW;
+			}
+
+			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
 		}
 	}
 	else if (_CanonType == CANON_THROW) {
@@ -188,10 +215,11 @@ void CanonEnemy::Attack() {
 
 //ワープ
 void CanonEnemy::Teleport() {
+	const float l_AddFrame = 1 / 30.0f;
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL];
-
+	
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
@@ -207,8 +235,9 @@ void CanonEnemy::BirthBullet() {
 		newbullet = new EnemyBullet();
 		newbullet->Initialize();
 		newbullet->SetPlayer(player);
+		newbullet->SetShotDir(m_ShotDir);
 		newbullet->SetPolterType(TYPE_FOLLOW);
-		newbullet->SetPosition({ m_Position.x,m_Position.y + 1.8f,m_Position.z });
+		newbullet->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
 		bullets.emplace_back(newbullet);
 }
 //魔法陣生成
@@ -251,6 +280,8 @@ void CanonEnemy::WarpEnemy() {
 			enemywarp.State = WARP_END;
 			coolTimer = {};
 			m_Position = l_RandPos;
+			m_RotFrame = {};
+			m_Rotation.y = 270.0f;
 			StagePanel::GetInstance()->EnemyHitReset();
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);

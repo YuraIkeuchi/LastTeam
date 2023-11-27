@@ -12,7 +12,7 @@
 PoisonEnemy::PoisonEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::MISSILE));
 	m_Object->SetLightEffect(false);
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
@@ -35,9 +35,9 @@ PoisonEnemy::PoisonEnemy() {
 //初期化
 bool PoisonEnemy::Initialize() {
 	//m_Position = randPanelPos();
-	m_Rotation = { 0.0f,0.0f,0.0f };
-	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.4f,0.4f,0.4f };
+	m_Rotation = { 0.0f,270.0f,0.0f };
+	m_BaseScale = 0.7f;
+	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "hp")));
 	m_MaxHP = m_HP;
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/PoisonEnemy.csv", "LIMIT_NUM")));
@@ -70,7 +70,6 @@ void (PoisonEnemy::* PoisonEnemy::stateTable[])() = {
 //行動
 void PoisonEnemy::Action() {
 	(this->*stateTable[_charaState])();
-	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -116,7 +115,8 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 
 		poisonarea[i]->Draw(dxCommon);
 	}
-	Obj_Draw();
+	if (m_Color.w != 0.0f)
+		Obj_Draw();
 }
 //ImGui描画
 void PoisonEnemy::ImGui_Origin() {
@@ -129,7 +129,8 @@ void PoisonEnemy::ImGui_Origin() {
 	//	poisonarea[i]->ImGuiDraw();
 	//}
 	ImGui::Begin("Poison");
-	ImGui::Text("Last:%d", m_LastEnemy);
+	ImGui::Text("Frame:%f", m_ScaleFrame);
+	ImGui::Text("Scale:%f", m_BaseScale);
 	ImGui::End();
 }
 //開放
@@ -143,31 +144,44 @@ void PoisonEnemy::Inter() {
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
 	if (coolTimer == l_TargetTimer) {
-		coolTimer = 0;
+		coolTimer = 100;
 		_charaState = STATE_ATTACK;
-		BirthPoison();
 	}
 }
 //攻撃
 void PoisonEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
-
+	float l_AfterScale = {};
+	float l_AddFrame = {};
 	if (_PoisonType == Poison_SET) {
+		l_AfterScale = 0.3f;
+		l_AddFrame = 1 / 30.0f;
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-			coolTimer = {};
-			_PoisonType = Poison_THROW;
+			if (Helper::FrameCheck(m_ScaleFrame,l_AddFrame)) {
+				coolTimer = {};
+				_PoisonType = Poison_THROW;
+				m_ScaleFrame = {};
+			}
+
+			m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
 		}
 	}
 	else if (_PoisonType == Poison_THROW) {
-		m_AttackCount++;
-		BirthPoison();
-		if (m_AttackCount != m_BulletNum) {
-			_PoisonType = Poison_SET;
+		l_AfterScale = 0.5f;
+		l_AddFrame = 1 / 20.0f;
+		if (Helper::FrameCheck(m_ScaleFrame, l_AddFrame)) {
+			m_AttackCount++;
+			BirthPoison();
+			if (m_AttackCount != m_BulletNum) {
+				_PoisonType = Poison_SET;
+			}
+			else {
+				_PoisonType = Poison_END;
+			}
+			m_ScaleFrame = {};
 		}
-		else {
-			_PoisonType = Poison_END;
-		}
+		m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
 	}
 	else {
 		m_CheckPanel = true;
@@ -177,6 +191,8 @@ void PoisonEnemy::Attack() {
 		_PoisonType = Poison_SET;
 		StagePanel::GetInstance()->EnemyHitReset();
 	}
+
+	m_Scale = { m_Scale.x,m_BaseScale,m_Scale.z };
 }
 
 //ワープ
@@ -199,7 +215,7 @@ void PoisonEnemy::BirthPoison() {
 	int l_RandHeight;
 	StagePanel::GetInstance()->PoisonSetPanel(l_RandWidth,l_RandHeight);
 	std::unique_ptr<PoisonArea> newarea = std::make_unique<PoisonArea>();
-	newarea->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
+	newarea->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
 	newarea->InitState(l_RandWidth, l_RandHeight);
 	newarea->SetPlayer(player);
 	poisonarea.push_back(std::move(newarea));

@@ -37,7 +37,7 @@ BossEnemy::BossEnemy() {
 //‰Šú‰»
 bool BossEnemy::Initialize() {
 	//m_Position = randPanelPos();
-	m_Rotation = { 0.0f,0.0f,0.0f };
+	m_Rotation = { 0.0f,270.0f,0.0f };
 	m_Color = { 0.0f,1.0f,0.5f,1.0f };
 	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "hp")));
@@ -84,13 +84,23 @@ void (BossEnemy::* BossEnemy::attackTable[])() = {
 //s“®
 void BossEnemy::Action() {
 	(this->*stateTable[_charaState])();
-	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//“–‚½‚è”»’è
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//“–‚½‚è”»’è
 	PoisonState();//“Å
 	BirthMagic();//–‚–@w
+	AttackMove();//UŒ‚‚Ì“®‚«
+	//UŒ‚ƒWƒƒƒ“ƒv‚·‚é
+	if (m_Jump) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_AddPower = {};
+			m_Jump = false;
+			m_Position.y = 0.1f;
+		}
+	}
+
 	//“G‚Ì’e
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
 		if (newbullet != nullptr) {
@@ -148,7 +158,8 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 		enethorn[i]->Draw(dxCommon);
 	}
 	predictarea->Draw(dxCommon);
-	Obj_Draw();
+	if (m_Color.w != 0.0f)
+		Obj_Draw();
 }
 //ImGui•`‰æ
 void BossEnemy::ImGui_Origin() {
@@ -202,6 +213,7 @@ void BossEnemy::BirthBullet() {
 	newbullet = new EnemyBullet();
 	newbullet->Initialize();
 	newbullet->SetPlayer(player);
+	newbullet->SetShotDir(m_ShotDir);
 	newbullet->SetPolterType(TYPE_FOLLOW);
 	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 	bullets.emplace_back(newbullet);
@@ -211,11 +223,36 @@ void BossEnemy::BirthBullet() {
 void BossEnemy::BulletAttack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_BULLET];
-
+	const float l_AddFrame = 1 / 30.0f;
 	if (_BossType == Boss_SET) {
+		if (coolTimer == 51) {		//‚±‚±‚ÅŒ‚‚Â•ûŒü‚ğŒˆ‚ß‚é
+			m_ShotDir = Helper::GetRanNum(0, 2);
+			//“G‚ª’[‚É‚¢‚½ê‡”½Ë‚É‚æ‚Á‚Ä‰ñ“]‚ª•Ï‚ÉŒ©‚¦‚é‚©‚çw’è‚·‚é
+			if (m_NowHeight == 0 && m_ShotDir == 2) {
+				m_ShotDir = 1;
+			}
+			else if (m_NowHeight == 3 && m_ShotDir == 1) {
+				m_ShotDir = 2;
+			}
+			//’e‚ğŒ‚‚Â•ûŒü‚ÅŒü‚«‚ª•Ï‚í‚é
+			if (m_ShotDir == 0) {
+				m_AfterRotY = 270.0f;
+			}
+			else if (m_ShotDir == 1) {
+				m_AfterRotY = 315.0f;
+			}
+			else {
+				m_AfterRotY = 225.0f;
+			}
+		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-			coolTimer = {};
-			_BossType = Boss_THROW;
+			if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
+				m_RotFrame = {};
+				coolTimer = {};
+				_BossType = Boss_THROW;
+			}
+
+			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
 		}
 	}
 	else if (_BossType == Boss_THROW) {
@@ -246,6 +283,9 @@ void BossEnemy::RowAttack() {
 			BirthPredict({}, m_AttackCount,"Row");
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//ÀÛ‚ÌUŒ‚
+			m_Jump = true;
+			m_AddPower = 0.2f;
+			m_Rot = true;
 			BirthArea({}, m_AttackCount, "Row");
 			coolTimer = {};
 			m_AttackCount++;
@@ -282,6 +322,9 @@ void BossEnemy::RandomAttack() {
 			BirthArea(m_RandWigth, m_RandHeight, "Random");
 			coolTimer = {};
 			m_AttackCount++;
+			m_Jump = true;
+			m_AddPower = 0.2f;
+			m_Rot = true;
 		}
 	}
 	else {
@@ -404,18 +447,7 @@ bool BossEnemy::CreateSkill(int id) {
 }
 //ƒGƒŠƒAUŒ‚‚Ì”»’è
 void BossEnemy::PlayerCollide() {
-	/*int l_PlayerWidth = player->GetNowWidth();
-	int l_PlayerHeight = player->GetNowHeight();
-	for (unique_ptr<AttackArea>& newarea : attackarea) {
-		if (newarea != nullptr) {
-			if ((newarea->GetNowHeight() == l_PlayerHeight && newarea->GetNowWidth() == l_PlayerWidth) &&
-				!newarea->GetHit() && (newarea->GetName() == "Enemy")) {
-				player->RecvDamage(20.0f,"NORMAL");
-				newarea->SetHit(true);
-				break;
-			}
-		}
-	}*/
+
 }
 //–‚–@w¶¬
 void BossEnemy::BirthMagic() {
@@ -457,6 +489,8 @@ void BossEnemy::WarpEnemy() {
 			enemywarp.State = WARP_END;
 			coolTimer = {};
 			m_Position = l_RandPos;
+			m_RotFrame = {};
+			m_Rotation.y = 270.0f;
 			StagePanel::GetInstance()->EnemyHitReset();
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
@@ -473,4 +507,16 @@ void BossEnemy::WarpEnemy() {
 	}
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
+}
+//UŒ‚‚Ì“®‚«
+void BossEnemy::AttackMove() {
+	if (!m_Rot) { return; }
+	const float l_AddFrame = 1 / 20.0f;
+	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
+		m_Rotation.y = 270.0f;
+		m_Rot = false;
+		m_AttackFrame = {};
+	}
+
+	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
 }

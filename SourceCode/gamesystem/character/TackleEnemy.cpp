@@ -12,7 +12,7 @@
 TackleEnemy::TackleEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::SQUID));
 	m_Object->SetLightEffect(false);
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
@@ -37,8 +37,7 @@ bool TackleEnemy::Initialize() {
 
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,0.0f,0.0f };
-	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5 };
+	m_Scale = { 0.3f,0.3f,0.3f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/TackleEnemy.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/TackleEnemy.csv", "LIMIT_NUM")));
 
@@ -49,7 +48,7 @@ bool TackleEnemy::Initialize() {
 
 	m_MaxHP = m_HP;
 	StagePanel::GetInstance()->EnemyHitReset();
-	m_ShadowScale = { 0.05f,0.05f,0.05f };
+	m_ShadowScale = { 0.03f,0.03f,0.03f };
 
 
 	magic.Alive = false;
@@ -73,7 +72,6 @@ void (TackleEnemy::* TackleEnemy::stateTable[])() = {
 //行動
 void TackleEnemy::Action() {
 	(this->*stateTable[_charaState])();
-	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//当たり判
@@ -97,6 +95,7 @@ void TackleEnemy::Draw(DirectXCommon* dxCommon) {
 	shadow_tex->Draw();
 	magic.tex->Draw();
 	IKETexture::PostDraw();
+	if (m_Color.w != 0.0f)
 	Obj_Draw();
 }
 //ImGui描画
@@ -110,10 +109,6 @@ void TackleEnemy::ImGui_Origin() {
 void TackleEnemy::Finalize() {
 
 }
-//追従
-//void NormalEnemy::Follow() {
-//	Helper::GetInstance()->FollowMove(m_Position, Player::GetInstance()->GetPosition(), 0.05f);
-//}
 
 void TackleEnemy::Inter() {
 	coolTimer++;
@@ -126,19 +121,34 @@ void TackleEnemy::Inter() {
 
 void TackleEnemy::Attack() {
 	const float l_TargetX = -8.0f;
-	m_Position.x -= m_Speed;
-	if (m_Position.x < l_TargetX) {
-		m_CheckPanel = true;
-		_charaState = STATE_SPECIAL;
-		StagePanel::GetInstance()->EnemyHitReset();
+	const float l_AddFrame = 1 / 45.0f;
+	const float l_AddRot = 20.0f;
+	if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+		m_Frame = 1.0f;
+		m_Position.x -= m_Speed;
+		m_Rotation.x += l_AddRot;
+		if (m_Position.x < l_TargetX) {
+			m_CheckPanel = true;
+			_charaState = STATE_SPECIAL;
+			StagePanel::GetInstance()->EnemyHitReset();
+			m_Frame = {};
+		}
 	}
+	m_Rotation.z = Ease(In, Cubic, m_Frame, m_Rotation.z, 90.0f);
+	m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.25f);
 }
 //ワープ
 void TackleEnemy::Teleport() {
+	const float l_TargetX = -8.0f;
+	const float l_AddFrame = 1 / 45.0f;
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL];
+	if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+		m_Frame = 1.0f;
+	}
 
+	m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.0f);
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
@@ -185,11 +195,13 @@ void TackleEnemy::WarpEnemy() {
 	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
-			enemywarp.AfterScale = 0.5f;
+			enemywarp.AfterScale = 0.3f;
 			enemywarp.State = WARP_END;
 			coolTimer = {};
 			m_Position = l_RandPos;
 			StagePanel::GetInstance()->EnemyHitReset();
+			m_Frame = {};
+			m_Rotation = { 0.0f,0.0f,0.0f };
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}

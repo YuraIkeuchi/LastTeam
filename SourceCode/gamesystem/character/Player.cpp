@@ -72,11 +72,8 @@ void Player::InitState(const XMFLOAT3& pos) {
 	m_Rotation = { 0.0f,90.0f,0.0f };
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5f };
+	m_BaseScale = 0.5f;
 	_charaState = STATE_MOVE;
-	//攻撃先
-	m_TargetPos = {};
-	//戻り先
-	m_ReturnPos = {};
 	//イージング
 	m_Frame = {};
 	m_CoolTime = {};
@@ -131,6 +128,8 @@ void Player::Update() {
 		}
 		HPEffect();
 		DamageUpdate();
+		AttackMove();
+		ShrinkScale();
 		//表示用のHP
 		m_InterHP = (int)(m_HP);
 		m_InterMaxHP = (int)m_MaxHP;
@@ -164,6 +163,18 @@ void Player::Update() {
 				imageplayer.erase(cbegin(imageplayer) + i);
 			}
 		}
+
+		//最後の一撃はジャンプする
+		if (m_Jump) {
+			m_AddPower -= m_Gravity;
+			if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+				m_AddPower = {};
+				m_Jump = false;
+				m_Position.y = 0.1f;
+			}
+		}
+
+		Helper::Clamp(m_BaseScale, 0.0f, 0.5f);
 	}
 	//影
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
@@ -216,10 +227,7 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("POSX:%f", m_Position.x);
-	ImGui::Text("POSZ:%f", m_Position.z);
-	ImGui::Text("Frame:%f", m_MoveFrame);
-	ImGui::Text("Move:%d", m_Move);
+	ImGui::Text("ScaleX:%f", m_BaseScale);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::SliderFloat("Disolve", &m_AddDisolve, 0, 2);
 	if (ImGui::Button("MOVE_NONE", ImVec2(100, 100)))
@@ -402,6 +410,16 @@ void Player::Move() {
 
 		//イージングで移動するためのもの
 		if (m_Move) {
+			float l_AddScale = 0.1f;
+			//拡縮処理
+			if (_AttackState == ATTACK_NONE) {
+				if (m_MoveFrame < m_FrameMax / 2) {
+					m_BaseScale -= l_AddScale;
+				}
+				else {
+					m_BaseScale += l_AddScale;
+				}
+			}
 			if (Helper::FrameCheck(m_MoveFrame, 0.2f)) {
 				m_MoveFrame = {};
 				m_Move = false;
@@ -410,7 +428,7 @@ void Player::Move() {
 				}
 				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 				GameStateManager::GetInstance()->SetResetPredict(true);
-				m_Rotation.y = 90.0f;
+				m_Scale = { 0.5f,0.5f,0.5f };
 			}
 
 			m_Position = { Ease(Out,Cubic,m_MoveFrame,m_Position.x,m_AfterPos.x),
@@ -498,6 +516,8 @@ void Player::Move() {
 			m_InputTimer[DIR_LEFT] = {};
 		}
 	}
+
+	m_Scale = { m_BaseScale,m_BaseScale ,m_BaseScale };
 }
 
 bool Player::MoveButtonKey() {
@@ -575,7 +595,6 @@ void Player::HealPlayer(const float power) {
 	m_HP += power;
 	HealParticle();
 }
-//チュートリアルの更新
 //プレイヤーのダメージ判定
 void Player::RecvDamage(const float Damage, const string& name) {
 	m_HP -= Damage;
@@ -585,7 +604,7 @@ void Player::RecvDamage(const float Damage, const string& name) {
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	} else if (name == "POISON") {
 		BirthPoisonParticle();
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.04f);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Fire.wav", 0.04f);
 	}
 	m_Damege = true;
 	m_DamageTimer = {};
@@ -720,4 +739,54 @@ void Player::GameOverUpdate() {
 	}
 	
 	Obj_SetParam();
+}
+//プレイヤーの攻撃時瞬間取得
+void Player::AttackCheck(const bool LastAttack) {
+	if (LastAttack) {
+		_AttackState = ATTACK_LAST;
+		m_Jump = true;
+		m_AddPower = 0.2f;
+	}
+	else {
+		_AttackState = ATTACK_NORMAL;
+	}
+}
+void Player::AttackMove() {
+	const float l_AddFrame = 1 / 20.0f;
+	if (_AttackState == ATTACK_NONE) { return; }
+	m_AfterScale = 0.5f;
+	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
+		m_AttackFrame = {};
+		_AttackState = ATTACK_NONE;
+		m_ShrinkTimer = {};
+		m_Rotation.y = 90.0f;
+	}
+	else {
+		m_BaseScale = Ease(In, Cubic, m_AttackFrame, m_BaseScale, m_AfterScale);
+	}
+	m_Scale = { m_BaseScale,m_BaseScale ,m_BaseScale };
+	if (_AttackState == ATTACK_LAST) {
+		m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 450.0f);
+	}
+}
+//縮小
+void Player::ShrinkScale() {
+	if (!m_Delay) { return; }
+
+	m_ShrinkTimer++;
+	if (m_ShrinkTimer < 8) {
+		m_AfterScale = 0.5f;
+	}
+	else if (m_ShrinkTimer >= 8 && m_ShrinkTimer < 20) {
+		m_AfterScale = 0.4f;
+	}
+	else if (m_ShrinkTimer >= 20 && m_ShrinkTimer < 30) {
+		m_AfterScale = 0.3f;
+	}
+	else if (m_ShrinkTimer >= 31) {
+		m_AfterScale = 0.2f;
+	}
+
+	m_BaseScale = Ease(In, Cubic, 0.7f, m_BaseScale, m_AfterScale);
+	m_Scale = { m_BaseScale,m_BaseScale ,m_BaseScale };
 }

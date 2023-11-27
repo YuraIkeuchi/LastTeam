@@ -50,7 +50,7 @@ void PoisonArea::InitState(const int width, const int height) {
 void PoisonArea::Update() {
 	const XMFLOAT4 s_color = { 1.f,0.0f,0.0f,1.0f };
 	const XMFLOAT4 e_color = { 1.f,0.5f,0.0f,1.0f };
-	const float s_scale = 1.0f;
+	const float s_scale = 0.5f;
 	const float e_scale = 0.0f;
 	ParticleEmitter::GetInstance()->PoisonEffect(
 	50, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color, 0.1f, 3.0f);
