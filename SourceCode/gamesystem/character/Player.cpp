@@ -19,6 +19,8 @@ void Player::LoadResource() {
 
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
+
 	hptex_under = IKESprite::Create(ImageManager::FEED, { 0.0f,0.0f });
 	hptex_under->SetSize(m_HPSize);
 	for (auto i = 0; i < _drawnumber.size(); i++) {
@@ -654,6 +656,7 @@ bool Player::HPEffect() {
 			_drawnumber[FIRST_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
 			_drawnumber[SECOND_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
 			_drawnumber[THIRD_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
+			hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
 			frame = 0.f;
 			isHeal = false;
 			isDamage = false;
@@ -670,11 +673,13 @@ bool Player::HPEffect() {
 	}
 	if (m_OldHP < m_HP) {
 		isHeal = true;
+		hptex->SetColor({ 0.0f,1.0f,0.0f,1.0f });
 		_drawnumber[FIRST_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
 		_drawnumber[SECOND_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
 		_drawnumber[THIRD_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
 	} else {
 		isDamage = true;
+		hptex->SetColor({ 1.0f,0.5f,0.5f,1.0f });
 		_drawnumber[FIRST_DIGHT]->SetColor({ 1.f,0.0f,0.f,1.0f });
 		_drawnumber[SECOND_DIGHT]->SetColor({ 1.f,0.0f,0.f,1.0f });
 		_drawnumber[THIRD_DIGHT]->SetColor({ 1.f,0.0f,0.f,1.0f });
