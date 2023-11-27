@@ -20,6 +20,8 @@ private:
 	void Inter();//待機
 	void Attack();//攻撃
 	void ShockWave();
+public:
+	void SetTargetPos(const XMFLOAT3& TargetPos) { m_TargetPos = TargetPos; }
 private:
 	unique_ptr<IKETexture> shockWaveTex;
 	int m_AttackCount = {};
@@ -35,4 +37,10 @@ private:
 	float m_SinAngle2 = {};
 	bool m_FlashStart = false;
 	float m_AddAngle = {};
+	XMFLOAT3 m_TargetPos = {};
+	enum BombState {
+		BOMB_SET,
+		BOMB_THROW,
+	}_BombState = BOMB_SET;
+	float m_Frame = {};
 };
