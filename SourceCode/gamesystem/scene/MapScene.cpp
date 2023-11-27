@@ -188,6 +188,20 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	pickHierarchy = nowHierarchy + 1;
 	pickIndex = nowIndex;
 
+	switch (UIs[pickHierarchy][pickIndex].Tag) {
+	case BATTLE:
+		text_->SetConversation(TextManager::MAP_BATTLE, { -300.0f,-80.0f });
+		break;
+	case BOSS:
+		text_->SetConversation(TextManager::MAP_BOSS, { -300.0f,-80.0f });
+		break;
+	case PASSIVE:
+		text_->SetConversation(TextManager::MAP_PASSIVE, { -300.0f,-80.0f });
+		break;
+	default:
+		break;
+	}
+
 	oldHierarchy = nowHierarchy;
 	oldIndex = nowIndex;
 
