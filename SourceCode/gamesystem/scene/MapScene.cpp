@@ -599,7 +599,6 @@ void MapScene::Move() {
 	}
 	if (moved) {
 		if (Helper::FrameCheck(mov_frame, 1 / kMoveFrame)) {
-			moved = false;
 			onomatoFrame = 0.f;
 			m_State = State::checkState;
 			mov_frame = 0.0f;
@@ -711,6 +710,7 @@ void MapScene::CheckState() {
 
 				if (input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) {
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+					moved = false;
 					if (nowCheack == 0) {
 						SceneChanger::GetInstance()->SetChangeStart(true);
 					} else {

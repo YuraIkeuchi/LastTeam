@@ -117,6 +117,9 @@ public:
 	void SetIsBombDamage(bool flag) { m_BombDamage = flag; }
 	bool GetIsBombDamage() { return m_BombDamage; }
 
+	void SetIsEnding(bool flag) { isEnding = flag; isFinish = flag; }
+	bool SetIsEnding() { return isEnding; }
+
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -126,6 +129,7 @@ private:
 	unique_ptr<IKETexture> _charge;
 	bool isFinish = false;
 	bool isChangeScene = false;
+	bool isEnding = false;
 	struct ActState {
 		int SkillType;//スキルの種類
 		int ActID;//ID

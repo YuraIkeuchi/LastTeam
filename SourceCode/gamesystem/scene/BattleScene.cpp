@@ -124,8 +124,13 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			Audio::GetInstance()->StopWave(AUDIO_MAIN);
 			//クリア処理が終らなかったら
 			if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
-				//クリア処理準備
-				GameStateManager::GetInstance()->StageClearInit();
+				if (!s_LastStage) {
+					//クリア処理準備
+					GameStateManager::GetInstance()->StageClearInit();
+				} else {
+					GameStateManager::GetInstance()->SetIsEnding(true);
+					SceneChanger::GetInstance()->SetChangeStart(true);
+				}
 			}
 			else {
 				//マップに戻る
