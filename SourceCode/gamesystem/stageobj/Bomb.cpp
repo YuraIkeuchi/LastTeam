@@ -47,6 +47,7 @@ bool Bomb::Initialize() {
 	m_EnemyTag = "Bomb";
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	m_BaseScale = {};
+	_BombState = BOMB_SET;
 	return true;
 }
 
@@ -74,6 +75,7 @@ void Bomb::Action() {
 	shadow_tex->SetPosition(m_ShadowPos);
 	shadow_tex->SetScale(m_ShadowScale);
 	shadow_tex->Update();
+	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 }
 
 //描画
@@ -91,7 +93,11 @@ void Bomb::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void Bomb::ImGui_Origin() {
-
+	ImGui::Begin("Bomb");
+	ImGui::Text("Scale.x:%f", m_Scale.x);
+	ImGui::Text("PosY:%f", m_Position.y);
+	ImGui::Text("Frame:%f", m_Frame);
+	ImGui::End();
 }
 //開放
 void Bomb::Finalize() {
@@ -107,9 +113,7 @@ void Bomb::Inter() {
 			m_Frame = {};
 			_BombState = BOMB_THROW;
 		}
-		m_BaseScale = Ease(In, Cubic, l_AddFrame, m_BaseScale, l_AfterScale);
-
-		m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
+		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, l_AfterScale);
 	}
 	else {
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
@@ -133,7 +137,7 @@ void Bomb::Inter() {
 		}
 
 		m_Position = { Ease(In,Cubic,m_Frame,m_Position.x,m_TargetPos.x),
-		m_Position.y,
+		Ease(In,Cubic,m_Frame,m_Position.y,0.0f),
 		Ease(In,Cubic,m_Frame,m_Position.z,m_TargetPos.z), };
 	}
 }
