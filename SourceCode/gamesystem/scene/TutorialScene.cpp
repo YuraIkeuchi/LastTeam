@@ -29,7 +29,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 	//�p�[�e�B�N���S�폜
 	ParticleEmitter::GetInstance()->AllDelete();
 
-
+	m_TextPos = { -10.0f,-30.0f };
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
 	text_->SetConversation(TextManager::TUTORIAL_START, m_TextPos);
