@@ -110,8 +110,13 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		//後々変更する(酷い処理)
 		//エネミーが全員死亡したら
 		if (enemyManager->BossDestroy() && !m_FeedStart) {
-			m_Feed = true;
-			m_FeedStart = true;
+			if (!s_LastStage) {
+				m_Feed = true;
+				m_FeedStart = true;
+			} else {
+				Audio::GetInstance()->StopWave(AUDIO_MAIN);
+				SceneChanger::GetInstance()->SetChangeStart(true);
+			}
 		}
 		if (m_Feed) {
 			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 60.0f, m_Feed);
@@ -124,13 +129,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			Audio::GetInstance()->StopWave(AUDIO_MAIN);
 			//クリア処理が終らなかったら
 			if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
-				if (!s_LastStage) {
-					//クリア処理準備
-					GameStateManager::GetInstance()->StageClearInit();
-				} else {
-					GameStateManager::GetInstance()->SetIsEnding(true);
-					SceneChanger::GetInstance()->SetChangeStart(true);
-				}
+				//クリア処理準備
+				GameStateManager::GetInstance()->StageClearInit();
 			}
 			else {
 				//マップに戻る
