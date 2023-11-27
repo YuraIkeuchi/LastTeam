@@ -34,7 +34,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateWord(MAP_BATTLE, L"バトルカードいっぱい！");
 	CreateWord(MAP_PASSIVE, L"パッシブが欲しいあなたへ！");
 	CreateWord(MAP_BOSS, L"手強そうだ！");
-	CreateWord(TUTORIAL_START, L"ここでは戦い方を教える", L"まずは方向パッドで移動してみろ");
+	CreateWord(TUTORIAL_START, L"ここでは戦い方を教える", L"まずはパッドかスティックで移動してみろ");
 	CreateWord(TUTORIAL_GET, L"ステージに何か出てきたぞ、取ってみろ");
 	CreateWord(TUTORIAL_EXPLAIN, L"下にカードが出ただろう", L"そのカードに応じてプレイヤーは動ける");
 	CreateWord(TUTORIAL_MARK, L"赤いエリアが出てきただろう", L"それが攻撃エリアだと思ってくれればいい");
