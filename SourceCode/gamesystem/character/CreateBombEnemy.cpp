@@ -173,7 +173,6 @@ void CreateBombEnemy::Attack() {
 		StagePanel::GetInstance()->EnemyHitReset();
 	}
 }
-
 //ワープ
 void CreateBombEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
@@ -196,11 +195,11 @@ void CreateBombEnemy::BirthBomb() {
 	//ボム生成
 	std::unique_ptr<Bomb> newBomb = std::make_unique<Bomb>();
 	newBomb->Initialize();
-	newBomb->SetPosition(StagePanel::GetInstance()->EnemySetPanel(true));
+	newBomb->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
+	newBomb->SetTargetPos(StagePanel::GetInstance()->EnemySetPanel(true));
 	newBomb->SetPlayer(player);
 	bomb.push_back(std::move(newBomb));
 }
-
 //魔法陣生成
 void CreateBombEnemy::BirthMagic() {
 	if (!magic.Alive) { return; }
