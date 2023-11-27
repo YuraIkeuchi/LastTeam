@@ -124,8 +124,13 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			Audio::GetInstance()->StopWave(AUDIO_MAIN);
 			//クリア処理が終らなかったら
 			if (!GameStateManager::GetInstance()->GetIsChangeScene()) {
-				//クリア処理準備
-				GameStateManager::GetInstance()->StageClearInit();
+				if (!s_LastStage) {
+					//クリア処理準備
+					GameStateManager::GetInstance()->StageClearInit();
+				} else {
+					GameStateManager::GetInstance()->SetIsEnding(true);
+					SceneChanger::GetInstance()->SetChangeStart(true);
+				}
 			}
 			else {
 				//マップに戻る
@@ -226,7 +231,7 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	player_->ImGuiDraw();
+	//player_->ImGuiDraw();
 	//GameStateManager::GetInstance()->ImGuiDraw();
 	//enemyManager->ImGuiDraw();
 	//StagePanel::GetInstance()->ImGuiDraw();

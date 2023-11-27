@@ -507,19 +507,19 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	ImGui::Begin("Map");
-	ImGui::Text("%f", framePos.x);
-	ImGui::Text("%f", eFrame);
-	ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
-	ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
-	ImGui::Text("PICKINDEX:%d", pickIndex);
-	ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
-	ImGui::Text("nowindel:%d", nowIndex);
-	ImGui::Text("nowHie:%d", nowHierarchy);
-	for (int i = 0; i < 3; i++) {
-		ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
-	}
-	ImGui::End();
+	//ImGui::Begin("Map");
+	//ImGui::Text("%f", framePos.x);
+	//ImGui::Text("%f", eFrame);
+	//ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
+	//ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
+	//ImGui::Text("PICKINDEX:%d", pickIndex);
+	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
+	//ImGui::Text("nowindel:%d", nowIndex);
+	//ImGui::Text("nowHie:%d", nowHierarchy);
+	//for (int i = 0; i < 3; i++) {
+	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
+	//}
+	//ImGui::End();
 }
 
 void MapScene::BlackOut() {
@@ -599,7 +599,6 @@ void MapScene::Move() {
 	}
 	if (moved) {
 		if (Helper::FrameCheck(mov_frame, 1 / kMoveFrame)) {
-			moved = false;
 			onomatoFrame = 0.f;
 			m_State = State::checkState;
 			mov_frame = 0.0f;
@@ -711,6 +710,7 @@ void MapScene::CheckState() {
 
 				if (input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) {
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+					moved = false;
 					if (nowCheack == 0) {
 						SceneChanger::GetInstance()->SetChangeStart(true);
 					} else {

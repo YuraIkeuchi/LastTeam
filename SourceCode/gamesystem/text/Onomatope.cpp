@@ -83,7 +83,7 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay)
 		str.Tex = IKESprite::Create(ImageManager::ONOMATO_05, basePos);
 		str.Tex->SetAnchorPoint({ 0.5f,0.5f });
 		str.Tex->SetSize({ 486.f,86.f });
-		str.kFrameMax = 50.f;
+		str.kFrameMax = 80.f;
 		str.kDelayFrameMax = delay;
 		str.pattern = Counter;
 		break;
