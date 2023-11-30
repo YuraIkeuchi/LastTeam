@@ -790,7 +790,7 @@ void MapScene::CheckState() {
 				ss << BaseName + levelName + "/BattleMap0" << num << ".csv";
 				isBattle = true;
 			} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
-				ss << BaseName + levelName + "/PassiveMap0" << 1 << ".csv";
+				ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
 				isBattle = false;
 			}
 
