@@ -139,7 +139,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 			}
 		}
 		for (int i = 0; i < 10; i++) {
-			unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, {});
+			unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, {-100.f,0.f});
 			road->SetAnchorPoint({ 0.5f,0.5f });
 			road->SetSize({ 16.f,16.f });
 			road->SetColor({ 1.f,1.f,0.f,1.f });
