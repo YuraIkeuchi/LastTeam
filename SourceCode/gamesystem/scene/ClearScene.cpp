@@ -70,10 +70,10 @@ void ClearScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void ClearScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	ImGui::Begin("Clear");
-	ImGui::Text("Clear");
-	ImGui::End();
-	SceneChanger::GetInstance()->ImGuiDraw();
+	//ImGui::Begin("Clear");
+	//ImGui::Text("Clear");
+	//ImGui::End();
+	//SceneChanger::GetInstance()->ImGuiDraw();
 }
 //‰ð•ú
 void ClearScene::Finalize() {
