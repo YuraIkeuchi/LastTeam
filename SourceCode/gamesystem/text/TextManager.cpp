@@ -59,7 +59,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillSentence(L"ザクッな近距離攻撃");
 	CreateSkillSentence(L"少し強い近中距離攻撃");
 	CreateSkillSentence(L"少し強い中遠距離攻撃");
-	CreateSkillSentence(L"すべてのマス、ビクトリーないち撃");
+	CreateSkillSentence(L"ドドドな遠距離攻撃");
 	CreateSkillSentence(L"イヤーナ毒攻撃だ");
 	CreateSkillSentence(L"回復できる攻撃だ");
 	CreateSkillSentence(L"次の攻撃を強く!");

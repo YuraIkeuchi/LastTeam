@@ -7,6 +7,7 @@
 #include <Helper.h>
 #include "InterEnemy.h"
 #include <StageBack.h>
+#include <Slow.h>
 BattleScene::~BattleScene() {
 	Finalize();
 }
@@ -59,6 +60,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	feed.reset(feed_);
 
 	gameoversprite = IKESprite::Create(ImageManager::GAMEOVERBACK, { 0.0f,0.0f });
+	Slow::GetInstance()->Initialize();
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
@@ -98,22 +100,20 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			GameStateManager::GetInstance()->SetIsReloadDamage(false);
 		}
 
-    if (GameStateManager::GetInstance()->GetIsBombDamage()) {
-		enemyManager->BombDamage();
-		GameStateManager::GetInstance()->SetIsBombDamage(false);
-	}
-
-		StagePanel::GetInstance()->Update();
-		enemyManager->Update();
-		ParticleEmitter::GetInstance()->Update();
+		if (GameStateManager::GetInstance()->GetIsBombDamage()) {
+			enemyManager->BombDamage();
+			GameStateManager::GetInstance()->SetIsBombDamage(false);
+		}
 
 		//後々変更する(酷い処理)
 		//エネミーが全員死亡したら
 		if (enemyManager->BossDestroy() && !m_FeedStart) {
+			Slow::GetInstance()->SetSlow(true);
 			if (!s_LastStage) {
 				m_Feed = true;
 				m_FeedStart = true;
-			} else {
+			}
+			else {
 				Audio::GetInstance()->StopWave(AUDIO_MAIN);
 				SceneChanger::GetInstance()->SetChangeStart(true);
 			}
@@ -124,6 +124,10 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		if (feed->GetFeedEnd()) {
 			m_FeedEnd = true;
 		}
+
+		StagePanel::GetInstance()->Update();
+		enemyManager->Update();
+		ParticleEmitter::GetInstance()->Update();
 
 		if (m_FeedEnd) {
 			Audio::GetInstance()->StopWave(AUDIO_MAIN);
@@ -157,7 +161,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			else {
 				SceneManager::GetInstance()->ChangeScene("CLEAR");
 			}
-		}else {
+		}
+		else {
 			SceneManager::GetInstance()->ChangeScene("TITLE");
 		}
 		player_->PlayerSave();
@@ -236,6 +241,7 @@ void BattleScene::ImGuiDraw() {
 	//enemyManager->ImGuiDraw();
 	//StagePanel::GetInstance()->ImGuiDraw();
 	//camerawork->ImGuiDraw();
+	//Slow::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {
