@@ -27,7 +27,7 @@ bool InterEnemy::Initialize() {
 }
 //更新
 void InterEnemy::Update() {
-
+	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
 	if (m_EnemyTag != "Bomb") {
 		if (m_Alive) {
 			Action();
@@ -97,6 +97,7 @@ void InterEnemy::ImGuiDraw() {
 }
 //UIの描画
 void InterEnemy::UIDraw() {
+	//if (!GameStateManager::GetInstance()->GetGameStart() && m_EnemyTag != "Mob") { return; }
 	IKESprite::PreDraw();
 	if (m_Alive) {
 		//HPバー

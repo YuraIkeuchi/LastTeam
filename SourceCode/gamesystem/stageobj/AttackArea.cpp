@@ -25,7 +25,7 @@ bool AttackArea::Initialize() {
 
 //ステータス初期化
 void AttackArea::InitState(const int width, const int height) {
-	panels.position.y = 100.0f;
+	panels.position = SetPanelPos(width, height);
 	panels.color = { 1.f,1.f,1.f,1.f };
 	m_NowWidth = width, m_NowHeight = height;
 	panels.position.y = 0.03f;
@@ -37,7 +37,7 @@ void AttackArea::InitState(const int width, const int height) {
 //更新
 void AttackArea::Update() {
 	const int l_TargetTimer = 10;
-	panels.position = SetPanelPos(m_NowWidth, m_NowHeight);
+
 	if (Helper::CheckMin(m_AliveTimer, l_TargetTimer, 1)) {
 		GameStateManager::GetInstance()->SetBuff(false);
 		m_Alive = false;

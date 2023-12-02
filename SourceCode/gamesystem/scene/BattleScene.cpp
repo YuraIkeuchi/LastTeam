@@ -34,7 +34,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
-	StagePanel::GetInstance()->Initialize(0.0f);
+	StagePanel::GetInstance()->Initialize(6.0f);
 	//ビヘイビア試しました！
 	{
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
@@ -124,6 +124,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			m_FeedEnd = true;
 		}
 
+		StagePanel::GetInstance()->CreateStage();
 		StagePanel::GetInstance()->Update();
 		enemyManager->Update();
 		ParticleEmitter::GetInstance()->Update();
@@ -197,7 +198,7 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 //前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_FeedEnd){
-		if (player_->GetHp() > 0.0f) {
+		if (player_->GetHp() > 0.0f && GameStateManager::GetInstance()->GetGameStart()) {
 			ParticleEmitter::GetInstance()->FlontDrawAll();
 			player_->UIDraw();
 			enemyManager->UIDraw();
@@ -221,13 +222,15 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	player_->Draw(dxCommon);
+	if (GameStateManager::GetInstance()->GetGameStart()) {
+		player_->Draw(dxCommon);
 
-	if (player_->GetHp() > 0.0f) {
-		enemyManager->Draw(dxCommon);
-		GameStateManager::GetInstance()->Draw(dxCommon);
-		if (!enemyManager->BossDestroy()) {
-			StagePanel::GetInstance()->ActDraw(dxCommon);
+		if (player_->GetHp() > 0.0f) {
+			enemyManager->Draw(dxCommon);
+			GameStateManager::GetInstance()->Draw(dxCommon);
+			if (!enemyManager->BossDestroy()) {
+				StagePanel::GetInstance()->ActDraw(dxCommon);
+			}
 		}
 	}
 	IKEObject3d::PostDraw();

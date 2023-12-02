@@ -120,6 +120,9 @@ public:
 	void SetIsEnding(bool flag) { isEnding = flag; isFinish = flag; }
 	bool SetIsEnding() { return isEnding; }
 
+	void SetGameStart(bool GameStart) { m_GameStart = GameStart;}
+	bool GetGameStart() { return m_GameStart; }
+
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -247,6 +250,8 @@ private:
 		bool isVanish = false;
 	};
 	std::list<PowerUpEffect> powerup;
+
+	bool m_GameStart = false;
 
 	///=============================
 	/// 

@@ -43,6 +43,8 @@ bool StagePanel::Initialize(const float PosY) {
 			panels[i][j].isHit = false;
 			panels[i][j].isPoison = false;
 			panels[i][j].PoisonTimer = {};
+			panels[i][j].Frame = {};
+			panels[i][j].TargetTimer = (i * 5) + (j * 40);
 		}
 	}
 	m_SelectHeight = 0;
@@ -50,6 +52,8 @@ bool StagePanel::Initialize(const float PosY) {
 	if (!actions.empty()) {
 		actions.clear();
 	}
+	m_CreateTimer = {};
+	m_CreateFinish = false;
 	//CSV読み込み
 	return true;
 }
@@ -72,6 +76,28 @@ void StagePanel::Update() {
 	}
 	else {
 		m_AllDelete = false;
+	}
+}
+//ステージ形成
+void StagePanel::CreateStage() {
+	if (m_CreateFinish) { return; }
+	const float l_AddFrame = 1 / 45.0f;
+	m_CreateTimer++;
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			if (m_CreateTimer >= panels[i][j].TargetTimer) {
+				if (Helper::FrameCheck(panels[i][j].Frame, l_AddFrame)) {
+					panels[i][j].Frame = 1.0f;
+				}
+
+				panels[i][j].position.y = Ease(In, Cubic, panels[i][j].Frame, panels[i][j].position.y, 0.0f);
+			}
+		}
+	}
+
+	if (panels[PANEL_WIDTH - 1][PANEL_HEIGHT - 1].Frame == 1.0f) {
+		m_CreateFinish = true;
+		GameStateManager::GetInstance()->SetGameStart(true);
 	}
 }
 
@@ -115,9 +141,8 @@ void StagePanel::ImGuiDraw() {
 }
 
 //スキルセットの更新(バトル前)
-void StagePanel::SetUpdate() {
+void StagePanel::SetUpdate() {	
 }
-
 //バトルの更新
 void StagePanel::BattleUpdate() {
 	//敵がが居るマスが赤くなる

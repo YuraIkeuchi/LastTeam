@@ -40,6 +40,8 @@ private:
 		bool predict = false;
 		bool isPoison = false;
 		int PoisonTimer = {};
+		int TargetTimer = {};
+		float Frame = {};
 	};
 
 public:
@@ -48,6 +50,7 @@ public:
 	bool Initialize(const float PosY = 0.0f);
 	//更新
 	void Update();
+	void CreateStage();
 	//描画
 	void Draw(DirectXCommon* dxCommon);
 	//行動カードの描画
@@ -92,7 +95,7 @@ public:
 	}
 
 	const bool GetAllDelete() { return m_AllDelete; }
-
+	const bool GetCreateFinish() { return m_CreateFinish; }
 private:
 	static Player* player;
 	//パネル
@@ -123,4 +126,7 @@ private:
 	//スキルをすべて手に入れているか
 	bool m_AllDelete = false;
 	int m_ActionCount = {};
+
+	int m_CreateTimer = {};
+	bool m_CreateFinish = false;
 };
