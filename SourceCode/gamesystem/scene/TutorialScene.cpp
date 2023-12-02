@@ -226,10 +226,14 @@ void TutorialScene::Finalize() {
 }
 //�ŏ��̌��
 void TutorialScene::IntroState() {
-	if (Helper::CheckMin(m_Timer, 150, 1)) {
+	Input* input = Input::GetInstance();
+	/*if (Helper::CheckMin(m_Timer, 150, 1)) {
 		_nowstate = TUTORIAL_MOVE;
 		m_Timer = {};
-
+	}*/
+	if ((input->TriggerButton(input->A))) {
+		_nowstate = TUTORIAL_MOVE;
+		m_Timer = {};
 	}
 }
 //�ړ�
@@ -257,14 +261,15 @@ void TutorialScene::GetState() {
 }
 //�U��
 void TutorialScene::AttackState() {
+	Input* input = Input::GetInstance();
 	Helper::CheckMin(m_Timer, 410, 1);
-	if (m_Timer == 120) {
+	if ((input->TriggerButton(input->A))) {
 	m_TextPos = { -10.0f,-30.f };
 		text_->SetConversation(TextManager::TUTORIAL_MARK, m_TextPos);
-	} else if (m_Timer == 240) {
+	} else if ((input->TriggerButton(input->A)))  {
 		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK, m_TextPos);
 	}
-	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
+	if ((input->TriggerButton(input->A))) {
 		text_->SetConversation(TextManager::TUTORIAL_TEXT_DAMAGE, m_TextPos);
 		_nowstate = TUTORIAL_DAMAGE;
 		m_Timer = {};
@@ -272,6 +277,7 @@ void TutorialScene::AttackState() {
 }
 //�_���[�W��������
 void TutorialScene::DamageState() {
+	Input* input = Input::GetInstance();
 	if (enemy->GetHP() <= 0.0f || m_Skip) {
 		if (!m_FeedStart) {
 			m_Feed = true;
@@ -292,10 +298,12 @@ void TutorialScene::DamageState() {
 			if (m_Timer == 1) {
 				m_TextPos = { 120.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_SKILL, m_TextPos);
-			} else if (m_Timer == 120) {
+			}
+			if((input->TriggerButton(input->A))) {
 				m_TextPos = { 10.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_CHOICE, m_TextPos);
-			} else if (m_Timer == 170) {
+			}
+			if ((input->TriggerButton(input->A))) {
 				TutorialTask::GetInstance()->SetViewSkill(true);
 			}
 			if (TutorialTask::GetInstance()->GetChoiceSkill()) {
