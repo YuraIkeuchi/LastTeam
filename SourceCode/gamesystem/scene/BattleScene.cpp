@@ -33,8 +33,8 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	GameStateManager::GetInstance()->Initialize();
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
-	StagePanel::GetInstance()->Initialize();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
+	StagePanel::GetInstance()->Initialize(0.0f);
 	//ビヘイビア試しました！
 	{
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
@@ -53,7 +53,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 		enemyManager->PoizonVenom();
 	}
 
-	GameReset({ -8.0f,0.1f,0.0f });
 	StagePanel::GetInstance()->DeleteAction();
 
 	Feed* feed_ = new Feed();
@@ -153,7 +152,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	SceneChanger::GetInstance()->Update();
 	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
-		GameReset({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 		if (_ChangeType == CHANGE_MAP) {
 			if (!s_LastStage) {
 				SceneManager::GetInstance()->ChangeScene("MAP");

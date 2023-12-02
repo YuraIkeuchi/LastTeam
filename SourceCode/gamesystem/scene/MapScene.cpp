@@ -745,7 +745,6 @@ void MapScene::CheckState() {
 
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
-			GameReset({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 			//チュートリアルのタスク
 			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 			TutorialTask::GetInstance()->SetViewSkill(false);
@@ -799,7 +798,6 @@ void MapScene::CheckState() {
 			delayFrame = 0.f;
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
-			GameReset({ -8.0f,0.1f,0.0f });
 			//チュートリアルのタスク
 			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 			TutorialTask::GetInstance()->SetViewSkill(true);

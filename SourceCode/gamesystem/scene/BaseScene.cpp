@@ -46,8 +46,3 @@ void BaseScene::BaseInitialize(DirectXCommon* dxCommon, XMFLOAT3 eye, XMFLOAT3 t
 	camerawork = make_unique<CameraWork>(eye, target);
 	Helper::SetCamera(camera);
 }
-void BaseScene::GameReset(XMFLOAT3 pos) {
-	//Player::GetInstance()->InitState(pos);
-	//Player::GetInstance()->Initialize();
-	StagePanel::GetInstance()->Initialize();
-}

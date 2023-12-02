@@ -44,8 +44,6 @@ public:
 	virtual void Draw(DirectXCommon* dxCommon) = 0;
 	//共通初期化
 	void BaseInitialize(DirectXCommon* dxCommon, XMFLOAT3 eye = { 2.0f, 45.0f, 2.0f }, XMFLOAT3 target = { 2.0f, 0.0f, 3.0f });
-	//ゲームのリセットに必要なやつ
-	void GameReset(XMFLOAT3 pos);
 public:
 
 	///ゲームシーン用

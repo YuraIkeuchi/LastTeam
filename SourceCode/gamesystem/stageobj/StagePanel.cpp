@@ -31,9 +31,13 @@ void StagePanel::LoadResource() {
 			panels[i][j].line->SetRotation({ 90.0f,0.0f,0.0f });
 		}
 	}
+	
+}
+//初期化
+bool StagePanel::Initialize(const float PosY) {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			panels[i][j].position = { (PANEL_SIZE * i) - (PANEL_HEIGHT * PANEL_SIZE),0.0f,(PANEL_SIZE * j) };
+			panels[i][j].position = { (PANEL_SIZE * i) - (PANEL_HEIGHT * PANEL_SIZE),PosY,(PANEL_SIZE * j) };
 			panels[i][j].color = { 1.f,1.f,1.f,1.f };
 			panels[i][j].type = NO_PANEL;
 			panels[i][j].isHit = false;
@@ -41,10 +45,6 @@ void StagePanel::LoadResource() {
 			panels[i][j].PoisonTimer = {};
 		}
 	}
-}
-//初期化
-bool StagePanel::Initialize() {
-	
 	m_SelectHeight = 0;
 	m_SelectWidth = 0;
 	if (!actions.empty()) {

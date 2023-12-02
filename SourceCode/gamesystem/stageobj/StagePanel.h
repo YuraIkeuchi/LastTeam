@@ -45,7 +45,7 @@ private:
 public:
 	void LoadResource();
 	//‰Šú‰»
-	bool Initialize();
+	bool Initialize(const float PosY = 0.0f);
 	//XV
 	void Update();
 	//•`‰æ
@@ -83,7 +83,7 @@ public:
 	static void SetPlayer(Player* player) { StagePanel::player = player; }
 	//gettersetter
 	XMFLOAT3 SetPositon(int width, int height) {
-		return panels[width][height].position;
+		return { panels[width][height].position.x,0.0f,panels[width][height].position.z };
 	}
 
 	//gettersetter
