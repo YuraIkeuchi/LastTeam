@@ -90,6 +90,8 @@ void GameStateManager::Initialize() {
 	m_Delay = false;
 	m_Buff = false;
 	predictarea->ResetPredict();
+
+	m_GameStart = false;
 }
 
 //更新
@@ -171,6 +173,7 @@ void GameStateManager::AttackTrigger() {
 	}
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
+	if (!m_GameStart) { return; }
 	if (!isFinish && !isChangeScene) {
 		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 		if (m_Delay && m_Act[0].ActDelay >= 30) {
@@ -357,6 +360,7 @@ void GameStateManager::FinishAct() {
 }
 
 void GameStateManager::GaugeUpdate() {
+	if (!m_GameStart) { return; }
 	if (SkillManager::GetInstance()->GetDeckNum() != 0 && (TutorialTask::GetInstance()->GetTutorialState() >= TASK_BIRTH_BEFORE)) {
 		m_GaugeCount += 1.0f * m_DiameterGauge;
 	}

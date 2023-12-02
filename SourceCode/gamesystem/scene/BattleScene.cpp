@@ -33,8 +33,8 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	GameStateManager::GetInstance()->Initialize();
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
-	StagePanel::GetInstance()->Initialize();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
+	StagePanel::GetInstance()->Initialize(6.0f);
 	//ビヘイビア試しました！
 	{
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
@@ -53,7 +53,6 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 		enemyManager->PoizonVenom();
 	}
 
-	GameReset({ -8.0f,0.1f,0.0f });
 	StagePanel::GetInstance()->DeleteAction();
 
 	Feed* feed_ = new Feed();
@@ -125,6 +124,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			m_FeedEnd = true;
 		}
 
+		StagePanel::GetInstance()->CreateStage();
 		StagePanel::GetInstance()->Update();
 		enemyManager->Update();
 		ParticleEmitter::GetInstance()->Update();
@@ -153,7 +153,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	SceneChanger::GetInstance()->Update();
 	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
-		GameReset({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 		if (_ChangeType == CHANGE_MAP) {
 			if (!s_LastStage) {
 				SceneManager::GetInstance()->ChangeScene("MAP");
@@ -199,7 +198,7 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 //前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_FeedEnd){
-		if (player_->GetHp() > 0.0f) {
+		if (player_->GetHp() > 0.0f && GameStateManager::GetInstance()->GetGameStart()) {
 			ParticleEmitter::GetInstance()->FlontDrawAll();
 			player_->UIDraw();
 			enemyManager->UIDraw();
@@ -223,13 +222,15 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	player_->Draw(dxCommon);
+	if (GameStateManager::GetInstance()->GetGameStart()) {
+		player_->Draw(dxCommon);
 
-	if (player_->GetHp() > 0.0f) {
-		enemyManager->Draw(dxCommon);
-		GameStateManager::GetInstance()->Draw(dxCommon);
-		if (!enemyManager->BossDestroy()) {
-			StagePanel::GetInstance()->ActDraw(dxCommon);
+		if (player_->GetHp() > 0.0f) {
+			enemyManager->Draw(dxCommon);
+			GameStateManager::GetInstance()->Draw(dxCommon);
+			if (!enemyManager->BossDestroy()) {
+				StagePanel::GetInstance()->ActDraw(dxCommon);
+			}
 		}
 	}
 	IKEObject3d::PostDraw();

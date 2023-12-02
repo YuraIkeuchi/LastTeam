@@ -42,9 +42,9 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
+	StagePanel::GetInstance()->Initialize();
 	//背景画像
 	StageBack::GetInstance()->LoadResource();
-	GameReset({ -PANEL_SIZE*2.f,0.1f,PANEL_SIZE });
 
 	////敵
 	InterEnemy::SetPlayer(player_.get());

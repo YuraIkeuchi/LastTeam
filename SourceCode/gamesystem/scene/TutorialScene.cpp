@@ -44,6 +44,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
 	GameStateManager::SetPlayer(player_.get());
 	GameStateManager::GetInstance()->Initialize();
+	GameStateManager::GetInstance()->SetGameStart(true);
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
@@ -251,25 +252,35 @@ void TutorialScene::MoveState() {
 }
 //�X�L���Q�b�g
 void TutorialScene::GetState() {
-
+	Input* input = Input::GetInstance();
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
 		m_TextPos = { -10.0f,-30.0f };
 		text_->SetConversation(TextManager::TUTORIAL_EXPLAIN, m_TextPos);
-		_nowstate = TUTORIAL_ATTACK;
-		m_Timer = {};
+
+
+		if ((input->TriggerButton(input->A))) {
+			m_TextPos = { -10.0f,-30.f };
+			text_->SetConversation(TextManager::TUTORIAL_MARK, m_TextPos);
+			_nowstate = TUTORIAL_ATTACK;
+			m_Timer = {};
+		}
+	}
+
+	if (enemy->GetHP() <= 0.0f) {
+		m_Skip = true;
+		m_IsBackKey = false;
+		_nowstate = TUTORIAL_DAMAGE;
 	}
 }
 //�U��
 void TutorialScene::AttackState() {
 	Input* input = Input::GetInstance();
 	Helper::CheckMin(m_Timer, 410, 1);
-	if ((input->TriggerButton(input->A))) {
-	m_TextPos = { -10.0f,-30.f };
-		text_->SetConversation(TextManager::TUTORIAL_MARK, m_TextPos);
-	} else if ((input->TriggerButton(input->A)))  {
+	
+	if ((input->TriggerButton(input->A)) && m_Timer > 10)  {
 		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK, m_TextPos);
 	}
-	if ((input->TriggerButton(input->A))) {
+	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
 		text_->SetConversation(TextManager::TUTORIAL_TEXT_DAMAGE, m_TextPos);
 		_nowstate = TUTORIAL_DAMAGE;
 		m_Timer = {};
