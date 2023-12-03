@@ -30,10 +30,10 @@ private:
 private:
 	static const int S_DAMAGEMAX = 2;
 private:
-	unique_ptr<TextManager> resulttext;
 	struct ResultUI{
 		std::unique_ptr<IKESprite> icon;
 		std::unique_ptr<DrawNumber> DamageNumber[S_DAMAGEMAX];
+		std::unique_ptr<TextManager> text_;
 		XMFLOAT2 position = { 640.f,320.f };
 		XMFLOAT2 size = { 128.f,128.f };
 		int no = -1;
@@ -44,6 +44,7 @@ private:
 		int DisX = {};
 		int DisY = {};
 		int Damage = {};
+		wchar_t* sentence[3] = { L"",L"",L"" };
 	};
 
 	struct ShineEffect {
@@ -65,14 +66,15 @@ public:
 	void SetIsBattle(bool isBattle) { this->isBattle = isBattle; }
 private:
 	bool isStart = false;
+	DirectXCommon* dxcommon = nullptr;
 	Player* player_=nullptr;
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> skillCheack;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;
+	unique_ptr<TextManager> resulttext;
 	int nowPos = 0;
 	XMFLOAT2 BasePos[3] = { {320.f,240.0f},{640.f,240.f},{960.f,240.f} };
-	wchar_t* baseSentence[3] = {L"",L"",L""};
 	bool isMove = false;
 	int nowFrame = 0;
 	int oldFrame = 0;

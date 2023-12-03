@@ -5,6 +5,7 @@
 #include <Easing.h>
 #include <SkillManager.h>
 #include <TutorialTask.h>
+#include <windows.h>
 ResultSkill::ResultSkill() {
 }
 
@@ -23,7 +24,7 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	resulttext = make_unique<TextManager>();
 	resulttext->Initialize(dxCommon);
 	resulttext->SetConversation(TextManager::RESULT, { -235.0f,80.0f });
-
+	dxcommon = dxCommon;
 }
 
 void ResultSkill::Update() {
@@ -59,9 +60,9 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 				}
 			}
 		}
-		resulttext->TestDraw(dxCommon);
 		for (ResultUI& itr : choiceSkills) {
 			if (itr.no == nowFrame) {
+				itr.text_->TestDraw(dxCommon);
 				if (!itr.isSkill) { continue; }
 				for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
 					pickAreas->Draw();
@@ -99,9 +100,9 @@ void ResultSkill::InPassive(std::vector<int>& Passive) {
 	std::vector<int> itr = Passive;
 	for (ResultUI& resultUI : pickSkills) {
 		if (resultUI.isSkill) { continue; }
-		if (resultUI.ID==1) {
+		if (resultUI.ID == 1) {
 			player_->SetMaxHp(
-			player_->GetMaxHp() * 1.3f);
+				player_->GetMaxHp() * 1.3f);
 		}
 		itr.push_back(resultUI.ID);
 	}
@@ -125,7 +126,7 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 	std::shuffle(noDeck.begin(), noDeck.end(), engine);
 	std::shuffle(noPassive.begin(), noPassive.end(), engine);
 
-	
+
 	//スキル
 	ResultUI resultUI = CreateUI(true, noDeck[0], BasePos[nowPos]);
 	choiceSkills.push_back(std::move(resultUI));
@@ -151,11 +152,15 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 			choiceSkills.push_back(std::move(passiveUI3));
 		}
 	}*/
-	resulttext->SetCreateSentence(baseSentence[0], baseSentence[1], baseSentence[2]);
-	for (int i = 0; i < 5;i++) {
+	for (ResultUI& itr : choiceSkills) {
+		if (itr.no == 0) {
+			resulttext->SetCreateSentence(itr.sentence[0], itr.sentence[1], itr.sentence[2]);
+		}
+	}
+	for (int i = 0; i < 5; i++) {
 		RandShineInit();
 	}
-	
+
 	isStart = true;
 }
 
@@ -170,6 +175,7 @@ void ResultSkill::Move() {
 		if (Helper::FrameCheck(frame, addFrame)) {
 			oldFrame = nowFrame;
 			isMove = false;
+			
 			frame = 0.f;
 		} else {
 			framePos.x = Ease(InOut, Circ, frame, BasePos[oldFrame].x, BasePos[nowFrame].x);
@@ -179,13 +185,13 @@ void ResultSkill::Move() {
 
 	if (input->TiltPushStick(input->L_LEFT) ||
 		input->TiltPushStick(input->L_RIGHT) ||
-		input->TriggerKey(DIK_A)||
-		input->TriggerKey(DIK_D)||
-		input->PushButton(input->LEFT)||
+		input->TriggerKey(DIK_A) ||
+		input->TriggerKey(DIK_D) ||
+		input->PushButton(input->LEFT) ||
 		input->PushButton(input->RIGHT)) {
 		if (isMove) { return; }
-		if (input->TiltPushStick(input->L_RIGHT)||
-			input->TriggerKey(DIK_D)||
+		if (input->TiltPushStick(input->L_RIGHT) ||
+			input->TriggerKey(DIK_D) ||
 			input->PushButton(input->RIGHT)) {
 			if (nowFrame == 2) { return; }
 			nowFrame++;
@@ -193,10 +199,15 @@ void ResultSkill::Move() {
 			if (nowFrame == 0) { return; }
 			nowFrame--;
 		}
+		for (ResultUI& itr : choiceSkills) {
+			if (itr.no == nowFrame) {
+				resulttext->SetCreateSentence(itr.sentence[0], itr.sentence[1], itr.sentence[2]);
+			}
+		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		isMove = true;
 	}
-	if (input->TriggerButton(Input::B)||
+	if (input->TriggerButton(Input::B) ||
 		input->TriggerKey(DIK_SPACE)) {
 		for (ResultUI& itr : choiceSkills) {
 			if (itr.no == nowFrame) {
@@ -245,15 +256,14 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	if (resultUI.isSkill) {
 		resultUI.icon = IKESprite::Create(ImageManager::ATTACK_0 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
-		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY,resultUI.Damage);//IDに応じた攻撃エリア、距離、ダメージを取得する
-			//桁数によって描画する桁数が違う
+		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY, resultUI.Damage);//IDに応じた攻撃エリア、距離、ダメージを取得する
+		//桁数によって描画する桁数が違う
 		if (resultUI.Damage < 10) {
 			resultUI.DamageNumber[0] = make_unique<DrawNumber>(0.5f);
 			resultUI.DamageNumber[0]->Initialize();
 			resultUI.DamageNumber[0]->SetNumber(resultUI.Damage);
 			resultUI.DamageNumber[0]->SetPosition({ resultUI.position.x + 10.0f,resultUI.position.y });
-		}
-		else {
+		} else {
 			int l_DightDamage[S_DAMAGEMAX];
 			for (auto i = 0; i < S_DAMAGEMAX; i++) {
 				resultUI.DamageNumber[i] = make_unique<DrawNumber>(0.5f);
@@ -266,15 +276,24 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 			resultUI.DamageNumber[1]->SetPosition({ resultUI.position.x - 10.0f,resultUI.position.y });
 		}
 		BirthArea(resultUI);
-		baseSentence[nowPos] = resulttext->GetSkillSentence(resultUI.ID);
+		resultUI.sentence[0] = L"スキル：";
+		resultUI.sentence[1] = resulttext->GetSkillSentence(resultUI.ID);
+		resultUI.sentence[2] = resulttext->GetSkillDamage(resultUI.ID);
 	} else {
 		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_01 + resultUI.ID, { 0.0f,0.0f });
-		baseSentence[nowPos] = resulttext->GetPasiveSentence(resultUI.ID);
+		resultUI.sentence[0] = L"パッシブ：";
+		resultUI.sentence[1] = resulttext->GetPasiveSentence(resultUI.ID);
+		resultUI.sentence[2] = L"いみふめい";
 	}
 	resultUI.icon->SetAnchorPoint({ 0.5f,0.5f });
 	resultUI.icon->SetSize({ 128.f,128.f });
 	resultUI.icon->SetPosition(resultUI.position);
 	resultUI.no = nowPos;
+	resultUI.text_ = make_unique<TextManager>();
+	resultUI.text_->Initialize(dxcommon);
+	resultUI.text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
+	resultUI.text_->SetCreateSentence(resultUI.sentence[0], resultUI.sentence[1], resultUI.sentence[2]);
+
 	nowPos++;
 	return resultUI;
 }
