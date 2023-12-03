@@ -87,6 +87,7 @@ public:
 
 	wchar_t* GetPasiveSentence(int ID) { return passiveSentence[ID]; };
 	wchar_t* GetSkillSentence(int ID) { return skillSentence[ID]; };
+	wchar_t* GetSkillDamage(int ID) { return skillDamage[ID]; };
 
 private:
 
@@ -100,12 +101,14 @@ private:
 	void CreatePassiveSentence(wchar_t* tex1);
 
 	void CreateSkillSentence(wchar_t* tex1);
+	void CreateSkillDamage(wchar_t* tex1);
 
 private:
 	std::map<TextManager::Name, Word> wordlist_;
 
 	std::vector<wchar_t*> passiveSentence;
 	std::vector<wchar_t*> skillSentence;
+	std::vector<wchar_t*> skillDamage;
 
 	Conversation conversation_ = {};
 	Conversation old_conversation_ = {};
