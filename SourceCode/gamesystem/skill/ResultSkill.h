@@ -72,7 +72,6 @@ private:
 	std::unique_ptr<IKESprite> skillCheack;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;
-	unique_ptr<TextManager> resulttext;
 	int nowPos = 0;
 	XMFLOAT2 BasePos[3] = { {320.f,240.0f},{640.f,240.f},{960.f,240.f} };
 	bool isMove = false;

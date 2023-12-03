@@ -20,10 +20,6 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	selectFrame->SetPosition(framePos);
 	skillCheack = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 1280.f,720.f });
 	skillCheack->SetAnchorPoint({ 1.f,1.f });
-	//���U���g�e�L�X�g
-	resulttext = make_unique<TextManager>();
-	resulttext->Initialize(dxCommon);
-	resulttext->SetConversation(TextManager::RESULT, { -235.0f,80.0f });
 	dxcommon = dxCommon;
 }
 
@@ -152,11 +148,6 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 			choiceSkills.push_back(std::move(passiveUI3));
 		}
 	}*/
-	for (ResultUI& itr : choiceSkills) {
-		if (itr.no == 0) {
-			resulttext->SetCreateSentence(itr.sentence[0], itr.sentence[1], itr.sentence[2]);
-		}
-	}
 	for (int i = 0; i < 5; i++) {
 		RandShineInit();
 	}
@@ -198,11 +189,6 @@ void ResultSkill::Move() {
 		} else {
 			if (nowFrame == 0) { return; }
 			nowFrame--;
-		}
-		for (ResultUI& itr : choiceSkills) {
-			if (itr.no == nowFrame) {
-				resulttext->SetCreateSentence(itr.sentence[0], itr.sentence[1], itr.sentence[2]);
-			}
 		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		isMove = true;
@@ -253,6 +239,8 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	resultUI.ID = id;
 	resultUI.position = pos;
 	resultUI.isSkill = isSkill;
+	resultUI.text_ = make_unique<TextManager>();
+	resultUI.text_->Initialize(dxcommon);
 	if (resultUI.isSkill) {
 		resultUI.icon = IKESprite::Create(ImageManager::ATTACK_0 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
@@ -277,20 +265,18 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 		}
 		BirthArea(resultUI);
 		resultUI.sentence[0] = L"スキル：";
-		resultUI.sentence[1] = resulttext->GetSkillSentence(resultUI.ID);
-		resultUI.sentence[2] = resulttext->GetSkillDamage(resultUI.ID);
+		resultUI.sentence[1] = resultUI.text_->GetSkillSentence(resultUI.ID);
+		resultUI.sentence[2] = resultUI.text_->GetSkillDamage(resultUI.ID);
 	} else {
 		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_01 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.sentence[0] = L"パッシブ：";
-		resultUI.sentence[1] = resulttext->GetPasiveSentence(resultUI.ID);
-		resultUI.sentence[2] = L"いみふめい";
+		resultUI.sentence[1] = resultUI.text_->GetPasiveSentence(resultUI.ID);
+		resultUI.sentence[2] = L" ";
 	}
 	resultUI.icon->SetAnchorPoint({ 0.5f,0.5f });
 	resultUI.icon->SetSize({ 128.f,128.f });
 	resultUI.icon->SetPosition(resultUI.position);
 	resultUI.no = nowPos;
-	resultUI.text_ = make_unique<TextManager>();
-	resultUI.text_->Initialize(dxcommon);
 	resultUI.text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
 	resultUI.text_->SetCreateSentence(resultUI.sentence[0], resultUI.sentence[1], resultUI.sentence[2]);
 
