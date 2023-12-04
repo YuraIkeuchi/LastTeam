@@ -179,7 +179,7 @@ public:
 	const float& GetRPosY() { return static_cast<float>(xinputState.Gamepad.sThumbLY); }
 	//ƒvƒbƒVƒ…
 	bool TiltStick(STICK Stick);
-	bool TiltPushStick(STICK Stick, float DeadZone = 0.3f);
+	bool TiltPushStick(STICK Stick, float DeadZone = 0.6f);
 	const float& GetLeftControllerX() { return LeftControllerX; }
 	const float& GetLeftControllerY() { return LeftControllerY; }
 private:
