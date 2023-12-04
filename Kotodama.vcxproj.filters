@@ -449,6 +449,9 @@
     <ClCompile Include="SourceCode\gamesystem\effect\Slow.cpp">
       <Filter>gamesystem\effect</Filter>
     </ClCompile>
+    <ClCompile Include="ResultReport.cpp">
+      <Filter>gamesystem\skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -864,6 +867,9 @@
     <ClInclude Include="SourceCode\gamesystem\text\DrawHealNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\effect\Slow.h">
       <Filter>gamesystem\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\skill\ResultReport.h">
+      <Filter>gamesystem\skill</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

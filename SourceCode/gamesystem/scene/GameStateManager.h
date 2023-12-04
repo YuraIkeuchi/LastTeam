@@ -120,9 +120,6 @@ public:
 	void SetIsHeal(bool flag) { m_Heal = flag; }
 	bool GetIsHeal() { return m_Heal; }
 
-	void SetIsEnding(bool flag) { isEnding = flag; isFinish = flag; }
-	bool SetIsEnding() { return isEnding; }
-
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart;}
 	bool GetGameStart() { return m_GameStart; }
 
@@ -135,7 +132,7 @@ private:
 	unique_ptr<IKETexture> _charge;
 	bool isFinish = false;
 	bool isChangeScene = false;
-	bool isEnding = false;
+	bool isResultFinish = false;
 	struct ActState {
 		int SkillType;//スキルの種類
 		int ActID;//ID
