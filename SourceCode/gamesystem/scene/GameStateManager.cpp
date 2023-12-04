@@ -468,14 +468,9 @@ bool GameStateManager::AttackSubAction() {
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
-	if (isEnding) {
-		m_PredictTimer = {};
-		isChangeScene = true;
-		isFinish = false;
-		m_Choice = true;
-		isEnding = false;
-	}
 	if (!TutorialTask::GetInstance()->GetViewSkill()) { return false; }
+	if (!isResultFinish) { return false; }
+	
 	if (Input::GetInstance()->TriggerButton(Input::LB)||
 		Input::GetInstance()->TriggerKey(DIK_LEFT)) {
 		_ResultType = GET_SKILL;
@@ -496,8 +491,7 @@ bool GameStateManager::ResultUpdate() {
 			m_Choice = true;
 			TutorialTask::GetInstance()->SetChoiceSkill(true);
 		}
-	}
-	else {
+	}else {
 		haveSkill->Update();
 	}
 	
