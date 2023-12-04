@@ -70,9 +70,7 @@ void EnemyBullet::Update() {
 //描画
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	if (m_NowWidth <= 3) {
-		panels.tex->Draw();
-	}
+	panels.tex->Draw();
 	shadow_tex->Draw();
 	IKETexture::PostDraw();
 	Obj_Draw();
