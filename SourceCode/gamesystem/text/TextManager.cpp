@@ -54,25 +54,25 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveSentence(L"リロードしたら攻撃だ");
 
 	CreateSkillSentence(L"ドドドな近距離攻撃");
-	CreateSkillDamage(L"いりょく:15");
+	CreateSkillDamage(L"威力:15");
 	CreateSkillSentence(L"ドゴンな近中距離攻撃");
-	CreateSkillDamage(L"いりょく:8");
+	CreateSkillDamage(L"威力:8");
 	CreateSkillSentence(L"バコン!な一列攻撃");
-	CreateSkillDamage(L"いりょく:5");
+	CreateSkillDamage(L"威力:5");
 	CreateSkillSentence(L"ザクッな近距離攻撃");
-	CreateSkillDamage(L"いりょく:5");
+	CreateSkillDamage(L"威力:5");
 	CreateSkillSentence(L"少し強い近中距離攻撃");
-	CreateSkillDamage(L"いりょく:10");
+	CreateSkillDamage(L"威力:10");
 	CreateSkillSentence(L"少し強い中遠距離攻撃");
-	CreateSkillDamage(L"いりょく:10");
+	CreateSkillDamage(L"威力:10");
 	CreateSkillSentence(L"ドドドな遠距離攻撃");
-	CreateSkillDamage(L"いりょく:15");
+	CreateSkillDamage(L"威力:15");
 	CreateSkillSentence(L"イヤーナ毒攻撃だ");
-	CreateSkillDamage(L"いりょく:3");
+	CreateSkillDamage(L"威力:3");
 	CreateSkillSentence(L"回復できる攻撃だ");
-	CreateSkillDamage(L"いりょく:9");
+	CreateSkillDamage(L"威力:9");
 	CreateSkillSentence(L"次の攻撃を強く!");
-	CreateSkillDamage(L"いりょく:次のスキル2バイ");
+	CreateSkillDamage(L"威力:次のスキル2倍");
 
 	//ラスボス
 	//コンヴァージョン初期化

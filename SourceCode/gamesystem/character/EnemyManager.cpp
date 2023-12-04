@@ -131,8 +131,9 @@ void EnemyManager::BombDamage() {
 
 void EnemyManager::Heal()
 {
+	const float l_HealPower = 5.0f;
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SimpleHeal(5.f);
+		enemy->SimpleHeal(l_HealPower);
 	}
 }
 
@@ -189,6 +190,13 @@ void EnemyManager::Spawn2Map() {
 			}
 			else if (x == '5') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy>();
+				//enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '6') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<HealEnemy>();
 				//enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));

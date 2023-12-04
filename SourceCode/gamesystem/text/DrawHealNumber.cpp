@@ -10,7 +10,7 @@ DrawHealNumber::DrawHealNumber() {
 
 	for (auto i = 0; i < NUMBER_MAX; i++) {
 		//“Ç‚Ýž‚Ý
-		_Number[i] = IKESprite::Create(ImageManager::DAMAGENUMBER, { 0.0f,0.0f });
+		_Number[i] = IKESprite::Create(ImageManager::HEALNUMBER, { 0.0f,0.0f });
 		int number_index_y = i / NumberCount;
 		int number_index_x = i % NumberCount;
 		_Number[i]->SetTextureRect(
