@@ -122,6 +122,7 @@ public://getter setter
 	const bool GetLastEnemy() { return m_LastEnemy; }
 
 	void SimpleDamege(float damage = 3.f);
+	void SimpleHeal(float heal = 5.f);
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>
@@ -159,6 +160,7 @@ private:
 	//UIのためのHPの管理
 	void HPManage();
 	void BirthPoisonParticle();
+	void BirthHealParticle();
 	void BirthDamage(const float Damage);//
 	void BirthHeal(const float Heal);
 	//ダメージの更新

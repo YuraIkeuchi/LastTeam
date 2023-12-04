@@ -165,14 +165,14 @@ void Bomb::ShockWave()
 	shockWaveTex->SetColor(m_shockWaveColor);
 	shockWaveTex->Update();
 
+	m_shockWaveScale.x += m_addShockWaveScale;
+	m_shockWaveScale.y += m_addShockWaveScale;
+	m_shockWaveScale.z += m_addShockWaveScale;
+
 	m_shockWaveTimer++;
-	m_shockWaveTimer = clamp(m_shockWaveTimer, 0, 30);
-	//タイマーに応じて衝撃波の大きさ変更処理
-	m_shockWaveScale.x += 0.15f;
-	m_shockWaveScale.y += 0.15f;
-	m_shockWaveScale.z += 0.15f;
+	m_shockWaveTimer = clamp(m_shockWaveTimer, 0, m_maxShockWaveTimer);
 	//時間切れ
-	if (m_shockWaveTimer == 30) {
+	if (m_shockWaveTimer == m_maxShockWaveTimer) {
 		m_Alive = false;
 		m_shockWaveTimer = 0;
 	}

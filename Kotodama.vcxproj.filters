@@ -442,6 +442,9 @@
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp">
       <Filter>gamesystem\charactor\Enemy\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\HealEnemy.cpp">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\text\DrawHealNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\effect\Slow.cpp">
       <Filter>gamesystem\effect</Filter>
@@ -854,6 +857,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h">
       <Filter>gamesystem\charactor\Enemy\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\HealEnemy.h">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\DrawHealNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\effect\Slow.h">
