@@ -90,6 +90,8 @@ void GameStateManager::Initialize() {
 	m_Delay = false;
 	m_Buff = false;
 	predictarea->ResetPredict();
+
+	m_GameStart = false;
 }
 
 //更新
@@ -164,15 +166,17 @@ void GameStateManager::AttackTrigger() {
 	if (isFinish) { return; }
 	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える
-	if (input->TriggerButton(input->B)) {
+	if (input->TriggerButton(input->B)||
+		input->TriggerKey(DIK_SPACE)) {
 		AttackSubAction();
 		m_Delay = true;
 	}
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
+	if (!m_GameStart) { return; }
 	if (!isFinish && !isChangeScene) {
 		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-		if (m_Delay && m_Act[0].ActDelay >= 30.0f) {
+		if (m_Delay && m_Act[0].ActDelay >= 30) {
 			_charge->Draw();
 		}
 		IKETexture::PostDraw();
@@ -330,6 +334,12 @@ void GameStateManager::UseSkill() {
 			onomatope->AddOnomato(AttackCharge, { 640.f,360.f });
 		}
 		FinishAct();
+		if (m_AllActCount == 0) {
+			player->AttackCheck(true);
+		}
+		else {
+			player->AttackCheck(false);
+		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.1f);
 		m_ResetPredict = true;
 		m_Delay = false;
@@ -350,6 +360,7 @@ void GameStateManager::FinishAct() {
 }
 
 void GameStateManager::GaugeUpdate() {
+	if (!m_GameStart) { return; }
 	if (SkillManager::GetInstance()->GetDeckNum() != 0 && (TutorialTask::GetInstance()->GetTutorialState() >= TASK_BIRTH_BEFORE)) {
 		m_GaugeCount += 1.0f * m_DiameterGauge;
 	}
@@ -457,18 +468,27 @@ bool GameStateManager::AttackSubAction() {
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
+	if (isEnding) {
+		m_PredictTimer = {};
+		isChangeScene = true;
+		isFinish = false;
+		m_Choice = true;
+		isEnding = false;
+	}
 	if (!TutorialTask::GetInstance()->GetViewSkill()) { return false; }
-	if (Input::GetInstance()->TriggerButton(Input::LB)) {
+	if (Input::GetInstance()->TriggerButton(Input::LB)||
+		Input::GetInstance()->TriggerKey(DIK_LEFT)) {
 		_ResultType = GET_SKILL;
 	}
-	if (Input::GetInstance()->TriggerButton(Input::RB)) {
+	if (Input::GetInstance()->TriggerButton(Input::RB)||
+		Input::GetInstance()->TriggerKey(DIK_RIGHT)) {
 		_ResultType = HAVE_SKILL;
 	}
 
 	if (_ResultType == GET_SKILL) {
 		resultSkill->Update();
 
-		if (Input::GetInstance()->TriggerButton(Input::B) && !m_Choice) {
+		if ((Input::GetInstance()->TriggerButton(Input::B)|| Input::GetInstance()->TriggerKey(DIK_SPACE)) && !m_Choice) {
 			resultSkill->InDeck(m_DeckNumber);
 			resultSkill->InPassive(GotPassiveIDs);
 			isChangeScene = true;

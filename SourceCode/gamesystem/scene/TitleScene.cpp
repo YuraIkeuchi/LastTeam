@@ -42,9 +42,9 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
+	StagePanel::GetInstance()->Initialize();
 	//背景画像
 	StageBack::GetInstance()->LoadResource();
-	GameReset({ -PANEL_SIZE*2.f,0.1f,PANEL_SIZE });
 
 	////敵
 	InterEnemy::SetPlayer(player_.get());
@@ -69,7 +69,7 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	SceneChanger::GetInstance()->Update();
 	enemy->Update();
 
-	if ((input->TriggerButton(input->B)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
+	if ((input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = PLAY;
 		//チュートリアルのタスク
@@ -128,8 +128,8 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	camerawork->ImGuiDraw();
-	player_->ImGuiDraw();
+	//camerawork->ImGuiDraw();
+	//player_->ImGuiDraw();
 }
 //解放
 void TitleScene::Finalize() {

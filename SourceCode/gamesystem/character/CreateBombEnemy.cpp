@@ -13,7 +13,7 @@
 CreateBombEnemy::CreateBombEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::BOMBER));
 	m_Object->SetLightEffect(false);
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
@@ -22,6 +22,7 @@ CreateBombEnemy::CreateBombEnemy() {
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
 
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
@@ -36,8 +37,7 @@ CreateBombEnemy::CreateBombEnemy() {
 //初期化
 bool CreateBombEnemy::Initialize() {
 	//m_Position = randPanelPos();
-	m_Rotation = { 0.0f,0.0f,0.0f };
-	m_Color = { 1.0f,0.0f,0.5f,1.0f };
+	m_Rotation = { 0.0f,90.0f,0.0f };
 	m_Scale = { 0.5f,0.5f,0.5f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CreateBombEnemy.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CreateBombEnemy.csv", "LIMIT_NUM")));
@@ -69,7 +69,6 @@ void (CreateBombEnemy::* CreateBombEnemy::stateTable[])() = {
 //行動
 void CreateBombEnemy::Action() {
 	(this->*stateTable[_charaState])();
-	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -114,7 +113,8 @@ void CreateBombEnemy::Draw(DirectXCommon* dxCommon) {
 
 		bomb[i]->Draw(dxCommon);
 	}
-	Obj_Draw();
+	if (m_Color.w != 0.0f)
+		Obj_Draw();
 }
 //ImGui描画
 void CreateBombEnemy::ImGui_Origin() {
@@ -174,7 +174,6 @@ void CreateBombEnemy::Attack() {
 		StagePanel::GetInstance()->EnemyHitReset();
 	}
 }
-
 //ワープ
 void CreateBombEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
@@ -197,11 +196,11 @@ void CreateBombEnemy::BirthBomb() {
 	//ボム生成
 	std::unique_ptr<Bomb> newBomb = std::make_unique<Bomb>();
 	newBomb->Initialize();
-	newBomb->SetPosition(StagePanel::GetInstance()->EnemySetPanel(true));
+	newBomb->SetPosition({ m_Position.x,m_Position.y + 1.2f,m_Position.z });
+	newBomb->SetTargetPos(StagePanel::GetInstance()->EnemySetPanel(true));
 	newBomb->SetPlayer(player);
 	bomb.push_back(std::move(newBomb));
 }
-
 //魔法陣生成
 void CreateBombEnemy::BirthMagic() {
 	if (!magic.Alive) { return; }

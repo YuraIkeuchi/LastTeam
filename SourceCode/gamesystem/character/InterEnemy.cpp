@@ -6,6 +6,7 @@
 #include <GameStateManager.h>
 #include <ParticleEmitter.h>
 #include <TutorialTask.h>
+#include <Slow.h>
 Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
 	//本当は4~7
@@ -26,7 +27,7 @@ bool InterEnemy::Initialize() {
 }
 //更新
 void InterEnemy::Update() {
-
+	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
 	if (m_EnemyTag != "Bomb") {
 		if (m_Alive) {
 			Action();
@@ -96,6 +97,7 @@ void InterEnemy::ImGuiDraw() {
 }
 //UIの描画
 void InterEnemy::UIDraw() {
+	//if (!GameStateManager::GetInstance()->GetGameStart() && m_EnemyTag != "Mob") { return; }
 	IKESprite::PreDraw();
 	if (m_Alive) {
 		//HPバー
@@ -179,19 +181,13 @@ void InterEnemy::BirthParticle() {
 	float l_Divi = {};
 	
 	//最後の敵かどうかでパーティクルが変わる
-	if (!m_LastEnemy) {
-		l_Life = 50;
-		l_Divi = 5.0f;
+	if(m_LastEnemy && m_HP <= 0.1f) {
+		l_Life = 500;
+		l_Divi = 20.0f;
 	}
 	else {
-		if (m_HP == 0.0f) {
-			l_Life = 500;
-			l_Divi = 20.0f;
-		}
-		else {
-			l_Life = 50;
-			l_Divi = 8.0f;
-		}
+		l_Life = 50;
+		l_Divi = 8.0f;
 	}
 	for (int i = 0; i < 20; i++) {
 		ParticleEmitter::GetInstance()->Break(l_Life, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, l_Divi);

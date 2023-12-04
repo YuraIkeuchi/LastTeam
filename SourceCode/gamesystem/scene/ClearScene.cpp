@@ -11,17 +11,17 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 	for (int i = 0; i < 3; i++) {
 		RandShineInit();
 	}
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameClear.wav", 0.04f);
 }
 //更新
 void ClearScene::Update(DirectXCommon* dxCommon) {
 	Input* input = Input::GetInstance();
-	if ((input->TriggerButton(input->B)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
+	if ((input->TriggerButton(input->B)||input->TriggerKey(DIK_SPACE)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
-		GameReset({ -4.0f,0.1f,2.0f });
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
@@ -69,10 +69,10 @@ void ClearScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void ClearScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	ImGui::Begin("Clear");
-	ImGui::Text("Clear");
-	ImGui::End();
-	SceneChanger::GetInstance()->ImGuiDraw();
+	//ImGui::Begin("Clear");
+	//ImGui::Text("Clear");
+	//ImGui::End();
+	//SceneChanger::GetInstance()->ImGuiDraw();
 }
 //解放
 void ClearScene::Finalize() {
