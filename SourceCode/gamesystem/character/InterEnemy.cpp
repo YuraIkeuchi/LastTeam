@@ -62,7 +62,7 @@ void InterEnemy::Update() {
 		}
 	}
 
-	//障害物の削除
+	//数字の削除
 	for (int i = 0; i < _damagenumber.size(); i++) {
 		if (_damagenumber[i] == nullptr) {
 			continue;
@@ -71,6 +71,18 @@ void InterEnemy::Update() {
 		_damagenumber[i]->Update();
 		if (!_damagenumber[i]->GetAlive()) {
 			_damagenumber.erase(cbegin(_damagenumber) + i);
+		}
+	}
+
+	//数字の削除
+	for (int i = 0; i < _healnumber.size(); i++) {
+		if (_healnumber[i] == nullptr) {
+			continue;
+		}
+
+		_healnumber[i]->Update();
+		if (!_healnumber[i]->GetAlive()) {
+			_healnumber.erase(cbegin(_healnumber) + i);
 		}
 	}
 	//だめーじ関係
@@ -112,6 +124,12 @@ void InterEnemy::UIDraw() {
 	}
 	//敵のダメージテキスト
 	for (unique_ptr<DrawDamageNumber>& newnumber : _damagenumber) {
+		if (newnumber != nullptr) {
+			newnumber->Draw();
+		}
+	}
+	//敵のヒールテキスト
+	for (unique_ptr<DrawHealNumber>& newnumber : _healnumber) {
 		if (newnumber != nullptr) {
 			newnumber->Draw();
 		}
@@ -168,6 +186,7 @@ void InterEnemy::SimpleHeal(float heal)
 	if (m_HP <= 0.0f) { return; }
 	m_HP += heal;
 	BirthHealParticle();
+	BirthHealNumber(heal);
 }
 
 
@@ -224,8 +243,8 @@ void InterEnemy::BirthPoisonParticle() {
 
 //パーティクル(ヒール)
 void InterEnemy::BirthHealParticle() {
-	const XMFLOAT4 s_color = { 1.0f,0.3f,0.0f,1.0f };
-	const XMFLOAT4 e_color = { 1.0f,0.3f,0.0f,1.0f };
+	const XMFLOAT4 s_color = { 0.5f,1.0f,0.1f,1.0f };
+	const XMFLOAT4 e_color = { 0.5f,1.0f,0.1f,1.0f };
 	const float s_scale = 1.0f;
 	const float e_scale = 0.0f;
 	int l_Life = {};
@@ -343,6 +362,16 @@ void InterEnemy::BirthDamage(const float Damage) {
 			_damagenumber.push_back(std::move(_newnumber));
 		}
 	}
+}
+void InterEnemy::BirthHealNumber(const float heal) {
+	int l_InterHeal = {};//int変換したダメージ
+	l_InterHeal = (int)heal;
+	unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+	_newnumber->GetCameraData();
+	_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
+	_newnumber->Initialize();
+	_newnumber->SetNumber(l_InterHeal);
+	_healnumber.push_back(std::move(_newnumber));
 }
 //ダメージ関係
 void InterEnemy::DamageUpdate() {

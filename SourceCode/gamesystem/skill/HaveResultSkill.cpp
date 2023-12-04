@@ -136,8 +136,10 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 	haveSkills[num].text_ = make_unique<TextManager>();
 	haveSkills[num].text_->Initialize(dxCommon);
 	haveSkills[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
-	haveSkills[num].baseSentence = haveSkills[num].text_->GetSkillSentence(haveSkills[num].ID);
-	haveSkills[num].text_->SetCreateSentence(haveSkills[num].baseSentence);
+	haveSkills[num].baseSentence[0] = L"スキル：";
+	haveSkills[num].baseSentence[1] = haveSkills[num].text_->GetSkillSentence(haveSkills[num].ID);
+	haveSkills[num].baseSentence[2] = haveSkills[num].text_->GetSkillDamage(haveSkills[num].ID);
+	haveSkills[num].text_->SetCreateSentence(haveSkills[num].baseSentence[0], haveSkills[num].baseSentence[1], haveSkills[num].baseSentence[2]);
 	m_SelectCount = {};
 	m_AddPosX = {};
 }
@@ -152,8 +154,10 @@ void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCom
 	havePassive[num].text_ = make_unique<TextManager>();
 	havePassive[num].text_->Initialize(dxCommon);
 	havePassive[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
-	havePassive[num].baseSentence = havePassive[num].text_->GetPasiveSentence(havePassive[num].ID);
-	havePassive[num].text_->SetCreateSentence(havePassive[num].baseSentence);
+	havePassive[num].baseSentence[0] = L"パッシブ：";
+	havePassive[num].baseSentence[1] = havePassive[num].text_->GetPasiveSentence(havePassive[num].ID);
+	havePassive[num].baseSentence[2] = L"";
+	havePassive[num].text_->SetCreateSentence(havePassive[num].baseSentence[0], havePassive[num].baseSentence[1], havePassive[num].baseSentence[2]);
 }
 //移動
 void HaveResultSkill::Move() {
