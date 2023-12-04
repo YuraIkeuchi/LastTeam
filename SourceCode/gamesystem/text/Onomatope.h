@@ -11,7 +11,7 @@ enum OnomatoPattern {
 	BossSpawn,
 	GameOver,
 	AttackCharge,
-	
+	Counter,
 
 };
 class Onomatope {
@@ -43,6 +43,7 @@ private:
 	void BossSpawnUpdate(OnomatoStruct& onomato);
 	void GameOverUpdate(OnomatoStruct& onomato);
 	void AttackChargeUpdate(OnomatoStruct& onomato);
+	void CounterUpdate(OnomatoStruct& onomato);
 
 private:
 	std::list<OnomatoStruct> onomatoList;

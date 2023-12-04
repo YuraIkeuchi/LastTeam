@@ -13,12 +13,11 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 //更新
 void GameoverScene::Update(DirectXCommon* dxCommon) {
 	Input* input = Input::GetInstance();
-	if ((input->TriggerButton(input->B))) {			//バトル
+	if ((input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE))) {			//バトル
 		SceneChanger::GetInstance()->SetChangeStart(true);
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
-		GameReset({ -4.0f,0.1f,2.0f });
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 		SceneChanger::GetInstance()->SetChange(false);
 	}

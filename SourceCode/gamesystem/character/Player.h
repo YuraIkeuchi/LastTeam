@@ -37,6 +37,14 @@ public:
 private:
 	//動き
 	void Move();
+
+	bool MoveButtonKey();
+	bool UpButtonKey();
+	bool DownButtonKey();
+	bool RightButtonKey();
+	bool LeftButtonKey();
+
+
 	//動きが止まる
 	void Delay();
 
@@ -88,6 +96,14 @@ public:
 	void Setname(const string name) { m_name = name; }
 
 	bool HPEffect();
+
+	//攻撃時の瞬間取得
+	void AttackCheck(const bool LastAttack);
+	void AttackMove();
+	//縮小する
+	void ShrinkScale();
+
+
 private:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
@@ -112,11 +128,6 @@ private:
 	int m_NowHeight = {};
 	int m_NowWidth = {};
 
-
-	//攻撃先
-	XMFLOAT3 m_TargetPos = {};
-	//戻り先
-	XMFLOAT3 m_ReturnPos = {};
 	//イージング
 	float m_Frame = {};
 	int m_CoolTime = {};
@@ -194,4 +205,24 @@ private:
 	std::vector<unique_ptr<ImagePlayer>> imageplayer;
 
 	bool m_FinishGameOver = false;
+
+
+	//攻撃時の動きのための変数
+	float m_BaseScale = {};
+	float m_AfterScale = 0.5f;
+	int m_ShrinkTimer = {};
+
+	enum AttackState {
+		ATTACK_NONE,
+		ATTACK_NORMAL,
+		ATTACK_LAST,
+	}_AttackState = ATTACK_NONE;
+
+	float m_AttackFrame = {};
+
+	bool m_Jump = false;
+	//上昇度
+	float m_AddPower = 0.0f;
+	//重力加速度
+	float m_Gravity = 0.02f;
 };

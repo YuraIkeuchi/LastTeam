@@ -75,5 +75,8 @@ private:
 	//インターバルとか
 	vector<int>m_Limit;
 	int m_BulletNum = {};
+
+	float m_BaseScale = {};
+	float m_ScaleFrame = {};
 };
 

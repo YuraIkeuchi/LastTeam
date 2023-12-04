@@ -15,6 +15,8 @@ HaveResultSkill::~HaveResultSkill() {
 void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
 	backScreen = IKESprite::Create(ImageManager::RESULTBACKSCREEN, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	backScreen->SetSize({ 1280.f,720.f });
+	skillCheack = IKESprite::Create(ImageManager::RESULTBACKCHECK, { 1280.f,720.f });
+	skillCheack->SetAnchorPoint({ 1.f,1.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetSize({ 128.0f,128.0f });
@@ -42,6 +44,7 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
+	skillCheack->Draw();
 	selectFrame->Draw();
 	for (HaveUI& resultUI : haveSkills) {
 		resultUI.icon->Draw();
@@ -73,7 +76,6 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 			havePassive[m_SelectCount - (int)(haveSkills.size())].text_->Draw(dxCommon);
 		}
 	}
-
 	IKESprite::PostDraw();
 }
 void HaveResultSkill::ImGuiDraw() {
@@ -141,8 +143,8 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 }
 //パッシブスキルの表示
 void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCommon* dxCommon) {
-	XMFLOAT2 l_BasePos = { 640.0f,150.0f };
-	havePassive[num].position = { l_BasePos.x + ((num + (int)haveSkills.size()) * 100.0f),l_BasePos.y };
+	XMFLOAT2 l_BasePos = { 640.0f,250.0f };
+	havePassive[num].position = { l_BasePos.x + ((num + (int)haveSkills.size()) * 150.0f),l_BasePos.y };
 	havePassive[num].icon = IKESprite::Create(ImageManager::PASSIVE_01 + havePassive[num].ID, {0.0f,0.0f});
 	havePassive[num].icon->SetSize({ 64.0f,64.0f });
 	havePassive[num].icon->SetAnchorPoint({ 0.5f,0.5f });
@@ -181,9 +183,12 @@ void HaveResultSkill::Move() {
 	}
 
 	if (input->TiltPushStick(input->L_LEFT) ||
-		input->TiltPushStick(input->L_RIGHT)) {
+		input->TiltPushStick(input->L_RIGHT)||
+		input->PushButton(input->LEFT)||
+		input->PushButton(input->RIGHT)) {
 		if (m_isMove) { return; }
-		if (input->TiltPushStick(input->L_RIGHT)) {
+		if (input->TiltPushStick(input->L_RIGHT)||
+			input->PushButton(input->RIGHT)) {
 			if (m_SelectCount == ((int)(haveSkills.size()) + (int)(havePassive.size())) - 1) { return; }
 			m_SelectCount++;
 		}

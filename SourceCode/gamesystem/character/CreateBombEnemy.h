@@ -74,5 +74,6 @@ private:
 	std::vector<unique_ptr<Bomb>> bomb;
 	//インターバルとか
 	vector<int>m_Limit;
+
 };
 

@@ -32,15 +32,15 @@ void DeckUI::Update() {
 	tex->SetColor(m_Color);
 	tex->SetPosition(m_Position);
 
-	_drawnumber->SetPosition(m_Position);
+	/*_drawnumber->SetPosition(m_Position);
 	_drawnumber->SetNumber(m_ID);
-	_drawnumber->Update();
+	_drawnumber->Update();*/
 }
 //•`‰æ
 void DeckUI::Draw() {
 	IKESprite::PreDraw();
 	tex->Draw();
-	_drawnumber->Draw();
+	//_drawnumber->Draw();
 	IKESprite::PostDraw();
 }
 //ImGui

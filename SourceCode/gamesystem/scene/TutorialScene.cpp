@@ -29,7 +29,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 	//�p�[�e�B�N���S�폜
 	ParticleEmitter::GetInstance()->AllDelete();
 
-
+	m_TextPos = { -10.0f,-30.0f };
 	text_ = make_unique<TextManager>();
 	text_->Initialize(dxCommon);
 	text_->SetConversation(TextManager::TUTORIAL_START, m_TextPos);
@@ -44,6 +44,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
 	GameStateManager::SetPlayer(player_.get());
 	GameStateManager::GetInstance()->Initialize();
+	GameStateManager::GetInstance()->SetGameStart(true);
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
@@ -104,7 +105,8 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	}
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	if (input->TriggerButton(input->BACK) &&
+	if ((input->TriggerButton(input->BACK)||
+		input->TriggerKey(DIK_BACK)) &&
 		!m_IsBackKey &&
 		!m_Skip) {
 		m_IsBackKey = true;
@@ -209,15 +211,15 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
-	ImGui::Begin("Tutorial");
-	ImGui::Text("Timer:%d", m_Timer);
-	ImGui::Text("State:%d", _nowstate);
-	ImGui::End();
-	/*
-	TutorialTask::GetInstance()->ImGuiDraw();
-	player_->ImGuiDraw();
-	*/
-	GameStateManager::GetInstance()->ImGuiDraw();
+	//ImGui::Begin("Tutorial");
+	//ImGui::Text("Timer:%d", m_Timer);
+	//ImGui::Text("State:%d", _nowstate);
+	//ImGui::End();
+	///*
+	//TutorialTask::GetInstance()->ImGuiDraw();
+	//player_->ImGuiDraw();
+	//*/
+	//GameStateManager::GetInstance()->ImGuiDraw();
 }
 
 void TutorialScene::Finalize() {
@@ -225,10 +227,14 @@ void TutorialScene::Finalize() {
 }
 //�ŏ��̌��
 void TutorialScene::IntroState() {
-	if (Helper::CheckMin(m_Timer, 150, 1)) {
+	Input* input = Input::GetInstance();
+	/*if (Helper::CheckMin(m_Timer, 150, 1)) {
 		_nowstate = TUTORIAL_MOVE;
 		m_Timer = {};
-
+	}*/
+	if ((input->TriggerButton(input->A))) {
+		_nowstate = TUTORIAL_MOVE;
+		m_Timer = {};
 	}
 }
 //�ړ�
@@ -246,21 +252,32 @@ void TutorialScene::MoveState() {
 }
 //�X�L���Q�b�g
 void TutorialScene::GetState() {
-
+	Input* input = Input::GetInstance();
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
 		m_TextPos = { -10.0f,-30.0f };
 		text_->SetConversation(TextManager::TUTORIAL_EXPLAIN, m_TextPos);
-		_nowstate = TUTORIAL_ATTACK;
-		m_Timer = {};
+
+
+		if ((input->TriggerButton(input->A))) {
+			m_TextPos = { -10.0f,-30.f };
+			text_->SetConversation(TextManager::TUTORIAL_MARK, m_TextPos);
+			_nowstate = TUTORIAL_ATTACK;
+			m_Timer = {};
+		}
+	}
+
+	if (enemy->GetHP() <= 0.0f) {
+		m_Skip = true;
+		m_IsBackKey = false;
+		_nowstate = TUTORIAL_DAMAGE;
 	}
 }
 //�U��
 void TutorialScene::AttackState() {
+	Input* input = Input::GetInstance();
 	Helper::CheckMin(m_Timer, 410, 1);
-	if (m_Timer == 120) {
-	m_TextPos = { -10.0f,-30.f };
-		text_->SetConversation(TextManager::TUTORIAL_MARK, m_TextPos);
-	} else if (m_Timer == 240) {
+	
+	if ((input->TriggerButton(input->A)) && m_Timer > 10)  {
 		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK, m_TextPos);
 	}
 	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
@@ -271,6 +288,7 @@ void TutorialScene::AttackState() {
 }
 //�_���[�W��������
 void TutorialScene::DamageState() {
+	Input* input = Input::GetInstance();
 	if (enemy->GetHP() <= 0.0f || m_Skip) {
 		if (!m_FeedStart) {
 			m_Feed = true;
@@ -291,10 +309,12 @@ void TutorialScene::DamageState() {
 			if (m_Timer == 1) {
 				m_TextPos = { 120.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_SKILL, m_TextPos);
-			} else if (m_Timer == 120) {
+			}
+			if((input->TriggerButton(input->A))) {
 				m_TextPos = { 10.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_CHOICE, m_TextPos);
-			} else if (m_Timer == 170) {
+			}
+			if ((input->TriggerButton(input->A))) {
 				TutorialTask::GetInstance()->SetViewSkill(true);
 			}
 			if (TutorialTask::GetInstance()->GetChoiceSkill()) {

@@ -10,7 +10,7 @@ void (Onomatope::* Onomatope::updateTable[])(OnomatoStruct& onomato) = {
 	&Onomatope::BossSpawnUpdate,//
 	&Onomatope::GameOverUpdate,//
 	&Onomatope::AttackChargeUpdate,//
-
+	& Onomatope::CounterUpdate,
 };
 
 Onomatope::Onomatope() {
@@ -78,6 +78,14 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay)
 		str.kFrameMax = 45.f;
 		str.kDelayFrameMax = delay;
 		str.pattern = AttackCharge;
+		break;
+	case Counter:
+		str.Tex = IKESprite::Create(ImageManager::ONOMATO_05, basePos);
+		str.Tex->SetAnchorPoint({ 0.5f,0.5f });
+		str.Tex->SetSize({ 486.f,86.f });
+		str.kFrameMax = 80.f;
+		str.kDelayFrameMax = delay;
+		str.pattern = Counter;
 		break;
 	default:
 		break;
@@ -163,4 +171,32 @@ void Onomatope::AttackChargeUpdate(OnomatoStruct& onomato) {
 		onomato.isFinish = true;
 	}
 
+}
+
+void Onomatope::CounterUpdate(OnomatoStruct& onomato) {
+	onomato.delayFrame += 1 / onomato.kDelayFrameMax;
+	if (onomato.delayFrame < 1.0f) {
+		return;
+	}
+	
+	onomato.frame += 1 / onomato.kFrameMax;
+	float frames = onomato.frame * 2.0f;
+	Helper::Clamp(frames,0.f,1.f);
+
+	float frameM = onomato.kFrameMax * 0.3f;
+	static float frameZ = 0.f;
+	if (onomato.frame <= 1.0f) {
+		XMFLOAT2 pos = onomato.Tex->GetPosition();
+		pos.y = Ease(Out,Quad, frames, 720 + 43.f, onomato.basePos.y);
+		if (frames==1.0f) {
+			frameZ += 1 / frameM;
+			float alpah = 0.f;
+			alpah = Ease(Out,Exp, frameZ,1.0f,0.f);
+			onomato.Tex->SetColor({1.f,1.f,1.f,alpah});
+		}
+		onomato.Tex->SetPosition(pos);
+	} else {
+		frameZ = 0.0f;
+		onomato.isFinish = true;
+	}
 }

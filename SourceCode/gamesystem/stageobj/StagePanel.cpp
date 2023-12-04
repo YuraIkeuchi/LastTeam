@@ -17,33 +17,43 @@ StagePanel* StagePanel::GetInstance() {
 }
 //リソース読み込み
 void StagePanel::LoadResource() {
+	float scale = PANEL_SIZE * 0.1f;
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			panels[i][j].object = make_unique<IKEObject3d>();
 			panels[i][j].object->Initialize();
 			panels[i][j].object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
 			panels[i][j].object->SetScale({ PANEL_SIZE,0.01f,PANEL_SIZE });
+			panels[i][j].line = make_unique<IKETexture>(ImageManager::PANNELLINE,XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+			panels[i][j].line->TextureCreate();
+			panels[i][j].line->Initialize();
+			panels[i][j].line->SetScale({ scale ,scale ,scale });
+			panels[i][j].line->SetRotation({ 90.0f,0.0f,0.0f });
 		}
 	}
+	
+}
+//初期化
+bool StagePanel::Initialize(const float PosY) {
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			panels[i][j].position = { (PANEL_SIZE * i) - (PANEL_HEIGHT * PANEL_SIZE),0.0f,(PANEL_SIZE * j) };
+			panels[i][j].position = { (PANEL_SIZE * i) - (PANEL_HEIGHT * PANEL_SIZE),PosY,(PANEL_SIZE * j) };
 			panels[i][j].color = { 1.f,1.f,1.f,1.f };
 			panels[i][j].type = NO_PANEL;
 			panels[i][j].isHit = false;
 			panels[i][j].isPoison = false;
 			panels[i][j].PoisonTimer = {};
+			panels[i][j].Frame = {};
+			panels[i][j].TargetTimer = (i * 5) + (j * 40);
 		}
 	}
-}
-//初期化
-bool StagePanel::Initialize() {
-	
 	m_SelectHeight = 0;
 	m_SelectWidth = 0;
 	if (!actions.empty()) {
 		actions.clear();
 	}
+	m_CreateTimer = {};
+	m_CreateFinish = false;
 	//CSV読み込み
 	return true;
 }
@@ -68,6 +78,28 @@ void StagePanel::Update() {
 		m_AllDelete = false;
 	}
 }
+//ステージ形成
+void StagePanel::CreateStage() {
+	if (m_CreateFinish) { return; }
+	const float l_AddFrame = 1 / 45.0f;
+	m_CreateTimer++;
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			if (m_CreateTimer >= panels[i][j].TargetTimer) {
+				if (Helper::FrameCheck(panels[i][j].Frame, l_AddFrame)) {
+					panels[i][j].Frame = 1.0f;
+				}
+
+				panels[i][j].position.y = Ease(In, Cubic, panels[i][j].Frame, panels[i][j].position.y, 0.0f);
+			}
+		}
+	}
+
+	if (panels[PANEL_WIDTH - 1][PANEL_HEIGHT - 1].Frame == 1.0f) {
+		m_CreateFinish = true;
+		GameStateManager::GetInstance()->SetGameStart(true);
+	}
+}
 
 //描画
 void StagePanel::Draw(DirectXCommon* dxCommon) {
@@ -78,6 +110,13 @@ void StagePanel::Draw(DirectXCommon* dxCommon) {
 		}
 	}
 	IKEObject3d::PostDraw();
+	IKETexture::PreDraw2(dxCommon, AddBlendType);
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			panels[i][j].line->Draw();
+		}
+	}
+	IKETexture::PostDraw();
 }
 //カードの描画
 void StagePanel::ActDraw(DirectXCommon* dxCommon) {
@@ -102,9 +141,8 @@ void StagePanel::ImGuiDraw() {
 }
 
 //スキルセットの更新(バトル前)
-void StagePanel::SetUpdate() {
+void StagePanel::SetUpdate() {	
 }
-
 //バトルの更新
 void StagePanel::BattleUpdate() {
 	//敵がが居るマスが赤くなる
@@ -119,6 +157,13 @@ void StagePanel::BattleUpdate() {
 			panels[i][j].object->Update();
 			panels[i][j].object->SetPosition(panels[i][j].position);
 			panels[i][j].object->SetColor(panels[i][j].color);
+			panels[i][j].line->Update();
+			panels[i][j].line->SetPosition({ panels[i][j].position.x, panels[i][j].position.y+0.05f, panels[i][j].position.z });
+			if (i < PANEL_WIDTH / 2) {
+				panels[i][j].line->SetColor({ 0.f,0.f,1.f,1.f });
+			} else {
+				panels[i][j].line->SetColor({ 1.f,0.f,0.f,1.f });
+			}
 		}
 	}
 }

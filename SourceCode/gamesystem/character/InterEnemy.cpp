@@ -6,6 +6,7 @@
 #include <GameStateManager.h>
 #include <ParticleEmitter.h>
 #include <TutorialTask.h>
+#include <Slow.h>
 Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
 	//本当は4~7
@@ -26,7 +27,7 @@ bool InterEnemy::Initialize() {
 }
 //更新
 void InterEnemy::Update() {
-
+	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
 	if (m_EnemyTag != "Bomb") {
 		if (m_Alive) {
 			Action();
@@ -96,6 +97,7 @@ void InterEnemy::ImGuiDraw() {
 }
 //UIの描画
 void InterEnemy::UIDraw() {
+	//if (!GameStateManager::GetInstance()->GetGameStart() && m_EnemyTag != "Mob") { return; }
 	IKESprite::PreDraw();
 	if (m_Alive) {
 		//HPバー
@@ -160,6 +162,15 @@ void InterEnemy::SimpleDamege(float damage) {
 	m_HP -= damage;
 	BirthParticle();
 }
+
+void InterEnemy::SimpleHeal(float heal)
+{
+	if (m_HP <= 0.0f) { return; }
+	m_HP += heal;
+	BirthHealParticle();
+}
+
+
 //パーティクル(ダメージ)
 void InterEnemy::BirthParticle() {
 	const XMFLOAT4 s_color = { 1.0f,0.3f,0.0f,1.0f };
@@ -170,19 +181,13 @@ void InterEnemy::BirthParticle() {
 	float l_Divi = {};
 	
 	//最後の敵かどうかでパーティクルが変わる
-	if (!m_LastEnemy) {
-		l_Life = 50;
-		l_Divi = 5.0f;
+	if(m_LastEnemy && m_HP <= 0.1f) {
+		l_Life = 500;
+		l_Divi = 20.0f;
 	}
 	else {
-		if (m_HP == 0.0f) {
-			l_Life = 500;
-			l_Divi = 20.0f;
-		}
-		else {
-			l_Life = 50;
-			l_Divi = 8.0f;
-		}
+		l_Life = 50;
+		l_Divi = 8.0f;
 	}
 	for (int i = 0; i < 20; i++) {
 		ParticleEmitter::GetInstance()->Break(l_Life, m_Position, s_scale, e_scale, s_color, e_color, 0.02f, l_Divi);
@@ -216,6 +221,36 @@ void InterEnemy::BirthPoisonParticle() {
 		ParticleEmitter::GetInstance()->PoisonEffect(l_Life, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color,0.02f,l_Divi);
 	}
 }
+
+//パーティクル(ヒール)
+void InterEnemy::BirthHealParticle() {
+	const XMFLOAT4 s_color = { 1.0f,0.3f,0.0f,1.0f };
+	const XMFLOAT4 e_color = { 1.0f,0.3f,0.0f,1.0f };
+	const float s_scale = 1.0f;
+	const float e_scale = 0.0f;
+	int l_Life = {};
+	float l_Divi = {};
+
+	//最後の敵かどうかでパーティクルが変わる
+	if (!m_LastEnemy) {
+		l_Life = 50;
+		l_Divi = 5.0f;
+	}
+	else {
+		if (m_HP == 0.0f) {
+			l_Life = 500;
+			l_Divi = 20.0f;
+		}
+		else {
+			l_Life = 50;
+			l_Divi = 8.0f;
+		}
+	}
+	for (int i = 0; i < 20; i++) {
+		ParticleEmitter::GetInstance()->HealEffect(l_Life, m_Position, s_scale, e_scale, s_color, e_color);
+	}
+}
+
 //HPの割合
 float InterEnemy::HpPercent() {
 	float temp = m_HP / m_MaxHP;

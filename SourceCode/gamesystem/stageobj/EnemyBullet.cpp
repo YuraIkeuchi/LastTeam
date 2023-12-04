@@ -19,6 +19,11 @@ EnemyBullet::EnemyBullet() {
 	float baseScale = PANEL_SIZE * 0.1f;
 	panels.tex->SetScale({ baseScale,baseScale,baseScale });
 	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shadow_tex->TextureCreate();
+	shadow_tex->Initialize();
+	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //初期化
 bool EnemyBullet::Initialize() {
@@ -31,7 +36,7 @@ bool EnemyBullet::Initialize() {
 	m_Alive = true;
 	m_ThrowType = THROW_SET;
 	m_AliveTimer = {};
-
+	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	panels.position = {};
 	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "BULLET_DAMAGE")));
 	panels.color = { 1.f,1.f,1.f,1.f };
@@ -56,6 +61,11 @@ void EnemyBullet::Update() {
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor({1.0f,0.3f,0.0f,1.0f});
 	panels.tex->Update();
+
+	m_ShadowPos = { m_Position.x,0.11f,m_Position.z };
+	shadow_tex->SetPosition(m_ShadowPos);
+	shadow_tex->SetScale(m_ShadowScale);
+	shadow_tex->Update();
 }
 //描画
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
@@ -63,6 +73,7 @@ void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 	if (m_NowWidth <= 3) {
 		panels.tex->Draw();
 	}
+	shadow_tex->Draw();
 	IKETexture::PostDraw();
 	Obj_Draw();
 }
@@ -88,7 +99,7 @@ bool EnemyBullet::Collide() {
 }
 //追従
 void EnemyBullet::Throw() {
-	const float l_AddFrame = 0.01f;
+	const float l_AddFrame = 0.1f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
 	//弾のマスを取得する
@@ -110,11 +121,10 @@ void EnemyBullet::Throw() {
 		m_ThrowTimer++;
 		if (m_ThrowTimer == l_BaseTimer) {
 			float l_Rot = {};
-			int num = Helper::GetRanNum(0, 2);
-			if (num == DIR_STRAIGHT) {
+			if (m_ShotDir == DIR_STRAIGHT) {
 				l_Rot = -90.0f;
 			}
-			else if (num == DIR_SLASHUP) {
+			else if (m_ShotDir == DIR_SLASHUP) {
 				l_Rot = -45.0f;
 			}
 			else {

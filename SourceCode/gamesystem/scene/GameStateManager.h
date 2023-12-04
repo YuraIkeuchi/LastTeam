@@ -117,6 +117,15 @@ public:
 	void SetIsBombDamage(bool flag) { m_BombDamage = flag; }
 	bool GetIsBombDamage() { return m_BombDamage; }
 
+	void SetIsHeal(bool flag) { m_Heal = flag; }
+	bool GetIsHeal() { return m_Heal; }
+
+	void SetIsEnding(bool flag) { isEnding = flag; isFinish = flag; }
+	bool SetIsEnding() { return isEnding; }
+
+	void SetGameStart(bool GameStart) { m_GameStart = GameStart;}
+	bool GetGameStart() { return m_GameStart; }
+
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -126,6 +135,7 @@ private:
 	unique_ptr<IKETexture> _charge;
 	bool isFinish = false;
 	bool isChangeScene = false;
+	bool isEnding = false;
 	struct ActState {
 		int SkillType;//スキルの種類
 		int ActID;//ID
@@ -187,11 +197,12 @@ private:
 	//
 	float m_DiameterGauge = 1.0f;
 	//ゲージマックス
-	float kGaugeCountMax = 180;
+	float kGaugeCountMax = 130;
 	bool m_IsReload = true;
 	bool m_IsReloadDamage = false;
 	bool m_ReloadDamage = false;
 	bool m_BombDamage = false;
+	bool m_Heal = false;
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
 	bool m_IsDrainUp = false;
@@ -203,7 +214,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 0,1,2 };
+	vector <int> m_StartNumber = { 1,2,6 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -243,6 +254,8 @@ private:
 		bool isVanish = false;
 	};
 	std::list<PowerUpEffect> powerup;
+
+	bool m_GameStart = false;
 
 	///=============================
 	/// 

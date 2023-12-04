@@ -31,6 +31,7 @@ private:
 	//パネル
 	struct Panel {
 		unique_ptr<IKEObject3d> object = nullptr;
+		unique_ptr<IKETexture> line = nullptr;
 		XMFLOAT3 position = { 0,0,0 };
 		XMFLOAT4 color = { 1,1,1,1 };
 		int type = NO_PANEL;
@@ -39,14 +40,17 @@ private:
 		bool predict = false;
 		bool isPoison = false;
 		int PoisonTimer = {};
+		int TargetTimer = {};
+		float Frame = {};
 	};
 
 public:
 	void LoadResource();
 	//初期化
-	bool Initialize();
+	bool Initialize(const float PosY = 0.0f);
 	//更新
 	void Update();
+	void CreateStage();
 	//描画
 	void Draw(DirectXCommon* dxCommon);
 	//行動カードの描画
@@ -82,7 +86,7 @@ public:
 	static void SetPlayer(Player* player) { StagePanel::player = player; }
 	//gettersetter
 	XMFLOAT3 SetPositon(int width, int height) {
-		return panels[width][height].position;
+		return { panels[width][height].position.x,0.0f,panels[width][height].position.z };
 	}
 
 	//gettersetter
@@ -91,7 +95,7 @@ public:
 	}
 
 	const bool GetAllDelete() { return m_AllDelete; }
-
+	const bool GetCreateFinish() { return m_CreateFinish; }
 private:
 	static Player* player;
 	//パネル
@@ -122,4 +126,7 @@ private:
 	//スキルをすべて手に入れているか
 	bool m_AllDelete = false;
 	int m_ActionCount = {};
+
+	int m_CreateTimer = {};
+	bool m_CreateFinish = false;
 };

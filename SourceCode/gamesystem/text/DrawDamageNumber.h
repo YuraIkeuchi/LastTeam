@@ -20,7 +20,7 @@ protected: // エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	DrawDamageNumber();
+	DrawDamageNumber(const float scale = 0.5f, const bool move = true);
 	//初期化
 	void Initialize();
 	//更新
@@ -60,4 +60,5 @@ private:
 	int m_Number = {};
 	float m_Frame = {};
 	bool m_Alive = false;
+	bool m_Move = false;
 };

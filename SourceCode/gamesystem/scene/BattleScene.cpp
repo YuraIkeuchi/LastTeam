@@ -7,6 +7,7 @@
 #include <Helper.h>
 #include "InterEnemy.h"
 #include <StageBack.h>
+#include <Slow.h>
 BattleScene::~BattleScene() {
 	Finalize();
 }
@@ -18,7 +19,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	dxCommon->SetFullScreen(true);
 	// ポストエフェクト
 	PlayPostEffect = false;
-	
+
 	// パーティクル
 	ParticleEmitter::GetInstance()->AllDelete();
 
@@ -32,8 +33,8 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	GameStateManager::GetInstance()->Initialize();
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
-	StagePanel::GetInstance()->Initialize();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
+	StagePanel::GetInstance()->Initialize(6.0f);
 	//ビヘイビア試しました！
 	{
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
@@ -43,7 +44,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	EnemyManager::SetPlayer(player_.get());
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
-	
+
 	//パッシブスキルによるエネミーの能力変更
 	if (GameStateManager::GetInstance()->GetPoisonSkill()) {
 		enemyManager->PoizonGauge();
@@ -52,13 +53,13 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 		enemyManager->PoizonVenom();
 	}
 
-	GameReset({ -8.0f,0.1f,0.0f });
 	StagePanel::GetInstance()->DeleteAction();
 
 	Feed* feed_ = new Feed();
 	feed.reset(feed_);
 
 	gameoversprite = IKESprite::Create(ImageManager::GAMEOVERBACK, { 0.0f,0.0f });
+	Slow::GetInstance()->Initialize();
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
@@ -77,6 +78,9 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		if (player_->GetFinishGameOver()) {
 			if (Helper::FrameCheck(m_GameOverFrame, 0.01f)) {
 				m_ChangeTimer++;
+				if (m_ChangeTimer == 1) {
+					Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameOver.wav", 0.1f);
+				}
 			}
 			else {
 				m_GameOverPos.y = { Ease(In,Cubic,m_GameOverFrame,m_GameOverPos.y,0.0f) };
@@ -95,20 +99,28 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			GameStateManager::GetInstance()->SetIsReloadDamage(false);
 		}
 
-    if (GameStateManager::GetInstance()->GetIsBombDamage()) {
-		enemyManager->BombDamage();
-		GameStateManager::GetInstance()->SetIsBombDamage(false);
-	}
+		if (GameStateManager::GetInstance()->GetIsBombDamage()) {
+			enemyManager->BombDamage();
+			GameStateManager::GetInstance()->SetIsBombDamage(false);
+		}
 
-		StagePanel::GetInstance()->Update();
-		enemyManager->Update();
-		ParticleEmitter::GetInstance()->Update();
+		if (GameStateManager::GetInstance()->GetIsHeal()) {
+			enemyManager->Heal();
+			GameStateManager::GetInstance()->SetIsHeal(false);
+		}
 
 		//後々変更する(酷い処理)
 		//エネミーが全員死亡したら
 		if (enemyManager->BossDestroy() && !m_FeedStart) {
-			m_Feed = true;
-			m_FeedStart = true;
+			Slow::GetInstance()->SetSlow(true);
+			if (!s_LastStage) {
+				m_Feed = true;
+				m_FeedStart = true;
+			}
+			else {
+				Audio::GetInstance()->StopWave(AUDIO_MAIN);
+				SceneChanger::GetInstance()->SetChangeStart(true);
+			}
 		}
 		if (m_Feed) {
 			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 60.0f, m_Feed);
@@ -116,6 +128,11 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		if (feed->GetFeedEnd()) {
 			m_FeedEnd = true;
 		}
+
+		StagePanel::GetInstance()->CreateStage();
+		StagePanel::GetInstance()->Update();
+		enemyManager->Update();
+		ParticleEmitter::GetInstance()->Update();
 
 		if (m_FeedEnd) {
 			Audio::GetInstance()->StopWave(AUDIO_MAIN);
@@ -141,7 +158,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	SceneChanger::GetInstance()->Update();
 	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
-		GameReset({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 		if (_ChangeType == CHANGE_MAP) {
 			if (!s_LastStage) {
 				SceneManager::GetInstance()->ChangeScene("MAP");
@@ -149,7 +165,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			else {
 				SceneManager::GetInstance()->ChangeScene("CLEAR");
 			}
-		}else {
+		}
+		else {
 			SceneManager::GetInstance()->ChangeScene("TITLE");
 		}
 		player_->PlayerSave();
@@ -185,8 +202,9 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 }
 //前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
+
 	if (!m_FeedEnd){
-		if (player_->GetHp() > 0.0f) {
+		if (player_->GetHp() > 0.0f && GameStateManager::GetInstance()->GetGameStart()) {
 			ParticleEmitter::GetInstance()->FlontDrawAll();
 			player_->UIDraw();
 			enemyManager->UIDraw();
@@ -210,26 +228,29 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	player_->Draw(dxCommon);
+	if (GameStateManager::GetInstance()->GetGameStart()) {
+		player_->Draw(dxCommon);
 
-	if (player_->GetHp() > 0.0f) {
-		enemyManager->Draw(dxCommon);
-		GameStateManager::GetInstance()->Draw(dxCommon);
-		if (!enemyManager->BossDestroy()) {
-			StagePanel::GetInstance()->ActDraw(dxCommon);
+		if (player_->GetHp() > 0.0f) {
+			enemyManager->Draw(dxCommon);
+			GameStateManager::GetInstance()->Draw(dxCommon);
+			if (!enemyManager->BossDestroy()) {
+				StagePanel::GetInstance()->ActDraw(dxCommon);
+			}
 		}
 	}
 	IKEObject3d::PostDraw();
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	player_->ImGuiDraw();
+	//player_->ImGuiDraw();
 	//GameStateManager::GetInstance()->ImGuiDraw();
 	//enemyManager->ImGuiDraw();
 	//StagePanel::GetInstance()->ImGuiDraw();
 	//camerawork->ImGuiDraw();
+	//Slow::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {
-	
+
 }

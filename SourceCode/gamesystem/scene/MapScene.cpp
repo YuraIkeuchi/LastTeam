@@ -139,7 +139,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 			}
 		}
 		for (int i = 0; i < 10; i++) {
-			unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, {});
+			unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, {-100.f,0.f});
 			road->SetAnchorPoint({ 0.5f,0.5f });
 			road->SetSize({ 16.f,16.f });
 			road->SetColor({ 1.f,1.f,0.f,1.f });
@@ -187,6 +187,20 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	//ここが新しく書いた場所
 	pickHierarchy = nowHierarchy + 1;
 	pickIndex = nowIndex;
+
+	switch (UIs[pickHierarchy][pickIndex].Tag) {
+	case BATTLE:
+		text_->SetConversation(TextManager::MAP_BATTLE, { -300.0f,-80.0f });
+		break;
+	case BOSS:
+		text_->SetConversation(TextManager::MAP_BOSS, { -300.0f,-80.0f });
+		break;
+	case PASSIVE:
+		text_->SetConversation(TextManager::MAP_PASSIVE, { -300.0f,-80.0f });
+		break;
+	default:
+		break;
+	}
 
 	oldHierarchy = nowHierarchy;
 	oldIndex = nowIndex;
@@ -507,19 +521,19 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	ImGui::Begin("Map");
-	ImGui::Text("%f", framePos.x);
-	ImGui::Text("%f", eFrame);
-	ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
-	ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
-	ImGui::Text("PICKINDEX:%d", pickIndex);
-	ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
-	ImGui::Text("nowindel:%d", nowIndex);
-	ImGui::Text("nowHie:%d", nowHierarchy);
-	for (int i = 0; i < 3; i++) {
-		ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
-	}
-	ImGui::End();
+	//ImGui::Begin("Map");
+	//ImGui::Text("%f", framePos.x);
+	//ImGui::Text("%f", eFrame);
+	//ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
+	//ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
+	//ImGui::Text("PICKINDEX:%d", pickIndex);
+	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
+	//ImGui::Text("nowindel:%d", nowIndex);
+	//ImGui::Text("nowHie:%d", nowHierarchy);
+	//for (int i = 0; i < 3; i++) {
+	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
+	//}
+	//ImGui::End();
 }
 
 void MapScene::BlackOut() {
@@ -547,26 +561,23 @@ void MapScene::BlackOut() {
 void MapScene::Move() {
 	Input* input = Input::GetInstance();
 	if (end) { return; }
-	int vel = 0;
-	if (input->PushButton(input->LB)) {
-		vel = -10;
-	} else if (input->PushButton(input->RB)) {
-		vel = 10;
-	}
-	if (input->TiltStick(input->L_UP) && !moved) {
+
+	if ((input->TiltStick(input->L_UP) || input->PushButton(input->UP) ||input->TriggerKey(DIK_W))
+		&& !moved) {
 		if (pickNextIndex == 0) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex - 1] == -1) { return; }
 		pickNextIndex--;
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
-	if (input->TiltStick(input->L_DOWN) && !moved) {
+	if ((input->TiltStick(input->L_DOWN)|| input->PushButton(input->DOWN) ||input->TriggerKey(DIK_S))
+		&& !moved) {
 		if (pickNextIndex == 2) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex + 1] == -1) { return; }
 		pickNextIndex++;
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 
-	if (input->TriggerButton(input->B) && !moved) {
+	if ((input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) && !moved) {
 		nowIndex = pickIndex;
 		nowHierarchy = pickHierarchy;
 		clearHierarchy++;
@@ -602,7 +613,6 @@ void MapScene::Move() {
 	}
 	if (moved) {
 		if (Helper::FrameCheck(mov_frame, 1 / kMoveFrame)) {
-			moved = false;
 			onomatoFrame = 0.f;
 			m_State = State::checkState;
 			mov_frame = 0.0f;
@@ -625,7 +635,6 @@ void MapScene::Move() {
 		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y, UIs[nowHierarchy][nowIndex].pos.y);
 		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowHierarchy][nowIndex].pos.x / 2);
 	}
-	scroll.x += vel;
 	scroll.x = clamp(scroll.x, -lastScroll, 340.f);
 }
 
@@ -687,9 +696,6 @@ void MapScene::MainState() {
 
 void MapScene::CheckState() {
 	const float addFrame = 1.0f / 15.f;
-	static float s_frame = 0.0f;
-	static XMFLOAT2 size = {};
-	static XMFLOAT2 cheackSize = {};
 	if (SceneChanger::GetInstance()->GetChangeState() == 1) {
 		delayFrame = 0.f;
 		m_State = State::mainState;
@@ -701,14 +707,14 @@ void MapScene::CheckState() {
 			if (Helper::FrameCheck(s_frame, addFrame)) {
 				Input* input = Input::GetInstance();
 
-				if (input->TiltStick(input->L_UP) &&
+				if ((input->TiltStick(input->L_UP)|| input->PushButton(input->UP) ||input->TriggerKey(DIK_W)) &&
 					nowCheack == 1) {
 					nowCheack--;
 					cFrame = 0.f;
 					cAdd = 0.03f;
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 				}
-				if (input->TiltStick(input->L_DOWN) &&
+				if ((input->TiltStick(input->L_DOWN)|| input->PushButton(input->DOWN) || input->TriggerKey(DIK_S)) &&
 					nowCheack == 0) {
 					nowCheack++;
 					cFrame = 0.f;
@@ -716,8 +722,9 @@ void MapScene::CheckState() {
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 				}
 
-				if (input->TriggerButton(input->B)) {
+				if (input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) {
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+					moved = false;
 					if (nowCheack == 0) {
 						SceneChanger::GetInstance()->SetChangeStart(true);
 					} else {
@@ -725,9 +732,9 @@ void MapScene::CheckState() {
 					}
 				}
 			} else {
-				size.x = Ease(Out, Quint, s_frame, 0.f, 640.f);
-				size.y = Ease(Out, Quint, s_frame, 0.f, 480.f);
-				cheack->SetSize(size);
+				size_c.x = Ease(Out, Quint, s_frame, 0.f, 640.f);
+				size_c.y = Ease(Out, Quint, s_frame, 0.f, 480.f);
+				cheack->SetSize(size_c);
 				cheackSize.x = Ease(Out, Quint, s_frame, 0.f, 320.f);
 				cheackSize.y = Ease(Out, Quint, s_frame, 0.f, 64.f);
 				for (int i = 0; i < 2; i++) {
@@ -738,7 +745,6 @@ void MapScene::CheckState() {
 
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
-			GameReset({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 			//チュートリアルのタスク
 			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 			TutorialTask::GetInstance()->SetViewSkill(false);
@@ -792,7 +798,6 @@ void MapScene::CheckState() {
 			delayFrame = 0.f;
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
-			GameReset({ -8.0f,0.1f,0.0f });
 			//チュートリアルのタスク
 			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 			TutorialTask::GetInstance()->SetViewSkill(true);
@@ -814,16 +819,14 @@ bool MapScene::TutorialClosed() {
 		isClose = false;
 		return true;
 	} else {
-		XMFLOAT2 l_size = {};
-		XMFLOAT2 c_size = {};
-		l_size.x = Ease(Out, Quint, closeFrame, 640.f, 0.f);
-		l_size.y = Ease(Out, Quint, closeFrame, 480.f, 0.f);
-		c_size.x = Ease(Out, Quint, closeFrame, 320.f, 0.f);
-		c_size.y = Ease(Out, Quint, closeFrame, 64.f, 0.f);
-		cheack->SetSize(l_size);
+		size_c.x = Ease(Out, Quint, closeFrame, 640.f, 0.f);
+		size_c.y = Ease(Out, Quint, closeFrame, 480.f, 0.f);
+		cheackSize.x = Ease(Out, Quint, closeFrame, 320.f, 0.f);
+		cheackSize.y = Ease(Out, Quint, closeFrame, 64.f, 0.f);
+		cheack->SetSize(size_c);
 		for (int i = 0; i < 2; i++) {
-			cheack_OK[i]->SetSize(c_size);
-			cheack_NO[i]->SetSize(c_size);
+			cheack_OK[i]->SetSize(cheackSize);
+			cheack_NO[i]->SetSize(cheackSize);
 		}
 		return true;
 	}

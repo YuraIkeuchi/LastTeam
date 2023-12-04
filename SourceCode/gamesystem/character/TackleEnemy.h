@@ -67,5 +67,6 @@ private:
 	float m_Speed = {};
 	float m_Damage = {};
 	bool m_Hit = false;
+	float m_Frame = {};
 };
 

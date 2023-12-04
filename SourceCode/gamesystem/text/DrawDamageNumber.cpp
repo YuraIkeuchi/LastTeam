@@ -3,7 +3,7 @@
 #include <Helper.h>
 #include <Easing.h>
 
-DrawDamageNumber::DrawDamageNumber() {
+DrawDamageNumber::DrawDamageNumber(const float scale, const bool move) {
 	const int NumberCount = NUMBER_MAX;
 	const float l_Width_Cut = 64.0f;
 	const float l_Height_Cut = 64.0f;
@@ -18,8 +18,10 @@ DrawDamageNumber::DrawDamageNumber() {
 			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
 		_Number[i]->SetAnchorPoint({ 0.5f,0.5f });
 		_Number[i]->SetSize({ l_Width_Cut,l_Height_Cut });
-		_Number[i]->SetScale(0.5f);
+		_Number[i]->SetScale(scale);
 	}
+
+	m_Move = move;
 }
 
 //èâä˙âª
@@ -31,10 +33,14 @@ void DrawDamageNumber::Initialize() {
 void DrawDamageNumber::Update() {
 	for (int i = 0; i < _Number.size(); i++) {
 		_Number[i]->SetPosition(m_Position);
-		_Number[i]->SetSize(m_Size);
+		if (m_Move) {
+			_Number[i]->SetSize(m_Size);
+		}
 	}
 
-	NumberMove();
+	if (m_Move) {
+		NumberMove();
+	}
 }
 //ï`âÊ
 void DrawDamageNumber::Draw() {
