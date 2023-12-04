@@ -54,7 +54,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//カード
 	title_ = IKESprite::Create(ImageManager::TITLETEXT, { 0.0f,0.0f });
 	GameStateManager::GetInstance()->DeckReset();
-
+	GameStateManager::GetInstance()->SetGameStart(true);
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
