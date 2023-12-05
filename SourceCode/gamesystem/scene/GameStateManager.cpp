@@ -46,6 +46,8 @@ void GameStateManager::Initialize() {
 	gaugeCover= IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f+32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
+
+	resultReport = make_unique<ResultReport>();
 	resultSkill = make_unique<ResultSkill>();
 	resultSkill->Initialize(m_dxCommon);
 	resultSkill->SetPlayer(player);
@@ -197,11 +199,16 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 			predictarea->Draw(dxCommon);
 		}
 	}
-	if (_ResultType == GET_SKILL) {
-		resultSkill->Draw(dxCommon);
-	}
-	else {
-		haveSkill->Draw(dxCommon);
+	if (isFinish) {
+		if (!resultReport->GetIsFinish()) {
+			resultReport->Draw(dxCommon);
+		} else {
+			if (_ResultType == GET_SKILL) {
+				resultSkill->Draw(dxCommon);
+			} else {
+				haveSkill->Draw(dxCommon);
+			}
+		}
 	}
 }
 //描画
@@ -469,8 +476,10 @@ bool GameStateManager::AttackSubAction() {
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
 	if (!TutorialTask::GetInstance()->GetViewSkill()) { return false; }
-	if (!isResultFinish) { return false; }
-	
+	if (!resultReport->GetIsFinish()) {
+		resultReport->Update();
+		return false;
+	}
 	if (Input::GetInstance()->TriggerButton(Input::LB)||
 		Input::GetInstance()->TriggerKey(DIK_LEFT)) {
 		_ResultType = GET_SKILL;
