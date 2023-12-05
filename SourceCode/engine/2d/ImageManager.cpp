@@ -57,6 +57,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(RESULTREPORTBACK, L"Resources/2d/sceneback/ResultRepot.png");
 	IKESprite::LoadTexture(RESULTREPORTATTACK, L"Resources/2d/objicon/AttackResult.png");
 	IKESprite::LoadTexture(RESULTREPORTDEFFENCE, L"Resources/2d/objicon/DeffenceResult.png");
+	IKESprite::LoadTexture(RESULTSKIP, L"Resources/2d/objicon/Skip_A.png");
 	IKESprite::LoadTexture(STAGEBACK, L"Resources/2d/sceneback/1.png");
 	IKESprite::LoadTexture(ATTACK_0, L"Resources/2d/objicon/AttackSKill/Skill0.png");
 	IKESprite::LoadTexture(ATTACK_1, L"Resources/2d/objicon/AttackSKill/Skill1.png");

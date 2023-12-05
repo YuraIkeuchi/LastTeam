@@ -36,6 +36,8 @@ public:
 	void SetNumber(const int Number) { m_Number = Number; }
 	void SetColor(XMFLOAT4 color);
 	void SetSize(XMFLOAT2 size);
+	int GetNumber() { return m_Number; }
+
 private:
 	static const int NUMBER_MAX = 10;
 private:
