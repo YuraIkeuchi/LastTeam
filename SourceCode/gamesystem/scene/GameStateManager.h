@@ -15,6 +15,8 @@
 #include "ResultSkill.h"
 #include "HaveResultSkill.h"
 #include <Onomatope.h>
+#include "ResultReport.h"
+
 using namespace DirectX;
 using namespace std;
 
@@ -225,6 +227,7 @@ private:
 
 	bool m_ResetPredict = false;
 	int m_PredictTimer = {};
+	std::unique_ptr <ResultReport> resultReport;
 	std::unique_ptr<ResultSkill> resultSkill;
 	std::unique_ptr<HaveResultSkill> haveSkill;
 	//ディレイ関係
