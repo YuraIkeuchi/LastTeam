@@ -27,6 +27,7 @@ public:
 		HEALNUMBER,
 		SLASH,
 		MAPSCREEN,
+		MAPSTART,
 		MAPROAD,
 		MAP_CHARA,
 		MAP_FRAME,
@@ -46,6 +47,7 @@ public:
 		PASSIVE_05,
 		PASSIVE_06,
 		PASSIVE_07,
+		PASSIVE_08,
 		PASSIVE_FRAME,
 		GAUGE,
 		GAUGECOVER,
@@ -78,6 +80,7 @@ public:
 		ATTACK_7,
 		ATTACK_8,
 		ATTACK_9,
+		ATTACK_10,
 		TUTORIAL_WINDOW,
 	};
 	//テクスチャの名前
@@ -103,6 +106,7 @@ public:
 		ATTACK_TEX_7,
 		ATTACK_TEX_8,
 		ATTACK_TEX_9,
+		ATTACK_TEX_10,
 		SHOCKWAVE,
 	};
 	enum particleName

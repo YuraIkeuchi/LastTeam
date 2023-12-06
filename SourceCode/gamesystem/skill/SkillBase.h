@@ -8,6 +8,7 @@ enum class SkillType
 	damege,
 	buff,
 	debuff,
+	specialDamage,
 	max,
 };
 

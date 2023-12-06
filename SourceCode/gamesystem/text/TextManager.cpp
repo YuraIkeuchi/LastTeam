@@ -52,6 +52,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveSentence(L"毒の威力が上がるぞ");
 	CreatePassiveSentence(L"ドレイン威力が上がるぞ");
 	CreatePassiveSentence(L"リロードしたら攻撃だ");
+	CreatePassiveSentence(L"5の倍すうで威力アップ");
 
 	CreateSkillSentence(L"ドドドな近距離攻撃");
 	CreateSkillDamage(L"威力:15");
@@ -73,6 +74,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"威力:9");
 	CreateSkillSentence(L"次の攻撃を強く!");
 	CreateSkillDamage(L"威力:次のスキル2倍");
+	CreateSkillSentence(L"ドゴンの威力もういっかい");
+	CreateSkillDamage(L"威力:バトル中のさいだい威力");
 
 	//ラスボス
 	//コンヴァージョン初期化

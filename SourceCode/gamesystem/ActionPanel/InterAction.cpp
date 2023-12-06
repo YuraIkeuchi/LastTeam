@@ -103,7 +103,10 @@ void InterAction::GetSkillData() {
 	if (m_SkillType == (int)SkillType::damege) {
 		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area, m_DistanceX, m_DistanceY, StateName);
 	}
-	else {
+	else if (m_SkillType == (int)SkillType::buff) {
 		SkillManager::GetInstance()->GetSpecialSkillDate(m_Delay,StateName);
+	} else if (m_SkillType == (int)SkillType::specialDamage) {
+		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area, m_DistanceX, m_DistanceY, StateName);
+
 	}
 }

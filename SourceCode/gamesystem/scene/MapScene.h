@@ -98,6 +98,7 @@ private:
 
 	static array<array<int, 3>, 10> mapKinds;
 	unique_ptr<IKESprite> screen = nullptr;
+	unique_ptr<IKESprite> startButton = nullptr;
 	unique_ptr<IKESprite> cheack= nullptr;
 	XMFLOAT2 size_c = {};
 	float s_frame = 0.0f;
@@ -108,7 +109,8 @@ private:
 	float cFrame = 0;
 	float cAdd = 0.03f;
 
-
+	static bool isStart;
+	float startAlpha = 0.f;
 	unique_ptr<IKESprite> frame = nullptr;
 	unique_ptr<IKESprite> chara = nullptr;
 

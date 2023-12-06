@@ -2,6 +2,7 @@
 #include"IKESprite.h"
 #include"DrawNumber.h"
 #include <vector>
+#include <Feed.h>
 class ResultReport {
 public:
 	ResultReport();
@@ -10,6 +11,10 @@ public:
 	void Initialize();
 	void Update();
 	void Draw(DirectXCommon* dxCommon);
+
+
+	void SetDealtDamage(int damage) { dealtDamage = damage; }
+	void SetTakenDamage(int damage) { takenDamage = damage; }
 
 	void SetIsFinish(bool flag) { isFinish = flag; }
 	bool GetIsFinish() { return isFinish; }
@@ -35,6 +40,11 @@ private:
 
 	bool isFinish = false;
 
+	unique_ptr<Feed> feed;
+	bool m_Feed = false;
+	bool m_FeedStart = false;
+	bool m_FeedEnd = false;
+
 	static const int DAMAGEMAX = 3;
 	std::unique_ptr<DrawNumber> damage_dealt[DAMAGEMAX];//ó^É_ÉÅ
 	std::unique_ptr<DrawNumber> damage_taken[DAMAGEMAX];//îÌÉ_ÉÅ
@@ -48,8 +58,8 @@ private:
 	float frameStamp = 0.f;
 	float kFrameStampMax = 60.0f;
 
-	int dealtDamage = 130;
-	int takenDamage = 8;
+	int dealtDamage = 0;
+	int takenDamage = 0;
 
 	std::vector<int> dealNum = {};
 	std::vector<int> takeNum = {};
