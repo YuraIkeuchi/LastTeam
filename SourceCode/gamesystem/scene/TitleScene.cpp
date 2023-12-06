@@ -39,7 +39,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	player_->SetTitleFlag(true);
 	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 	player_->Initialize();
-	
+	player_->SkipInitialize();
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
 	StagePanel::GetInstance()->Initialize();

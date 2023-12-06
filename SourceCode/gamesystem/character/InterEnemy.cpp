@@ -25,6 +25,9 @@ XMFLOAT3 InterEnemy::SetPannelPos(int width, int height) {
 bool InterEnemy::Initialize() {
 	return true;
 }
+void InterEnemy::SkipInitialize() {
+	m_AddDisolve = 0.0f;
+}
 //更新
 void InterEnemy::Update() {
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }

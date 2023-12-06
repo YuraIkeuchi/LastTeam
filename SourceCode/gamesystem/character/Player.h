@@ -19,6 +19,7 @@ public:
 
 	void InitState(const XMFLOAT3& pos);
 	void LoadResource();
+	void SkipInitialize();
 	//初期化
 	bool Initialize() override;
 	//更新

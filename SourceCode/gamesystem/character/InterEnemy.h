@@ -40,7 +40,7 @@ protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
 	std::vector<unique_ptr<DrawDamageNumber>> _damagenumber;
 	std::vector<unique_ptr<DrawHealNumber>> _healnumber;
-	unique_ptr<IKETexture> shadow_tex;
+	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
 	//桁数
 	enum DightType {
@@ -131,6 +131,7 @@ public:
 	/// 初期化
 	/// </summary>
 	virtual bool Initialize()override;
+	void SkipInitialize();
 	/// <summary>
 	/// 終了
 	/// </summary>
