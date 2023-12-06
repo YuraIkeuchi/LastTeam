@@ -21,6 +21,7 @@ ResultReport::ResultReport() {
 		damage_taken[i] = make_unique<DrawNumber>(2.f);
 		damage_taken[i]->Initialize();
 	}
+	feed = make_unique<Feed>();
 	Initialize();
 }
 
@@ -40,6 +41,7 @@ void ResultReport::Initialize() {
 		damage_taken[i]->SetColor({ 1.f,0.5f,0.f,1.0f });
 	}
 	isFinish = false;
+	m_Feed = false;
 	count = 10;
 	frameInit = 0.f;
 	numFrames[0] = {};
@@ -98,6 +100,9 @@ void ResultReport::Draw(DirectXCommon* dxCommon) {
 	}
 	if (state < FINISH) {
 		skip->Draw();
+	}
+	if (m_Feed) {
+		feed->Draw();
 	}
 	IKESprite::PostDraw();
 }
@@ -170,8 +175,16 @@ void ResultReport::StampUpdate() {
 
 void ResultReport::FinishUpdate() {
 
-	if (Input::GetInstance()->TriggerButton(Input::B) ||
-		Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+	if ((Input::GetInstance()->TriggerButton(Input::B) ||
+		Input::GetInstance()->TriggerKey(DIK_SPACE))&&
+		!m_Feed) {
+		m_Feed = true;
+	}
+
+	if (m_Feed) {
+		feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 30.0f, m_Feed);
+	}
+	if (feed->GetFeedEnd()) {
 		isFinish = true;
 	}
 }
