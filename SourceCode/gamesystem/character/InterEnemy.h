@@ -40,6 +40,7 @@ protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
 	std::vector<unique_ptr<DrawDamageNumber>> _damagenumber;
 	std::vector<unique_ptr<DrawHealNumber>> _healnumber;
+	unique_ptr<IKETexture> _charge;
 	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
 	//桁数
@@ -101,6 +102,14 @@ protected:
 	//影の変数
 	XMFLOAT3 m_ShadowPos = {};
 	XMFLOAT3 m_ShadowScale = {};
+	float m_ChargeScale = {};
+	bool m_Jump = false;
+	//上昇度
+	float m_AddPower = 0.0f;
+	//重力加速度
+	float m_Gravity = 0.02f;
+	bool m_Rot = false;
+	float m_AttackFrame = {};
 	//予測エリア
 	std::unique_ptr<PredictArea> predictarea;
 
