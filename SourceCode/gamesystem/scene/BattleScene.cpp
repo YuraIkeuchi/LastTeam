@@ -248,6 +248,7 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 			GameStateManager::GetInstance()->ActUIDraw();
 		}
 	}
+	StagePanel::GetInstance()->OnomatoDraw();
 	IKESprite::PreDraw();
 	if (player_->GetFinishGameOver()) {
 		gameoversprite->Draw();
