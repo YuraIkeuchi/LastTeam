@@ -81,8 +81,10 @@ void ResultReport::Draw(DirectXCommon* dxCommon) {
 	for (auto i = 0; i < DAMAGEMAX; i++) {
 		if (state >= SCORE) {
 			if (i != 2) {
-				if (damage_dealt[i]->GetNumber() == 0) {
-					continue;
+				if (dealtDamage < 10) {
+					if (damage_dealt[i]->GetNumber() == 0) {
+						continue;
+					}
 				}
 			}
 		}
@@ -91,8 +93,10 @@ void ResultReport::Draw(DirectXCommon* dxCommon) {
 	for (auto i = 0; i < DAMAGEMAX; i++) {
 		if (state >= SCORE) {
 			if (i != 2) {
-				if (damage_taken[i]->GetNumber() == 0) {
-					continue;
+				if (dealtDamage < 10) {
+					if (damage_taken[i]->GetNumber() == 0) {
+						continue;
+					}
 				}
 			}
 		}
