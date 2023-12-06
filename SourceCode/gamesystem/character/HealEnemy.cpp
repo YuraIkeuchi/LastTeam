@@ -78,6 +78,16 @@ void HealEnemy::Action() {
 	Collide(_AttackArea);		//ìñÇΩÇËîªíË
 	PoisonState();//ì≈
 	BirthMagic();//ñÇñ@êw
+	AttackMove();//çUåÇéûÇÃìÆÇ´
+	//çUåÇéûÉWÉÉÉìÉvÇ∑ÇÈ
+	if (m_Jump) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_AddPower = {};
+			m_Jump = false;
+			m_Position.y = 0.1f;
+		}
+	}
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	/*shadow_tex->SetPosition(m_ShadowPos);
@@ -125,7 +135,9 @@ void HealEnemy::Attack() {
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 
 	GameStateManager::GetInstance()->SetIsHeal(true);
-
+	m_Jump = true;
+	m_AddPower = 0.2f;
+	m_Rot = true;
 	_charaState = STATE_SPECIAL;
 	coolTimer = {};
 }
@@ -201,4 +213,16 @@ void HealEnemy::WarpEnemy() {
 	}
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
+}
+//çUåÇéûÇÃìÆÇ´
+void HealEnemy::AttackMove() {
+	if (!m_Rot) { return; }
+	const float l_AddFrame = 1 / 20.0f;
+	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
+		m_Rotation.y = 270.0f;
+		m_Rot = false;
+		m_AttackFrame = {};
+	}
+
+	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
 }

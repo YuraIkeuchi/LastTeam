@@ -108,12 +108,6 @@ private:
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};
 
-	bool m_Jump = false;
-	//è„è∏ìx
-	float m_AddPower = 0.0f;
-	//èdóÕâ¡ë¨ìx
-	float m_Gravity = 0.02f;
-	bool m_Rot = false;
-	float m_AttackFrame = {};
+	
 };
 
