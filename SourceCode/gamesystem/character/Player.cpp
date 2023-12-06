@@ -617,6 +617,7 @@ void Player::HealPlayer(const float power) {
 //プレイヤーのダメージ判定
 void Player::RecvDamage(const float Damage, const string& name) {
 	m_HP -= Damage;
+	GameStateManager::GetInstance()->TakenDamageCheck((int)Damage);
 	//ダメージの種類によってパーティクルを変える
 	if (name == "NORMAL") {
 		DamageParticle();

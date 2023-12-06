@@ -125,6 +125,8 @@ public:
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart;}
 	bool GetGameStart() { return m_GameStart; }
 
+	void DamageCheck(int Damage);
+	void TakenDamageCheck(int Damage);
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -182,7 +184,8 @@ private:
 
 	//全体スコア
 	int m_AllScore = {};
-
+	int m_MaxDamage = 0;
+	int m_MaxTakenDamage = 0;
 
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
 	bool isBattleFromMap = true;

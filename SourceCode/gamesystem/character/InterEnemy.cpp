@@ -170,6 +170,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			m_Damege = true;
 			m_DamageTimer = {};
 			m_HP -= damage;
+			GameStateManager::GetInstance()->DamageCheck((int)damage);
 			BirthDamage(damage);
 			std::string name = _area->GetStateName();
 

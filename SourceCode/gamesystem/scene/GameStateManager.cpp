@@ -25,7 +25,9 @@ void GameStateManager::Initialize() {
 
 	//全体スコア
 	m_AllScore = {};
-
+	m_MaxDamage = 0;
+	m_MaxTakenDamage = 0;
+	m_MaxTakenDamage = 0;
 	//終了関連
 	isFinish = false;
 	isChangeScene = false;
@@ -577,4 +579,16 @@ void GameStateManager::PowerUpEffectUpdate() {
 	}
 	powerup.remove_if([](PowerUpEffect& shine) {
 		return shine.isVanish; });
+}
+
+void GameStateManager::DamageCheck(int Damage) {
+	if (Damage > m_MaxDamage) {
+		m_MaxDamage = Damage;
+		resultReport->SetDealtDamage(m_MaxDamage);
+	}
+}
+
+void GameStateManager::TakenDamageCheck(int Damage) {
+		m_MaxTakenDamage += Damage;
+		resultReport->SetTakenDamage(m_MaxDamage);
 }
