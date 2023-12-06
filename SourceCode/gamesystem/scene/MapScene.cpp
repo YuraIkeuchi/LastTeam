@@ -11,7 +11,7 @@
 
 
 array<array<int, 3>, 10> MapScene::mapKinds;
-
+bool MapScene::isStart = true;
 void (MapScene::* MapScene::stateTable[])() = {
 	&MapScene::InitState,//
 	&MapScene::MainState,//
@@ -114,6 +114,11 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	frame->SetAnchorPoint({ 0.5f,0.5f });
 
 
+	startButton = IKESprite::Create(ImageManager::MAPSTART, { 0,0 });
+	startButton->SetPosition({640.f,550.f});
+	startButton->SetSize({ 512.f,192.f });
+	startButton->SetAnchorPoint({ 0.5f,0.5f });
+
 	onomatope = std::make_unique<Onomatope>();
 
 	//道の処理
@@ -177,6 +182,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		charaSize = { 0.f,0.f };
 		chara->SetSize(charaSize);
 		m_State = State::initState;
+		isStart = true;
 	} else {
 		m_State = State::mainState;
 		scroll.x = -(UIs[nowHierarchy][nowIndex].pos.x / 2.f);
@@ -298,7 +304,9 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	cheack->Draw();
 	cheack_OK[1 - nowCheack]->Draw();
 	cheack_NO[nowCheack]->Draw();
-
+	if (isStart&& m_State != State::initState) {
+		startButton->Draw();
+	}
 	IKESprite::PostDraw();
 
 	SceneChanger::GetInstance()->Draw();
@@ -578,6 +586,9 @@ void MapScene::Move() {
 	}
 
 	if ((input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) && !moved) {
+		if (isStart) {
+			isStart = false;
+		}
 		nowIndex = pickIndex;
 		nowHierarchy = pickHierarchy;
 		clearHierarchy++;
@@ -675,10 +686,13 @@ void MapScene::InitState() {
 	}
 }
 void MapScene::MainState() {
-
 	BlackOut();
 	Move();
 	RoadUpdate();
+	if (isStart) {
+		startAlpha += 0.05f;
+		startButton->SetColor({1,1,1,abs(sinf(startAlpha))});
+	}
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
