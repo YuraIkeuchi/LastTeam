@@ -25,6 +25,9 @@ XMFLOAT3 InterEnemy::SetPannelPos(int width, int height) {
 bool InterEnemy::Initialize() {
 	return true;
 }
+void InterEnemy::SkipInitialize() {
+	m_AddDisolve = 0.0f;
+}
 //更新
 void InterEnemy::Update() {
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
@@ -93,6 +96,18 @@ void InterEnemy::Update() {
 	WorldDivision();
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
+}
+//バトル前の更新
+void InterEnemy::AwakeUpdate() {
+	if (GameStateManager::GetInstance()->GetGameStart()) { return; }
+	if (!StagePanel::GetInstance()->GetCreateFinish()) { return; }
+	const float l_AddDisolve = 0.05f;
+	//ディゾルブを解除する
+	if (Helper::CheckMax(m_AddDisolve, 0.0f, -l_AddDisolve)) {
+		GameStateManager::GetInstance()->SetGameStart(true);
+	}
+
+	Obj_SetParam();
 }
 //描画
 void InterEnemy::Draw(DirectXCommon* dxCommon) {

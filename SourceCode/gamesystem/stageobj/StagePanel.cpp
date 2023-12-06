@@ -97,7 +97,6 @@ void StagePanel::CreateStage() {
 
 	if (panels[PANEL_WIDTH - 1][PANEL_HEIGHT - 1].Frame == 1.0f) {
 		m_CreateFinish = true;
-		GameStateManager::GetInstance()->SetGameStart(true);
 	}
 }
 
@@ -131,13 +130,13 @@ void StagePanel::ImGuiDraw() {
 		if (actions[i] == nullptr)continue;
 		actions[i]->ImGuiDraw();
 	}
-	ImGui::Begin("Panel");
-	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			ImGui::Text("Poison[%d][%d]:%d", i, j, panels[i][j].type);
-		}
-	}
-	ImGui::End();
+	//ImGui::Begin("Panel");
+	//for (int i = 0; i < PANEL_WIDTH / 2; i++) {
+	//	for (int j = 0; j < PANEL_HEIGHT; j++) {
+	//		ImGui::Text("Poison[%d][%d]:%d", i, j, panels[i][j].type);
+	//	}
+	//}
+	//ImGui::End();
 }
 
 //スキルセットの更新(バトル前)

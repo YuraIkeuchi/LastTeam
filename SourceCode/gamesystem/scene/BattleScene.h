@@ -23,8 +23,13 @@ private:
 	void FrontDraw(DirectXCommon* dxCommon);
 	void BackDraw(DirectXCommon* dxCommon);
 	void ImGuiDraw();
-private:
 
+	void SkipUpdate();
+private:
+	unique_ptr<IKESprite> skipUI = nullptr;
+	unique_ptr<IKESprite> skipUnder = nullptr;
+	unique_ptr<IKESprite> skipBack = nullptr;
+	float scale_skip = 0.7f;
 	unique_ptr<EnemyManager> enemyManager = nullptr;
 
 	unique_ptr<IKESprite> ui = nullptr;
@@ -38,4 +43,10 @@ private:
 	XMFLOAT2 m_GameOverPos = { 0.0f,-1280.0f };
 	float m_GameOverFrame = {};
 	int m_ChangeTimer = {};
+	bool m_Skip = false;
+	bool m_IsBackKey = false;
+	float m_Frame = {};
+	bool m_SkipFeed = false;
+	bool m_SkipEnd = false;
+	bool m_BattleEnd = false;
 };

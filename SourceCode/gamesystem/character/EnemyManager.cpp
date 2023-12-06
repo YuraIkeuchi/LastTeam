@@ -56,7 +56,18 @@ void EnemyManager::Update() {
 	}
 
 }
-
+//スキップ時の初期化
+void EnemyManager::SkipInitialize() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SkipInitialize();
+	}
+}
+//バトル前の更新
+void EnemyManager::AwakeUpdate() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->AwakeUpdate();
+	}
+}
 void EnemyManager::Draw(DirectXCommon* dxCommon) {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->Draw(dxCommon);
