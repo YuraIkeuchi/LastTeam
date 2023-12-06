@@ -28,6 +28,7 @@ void GameStateManager::Initialize() {
 	m_MaxDamage = 0;
 	m_MaxTakenDamage = 0;
 	m_MaxTakenDamage = 0;
+	m_HandedCount = 0;
 	//終了関連
 	isFinish = false;
 	isChangeScene = false;
@@ -172,6 +173,7 @@ void GameStateManager::AttackTrigger() {
 	//スキルが一個以上あったらスキル使える
 	if (input->TriggerButton(input->B)||
 		input->TriggerKey(DIK_SPACE)) {
+		m_HandedCount++;
 		AttackSubAction();
 		m_Delay = true;
 	}
@@ -215,6 +217,9 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
+	ImGui::Begin("STATE");
+	ImGui::Text("m_HandedCount:%d", m_HandedCount);
+	ImGui::End();
 	if (_ResultType == HAVE_SKILL) {
 		haveSkill->ImGuiDraw();
 	}
@@ -428,6 +433,9 @@ void GameStateManager::PassiveCheck() {
 			break;
 		case Passive::ABILITY::RELOAD_DAMAGE:
 			m_IsReloadDamage = true;
+			break;
+		case Passive::ABILITY::FIVE_POWER:
+			m_FivePower = true;
 			break;
 		default:
 			assert(0);

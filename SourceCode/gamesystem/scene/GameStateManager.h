@@ -127,6 +127,7 @@ public:
 
 	void DamageCheck(int Damage);
 	void TakenDamageCheck(int Damage);
+	bool GetIsFivePower() { return m_FivePower && (m_HandedCount % 5 == 0); }
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -157,7 +158,7 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {};
+	std::vector <int> m_StartPassive= {7};
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -186,6 +187,7 @@ private:
 	int m_AllScore = {};
 	int m_MaxDamage = 0;
 	int m_MaxTakenDamage = 0;
+	int m_HandedCount = 0;
 
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
 	bool isBattleFromMap = true;
@@ -208,7 +210,7 @@ private:
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
 	bool m_IsDrainUp = false;
-
+	bool m_FivePower = false;
 
 	bool m_BirthSkill = false;
 
