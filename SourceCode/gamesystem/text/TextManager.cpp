@@ -74,6 +74,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"威力:9");
 	CreateSkillSentence(L"次の攻撃を強く!");
 	CreateSkillDamage(L"威力:次のスキル2倍");
+	CreateSkillSentence(L"ドゴンの威力もういっかい");
+	CreateSkillDamage(L"威力:バトル中のさいだい威力");
 
 	//ラスボス
 	//コンヴァージョン初期化

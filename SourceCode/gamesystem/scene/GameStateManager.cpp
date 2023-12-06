@@ -67,7 +67,7 @@ void GameStateManager::Initialize() {
 	DeckInitialize();
 
 	//デッキにないカードを検索する
-	const int CARD_MAX = 10;
+	const int CARD_MAX = 11;
 	m_NotDeckNumber.clear();
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
 		for (int j = 0; j < CARD_MAX; j++) {
@@ -244,7 +244,7 @@ void GameStateManager::ActUIDraw() {
 void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name) {
 	ActState act;
 	act.SkillType = SkillType;
-	if (act.SkillType == 0) {
+	if (act.SkillType == 0|| act.SkillType == 3) {
 		act.ActID = ID;
 		act.ActDamage = damage;
 		act.AttackArea.resize(7);
@@ -287,6 +287,10 @@ void GameStateManager::BirthArea() {
 	l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
 	int AreaX = {};
 	int AreaY = {};
+	float damage = m_Act[0].ActDamage;
+	if (m_Act[0].ActID == 10) {
+		damage = (float)m_MaxDamage;
+	}
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 			AreaX = l_BirthBaseX + i;
@@ -294,7 +298,7 @@ void GameStateManager::BirthArea() {
 			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0)) && (AreaX < 8)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player");
 				newarea->InitState(AreaX, AreaY);
-				newarea->SetDamage(m_Act[0].ActDamage);
+				newarea->SetDamage(damage);
 				newarea->SetStateName(m_Act[0].StateName);
 				attackarea.emplace_back(std::move(newarea));
 			}
@@ -340,12 +344,15 @@ void GameStateManager::UseSkill() {
 			BirthArea();
 			onomatope->AddOnomato(Attack01, { 640.f,360.f });
 		}
-		else {
+		else if (m_Act[0].SkillType == 1) {
 			for (int i = 0; i < 2; i++) {
 				RandPowerUpInit();
 			}
 			BirthBuff();
 			onomatope->AddOnomato(AttackCharge, { 640.f,360.f });
+		} else if (m_Act[0].SkillType == 3) {
+			BirthArea();
+			onomatope->AddOnomato(Attack01, { 640.f,360.f });
 		}
 		FinishAct();
 		if (m_AllActCount == 0) {

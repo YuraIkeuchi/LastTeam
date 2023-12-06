@@ -71,6 +71,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ATTACK_7, L"Resources/2d/objicon/AttackSKill/Skill7.png");
 	IKESprite::LoadTexture(ATTACK_8, L"Resources/2d/objicon/AttackSKill/Skill8.png");
 	IKESprite::LoadTexture(ATTACK_9, L"Resources/2d/objicon/AttackSKill/Skill9.png");
+	IKESprite::LoadTexture(ATTACK_10, L"Resources/2d/objicon/AttackSKill/Skill10.png");
 	IKESprite::LoadTexture(TUTORIAL_WINDOW, L"Resources/2d/objicon/Tutorial.png");
 }
 
@@ -102,6 +103,7 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(ATTACK_TEX_7, L"Resources/2d/objicon/AttackSKill/Skill7.png");
 	IKETexture::LoadTexture(ATTACK_TEX_8, L"Resources/2d/objicon/AttackSKill/Skill8.png");
 	IKETexture::LoadTexture(ATTACK_TEX_9, L"Resources/2d/objicon/AttackSKill/Skill9.png");
+	IKETexture::LoadTexture(ATTACK_TEX_10, L"Resources/2d/objicon/AttackSKill/Skill10.png");
 	IKETexture::LoadTexture(SHOCKWAVE, L"Resources/2d/objicon/ShockWave.png");
 }
 

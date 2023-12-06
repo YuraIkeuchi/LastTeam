@@ -80,6 +80,7 @@ public:
 		ATTACK_7,
 		ATTACK_8,
 		ATTACK_9,
+		ATTACK_10,
 		TUTORIAL_WINDOW,
 	};
 	//テクスチャの名前
@@ -105,6 +106,7 @@ public:
 		ATTACK_TEX_7,
 		ATTACK_TEX_8,
 		ATTACK_TEX_9,
+		ATTACK_TEX_10,
 		SHOCKWAVE,
 	};
 	enum particleName
