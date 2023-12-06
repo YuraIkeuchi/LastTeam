@@ -22,6 +22,7 @@ public:
 	void SkipInitialize();
 	//初期化
 	bool Initialize() override;
+	void AwakeUpdate();
 	//更新
 	void Update() override;
 	//描画

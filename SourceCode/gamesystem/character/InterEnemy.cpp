@@ -97,6 +97,18 @@ void InterEnemy::Update() {
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
+//バトル前の更新
+void InterEnemy::AwakeUpdate() {
+	if (GameStateManager::GetInstance()->GetGameStart()) { return; }
+	if (!StagePanel::GetInstance()->GetCreateFinish()) { return; }
+	const float l_AddDisolve = 0.05f;
+	//ディゾルブを解除する
+	if (Helper::CheckMax(m_AddDisolve, 0.0f, -l_AddDisolve)) {
+		GameStateManager::GetInstance()->SetGameStart(true);
+	}
+
+	Obj_SetParam();
+}
 //描画
 void InterEnemy::Draw(DirectXCommon* dxCommon) {
 }

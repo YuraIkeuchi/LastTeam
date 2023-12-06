@@ -154,6 +154,8 @@ public:
 
 	void UIDraw();
 	XMFLOAT3 SetPannelPos(int width, int height);
+
+	void AwakeUpdate();
 private:
 	void BirthParticle();
 	//HPの割合を求める

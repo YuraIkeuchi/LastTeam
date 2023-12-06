@@ -101,6 +101,18 @@ void (Player::* Player::stateTable[])() = {
 	&Player::Move,//移動
 	&Player::Delay,//動きが止まる
 };
+//バトル前の更新
+void Player::AwakeUpdate() {
+	if (GameStateManager::GetInstance()->GetGameStart()) { return; }
+	if (!StagePanel::GetInstance()->GetCreateFinish()) { return; }
+	const float l_AddDisolve = 0.05f;
+	//ディゾルブを解除する
+	if (Helper::CheckMax(m_AddDisolve, 0.0f, -l_AddDisolve)) {
+		GameStateManager::GetInstance()->SetGameStart(true);
+	}
+
+	Obj_SetParam();
+}
 //更新処理
 void Player::Update() {
 	if (is_title) {

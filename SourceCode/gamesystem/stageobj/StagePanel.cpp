@@ -97,7 +97,6 @@ void StagePanel::CreateStage() {
 
 	if (panels[PANEL_WIDTH - 1][PANEL_HEIGHT - 1].Frame == 1.0f) {
 		m_CreateFinish = true;
-		GameStateManager::GetInstance()->SetGameStart(true);
 	}
 }
 

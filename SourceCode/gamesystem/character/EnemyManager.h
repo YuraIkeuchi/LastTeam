@@ -20,7 +20,7 @@ public:
 	void Initialize();
 	void Update();
 	void Draw(DirectXCommon* dxCommon);
-
+	void AwakeUpdate();
 	void SetCount();
 
 	void ImGuiDraw();

@@ -92,6 +92,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		}
 	}
 	else {		//ゲームオーバー以外
+		player_->AwakeUpdate();
 		player_->Update();
 		GameStateManager::GetInstance()->Update();
 		if (GameStateManager::GetInstance()->GetIsReloadDamage()) {
@@ -131,6 +132,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 
 		StagePanel::GetInstance()->CreateStage();
 		StagePanel::GetInstance()->Update();
+		enemyManager->AwakeUpdate();
 		enemyManager->Update();
 		ParticleEmitter::GetInstance()->Update();
 
@@ -228,11 +230,11 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);
-	if (GameStateManager::GetInstance()->GetGameStart()) {
-		player_->Draw(dxCommon);
+	player_->Draw(dxCommon);
+	if (player_->GetHp() > 0.0f) {
+		enemyManager->Draw(dxCommon);
+		if (GameStateManager::GetInstance()->GetGameStart()) {
 
-		if (player_->GetHp() > 0.0f) {
-			enemyManager->Draw(dxCommon);
 			GameStateManager::GetInstance()->Draw(dxCommon);
 			if (!enemyManager->BossDestroy()) {
 				StagePanel::GetInstance()->ActDraw(dxCommon);
