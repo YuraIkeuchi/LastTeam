@@ -55,11 +55,15 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 
 	StagePanel::GetInstance()->DeleteAction();
 
-	Feed* feed_ = new Feed();
-	feed.reset(feed_);
-
 	gameoversprite = IKESprite::Create(ImageManager::GAMEOVERBACK, { 0.0f,0.0f });
 	Slow::GetInstance()->Initialize();
+	skipUI = IKESprite::Create(ImageManager::TUTORIAL_SKIPUI, { 940.f ,5.f });
+	skipUnder = IKESprite::Create(ImageManager::FEED, { 940.f + (128.f * scale_skip) ,5.f });
+	skipBack = IKESprite::Create(ImageManager::FEED, { 940.f + (128.f * scale_skip),5.f });
+	skipUI->SetSize({ 472.f * scale_skip ,96.f * scale_skip });
+
+	Feed* feed_ = new Feed();
+	feed.reset(feed_);
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
@@ -92,6 +96,30 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		}
 	}
 	else {		//ゲームオーバー以外
+		if (m_IsBackKey) {
+			const float frameMax = 5.f;
+			if (Helper::FrameCheck(m_Frame, 1 / frameMax)) {
+				m_Skip = true;
+				m_IsBackKey = false;
+			}
+			else {
+				float siz = 0.f;
+				siz = Ease(In, Quad, m_Frame, 0.f, 344.f);
+				skipUnder->SetSize({ siz * scale_skip,96.f * scale_skip });
+			}
+			return;
+		}
+
+		if ((input->TriggerButton(input->BACK) ||
+			input->TriggerKey(DIK_BACK)) &&
+			!m_IsBackKey &&
+			!m_Skip) {
+			m_IsBackKey = true;
+		}
+		SkipUpdate();
+		if (m_SkipFeed) {
+			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 60.0f, m_SkipFeed);
+		}
 		player_->AwakeUpdate();
 		player_->Update();
 		GameStateManager::GetInstance()->Update();
@@ -116,6 +144,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			Slow::GetInstance()->SetSlow(true);
 			if (!s_LastStage) {
 				m_Feed = true;
+				m_BattleEnd = true;
 				m_FeedStart = true;
 			}
 			else {
@@ -126,7 +155,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		if (m_Feed) {
 			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 60.0f, m_Feed);
 		}
-		if (feed->GetFeedEnd()) {
+		if (feed->GetFeedEnd() && m_BattleEnd) {
 			m_FeedEnd = true;
 		}
 
@@ -204,7 +233,13 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 }
 //前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
-
+	if (!m_Skip && !GameStateManager::GetInstance()->GetGameStart()) {
+		IKESprite::PreDraw();
+		skipBack->Draw();
+		skipUnder->Draw();
+		skipUI->Draw();
+		IKESprite::PostDraw();
+	}
 	if (!m_FeedEnd){
 		if (player_->GetHp() > 0.0f && GameStateManager::GetInstance()->GetGameStart()) {
 			ParticleEmitter::GetInstance()->FlontDrawAll();
@@ -217,10 +252,10 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (player_->GetFinishGameOver()) {
 		gameoversprite->Draw();
 	}
-	IKESprite::PostDraw();
-	if (m_Feed) {
+	if (m_Feed || m_SkipFeed) {
 		feed->Draw();
 	}
+	IKESprite::PostDraw();
 	SceneChanger::GetInstance()->Draw();
 }
 //後方描画(主にSprite)
@@ -234,7 +269,6 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	if (player_->GetHp() > 0.0f) {
 		enemyManager->Draw(dxCommon);
 		if (GameStateManager::GetInstance()->GetGameStart()) {
-
 			GameStateManager::GetInstance()->Draw(dxCommon);
 			if (!enemyManager->BossDestroy()) {
 				StagePanel::GetInstance()->ActDraw(dxCommon);
@@ -245,14 +279,30 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	//player_->ImGuiDraw();
-	//GameStateManager::GetInstance()->ImGuiDraw();
-	//enemyManager->ImGuiDraw();
-	//StagePanel::GetInstance()->ImGuiDraw();
-	//camerawork->ImGuiDraw();
-	//Slow::GetInstance()->ImGuiDraw();
+	StagePanel::GetInstance()->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {
 
+}
+void BattleScene::SkipUpdate() {
+	if (GameStateManager::GetInstance()->GetGameStart()) { return; }
+	Input* input = Input::GetInstance();
+	if (m_Skip) {
+		if (!m_FeedStart) {
+			m_SkipFeed = true;
+		}
+		
+		if (feed->GetFeedEnd()) {
+			m_SkipEnd = true;
+		}
+
+		if (m_SkipEnd) {
+			player_->SkipInitialize();
+			enemyManager->SkipInitialize();
+			StagePanel::GetInstance()->Initialize();
+			StagePanel::GetInstance()->SetCreateFinish(true);
+			GameStateManager::GetInstance()->SetGameStart(true);
+		}
+	}
 }

@@ -96,6 +96,8 @@ public:
 
 	const bool GetAllDelete() { return m_AllDelete; }
 	const bool GetCreateFinish() { return m_CreateFinish; }
+
+	void SetCreateFinish(const bool CreateFinish) { m_CreateFinish = CreateFinish; }
 private:
 	static Player* player;
 	//ƒpƒlƒ‹
