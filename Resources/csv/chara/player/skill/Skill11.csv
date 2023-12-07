@@ -3,7 +3,7 @@ SkillType,0
 Delay,10
 Name,Refrain
 StateName,Refrain
-Damege,1
+Damege,0
 DistanceX,1
 DistanceY,1
 AttackArea,1 1 1 0

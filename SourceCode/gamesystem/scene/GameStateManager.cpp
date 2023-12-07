@@ -289,6 +289,7 @@ void GameStateManager::BirthArea() {
 	int AreaY = {};
 	float damage = m_Act[0].ActDamage;
 	if (m_Act[0].ActID == 10) {
+		//リフレイン攻撃
 		damage = (float)m_MaxDamage;
 	}
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
