@@ -89,7 +89,7 @@ void StagePanel::CreateStage() {
 		XMFLOAT2 l_RandPos = {};
 		l_RandPos.x = (float)Helper::GetRanNum(100, 1000);
 		l_RandPos.y = (float)Helper::GetRanNum(100, 500);
-		onomatope->AddOnomato(AttackCharge, l_RandPos);
+		onomatope->AddOnomato(BossSpawn, l_RandPos);
 	}
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
