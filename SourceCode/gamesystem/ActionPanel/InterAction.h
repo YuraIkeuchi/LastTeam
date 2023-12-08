@@ -56,6 +56,7 @@ public:
 
 	void SetState(const int state) { _state= state; }
 	void SetAlive(const bool Alive) { m_Alive = Alive; }
+	void SetDiscard(const bool Discard) { m_Discard = Discard; }
 	void SetPlayer(Player* player) { this->player = player; }
 
 protected:

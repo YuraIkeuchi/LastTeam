@@ -384,7 +384,7 @@ void GameStateManager::FinishAct() {
 	//デッキがない且つ手札を使い切ってたらまた再配布
 	if (m_AllActCount == 0 && StagePanel::GetInstance()->GetAllDelete()) {
 		//デッキの初期化
-		DeckInitialize();
+		//DeckInitialize();
 	}
 }
 
@@ -420,14 +420,13 @@ void GameStateManager::GaugeUpdate() {
 		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTH_BEFORE) {		//チュートリアル専用
 			TutorialTask::GetInstance()->SetTutorialState(TASK_BIRTHSKIL);
 		}
+		if (SkillManager::GetInstance()->GetDeckNum() == 0 && StagePanel::GetInstance()->GetAllDelete()) {
+			DeckDiscard();
+		}
 	}
 	float per = (m_GaugeCount / kGaugeCountMax);
 	float size = Ease(In, Quad, 0.5f, gaugeUI->GetSize().y, basesize.y * per);
 	gaugeUI->SetSize({ basesize.x,size });
-
-	if (SkillManager::GetInstance()->GetDeckNum() == 0 && StagePanel::GetInstance()->GetAllDelete()) {
-		DeckDiscard();
-	}
 }
 
 void GameStateManager::PassiveCheck() {
