@@ -21,7 +21,7 @@ private:
 	void Attack();//UŒ‚
 	void Teleport();//ˆÚ“®
 	void WarpEnemy();//“G‚Ìƒ[ƒvˆ—
-
+	void AttackMove();//UŒ‚‚Ì“®‚«
 	//–‚–@w
 	void BirthMagic();
 private:

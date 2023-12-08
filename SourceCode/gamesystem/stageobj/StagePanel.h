@@ -7,6 +7,7 @@
 #include "IKESprite.h"
 #include "IKETexture.h"
 #include "Player.h"
+#include "Onomatope.h"
 using namespace DirectX;
 using namespace std;
 
@@ -55,6 +56,8 @@ public:
 	void Draw(DirectXCommon* dxCommon);
 	//行動カードの描画
 	void ActDraw(DirectXCommon* dxCommon);
+	//オノマトペの描画
+	void OnomatoDraw();
 	//ImGui
 	void ImGuiDraw();
 	//パネルを戻す
@@ -96,8 +99,11 @@ public:
 
 	const bool GetAllDelete() { return m_AllDelete; }
 	const bool GetCreateFinish() { return m_CreateFinish; }
+
+	void SetCreateFinish(const bool CreateFinish) { m_CreateFinish = CreateFinish; }
 private:
 	static Player* player;
+	unique_ptr<Onomatope> onomatope = nullptr;
 	//パネル
 	Panel panels[PANEL_WIDTH][PANEL_HEIGHT];
 	//スキル

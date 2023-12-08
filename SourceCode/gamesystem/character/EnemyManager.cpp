@@ -56,7 +56,18 @@ void EnemyManager::Update() {
 	}
 
 }
-
+//スキップ時の初期化
+void EnemyManager::SkipInitialize() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SkipInitialize();
+	}
+}
+//バトル前の更新
+void EnemyManager::AwakeUpdate() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->AwakeUpdate();
+	}
+}
 void EnemyManager::Draw(DirectXCommon* dxCommon) {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->Draw(dxCommon);
@@ -131,8 +142,9 @@ void EnemyManager::BombDamage() {
 
 void EnemyManager::Heal()
 {
+	const float l_HealPower = 5.0f;
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SimpleHeal(5.f);
+		enemy->SimpleHeal(l_HealPower);
 	}
 }
 
@@ -189,6 +201,13 @@ void EnemyManager::Spawn2Map() {
 			}
 			else if (x == '5') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy>();
+				//enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '6') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<HealEnemy>();
 				//enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));

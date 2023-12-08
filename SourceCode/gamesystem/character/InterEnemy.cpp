@@ -25,6 +25,9 @@ XMFLOAT3 InterEnemy::SetPannelPos(int width, int height) {
 bool InterEnemy::Initialize() {
 	return true;
 }
+void InterEnemy::SkipInitialize() {
+	m_AddDisolve = 0.0f;
+}
 //更新
 void InterEnemy::Update() {
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
@@ -62,7 +65,7 @@ void InterEnemy::Update() {
 		}
 	}
 
-	//障害物の削除
+	//数字の削除
 	for (int i = 0; i < _damagenumber.size(); i++) {
 		if (_damagenumber[i] == nullptr) {
 			continue;
@@ -73,6 +76,18 @@ void InterEnemy::Update() {
 			_damagenumber.erase(cbegin(_damagenumber) + i);
 		}
 	}
+
+	//数字の削除
+	for (int i = 0; i < _healnumber.size(); i++) {
+		if (_healnumber[i] == nullptr) {
+			continue;
+		}
+
+		_healnumber[i]->Update();
+		if (!_healnumber[i]->GetAlive()) {
+			_healnumber.erase(cbegin(_healnumber) + i);
+		}
+	}
 	//だめーじ関係
 	DamageUpdate();
 	//数値化したHP
@@ -81,6 +96,18 @@ void InterEnemy::Update() {
 	WorldDivision();
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
+}
+//バトル前の更新
+void InterEnemy::AwakeUpdate() {
+	if (GameStateManager::GetInstance()->GetGameStart()) { return; }
+	if (!StagePanel::GetInstance()->GetCreateFinish()) { return; }
+	const float l_AddDisolve = 0.05f;
+	//ディゾルブを解除する
+	if (Helper::CheckMax(m_AddDisolve, 0.0f, -l_AddDisolve)) {
+		GameStateManager::GetInstance()->SetGameStart(true);
+	}
+
+	Obj_SetParam();
 }
 //描画
 void InterEnemy::Draw(DirectXCommon* dxCommon) {
@@ -116,6 +143,12 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
+	//敵のヒールテキスト
+	for (unique_ptr<DrawHealNumber>& newnumber : _healnumber) {
+		if (newnumber != nullptr) {
+			newnumber->Draw();
+		}
+	}
 	IKESprite::PostDraw();
 }
 //当たり判定
@@ -129,14 +162,18 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			float damage = _area->GetDamage();
 			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
 				GameStateManager::GetInstance()->SetCounter(true);
-				damage *= 2.0f;
+				damage *= 1.5f;
 			}
 			if (GameStateManager::GetInstance()->GetBuff()) {
 				damage *= 2.0f;
 			}
+			if (GameStateManager::GetInstance()->GetIsFivePower()) {
+				damage *= 1.2f;
+			}
 			m_Damege = true;
 			m_DamageTimer = {};
 			m_HP -= damage;
+			GameStateManager::GetInstance()->DamageCheck((int)damage);
 			BirthDamage(damage);
 			std::string name = _area->GetStateName();
 
@@ -168,6 +205,7 @@ void InterEnemy::SimpleHeal(float heal)
 	if (m_HP <= 0.0f) { return; }
 	m_HP += heal;
 	BirthHealParticle();
+	BirthHealNumber(heal);
 }
 
 
@@ -224,8 +262,8 @@ void InterEnemy::BirthPoisonParticle() {
 
 //パーティクル(ヒール)
 void InterEnemy::BirthHealParticle() {
-	const XMFLOAT4 s_color = { 1.0f,0.3f,0.0f,1.0f };
-	const XMFLOAT4 e_color = { 1.0f,0.3f,0.0f,1.0f };
+	const XMFLOAT4 s_color = { 0.5f,1.0f,0.1f,1.0f };
+	const XMFLOAT4 e_color = { 0.5f,1.0f,0.1f,1.0f };
 	const float s_scale = 1.0f;
 	const float e_scale = 0.0f;
 	int l_Life = {};
@@ -343,6 +381,16 @@ void InterEnemy::BirthDamage(const float Damage) {
 			_damagenumber.push_back(std::move(_newnumber));
 		}
 	}
+}
+void InterEnemy::BirthHealNumber(const float heal) {
+	int l_InterHeal = {};//int変換したダメージ
+	l_InterHeal = (int)heal;
+	unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+	_newnumber->GetCameraData();
+	_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
+	_newnumber->Initialize();
+	_newnumber->SetNumber(l_InterHeal);
+	_healnumber.push_back(std::move(_newnumber));
 }
 //ダメージ関係
 void InterEnemy::DamageUpdate() {

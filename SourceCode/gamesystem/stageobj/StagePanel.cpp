@@ -54,6 +54,7 @@ bool StagePanel::Initialize(const float PosY) {
 	}
 	m_CreateTimer = {};
 	m_CreateFinish = false;
+	onomatope = make_unique<Onomatope>();
 	//CSV読み込み
 	return true;
 }
@@ -83,6 +84,13 @@ void StagePanel::CreateStage() {
 	if (m_CreateFinish) { return; }
 	const float l_AddFrame = 1 / 45.0f;
 	m_CreateTimer++;
+
+	if (m_CreateTimer % 30 == 0) {
+		XMFLOAT2 l_RandPos = {};
+		l_RandPos.x = (float)Helper::GetRanNum(100, 1000);
+		l_RandPos.y = (float)Helper::GetRanNum(100, 500);
+		onomatope->AddOnomato(BossSpawn, l_RandPos);
+	}
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			if (m_CreateTimer >= panels[i][j].TargetTimer) {
@@ -97,8 +105,9 @@ void StagePanel::CreateStage() {
 
 	if (panels[PANEL_WIDTH - 1][PANEL_HEIGHT - 1].Frame == 1.0f) {
 		m_CreateFinish = true;
-		GameStateManager::GetInstance()->SetGameStart(true);
 	}
+
+	onomatope->Update();
 }
 
 //描画
@@ -131,15 +140,14 @@ void StagePanel::ImGuiDraw() {
 		if (actions[i] == nullptr)continue;
 		actions[i]->ImGuiDraw();
 	}
-	ImGui::Begin("Panel");
-	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			ImGui::Text("Poison[%d][%d]:%d", i, j, panels[i][j].type);
-		}
-	}
-	ImGui::End();
 }
-
+//オノマトペの描画
+void StagePanel::OnomatoDraw() {
+	if (m_CreateFinish) { return; }
+	IKESprite::PreDraw();
+	onomatope->Draw();
+	IKESprite::PostDraw();
+}
 //スキルセットの更新(バトル前)
 void StagePanel::SetUpdate() {	
 }

@@ -193,8 +193,9 @@ void ResultSkill::Move() {
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		isMove = true;
 	}
-	if (input->TriggerButton(Input::B) ||
-		input->TriggerKey(DIK_SPACE)) {
+	if ((input->TriggerButton(Input::B) ||
+		input->TriggerKey(DIK_SPACE))&&
+		!isMove) {
 		for (ResultUI& itr : choiceSkills) {
 			if (itr.no == nowFrame) {
 				ResultUI n = CreateUI(itr.isSkill, itr.ID, itr.position);

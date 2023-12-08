@@ -9,6 +9,7 @@
 #include "IKETexture.h"
 #include "Player.h"
 #include "DrawDamageNumber.h"
+#include "DrawHealNumber.h"
 
 using namespace std;         //  名前空間指定
 //キャラの状態
@@ -38,7 +39,9 @@ protected:
 protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
 	std::vector<unique_ptr<DrawDamageNumber>> _damagenumber;
-	unique_ptr<IKETexture> shadow_tex;
+	std::vector<unique_ptr<DrawHealNumber>> _healnumber;
+	unique_ptr<IKETexture> _charge;
+	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
 	//桁数
 	enum DightType {
@@ -99,6 +102,14 @@ protected:
 	//影の変数
 	XMFLOAT3 m_ShadowPos = {};
 	XMFLOAT3 m_ShadowScale = {};
+	float m_ChargeScale = {};
+	bool m_Jump = false;
+	//上昇度
+	float m_AddPower = 0.0f;
+	//重力加速度
+	float m_Gravity = 0.02f;
+	bool m_Rot = false;
+	float m_AttackFrame = {};
 	//予測エリア
 	std::unique_ptr<PredictArea> predictarea;
 
@@ -129,6 +140,7 @@ public:
 	/// 初期化
 	/// </summary>
 	virtual bool Initialize()override;
+	void SkipInitialize();
 	/// <summary>
 	/// 終了
 	/// </summary>
@@ -151,6 +163,8 @@ public:
 
 	void UIDraw();
 	XMFLOAT3 SetPannelPos(int width, int height);
+
+	void AwakeUpdate();
 private:
 	void BirthParticle();
 	//HPの割合を求める
@@ -165,6 +179,7 @@ private:
 	void BirthHeal(const float Heal);
 	//ダメージの更新
 	void DamageUpdate();
+	void BirthHealNumber(const float heal);
 protected:
 	void Collide(vector<unique_ptr<AttackArea>>& area);
 	//毒の状態

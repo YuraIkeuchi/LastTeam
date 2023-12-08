@@ -16,7 +16,7 @@ SkillManager* SkillManager::GetInstance()
 
 void SkillManager::Initialize()
 {
-	const int l_SKILLMAX = 10;
+	const int l_SKILLMAX = 11;
 	//一旦3に指定(実際はCSVとかになるかな)
 	skill.resize(l_SKILLMAX);
 	//ここはもう少しやりようがあるかもしれない
@@ -24,7 +24,8 @@ void SkillManager::Initialize()
 		skill[i] = new AttackSkill();
 	}
 
-	skill[l_SKILLMAX - 1] = new SpecialSkill();
+	skill[9] = new SpecialSkill();
+	skill[10] = new AttackSkill();
 
 	//csv読み取り
 	for (int i = 1; i < l_SKILLMAX + 1; i++)

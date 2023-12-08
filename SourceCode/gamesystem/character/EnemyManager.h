@@ -18,9 +18,10 @@ public:
 	~EnemyManager();
 
 	void Initialize();
+	void SkipInitialize();
 	void Update();
 	void Draw(DirectXCommon* dxCommon);
-
+	void AwakeUpdate();
 	void SetCount();
 
 	void ImGuiDraw();

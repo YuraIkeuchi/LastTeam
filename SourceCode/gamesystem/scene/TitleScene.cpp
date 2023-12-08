@@ -39,7 +39,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	player_->SetTitleFlag(true);
 	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 	player_->Initialize();
-	
+	player_->SkipInitialize();
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
 	StagePanel::GetInstance()->Initialize();
@@ -54,7 +54,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//カード
 	title_ = IKESprite::Create(ImageManager::TITLETEXT, { 0.0f,0.0f });
 	GameStateManager::GetInstance()->DeckReset();
-
+	GameStateManager::GetInstance()->SetGameStart(true);
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {

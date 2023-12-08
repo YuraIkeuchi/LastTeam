@@ -29,10 +29,10 @@ CanonEnemy::CanonEnemy() {
 		_drawnumber[i]->Initialize();
 	}
 
-	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
-	shadow_tex->TextureCreate();
-	shadow_tex->Initialize();
-	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
+	//shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	//shadow_tex->TextureCreate();
+	//shadow_tex->Initialize();
+	//shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 
 }
 //初期化
@@ -61,6 +61,7 @@ bool CanonEnemy::Initialize() {
 
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.5f;
+	m_AddDisolve = 2.0f;
 	return true;
 }
 
@@ -103,9 +104,9 @@ void CanonEnemy::Action() {
 	//}
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
-	shadow_tex->SetPosition(m_ShadowPos);
-	shadow_tex->SetScale(m_ShadowScale);
-	shadow_tex->Update();
+	//shadow_tex->SetPosition(m_ShadowPos);
+	//shadow_tex->SetScale(m_ShadowScale);
+	//shadow_tex->Update();
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
@@ -116,7 +117,7 @@ void CanonEnemy::Action() {
 void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	shadow_tex->Draw();
+	//shadow_tex->Draw();
 	magic.tex->Draw();
 	IKETexture::PostDraw();
 	//敵の弾

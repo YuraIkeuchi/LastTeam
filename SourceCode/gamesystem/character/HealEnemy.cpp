@@ -21,16 +21,17 @@ HealEnemy::HealEnemy() {
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
 
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 	}
 
-	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
-	shadow_tex->TextureCreate();
-	shadow_tex->Initialize();
-	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
+	//shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	//shadow_tex->TextureCreate();
+	//shadow_tex->Initialize();
+	//shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //èâä˙âª
 bool HealEnemy::Initialize() {
@@ -57,6 +58,8 @@ bool HealEnemy::Initialize() {
 
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.5f;
+
+	m_AddDisolve = 2.0f;
 	return true;
 }
 
@@ -69,18 +72,27 @@ void (HealEnemy::* HealEnemy::stateTable[])() = {
 //çsìÆ
 void HealEnemy::Action() {
 	(this->*stateTable[_charaState])();
-	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//ìñÇΩÇËîªíË
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//ìñÇΩÇËîªíË
 	PoisonState();//ì≈
 	BirthMagic();//ñÇñ@êw
+	AttackMove();//çUåÇéûÇÃìÆÇ´
+	//çUåÇéûÉWÉÉÉìÉvÇ∑ÇÈ
+	if (m_Jump) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_AddPower = {};
+			m_Jump = false;
+			m_Position.y = 0.1f;
+		}
+	}
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
-	shadow_tex->SetPosition(m_ShadowPos);
+	/*shadow_tex->SetPosition(m_ShadowPos);
 	shadow_tex->SetScale(m_ShadowScale);
-	shadow_tex->Update();
+	shadow_tex->Update();*/
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
@@ -91,7 +103,7 @@ void HealEnemy::Action() {
 void HealEnemy::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	shadow_tex->Draw();
+	//shadow_tex->Draw();
 	magic.tex->Draw();
 	IKETexture::PostDraw();
 	Obj_Draw();
@@ -123,7 +135,9 @@ void HealEnemy::Attack() {
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 
 	GameStateManager::GetInstance()->SetIsHeal(true);
-
+	m_Jump = true;
+	m_AddPower = 0.2f;
+	m_Rot = true;
 	_charaState = STATE_SPECIAL;
 	coolTimer = {};
 }
@@ -199,4 +213,16 @@ void HealEnemy::WarpEnemy() {
 	}
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
+}
+//çUåÇéûÇÃìÆÇ´
+void HealEnemy::AttackMove() {
+	if (!m_Rot) { return; }
+	const float l_AddFrame = 1 / 20.0f;
+	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
+		m_Rotation.y = 270.0f;
+		m_Rot = false;
+		m_AttackFrame = {};
+	}
+
+	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
 }

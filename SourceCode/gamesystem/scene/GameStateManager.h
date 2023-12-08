@@ -15,6 +15,8 @@
 #include "ResultSkill.h"
 #include "HaveResultSkill.h"
 #include <Onomatope.h>
+#include "ResultReport.h"
+
 using namespace DirectX;
 using namespace std;
 
@@ -120,12 +122,12 @@ public:
 	void SetIsHeal(bool flag) { m_Heal = flag; }
 	bool GetIsHeal() { return m_Heal; }
 
-	void SetIsEnding(bool flag) { isEnding = flag; isFinish = flag; }
-	bool SetIsEnding() { return isEnding; }
-
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart;}
 	bool GetGameStart() { return m_GameStart; }
 
+	void DamageCheck(int Damage);
+	void TakenDamageCheck(int Damage);
+	bool GetIsFivePower() { return m_FivePower && (m_HandedCount % 5 == 0); }
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -135,7 +137,7 @@ private:
 	unique_ptr<IKETexture> _charge;
 	bool isFinish = false;
 	bool isChangeScene = false;
-	bool isEnding = false;
+	bool isResultFinish = false;
 	struct ActState {
 		int SkillType;//スキルの種類
 		int ActID;//ID
@@ -156,7 +158,7 @@ private:
 	vector<unique_ptr<ActionUI>> actui;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {};
+	std::vector <int> m_StartPassive= {7};
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -183,7 +185,9 @@ private:
 
 	//全体スコア
 	int m_AllScore = {};
-
+	int m_MaxDamage = 0;
+	int m_MaxTakenDamage = 0;
+	int m_HandedCount = 0;
 
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
 	bool isBattleFromMap = true;
@@ -206,7 +210,7 @@ private:
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
 	bool m_IsDrainUp = false;
-
+	bool m_FivePower = false;
 
 	bool m_BirthSkill = false;
 
@@ -214,7 +218,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 1,2,6 };
+	vector <int> m_StartNumber = { 1,2,6,10 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -228,6 +232,7 @@ private:
 
 	bool m_ResetPredict = false;
 	int m_PredictTimer = {};
+	std::unique_ptr <ResultReport> resultReport;
 	std::unique_ptr<ResultSkill> resultSkill;
 	std::unique_ptr<HaveResultSkill> haveSkill;
 	//ディレイ関係

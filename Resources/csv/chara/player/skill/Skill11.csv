@@ -1,0 +1,12 @@
+ID,10
+SkillType,0
+Delay,10
+Name,Refrain
+StateName,Refrain
+Damege,0
+DistanceX,1
+DistanceY,1
+AttackArea,1 1 1 0
+AttackArea,0 1 0 0
+AttackArea,0 0 0 0
+AttackAreA,0 0 0 0
