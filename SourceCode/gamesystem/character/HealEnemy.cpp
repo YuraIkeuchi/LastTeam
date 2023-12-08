@@ -111,7 +111,9 @@ void HealEnemy::Draw(DirectXCommon* dxCommon) {
 //ImGui•`‰æ
 void HealEnemy::ImGui_Origin() {
 	ImGui::Begin("Heal");
-	ImGui::Text("Last:%d", m_LastEnemy);
+	ImGui::Text("CoolT:%d", coolTimer);
+	ImGui::Text("Warp:%d", m_Warp);
+	ImGui::Text("frame:%f", magic.Frame);
 	ImGui::End();
 }
 //ŠJ•ú
@@ -183,6 +185,7 @@ void HealEnemy::BirthMagic() {
 			magic.AfterScale = 0.2f;
 			magic.Alive = false;
 			magic.State = MAGIC_BIRTH;
+			m_Warp = false;
 		}
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
