@@ -222,7 +222,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 0,1,2,3,4,5,6,7};
+	vector <int> m_StartNumber = { 1,2,9,10 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -259,7 +259,7 @@ private:
 		float kFrame = 30.f;
 		XMFLOAT2 position = { 0.f,0.f };
 		XMFLOAT2 afterpos = {};
-		XMFLOAT2 size = { 32.f,32.f };
+		XMFLOAT2 size = { 48.f,48.f };
 		XMFLOAT4 color = { 1.5f,1.5f,1.5f,1.0f };
 		bool isVanish = false;
 	};

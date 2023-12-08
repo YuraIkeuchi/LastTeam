@@ -44,7 +44,7 @@ void GameStateManager::Initialize() {
 	PassiveCheck();
 	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.9f,0.9f,0.9f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize(basesize);
-	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
+	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.6f,0.6f,1.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 	gaugeCover= IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f+32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
@@ -306,6 +306,10 @@ void GameStateManager::BirthArea() {
 				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player");
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(damage);
+				if (m_Act[0].ActID == 10) {
+					//固定ダメージ
+					newarea->SetIsFixed(true);
+				}
 				newarea->SetStateName(m_Act[0].StateName);
 				attackarea.emplace_back(std::move(newarea));
 			}
@@ -579,7 +583,7 @@ void GameStateManager::DeckReset() {
 }
 //パワーアップのエフェクトの初期化
 void GameStateManager::RandPowerUpInit() {
-	float posX = (float)Helper::GetRanNum(0, 200);
+	float posX = (float)Helper::GetRanNum(25, 200);
 	float posY = (float)Helper::GetRanNum(550, 700);
 	float frame = (float)Helper::GetRanNum(30, 45);
 	PowerUpEffect itr;
@@ -621,7 +625,7 @@ void GameStateManager::DamageCheck(int Damage) {
 
 void GameStateManager::TakenDamageCheck(int Damage) {
 		m_MaxTakenDamage += Damage;
-		resultReport->SetTakenDamage(m_MaxDamage);
+		resultReport->SetTakenDamage(m_MaxTakenDamage);
 }
 //捨てたカードの再シャッフル
 void GameStateManager::DeckDiscard() {

@@ -105,6 +105,8 @@ private:
 	XMFLOAT2 cheackSize = {};
 	unique_ptr<IKESprite> cheack_OK[2] = {};
 	unique_ptr<IKESprite> cheack_NO[2] = {};
+	unique_ptr<IKESprite> comment[4] = {};
+	int nowComment = 0;
 	int nowCheack = 0;
 	float cFrame = 0;
 	float cAdd = 0.03f;

@@ -30,10 +30,6 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	//ワード追加
 	CreateWord(NONE, L"");
 	CreateWord(TITLE, L"Bボタン:ゲーム");
-	CreateWord(MAP_01, L"始めようここから！");
-	CreateWord(MAP_BATTLE, L"バトルカードいっぱい！");
-	CreateWord(MAP_PASSIVE, L"パッシブが欲しいあなたへ！");
-	CreateWord(MAP_BOSS, L"手強そうだ！");
 	CreateWord(TUTORIAL_START, L"ここでは戦い方を教える", L"まずはパッドかスティックで移動してみろ");
 	CreateWord(TUTORIAL_GET, L"ステージに何か出てきたぞ、取ってみろ");
 	CreateWord(TUTORIAL_EXPLAIN, L"下にカードが出ただろう", L"そのカードに応じてプレイヤーは動ける");
@@ -55,27 +51,27 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveSentence(L"5の倍すうで威力アップ");
 
 	CreateSkillSentence(L"ドドドな近距離攻撃");
-	CreateSkillDamage(L"威力:15");
+	CreateSkillDamage(L"威力:15（大）");
 	CreateSkillSentence(L"ドゴンな近中距離攻撃");
-	CreateSkillDamage(L"威力:8");
+	CreateSkillDamage(L"威力:8（中）");
 	CreateSkillSentence(L"バコン!な一列攻撃");
-	CreateSkillDamage(L"威力:5");
+	CreateSkillDamage(L"威力:5（少）");
 	CreateSkillSentence(L"ザクッな近距離攻撃");
-	CreateSkillDamage(L"威力:5");
+	CreateSkillDamage(L"威力:5（少）");
 	CreateSkillSentence(L"少し強い近中距離攻撃");
-	CreateSkillDamage(L"威力:10");
+	CreateSkillDamage(L"威力:10（中）");
 	CreateSkillSentence(L"少し強い中遠距離攻撃");
-	CreateSkillDamage(L"威力:10");
+	CreateSkillDamage(L"威力:10（中）");
 	CreateSkillSentence(L"ドドドな遠距離攻撃");
-	CreateSkillDamage(L"威力:15");
+	CreateSkillDamage(L"威力:15（大）");
 	CreateSkillSentence(L"イヤーナ毒攻撃だ");
-	CreateSkillDamage(L"威力:3");
+	CreateSkillDamage(L"威力:3（少）");
 	CreateSkillSentence(L"回復できる攻撃だ");
-	CreateSkillDamage(L"威力:9");
+	CreateSkillDamage(L"威力:9（中）");
 	CreateSkillSentence(L"次の攻撃を強く!");
 	CreateSkillDamage(L"威力:次のスキル2倍");
-	CreateSkillSentence(L"ドゴンの威力もういっかい");
-	CreateSkillDamage(L"威力:バトル中のさいだい威力");
+	CreateSkillSentence(L"！");
+	CreateSkillDamage(L"威力:バトル中のさいだい威力(こてい)");
 
 	//ラスボス
 	//コンヴァージョン初期化
