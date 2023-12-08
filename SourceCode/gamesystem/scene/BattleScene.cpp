@@ -118,7 +118,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		}
 		SkipUpdate();
 		if (m_SkipFeed) {
-			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 60.0f, m_SkipFeed);
+			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 30.0f, m_SkipFeed);
 		}
 		player_->AwakeUpdate();
 		player_->Update();
@@ -280,8 +280,9 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	GameStateManager::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
+	//GameStateManager::GetInstance()->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
+	enemyManager->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

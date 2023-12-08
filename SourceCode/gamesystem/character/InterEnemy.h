@@ -117,6 +117,8 @@ protected:
 	bool m_Damege = false;
 	int m_DamageTimer = {};
 	int m_FlashCount = {};
+
+	float m_OverFrame = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -165,6 +167,8 @@ public:
 	XMFLOAT3 SetPannelPos(int width, int height);
 
 	void AwakeUpdate();
+
+	void DeathUpdate();
 private:
 	void BirthParticle();
 	//HPの割合を求める
