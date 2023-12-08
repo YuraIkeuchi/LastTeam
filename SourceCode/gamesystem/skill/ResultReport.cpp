@@ -81,7 +81,7 @@ void ResultReport::Draw(DirectXCommon* dxCommon) {
 	for (auto i = 0; i < DAMAGEMAX; i++) {
 		if (state >= SCORE) {
 			if (i != 2) {
-				if (dealtDamage < 10) {
+				if (dealtDamage < 100) {
 					if (damage_dealt[i]->GetNumber() == 0) {
 						continue;
 					}
@@ -93,7 +93,7 @@ void ResultReport::Draw(DirectXCommon* dxCommon) {
 	for (auto i = 0; i < DAMAGEMAX; i++) {
 		if (state >= SCORE) {
 			if (i != 2) {
-				if (dealtDamage < 10) {
+				if (takenDamage < 100) {
 					if (damage_taken[i]->GetNumber() == 0) {
 						continue;
 					}
@@ -205,7 +205,7 @@ void ResultReport::DamageIntNum(int num, vector<int>& nums) {
 		int t_num = number / 10;
 		nums[1] = t_num;
 		number -= t_num * 10;
-	}
+	} 
 	if (number >= 0) {
 		nums[2] = number;
 	}

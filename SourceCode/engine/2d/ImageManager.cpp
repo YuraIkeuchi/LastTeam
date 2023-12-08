@@ -18,6 +18,10 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(HEALNUMBER, L"Resources/2d/objicon/Numbers/Num_Heal.png");
 	IKESprite::LoadTexture(SLASH, L"Resources/2d/objicon/Numbers/slash.png");
 	IKESprite::LoadTexture(MAPSCREEN, L"Resources/2d/sceneback/mapscreen.png");
+	IKESprite::LoadTexture(MAPCOMMENT00, L"Resources/2d/objicon/Map/Comment_00.png");
+	IKESprite::LoadTexture(MAPCOMMENT01, L"Resources/2d/objicon/Map/Comment_01.png");
+	IKESprite::LoadTexture(MAPCOMMENT02, L"Resources/2d/objicon/Map/Comment_02.png");
+	IKESprite::LoadTexture(MAPCOMMENT03, L"Resources/2d/objicon/Map/Comment_03.png");
 	IKESprite::LoadTexture(MAPSTART, L"Resources/2d/objicon/Map/map_start.png");
 	IKESprite::LoadTexture(MAPROAD, L"Resources/2d/objicon/Map/map_road.png");
 	IKESprite::LoadTexture(MAP_CHARA, L"Resources/2d/objicon/Map/map_chara.png");

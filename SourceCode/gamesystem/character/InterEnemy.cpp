@@ -160,15 +160,25 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) &&
 			!_area->GetHit() && _area->GetName() == "Player") {
 			float damage = _area->GetDamage();
-			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
-				GameStateManager::GetInstance()->SetCounter(true);
-				damage *= 1.5f;
-			}
-			if (GameStateManager::GetInstance()->GetBuff()) {
-				damage *= 2.0f;
-			}
-			if (GameStateManager::GetInstance()->GetIsFivePower()) {
-				damage *= 1.2f;
+			//固定ダメージか否か
+			if (!_area->GetIsFixed()) {
+				if (_charaState == STATE_ATTACK &&
+					!GameStateManager::GetInstance()->GetCounter()) {
+					GameStateManager::GetInstance()->SetCounter(true);
+					damage *= 1.5f;
+				}
+				if (GameStateManager::GetInstance()->GetBuff()) {
+					damage *= 2.0f;
+				}
+				if (GameStateManager::GetInstance()->GetIsFivePower()) {
+					damage *= 1.2f;
+				}
+			} else {
+				if (_charaState == STATE_ATTACK &&
+					!GameStateManager::GetInstance()->GetCounter()) {
+					GameStateManager::GetInstance()->SetCounter(true);
+				}
+
 			}
 			m_Damege = true;
 			m_DamageTimer = {};

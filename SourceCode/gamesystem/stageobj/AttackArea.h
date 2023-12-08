@@ -35,6 +35,7 @@ public:
 	//gettersetter
 	const bool GetHit() { return m_Hit; }
 	const bool GetAlive() { return m_Alive; }
+	const bool GetIsFixed() { return isFixed; }
 	const string GetName() { return m_Name; }
 
 	const int GetNowWidth() { return m_NowWidth; }
@@ -45,6 +46,7 @@ public:
 	void SetHit(const bool Hit) { m_Hit = Hit; }
 	void SetName(const string name) { m_Name = name; }
 	void SetDamage(const float Damage) { m_Damage = Damage; }
+	void SetIsFixed(bool flag) { isFixed = flag; }
 	void SetStateName(const std::string name) { StateName = name; }
 private:
 	//パネル
@@ -62,7 +64,8 @@ private:
 
 	//ヒットしたかどうか
 	bool m_Hit = false;
-
+	//他の補正をかけない
+	bool isFixed = false;
 	int m_NowWidth = {};
 	int m_NowHeight = {};
 	float m_Damage = {};
