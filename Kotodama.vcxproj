@@ -104,6 +104,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SourceCode\gamesystem\effect\AttackEfect.cpp" />
     <ClCompile Include="lib\imgui\include\imgui.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_demo.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_draw.cpp" />
@@ -237,6 +238,7 @@
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SourceCode\gamesystem\effect\AttackEfect.h" />
     <ClInclude Include="lib\imgui\include\imconfig.h" />
     <ClInclude Include="lib\imgui\include\imgui.h" />
     <ClInclude Include="lib\imgui\include\imgui_impl_dx12.h" />
