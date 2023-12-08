@@ -149,6 +149,7 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
+
 	IKESprite::PostDraw();
 }
 //当たり判定
@@ -203,9 +204,21 @@ void InterEnemy::SimpleDamege(float damage) {
 void InterEnemy::SimpleHeal(float heal)
 {
 	if (m_HP <= 0.0f) { return; }
-	m_HP += heal;
-	BirthHealParticle();
-	BirthHealNumber(heal);
+	
+	float l_HealNum = {};
+
+	if (m_HP != m_MaxHP) {
+		BirthHealParticle();
+
+		if (m_MaxHP - m_HP >= heal) {
+			l_HealNum = heal;
+		}
+		else {
+			l_HealNum = m_MaxHP - m_HP;
+		}
+		BirthHealNumber(l_HealNum);
+		m_HP += heal;
+	}
 }
 
 
