@@ -150,6 +150,7 @@ void HealEnemy::Teleport() {
 
 	if (Helper::CheckMin(coolTimer, l_RandTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
+		coolTimer = {};
 	}
 
 	if (m_Warp) {

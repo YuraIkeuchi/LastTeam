@@ -31,7 +31,7 @@ void InterAction::ImGuiDraw() {
 //プレイヤーとパネルの当たり判定
 void InterAction::Collide()
 {
-	if (m_Delete) { return; }
+	if (_state == STATE_VANISH || m_Delete) { return; }
 	if (Collision::CircleCollision(
 		m_Position.x, m_Position.z, m_Radius, 
 		player->GetPosition().x,
@@ -92,6 +92,7 @@ void InterAction::Vanish() {
 	m_Pannel->SetScale(m_PannelScale);
 	m_Pannel->Update();
 	if (Helper::FrameCheck(m_VanishFrame, 1 / kVanishMax)) {
+		m_Discard = true;
 		m_Delete = true;
 		m_VanishFrame = 0;
 	}

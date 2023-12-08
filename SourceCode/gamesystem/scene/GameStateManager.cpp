@@ -81,7 +81,7 @@ void GameStateManager::Initialize() {
 	//予測
 	predictarea.reset(new PredictArea("PLAYER"));
 	predictarea->Initialize();
-
+	m_DiscardNumber.clear();
 	//右のゲージ
 	m_GaugeCount = {};
 	m_NotCount = (int)(m_NotDeckNumber.size()) - 1;//無いカードの枚数を検索してる(ImGui用)
@@ -219,10 +219,16 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("STATE");
 	ImGui::Text("m_HandedCount:%d", m_HandedCount);
-	ImGui::End();
-	if (_ResultType == HAVE_SKILL) {
-		haveSkill->ImGuiDraw();
+	for (int i = 0; i < m_DiscardNumber.size(); i++) {
+		ImGui::Text("Discard[%d]:[%d]", i, m_DiscardNumber[i]);
 	}
+	for (int i = 0; i < m_Act.size(); i++) {
+		ImGui::Text("ID[%d]:[%d]", i, m_Act[i].ActID);
+	}
+	ImGui::End();
+	/*if (_ResultType == HAVE_SKILL) {
+		haveSkill->ImGuiDraw();
+	}*/
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
@@ -371,20 +377,26 @@ void GameStateManager::UseSkill() {
 }
 //行動の終了
 void GameStateManager::FinishAct() {
+	m_DiscardNumber.push_back(m_Act[0].ActID);
 	m_Act.erase(m_Act.begin());
 	m_AllActCount--;
 	actui[0]->SetUse(true);
 	//デッキがない且つ手札を使い切ってたらまた再配布
 	if (m_AllActCount == 0 && StagePanel::GetInstance()->GetAllDelete()) {
 		//デッキの初期化
-		DeckInitialize();
+		//DeckInitialize();
 	}
 }
 
 void GameStateManager::GaugeUpdate() {
 	if (!m_GameStart) { return; }
-	if (SkillManager::GetInstance()->GetDeckNum() != 0 && (TutorialTask::GetInstance()->GetTutorialState() >= TASK_BIRTH_BEFORE)) {
-		m_GaugeCount += 1.0f * m_DiameterGauge;
+	if(m_Act.size() == m_DeckNumber.size()){
+		m_GaugeCount = 0.0f;
+	}
+	else {
+		if (TutorialTask::GetInstance()->GetTutorialState() >= TASK_BIRTH_BEFORE) {
+			m_GaugeCount += 1.0f * m_DiameterGauge;
+		}
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReloadDamage) {
@@ -407,6 +419,9 @@ void GameStateManager::GaugeUpdate() {
 		m_GaugeCount = 0;
 		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTH_BEFORE) {		//チュートリアル専用
 			TutorialTask::GetInstance()->SetTutorialState(TASK_BIRTHSKIL);
+		}
+		if (SkillManager::GetInstance()->GetDeckNum() == 0 && StagePanel::GetInstance()->GetAllDelete()) {
+			DeckDiscard();
 		}
 	}
 	float per = (m_GaugeCount / kGaugeCountMax);
@@ -607,4 +622,21 @@ void GameStateManager::DamageCheck(int Damage) {
 void GameStateManager::TakenDamageCheck(int Damage) {
 		m_MaxTakenDamage += Damage;
 		resultReport->SetTakenDamage(m_MaxDamage);
+}
+//捨てたカードの再シャッフル
+void GameStateManager::DeckDiscard() {
+	StagePanel::GetInstance()->ResetPanel();
+	SkillManager::GetInstance()->DeckClear();
+	//デッキに入っているカードの確認
+	for (int i = 0; i < m_DiscardNumber.size(); i++) {
+		SkillManager::GetInstance()->DeckCheck(m_DiscardNumber[i], i);
+	}
+	//デッキの最大数確認
+	SkillManager::GetInstance()->SetDeckState((int)(m_DiscardNumber.size()));
+
+	m_DiscardNumber.clear();
+}
+//捨てたカードの取得
+void GameStateManager::GetDiscardSkill(const int ID) {
+	m_DiscardNumber.push_back(ID);
 }
