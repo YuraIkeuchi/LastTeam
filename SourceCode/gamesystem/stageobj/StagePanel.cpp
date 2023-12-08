@@ -67,6 +67,9 @@ void StagePanel::Update() {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Update();
 		if (actions[i]->GetAlive() && actions[i]->GetDelete()) {
+			if (actions[i]->GetDiscard()) {
+				GameStateManager::GetInstance()->GetDiscardSkill(actions[i]->GetSkillID());
+			}
 			m_ActionCount--;
 			actions[i]->SetAlive(false);
 		}

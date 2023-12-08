@@ -47,6 +47,7 @@ public:
 	//gettersetter
 	const bool GetAlive() { return m_Alive; }
 	const bool GetDelete() { return m_Delete; }
+	const bool GetDiscard() { return m_Discard; }
 	const int GetSkillID() { return m_SkillID; }
 	const float GetDamage() { return m_Damage; }
 	const int GetDelay() { return m_Delay; }
@@ -67,6 +68,7 @@ protected:
 	float m_Radius = 0.35f;
 	bool m_Alive = true;
 	bool m_Delete = false;
+	bool m_Discard = false;
 	float m_VanishFrame = 0.f;
 	float kVanishMax = 45.f;
 	//ŠÖ”ƒ|ƒCƒ“ƒ^

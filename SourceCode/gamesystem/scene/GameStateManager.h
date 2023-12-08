@@ -49,6 +49,8 @@ public:
 	void AddEnemy(std::weak_ptr<BaseEnemy> Enemy) { enemys_container_.emplace_back(Enemy); }
 	//デッキのリセット
 	void DeckReset();
+	//捨てたIDを取得する
+	void GetDiscardSkill(const int ID);
 private:
 	void PredictManager();
 	//攻撃した瞬間
@@ -69,6 +71,7 @@ private:
 	void PassiveCheck();
 	//デッキの初期化
 	void DeckInitialize();
+	void DeckDiscard();
 	void GetPassive(int ID);
 	
 	bool AttackSubAction();
@@ -80,6 +83,7 @@ private:
 	void RandPowerUpInit();
 	void PowerUpEffectUpdate();
 
+	
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -201,7 +205,7 @@ private:
 	//
 	float m_DiameterGauge = 1.0f;
 	//ゲージマックス
-	float kGaugeCountMax = 130;
+	float kGaugeCountMax = 150;
 	bool m_IsReload = true;
 	bool m_IsReloadDamage = false;
 	bool m_ReloadDamage = false;
@@ -218,10 +222,11 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 1,2,6,10 };
+	vector <int> m_StartNumber = { 1,2,3};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
+	vector<int> m_DiscardNumber = {};
 
 	int m_DistanceX = 0;
 	int m_DistanceY = 0;

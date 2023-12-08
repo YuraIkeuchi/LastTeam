@@ -92,6 +92,7 @@ void InterAction::Vanish() {
 	m_Pannel->SetScale(m_PannelScale);
 	m_Pannel->Update();
 	if (Helper::FrameCheck(m_VanishFrame, 1 / kVanishMax)) {
+		m_Discard = true;
 		m_Delete = true;
 		m_VanishFrame = 0;
 	}
