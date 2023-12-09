@@ -38,7 +38,7 @@ public:
 	//IDÇåüçı
 	int IDSearch(const int BirthNum);
 	void GetSkillType(int& SkillType);
-	void GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY,string& name);
+	void GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, vector<std::vector<int>>& timer, int& DisX, int& DisY,string& name);
 	void GetSpecialSkillDate(int& delay,string& name);
 
 	void SetDeckState(const int DeckNum);

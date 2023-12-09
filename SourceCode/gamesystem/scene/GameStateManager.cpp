@@ -217,7 +217,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("STATE");
+	/*ImGui::Begin("STATE");
 	ImGui::Text("m_HandedCount:%d", m_HandedCount);
 	for (int i = 0; i < m_DiscardNumber.size(); i++) {
 		ImGui::Text("Discard[%d]:[%d]", i, m_DiscardNumber[i]);
@@ -225,10 +225,11 @@ void GameStateManager::ImGuiDraw() {
 	for (int i = 0; i < m_Act.size(); i++) {
 		ImGui::Text("ID[%d]:[%d]", i, m_Act[i].ActID);
 	}
-	ImGui::End();
-	/*if (_ResultType == HAVE_SKILL) {
-		haveSkill->ImGuiDraw();
-	}*/
+	ImGui::End();*/
+	for (auto i = 0; i < attackarea.size(); i++) {
+		if (attackarea[i] == nullptr)continue;
+		attackarea[i]->ImGuiDraw();
+	}
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
@@ -247,22 +248,26 @@ void GameStateManager::ActUIDraw() {
 	IKESprite::PostDraw();
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name) {
+void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay,
+	vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY,string name) {
 	ActState act;
 	act.SkillType = SkillType;
-	if (act.SkillType == 0|| act.SkillType == 3) {
+	if (act.SkillType == 0|| act.SkillType == 1 || act.SkillType == 3) {
 		act.ActID = ID;
 		act.ActDamage = damage;
 		act.AttackArea.resize(7);
+		act.AttackTimer.resize(7);
 		act.DistanceX = DisX;
 		act.DistanceY = DisY;
 
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
 				act.AttackArea[i].push_back(j);
+				act.AttackTimer[i].push_back(j);
 			}
 		}
 		act.AttackArea = area;
+		act.AttackTimer = timer;
 	}
 	act.ActDelay = Delay;
 	act.StateName = name;
@@ -288,7 +293,7 @@ void GameStateManager::BirthActUI(const int ID,const int Type) {
 void GameStateManager::BirthArea() {
 	int l_BirthBaseX = {};
 	int l_BirthBaseY = {};
-
+	int Timer = {};
 	l_BirthBaseX = m_NowWidth + m_Act[0].DistanceX;		//生成の初めの位置を見てる
 	l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
 	int AreaX = {};
@@ -306,6 +311,7 @@ void GameStateManager::BirthArea() {
 				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player");
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(damage);
+				newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
 				if (m_Act[0].ActID == 10) {
 					//固定ダメージ
 					newarea->SetIsFixed(true);

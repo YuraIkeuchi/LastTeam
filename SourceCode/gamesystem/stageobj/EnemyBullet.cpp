@@ -109,7 +109,7 @@ void EnemyBullet::Throw() {
 			m_ThrowType = THROW_INTER;
 		}
 		
-		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.10f);
+		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.1f);
 	}
 	//狙う方向を決める
 	else if (m_ThrowType == THROW_INTER) {

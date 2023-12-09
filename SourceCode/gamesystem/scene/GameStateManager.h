@@ -39,7 +39,8 @@ public:
 	//プレイヤーの現在位置
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
-	void AddSkill(const int SkillType, const int ID, const float damage, const int Delay, vector<std::vector<int>> area, int DisX, int DisY, string name);
+	void AddSkill(const int SkillType, const int ID, const float damage, const int Delay,
+		vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name);
 
 	/// <summary>
 	/// エネミーのデータをコンテナに追加
@@ -148,6 +149,7 @@ private:
 		float ActDamage;//ダメージ
 		int ActDelay;//ディレイ
 		vector<std::vector<int>> AttackArea;	//範囲
+		vector<std::vector<int>> AttackTimer;	//範囲
 		int DistanceX;		//プレイヤーからの距離
 		int DistanceY;		//プレイヤーからの距離
 		string StateName;		//付与状態

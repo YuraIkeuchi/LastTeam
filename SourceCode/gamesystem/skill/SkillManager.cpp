@@ -99,7 +99,7 @@ void SkillManager::ResetBirth() {
 }
 
 //スキルのデータを渡す(攻撃)
-void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY, string& name) {
+void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, vector<std::vector<int>>& timer, int& DisX, int& DisY, string& name) {
 	if (skill[m_BirthNow]->GetSkillType() != SkillType::damege)
 	{
 		assert(0);
@@ -109,6 +109,7 @@ void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vec
 	damage = atkSkill->GetDamege();		//ダメージ
 	delay = skill[m_BirthNow]->Getlatency();		//硬直時間
 	area = atkSkill->GetArea();		//範囲
+	timer = atkSkill->GetTimer();
 	name = atkSkill->GetStateName();		//付与状態
 	//プレイヤーからの距離
 	int l_DistanceX = {};
@@ -140,6 +141,8 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 	std::string line;
 	//アタックエリア用
 	std::vector<std::vector<int> > MyVector;
+	//タイマー用
+	std::vector<std::vector<int> > MyTimer;
 
 	while (std::getline(popcom, line)) {
 		std::istringstream line_stream(line);
@@ -257,6 +260,36 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 				if (atkSkill != nullptr)
 				{
 					atkSkill->SetArea(MyVector);
+				}
+			}
+			else if (word.find("Timer") == 0) {
+				while (std::getline(line_stream, word)) {
+					std::vector<int> row;
+
+					for (char& x : word) {
+						int X = x - '0';
+						if (x != ' ')
+							row.push_back(X);
+					}
+					MyTimer.push_back(row);
+				}
+			}
+			else if (word.find("TimeR") == 0) {
+				while (std::getline(line_stream, word)) {
+					std::vector<int> row;
+
+					for (char& x : word) {
+						int X = x - '0';
+						if (x != ' ')
+							row.push_back(X);
+					}
+					MyTimer.push_back(row);
+				}
+
+				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+				if (atkSkill != nullptr)
+				{
+					atkSkill->SetTimer(MyTimer);
 				}
 				break;
 			}

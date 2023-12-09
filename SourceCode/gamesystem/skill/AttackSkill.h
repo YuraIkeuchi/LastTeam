@@ -9,12 +9,14 @@ public:
 	void ImGui_Origin()override;
 	float GetDamege() { return damege; }
 	std::vector<std::vector<int>> GetArea() { return area; }
+	std::vector<std::vector<int>> GetTimer() { return timer; }
 	int GetDistanceX() { return distanceX; }
 	int GetDistanceY() { return distanceY; }
 	std::string GetStateName() { return StateName; }
 
 	void SetDamege(const float damege) { this->damege = damege; }
 	void SetArea(std::vector<std::vector<int>> area) { this->area = area; }
+	void SetTimer(std::vector<std::vector<int>> timer) { this->timer = timer; }
 	//”O‚Ì‚½‚ß
 	void SetDistanceX(const int distanceX) { this->distanceX = distanceX; }
 	void SetDistanceY(const int distanceY) { this->distanceY = distanceY; }
@@ -36,5 +38,6 @@ protected:
 
 	std::string StateName = "NONE";
 	std::vector<std::vector<int>> area;
+	std::vector < std::vector<int>> timer;
 };
 
