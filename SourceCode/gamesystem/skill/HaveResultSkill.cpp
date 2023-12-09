@@ -24,15 +24,6 @@ void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
 }
 
 void HaveResultSkill::Update() {
-	for (HaveUI& resultUI : haveSkills) {
-		if (resultUI.isSkill) {
-			resultUI.DamageNumber[0]->Update();
-			if (resultUI.Damage >= 10) {
-				resultUI.DamageNumber[1]->Update();
-			}
-		}
-	}
-	
 	for (HaveUI& PassiveUI : havePassive) {
 	}
 
@@ -48,14 +39,6 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 	selectFrame->Draw();
 	for (HaveUI& resultUI : haveSkills) {
 		resultUI.icon->Draw();
-		if (resultUI.isSkill) {
-			if (resultUI.Damage != 0) {			//UŒ‚—Í‚ª0‚È‚ç•`‰æ‚µ‚È‚¢
-				resultUI.DamageNumber[0]->Draw();
-			}
-			if (resultUI.Damage >= 10) {		//“ñŒ…‚ß
-				resultUI.DamageNumber[1]->Draw();
-			}
-		}
 	}
 	
 	for (HaveUI& PassiveUI : havePassive) {
@@ -114,25 +97,6 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 	haveSkills[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	haveSkills[num].icon->SetPosition(haveSkills[num].position);
 	haveSkills[num].icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
-	//ƒ_ƒ[ƒW”‚É‚æ‚Á‚Ä•`‰æ‚·‚éŒ…”‚ªˆá‚¤
-	if (haveSkills[num].Damage < 10) {
-		haveSkills[num].DamageNumber[0] = make_unique<DrawNumber>(0.4f);
-		haveSkills[num].DamageNumber[0]->Initialize();
-		haveSkills[num].DamageNumber[0]->SetNumber(haveSkills[num].Damage);
-		haveSkills[num].DamageNumber[0]->SetPosition({ haveSkills[num].position.x - 10.0f, haveSkills[num].position.y});
-	}
-	else {
-		int l_DightDamage[S_DAMAGEMAX];
-		for (auto i = 0; i < S_DAMAGEMAX; i++) {
-			haveSkills[num].DamageNumber[i] = make_unique<DrawNumber>(0.4f);
-			haveSkills[num].DamageNumber[i]->Initialize();
-			l_DightDamage[i] = Helper::getDigits(haveSkills[num].Damage, i, i);
-			haveSkills[num].DamageNumber[i]->SetNumber(l_DightDamage[i]);
-		}
-
-		haveSkills[num].DamageNumber[0]->SetPosition({ haveSkills[num].position.x + 10.0f, haveSkills[num].position.y});
-		haveSkills[num].DamageNumber[1]->SetPosition({ haveSkills[num].position.x - 10.0f, haveSkills[num].position.y});
-	}
 	haveSkills[num].text_ = make_unique<TextManager>();
 	haveSkills[num].text_->Initialize(dxCommon);
 	haveSkills[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
@@ -172,14 +136,6 @@ void HaveResultSkill::Move() {
 		}
 		else {
 			m_AddPosX = Ease(InOut, Circ, frame, m_AddPosX, 150.0f * m_SelectCount);
-		}
-
-		for (auto i = 0; i < haveSkills.size(); i++) {
-			haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
-			haveSkills[i].DamageNumber[0]->SetPosition({ (haveSkills[i].position.x + 10.0f) - m_AddPosX,haveSkills[i].position.y});
-			if (haveSkills[i].Damage >= 10) {
-				haveSkills[i].DamageNumber[1]->SetPosition({ (haveSkills[i].position.x - 10.0f) - m_AddPosX,haveSkills[i].position.y});
-			}
 		}
 		for (auto i = 0; i < havePassive.size(); i++) {
 			havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });

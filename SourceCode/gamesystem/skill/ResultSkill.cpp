@@ -25,14 +25,6 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 
 void ResultSkill::Update() {
 	Move();
-	for (ResultUI& resultUI : choiceSkills) {
-		if (resultUI.isSkill) {
-			resultUI.DamageNumber[0]->Update();
-			if (resultUI.Damage >= 10) {
-				resultUI.DamageNumber[1]->Update();
-			}
-		}
-	}
 	ShineEffectUpdate();
 }
 
@@ -47,14 +39,6 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 		selectFrame->Draw();
 		for (ResultUI& resultUI : choiceSkills) {
 			resultUI.icon->Draw();
-			if (resultUI.isSkill) {
-				if (resultUI.Damage != 0) {
-					resultUI.DamageNumber[0]->Draw();
-				}
-				if (resultUI.Damage >= 10) {
-					resultUI.DamageNumber[1]->Draw();
-				}
-			}
 		}
 		for (ResultUI& itr : choiceSkills) {
 			if (itr.no == nowFrame) {
@@ -247,23 +231,6 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 		resultUI.icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
 		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY, resultUI.Damage);//IDに応じた攻撃エリア、距離、ダメージを取得する
 		//桁数によって描画する桁数が違う
-		if (resultUI.Damage < 10) {
-			resultUI.DamageNumber[0] = make_unique<DrawNumber>(0.5f);
-			resultUI.DamageNumber[0]->Initialize();
-			resultUI.DamageNumber[0]->SetNumber(resultUI.Damage);
-			resultUI.DamageNumber[0]->SetPosition({ resultUI.position.x + 10.0f,resultUI.position.y });
-		} else {
-			int l_DightDamage[S_DAMAGEMAX];
-			for (auto i = 0; i < S_DAMAGEMAX; i++) {
-				resultUI.DamageNumber[i] = make_unique<DrawNumber>(0.5f);
-				resultUI.DamageNumber[i]->Initialize();
-				l_DightDamage[i] = Helper::getDigits(resultUI.Damage, i, i);
-				resultUI.DamageNumber[i]->SetNumber(l_DightDamage[i]);
-			}
-
-			resultUI.DamageNumber[0]->SetPosition({ resultUI.position.x + 10.0f,resultUI.position.y });
-			resultUI.DamageNumber[1]->SetPosition({ resultUI.position.x - 10.0f,resultUI.position.y });
-		}
 		BirthArea(resultUI);
 		resultUI.sentence[0] = L"スキル：";
 		resultUI.sentence[1] = resultUI.text_->GetSkillSentence(resultUI.ID);
