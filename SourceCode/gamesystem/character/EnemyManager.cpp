@@ -120,7 +120,6 @@ void EnemyManager::PoizonVenom() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SetPoizonVenom(true);
 	}
-
 }
 
 void EnemyManager::DrainHealUp() {

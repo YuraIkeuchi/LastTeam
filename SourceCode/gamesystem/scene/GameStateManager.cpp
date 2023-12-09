@@ -46,9 +46,9 @@ void GameStateManager::Initialize() {
 	skillUI->SetSize(basesize);
 	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.6f,0.6f,1.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
-	gaugeCover= IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f+32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	gaugeCover = IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f + 32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
-
+	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 640.f,50.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
 	resultReport = make_unique<ResultReport>();
 	resultSkill = make_unique<ResultSkill>();
@@ -114,7 +114,7 @@ void GameStateManager::Update() {
 
 		if (Helper::CheckMin(m_CounterTimer, 20, 1)) {		//一定フレームでカウンター終了
 			m_Counter = false;
-			onomatope->AddOnomato(Counter, {640.f,660.f});
+			onomatope->AddOnomato(Counter, { 640.f,660.f });
 			m_CounterTimer = {};
 		}
 	}
@@ -146,7 +146,7 @@ void GameStateManager::Update() {
 	UseSkill();
 	if (m_ResetPredict) {
 		m_PredictTimer++;
-		if (m_PredictTimer  > 1) {
+		if (m_PredictTimer > 1) {
 			PredictManager();
 			m_ResetPredict = false;
 			m_PredictTimer = {};
@@ -160,6 +160,7 @@ void GameStateManager::Update() {
 	_charge->Update();
 	onomatope->Update();
 
+	PassiveActive();
 	PowerUpEffectUpdate();
 }
 //攻撃した瞬間
@@ -171,7 +172,7 @@ void GameStateManager::AttackTrigger() {
 	if (isFinish) { return; }
 	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える
-	if (input->TriggerButton(input->B)||
+	if (input->TriggerButton(input->B) ||
 		input->TriggerKey(DIK_SPACE)) {
 		m_HandedCount++;
 		AttackSubAction();
@@ -191,6 +192,9 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		skillUI->Draw();
 		gaugeUI->Draw();
 		//gaugeCover->Draw();
+		if (isPassive) {
+			passiveActive->Draw();
+		}
 		onomatope->Draw();
 		IKESprite::PostDraw();
 		SkillManager::GetInstance()->UIDraw();
@@ -248,11 +252,11 @@ void GameStateManager::ActUIDraw() {
 	IKESprite::PostDraw();
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay,
-	vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY,string name) {
+void GameStateManager::AddSkill(const int SkillType, const int ID, const float damage, const int Delay,
+	vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name) {
 	ActState act;
 	act.SkillType = SkillType;
-	if (act.SkillType == 0|| act.SkillType == 1 || act.SkillType == 3) {
+	if (act.SkillType == 0 || act.SkillType == 1 || act.SkillType == 3) {
 		act.ActID = ID;
 		act.ActDamage = damage;
 		act.AttackArea.resize(7);
@@ -274,16 +278,16 @@ void GameStateManager::AddSkill(const int SkillType,const int ID, const float da
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
-	BirthActUI(ID,act.SkillType);//UIも増えるよ
+	BirthActUI(ID, act.SkillType);//UIも増えるよ
 	PredictManager();
 }
 //スキルUIの生成
-void GameStateManager::BirthActUI(const int ID,const int Type) {
+void GameStateManager::BirthActUI(const int ID, const int Type) {
 	//アクションUIのセット
 	ActionUI* newactUi = nullptr;
 	newactUi = new ActionUI(ID);
 	newactUi->Initialize();
-	newactUi->InitState(m_AllActCount,Type);
+	newactUi->InitState(m_AllActCount, Type);
 	actui.emplace_back(newactUi);
 
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/cardget.wav", 0.15f);
@@ -356,12 +360,11 @@ void GameStateManager::UseSkill() {
 	if (m_AllActCount == 0) { return; }
 	if (!m_Delay) { return; }
 	m_ChargeScale = Helper::Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
-	if (Helper::CheckMin(m_DelayTimer,m_Act[0].ActDelay,1)) {
+	if (Helper::CheckMin(m_DelayTimer, m_Act[0].ActDelay, 1)) {
 		if (m_Act[0].SkillType == 0) {
 			BirthArea();
 			onomatope->AddOnomato(Attack01, { 640.f,360.f });
-		}
-		else if (m_Act[0].SkillType == 1) {
+		} else if (m_Act[0].SkillType == 1) {
 			for (int i = 0; i < 2; i++) {
 				RandPowerUpInit();
 			}
@@ -374,8 +377,7 @@ void GameStateManager::UseSkill() {
 		FinishAct();
 		if (m_AllActCount == 0) {
 			player->AttackCheck(true);
-		}
-		else {
+		} else {
 			player->AttackCheck(false);
 		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.1f);
@@ -400,10 +402,9 @@ void GameStateManager::FinishAct() {
 
 void GameStateManager::GaugeUpdate() {
 	if (!m_GameStart) { return; }
-	if(m_Act.size() == m_DeckNumber.size()){
+	if (m_Act.size() == m_DeckNumber.size()) {
 		m_GaugeCount = 0.0f;
-	}
-	else {
+	} else {
 		if (TutorialTask::GetInstance()->GetTutorialState() >= TASK_BIRTH_BEFORE) {
 			m_GaugeCount += 1.0f * m_DiameterGauge;
 		}
@@ -412,18 +413,20 @@ void GameStateManager::GaugeUpdate() {
 		if (m_IsReloadDamage) {
 			//エネミーに3ダメージ
 			m_ReloadDamage = true;
+			SetPassiveActive();
 		}
 		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();
 			StagePanel::GetInstance()->ResetPanel();
+		} else {
+			SetPassiveActive();
 		}
 		//パネル置く数
 		int panel_num = 3;
 		SkillManager::GetInstance()->ResetBirth();
 		if (SkillManager::GetInstance()->GetDeckNum() >= 3) {
 			StagePanel::GetInstance()->RandomPanel(panel_num);
-		}
-		else {
+		} else {
 			StagePanel::GetInstance()->RandomPanel(SkillManager::GetInstance()->GetDeckNum());
 		}
 		m_GaugeCount = 0;
@@ -441,7 +444,7 @@ void GameStateManager::GaugeUpdate() {
 
 void GameStateManager::PassiveCheck() {
 
-	for (int& id:GotPassiveIDs) {
+	for (int& id : GotPassiveIDs) {
 		GetPassive(id);
 	}
 
@@ -477,11 +480,11 @@ void GameStateManager::PassiveCheck() {
 	}
 	const int PASSIVE_MAX = 7;
 	NotPassiveIDs.clear();
-	if (GotPassiveIDs.size() == 0) { 
+	if (GotPassiveIDs.size() == 0) {
 		for (int j = 0; j < PASSIVE_MAX; j++) {
 			NotPassiveIDs.push_back(j);		//なかったら追加する
 		}
-		return; 
+		return;
 	}
 	for (int i = 0; i < GotPassiveIDs.size(); i++) {
 		for (int j = 0; j < PASSIVE_MAX; j++) {
@@ -499,7 +502,7 @@ void GameStateManager::DeckInitialize() {
 	SkillManager::GetInstance()->DeckClear();
 	//デッキに入っているカードの確認
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
-		SkillManager::GetInstance()->DeckCheck(m_DeckNumber[i],i);
+		SkillManager::GetInstance()->DeckCheck(m_DeckNumber[i], i);
 	}
 	//デッキの最大数確認
 	SkillManager::GetInstance()->SetDeckState((int)(m_DeckNumber.size()));
@@ -507,7 +510,7 @@ void GameStateManager::DeckInitialize() {
 
 void GameStateManager::GetPassive(int ID) {
 	float posX = GotPassives.size() * 70.0f;
-	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,50.0f})));
+	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,50.0f })));
 }
 
 
@@ -523,11 +526,11 @@ bool GameStateManager::ResultUpdate() {
 		resultReport->Update();
 		return false;
 	}
-	if (Input::GetInstance()->TriggerButton(Input::LB)||
+	if (Input::GetInstance()->TriggerButton(Input::LB) ||
 		Input::GetInstance()->TriggerKey(DIK_LEFT)) {
 		_ResultType = GET_SKILL;
 	}
-	if (Input::GetInstance()->TriggerButton(Input::RB)||
+	if (Input::GetInstance()->TriggerButton(Input::RB) ||
 		Input::GetInstance()->TriggerKey(DIK_RIGHT)) {
 		_ResultType = HAVE_SKILL;
 	}
@@ -535,7 +538,7 @@ bool GameStateManager::ResultUpdate() {
 	if (_ResultType == GET_SKILL) {
 		resultSkill->Update();
 
-		if ((Input::GetInstance()->TriggerButton(Input::B)|| Input::GetInstance()->TriggerKey(DIK_SPACE)) && !m_Choice) {
+		if ((Input::GetInstance()->TriggerButton(Input::B) || Input::GetInstance()->TriggerKey(DIK_SPACE)) && !m_Choice) {
 			resultSkill->InDeck(m_DeckNumber);
 			resultSkill->InPassive(GotPassiveIDs);
 			isChangeScene = true;
@@ -543,10 +546,10 @@ bool GameStateManager::ResultUpdate() {
 			m_Choice = true;
 			TutorialTask::GetInstance()->SetChoiceSkill(true);
 		}
-	}else {
+	} else {
 		haveSkill->Update();
 	}
-	
+
 	return true;
 }
 
@@ -569,7 +572,7 @@ bool GameStateManager::SkillRecycle() {
 
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
-	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size(),m_dxCommon);
+	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size(), m_dxCommon);
 	haveSkill->HavePassiveSkill(GotPassiveIDs, (int)GotPassiveIDs.size(), m_dxCommon);
 	resultSkill->SetIsBattle(isBattleFromMap);
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
@@ -610,8 +613,7 @@ void GameStateManager::PowerUpEffectUpdate() {
 				RandPowerUpInit();
 			}
 			power.isVanish = true;
-		}
-		else {
+		} else {
 			power.position.y = Ease(In, Exp, power.frame, power.position.y, power.afterpos.y);
 			power.color.w = Ease(In, Exp, power.frame, 1.0f, 0.0f);
 			power.tex->SetPosition(power.position);
@@ -622,6 +624,26 @@ void GameStateManager::PowerUpEffectUpdate() {
 		return shine.isVanish; });
 }
 
+void GameStateManager::PassiveActive() {
+	if (!isPassive) { return; }
+	if (Helper::FrameCheck(passiveFrame, 1.f / 60.f)) {
+		if (Helper::FrameCheck(passiveAlphaFrame,1.f/30.0f)) {
+			isPassive = false;
+			passiveFrame = 0.f;
+			passiveAlphaFrame = 0.f;
+			passiveActive->SetColor({ 1,1,1,1});
+		} else {
+			float alpha = Ease(In,Quint, passiveAlphaFrame,1.f,0.f);
+			passiveActive->SetColor({1,1,1,alpha});
+		}
+	} else {
+		XMFLOAT2 size = {};
+		size.x = Ease(Out, Elastic, passiveFrame, 384.f * 0.4f, 384.f);
+		size.y = Ease(Out, Elastic, passiveFrame, 74.f * 0.4f, 74.f);
+		passiveActive->SetSize(size);
+	}
+}
+
 void GameStateManager::DamageCheck(int Damage) {
 	if (Damage > m_MaxDamage) {
 		m_MaxDamage = Damage;
@@ -630,8 +652,14 @@ void GameStateManager::DamageCheck(int Damage) {
 }
 
 void GameStateManager::TakenDamageCheck(int Damage) {
-		m_MaxTakenDamage += Damage;
-		resultReport->SetTakenDamage(m_MaxTakenDamage);
+	m_MaxTakenDamage += Damage;
+	resultReport->SetTakenDamage(m_MaxTakenDamage);
+}
+void GameStateManager::SetPassiveActive(){ 
+	isPassive = true; 
+	passiveFrame = 0.f; 
+	passiveAlphaFrame = 0.f;
+	passiveActive->SetColor({ 1,1,1,1 });
 }
 //捨てたカードの再シャッフル
 void GameStateManager::DeckDiscard() {
