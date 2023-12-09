@@ -9,3 +9,6 @@ DistanceY,1
 AttackArea,0 1 0
 AttackArea,1 1 1
 AttackAreA,0 1 0
+Timer,0 1 0
+Timer,1 1 1
+TimeR,0 1 0

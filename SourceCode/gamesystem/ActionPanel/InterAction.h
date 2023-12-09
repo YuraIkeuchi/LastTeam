@@ -53,6 +53,7 @@ public:
 	const int GetDelay() { return m_Delay; }
 	const string GetStateName() { return StateName; }
 	const std::vector<std::vector<int>> GetArea() { return m_Area; }
+	const std::vector<std::vector<int>> GetTimer() { return m_Timer; }
 
 	void SetState(const int state) { _state= state; }
 	void SetAlive(const bool Alive) { m_Alive = Alive; }
@@ -80,6 +81,7 @@ protected:
 	int m_Delay = {};
 	int m_SkillType = {};
 	std::vector<std::vector<int>> m_Area;
+	std::vector<std::vector<int>> m_Timer;
 	int m_DistanceX = {};
 	int m_DistanceY = {};
 	string StateName = {};

@@ -32,9 +32,7 @@ void InterEnemy::SkipInitialize() {
 void InterEnemy::Update() {
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
 	if (m_HP != 0.0f) {
-
 		//各行動
-
 		if (m_EnemyTag != "Bomb") {
 			if (m_Alive) {
 				Action();
