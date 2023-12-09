@@ -546,7 +546,7 @@ void MapScene::ImGuiDraw() {
 	ImGui::Begin("Map");
 	//ImGui::Text("%f", framePos.x);
 	//ImGui::Text("%f", eFrame);
-	ImGui::Text("HIERARCHY:%d", UIs[pickHierarchy][pickIndex].Tag);
+	ImGui::Text("HIERARCHY:%f", startAlpha);
 	//ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
 	//ImGui::Text("PICKINDEX:%d", pickIndex);
 	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
@@ -690,7 +690,7 @@ void MapScene::MainState() {
 	Move();
 	RoadUpdate();
 	if (isStart) {
-		startAlpha += 0.05f;
+		startAlpha += 0.02f;
 		startButton->SetColor({1,1,1,abs(sinf(startAlpha))});
 	}
 	for (array<UI, INDEX>& ui : UIs) {
