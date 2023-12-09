@@ -33,7 +33,6 @@ private:
 
 	struct HaveUI {
 		std::unique_ptr<IKESprite> icon;
-		std::unique_ptr<DrawNumber> DamageNumber[S_DAMAGEMAX];
 		std::unique_ptr<TextManager> text_;
 		vector<std::unique_ptr<ResultAreaUI>> resultarea;
 		XMFLOAT2 position = { 640.f,320.f };

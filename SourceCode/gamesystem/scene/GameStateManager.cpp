@@ -411,9 +411,12 @@ void GameStateManager::GaugeUpdate() {
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReloadDamage) {
-			//エネミーに3ダメージ
-			m_ReloadDamage = true;
-			SetPassiveActive();
+			int r_num = Helper::GetRanNum(0,99);
+			if (r_num < 30) {
+				//エネミーに3ダメージ
+				m_ReloadDamage = true;
+				SetPassiveActive();
+			}
 		}
 		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();

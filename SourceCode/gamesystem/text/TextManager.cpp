@@ -47,7 +47,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveSentence(L"毒の時間が長いぞ");
 	CreatePassiveSentence(L"毒の威力が上がるぞ");
 	CreatePassiveSentence(L"ドレイン威力が上がるぞ");
-	CreatePassiveSentence(L"リロードしたら攻撃だ");
+	CreatePassiveSentence(L"リロードしたらたまに攻撃だ");
 	CreatePassiveSentence(L"5の倍すうで威力アップ");
 
 	CreateSkillSentence(L"ドドドな近距離攻撃");

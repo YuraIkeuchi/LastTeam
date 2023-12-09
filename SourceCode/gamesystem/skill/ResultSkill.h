@@ -32,7 +32,6 @@ private:
 private:
 	struct ResultUI{
 		std::unique_ptr<IKESprite> icon;
-		std::unique_ptr<DrawNumber> DamageNumber[S_DAMAGEMAX];
 		std::unique_ptr<TextManager> text_;
 		XMFLOAT2 position = { 640.f,320.f };
 		XMFLOAT2 size = { 128.f,128.f };
