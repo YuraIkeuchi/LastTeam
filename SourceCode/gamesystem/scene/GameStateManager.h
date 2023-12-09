@@ -39,7 +39,8 @@ public:
 	//プレイヤーの現在位置
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
-	void AddSkill(const int SkillType, const int ID, const float damage, const int Delay, vector<std::vector<int>> area, int DisX, int DisY, string name);
+	void AddSkill(const int SkillType, const int ID, const float damage, const int Delay,
+		vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name);
 
 	/// <summary>
 	/// エネミーのデータをコンテナに追加
@@ -49,6 +50,8 @@ public:
 	void AddEnemy(std::weak_ptr<BaseEnemy> Enemy) { enemys_container_.emplace_back(Enemy); }
 	//デッキのリセット
 	void DeckReset();
+	//捨てたIDを取得する
+	void GetDiscardSkill(const int ID);
 private:
 	void PredictManager();
 	//攻撃した瞬間
@@ -69,6 +72,7 @@ private:
 	void PassiveCheck();
 	//デッキの初期化
 	void DeckInitialize();
+	void DeckDiscard();
 	void GetPassive(int ID);
 	
 	bool AttackSubAction();
@@ -80,6 +84,7 @@ private:
 	void RandPowerUpInit();
 	void PowerUpEffectUpdate();
 
+	
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -144,6 +149,7 @@ private:
 		float ActDamage;//ダメージ
 		int ActDelay;//ディレイ
 		vector<std::vector<int>> AttackArea;	//範囲
+		vector<std::vector<int>> AttackTimer;	//範囲
 		int DistanceX;		//プレイヤーからの距離
 		int DistanceY;		//プレイヤーからの距離
 		string StateName;		//付与状態
@@ -201,7 +207,7 @@ private:
 	//
 	float m_DiameterGauge = 1.0f;
 	//ゲージマックス
-	float kGaugeCountMax = 130;
+	float kGaugeCountMax = 150;
 	bool m_IsReload = true;
 	bool m_IsReloadDamage = false;
 	bool m_ReloadDamage = false;
@@ -218,10 +224,11 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 1,2,6,10 };
+	vector <int> m_StartNumber = { 1,2,9,10 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
+	vector<int> m_DiscardNumber = {};
 
 	int m_DistanceX = 0;
 	int m_DistanceY = 0;
@@ -254,7 +261,7 @@ private:
 		float kFrame = 30.f;
 		XMFLOAT2 position = { 0.f,0.f };
 		XMFLOAT2 afterpos = {};
-		XMFLOAT2 size = { 32.f,32.f };
+		XMFLOAT2 size = { 48.f,48.f };
 		XMFLOAT4 color = { 1.5f,1.5f,1.5f,1.0f };
 		bool isVanish = false;
 	};

@@ -112,7 +112,7 @@
     <ClCompile Include="lib\imgui\include\imgui_impl_win32.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_tables.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_widgets.cpp" />
-    <ClCompile Include="ResultReport.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Font.cpp" />

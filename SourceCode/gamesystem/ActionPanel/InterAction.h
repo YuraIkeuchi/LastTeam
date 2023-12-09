@@ -47,14 +47,17 @@ public:
 	//gettersetter
 	const bool GetAlive() { return m_Alive; }
 	const bool GetDelete() { return m_Delete; }
+	const bool GetDiscard() { return m_Discard; }
 	const int GetSkillID() { return m_SkillID; }
 	const float GetDamage() { return m_Damage; }
 	const int GetDelay() { return m_Delay; }
 	const string GetStateName() { return StateName; }
 	const std::vector<std::vector<int>> GetArea() { return m_Area; }
+	const std::vector<std::vector<int>> GetTimer() { return m_Timer; }
 
 	void SetState(const int state) { _state= state; }
 	void SetAlive(const bool Alive) { m_Alive = Alive; }
+	void SetDiscard(const bool Discard) { m_Discard = Discard; }
 	void SetPlayer(Player* player) { this->player = player; }
 
 protected:
@@ -67,6 +70,7 @@ protected:
 	float m_Radius = 0.35f;
 	bool m_Alive = true;
 	bool m_Delete = false;
+	bool m_Discard = false;
 	float m_VanishFrame = 0.f;
 	float kVanishMax = 45.f;
 	//ä÷êîÉ|ÉCÉìÉ^
@@ -77,6 +81,7 @@ protected:
 	int m_Delay = {};
 	int m_SkillType = {};
 	std::vector<std::vector<int>> m_Area;
+	std::vector<std::vector<int>> m_Timer;
 	int m_DistanceX = {};
 	int m_DistanceY = {};
 	string StateName = {};

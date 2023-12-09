@@ -44,7 +44,7 @@ void GameStateManager::Initialize() {
 	PassiveCheck();
 	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.9f,0.9f,0.9f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize(basesize);
-	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.f,1.f,0.f,1.f }, { 0.5f,1.f });
+	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.6f,0.6f,1.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 	gaugeCover= IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f+32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
@@ -81,7 +81,7 @@ void GameStateManager::Initialize() {
 	//予測
 	predictarea.reset(new PredictArea("PLAYER"));
 	predictarea->Initialize();
-
+	m_DiscardNumber.clear();
 	//右のゲージ
 	m_GaugeCount = {};
 	m_NotCount = (int)(m_NotDeckNumber.size()) - 1;//無いカードの枚数を検索してる(ImGui用)
@@ -217,11 +217,18 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("STATE");
+	/*ImGui::Begin("STATE");
 	ImGui::Text("m_HandedCount:%d", m_HandedCount);
-	ImGui::End();
-	if (_ResultType == HAVE_SKILL) {
-		haveSkill->ImGuiDraw();
+	for (int i = 0; i < m_DiscardNumber.size(); i++) {
+		ImGui::Text("Discard[%d]:[%d]", i, m_DiscardNumber[i]);
+	}
+	for (int i = 0; i < m_Act.size(); i++) {
+		ImGui::Text("ID[%d]:[%d]", i, m_Act[i].ActID);
+	}
+	ImGui::End();*/
+	for (auto i = 0; i < attackarea.size(); i++) {
+		if (attackarea[i] == nullptr)continue;
+		attackarea[i]->ImGuiDraw();
 	}
 	SkillManager::GetInstance()->ImGuiDraw();
 }
@@ -241,22 +248,26 @@ void GameStateManager::ActUIDraw() {
 	IKESprite::PostDraw();
 }
 //スキルを入手(InterActionCPPで使ってます)
-void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay, vector<std::vector<int>> area, int DisX, int DisY,string name) {
+void GameStateManager::AddSkill(const int SkillType,const int ID, const float damage,const int Delay,
+	vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY,string name) {
 	ActState act;
 	act.SkillType = SkillType;
-	if (act.SkillType == 0|| act.SkillType == 3) {
+	if (act.SkillType == 0|| act.SkillType == 1 || act.SkillType == 3) {
 		act.ActID = ID;
 		act.ActDamage = damage;
 		act.AttackArea.resize(7);
+		act.AttackTimer.resize(7);
 		act.DistanceX = DisX;
 		act.DistanceY = DisY;
 
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
 				act.AttackArea[i].push_back(j);
+				act.AttackTimer[i].push_back(j);
 			}
 		}
 		act.AttackArea = area;
+		act.AttackTimer = timer;
 	}
 	act.ActDelay = Delay;
 	act.StateName = name;
@@ -282,7 +293,7 @@ void GameStateManager::BirthActUI(const int ID,const int Type) {
 void GameStateManager::BirthArea() {
 	int l_BirthBaseX = {};
 	int l_BirthBaseY = {};
-
+	int Timer = {};
 	l_BirthBaseX = m_NowWidth + m_Act[0].DistanceX;		//生成の初めの位置を見てる
 	l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
 	int AreaX = {};
@@ -300,6 +311,11 @@ void GameStateManager::BirthArea() {
 				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player");
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(damage);
+				newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
+				if (m_Act[0].ActID == 10) {
+					//固定ダメージ
+					newarea->SetIsFixed(true);
+				}
 				newarea->SetStateName(m_Act[0].StateName);
 				attackarea.emplace_back(std::move(newarea));
 			}
@@ -371,20 +387,26 @@ void GameStateManager::UseSkill() {
 }
 //行動の終了
 void GameStateManager::FinishAct() {
+	m_DiscardNumber.push_back(m_Act[0].ActID);
 	m_Act.erase(m_Act.begin());
 	m_AllActCount--;
 	actui[0]->SetUse(true);
 	//デッキがない且つ手札を使い切ってたらまた再配布
 	if (m_AllActCount == 0 && StagePanel::GetInstance()->GetAllDelete()) {
 		//デッキの初期化
-		DeckInitialize();
+		//DeckInitialize();
 	}
 }
 
 void GameStateManager::GaugeUpdate() {
 	if (!m_GameStart) { return; }
-	if (SkillManager::GetInstance()->GetDeckNum() != 0 && (TutorialTask::GetInstance()->GetTutorialState() >= TASK_BIRTH_BEFORE)) {
-		m_GaugeCount += 1.0f * m_DiameterGauge;
+	if(m_Act.size() == m_DeckNumber.size()){
+		m_GaugeCount = 0.0f;
+	}
+	else {
+		if (TutorialTask::GetInstance()->GetTutorialState() >= TASK_BIRTH_BEFORE) {
+			m_GaugeCount += 1.0f * m_DiameterGauge;
+		}
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReloadDamage) {
@@ -407,6 +429,9 @@ void GameStateManager::GaugeUpdate() {
 		m_GaugeCount = 0;
 		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTH_BEFORE) {		//チュートリアル専用
 			TutorialTask::GetInstance()->SetTutorialState(TASK_BIRTHSKIL);
+		}
+		if (SkillManager::GetInstance()->GetDeckNum() == 0 && StagePanel::GetInstance()->GetAllDelete()) {
+			DeckDiscard();
 		}
 	}
 	float per = (m_GaugeCount / kGaugeCountMax);
@@ -564,7 +589,7 @@ void GameStateManager::DeckReset() {
 }
 //パワーアップのエフェクトの初期化
 void GameStateManager::RandPowerUpInit() {
-	float posX = (float)Helper::GetRanNum(0, 200);
+	float posX = (float)Helper::GetRanNum(25, 200);
 	float posY = (float)Helper::GetRanNum(550, 700);
 	float frame = (float)Helper::GetRanNum(30, 45);
 	PowerUpEffect itr;
@@ -606,5 +631,22 @@ void GameStateManager::DamageCheck(int Damage) {
 
 void GameStateManager::TakenDamageCheck(int Damage) {
 		m_MaxTakenDamage += Damage;
-		resultReport->SetTakenDamage(m_MaxDamage);
+		resultReport->SetTakenDamage(m_MaxTakenDamage);
+}
+//捨てたカードの再シャッフル
+void GameStateManager::DeckDiscard() {
+	StagePanel::GetInstance()->ResetPanel();
+	SkillManager::GetInstance()->DeckClear();
+	//デッキに入っているカードの確認
+	for (int i = 0; i < m_DiscardNumber.size(); i++) {
+		SkillManager::GetInstance()->DeckCheck(m_DiscardNumber[i], i);
+	}
+	//デッキの最大数確認
+	SkillManager::GetInstance()->SetDeckState((int)(m_DiscardNumber.size()));
+
+	m_DiscardNumber.clear();
+}
+//捨てたカードの取得
+void GameStateManager::GetDiscardSkill(const int ID) {
+	m_DiscardNumber.push_back(ID);
 }

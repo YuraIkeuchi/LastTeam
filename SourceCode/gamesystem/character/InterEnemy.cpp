@@ -31,16 +31,19 @@ void InterEnemy::SkipInitialize() {
 //更新
 void InterEnemy::Update() {
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
-	if (m_EnemyTag != "Bomb") {
-		if (m_Alive) {
+	if (m_HP != 0.0f) {
+		//各行動
+		if (m_EnemyTag != "Bomb") {
+			if (m_Alive) {
+				Action();
+			}
+		}
+		else {
 			Action();
 		}
 	}
 	else {
-		Action();
 	}
-
-	//各行動
 
 	const int l_BasePanelCount = 4;
 	Helper::CheckMax(m_DamegeTimer, 0, -1);
@@ -50,8 +53,6 @@ void InterEnemy::Update() {
 	m_InterHP = (int)(m_HP);
 
 	////敵のマスを取得する
-	if (m_EnemyTag == "Normal") {
-	}
 	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight,m_Alive);
 
 	if (m_HP != 0.0f) {
@@ -61,7 +62,7 @@ void InterEnemy::Update() {
 	}
 	else {
 		if (m_EnemyTag != "Bomb") {
-			m_Alive = false;
+			//m_Alive = false;
 		}
 	}
 
@@ -126,7 +127,7 @@ void InterEnemy::ImGuiDraw() {
 void InterEnemy::UIDraw() {
 	//if (!GameStateManager::GetInstance()->GetGameStart() && m_EnemyTag != "Mob") { return; }
 	IKESprite::PreDraw();
-	if (m_Alive) {
+	if (m_HP != 0.0f) {
 		//HPバー
 		hptex->Draw();
 		//HP(数字)
@@ -149,6 +150,7 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
+
 	IKESprite::PostDraw();
 }
 //当たり判定
@@ -160,15 +162,25 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) &&
 			!_area->GetHit() && _area->GetName() == "Player") {
 			float damage = _area->GetDamage();
-			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
-				GameStateManager::GetInstance()->SetCounter(true);
-				damage *= 1.5f;
-			}
-			if (GameStateManager::GetInstance()->GetBuff()) {
-				damage *= 2.0f;
-			}
-			if (GameStateManager::GetInstance()->GetIsFivePower()) {
-				damage *= 1.2f;
+			//固定ダメージか否か
+			if (!_area->GetIsFixed()) {
+				if (_charaState == STATE_ATTACK &&
+					!GameStateManager::GetInstance()->GetCounter()) {
+					GameStateManager::GetInstance()->SetCounter(true);
+					damage *= 1.5f;
+				}
+				if (GameStateManager::GetInstance()->GetBuff()) {
+					damage *= 2.0f;
+				}
+				if (GameStateManager::GetInstance()->GetIsFivePower()) {
+					damage *= 1.2f;
+				}
+			} else {
+				if (_charaState == STATE_ATTACK &&
+					!GameStateManager::GetInstance()->GetCounter()) {
+					GameStateManager::GetInstance()->SetCounter(true);
+				}
+
 			}
 			m_Damege = true;
 			m_DamageTimer = {};
@@ -203,9 +215,21 @@ void InterEnemy::SimpleDamege(float damage) {
 void InterEnemy::SimpleHeal(float heal)
 {
 	if (m_HP <= 0.0f) { return; }
-	m_HP += heal;
-	BirthHealParticle();
-	BirthHealNumber(heal);
+	
+	float l_HealNum = {};
+
+	if (m_HP != m_MaxHP) {
+		BirthHealParticle();
+
+		if (m_MaxHP - m_HP >= heal) {
+			l_HealNum = heal;
+		}
+		else {
+			l_HealNum = m_MaxHP - m_HP;
+		}
+		BirthHealNumber(l_HealNum);
+		m_HP += heal;
+	}
 }
 
 
@@ -413,4 +437,29 @@ void InterEnemy::DamageUpdate() {
 	else {
 		m_Color.w = 0.0f;
 	}
+}
+
+//死んだときの動き
+void InterEnemy::DeathUpdate() {
+	if (m_HP != 0.0f) { return; }
+
+	const float l_AddFrame = 0.005f;
+	float RotPower = 5.0f;
+	m_Color.w = 1.0f;
+
+	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
+		m_OverFrame = 1.0f;
+		m_Alive = false;
+	}
+	else {
+		RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);
+		m_Rotation.y += RotPower;
+		m_Position.y = Ease(In, Cubic, m_OverFrame, m_Position.y, 0.5f);
+
+		m_Scale = { Ease(In,Cubic,m_OverFrame,m_Scale.x,0.0f),
+			Ease(In,Cubic,m_OverFrame,m_Scale.y,0.0f),
+		Ease(In,Cubic,m_OverFrame,m_Scale.z,0.0f)};
+	}
+
+	Obj_SetParam();
 }

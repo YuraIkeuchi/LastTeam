@@ -32,6 +32,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	screen->SetSize({ 1280.f,720.f });
 
 	cheack = IKESprite::Create(ImageManager::MAP_CHEACK, { 640.f,360.f });
+	cheack->SetColor({1.2f,1.2f,1.2f,1});
 	cheack->SetSize({ 0.f,0.f });
 	cheack->SetAnchorPoint({ 0.5f,0.5f });
 
@@ -53,11 +54,18 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 		cheack_OK[i]->SetSize({ 0.f,0.f });
 		cheack_OK[i]->SetAnchorPoint({ 0.5f,0.5f });
+		cheack_OK[i]->SetColor({ 1.2f,1.2f,1.2f,1 });
 
 		cheack_NO[i]->SetSize({ 0.f,0.f });
 		cheack_NO[i]->SetAnchorPoint({ 0.5f,0.5f });
+		cheack_NO[i]->SetColor({ 1.2f,1.2f,1.2f,1 });
 	}
+	comment[0] = IKESprite::Create(ImageManager::MAPCOMMENT00, { 1260.f-512.f,600.f });
+	comment[1] = IKESprite::Create(ImageManager::MAPCOMMENT01, { 1260.f-512.f,600.f });
+	comment[2] = IKESprite::Create(ImageManager::MAPCOMMENT02, { 1260.f-512.f,600.f });
+	comment[3] = IKESprite::Create(ImageManager::MAPCOMMENT03, { 1260.f-512.f,600.f });
 
+	nowComment = 0;
 
 	UIs[0][Middle].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
 	UIs[0][Middle].pos = { homeX ,homeY[Middle] };
@@ -76,11 +84,6 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	}
 	MapCreate();
 
-	//テキスト
-	text_ = make_unique<TextManager>();
-	text_->Initialize(dxCommon);
-	text_->SetConversation(TextManager::MAP_01, { -300.0f,-80.0f });
-	//text_->SetConversation(TextManager::TITLE);
 
 	switch (dungeons[0]) {
 	case 1:
@@ -196,13 +199,13 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 	switch (UIs[pickHierarchy][pickIndex].Tag) {
 	case BATTLE:
-		text_->SetConversation(TextManager::MAP_BATTLE, { -300.0f,-80.0f });
-		break;
-	case BOSS:
-		text_->SetConversation(TextManager::MAP_BOSS, { -300.0f,-80.0f });
+		nowComment = 1;
 		break;
 	case PASSIVE:
-		text_->SetConversation(TextManager::MAP_PASSIVE, { -300.0f,-80.0f });
+		nowComment = 2;
+		break;
+	case BOSS:
+		nowComment = 3;
 		break;
 	default:
 		break;
@@ -248,6 +251,19 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	frame->SetSize(size);
 
 	onomatope->Update();
+	switch (UIs[pickHierarchy][pickIndex].Tag) {
+	case BATTLE:
+		nowComment = 1;
+		break;
+	case PASSIVE:
+		nowComment = 2;
+		break;
+	case BOSS:
+		nowComment = 3;
+		break;
+	default:
+		break;
+	}
 	(this->*stateTable[(size_t)m_State])();
 }
 
@@ -297,10 +313,8 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	}
 	onomatope->Draw();
 	IKESprite::PostDraw();
-
-	text_->TestDraw(dxCommon);
-
 	IKESprite::PreDraw();
+	comment[nowComment]->Draw();
 	cheack->Draw();
 	cheack_OK[1 - nowCheack]->Draw();
 	cheack_NO[nowCheack]->Draw();
@@ -529,10 +543,10 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	//ImGui::Begin("Map");
+	ImGui::Begin("Map");
 	//ImGui::Text("%f", framePos.x);
 	//ImGui::Text("%f", eFrame);
-	//ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
+	ImGui::Text("HIERARCHY:%d", UIs[pickHierarchy][pickIndex].Tag);
 	//ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
 	//ImGui::Text("PICKINDEX:%d", pickIndex);
 	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
@@ -541,7 +555,7 @@ void MapScene::ImGuiDraw() {
 	//for (int i = 0; i < 3; i++) {
 	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
 	//}
-	//ImGui::End();
+	ImGui::End();
 }
 
 void MapScene::BlackOut() {
@@ -603,20 +617,6 @@ void MapScene::Move() {
 		framePos = UIs[pickHierarchy][pickIndex].pos;
 
 		if (oldPickInd != pickIndex) {
-			wchar_t* sample = L" ふ";
-			switch (UIs[pickHierarchy][pickIndex].Tag) {
-			case BATTLE:
-				text_->SetConversation(TextManager::MAP_BATTLE, { -300.0f,-80.0f });
-				break;
-			case BOSS:
-				text_->SetConversation(TextManager::MAP_BOSS, { -300.0f,-80.0f });
-				break;
-			case PASSIVE:
-				text_->SetConversation(TextManager::MAP_PASSIVE, { -300.0f,-80.0f });
-				break;
-			default:
-				break;
-			}
 			oldPickHis = pickHierarchy;
 			oldPickInd = pickIndex;
 		}
