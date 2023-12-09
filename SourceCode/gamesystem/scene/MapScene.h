@@ -112,7 +112,7 @@ private:
 	float cAdd = 0.03f;
 
 	static bool isStart;
-	float startAlpha = 0.f;
+	float startAlpha =  XM_PI / 2.f;
 	unique_ptr<IKESprite> frame = nullptr;
 	unique_ptr<IKESprite> chara = nullptr;
 

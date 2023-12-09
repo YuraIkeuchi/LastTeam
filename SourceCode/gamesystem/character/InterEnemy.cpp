@@ -174,6 +174,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				}
 				if (GameStateManager::GetInstance()->GetIsFivePower()) {
 					damage *= 1.2f;
+					GameStateManager::GetInstance()->SetPassiveActive();
 				}
 			} else {
 				if (_charaState == STATE_ATTACK &&
@@ -191,7 +192,10 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 
 			if (name == "DRAIN") {
 				float rate = 0.2f;
-				if (m_IsDrainUp) { rate *= 2.f; }
+				if (m_IsDrainUp) {
+					rate *= 2.f; 
+					GameStateManager::GetInstance()->SetPassiveActive();
+				}
 				player->HealPlayer(damage * rate);		//HP回復
 			}
 			else if (name == "POISON") {
@@ -208,7 +212,10 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 }
 void InterEnemy::SimpleDamege(float damage) {
 	if (m_HP <= 0.0f) { return; }
-	m_HP -= damage;
+	float hp = m_HP;
+	hp -= damage;
+	Helper::Clamp(hp,1.0f,m_HP);
+	m_HP = hp;
 	BirthParticle();
 }
 
@@ -355,7 +362,10 @@ void InterEnemy::PoisonState() {
 	float damage = {};
 	if (!m_Poison) { return; }
 	int kTimerMax = 800;
-	if (m_PoisonLong) { kTimerMax *= 2; }
+	if (m_PoisonLong) { 
+		GameStateManager::GetInstance()->SetPassiveActive();
+		kTimerMax *= 2; 
+	}
 	m_PoisonTimer++;
 
 	if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
@@ -365,6 +375,7 @@ void InterEnemy::PoisonState() {
 		} else {
 			damage = 2.0f;
 			m_HP -= damage;
+			GameStateManager::GetInstance()->SetPassiveActive();
 		}
 		BirthDamage(damage);
 		BirthPoisonParticle();

@@ -84,7 +84,7 @@ private:
 	void RandPowerUpInit();
 	void PowerUpEffectUpdate();
 
-	
+	void PassiveActive();
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -133,6 +133,9 @@ public:
 	void DamageCheck(int Damage);
 	void TakenDamageCheck(int Damage);
 	bool GetIsFivePower() { return m_FivePower && (m_HandedCount % 5 == 0); }
+
+	void SetPassiveActive();
+	
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -171,6 +174,12 @@ private:
 	unique_ptr<IKESprite> skillUI = nullptr;
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 	unique_ptr<IKESprite> gaugeCover = nullptr;
+	unique_ptr<IKESprite> passiveActive = nullptr;
+	bool isPassive = false;
+	float passiveFrame = 0.f;
+	float passiveAlpha = 1.0f;
+	float passiveAlphaFrame = 0.0f;
+
 	std::unique_ptr<IKESprite> handsFrame;
 
 	XMFLOAT2 basesize = { 46.f,400.f };

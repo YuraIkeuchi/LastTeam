@@ -35,6 +35,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(MAP_CHEACK_OK, L"Resources/2d/objicon/Map/T_OK.png");
 	IKESprite::LoadTexture(MAP_CHEACK_NO, L"Resources/2d/objicon/Map/T_Cancel.png");
 	IKESprite::LoadTexture(TUTORIAL_SKIPUI, L"Resources/2d/objicon/SKIP.png");
+	IKESprite::LoadTexture(PASSIVE_ACTIVE, L"Resources/2d/objicon/Passive/Passive_Active.png");
 	IKESprite::LoadTexture(PASSIVE_01, L"Resources/2d/objicon/Passive/Passive_01.png");
 	IKESprite::LoadTexture(PASSIVE_02, L"Resources/2d/objicon/Passive/Passive_02.png");
 	IKESprite::LoadTexture(PASSIVE_03, L"Resources/2d/objicon/Passive/Passive_03.png");
