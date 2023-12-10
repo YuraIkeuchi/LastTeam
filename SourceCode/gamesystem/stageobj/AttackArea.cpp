@@ -81,7 +81,7 @@ void AttackArea::Move() {
 	if (m_Timer > m_BirthTimer) { return; }
 	m_AddPower -= m_Gravity;
 	if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
-		//m_Alive = false;
+		m_Alive = false;
 		GameStateManager::GetInstance()->SetBuff(false);
 	}
 }
