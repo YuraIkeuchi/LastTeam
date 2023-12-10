@@ -180,6 +180,7 @@
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\BaseEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\BossEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\BossEnemy2.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\CreateBombEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
@@ -322,6 +323,7 @@
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
     <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\BossEnemy.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\BossEnemy2.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CreateBombEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
