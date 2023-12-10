@@ -49,15 +49,16 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveSentence(L"ドレイン威力が上がるぞ");
 	CreatePassiveSentence(L"リロードしたらたまに攻撃だ");
 	CreatePassiveSentence(L"5の倍数で威力アップ");
+	CreatePassiveSentence(L"ダメージをうけるたび、威力+0.2");
 
 	CreateSkillSentence(L"ドドドな近距離攻撃");
 	CreateSkillDamage(L"威力:15（大）");
 	CreateSkillSentence(L"ドゴンな近中距離攻撃");
 	CreateSkillDamage(L"威力:8（中）");
 	CreateSkillSentence(L"バコン!な一列攻撃");
-	CreateSkillDamage(L"威力:5（少）");
+	CreateSkillDamage(L"威力:5（小）");
 	CreateSkillSentence(L"ザクッな近距離攻撃");
-	CreateSkillDamage(L"威力:5（少）");
+	CreateSkillDamage(L"威力:5（小）");
 	CreateSkillSentence(L"少し強い近中距離攻撃");
 	CreateSkillDamage(L"威力:10（中）");
 	CreateSkillSentence(L"少し強い中遠距離攻撃");
@@ -65,12 +66,12 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillSentence(L"ドドドな遠距離攻撃");
 	CreateSkillDamage(L"威力:15（大）");
 	CreateSkillSentence(L"イヤーナ毒攻撃だ");
-	CreateSkillDamage(L"威力:3（少）");
+	CreateSkillDamage(L"威力:3（小）");
 	CreateSkillSentence(L"回復できる攻撃だ");
 	CreateSkillDamage(L"威力:9（中）");
 	CreateSkillSentence(L"次の攻撃を強く!");
-	CreateSkillDamage(L"威力:次のスキル2倍");
-	CreateSkillSentence(L"！");
+	CreateSkillDamage(L"威力:0(次のスキル2倍)");
+	CreateSkillSentence(L"最大の火力を再現！");
 	CreateSkillDamage(L"威力:バトル中の最大威力(固定)");
 
 	//ラスボス

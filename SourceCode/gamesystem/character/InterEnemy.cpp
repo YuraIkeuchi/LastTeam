@@ -176,6 +176,13 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					damage *= 1.2f;
 					GameStateManager::GetInstance()->SetPassiveActive();
 				}
+				if (GameStateManager::GetInstance()->GetTakenDamageUp()) {
+					float up = (float)GameStateManager::GetInstance()->GetTakenDamageNum() * 0.2f;
+					if (up >= 1.0f) {
+						damage += up;
+						GameStateManager::GetInstance()->SetPassiveActive();
+					}
+				}
 			} else {
 				if (_charaState == STATE_ATTACK &&
 					!GameStateManager::GetInstance()->GetCounter()) {

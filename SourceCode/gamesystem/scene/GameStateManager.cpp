@@ -476,6 +476,9 @@ void GameStateManager::PassiveCheck() {
 		case Passive::ABILITY::FIVE_POWER:
 			m_FivePower = true;
 			break;
+		case Passive::ABILITY::TAKENDAMAGEUP:
+			m_TakenDamageUp = true;
+			break;
 		default:
 			assert(0);
 			break;
@@ -656,6 +659,8 @@ void GameStateManager::DamageCheck(int Damage) {
 
 void GameStateManager::TakenDamageCheck(int Damage) {
 	m_MaxTakenDamage += Damage;
+	//受けた回数
+	m_TakenDamageNum++;
 	resultReport->SetTakenDamage(m_MaxTakenDamage);
 }
 void GameStateManager::SetPassiveActive(){ 
