@@ -19,6 +19,7 @@ public:
 		DRAIN_HEALUP,
 		RELOAD_DAMAGE,
 		FIVE_POWER,
+		TAKENDAMAGEUP,
 		MAX_ABILITY
 	};
 	Passive(int id, XMFLOAT2 pos = { 0.f,0.f }, XMFLOAT2 size = {64.f,64.f});
