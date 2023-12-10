@@ -17,7 +17,7 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	backScreen->SetSize({ 1280.f,720.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
-	selectFrame->SetPosition(framePos);
+	selectFrame->SetPosition(BasePos[2]);
 	skillCheack = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 1280.f,720.f });
 	skillCheack->SetAnchorPoint({ 1.f,1.f });
 	dxcommon = dxCommon;
@@ -41,7 +41,7 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 			resultUI.icon->Draw();
 		}
 		for (ResultUI& itr : choiceSkills) {
-			if (itr.no == nowFrame) {
+			if (itr.no == 2) {
 				itr.text_->TestDraw(dxCommon);
 				if (!itr.isSkill) { continue; }
 				for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
@@ -58,11 +58,6 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 }
 void ResultSkill::ImGuiDraw() {
-	ImGui::Begin("Result");
-	ImGui::Text("Frame:%d", nowFrame);
-	ImGui::Text("OldFrame:%d", oldFrame);
-	ImGui::Text("PosX:%f", framePos.x);
-	ImGui::End();
 }
 void ResultSkill::InDeck(std::vector<int>& Deck) {
 	std::vector<int> itr = Deck;
@@ -106,32 +101,24 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 	std::shuffle(noDeck.begin(), noDeck.end(), engine);
 	std::shuffle(noPassive.begin(), noPassive.end(), engine);
 
-
-	//スキル
-	ResultUI resultUI = CreateUI(true, noDeck[0], BasePos[nowPos]);
-	choiceSkills.push_back(std::move(resultUI));
 	if (isBattle) {
-		ResultUI resultUI = CreateUI(true, noDeck[1], BasePos[nowPos]);
+		for (int i = 0; i < 4; i++) {
+			ResultUI resultUI = CreateUI(true, noDeck[i], BasePos[nowPos]);
+			choiceSkills.push_back(std::move(resultUI));
+		}
+		//パッシブ
+		ResultUI passiveUI = CreateUI(false, noPassive[0], BasePos[nowPos]);
+		choiceSkills.push_back(std::move(passiveUI));
+	} else {
+		for (int i = 0; i < 4; i++) {
+			ResultUI passiveUI = CreateUI(false, noPassive[i], BasePos[nowPos]);
+			choiceSkills.push_back(std::move(passiveUI));
+		}
+		//スキル
+		ResultUI resultUI = CreateUI(true, noDeck[0], BasePos[nowPos]);
 		choiceSkills.push_back(std::move(resultUI));
 	}
-	//パッシブ
-	ResultUI passiveUI = CreateUI(false, noPassive[0], BasePos[nowPos]);
-	choiceSkills.push_back(std::move(passiveUI));
-	if (!isBattle) {
-		ResultUI passiveUI = CreateUI(false, noPassive[1], BasePos[nowPos]);
-		choiceSkills.push_back(std::move(passiveUI));
-	}
-	/*if (noDeck.size() < noPassive.size()) {
-		if (noPassive.size() > 1) {
-			ResultUI passiveUI2 = CreateUI(false, noPassive[1], BasePos[nowPos]);
-			choiceSkills.push_back(std::move(passiveUI2));
-		}
-	} else {
-		if (noDeck.size() > 1) {
-			ResultUI passiveUI3 = CreateUI(true, noDeck[1], BasePos[nowPos]);
-			choiceSkills.push_back(std::move(passiveUI3));
-		}
-	}*/
+
 	for (int i = 0; i < 5; i++) {
 		RandShineInit();
 	}
@@ -148,13 +135,26 @@ void ResultSkill::Move() {
 		static float addFrame = 1.f / 15.f;
 
 		if (Helper::FrameCheck(frame, addFrame)) {
-			oldFrame = nowFrame;
 			isMove = false;
-			
 			frame = 0.f;
+			for (ResultUI& itr : choiceSkills) {
+				itr.oldNo = itr.no;
+			}
 		} else {
-			framePos.x = Ease(InOut, Circ, frame, BasePos[oldFrame].x, BasePos[nowFrame].x);
-			selectFrame->SetPosition(framePos);
+			for (ResultUI& itr : choiceSkills) {
+				if ((itr.no == 2 && itr.oldNo == 1) || (itr.no == 2 && itr.oldNo == 3)) {
+					itr.size.x = Ease(In, Quad, 0.5f, itr.size.x, 128.f);
+					itr.size.y = Ease(In, Quad, 0.5f, itr.size.y, 128.f);
+				}
+				if ((itr.no == 3 && itr.oldNo == 2) || (itr.no == 1 && itr.oldNo == 2)) {
+					itr.size.x = Ease(In, Quad, 0.5f, itr.size.x, 128.f * 0.5f);
+					itr.size.y = Ease(In, Quad, 0.5f, itr.size.y, 128.f * 0.5f);
+				}
+
+				itr.position.x = Ease(Out, Quad, frame, BasePos[itr.oldNo].x, BasePos[itr.no].x);
+				itr.icon->SetPosition(itr.position);
+				itr.icon->SetSize(itr.size);
+			}
 		}
 	}
 
@@ -168,20 +168,28 @@ void ResultSkill::Move() {
 		if (input->TiltPushStick(input->L_RIGHT) ||
 			input->TriggerKey(DIK_D) ||
 			input->PushButton(input->RIGHT)) {
-			if (nowFrame == 2) { return; }
-			nowFrame++;
+			for (ResultUI& itr : choiceSkills) {
+				itr.no++;
+				if (itr.no == 5) {
+					itr.no = 0;
+				}
+			}
 		} else {
-			if (nowFrame == 0) { return; }
-			nowFrame--;
+			for (ResultUI& itr : choiceSkills) {
+				itr.no--;
+				if (itr.no == -1) {
+					itr.no = 4;
+				}
+			}
 		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		isMove = true;
 	}
 	if ((input->TriggerButton(Input::B) ||
-		input->TriggerKey(DIK_SPACE))&&
+		input->TriggerKey(DIK_SPACE)) &&
 		!isMove) {
 		for (ResultUI& itr : choiceSkills) {
-			if (itr.no == nowFrame) {
+			if (itr.no == 2) {
 				ResultUI n = CreateUI(itr.isSkill, itr.ID, itr.position);
 				pickSkills.push_back(std::move(n));
 			}
@@ -242,9 +250,15 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 		resultUI.sentence[2] = L" ";
 	}
 	resultUI.icon->SetAnchorPoint({ 0.5f,0.5f });
-	resultUI.icon->SetSize({ 128.f,128.f });
 	resultUI.icon->SetPosition(resultUI.position);
 	resultUI.no = nowPos;
+	if (resultUI.no == 2) {
+		resultUI.size = { 128.f,128.f };
+	} else {
+		resultUI.size = { 128.f * 0.5f ,128.f * 0.5f };
+	}
+	resultUI.icon->SetSize(resultUI.size);
+	resultUI.oldNo = resultUI.no;
 	resultUI.text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
 	resultUI.text_->SetCreateSentence(resultUI.sentence[0], resultUI.sentence[1], resultUI.sentence[2]);
 

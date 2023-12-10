@@ -36,6 +36,7 @@ private:
 		XMFLOAT2 position = { 640.f,320.f };
 		XMFLOAT2 size = { 128.f,128.f };
 		int no = -1;
+		int oldNo = -1;
 		int ID = -1;
 		bool isSkill = true;
 		list<std::unique_ptr<ResultAreaUI>> resultarea;
@@ -72,11 +73,9 @@ private:
 	std::unique_ptr<IKESprite> selectFrame;
 	std::list<ResultUI> choiceSkills;
 	int nowPos = 0;
-	XMFLOAT2 BasePos[3] = { {320.f,240.0f},{640.f,240.f},{960.f,240.f} };
+	XMFLOAT2 BasePos[5] = { {200.f,240.f}, {420.f,240.0f},{640.f,240.f},{860.f,240.f},{1080.f,240.f} };
 	bool isMove = false;
-	int nowFrame = 0;
-	int oldFrame = 0;
-	XMFLOAT2 framePos = BasePos[0];
+	XMFLOAT2 framePos = BasePos[2];
 	std::list<ResultUI> pickSkills;
 	std::list<ShineEffect> shines;
 	bool m_Choice = false;
