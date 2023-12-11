@@ -450,7 +450,7 @@
       <Filter>gamesystem\effect</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp" />
-    <ClCompile Include="FrontEnemy.cpp">
+    <ClCompile Include="SourceCode\gamesystem\character\FrontEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
   </ItemGroup>
@@ -872,7 +872,7 @@
     <ClInclude Include="SourceCode\gamesystem\skill\ResultReport.h">
       <Filter>gamesystem\skill</Filter>
     </ClInclude>
-    <ClInclude Include="FrontEnemy.h">
+    <ClInclude Include="SourceCode\gamesystem\character\FrontEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
   </ItemGroup>

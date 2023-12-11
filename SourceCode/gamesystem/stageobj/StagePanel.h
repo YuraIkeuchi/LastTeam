@@ -74,6 +74,8 @@ public:
 	void SetPanelSearch(IKEObject3d* obj, int& width, int& height);
 	//敵の配置(かぶらないように)
 	XMFLOAT3 EnemySetPanel(const bool LastEnemy);
+	//敵の配置(プレイヤーの前に来るやつ)
+	XMFLOAT3 FrontPlayerSetPanel();
 	//毒の配置(かぶらないように)
 	void PoisonSetPanel(int& width, int& height);
 	//アクションの全削除

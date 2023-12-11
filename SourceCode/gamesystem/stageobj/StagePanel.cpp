@@ -375,6 +375,9 @@ XMFLOAT3 StagePanel::EnemySetPanel(const bool LastEnemy) {
 
 	return SetPositon(width, height);
 }
+XMFLOAT3 StagePanel::FrontPlayerSetPanel() {
+	return SetPositon(player->GetNowWidth() + 1, player->GetNowHeight());		//プレイヤーの正面
+}
 void StagePanel::PoisonSetPanel(int& width, int& height) {
 	bool isSet = false;
 	//乱数の設定

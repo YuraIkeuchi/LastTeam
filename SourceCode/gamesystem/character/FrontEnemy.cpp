@@ -42,11 +42,6 @@ bool FrontEnemy::Initialize() {
 	m_Limit.resize(LimitSize);
 	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/FrontEnemy.csv", m_Limit, "Interval");
 
-	auto AttackLimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/FrontEnemy.csv", "ATTACK_LIMIT_NUM")));
-
-	m_AttackLimit.resize(AttackLimitSize);
-	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/FrontEnemy.csv", m_AttackLimit, "Attack_Interval");
-
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -60,6 +55,7 @@ bool FrontEnemy::Initialize() {
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.5f;
 	m_AddDisolve = 2.0f;
+	_AttackState = ATTACK_WARP;
 	return true;
 }
 //状態遷移
@@ -104,12 +100,6 @@ void FrontEnemy::Action() {
 		}
 	}
 
-
-	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
-	/*shadow_tex->SetPosition(m_ShadowPos);
-	shadow_tex->SetScale(m_ShadowScale);
-	shadow_tex->Update();*/
-
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
@@ -135,6 +125,7 @@ void FrontEnemy::Draw(DirectXCommon* dxCommon) {
 void FrontEnemy::ImGui_Origin() {
 	ImGui::Begin("Area");
 	ImGui::Text("AttackCount:%d", m_AttackCount);
+	ImGui::Text("State:%d", (int)_charaState);
 	ImGui::Text("cool:%d", coolTimer);
 	ImGui::End();
 	predictarea->ImGuiDraw();
@@ -150,14 +141,12 @@ void FrontEnemy::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = Helper::GetRanNum(0, 2);
-		_AttackState = (AttackState)(l_RandState);
+		_AttackState = ATTACK_WARP;
 	}
 }
 //攻撃
 void FrontEnemy::Attack() {
 	(this->*attackTable[_AttackState])();
-	PlayerCollide();
 	predictarea->Update();
 	predictarea->SetTimer(coolTimer);
 }
@@ -166,51 +155,30 @@ void FrontEnemy::Attack() {
 void FrontEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
-	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
+	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer,1)) {
 		magic.Alive = true;
-	}
-
-	if (m_Warp) {
-		WarpEnemy();
-	}
-}
-//攻撃エリア
-void FrontEnemy::BirthArea(const int Width, const int Height, const string& name) {
-	if (name == "Row") {			//横一列
-		for (auto i = 0; i < m_Area.size(); i++) {
-			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
-				newarea->Initialize();
-				newarea->InitState(i, Height);
-				newarea->SetPlayer(player);
-				enethorn.emplace_back(std::move(newarea));
-			}
+		if (m_Warp) {
+			WarpEnemy(false);
 		}
 	}
-	else {		//ランダム(プレイヤーから近います)
-		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
-		newarea->Initialize();
-		newarea->InitState(Width, Height);
-		newarea->SetPlayer(player);
-		enethorn.emplace_back(std::move(newarea));
-	}
+
+	
+}
+//攻撃エリア
+void FrontEnemy::BirthArea(const int Width, const int Height) {
+	std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
+	newarea->Initialize();
+	newarea->InitState(Width, Height);
+	newarea->SetPlayer(player);
+	enethorn.emplace_back(std::move(newarea));
 	predictarea->ResetPredict();
 
 }
 //予測エリア
-void FrontEnemy::BirthPredict(const int Width, const int Height, const string& name) {
-	if (name == "Row") {			//横一列
-		for (auto i = 0; i < m_Area.size(); i++) {
-			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				predictarea->SetPredict(i, Height, true);
-			}
-		}
-	}
-	else {//ランダム(プレイヤーから近います)
-		predictarea->SetPredict(Width, Height, true);
-	}
+void FrontEnemy::BirthPredict(const int Width, const int Height) {
+	predictarea->SetPredict(Width, Height, true);
 	predictarea->SetFlashStart(true);
 }
 
@@ -243,17 +211,25 @@ void FrontEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 }
-void FrontEnemy::WarpEnemy() {
+void FrontEnemy::WarpEnemy(bool Attack) {
 	XMFLOAT3 l_RandPos = {};
-	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy);
+	if (!Attack) {
+		l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy);
+	}
+	else {
+		l_RandPos = StagePanel::GetInstance()->FrontPlayerSetPanel();
+	}
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.5f;
 			enemywarp.State = WARP_END;
-			coolTimer = {};
 			m_Position = l_RandPos;
+			if (Attack) {
+				m_AttackWidth = player->GetNowWidth();
+				m_AttackHeight = player->GetNowHeight();
+			}
 			m_RotFrame = {};
 			m_Rotation.y = 270.0f;
 			StagePanel::GetInstance()->EnemyHitReset();
@@ -265,8 +241,15 @@ void FrontEnemy::WarpEnemy() {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
 			m_Warp = false;
-			_charaState = STATE_INTER;
+			if (Attack) {
+				_AttackState = ATTACK_FRONT;
+			}
+			else {
+
+				_charaState = STATE_INTER;
+			}
 			enemywarp.State = WARP_START;
+			coolTimer = {};
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
@@ -287,9 +270,30 @@ void FrontEnemy::AttackMove() {
 }
 //プレイヤーの前に移動
 void FrontEnemy::FrontPlayerWarp() {
-
+	magic.Alive = true;
+	if (m_Warp) {
+		WarpEnemy(true);
+	}
 }
 //正面に攻撃
 void FrontEnemy::FrontAttack() {
-
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_ATTACK];
+	if (m_AttackCount != 1) {
+		if (coolTimer == 0) {		//予測エリア
+			BirthPredict(m_AttackWidth,m_AttackHeight);
+		}
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//実際の攻撃
+			m_Jump = true;
+			m_AddPower = 0.2f;
+			m_Rot = true;
+			BirthArea(m_AttackWidth, m_AttackHeight);
+			coolTimer = {};
+			StagePanel::GetInstance()->EnemyHitReset();
+			m_CheckPanel = true;
+			m_AttackCount = {};
+			_charaState = STATE_SPECIAL;
+		}
+		predictarea->SetTargetTimer(l_TargetTimer);
+	}
 }

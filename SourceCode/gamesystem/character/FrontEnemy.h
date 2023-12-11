@@ -21,8 +21,7 @@ private:
 	void Inter();//待機
 	void Attack();//攻撃
 	void Teleport();//移動
-	void PlayerCollide();
-	void WarpEnemy();//敵のワープ処理
+	void WarpEnemy(bool Attack);//敵のワープ処理
 	void AttackMove();//攻撃時の動き
 
 	//こっからは攻撃時のステート
@@ -30,25 +29,18 @@ private:
 	void FrontAttack();//攻撃
 //魔法陣
 	void BirthMagic();
-	void BirthArea(const int Width, const int Height, const string& name);//攻撃エリア
-	void BirthPredict(const int Width, const int Height, const string& name);//予測エリア
+	void BirthArea(const int Width, const int Height);//攻撃エリア
+	void BirthPredict(const int Width, const int Height);//予測エリア
 private:
 	static const int BULLET_NUM = 5;
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
 	
-	enum BossType {
-		Boss_SET,
-		Boss_THROW,
-		Boss_END,
-	}_BossType = Boss_SET;
-
 	enum AttackState {
-		ATTACK_BULLET,
-		ATTACK_ROW,
-		ATTACK_RANDOM,
-	}_AttackState = ATTACK_RANDOM;
+		ATTACK_WARP,
+		ATTACK_FRONT
+	}_AttackState = ATTACK_WARP;
 	std::vector<std::vector<int>> m_Area = {};
 	// 攻撃エリア
 	std::vector<unique_ptr<EnemyThorn>> enethorn;
@@ -99,5 +91,8 @@ private:
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};
+
+	int m_AttackWidth = {};
+	int m_AttackHeight = {};
 };
 
