@@ -13,7 +13,7 @@
 ThrowEnemy::ThrowEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::CANNON));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::THROW));
 	m_Object->SetLightEffect(false);
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
@@ -33,7 +33,7 @@ ThrowEnemy::ThrowEnemy() {
 bool ThrowEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Scale = { 0.6f,0.6f,0.6f };
+	m_Scale = { 0.6f,0.4f,0.6f };
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ThrowEnemy.csv", "LIMIT_NUM")));
 
 	m_Limit.resize(LimitSize);
@@ -94,6 +94,8 @@ void ThrowEnemy::Action() {
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+
+	m_Rotation.y += 2.0f;
 }
 
 //ï`âÊ
@@ -176,7 +178,7 @@ void ThrowEnemy::BirthBullet() {
 	unique_ptr<Boomerang> newbullet = make_unique<Boomerang>();
 	newbullet->Initialize();
 	newbullet->SetPlayer(player);
-	newbullet->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 	bullets.emplace_back(std::move(newbullet));
 }
 //ñÇñ@êwê∂ê¨

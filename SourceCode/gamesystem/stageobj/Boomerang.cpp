@@ -8,7 +8,7 @@
 #include "GameStateManager.h"
 
 Boomerang::Boomerang() {
-	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BULLET);
+	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BOOMERAN);
 	m_Object = make_unique<IKEObject3d>();
 	m_Object->Initialize();
 	m_Object->SetModel(m_Model);
@@ -31,7 +31,7 @@ bool Boomerang::Initialize() {
 	m_Rotation.y = 270.0f;
 	m_Scale = { 0.0f,0.0f,0.0f };
 	m_BaseScale = {};
-	m_Color = { 0.6f,0.1f,0.1f,1.0f };
+	m_Color = { 1.0f,1.0f,1.0f,1.0f };
 	m_AddSpeed = 1.0f;
 	m_Alive = true;
 	m_ThrowType = THROW_SET;
@@ -56,6 +56,8 @@ void Boomerang::Update() {
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor({ 1.0f,0.3f,0.0f,1.0f });
 	panels.tex->Update();
+
+	m_Rotation.y += 20.0f;
 }
 //ï`âÊ
 void Boomerang::Draw(DirectXCommon* dxCommon) {
@@ -101,7 +103,7 @@ void Boomerang::Throw() {
 			m_TargetPos = { -6.0f,m_Position.y,m_Position.z };
 		}
 
-		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.1f);
+		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.3f);
 	}
 	//é¿ç€Ç…ë_Ç¡ÇøÇ·Ç§
 	else {
