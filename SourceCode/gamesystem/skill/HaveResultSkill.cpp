@@ -169,7 +169,6 @@ void HaveResultSkill::Move() {
 }
 //エリアの生成
 void HaveResultSkill::BirthArea(const int Area) {
-	
 	for (auto i = 0; i < haveSkills[Area].area.size(); i++) {
 		for (auto j = 0; j < haveSkills[Area].area.size(); j++) {		
 			if (haveSkills[Area].area[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する

@@ -1,13 +1,12 @@
 #pragma once
 #include"InterEnemy.h"
-#include "EnemyBullet.h"
 #include "EnemyThorn.h"
 
 using namespace std;         //  名前空間指定
 //普通の敵
-class BossEnemy :public InterEnemy {
+class FrontEnemy :public InterEnemy {
 public:
-	BossEnemy();
+	FrontEnemy();
 	bool Initialize() override;//初期化
 	void Finalize() override;//開放
 	void Action()override;//更新
@@ -16,35 +15,29 @@ public:
 	void Draw(DirectXCommon* dxCommon) override;//描画
 private:
 	//関数ポインタ
-	static void(BossEnemy::* stateTable[])();
-	static void(BossEnemy::* attackTable[])();
+	static void(FrontEnemy::* stateTable[])();
+	static void(FrontEnemy::* attackTable[])();
 private:
 	void Inter();//待機
 	void Attack();//攻撃
 	void Teleport();//移動
-	void BulletAttack();//弾の攻撃
-	void RowAttack();
-	void RandomAttack();
-	void BirthBullet();//
-	void BirthArea(const int Width,const int Height,const string& name);//攻撃エリア
-	void BirthPredict(const int Width,const int Height,const string& name);//予測エリア
-
-	//スキルのCSVを読み取る
-	void LoadCsvSkill(std::string& FileName, const int id);
-	//CSVを作成
-	bool CreateSkill(int id);
 	void PlayerCollide();
 	void WarpEnemy();//敵のワープ処理
 	void AttackMove();//攻撃時の動き
+
+	//こっからは攻撃時のステート
+	void FrontPlayerWarp();//プレイヤーの前
+	void FrontAttack();//攻撃
 //魔法陣
 	void BirthMagic();
+	void BirthArea(const int Width, const int Height, const string& name);//攻撃エリア
+	void BirthPredict(const int Width, const int Height, const string& name);//予測エリア
 private:
 	static const int BULLET_NUM = 5;
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
-	vector<unique_ptr<EnemyBullet>> bullets;//ポルターガイスト
-
+	
 	enum BossType {
 		Boss_SET,
 		Boss_THROW,
@@ -59,7 +52,7 @@ private:
 	std::vector<std::vector<int>> m_Area = {};
 	// 攻撃エリア
 	std::vector<unique_ptr<EnemyThorn>> enethorn;
-	
+
 
 	int m_RandWigth = {};
 	int m_RandHeight = {};
@@ -101,7 +94,6 @@ private:
 	vector<int>m_Limit;
 	//攻撃のインターバルとか
 	vector<int>m_AttackLimit;
-	int m_BulletNum = {};
 
 	float m_RotFrame = {};
 	int m_ShotDir = {};
