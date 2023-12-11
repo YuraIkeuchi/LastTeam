@@ -247,19 +247,8 @@ void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("ScaleX:%f", m_BaseScale);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
-	ImGui::SliderFloat("Disolve", &m_AddDisolve, 0, 2);
-	if (ImGui::Button("MOVE_NONE", ImVec2(100, 100)))
-	{
-		_MoveType = MOVE_NONE;
-	}
-	if (ImGui::Button("MOVE_EASE", ImVec2(100, 100)))
-	{
-		_MoveType = MOVE_EASE;
-	}
-	if (ImGui::Button("MOVE_DISOLVE", ImVec2(100, 100)))
-	{
-		_MoveType = MOVE_DISOLVE;
-	}
+	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::End();
 }
 //移動
@@ -538,7 +527,6 @@ void Player::Move() {
 
 	m_Scale = { m_BaseScale,m_BaseScale ,m_BaseScale };
 }
-
 bool Player::MoveButtonKey() {
 	if (input->PushButton(input->UP) ||
 		input->PushButton(input->DOWN) ||
@@ -558,7 +546,6 @@ bool Player::MoveButtonKey() {
 		return false;
 	}
 }
-
 bool Player::UpButtonKey() {
 	if (input->PushButton(input->UP) || input->TiltPushStick(input->L_UP) || input->Pushkey(DIK_W)) {
 		return true;
@@ -566,7 +553,6 @@ bool Player::UpButtonKey() {
 		return false;
 	}
 }
-
 bool Player::DownButtonKey() {
 	if (input->PushButton(input->DOWN) || input->TiltPushStick(input->L_DOWN) || input->Pushkey(DIK_S)) {
 		return true;
@@ -574,7 +560,6 @@ bool Player::DownButtonKey() {
 		return false;
 	}
 }
-
 bool Player::RightButtonKey() {
 	if (input->PushButton(input->RIGHT) || input->TiltPushStick(input->L_RIGHT) || input->Pushkey(DIK_D)) {
 		return true;
@@ -582,7 +567,6 @@ bool Player::RightButtonKey() {
 		return false;
 	}
 }
-
 bool Player::LeftButtonKey() {
 	if (input->PushButton(input->LEFT) || input->TiltPushStick(input->L_LEFT) || input->Pushkey(DIK_A)) {
 		return true;
@@ -590,7 +574,6 @@ bool Player::LeftButtonKey() {
 		return false;
 	}
 }
-
 void Player::BirthParticle() {
 }
 //HPの割合

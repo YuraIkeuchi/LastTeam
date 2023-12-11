@@ -215,7 +215,6 @@ void BossEnemy::BirthBullet() {
 	newbullet->Initialize();
 	newbullet->SetPlayer(player);
 	newbullet->SetShotDir(m_ShotDir);
-	newbullet->SetPolterType(TYPE_FOLLOW);
 	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.8f,m_Position.z });
 	bullets.emplace_back(newbullet);
 }

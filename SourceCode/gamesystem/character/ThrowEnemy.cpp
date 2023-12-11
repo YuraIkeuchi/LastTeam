@@ -1,4 +1,4 @@
-ï»¿#include "CanonEnemy.h"
+#include "ThrowEnemy.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -9,11 +9,11 @@
 #include <GameStateManager.h>
 #include <StagePanel.h>
 
-//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
-CanonEnemy::CanonEnemy() {
+//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+ThrowEnemy::ThrowEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::CANNON));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::THROW));
 	m_Object->SetLightEffect(false);
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
@@ -28,25 +28,18 @@ CanonEnemy::CanonEnemy() {
 		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 	}
-
-	//shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
-	//shadow_tex->TextureCreate();
-	//shadow_tex->Initialize();
-	//shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
-
 }
-//åˆæœŸåŒ–
-bool CanonEnemy::Initialize() {
+//‰Šú‰»
+bool ThrowEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Scale = { 0.6f,0.6f,0.6f };
-	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "LIMIT_NUM")));
+	m_Scale = { 0.6f,0.4f,0.6f };
+	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ThrowEnemy.csv", "LIMIT_NUM")));
 
 	m_Limit.resize(LimitSize);
-	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/CanonEnemy.csv", m_Limit, "Interval");
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/ThrowEnemy.csv", m_Limit, "Interval");
 
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "hp")));
-	m_BulletNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "BULLET_NUM")));
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ThrowEnemy.csv", "hp")));
 
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
@@ -65,29 +58,29 @@ bool CanonEnemy::Initialize() {
 	return true;
 }
 
-void (CanonEnemy::* CanonEnemy::stateTable[])() = {
-	&CanonEnemy::Inter,//å‹•ãã®åˆé–“
-	&CanonEnemy::Attack,//å‹•ãã®åˆé–“
-	&CanonEnemy::Teleport,//ç¬é–“ç§»å‹•
+void (ThrowEnemy::* ThrowEnemy::stateTable[])() = {
+	&ThrowEnemy::Inter,//“®‚«‚Ì‡ŠÔ
+	&ThrowEnemy::Attack,//“®‚«‚Ì‡ŠÔ
+	&ThrowEnemy::Teleport,//uŠÔˆÚ“®
 };
 
-//è¡Œå‹•
-void CanonEnemy::Action() {
+//s“®
+void ThrowEnemy::Action() {
 	(this->*stateTable[_charaState])();
 	Obj_SetParam();
-	//å½“ãŸã‚Šåˆ¤å®š
+	//“–‚½‚è”»’è
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
-	Collide(_AttackArea);		//å½“ãŸã‚Šåˆ¤å®š
-	PoisonState();//æ¯’
-	BirthMagic();//é­”æ³•é™£
-	//æ•µã®å¼¾
-	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
+	Collide(_AttackArea);		//“–‚½‚è”»’è
+	PoisonState();//“Å
+	BirthMagic();//–‚–@w
+	//“G‚Ì’e
+	for (unique_ptr<Boomerang>& newbullet : bullets) {
 		if (newbullet != nullptr) {
 			newbullet->Update();
 		}
 	}
 
-	//éšœå®³ç‰©ã®å‰Šé™¤
+	//áŠQ•¨‚Ìíœ
 	for (int i = 0; i < bullets.size(); i++) {
 		if (bullets[i] == nullptr) {
 			continue;
@@ -98,30 +91,22 @@ void CanonEnemy::Action() {
 		}
 	}
 
-	//å¼¾ãŒãªããªã£ãŸã‚‰æ­»äº¡(å¾Œã§è©±ã—åˆã†)
-	//if (!m_Alive && bullets.empty()) {
-	//	m_Death = true;
-	//}
-
-	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
-	//shadow_tex->SetPosition(m_ShadowPos);
-	//shadow_tex->SetScale(m_ShadowScale);
-	//shadow_tex->Update();
-
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+
+	m_Rotation.y += 2.0f;
 }
 
-//æç”»
-void CanonEnemy::Draw(DirectXCommon* dxCommon) {
+//•`‰æ
+void ThrowEnemy::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
 	IKETexture::PostDraw();
-	//æ•µã®å¼¾
-	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
+	//“G‚Ì’e
+	for (unique_ptr<Boomerang>& newbullet : bullets) {
 		if (newbullet != nullptr) {
 			newbullet->Draw(dxCommon);
 		}
@@ -129,25 +114,25 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
 }
-//ImGuiæç”»
-void CanonEnemy::ImGui_Origin() {
-	//æ•µã®å¼¾
+//ImGui•`‰æ
+void ThrowEnemy::ImGui_Origin() {
+	//“G‚Ì’e
 	/*for (unique_ptr<EnemyBullet>& newbullet : bullets) {
 		if (newbullet != nullptr) {
 			newbullet->ImGuiDraw();
 		}
 	}*/
-	ImGui::Begin("Canon");
+	ImGui::Begin("Throw");
 	ImGui::Text("Height:%d", m_NowHeight);
 	ImGui::Text("ShotDir:%d", m_ShotDir);
 	ImGui::End();
 }
-//é–‹æ”¾
-void CanonEnemy::Finalize() {
+//ŠJ•ú
+void ThrowEnemy::Finalize() {
 
 }
-//å¾…æ©Ÿ
-void CanonEnemy::Inter() {
+//‘Ò‹@
+void ThrowEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
 	coolTimer++;
@@ -157,71 +142,28 @@ void CanonEnemy::Inter() {
 		_charaState = STATE_ATTACK;
 	}
 }
-//æ”»æ’ƒ
-void CanonEnemy::Attack() {
+//UŒ‚
+void ThrowEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
-	const float l_AddFrame = 1 / 30.0f;
-	
-	//å¼¾ã®ç”Ÿæˆé–¢ä¿‚
-	if (_CanonType == CANON_SET) {
-		if (coolTimer == 101) {		//ã“ã“ã§æ’ƒã¤æ–¹å‘ã‚’æ±ºã‚ã‚‹
-			m_ShotDir = Helper::GetRanNum(0, 2);
-			//æ•µãŒç«¯ã«ã„ãŸå ´åˆåå°„ã«ã‚ˆã£ã¦å›è»¢ãŒå¤‰ã«è¦‹ãˆã‚‹ã‹ã‚‰æŒ‡å®šã™ã‚‹
-			if (m_NowHeight == 0 && m_ShotDir == 2) {
-				m_ShotDir = 1;
-			}
-			else if (m_NowHeight == 3 && m_ShotDir == 1) {
-				m_ShotDir = 2;
-			}
-			//å¼¾ã‚’æ’ƒã¤æ–¹å‘ã§å‘ããŒå¤‰ã‚ã‚‹
-			if (m_ShotDir == 0) {
-				m_AfterRotY = 270.0f;
-			}
-			else if (m_ShotDir == 1) {
-				m_AfterRotY = 315.0f;
-			}
-			else {
-				m_AfterRotY = 225.0f;
-			}
-		}
-		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-			if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
-				m_RotFrame = {};
-				coolTimer = {};
-				_CanonType = CANON_THROW;
-			}
 
-			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
-		}
-	}
-	else if (_CanonType == CANON_THROW) {
-		m_AttackCount++;
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		BirthBullet();
-		if (m_AttackCount != m_BulletNum) {
-			_CanonType = CANON_SET;
-		}
-		else {
-			_CanonType = CANON_END;
-		}
-	}
-	else {
 		m_CheckPanel = true;
 		m_AttackCount = {};
-		_charaState = STATE_SPECIAL;
 		coolTimer = {};
-		_CanonType = CANON_SET;
 		StagePanel::GetInstance()->EnemyHitReset();
+		_charaState = STATE_SPECIAL;
 	}
 }
 
-//ãƒ¯ãƒ¼ãƒ—
-void CanonEnemy::Teleport() {
+//ƒ[ƒv
+void ThrowEnemy::Teleport() {
 	const float l_AddFrame = 1 / 30.0f;
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL];
-	
+
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
@@ -230,24 +172,23 @@ void CanonEnemy::Teleport() {
 		WarpEnemy();
 	}
 }
-//å¼¾ã®ç”Ÿæˆ
-void CanonEnemy::BirthBullet() {
-	//å¼¾ã®ç™ºç”Ÿ
-	unique_ptr<EnemyBullet> newbullet = make_unique<EnemyBullet>();
+//’e‚Ì¶¬
+void ThrowEnemy::BirthBullet() {
+	//’e‚Ì”­¶
+	unique_ptr<Boomerang> newbullet = make_unique<Boomerang>();
 	newbullet->Initialize();
 	newbullet->SetPlayer(player);
-	newbullet->SetShotDir(m_ShotDir);
-	newbullet->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 	bullets.emplace_back(std::move(newbullet));
 }
-//é­”æ³•é™£ç”Ÿæˆ
-void CanonEnemy::BirthMagic() {
+//–‚–@w¶¬
+void ThrowEnemy::BirthMagic() {
 	if (!magic.Alive) { return; }
 	static float addFrame = 1.f / 15.f;
 	const int l_TargetTimer = 20;
-	if (magic.State == MAGIC_BIRTH) {			//é­”æ³•é™£ã‚’åºƒã’ã‚‹
+	if (magic.State == MAGIC_BIRTH) {			//–‚–@w‚ğL‚°‚é
 		magic.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
-		
+
 		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			if (Helper::CheckMin(magic.Timer, l_TargetTimer, 1)) {
 				m_Warp = true;
@@ -259,7 +200,7 @@ void CanonEnemy::BirthMagic() {
 		}
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
-	else {			//é­”æ³•é™£ã‚’ç¸®ã‚ã‚‹
+	else {			//–‚–@w‚ğk‚ß‚é
 		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
@@ -269,11 +210,11 @@ void CanonEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 }
-void CanonEnemy::WarpEnemy() {
+void ThrowEnemy::WarpEnemy() {
 	XMFLOAT3 l_RandPos = {};
 	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy);
 	static float addFrame = 1.f / 15.f;
-	if (enemywarp.State == WARP_START) {			//ã‚­ãƒ£ãƒ©ãŒå°ã•ããªã‚‹
+	if (enemywarp.State == WARP_START) {			//ƒLƒƒƒ‰‚ª¬‚³‚­‚È‚é
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.5f;
@@ -286,7 +227,7 @@ void CanonEnemy::WarpEnemy() {
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
-	else {			//ã‚­ãƒ£ãƒ©ãŒå¤§ãããªã£ã¦ã„ã‚‹
+	else {			//ƒLƒƒƒ‰‚ª‘å‚«‚­‚È‚Á‚Ä‚¢‚é
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;

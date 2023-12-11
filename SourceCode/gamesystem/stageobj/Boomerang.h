@@ -1,43 +1,43 @@
-ï»¿#pragma once
+#pragma once
 #include "ObjCommon.h"
 #include "IKETexture.h"
 #include "Player.h"
 
-//æ•µã®æ”»æ’ƒå¼¾ã‚¯ãƒ©ã‚¹
-class EnemyBullet :
+//ƒu[ƒƒ‰ƒ“‚ÌUŒ‚(“G)
+class Boomerang :
 	public ObjCommon {
 protected:
-	// DirectX::ã‚’çœç•¥
+	// DirectX::‚ğÈ—ª
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	EnemyBullet();
+	Boomerang();
 
-	bool Initialize() override;//åˆæœŸåŒ–
+	bool Initialize() override;//‰Šú‰»
 	/// <summary>
-	/// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
+	/// –ˆƒtƒŒ[ƒ€ˆ—
 	/// </summary>
 	void Update() override;
 
 	/// <summary>
-	/// æç”»
+	/// •`‰æ
 	/// </summary>
 	void Draw(DirectXCommon* dxCommon) override;
 
 	/// <summary>
-	/// ImGuiæç”»
+	/// ImGui•`‰æ
 	/// </summary>
 	void ImGuiDraw();
 
-	bool Collide();	//å½“ãŸã‚Šåˆ¤å®š
+	bool Collide();	//“–‚½‚è”»’è
 
-private://ã‚¹ãƒ†ãƒ¼ãƒˆ
-	static void (EnemyBullet::* stateTable[])();
+private://ƒXƒe[ƒg
+	static void (Boomerang::* stateTable[])();
 private:
-	void Throw();//æŠ•ã’ã‚‹
+	void Throw();//“Š‚°‚é
 
 public:
 	//gettersetter
@@ -46,13 +46,12 @@ public:
 	void SetAlive(const bool Alive) { m_Alive = Alive; }
 
 	void SetTargetTimer(const int TargetTimer) { m_TargetTimer = TargetTimer; }
-	void SetShotDir(const int ShotDir) { m_ShotDir = ShotDir; }
 	void SetPlayer(Player* player) { this->player = player; }
 
 private:
 	unique_ptr<IKETexture> shadow_tex;
 	Player* player;
-	//ãƒ‘ãƒãƒ«
+	//ƒpƒlƒ‹
 	struct Panel {
 		unique_ptr<IKETexture> tex = nullptr;
 		XMFLOAT3 position = { 0,0,0 };
@@ -60,18 +59,17 @@ private:
 		bool predict = false;
 	};
 	Panel panels;
-	//ç¾åœ¨ã®ãƒã‚¹ç•ªå·
+	//Œ»İ‚Ìƒ}ƒX”Ô†
 	int m_NowWidth = {};
 	int m_NowHeight = {};
-	bool m_Alive = true;//ç”Ÿå­˜ãƒ•ãƒ©ã‚°
+	bool m_Alive = true;//¶‘¶ƒtƒ‰ƒO
 
-	int m_TargetTimer = {};//å‡ºç¾æ™‚é–“ã®ç›®æ¨™
+	int m_TargetTimer = {};//oŒ»ŠÔ‚Ì–Ú•W
 
 	int m_ThrowTimer = {};
 
 	enum ThrowType {
 		THROW_SET,
-		THROW_INTER,
 		THROW_PLAY,
 	};
 
@@ -82,23 +80,21 @@ private:
 	float m_BaseScale = {};
 	XMFLOAT2 m_Angle = {};
 
-	float m_AddSpeed = {};//åŠ é€Ÿåº¦
+	float m_AddSpeed = {};//‰Á‘¬“x
 
 	int m_AliveTimer = {};
 
-	//æŠ•ã’ã‚‹æ–¹å‘
-	enum ThrowDir {
-		DIR_STRAIGHT,//ã¾ã£ã™ã
-		DIR_SLASHUP,//æ–œã‚ä¸Š
-		DIR_SLASHDOWN,//æ–œã‚ã—ãŸ
-	};
-	int m_ThrowDir = {};
-
 	float m_Damage = {};
+	
+	XMFLOAT3 m_TargetPos = {};
 
+	enum MoveDir {
+		MOVE_STRAIGHT,
+		MOVE_UP,
+		MOVE_DOWN,
+		MOVE_RETURN,
+	}_MoveDir = MOVE_UP;
 
-	//å½±ã®å¤‰æ•°
-	XMFLOAT3 m_ShadowPos = {};
-	XMFLOAT3 m_ShadowScale = {};
-	int m_ShotDir = {};
+	float m_Length = {};
+	float m_Speed = {};
 };

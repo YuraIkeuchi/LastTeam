@@ -283,6 +283,7 @@ void BattleScene::ImGuiDraw() {
 	//GameStateManager::GetInstance()->ImGuiDraw();
 	//StagePanel::GetInstance()->ImGuiDraw();
 	enemyManager->ImGuiDraw();
+	player_->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {
