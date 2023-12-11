@@ -27,6 +27,7 @@ public:
 	bool GetIsVisible() { return isStart; }
 private:
 	void Move();
+	bool FeedOut();
 private:
 	static const int S_DAMAGEMAX = 2;
 private:
@@ -71,10 +72,12 @@ private:
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> skillCheack;
 	std::unique_ptr<IKESprite> selectFrame;
+	std::unique_ptr<IKESprite> feedIn;
 	std::list<ResultUI> choiceSkills;
 	int nowPos = 0;
 	XMFLOAT2 BasePos[5] = { {200.f,240.f}, {420.f,240.0f},{640.f,240.f},{860.f,240.f},{1080.f,240.f} };
 	bool isMove = false;
+	float frameA = 0.f;
 	XMFLOAT2 framePos = BasePos[2];
 	std::list<ResultUI> pickSkills;
 	std::list<ShineEffect> shines;
