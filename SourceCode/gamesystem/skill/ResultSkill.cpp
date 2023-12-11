@@ -20,10 +20,13 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	selectFrame->SetPosition(BasePos[2]);
 	skillCheack = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 1280.f,720.f });
 	skillCheack->SetAnchorPoint({ 1.f,1.f });
+	feedIn = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
+	feedIn->SetSize({ 1280.f,720.f });
 	dxcommon = dxCommon;
 }
 
 void ResultSkill::Update() {
+	if (!FeedOut()) { return; }
 	Move();
 	ShineEffectUpdate();
 }
@@ -55,6 +58,7 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 	for (ShineEffect& shine : shines) {
 		shine.tex->Draw();
 	}
+	feedIn->Draw();
 	IKESprite::PostDraw();
 }
 void ResultSkill::ImGuiDraw() {
@@ -198,6 +202,17 @@ void ResultSkill::Move() {
 		m_Choice = true;
 	}
 
+}
+
+bool ResultSkill::FeedOut() {
+	if (Helper::FrameCheck(frameA,1/45.f)) {
+		feedIn->SetColor({ 1,1,1,0.f });
+		return true;
+	} else {
+		float alpha = Ease(In, Quad, frameA, 1.f, 0.f);
+		feedIn->SetColor({ 1,1,1,alpha });
+		return false;
+	}
 }
 
 void ResultSkill::RandShineInit() {
