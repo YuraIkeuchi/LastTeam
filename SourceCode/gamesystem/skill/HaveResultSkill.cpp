@@ -137,17 +137,24 @@ void HaveResultSkill::Move() {
 		else {
 			m_AddPosX = Ease(InOut, Circ, frame, m_AddPosX, 150.0f * m_SelectCount);
 		}
+		for (auto i = 0; i < haveSkills.size(); i++) {
+			haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
+		}
+
 		for (auto i = 0; i < havePassive.size(); i++) {
 			havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
 		}
 	}
 
 	if (input->TiltPushStick(input->L_LEFT) ||
-		input->TiltPushStick(input->L_RIGHT)||
-		input->PushButton(input->LEFT)||
+		input->TiltPushStick(input->L_RIGHT) ||
+		input->TriggerKey(DIK_A) ||
+		input->TriggerKey(DIK_D) ||
+		input->PushButton(input->LEFT) ||
 		input->PushButton(input->RIGHT)) {
 		if (m_isMove) { return; }
-		if (input->TiltPushStick(input->L_RIGHT)||
+		if (input->TiltPushStick(input->L_RIGHT) ||
+			input->TriggerKey(DIK_D) ||
 			input->PushButton(input->RIGHT)) {
 			if (m_SelectCount == ((int)(haveSkills.size()) + (int)(havePassive.size())) - 1) { return; }
 			m_SelectCount++;
