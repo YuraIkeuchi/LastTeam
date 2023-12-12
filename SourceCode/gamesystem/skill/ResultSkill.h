@@ -57,9 +57,21 @@ private:
 		bool isVanish = false;
 	};
 
+	struct StarEffect {
+		unique_ptr<IKESprite> tex;
+		float frame = 0.f;
+		float frameA = 0.f;
+		float kFrame = 20.f;
+		float angle = 0.f;
+		float dia = 0.f;
+		XMFLOAT2 position = { 0.f,0.f };
+		XMFLOAT2 size = { 32.f,32.f };
+		bool isVanish = false;
+	};
 	void RandShineInit();
 	void ShineEffectUpdate();
-
+	void StarEffectUpdate();
+	void StarInit();
 	ResultUI CreateUI(bool isSkill,int id,XMFLOAT2 pos);
 	void BirthArea(ResultUI& resultUI);
 public:
@@ -81,6 +93,7 @@ private:
 	XMFLOAT2 framePos = BasePos[2];
 	std::list<ResultUI> pickSkills;
 	std::list<ShineEffect> shines;
+	std::vector<StarEffect> stars = {};
 	bool m_Choice = false;
 	bool isBattle = false;
 };
