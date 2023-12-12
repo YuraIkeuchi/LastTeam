@@ -12,14 +12,14 @@ Sickle::Sickle() {
 bool Sickle::Initialize() {
 	m_Position = {};
 	m_Rotation.y = 90.0f;
-	m_Color = { 1.0f,1.0f,1.0f,1.0f };
+	m_Color = { 1.0f,1.0f,1.0f,0.0f };
 	m_Scale = { 1.0f,1.0f,1.0f };
 	return true;
 }
 //èâä˙âª
-void Sickle::InitState(const int width, const int height) {
-	m_Position = SetPanelPos(width, height);
-	m_Position.y = -0.5f;
+void Sickle::InitState(const int width, const int height, const XMFLOAT3 Pos) {
+	m_Position = Pos;
+	m_Position.y = 0.8f;
 	m_NowWidth = width, m_NowHeight = height;
 	m_Alive = true;
 	m_Hit = false;
@@ -48,13 +48,17 @@ void Sickle::Move() {
 			_ThornState = THORN_STOP;
 			m_Frame = {};
 		}
-		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.4f);
+		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 1.0f);
 	}
 	else if (_ThornState == THORN_STOP) {
-		if (Helper::CheckMin(m_AliveTimer, l_TargetTimer, 1)) {
-			_ThornState = THORN_END;
-			m_AliveTimer = false;
+		if (Helper::FrameCheck(m_Frame, addFrame)) {
+			if (Helper::CheckMin(m_AliveTimer, l_TargetTimer, 1)) {
+				_ThornState = THORN_END;
+				m_AliveTimer = {};
+				m_Frame = {};
+			}
 		}
+		m_Rotation.x = Ease(In, Cubic, m_Frame, m_Rotation.x, -90.0f);
 	}
 	else {
 		if (Helper::FrameCheck(m_Frame, addFrame)) {

@@ -170,7 +170,7 @@ void FrontEnemy::Teleport() {
 void FrontEnemy::BirthArea(const int Width, const int Height) {
 	std::unique_ptr<Sickle> newarea = std::make_unique<Sickle>();
 	newarea->Initialize();
-	newarea->InitState(Width, Height);
+	newarea->InitState(Width, Height,{m_Position.x - 0.5f,m_Position.y,m_Position.z});
 	newarea->SetPlayer(player);
 	sickle.emplace_back(std::move(newarea));
 	predictarea->ResetPredict();

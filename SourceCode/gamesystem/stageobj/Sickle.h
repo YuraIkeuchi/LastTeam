@@ -23,7 +23,7 @@ public:
 	//初期化
 	bool Initialize() override;
 	//ステータス初期化
-	void InitState(const int width, const int height);
+	void InitState(const int width, const int height,const XMFLOAT3 Pos);
 	//更新
 	void Update() override;
 	//描画
