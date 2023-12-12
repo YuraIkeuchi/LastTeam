@@ -12,7 +12,7 @@
 FrontEnemy::FrontEnemy() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::FRONT));
 	m_Object->SetLightEffect(false);
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
@@ -34,7 +34,7 @@ FrontEnemy::FrontEnemy() {
 bool FrontEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Color = { 0.0f,1.0f,0.5f,1.0f };
+	//m_Color = { 0.0f,1.0f,0.5f,1.0f };
 	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/FrontEnemy.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/FrontEnemy.csv", "LIMIT_NUM")));
@@ -90,13 +90,13 @@ void FrontEnemy::Action() {
 		}
 	}
 
-	//攻撃エリアの更新(実際はスキルになると思う)
-	for (auto i = 0; i < enethorn.size(); i++) {
-		if (enethorn[i] == nullptr)continue;
-		enethorn[i]->Update();
+	//鎌クラスの更新とか
+	for (auto i = 0; i < sickle.size(); i++) {
+		if (sickle[i] == nullptr)continue;
+		sickle[i]->Update();
 
-		if (!enethorn[i]->GetAlive()) {
-			enethorn.erase(cbegin(enethorn) + i);
+		if (!sickle[i]->GetAlive()) {
+			sickle.erase(cbegin(sickle) + i);
 		}
 	}
 
@@ -113,9 +113,9 @@ void FrontEnemy::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	IKETexture::PostDraw();
 
-	for (auto i = 0; i < enethorn.size(); i++) {
-		if (enethorn[i] == nullptr)continue;
-		enethorn[i]->Draw(dxCommon);
+	for (auto i = 0; i < sickle.size(); i++) {
+		if (sickle[i] == nullptr)continue;
+		sickle[i]->Draw(dxCommon);
 	}
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
@@ -168,11 +168,11 @@ void FrontEnemy::Teleport() {
 }
 //攻撃エリア
 void FrontEnemy::BirthArea(const int Width, const int Height) {
-	std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
+	std::unique_ptr<Sickle> newarea = std::make_unique<Sickle>();
 	newarea->Initialize();
-	newarea->InitState(Width, Height);
+	newarea->InitState(Width, Height,{m_Position.x - 0.5f,m_Position.y,m_Position.z});
 	newarea->SetPlayer(player);
-	enethorn.emplace_back(std::move(newarea));
+	sickle.emplace_back(std::move(newarea));
 	predictarea->ResetPredict();
 
 }

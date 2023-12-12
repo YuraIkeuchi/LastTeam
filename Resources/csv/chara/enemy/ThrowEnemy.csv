@@ -16,9 +16,6 @@ Interval,180
 Interval,200
 *---------------------------*
 
-//敵の弾の撃つ数
-BULLET_NUM,2
-
 //弾のダメージ
 BULLET_DAMAGE,7
 

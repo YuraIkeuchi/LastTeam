@@ -16,7 +16,7 @@ Bomb::Bomb() {
 	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::BULLET));
 	m_Object->SetLightEffect(false);
 
-	shockWaveTex.reset(new IKETexture(ImageManager::SHOCKWAVE, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shockWaveTex.reset(new IKETexture(ImageManager::CHARGE, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shockWaveTex->TextureCreate();
 	shockWaveTex->Initialize();
 	shockWaveTex->SetRotation({ 90.0f,0.0f,0.0f });

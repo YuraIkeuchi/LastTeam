@@ -25,6 +25,8 @@ public:
 		BOMBER,
 		THROW,
 		BOOMERAN,
+		FRONT,
+		SICKLE,
 	};
 	//FBXの名前
 	enum FBXName {

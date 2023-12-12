@@ -459,6 +459,9 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\Boomerang.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\Sickle.cpp">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -885,6 +888,9 @@
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\Boomerang.h">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\Sickle.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

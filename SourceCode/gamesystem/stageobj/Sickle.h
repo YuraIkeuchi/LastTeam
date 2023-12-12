@@ -7,8 +7,8 @@
 using namespace std;         //  名前空間指定
 
 //トゲクラス
-class EnemyThorn :
-public ObjCommon{
+class Sickle :
+	public ObjCommon {
 protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	// DirectX::を省略
@@ -18,12 +18,12 @@ protected:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	EnemyThorn();
+	Sickle();
 public:
 	//初期化
 	bool Initialize() override;
 	//ステータス初期化
-	void InitState(const int width, const int height);
+	void InitState(const int width, const int height,const XMFLOAT3 Pos);
 	//更新
 	void Update() override;
 	//描画
