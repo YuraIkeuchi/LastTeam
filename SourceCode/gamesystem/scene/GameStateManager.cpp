@@ -363,17 +363,26 @@ void GameStateManager::UseSkill() {
 	if (Helper::CheckMin(m_DelayTimer, m_Act[0].ActDelay, 1)) {
 		if (m_Act[0].SkillType == 0) {
 			BirthArea();
-			onomatope->AddOnomato(Attack01, { 640.f,360.f });
+			if (m_Act[0].StateName!="Refrain") {
+				if (m_Act[0].ActDamage <= 3) {
+					onomatope->AddOnomato(Attack02, { 440.f,0.f });
+				} else if (m_Act[0].ActDamage <= 10) {
+					onomatope->AddOnomato(Attack01, { 640.f,360.f });
+				} else {
+					onomatope->AddOnomato(Attack03, { 840.f,0.f });
+				}
+			} else {
+				onomatope->AddOnomato(Refrain, { 640.f,800.f });
+
+			}
 		} else if (m_Act[0].SkillType == 1) {
 			for (int i = 0; i < 2; i++) {
 				RandPowerUpInit();
 			}
 			BirthBuff();
-			onomatope->AddOnomato(AttackCharge, { 640.f,360.f });
-		} else if (m_Act[0].SkillType == 3) {
-			BirthArea();
-			onomatope->AddOnomato(Attack01, { 640.f,360.f });
+			onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
 		}
+
 		FinishAct();
 		if (m_AllActCount == 0) {
 			player->AttackCheck(true);
