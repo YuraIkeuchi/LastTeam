@@ -232,6 +232,7 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\PoisonArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\ResultAreaUI.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\Sickle.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\StageBack.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\StagePanel.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\DrawDamageNumber.cpp" />
@@ -378,6 +379,7 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\PoisonArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\ResultAreaUI.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\Sickle.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\StageBack.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\StagePanel.h" />
     <ClInclude Include="SourceCode\gamesystem\text\DrawDamageNumber.h" />

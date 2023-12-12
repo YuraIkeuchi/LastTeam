@@ -1,6 +1,6 @@
 #pragma once
 #include"InterEnemy.h"
-#include "EnemyThorn.h"
+#include "Sickle.h"
 
 using namespace std;         //  名前空間指定
 //普通の敵
@@ -43,7 +43,7 @@ private:
 	}_AttackState = ATTACK_WARP;
 	std::vector<std::vector<int>> m_Area = {};
 	// 攻撃エリア
-	std::vector<unique_ptr<EnemyThorn>> enethorn;
+	std::vector<unique_ptr<Sickle>> sickle;
 
 
 	int m_RandWigth = {};

@@ -2,7 +2,7 @@
 #include"InterEnemy.h"
 
 using namespace std;         //  名前空間指定
-//普通の敵
+//爆弾の敵
 class Bomb :public InterEnemy {
 public:
 	Bomb();
