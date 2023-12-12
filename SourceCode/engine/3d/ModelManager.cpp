@@ -24,6 +24,7 @@ void ModelManager::StartInitialize()
 	LoadModel(BOMBER, "bomber");
 	LoadModel(THROW, "ThrowEnemy");
 	LoadModel(BOOMERAN, "Boomeran");
+	LoadModel(FRONT, "FrontEnemy");
 }
 
 //モデル読み込み(非同期処理で読み込むもの)
