@@ -601,7 +601,12 @@ void Player::HealPlayer(const float power) {
 void Player::RecvDamage(const float Damage, const string& name) {
 	m_HP -= Damage;
 	GameStateManager::GetInstance()->TakenDamageCheck((int)Damage);
-	
+	GameStateManager::GetInstance()->MissAttack();
+	m_BaseScale = 0.5f;
+	m_AfterScale = m_BaseScale;
+	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
+	m_Delay = false;
+	m_ShrinkTimer = {};
 	//ダメージの種類によってパーティクルを変える
 	if (name == "NORMAL") {
 		DamageParticle();

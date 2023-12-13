@@ -384,7 +384,7 @@ void GameStateManager::UseSkill() {
 		m_ResetPredict = true;
 		m_Delay = false;
 		m_DelayTimer = {};
-		m_ChargeScale = 5;
+		m_ChargeScale = 5.0f;
 	}
 }
 //行動の終了
@@ -685,4 +685,10 @@ void GameStateManager::DeckDiscard() {
 //捨てたカードの取得
 void GameStateManager::GetDiscardSkill(const int ID) {
 	m_DiscardNumber.push_back(ID);
+}
+void GameStateManager::MissAttack() {
+	m_ResetPredict = true;
+	m_Delay = false;
+	m_DelayTimer = {};
+	m_ChargeScale = 5.0f;
 }

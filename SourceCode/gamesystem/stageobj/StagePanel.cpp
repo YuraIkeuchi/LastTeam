@@ -220,7 +220,7 @@ void StagePanel::RandomPanel(int num) {
 		//パネル探索（開いてるのが3追加の場合書いてない）
 
 		while (!isSet) {
-			if (panels[width][height].type != NO_PANEL ||
+			if (panels[width][height].type != NO_PANEL || panels[width][height].isEnemyHit ||
 				(width == p_width && height == p_height)) {
 				width = Helper::GetRanNum(0, 3);
 				height = Helper::GetRanNum(0, 3);

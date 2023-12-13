@@ -95,7 +95,13 @@ void ThrowEnemy::Action() {
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
 
-	m_Rotation.y += 2.0f;
+	if (_charaState == STATE_ATTACK) {
+		m_RotPower = Ease(In, Cubic, 0.5f, m_RotPower, 20.0f);
+	}
+	else {
+		m_RotPower = Ease(In, Cubic, 0.5f, m_RotPower, 2.0f);
+	}
+	m_Rotation.y += m_RotPower;
 }
 
 //•`‰æ
