@@ -101,6 +101,7 @@ public:
 
 	const bool GetAllDelete() { return m_AllDelete; }
 	const bool GetCreateFinish() { return m_CreateFinish; }
+	const int GetPanelType(const int width, const int height) { return panels[width][height].type; }
 
 	void SetCreateFinish(const bool CreateFinish) { m_CreateFinish = CreateFinish; }
 private:

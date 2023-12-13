@@ -24,6 +24,12 @@ Boomerang::Boomerang() {
 	shadow_tex->TextureCreate();
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	dir_tex.reset(new IKETexture(ImageManager::BOOM_DIR, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	dir_tex->TextureCreate();
+	dir_tex->Initialize();
+	dir_tex->SetRotation(m_DirRot);
+	dir_tex->SetScale({ 0.05f,0.05f,0.05f});
 }
 //‰Šú‰»
 bool Boomerang::Initialize() {
@@ -57,6 +63,10 @@ void Boomerang::Update() {
 	panels.tex->SetColor({ 1.0f,0.3f,0.0f,1.0f });
 	panels.tex->Update();
 
+	dir_tex->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+	dir_tex->SetRotation(m_DirRot);
+	dir_tex->Update();
+
 	m_Rotation.y += 20.0f;
 }
 //•`‰æ
@@ -64,6 +74,7 @@ void Boomerang::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	panels.tex->Draw();
 	shadow_tex->Draw();
+	dir_tex->Draw();
 	IKETexture::PostDraw();
 	Obj_Draw();
 }
@@ -73,12 +84,14 @@ void Boomerang::ImGuiDraw() {
 
 //“–‚½‚è”»’è
 bool Boomerang::Collide() {
+	if (m_Hit) { return false; }
+	if (!m_Alive) { return false; }
 	XMFLOAT3 l_PlayerPos = player->GetPosition();
 	const float l_Damage = 0.5f;
 	const float l_Radius = 0.15f;
-	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
+	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius)) {
 		player->RecvDamage(m_Damage, "NORMAL");
-		m_Alive = false;
+		m_Hit = true;
 		return true;
 	}
 	else {
@@ -117,10 +130,22 @@ void Boomerang::Throw() {
 			else {
 				//Å‰‚ÌÀ•W‚É‚æ‚Á‚Äãs‚­‚©‰ºs‚­‚©Œˆ‚Ü‚é
 				if (m_Position.z < 2.0f) {
-					_MoveDir = MOVE_UP;
+					if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
+						_MoveDir = MOVE_UP;
+						m_RotFrame = {};
+					}
+					else {
+						m_DirRot.y = Ease(In, Cubic, m_RotFrame, m_DirRot.y, 360.0f);
+					}
 				}
 				else {
-					_MoveDir = MOVE_DOWN;
+					if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
+						_MoveDir = MOVE_DOWN;
+						m_RotFrame = {};
+					}
+					else {
+						m_DirRot.y = Ease(In, Cubic, m_RotFrame, m_DirRot.y, 180.0f);
+					}
 				}
 			}
 		}
@@ -133,7 +158,13 @@ void Boomerang::Throw() {
 				Helper::FollowMove(m_Position, m_TargetPos, m_Speed);
 			}
 			else {
-				_MoveDir = MOVE_RETURN;
+				if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
+					_MoveDir = MOVE_RETURN;
+					m_RotFrame = {};
+				}
+				else {
+					m_DirRot.y = Ease(In, Cubic, m_RotFrame, m_DirRot.y, 450.0f);
+				}
 			}
 		}
 		else if (_MoveDir == MOVE_DOWN) {
@@ -145,7 +176,13 @@ void Boomerang::Throw() {
 				Helper::FollowMove(m_Position, m_TargetPos, m_Speed);
 			}
 			else {
-				_MoveDir = MOVE_RETURN;
+				if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
+					_MoveDir = MOVE_RETURN;
+					m_RotFrame = {};
+				}
+				else {
+					m_DirRot.y = Ease(In, Cubic, m_RotFrame, m_DirRot.y, 90.0f);
+				}
 			}
 		}
 		else {
@@ -156,6 +193,13 @@ void Boomerang::Throw() {
 			if (m_Length < 0.1f) {
 				m_Alive = false;
 			}
+		}
+	}
+
+	if (m_Hit) {
+		if (Helper::CheckMin(m_HitTimer, 20, 1)) {
+			m_Hit = false;
+			m_HitTimer = {};
 		}
 	}
 }

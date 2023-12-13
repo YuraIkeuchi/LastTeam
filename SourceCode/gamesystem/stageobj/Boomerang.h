@@ -50,6 +50,7 @@ public:
 
 private:
 	unique_ptr<IKETexture> shadow_tex;
+	unique_ptr<IKETexture> dir_tex;
 	Player* player;
 	//ƒpƒlƒ‹
 	struct Panel {
@@ -97,4 +98,9 @@ private:
 
 	float m_Length = {};
 	float m_Speed = {};
+
+	XMFLOAT3 m_DirRot = { 90.0f,270.0f,0.0f };
+	float m_RotFrame = {};
+	bool m_Hit = false;
+	int m_HitTimer = {};
 };
