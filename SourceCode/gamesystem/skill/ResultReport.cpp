@@ -106,6 +106,9 @@ void ResultReport::Draw(DirectXCommon* dxCommon) {
 	for (SmokeEffect& smoke : smokes) {
 		smoke.tex->Draw();
 	}
+	for (ShineEffect& shine : shines) {
+		shine.tex->Draw();
+	}
 	if (state < FINISH) {
 		skip->Draw();
 	}
@@ -144,6 +147,11 @@ void ResultReport::ScoreUpdate() {
 		}
 		isSecondNum = true;
 		if (Helper::FrameCheck(numFrames[1], 1 / kFrameScoreMax)) {
+			if (score >= 200) {
+				rate = IKESprite::Create(ImageManager::RESULTREPORTATTACK, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
+			} else {
+				rate = IKESprite::Create(ImageManager::RESULTREPORTDEFFENCE, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
+			}
 			state = STAMP;
 		} else {
 			float size = Ease(Out, Elastic, numFrames[1], 48.f, 128.f);
@@ -213,6 +221,15 @@ void ResultReport::SmokeInit(XMFLOAT2 pos) {
 		itr.kFrameMax = 30.f;
 		smokes.push_back(std::move(itr));
 	}
+	for (int i = 0; i < 4; i++) {
+		ShineEffect shine;
+		shine.tex = IKESprite::Create(ImageManager::SHINE_S, { -100.f,0.f });
+		shine.tex->SetAnchorPoint({ 0.5f,0.5f });
+		shine.tex->SetSize({ 64.f,64.f });
+		shine.angle = ((i + 1) * 90.f) * (XM_PI / 180.f);
+		shine.position = pos;
+		shines.push_back(std::move(shine));
+	}
 }
 
 void ResultReport::SmokeUpdate() {
@@ -231,6 +248,24 @@ void ResultReport::SmokeUpdate() {
 		}
 	smokes.remove_if([](SmokeEffect& shine) {
 			return shine.isVanish; });
+	for (ShineEffect& shine : shines) {
+		if (Helper::FrameCheck(shine.frame, 1 / shine.kFrame)) {
+			shine.isVanish = true;
+		} else {
+			shine.dia = Ease(Out, Exp, shine.frame, 0.f, 100.f);
+			shine.tex->SetPosition({
+				shine.position.x + sinf(shine.angle) * shine.dia,
+				shine.position.y - cosf(shine.angle) * shine.dia
+				});
+			float rot = Ease(In, Quad, shine.frame, 0.0f, 180.f);
+			shine.tex->SetRotation(rot);
+			float alpha = Ease(In, Quad, shine.frame, 1.0f, 0.f);
+			shine.tex->SetColor({ 1,1,1,alpha });
+		}
+	}
+	shines.remove_if([](ShineEffect& shine) {
+		return shine.isVanish; });
+
 }
 
 void ResultReport::DamageIntNum(int num, vector<int>& nums) {

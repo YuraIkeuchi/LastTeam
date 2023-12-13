@@ -105,8 +105,7 @@ public:
 	const bool GetResetPredict() { return  m_ResetPredict; }
 
 	void SetDxCommon(DirectXCommon* dxCommon) { this->m_dxCommon = dxCommon; }
-	const float GetPosScore() { return m_PosScore; }
-	const float GetGrazeScore() { return m_GrazeScore; }
+	const int GetPosScore() { return m_PosScore; }
 	vector<unique_ptr<AttackArea>>& GetAttackArea() { return attackarea; }
 	const float GetDiameterVel() { return m_DiameterVel; }
 	//std::weak_ptr<Player> GetPlayer() { return player_; }
@@ -119,8 +118,7 @@ public:
 	string& GetEnemySpawnText() { return enemySpawnText; }
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetResetPredict(const bool ResetPredict) { this->m_ResetPredict = ResetPredict; }
-	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
-	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
+	void SetPosScore(const int PosScore) { this->m_PosScore = PosScore; }
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
 	//void SetPlayer(std::weak_ptr<Player> player) { player_ = player; }
 	// 仮
@@ -216,12 +214,10 @@ private:
 	//カウンター
 	bool m_Counter = false;
 	int m_CounterTimer = {};
-	int m_CounterScore = {};
+	int m_CounterCount = {};
 
 	//位置のスコア
-	float m_PosScore = {};
-	//グレイズのスコア(後々intにする)
-	float m_GrazeScore = 0.0f;
+	int m_PosScore = {};
 
 	//全体スコア
 	int m_AllScore = {};

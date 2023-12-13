@@ -12,6 +12,7 @@ public:
 	void Update();
 	void Draw(DirectXCommon* dxCommon);
 
+	void SetScore(int score) { this->score = score; }
 
 	void SetDealtDamage(int damage) { dealtDamage = damage; }
 	void SetTakenDamage(int damage) { takenDamage = damage; }
@@ -38,18 +39,31 @@ private:
 private:
 	struct SmokeEffect {
 		std::unique_ptr<IKESprite> tex = nullptr;
-		XMFLOAT2 pos;
-		XMFLOAT2 size;
+		XMFLOAT2 pos = { };
+		XMFLOAT2 size = { 64.f,64.f };
 		float frame = 0.f;
 		float kFrameMax = 45.f;
 		bool isVanish = false;
 	};
-
+	struct ShineEffect {
+		unique_ptr<IKESprite> tex;
+		float frame = 0.f;
+		float frameA = 0.f;
+		float kFrame = 20.f;
+		float angle = 0.f;
+		float dia = 0.f;
+		XMFLOAT2 position = { 0.f,0.f };
+		XMFLOAT2 size = { 32.f,32.f };
+		bool isVanish = false;
+	};
 private:
 	std::unique_ptr<IKESprite> backScreen = nullptr;
 	std::unique_ptr<IKESprite> rate = nullptr;
 	std::unique_ptr<IKESprite> skip = nullptr;
-
+	std::list<ShineEffect> shines;
+	
+	int score = 0;
+	int counter = 0;
 	bool isFinish = false;
 	std::list<SmokeEffect> smokes;
 	bool isFirstNum = false;

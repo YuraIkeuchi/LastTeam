@@ -17,11 +17,9 @@ void GameStateManager::Initialize() {
 	//カウンター
 	m_Counter = false;
 	m_CounterTimer = {};
-	m_CounterScore = {};
+	m_CounterCount = 0;
 	//位置のスコア
-	m_PosScore = {};
-	//グレイズのスコア(後々intにする)
-	m_GrazeScore = 0.0f;
+	m_PosScore = 0;
 
 	//全体スコア
 	m_AllScore = {};
@@ -103,12 +101,12 @@ void GameStateManager::Initialize() {
 void GameStateManager::Update() {
 	if (ResultUpdate()) { return; }
 	const int l_AddCounterScore = 10;
-	m_AllScore = m_CounterScore + (int)(m_PosScore)+(int)(m_GrazeScore);
+	m_AllScore = (m_CounterCount * l_AddCounterScore) + m_PosScore;
 
 	//カウンターの処理
 	if (m_Counter) {
 		if (m_CounterTimer == 0) {		//カウンターのスコアに加算
-			m_CounterScore += l_AddCounterScore;
+			m_CounterCount++;
 		}
 		m_CounterTimer++;
 
@@ -613,6 +611,7 @@ void GameStateManager::StageClearInit() {
 	resultSkill->SetIsBattle(isBattleFromMap);
 	resultSkill->CreateResult(m_NotDeckNumber, NotPassiveIDs);
 	m_PredictTimer = {};
+	resultReport->SetScore(m_PosScore);
 	isFinish = true;
 }
 //バフの生成
