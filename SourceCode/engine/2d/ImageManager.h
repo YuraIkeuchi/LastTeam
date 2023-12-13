@@ -23,6 +23,7 @@ public:
 		PLASHINE,
 		SHINE_S,
 		SHINE_L,
+		SMOKE,
 		POWERUP,
 		ENEMYHPUI,
 		HPNUMBERUI,
