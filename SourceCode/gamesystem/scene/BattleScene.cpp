@@ -57,10 +57,8 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 
 	gameoversprite = IKESprite::Create(ImageManager::GAMEOVERBACK, { 0.0f,0.0f });
 	Slow::GetInstance()->Initialize();
-	skipUI = IKESprite::Create(ImageManager::TUTORIAL_SKIPUI, { 940.f ,5.f });
-	skipUnder = IKESprite::Create(ImageManager::FEED, { 940.f + (128.f * scale_skip) ,5.f });
-	skipBack = IKESprite::Create(ImageManager::FEED, { 940.f + (128.f * scale_skip),5.f });
-	skipUI->SetSize({ 472.f * scale_skip ,96.f * scale_skip });
+	skipUI = IKESprite::Create(ImageManager::RESULTSKIP, { 10.f,10.f }, { 1.f,1.f, 1.f, 1.f });
+	skipUI->SetSize({ 512.f * scale_skip,128.f * scale_skip });
 
 	Feed* feed_ = new Feed();
 	feed.reset(feed_);
@@ -98,25 +96,21 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	else {		//ゲームオーバー以外
 		if (m_IsBackKey) {
 			const float frameMax = 5.f;
-			if (Helper::FrameCheck(m_Frame, 1 / frameMax)) {
-				m_Skip = true;
-				m_IsBackKey = false;
-			}
-			else {
-				float siz = 0.f;
-				siz = Ease(In, Quad, m_Frame, 0.f, 344.f);
-				skipUnder->SetSize({ siz * scale_skip,96.f * scale_skip });
-			}
+			m_Skip = true;
+			m_IsBackKey = false;
 			return;
 		}
 
-		if ((input->TriggerButton(input->BACK) ||
+		if ((input->TriggerButton(input->A) ||
 			input->TriggerKey(DIK_BACK)) &&
 			!m_IsBackKey &&
 			!m_Skip) {
 			m_IsBackKey = true;
 		}
+		skip_alpha += 0.05f;
+		skipUI->SetColor({ 1.f,1.f,1.f,abs(sinf(skip_alpha)) });
 		SkipUpdate();
+
 		if (m_SkipFeed) {
 			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 30.0f, m_SkipFeed);
 		}
@@ -203,7 +197,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		player_->PlayerSave();
 		SceneChanger::GetInstance()->SetChange(false);
 	}
-
 	gameoversprite->SetPosition(m_GameOverPos);
 }
 //描画
@@ -235,8 +228,6 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_Skip && !GameStateManager::GetInstance()->GetGameStart()) {
 		IKESprite::PreDraw();
-		skipBack->Draw();
-		skipUnder->Draw();
 		skipUI->Draw();
 		IKESprite::PostDraw();
 	}

@@ -249,5 +249,4 @@ void ResultReport::DamageIntNum(int num, vector<int>& nums) {
 	if (number >= 0) {
 		nums[2] = number;
 	}
-
 }
