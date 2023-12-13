@@ -54,6 +54,9 @@ public:
 	void GetDiscardSkill(const int ID);
 	//攻撃失敗
 	void MissAttack();
+	//
+	void DamageEffectInit(XMFLOAT2 pos);
+
 private:
 	void PredictManager();
 	//攻撃した瞬間
@@ -87,6 +90,9 @@ private:
 	void PowerUpEffectUpdate();
 
 	void PassiveActive();
+
+	void DamageEffectUpdate();
+
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -163,6 +169,18 @@ private:
 		string StateName;		//付与状態
 	};
 
+	struct DamageEffect {
+		unique_ptr<IKESprite> tex;
+		float frame = 0.f;
+		float frameA = 0.f;
+		float kFrame = 20.f;
+		float angle = 0.f;
+		float dia = 0.f;
+		XMFLOAT2 position = { 0.f,0.f };
+		XMFLOAT2 size = { 32.f,32.f };
+		bool isVanish = false;
+	};
+
 	vector<ActState> m_Act;
 
 	//全行動回数
@@ -170,6 +188,8 @@ private:
 
 	//行動のUI
 	vector<unique_ptr<ActionUI>> actui;
+
+	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
 	std::vector <int> m_StartPassive= {};

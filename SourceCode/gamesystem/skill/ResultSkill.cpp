@@ -255,7 +255,7 @@ void ResultSkill::StarEffectUpdate() {
 				star.isVanish = true;
 			} else {
 				float alpha = Ease(In, Quad, star.frameA, 1.0f, 0.f);
-				float rot = Ease(In, Quad, star.frameA, 0.0f, 360.f);
+				float rot = Ease(In, Quad, star.frameA, 0.0f, 180.f);
 				star.tex->SetColor({ 1,1,1,alpha });
 				star.tex->SetRotation(rot);
 

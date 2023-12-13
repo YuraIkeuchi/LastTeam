@@ -21,6 +21,8 @@ public:
 		FEED,
 		SHINE,
 		PLASHINE,
+		SHINE_S,
+		SHINE_L,
 		POWERUP,
 		ENEMYHPUI,
 		HPNUMBERUI,

@@ -162,6 +162,7 @@ void GameStateManager::Update() {
 
 	PassiveActive();
 	PowerUpEffectUpdate();
+	DamageEffectUpdate();
 }
 //攻撃した瞬間
 void GameStateManager::AttackTrigger() {
@@ -188,6 +189,9 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		}
 		IKETexture::PostDraw();
 		IKESprite::PreDraw();
+		for (DamageEffect& damage : damages) {
+			damage.tex->Draw();
+		}
 		handsFrame->Draw();
 		skillUI->Draw();
 		gaugeUI->Draw();
@@ -363,7 +367,7 @@ void GameStateManager::UseSkill() {
 	if (Helper::CheckMin(m_DelayTimer, m_Act[0].ActDelay, 1)) {
 		if (m_Act[0].SkillType == 0) {
 			BirthArea();
-			if (m_Act[0].StateName!="Refrain") {
+			if (m_Act[0].StateName != "Refrain") {
 				if (m_Act[0].ActDamage <= 3) {
 					onomatope->AddOnomato(Attack02, { 440.f,0.f });
 				} else if (m_Act[0].ActDamage <= 10) {
@@ -420,7 +424,7 @@ void GameStateManager::GaugeUpdate() {
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReloadDamage) {
-			int r_num = Helper::GetRanNum(0,99);
+			int r_num = Helper::GetRanNum(0, 99);
 			if (r_num < 30) {
 				//エネミーに3ダメージ
 				m_ReloadDamage = true;
@@ -585,6 +589,23 @@ bool GameStateManager::SkillRecycle() {
 	return true;
 }
 
+void GameStateManager::DamageEffectInit(XMFLOAT2 pos) {
+	for (int i = 0; i < 6; i++) {
+		DamageEffect damage;
+		if (i % 3 == 0) {
+			damage.tex = IKESprite::Create(ImageManager::SHINE_S, { -100.f,0.f });
+		} else {
+			damage.tex = IKESprite::Create(ImageManager::SHINE_L, { -100.f,0.f });
+		}
+		damage.tex->SetAnchorPoint({ 0.5f,0.5f });
+		damage.tex->SetSize({ 64.f,64.f });
+		damage.angle = ((i + 1) * 60.f) * (XM_PI / 180.f);
+		damage.position = pos;
+		damages.push_back(std::move(damage));
+	}
+
+}
+
 void GameStateManager::StageClearInit() {
 	if (isFinish) { return; }
 	haveSkill->HaveAttackSkill(m_DeckNumber, (int)m_DeckNumber.size(), m_dxCommon);
@@ -642,14 +663,14 @@ void GameStateManager::PowerUpEffectUpdate() {
 void GameStateManager::PassiveActive() {
 	if (!isPassive) { return; }
 	if (Helper::FrameCheck(passiveFrame, 1.f / 60.f)) {
-		if (Helper::FrameCheck(passiveAlphaFrame,1.f/30.0f)) {
+		if (Helper::FrameCheck(passiveAlphaFrame, 1.f / 30.0f)) {
 			isPassive = false;
 			passiveFrame = 0.f;
 			passiveAlphaFrame = 0.f;
-			passiveActive->SetColor({ 1,1,1,1});
+			passiveActive->SetColor({ 1,1,1,1 });
 		} else {
-			float alpha = Ease(In,Quint, passiveAlphaFrame,1.f,0.f);
-			passiveActive->SetColor({1,1,1,alpha});
+			float alpha = Ease(In, Quint, passiveAlphaFrame, 1.f, 0.f);
+			passiveActive->SetColor({ 1,1,1,alpha });
 		}
 	} else {
 		XMFLOAT2 size = {};
@@ -657,6 +678,29 @@ void GameStateManager::PassiveActive() {
 		size.y = Ease(Out, Elastic, passiveFrame, 74.f * 0.4f, 74.f);
 		passiveActive->SetSize(size);
 	}
+}
+
+void GameStateManager::DamageEffectUpdate() {
+	for (DamageEffect& damage : damages) {
+		if (Helper::FrameCheck(damage.frame, 1 / damage.kFrame)) {
+			damage.isVanish = true;
+		} else {
+			damage.dia = Ease(Out, Exp, damage.frame, 0.f, 100.f);
+			damage.tex->SetPosition({
+				damage.position.x + sinf(damage.angle) * damage.dia,
+				damage.position.y - cosf(damage.angle) * damage.dia
+			});
+			float rot = Ease(In, Quad, damage.frame, 0.0f, 180.f);
+			damage.tex->SetRotation(rot);
+			float alpha = Ease(In, Quad, damage.frame, 1.0f, 0.f);
+			damage.tex->SetColor({ 1,1,1,alpha });
+
+		}
+	}
+	damages.remove_if([](DamageEffect& shine) {
+		return shine.isVanish; });
+
+
 }
 
 void GameStateManager::DamageCheck(int Damage) {
@@ -672,9 +716,9 @@ void GameStateManager::TakenDamageCheck(int Damage) {
 	m_TakenDamageNum++;
 	resultReport->SetTakenDamage(m_MaxTakenDamage);
 }
-void GameStateManager::SetPassiveActive(){ 
-	isPassive = true; 
-	passiveFrame = 0.f; 
+void GameStateManager::SetPassiveActive() {
+	isPassive = true;
+	passiveFrame = 0.f;
 	passiveAlphaFrame = 0.f;
 	passiveActive->SetColor({ 1,1,1,1 });
 }

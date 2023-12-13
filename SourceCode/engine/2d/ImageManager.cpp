@@ -12,6 +12,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(FEED, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(SHINE, L"Resources/2d/effect/shine.png");
 	IKESprite::LoadTexture(PLASHINE, L"Resources/2d/effect/effect3.png");
+	IKESprite::LoadTexture(SHINE_S, L"Resources/2d/effect/effect4.png");
+	IKESprite::LoadTexture(SHINE_L, L"Resources/2d/effect/effect5.png");
 	IKESprite::LoadTexture(POWERUP, L"Resources/2d/effect/Up.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 	IKESprite::LoadTexture(HPNUMBERUI, L"Resources/2d/objicon/Numbers/Num.png");
