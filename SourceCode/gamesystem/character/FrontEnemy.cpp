@@ -138,7 +138,7 @@ void FrontEnemy::Finalize() {
 void FrontEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1) && (StagePanel::GetInstance()->GetPanelType(player->GetNowWidth() + 1, player->GetNowHeight()) == 0)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		_AttackState = ATTACK_WARP;
@@ -170,7 +170,7 @@ void FrontEnemy::Teleport() {
 void FrontEnemy::BirthArea(const int Width, const int Height) {
 	std::unique_ptr<Sickle> newarea = std::make_unique<Sickle>();
 	newarea->Initialize();
-	newarea->InitState(Width, Height,{m_Position.x - 0.5f,m_Position.y,m_Position.z});
+	newarea->InitState(Width, Height,{m_Position.x - 1.5f,m_Position.y,m_Position.z});
 	newarea->SetPlayer(player);
 	sickle.emplace_back(std::move(newarea));
 	predictarea->ResetPredict();

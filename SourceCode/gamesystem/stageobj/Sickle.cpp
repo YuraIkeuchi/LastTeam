@@ -13,13 +13,13 @@ bool Sickle::Initialize() {
 	m_Position = {};
 	m_Rotation.y = 90.0f;
 	m_Color = { 1.0f,1.0f,1.0f,0.0f };
-	m_Scale = { 1.0f,1.0f,1.0f };
+	m_Scale = { 0.7f,0.7f,0.7f };
 	return true;
 }
 //èâä˙âª
 void Sickle::InitState(const int width, const int height, const XMFLOAT3 Pos) {
 	m_Position = Pos;
-	m_Position.y = 0.8f;
+	m_Position.y = 2.0f;
 	m_NowWidth = width, m_NowHeight = height;
 	m_Alive = true;
 	m_Hit = false;
@@ -58,7 +58,8 @@ void Sickle::Move() {
 				m_Frame = {};
 			}
 		}
-		m_Rotation.x = Ease(In, Cubic, m_Frame, m_Rotation.x, -90.0f);
+		m_Rotation.x = Ease(In, Cubic, m_Frame, m_Rotation.x, -450.0f);
+		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.5f);
 	}
 	else {
 		if (Helper::FrameCheck(m_Frame, addFrame)) {

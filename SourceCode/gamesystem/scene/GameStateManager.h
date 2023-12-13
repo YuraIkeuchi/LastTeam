@@ -52,6 +52,8 @@ public:
 	void DeckReset();
 	//捨てたIDを取得する
 	void GetDiscardSkill(const int ID);
+	//攻撃失敗
+	void MissAttack();
 private:
 	void PredictManager();
 	//攻撃した瞬間

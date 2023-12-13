@@ -461,7 +461,7 @@ void InterEnemy::DamageUpdate() {
 void InterEnemy::DeathUpdate() {
 	if (m_HP != 0.0f) { return; }
 
-	const float l_AddFrame = 0.005f;
+	const float l_AddFrame = 0.05f;
 	float RotPower = 5.0f;
 	m_Color.w = 1.0f;
 

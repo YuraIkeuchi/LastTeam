@@ -117,6 +117,7 @@ public:
 		ATTACK_TEX_8,
 		ATTACK_TEX_9,
 		ATTACK_TEX_10,
+		BOOM_DIR,
 	};
 	enum particleName
 	{
