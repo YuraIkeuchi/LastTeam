@@ -243,30 +243,15 @@ void BossEnemy2::ShockWaveAttack() {
 
 //回復行動
 void BossEnemy2::Recovery() {
-	//プレイヤーの現在マス
-	int l_PlayerWidth = player->GetNowWidth();
-	int l_PlayerHeight = player->GetNowHeight();
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_RECOVERY];
 	if (m_AttackCount != 1) {
-		if (coolTimer == 0) {
-			//プレイヤーからの距離(-1~1)
-			int l_RandWigth = Helper::GetRanNum(-1, 1);
-			int l_RandHeight = Helper::GetRanNum(-1, 1);
-			m_RandWigth = l_PlayerWidth + l_RandWigth;
-			m_RandHeight = l_PlayerHeight + l_RandHeight;
-			Helper::Clamp(m_RandWigth, 0, 3);
-			Helper::Clamp(m_RandHeight, 0, 3);
-			BirthPredict(m_RandWigth, m_RandHeight, "Recovery");
-		}
-		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-			BirthArea(m_RandWigth, m_RandHeight, "Recovery");
-			coolTimer = {};
-			m_AttackCount++;
-			m_Jump = true;
-			m_AddPower = 0.2f;
-			m_Rot = true;
-		}
+		GameStateManager::GetInstance()->SetIsHeal(true);
+		m_Jump = true;
+		m_AddPower = 0.2f;
+		m_Rot = true;
+		coolTimer = {};
+		m_AttackCount++;
 	}
 	else {
 		StagePanel::GetInstance()->EnemyHitReset();
@@ -280,27 +265,7 @@ void BossEnemy2::Recovery() {
 
 //攻撃エリア
 void BossEnemy2::BirthArea(const int Width, const int Height, const string& name) {
-	if (name == "Spinning") {			//衝撃波
-		for (auto i = 0; i < m_Area.size(); i++) {
-			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
-				newarea->Initialize();
-				newarea->InitState(i, Height);
-				newarea->SetPlayer(player);
-				enethorn.emplace_back(std::move(newarea));
-			}
-		}
-	}
-	else if (name == "ShockWave") {			//衝撃波
-		if (m_Area[Width][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-			std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
-			newarea->Initialize();
-			newarea->InitState(Width, Height);
-			newarea->SetPlayer(player);
-			enethorn.emplace_back(std::move(newarea));
-		}
-	}
-	else {		//ランダム(プレイヤーから近います)
+	if (m_Area[Width][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
@@ -313,19 +278,7 @@ void BossEnemy2::BirthArea(const int Width, const int Height, const string& name
 
 //予測エリア
 void BossEnemy2::BirthPredict(const int Width, const int Height, const string& name) {
-	if (name == "Spinning") {			//衝撃波
-		for (auto i = 0; i < m_Area.size(); i++) {
-			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				predictarea->SetPredict(i, Height, true);
-			}
-		}
-	}
-	else if (name == "ShockWave") {			//衝撃波
-		predictarea->SetPredict(Width, Height, true);
-	}
-	else {//ランダム(プレイヤーから近います)
-		predictarea->SetPredict(Width, Height, true);
-	}
+	predictarea->SetPredict(Width, Height, true);
 	predictarea->SetFlashStart(true);
 }
 
@@ -371,6 +324,12 @@ void BossEnemy2::SpinningAttackBirthPredict(int AttackCount)
 		BirthPredict(0, 1, "Spinning");
 		BirthPredict(1, 1, "Spinning");
 	}
+	else if (tmpAttackCount == 6) {
+		BirthPredict(0, 0, "Spinning");
+		BirthPredict(1, 1, "Spinning");
+		BirthPredict(2, 2, "Spinning");
+		BirthPredict(3, 3, "Spinning");
+	}
 }
 
 void BossEnemy2::SpinningAttackBirthArea(int AttackCount)
@@ -415,6 +374,12 @@ void BossEnemy2::SpinningAttackBirthArea(int AttackCount)
 		BirthArea(3, 2, "Spinning");
 		BirthArea(0, 1, "Spinning");
 		BirthArea(1, 1, "Spinning");
+	}
+	else if (tmpAttackCount == 6) {
+		BirthArea(0, 0, "Spinning");
+		BirthArea(1, 1, "Spinning");
+		BirthArea(2, 2, "Spinning");
+		BirthArea(3, 3, "Spinning");
 	}
 }
 
