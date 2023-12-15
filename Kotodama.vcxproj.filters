@@ -445,7 +445,6 @@
     <ClCompile Include="SourceCode\gamesystem\character\HealEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\text\DrawHealNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\effect\Slow.cpp">
       <Filter>gamesystem\effect</Filter>
     </ClCompile>
@@ -463,6 +462,12 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp">
       <Filter>gamesystem\skill</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\text\DrawHealNumber.cpp">
+      <Filter>gamesystem\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\text\DrawPoisonNumber.cpp">
+      <Filter>gamesystem\Text</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -876,7 +881,6 @@
     <ClInclude Include="SourceCode\gamesystem\character\HealEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\text\DrawHealNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\effect\Slow.h">
       <Filter>gamesystem\effect</Filter>
     </ClInclude>
@@ -894,6 +898,12 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\Sickle.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\text\DrawHealNumber.h">
+      <Filter>gamesystem\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\text\DrawPoisonNumber.h">
+      <Filter>gamesystem\Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -38,6 +38,10 @@ bool MobEnemy::Initialize() {
 	m_MaxHP = m_HP;
 	m_EnemyTag = "Mob";
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
+	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
+		_drawPoisonnumber[i] = make_unique<DrawPoisonNumber>(0.5f);
+		_drawPoisonnumber[i]->Initialize();
+	}
 	return true;
 }
 

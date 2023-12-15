@@ -238,6 +238,7 @@
     <ClCompile Include="SourceCode\gamesystem\text\DrawDamageNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\DrawHealNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\text\DrawPoisonNumber.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\Onomatope.cpp" />
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp" />
   </ItemGroup>
@@ -385,6 +386,7 @@
     <ClInclude Include="SourceCode\gamesystem\text\DrawDamageNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\DrawHealNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h" />
+    <ClInclude Include="SourceCode\gamesystem\text\DrawPoisonNumber.h" />
     <ClInclude Include="SourceCode\gamesystem\text\Onomatope.h" />
     <ClInclude Include="SourceCode\gamesystem\text\TextManager.h" />
   </ItemGroup>

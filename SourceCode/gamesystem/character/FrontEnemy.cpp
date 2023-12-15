@@ -26,6 +26,10 @@ FrontEnemy::FrontEnemy() {
 		_drawnumber[i]->Initialize();
 	}
 
+	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
+		_drawPoisonnumber[i] = make_unique<DrawPoisonNumber>(0.5f);
+		_drawPoisonnumber[i]->Initialize();
+	}
 	//—\‘ª
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();

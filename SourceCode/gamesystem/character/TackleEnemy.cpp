@@ -28,6 +28,10 @@ TackleEnemy::TackleEnemy() {
 		_drawnumber[i]->Initialize();
 	}
 
+	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
+		_drawPoisonnumber[i] = make_unique<DrawPoisonNumber>(0.5f);
+		_drawPoisonnumber[i]->Initialize();
+	}
 	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();
 	shadow_tex->Initialize();
