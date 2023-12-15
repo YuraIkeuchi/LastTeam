@@ -71,7 +71,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	UIs[0][Middle].pos = { homeX ,homeY[Middle] };
 	UIs[0][Middle].open = true;
 	UIs[0][Middle].hierarchy = 0;
-	UIs[0][Middle].size = { 128.f,128.f };
+	UIs[0][Middle].size = { 186.f,186.f };
 	UIs[0][Middle].sprite->SetAnchorPoint({ 0.5f,0.5f });
 	homeX += interbal;
 
@@ -135,7 +135,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 						int next = UIs[i][j].nextIndex[l];
 						XMFLOAT2 pos = {
 						Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.x,UIs[i + 1][next].pos.x),
-						Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y,UIs[i + 1][next].pos.y)
+						Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y+30.f,UIs[i + 1][next].pos.y+30.f)
 						};
 						unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, pos);
 						road->SetAnchorPoint({ 0.5f,0.5f });
@@ -214,7 +214,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	oldHierarchy = nowHierarchy;
 	oldIndex = nowIndex;
 
-	charaPos = { UIs[nowHierarchy][nowIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.y };
+	charaPos = { UIs[nowHierarchy][nowIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.y + 30.f};
 	framePos = UIs[pickHierarchy][pickIndex].pos;
 	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
@@ -375,7 +375,7 @@ MapScene::UI MapScene::TestPannel(int Index, int Hierarchy) {
 		break;
 	}
 
-	itr.size = { 128.f,128.f };
+	itr.size = { 186.f,186.f };
 	itr.sprite->SetAnchorPoint({ 0.5f,0.5f });
 	return itr;
 }
@@ -384,7 +384,7 @@ void MapScene::RoadUpdate() {
 	for (int k = 0; k < 10; k++) {
 		XMFLOAT2 pos = {
 		Ease(In,Linear,(float)k / 10.0f,UIs[nowHierarchy][nowIndex].pos.x,UIs[pickHierarchy][pickIndex].pos.x),
-		Ease(In,Linear,(float)k / 10.0f,UIs[nowHierarchy][nowIndex].pos.y,UIs[pickHierarchy][pickIndex].pos.y)
+		Ease(In,Linear,(float)k / 10.0f,UIs[nowHierarchy][nowIndex].pos.y+30.f,UIs[pickHierarchy][pickIndex].pos.y + 30.f)
 		};
 		starRoadsPos[k] = pos;
 	}
@@ -643,7 +643,7 @@ void MapScene::Move() {
 		}
 
 		charaPos.x = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.x);
-		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y, UIs[nowHierarchy][nowIndex].pos.y);
+		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y + 30.f, UIs[nowHierarchy][nowIndex].pos.y+30.f);
 		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowHierarchy][nowIndex].pos.x / 2);
 	}
 	scroll.x = clamp(scroll.x, -lastScroll, 340.f);
@@ -664,8 +664,8 @@ void MapScene::InitState() {
 			scrollFrame = 0.0f;
 			s_frame = 0.0f;
 		} else {
-			charaSize.x = Ease(In, Elastic, s_frame, 0.f, 128.f);
-			charaSize.y = Ease(In, Linear, s_frame, 0.f, 128.f);
+			charaSize.x = Ease(In, Elastic, s_frame, 0.f, 186.f);
+			charaSize.y = Ease(In, Linear, s_frame, 0.f, 186.f);
 		}
 	} else {
 		scroll.x = Ease(In, Linear, scrollFrame, -lastScroll, 0.f);
