@@ -25,6 +25,7 @@ private:
 	void SpinningAttack();
 	void ShockWaveAttack();
 	void Recovery();
+	void Stun();
 
 	void BirthArea(const int Width,const int Height,const string& name);//攻撃エリア
 	void BirthPredict(const int Width,const int Height,const string& name);//予測エリア
@@ -59,7 +60,8 @@ private:
 		ATTACK_SPINNING,
 		ATTACK_SHOCKWAVE,
 		ATTACK_RECOVERY,
-	}_AttackState = ATTACK_RECOVERY;
+		ATTACK_STUN
+	}_AttackState = ATTACK_SPINNING;
 	std::vector<std::vector<int>> m_Area = {};
 	// 攻撃エリア
 	std::vector<unique_ptr<EnemyThorn>> enethorn;
@@ -110,7 +112,8 @@ private:
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};
-
-	
+	bool m_RecoverySaveHP = {};
+	float m_TmpHP = {};
+	bool m_isStun = { };
 };
 

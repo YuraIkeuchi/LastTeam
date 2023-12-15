@@ -78,6 +78,7 @@ void (BossEnemy2::* BossEnemy2::attackTable[])() = {
 	&BossEnemy2::SpinningAttack,//‰ñ“]UŒ‚
 	&BossEnemy2::ShockWaveAttack,//—ñUŒ‚
 	&BossEnemy2::Recovery,//ƒ‰ƒ“ƒ_ƒ€
+	&BossEnemy2::Stun,
 };
 
 //s“®
@@ -151,13 +152,19 @@ void BossEnemy2::Finalize() {
 }
 //‘Ò‹@
 void BossEnemy2::Inter() {
-	int l_TargetTimer = {};
-	l_TargetTimer = m_Limit[STATE_INTER];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-		coolTimer = 0;
-		_charaState = STATE_ATTACK;
-		int l_RandState = Helper::GetRanNum(0, 2);
-		_AttackState = (AttackState)(l_RandState);
+	if (!m_isStun) {
+		int l_TargetTimer = {};
+		l_TargetTimer = m_Limit[STATE_INTER];
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+			coolTimer = 0;
+			_charaState = STATE_ATTACK;
+			int l_RandState = Helper::GetRanNum(0, 2);
+			//_AttackState = (AttackState)(l_RandState);
+			_AttackState = ATTACK_RECOVERY;
+		}
+	}
+	else {
+		Stun();
 	}
 }
 //UŒ‚
@@ -245,19 +252,57 @@ void BossEnemy2::ShockWaveAttack() {
 void BossEnemy2::Recovery() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_RECOVERY];
+	m_Rot = true;
+	if (!m_RecoverySaveHP) {
+		m_TmpHP = m_HP;
+		m_RecoverySaveHP = true;
+	}
+
+	if (m_TmpHP - 4.0f > m_HP) {
+		_charaState = STATE_INTER;
+		m_isStun = true;
+		m_TmpHP = 0.0f;
+	}
+
 	if (m_AttackCount != 1) {
-		GameStateManager::GetInstance()->SetIsHeal(true);
-		m_Jump = true;
-		m_AddPower = 0.2f;
-		m_Rot = true;
-		coolTimer = {};
-		m_AttackCount++;
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//ŽÀÛ‚ÌUŒ‚
+			GameStateManager::GetInstance()->SetIsHeal(true);
+			m_Jump = true;
+			m_AddPower = 0.2f;
+			m_Rot = true;
+			coolTimer = {};
+			m_AttackCount++;
+			m_RecoverySaveHP = false;
+		}
 	}
 	else {
 		StagePanel::GetInstance()->EnemyHitReset();
 		m_CheckPanel = true;
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
+		m_RecoverySaveHP = false;
+	}
+
+	predictarea->SetTargetTimer(l_TargetTimer);
+}
+
+void BossEnemy2::Stun()
+{
+
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_RECOVERY];
+
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//ŽÀÛ‚ÌUŒ‚
+		int l_TargetTimer = {};
+		l_TargetTimer = m_Limit[STATE_INTER];
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+			coolTimer = 0;
+			_charaState = STATE_SPECIAL;
+			int l_RandState = Helper::GetRanNum(0, 2);
+			_AttackState = (AttackState)(l_RandState);
+			m_isStun = false;
+			m_RecoverySaveHP = false;
+		}
 	}
 
 	predictarea->SetTargetTimer(l_TargetTimer);
@@ -306,7 +351,8 @@ void BossEnemy2::SpinningAttackBirthPredict(int AttackCount)
 		BirthPredict(2, 1, "Spinning");
 		BirthPredict(1, 2, "Spinning");
 		BirthPredict(1, 3, "Spinning");
-	}else if (tmpAttackCount == 3) {
+	}
+	else if (tmpAttackCount == 3) {
 		BirthPredict(3, 0, "Spinning");
 		BirthPredict(2, 1, "Spinning");
 		BirthPredict(1, 2, "Spinning");
