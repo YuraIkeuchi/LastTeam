@@ -22,6 +22,7 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	skillCheack->SetAnchorPoint({ 1.f,1.f });
 	feedIn = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	feedIn->SetSize({ 1280.f,720.f });
+	StarInit();
 	dxcommon = dxCommon;
 }
 
@@ -29,6 +30,7 @@ void ResultSkill::Update() {
 	if (!FeedOut()) { return; }
 	Move();
 	ShineEffectUpdate();
+	StarEffectUpdate();
 }
 
 void ResultSkill::Draw(DirectXCommon* dxCommon) {
@@ -57,6 +59,9 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 
 	for (ShineEffect& shine : shines) {
 		shine.tex->Draw();
+	}
+	for (StarEffect& star : stars) {
+		star.tex->Draw();
 	}
 	feedIn->Draw();
 	IKESprite::PostDraw();
@@ -144,6 +149,7 @@ void ResultSkill::Move() {
 			for (ResultUI& itr : choiceSkills) {
 				itr.oldNo = itr.no;
 			}
+			StarInit();
 		} else {
 			for (ResultUI& itr : choiceSkills) {
 				if ((itr.no == 2 && itr.oldNo == 1) || (itr.no == 2 && itr.oldNo == 3)) {
@@ -205,7 +211,7 @@ void ResultSkill::Move() {
 }
 
 bool ResultSkill::FeedOut() {
-	if (Helper::FrameCheck(frameA,1/45.f)) {
+	if (Helper::FrameCheck(frameA, 1 / 45.f)) {
 		feedIn->SetColor({ 1,1,1,0.f });
 		return true;
 	} else {
@@ -240,6 +246,43 @@ void ResultSkill::ShineEffectUpdate() {
 	}
 	shines.remove_if([](ShineEffect& shine) {
 		return shine.isVanish; });
+}
+
+void ResultSkill::StarEffectUpdate() {
+	for (StarEffect& star : stars) {
+		if (Helper::FrameCheck(star.frame, 1 / star.kFrame)) {
+			if (Helper::FrameCheck(star.frameA, 1.f / 10.f)) {
+				star.isVanish = true;
+			} else {
+				float alpha = Ease(In, Quad, star.frameA, 1.0f, 0.f);
+				float rot = Ease(In, Quad, star.frameA, 0.0f, 180.f);
+				star.tex->SetColor({ 1,1,1,alpha });
+				star.tex->SetRotation(rot);
+
+			}
+		} else {
+			star.dia = Ease(Out, Exp, star.frame, 0.f, 150.f);
+			star.tex->SetPosition({
+				star.position.x + sinf(star.angle) * star.dia,
+				star.position.y - cosf(star.angle) * star.dia
+				});
+		}
+	}
+
+	auto result = std::remove_if(stars.begin(), stars.end(),
+		[](StarEffect& star) { return star.isVanish; });
+	stars.erase(result, stars.end());
+}
+
+void ResultSkill::StarInit() {
+	for (int i = 0; i < 5; i++) {
+		StarEffect star;
+		star.tex = IKESprite::Create(ImageManager::PLASHINE, { -100.f,0.f });
+		star.tex->SetAnchorPoint({ 0.5f,0.5f });
+		star.angle = (i * 72.f) * (XM_PI / 180.f);
+		star.position = BasePos[2];
+		stars.push_back(std::move(star));
+	}
 }
 
 ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) {

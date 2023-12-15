@@ -133,7 +133,7 @@ void Player::Update() {
 		// 最大スコアは10
 		Helper::Clamp(m_GrazeScore, 0.0f, l_GrazeMax);
 		// プレイヤーの位置からスコアを加算する
-		GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + ((float)(m_NowWidth) * 0.1f));
+		GameStateManager::GetInstance()->SetPosScore(GameStateManager::GetInstance()->GetPosScore() + (int)((m_NowWidth) * 0.1f));
 		GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 
 		//HPの限界値を決める
@@ -434,7 +434,7 @@ void Player::Move() {
 				for (int i = 0; i < 4; i++) {
 					m_InputTimer[i] = {};
 				}
-				GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+				//GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 				GameStateManager::GetInstance()->SetResetPredict(true);
 				m_Scale = { 0.5f,0.5f,0.5f };
 			}
@@ -589,7 +589,7 @@ void Player::Delay() {
 //プレイヤーの動きの基本
 void Player::MoveCommon(float& pos, float velocity) {
 	pos += velocity;
-	GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+	//GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 	GameStateManager::GetInstance()->SetResetPredict(true);
 }
 //プレイヤーのHP回復

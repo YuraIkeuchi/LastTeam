@@ -209,6 +209,19 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				m_Poison = true;
 			}
 			BirthParticle();
+
+			Camera* camera = Helper::GetCamera();
+			m_MatView = camera->GetViewMatrix();
+			m_MatProjection = camera->GetProjectionMatrix();
+			m_MatPort = camera->GetViewPort();
+			//HPバー
+			XMVECTOR tex2DPos = { m_Position.x, m_Position.y, m_Position.z};
+			tex2DPos = Helper::PosDivi(tex2DPos, m_MatView, false);
+			tex2DPos = Helper::PosDivi(tex2DPos, m_MatProjection, true);
+			tex2DPos = Helper::WDivision(tex2DPos, false);
+			tex2DPos = Helper::PosDivi(tex2DPos, m_MatPort, false);
+
+			GameStateManager::GetInstance()->DamageEffectInit({ tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] });
 			_area->SetHit(true);
 			//チュートリアル専用
 			if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {

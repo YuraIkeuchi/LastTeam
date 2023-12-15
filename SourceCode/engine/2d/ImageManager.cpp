@@ -11,6 +11,10 @@ void ImageManager::StartLoad2D()
 {
 	IKESprite::LoadTexture(FEED, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(SHINE, L"Resources/2d/effect/shine.png");
+	IKESprite::LoadTexture(PLASHINE, L"Resources/2d/effect/effect3.png");
+	IKESprite::LoadTexture(SHINE_S, L"Resources/2d/effect/effect4.png");
+	IKESprite::LoadTexture(SHINE_L, L"Resources/2d/effect/effect5.png");
+	IKESprite::LoadTexture(SMOKE, L"Resources/2d/effect/smoke.png");
 	IKESprite::LoadTexture(POWERUP, L"Resources/2d/effect/Up.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 	IKESprite::LoadTexture(HPNUMBERUI, L"Resources/2d/objicon/Numbers/Num.png");
@@ -58,6 +62,9 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ONOMATO_03, L"Resources/2d/objicon/Onomatope/03_GAMEOVER.png");
 	IKESprite::LoadTexture(ONOMATO_04, L"Resources/2d/objicon/Onomatope/04_Charged.png");
 	IKESprite::LoadTexture(ONOMATO_05, L"Resources/2d/objicon/Onomatope/05_Counter.png");
+	IKESprite::LoadTexture(ONOMATO_06, L"Resources/2d/objicon/Onomatope/06_Attack02.png");
+	IKESprite::LoadTexture(ONOMATO_07, L"Resources/2d/objicon/Onomatope/07_Attack03.png");
+	IKESprite::LoadTexture(ONOMATO_08, L"Resources/2d/objicon/Onomatope/08_Attack04.png");
 	IKESprite::LoadTexture(RESULTBACKSCREEN, L"Resources/2d/sceneback/ResultSkill_BS.png");
 	IKESprite::LoadTexture(RESULTATTACKAREA, L"Resources/2d/objicon/Areas/AttackArea.png");
 	IKESprite::LoadTexture(RESULTNOWCHECK, L"Resources/2d/objicon/SkillCheackNow.png");

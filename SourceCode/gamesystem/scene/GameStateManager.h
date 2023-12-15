@@ -54,6 +54,9 @@ public:
 	void GetDiscardSkill(const int ID);
 	//攻撃失敗
 	void MissAttack();
+	//
+	void DamageEffectInit(XMFLOAT2 pos);
+
 private:
 	void PredictManager();
 	//攻撃した瞬間
@@ -87,6 +90,9 @@ private:
 	void PowerUpEffectUpdate();
 
 	void PassiveActive();
+
+	void DamageEffectUpdate();
+
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -99,8 +105,7 @@ public:
 	const bool GetResetPredict() { return  m_ResetPredict; }
 
 	void SetDxCommon(DirectXCommon* dxCommon) { this->m_dxCommon = dxCommon; }
-	const float GetPosScore() { return m_PosScore; }
-	const float GetGrazeScore() { return m_GrazeScore; }
+	const int GetPosScore() { return m_PosScore; }
 	vector<unique_ptr<AttackArea>>& GetAttackArea() { return attackarea; }
 	const float GetDiameterVel() { return m_DiameterVel; }
 	//std::weak_ptr<Player> GetPlayer() { return player_; }
@@ -113,8 +118,7 @@ public:
 	string& GetEnemySpawnText() { return enemySpawnText; }
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetResetPredict(const bool ResetPredict) { this->m_ResetPredict = ResetPredict; }
-	void SetPosScore(const float PosScore) { this->m_PosScore = PosScore; }
-	void SetGrazeScore(const float GrazeScore) { this->m_GrazeScore = GrazeScore; }
+	void SetPosScore(const int PosScore) { this->m_PosScore = PosScore; }
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
 	//void SetPlayer(std::weak_ptr<Player> player) { player_ = player; }
 	// 仮
@@ -163,6 +167,18 @@ private:
 		string StateName;		//付与状態
 	};
 
+	struct DamageEffect {
+		unique_ptr<IKESprite> tex;
+		float frame = 0.f;
+		float frameA = 0.f;
+		float kFrame = 20.f;
+		float angle = 0.f;
+		float dia = 0.f;
+		XMFLOAT2 position = { 0.f,0.f };
+		XMFLOAT2 size = { 32.f,32.f };
+		bool isVanish = false;
+	};
+
 	vector<ActState> m_Act;
 
 	//全行動回数
@@ -171,8 +187,10 @@ private:
 	//行動のUI
 	vector<unique_ptr<ActionUI>> actui;
 
+	std::list<DamageEffect> damages;
+
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {8};
+	std::vector <int> m_StartPassive= {};
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -196,12 +214,10 @@ private:
 	//カウンター
 	bool m_Counter = false;
 	int m_CounterTimer = {};
-	int m_CounterScore = {};
+	int m_CounterCount = {};
 
 	//位置のスコア
-	float m_PosScore = {};
-	//グレイズのスコア(後々intにする)
-	float m_GrazeScore = 0.0f;
+	int m_PosScore = {};
 
 	//全体スコア
 	int m_AllScore = {};

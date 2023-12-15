@@ -449,7 +449,6 @@
     <ClCompile Include="SourceCode\gamesystem\effect\Slow.cpp">
       <Filter>gamesystem\effect</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\FrontEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
@@ -461,6 +460,9 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\stageobj\Sickle.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp">
+      <Filter>gamesystem\skill</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

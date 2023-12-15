@@ -7,12 +7,14 @@
 
 enum OnomatoPattern {
 	Foot,
-	Attack01,
 	BossSpawn,
 	GameOver,
 	AttackCharge,
 	Counter,
-
+	Attack01,
+	Attack02,
+	Attack03,
+	Refrain,
 };
 class Onomatope {
 public:
@@ -34,6 +36,8 @@ private:
 		int pattern = -1;
 		float delayFrame = 0.f;
 		float kDelayFrameMax = 1.f;
+		float vanishFrame = 0.f;
+		float kVanishFrameMax = 20.0f;
 	};
 	//ä÷êîÉ|ÉCÉìÉ^
 	static void(Onomatope::* updateTable[])(OnomatoStruct& onomato);
@@ -44,8 +48,11 @@ private:
 	void GameOverUpdate(OnomatoStruct& onomato);
 	void AttackChargeUpdate(OnomatoStruct& onomato);
 	void CounterUpdate(OnomatoStruct& onomato);
-
+	void LittleBurnUpdate(OnomatoStruct& onomato);
+	void StoneUpdate(OnomatoStruct& onomato);
+	void RefrainUpdate(OnomatoStruct& onomato);
 private:
 	std::list<OnomatoStruct> onomatoList;
+	std::unique_ptr<IKESprite> Huu;
 
 };
