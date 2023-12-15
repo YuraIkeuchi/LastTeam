@@ -265,9 +265,11 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 			else if (word.find("Timer") == 0) {
 				while (std::getline(line_stream, word)) {
 					std::vector<int> row;
-
+					stringstream ss;
+					int X = 0;
 					for (char& x : word) {
-						int X = x - '0';
+						ss << word;
+						ss >> X;
 						if (x != ' ')
 							row.push_back(X);
 					}
@@ -277,9 +279,11 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 			else if (word.find("TimeR") == 0) {
 				while (std::getline(line_stream, word)) {
 					std::vector<int> row;
-
+					stringstream ss;
+					int X = 0;
 					for (char& x : word) {
-						int X = x - '0';
+						ss << word;
+						ss >> X;
 						if (x != ' ')
 							row.push_back(X);
 					}
