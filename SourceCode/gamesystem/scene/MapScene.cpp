@@ -89,8 +89,6 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		mapKinds[11] = { PASSIVE,BATTLE,BATTLE };
 		mapKinds[12] = { BATTLE,PASSIVE,PASSIVE };
 		mapKinds[13] = { -1,BOSS,-1 };
-
-
 	}
 	MapCreate();
 
@@ -665,7 +663,7 @@ void MapScene::Finalize() {
 
 void MapScene::InitState() {
 	const float addFrame = 1.0f / 45.f;
-	const float addFrameS = 1.0f / 80.f;
+	const float addFrameS = 1.0f / 180.f;
 	static float scrollFrame = 0.0f;
 	static float s_frame = 0.0f;
 	if (Helper::FrameCheck(scrollFrame, addFrameS)) {
