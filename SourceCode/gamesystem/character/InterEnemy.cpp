@@ -414,26 +414,28 @@ void InterEnemy::HPManage() {
 	}
 
 	//描画する数字と座標をここでセットする
-	if (m_PoisonToken >= 100) {
-		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 2.0f, m_Position.y, m_Position.z - 0.55f });
-		_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
-		_drawPoisonnumber[THIRD_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
-		XMFLOAT2 pos = _drawPoisonnumber[THIRD_DIGHT]->GetPosition();
-		poisonState->SetPosition({ pos.x - 35.f,pos.y });
-	} else if (m_PoisonToken >= 10) {
-		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
-		_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
-		XMFLOAT2 pos = _drawPoisonnumber[SECOND_DIGHT]->GetPosition();
-		poisonState->SetPosition({ pos.x - 35.f,pos.y });
-	} else {
-		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
-		XMFLOAT2 pos = _drawPoisonnumber[FIRST_DIGHT]->GetPosition();
-		poisonState->SetPosition({ pos.x - 35.f,pos.y });
-	}
 	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
 		_drawPoisonnumber[i]->GetCameraData();
 		_drawPoisonnumber[i]->SetNumber(m_PoisonTokenNum[i]);
 		_drawPoisonnumber[i]->Update();
+	}
+	if (m_Poison) {
+		if (m_PoisonToken >= 100) {
+			_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 2.0f, m_Position.y, m_Position.z - 0.55f });
+			_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
+			_drawPoisonnumber[THIRD_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+			XMFLOAT2 pos = _drawPoisonnumber[THIRD_DIGHT]->GetPosition();
+			poisonState->SetPosition({ pos.x - 35.f,pos.y });
+		} else if (m_PoisonToken >= 10) {
+			_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
+			_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+			XMFLOAT2 pos = _drawPoisonnumber[SECOND_DIGHT]->GetPosition();
+			poisonState->SetPosition({ pos.x - 35.f,pos.y });
+		} else {
+			_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+			XMFLOAT2 pos = _drawPoisonnumber[FIRST_DIGHT]->GetPosition();
+			poisonState->SetPosition({ pos.x - 35.f,pos.y });
+		}
 	}
 }
 
