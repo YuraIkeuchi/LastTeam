@@ -42,6 +42,7 @@ protected:
 	std::vector<unique_ptr<DrawDamageNumber>> _damagenumber;
 	std::vector<unique_ptr<DrawHealNumber>> _healnumber;
 	array<unique_ptr<DrawPoisonNumber>, NUMBER_MAX> _drawPoisonnumber;
+	unique_ptr<IKESprite> poisonState;
 
 	unique_ptr<IKETexture> _charge;
 	//unique_ptr<IKETexture> shadow_tex;
@@ -149,6 +150,7 @@ public:
 	/// 初期化
 	/// </summary>
 	virtual bool Initialize()override;
+	void BaseInitialize(IKEModel* _model);
 	void SkipInitialize();
 	/// <summary>
 	/// 終了

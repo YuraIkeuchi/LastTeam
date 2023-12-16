@@ -6,6 +6,7 @@
 #include <GameStateManager.h>
 #include <ParticleEmitter.h>
 #include <TutorialTask.h>
+#include "ImageManager.h"
 #include <Slow.h>
 Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
@@ -24,6 +25,29 @@ XMFLOAT3 InterEnemy::SetPannelPos(int width, int height) {
 //初期化
 bool InterEnemy::Initialize() {
 	return true;
+}
+void InterEnemy::BaseInitialize(IKEModel* _model) {
+	m_Object.reset(new IKEObject3d());
+	m_Object->Initialize();
+	m_Object->SetModel(_model);
+	m_Object->SetLightEffect(false);
+
+	//HPII
+	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
+
+	for (auto i = 0; i < _drawnumber.size(); i++) {
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
+		_drawnumber[i]->Initialize();
+	}
+	poisonState = IKESprite::Create(ImageManager::POIZONCOVER, { 0.0f,0.0f });
+	poisonState->SetSize({ 32.f,32.f });
+	poisonState->SetAnchorPoint({ 0.5f,0.5f });
+	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
+		_drawPoisonnumber[i] = make_unique<DrawPoisonNumber>(0.5f);
+		_drawPoisonnumber[i]->Initialize();
+	}
+
 }
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;
@@ -148,15 +172,18 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
-	//敵のポイズンテキスト
-	if (m_PoisonToken >= 0) {
-		_drawPoisonnumber[FIRST_DIGHT]->Draw();
-	}
-	if (m_PoisonToken >= 10) {
-		_drawPoisonnumber[SECOND_DIGHT]->Draw();
-	}
-	if (m_PoisonToken >= 100) {
-		_drawPoisonnumber[THIRD_DIGHT]->Draw();
+	if (m_Poison) {
+		poisonState->Draw();
+		//敵のポイズンテキスト
+		if (m_PoisonToken >= 0) {
+			_drawPoisonnumber[FIRST_DIGHT]->Draw();
+		}
+		if (m_PoisonToken >= 10) {
+			_drawPoisonnumber[SECOND_DIGHT]->Draw();
+		}
+		if (m_PoisonToken >= 100) {
+			_drawPoisonnumber[THIRD_DIGHT]->Draw();
+		}
 	}
 	IKESprite::PostDraw();
 }
@@ -387,14 +414,20 @@ void InterEnemy::HPManage() {
 
 	//描画する数字と座標をここでセットする
 	if (m_PoisonToken >= 100) {
-		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.4f, m_Position.y, m_Position.z - 0.55f });
-		_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.05f, m_Position.y, m_Position.z - 0.55f });
-		_drawPoisonnumber[THIRD_DIGHT]->SetExplain({ m_Position.x + 0.7f, m_Position.y, m_Position.z - 0.55f });
+		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 2.0f, m_Position.y, m_Position.z - 0.55f });
+		_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
+		_drawPoisonnumber[THIRD_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+		XMFLOAT2 pos = _drawPoisonnumber[THIRD_DIGHT]->GetPosition();
+		poisonState->SetPosition({ pos.x - 35.f,pos.y });
 	} else if (m_PoisonToken >= 10) {
-		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.05f, m_Position.y, m_Position.z - 0.55f });
-		_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 0.7f, m_Position.y, m_Position.z - 0.55f });
+		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
+		_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+		XMFLOAT2 pos = _drawPoisonnumber[SECOND_DIGHT]->GetPosition();
+		poisonState->SetPosition({ pos.x - 35.f,pos.y });
 	} else {
-		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.7f, m_Position.y, m_Position.z - 0.55f });
+		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+		XMFLOAT2 pos = _drawPoisonnumber[FIRST_DIGHT]->GetPosition();
+		poisonState->SetPosition({ pos.x - 35.f,pos.y });
 	}
 	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
 		_drawPoisonnumber[i]->GetCameraData();
