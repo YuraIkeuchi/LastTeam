@@ -19,6 +19,7 @@ DrawPoisonNumber::DrawPoisonNumber(const float scale, const bool move) {
 		_Number[i]->SetAnchorPoint({ 0.5f,0.5f });
 		_Number[i]->SetSize({ l_Width_Cut,l_Height_Cut });
 		_Number[i]->SetScale(scale);
+		_Number[i]->SetColor({1,1,1,1});
 	}
 
 	m_Move = move;

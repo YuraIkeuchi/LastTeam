@@ -10,7 +10,7 @@
 #include <StagePanel.h>
 
 
-array<array<int, 3>, 10> MapScene::mapKinds;
+array<array<int, 3>, 15> MapScene::mapKinds;
 bool MapScene::isStart = true;
 void (MapScene::* MapScene::stateTable[])() = {
 	&MapScene::InitState,//
@@ -81,6 +81,11 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		mapKinds[3] = { -1,BATTLE,-1 };
 		mapKinds[4] = { PASSIVE,-1,BATTLE };
 		mapKinds[5] = { -1,BOSS,-1 };
+		mapKinds[6] = { PASSIVE,-1,BATTLE };
+		mapKinds[7] = { PASSIVE,-1,PASSIVE };
+		mapKinds[8] = { BATTLE,-1,PASSIVE };
+		mapKinds[9] = { PASSIVE,-1,BATTLE };
+		mapKinds[10] = { -1,BOSS,-1 };
 	}
 	MapCreate();
 

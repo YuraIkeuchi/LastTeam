@@ -96,7 +96,7 @@ private:
 
 	unique_ptr<Onomatope> onomatope = nullptr;
 
-	static array<array<int, 3>, 10> mapKinds;
+	static array<array<int, 3>, 15> mapKinds;
 	unique_ptr<IKESprite> screen = nullptr;
 	unique_ptr<IKESprite> startButton = nullptr;
 	unique_ptr<IKESprite> cheack= nullptr;

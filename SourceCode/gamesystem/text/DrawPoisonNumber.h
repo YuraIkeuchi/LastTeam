@@ -40,6 +40,7 @@ public:
 	const bool GetAlive() { return m_Alive; }
 	void SetPosition(const XMFLOAT2& Position) { m_Position = Position; }
 	void SetNumber(const int Number) { m_Number = Number; }
+	XMFLOAT2 GetPosition() { return m_Position; }
 private:
 private:
 	static const int NUMBER_MAX = 10;
