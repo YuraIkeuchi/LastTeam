@@ -10,23 +10,13 @@
 #include <StagePanel.h>
 //ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
 PoisonEnemy::PoisonEnemy() {
-	m_Object.reset(new IKEObject3d());
-	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::MISSILE));
-	m_Object->SetLightEffect(false);
+	//‹¤’Ê‚Ì‰Šú‰»ˆ—
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::MISSILE));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
-	//HPII
-	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
-	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
-
-	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
-		_drawnumber[i]->Initialize();
-	}
 
 	//shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	//shadow_tex->TextureCreate();

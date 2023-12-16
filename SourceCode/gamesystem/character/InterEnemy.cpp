@@ -6,6 +6,7 @@
 #include <GameStateManager.h>
 #include <ParticleEmitter.h>
 #include <TutorialTask.h>
+#include "ImageManager.h"
 #include <Slow.h>
 Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
@@ -25,6 +26,29 @@ XMFLOAT3 InterEnemy::SetPannelPos(int width, int height) {
 bool InterEnemy::Initialize() {
 	return true;
 }
+void InterEnemy::BaseInitialize(IKEModel* _model) {
+	m_Object.reset(new IKEObject3d());
+	m_Object->Initialize();
+	m_Object->SetModel(_model);
+	m_Object->SetLightEffect(false);
+
+	//HPII
+	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
+
+	for (auto i = 0; i < _drawnumber.size(); i++) {
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
+		_drawnumber[i]->Initialize();
+	}
+	poisonState = IKESprite::Create(ImageManager::POIZONCOVER, { 0.0f,0.0f });
+	poisonState->SetSize({ 32.f,32.f });
+	poisonState->SetAnchorPoint({ 0.5f,0.5f });
+	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
+		_drawPoisonnumber[i] = make_unique<DrawPoisonNumber>(0.5f);
+		_drawPoisonnumber[i]->Initialize();
+	}
+
+}
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;
 }
@@ -37,12 +61,10 @@ void InterEnemy::Update() {
 			if (m_Alive) {
 				Action();
 			}
-		}
-		else {
+		} else {
 			Action();
 		}
-	}
-	else {
+	} else {
 	}
 
 	const int l_BasePanelCount = 4;
@@ -53,14 +75,14 @@ void InterEnemy::Update() {
 	m_InterHP = (int)(m_HP);
 
 	////敵のマスを取得する
-	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight,m_Alive);
+	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight, m_Alive);
 
 	if (m_HP != 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
 			_drawnumber[i]->Update();
 		}
-	}
-	else {
+
+	} else {
 		if (m_EnemyTag != "Bomb") {
 			//m_Alive = false;
 		}
@@ -150,7 +172,19 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
-
+	if (m_Poison) {
+		poisonState->Draw();
+		//敵のポイズンテキスト
+		if (m_PoisonToken >= 0) {
+			_drawPoisonnumber[FIRST_DIGHT]->Draw();
+		}
+		if (m_PoisonToken >= 10) {
+			_drawPoisonnumber[SECOND_DIGHT]->Draw();
+		}
+		if (m_PoisonToken >= 100) {
+			_drawPoisonnumber[THIRD_DIGHT]->Draw();
+		}
+	}
 	IKESprite::PostDraw();
 }
 //当たり判定
@@ -200,13 +234,18 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			if (name == "DRAIN") {
 				float rate = 0.2f;
 				if (m_IsDrainUp) {
-					rate *= 2.f; 
+					rate *= 2.f;
 					GameStateManager::GetInstance()->SetPassiveActive();
 				}
 				player->HealPlayer(damage * rate);		//HP回復
-			}
-			else if (name == "POISON") {
+			} else if (name == "POISON") {
 				m_Poison = true;
+				if (!m_IsVenom) {
+					m_PoisonToken += 4;
+				} else {
+					GameStateManager::GetInstance()->SetPassiveActive();
+					m_PoisonToken += 8;
+				}
 			}
 			BirthParticle();
 
@@ -215,7 +254,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			m_MatProjection = camera->GetProjectionMatrix();
 			m_MatPort = camera->GetViewPort();
 			//HPバー
-			XMVECTOR tex2DPos = { m_Position.x, m_Position.y, m_Position.z};
+			XMVECTOR tex2DPos = { m_Position.x, m_Position.y, m_Position.z };
 			tex2DPos = Helper::PosDivi(tex2DPos, m_MatView, false);
 			tex2DPos = Helper::PosDivi(tex2DPos, m_MatProjection, true);
 			tex2DPos = Helper::WDivision(tex2DPos, false);
@@ -234,15 +273,14 @@ void InterEnemy::SimpleDamege(float damage) {
 	if (m_HP <= 0.0f) { return; }
 	float hp = m_HP;
 	hp -= damage;
-	Helper::Clamp(hp,1.0f,m_HP);
+	Helper::Clamp(hp, 1.0f, m_HP);
 	m_HP = hp;
 	BirthParticle();
 }
 
-void InterEnemy::SimpleHeal(float heal)
-{
+void InterEnemy::SimpleHeal(float heal) {
 	if (m_HP <= 0.0f) { return; }
-	
+
 	float l_HealNum = {};
 
 	if (m_HP != m_MaxHP) {
@@ -250,8 +288,7 @@ void InterEnemy::SimpleHeal(float heal)
 
 		if (m_MaxHP - m_HP >= heal) {
 			l_HealNum = heal;
-		}
-		else {
+		} else {
 			l_HealNum = m_MaxHP - m_HP;
 		}
 		BirthHealNumber(l_HealNum);
@@ -268,13 +305,12 @@ void InterEnemy::BirthParticle() {
 	const float e_scale = 0.0f;
 	int l_Life = {};
 	float l_Divi = {};
-	
+
 	//最後の敵かどうかでパーティクルが変わる
-	if(m_LastEnemy && m_HP <= 0.1f) {
+	if (m_LastEnemy && m_HP <= 0.1f) {
 		l_Life = 500;
 		l_Divi = 20.0f;
-	}
-	else {
+	} else {
 		l_Life = 50;
 		l_Divi = 8.0f;
 	}
@@ -295,19 +331,17 @@ void InterEnemy::BirthPoisonParticle() {
 	if (!m_LastEnemy) {
 		l_Life = 50;
 		l_Divi = 3.0f;
-	}
-	else {
+	} else {
 		if (m_HP == 0.0f) {
 			l_Life = 500;
 			l_Divi = 20.0f;
-		}
-		else {
+		} else {
 			l_Life = 50;
 			l_Divi = 8.0f;
 		}
 	}
 	for (int i = 0; i < 3; i++) {
-		ParticleEmitter::GetInstance()->PoisonEffect(l_Life, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color,0.02f,l_Divi);
+		ParticleEmitter::GetInstance()->PoisonEffect(l_Life, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color, 0.02f, l_Divi);
 	}
 }
 
@@ -324,13 +358,11 @@ void InterEnemy::BirthHealParticle() {
 	if (!m_LastEnemy) {
 		l_Life = 50;
 		l_Divi = 5.0f;
-	}
-	else {
+	} else {
 		if (m_HP == 0.0f) {
 			l_Life = 500;
 			l_Divi = 20.0f;
-		}
-		else {
+		} else {
 			l_Life = 50;
 			l_Divi = 8.0f;
 		}
@@ -362,9 +394,9 @@ void InterEnemy::WorldDivision() {
 	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 
 	//描画する数字と座標をここでセットする
-	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.55f, m_Position.y, m_Position.z - 0.55f });
-	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f });
-	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.15f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.35f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.35f, m_Position.y, m_Position.z - 0.55f });
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i]->GetCameraData();
 		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
@@ -375,35 +407,60 @@ void InterEnemy::HPManage() {
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		m_DigitNumber[i] = Helper::getDigits(m_InterHP, i, i);
 	}
+
+	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
+		m_PoisonTokenNum[i] = Helper::getDigits(m_PoisonToken, i, i);
+	}
+
+	//描画する数字と座標をここでセットする
+	if (m_PoisonToken >= 100) {
+		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 2.0f, m_Position.y, m_Position.z - 0.55f });
+		_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
+		_drawPoisonnumber[THIRD_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+		XMFLOAT2 pos = _drawPoisonnumber[THIRD_DIGHT]->GetPosition();
+		poisonState->SetPosition({ pos.x - 35.f,pos.y });
+	} else if (m_PoisonToken >= 10) {
+		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
+		_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+		XMFLOAT2 pos = _drawPoisonnumber[SECOND_DIGHT]->GetPosition();
+		poisonState->SetPosition({ pos.x - 35.f,pos.y });
+	} else {
+		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+		XMFLOAT2 pos = _drawPoisonnumber[FIRST_DIGHT]->GetPosition();
+		poisonState->SetPosition({ pos.x - 35.f,pos.y });
+	}
+	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
+		_drawPoisonnumber[i]->GetCameraData();
+		_drawPoisonnumber[i]->SetNumber(m_PoisonTokenNum[i]);
+		_drawPoisonnumber[i]->Update();
+	}
 }
 
 //毒
 void InterEnemy::PoisonState() {
-	float damage = {};
 	if (!m_Poison) { return; }
-	int kTimerMax = 800;
-	if (m_PoisonLong) { 
-		GameStateManager::GetInstance()->SetPassiveActive();
-		kTimerMax *= 2; 
-	}
-	m_PoisonTimer++;
-
-	if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
-		if (!m_IsVenom) {
-			damage = 1.0f;
-			m_HP -= damage;
-		} else {
-			damage = 2.0f;
-			m_HP -= damage;
-			GameStateManager::GetInstance()->SetPassiveActive();
-		}
-		BirthDamage(damage);
-		BirthPoisonParticle();
-	}
-
-	if (m_PoisonTimer == kTimerMax) {	//一定時間立ったら毒終了
+	if (m_PoisonToken <= 0) {
 		m_Poison = false;
-		m_PoisonTimer = {};
+		m_PoisonToken = 0;
+		m_PoisonTimer = 0;
+	}
+	//毒ヒット時タイマーリセットするか
+	//仕様変更必要
+	//新毒仕様
+	int kTimerMax = 140;//
+	m_PoisonTimer++;
+	if (m_PoisonTimer % kTimerMax == 0) {	//一定フレームで1ずつ減らす
+		m_HP -= m_PoisonToken;
+		BirthDamage((float)m_PoisonToken);
+		BirthPoisonParticle();
+		if (m_PoisonLong) {
+			//GameStateManager::GetInstance()->SetPassiveActive();
+			m_PoisonToken /= 4;
+		} else {
+			m_PoisonToken /= 2;
+		}
+
+		m_PoisonTimer = 0;
 	}
 }
 //ダメージテキスト
@@ -418,8 +475,7 @@ void InterEnemy::BirthDamage(const float Damage) {
 		_newnumber->Initialize();
 		_newnumber->SetNumber(l_InterDamage);
 		_damagenumber.push_back(std::move(_newnumber));
-	}
-	else {
+	} else {
 		int l_DightDamage[DAMAGE_MAX];
 		for (auto i = 0; i < DAMAGE_MAX; i++) {
 			l_DightDamage[i] = Helper::getDigits(l_InterDamage, i, i);
@@ -427,8 +483,7 @@ void InterEnemy::BirthDamage(const float Damage) {
 			_newnumber->GetCameraData();
 			if (i == 0) {
 				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
-			}
-			else {
+			} else {
 				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
 			}
 			_newnumber->Initialize();
@@ -464,8 +519,7 @@ void InterEnemy::DamageUpdate() {
 
 	if (m_FlashCount % 2 != 0) {
 		m_Color.w = 1.0f;
-	}
-	else {
+	} else {
 		m_Color.w = 0.0f;
 	}
 }
@@ -481,15 +535,14 @@ void InterEnemy::DeathUpdate() {
 	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
 		m_OverFrame = 1.0f;
 		m_Alive = false;
-	}
-	else {
+	} else {
 		RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);
 		m_Rotation.y += RotPower;
 		m_Position.y = Ease(In, Cubic, m_OverFrame, m_Position.y, 0.5f);
 
 		m_Scale = { Ease(In,Cubic,m_OverFrame,m_Scale.x,0.0f),
 			Ease(In,Cubic,m_OverFrame,m_Scale.y,0.0f),
-		Ease(In,Cubic,m_OverFrame,m_Scale.z,0.0f)};
+		Ease(In,Cubic,m_OverFrame,m_Scale.z,0.0f) };
 	}
 
 	Obj_SetParam();

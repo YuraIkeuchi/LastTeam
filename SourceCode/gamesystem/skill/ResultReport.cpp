@@ -149,8 +149,13 @@ void ResultReport::ScoreUpdate() {
 		if (Helper::FrameCheck(numFrames[1], 1 / kFrameScoreMax)) {
 			if (score >= 200) {
 				rate = IKESprite::Create(ImageManager::RESULTREPORTATTACK, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
+				rate->SetAnchorPoint({ 0.5f,0.5f });
+				rate->SetRotation(-2.f);
 			} else {
 				rate = IKESprite::Create(ImageManager::RESULTREPORTDEFFENCE, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
+				rate->SetAnchorPoint({ 0.5f,0.5f });
+				rate->SetRotation(-2.f);
+
 			}
 			state = STAMP;
 		} else {

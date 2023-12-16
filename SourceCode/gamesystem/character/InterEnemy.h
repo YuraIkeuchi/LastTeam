@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "DrawDamageNumber.h"
 #include "DrawHealNumber.h"
+#include "DrawPoisonNumber.h"
 
 using namespace std;         //  名前空間指定
 //キャラの状態
@@ -40,6 +41,9 @@ protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
 	std::vector<unique_ptr<DrawDamageNumber>> _damagenumber;
 	std::vector<unique_ptr<DrawHealNumber>> _healnumber;
+	array<unique_ptr<DrawPoisonNumber>, NUMBER_MAX> _drawPoisonnumber;
+	unique_ptr<IKESprite> poisonState;
+
 	unique_ptr<IKETexture> _charge;
 	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
@@ -86,9 +90,13 @@ protected:
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//整数にしたHP
 
+	//数値化したPOISON表示のための変数
+	array<int, NUMBER_MAX> m_PoisonTokenNum;
+
 	bool m_Poison = false;
 	bool m_PoisonLong = false;
 	bool m_IsVenom = false;
+	int m_PoisonToken = 0;
 	bool m_IsDrainUp = false;
 	int m_PoisonTimer = {};
 	bool m_Alive = true;
@@ -142,6 +150,7 @@ public:
 	/// 初期化
 	/// </summary>
 	virtual bool Initialize()override;
+	void BaseInitialize(IKEModel* _model);
 	void SkipInitialize();
 	/// <summary>
 	/// 終了

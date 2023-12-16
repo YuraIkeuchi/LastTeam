@@ -96,7 +96,7 @@ private:
 
 	unique_ptr<Onomatope> onomatope = nullptr;
 
-	static array<array<int, 3>, 10> mapKinds;
+	static array<array<int, 3>, 15> mapKinds;
 	unique_ptr<IKESprite> screen = nullptr;
 	unique_ptr<IKESprite> startButton = nullptr;
 	unique_ptr<IKESprite> cheack= nullptr;
@@ -122,7 +122,7 @@ private:
 
 	float delayFrame = 0.f;
 	array<array<UI, INDEX>, 20> UIs;
-	float homeY[INDEX] = { 110.f,360.f,610.f };
+	float homeY[INDEX] = { 160.f,360.f,560.f };
 	float homeX = 360.f;
 	float interbal = 300.f;
 
