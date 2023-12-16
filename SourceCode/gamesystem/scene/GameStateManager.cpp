@@ -727,7 +727,7 @@ void GameStateManager::TakenDamageCheck(int Damage) {
 }
 void GameStateManager::SetPassiveActive(int id) {
 	isPassive = true;
-	passiveAct = IKESprite::Create(ImageManager::PASSIVE_01 + id, {0.f,0.f});
+	passiveAct = IKESprite::Create(ImageManager::PASSIVE_00 + id, {0.f,0.f});
 	passiveAct->SetPosition( { 640.f, 110.0f });
 	passiveAct->SetAnchorPoint({0.5f,0.5f});
 	passiveFrame = 0.f;
