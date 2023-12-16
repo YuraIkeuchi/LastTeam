@@ -121,6 +121,8 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(ATTACK_TEX_9, L"Resources/2d/objicon/AttackSKill/Skill9.png");
 	IKETexture::LoadTexture(ATTACK_TEX_10, L"Resources/2d/objicon/AttackSKill/Skill10.png");
 	IKETexture::LoadTexture(BOOM_DIR, L"Resources/2d/effect/Up.png");
+	IKETexture::LoadTexture(POISON_EFFECT, L"Resources/2d/effect/poison.png");
+
 }
 
 //非同期処理でのテクスチャの読み込み

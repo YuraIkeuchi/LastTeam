@@ -93,6 +93,7 @@ void CreateBombEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
+	if (m_SuperPoison) {poison_tex->Draw();}
 	IKETexture::PostDraw();
 
 	//áŠQ•¨‚Ìíœ

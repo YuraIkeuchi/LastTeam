@@ -56,6 +56,7 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	IKETexture::PostDraw();
+	if (m_SuperPoison) {poison_tex->Draw();}
 	Obj_Draw();
 }
 //ImGui描画

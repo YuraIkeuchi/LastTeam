@@ -48,7 +48,10 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 		_drawPoisonnumber[i] = make_unique<DrawPoisonNumber>(0.5f);
 		_drawPoisonnumber[i]->Initialize();
 	}
-
+	poison_tex = std::make_unique<IKETexture>(ImageManager::POISON_EFFECT, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,0.5f,1.f,1.f });
+	poison_tex->TextureCreate();
+	poison_tex->Initialize();
+	poison_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;
@@ -112,6 +115,8 @@ void InterEnemy::Update() {
 			_healnumber.erase(cbegin(_healnumber) + i);
 		}
 	}
+
+	SuperPoisonEffect();
 	//だめーじ関係
 	DamageUpdate();
 	//数値化したHP
@@ -132,6 +137,25 @@ void InterEnemy::AwakeUpdate() {
 	}
 
 	Obj_SetParam();
+}
+void InterEnemy::SuperPoisonEffect() {
+	if (!m_SuperPoison) { return; }
+	if (Helper::FrameCheck(m_poisonFrame, 1 / 30.f)) {
+		m_SuperPoison = false;
+		m_poisonFrame = 0.f;
+	} else {
+		XMFLOAT3 scale = {
+			Ease(Out,Back,m_poisonFrame,0.f,0.5f),
+			Ease(Out,Back,m_poisonFrame,0.f,0.5f),
+			Ease(Out,Back,m_poisonFrame,0.f,0.5f)
+		};
+		float alpha = Ease(In, Quint, m_poisonFrame, 1.f, 0.f);
+		float posY = Ease(Out, Cubic, m_poisonFrame, 0.5f, 2.5f);
+		poison_tex->SetScale(scale);
+		poison_tex->SetColor(XMFLOAT4{ 1.f,0.5f,1.f,alpha });
+		poison_tex->SetPosition({ m_Position.x,posY,m_Position.z });
+		poison_tex->Update();
+	}
 }
 //描画
 void InterEnemy::Draw(DirectXCommon* dxCommon) {
@@ -244,9 +268,16 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				if (!m_IsVenom) {
 					m_PoisonToken += 4;
 				} else {
-					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POIZON_DAMAGEUP);
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POISON_DAMAGEUP);
+					m_SuperPoison = true;
 					m_PoisonToken += 8;
 				}
+			}
+
+			if (GameStateManager::GetInstance()->GetAttackedPoison()) {
+				GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::ATTACK_POISON);
+				m_Poison = true;
+				m_PoisonToken += 1;
 			}
 			BirthParticle();
 
@@ -460,9 +491,13 @@ void InterEnemy::PoisonState() {
 			//GameStateManager::GetInstance()->SetPassiveActive();
 			m_PoisonToken /= 4;
 		} else {
-			m_PoisonToken /= 2;
+			if (m_PoisonToken %2 ==0) {
+				m_PoisonToken /= 2;
+			} else {
+				m_PoisonToken++;
+				m_PoisonToken /= 2;
+			}
 		}
-
 		m_PoisonTimer = 0;
 	}
 }

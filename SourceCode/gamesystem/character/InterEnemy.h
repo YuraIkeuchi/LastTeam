@@ -44,6 +44,7 @@ protected:
 	array<unique_ptr<DrawPoisonNumber>, NUMBER_MAX> _drawPoisonnumber;
 	unique_ptr<IKESprite> poisonState;
 
+	unique_ptr<IKETexture> poison_tex;
 	unique_ptr<IKETexture> _charge;
 	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
@@ -125,7 +126,9 @@ protected:
 	bool m_Damege = false;
 	int m_DamageTimer = {};
 	int m_FlashCount = {};
-
+	
+	bool m_SuperPoison = false;
+	float m_poisonFrame = 0.f;
 	float m_OverFrame = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
@@ -176,6 +179,8 @@ public:
 	XMFLOAT3 SetPannelPos(int width, int height);
 
 	void AwakeUpdate();
+
+	void SuperPoisonEffect();
 
 	void DeathUpdate();
 private:
