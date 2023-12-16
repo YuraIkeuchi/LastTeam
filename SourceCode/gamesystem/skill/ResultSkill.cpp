@@ -304,7 +304,7 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 		resultUI.sentence[1] = resultUI.text_->GetSkillSentence(resultUI.ID);
 		resultUI.sentence[2] = resultUI.text_->GetSkillDamage(resultUI.ID);
 	} else {
-		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_01 + resultUI.ID, { 0.0f,0.0f });
+		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_00 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.sentence[0] = L"パッシブ：";
 		resultUI.sentence[1] = resultUI.text_->GetPasiveSentence(resultUI.ID);
 		resultUI.sentence[2] = L" ";
