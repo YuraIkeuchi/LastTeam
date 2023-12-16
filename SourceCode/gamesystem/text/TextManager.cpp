@@ -42,11 +42,11 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateWord(RESULT, L"スキル効果");
 
 	CreatePassiveSentence(L"リロードが早くなるぞ");
-	CreatePassiveSentence(L"全回復、体力増加");
+	CreatePassiveSentence(L"体力増加、少し回復");
 	CreatePassiveSentence(L"リロードしても消えないぞ");
-	CreatePassiveSentence(L"毒の時間が長いぞ");
-	CreatePassiveSentence(L"毒の威力が上がるぞ");
-	CreatePassiveSentence(L"ドレイン威力が上がるぞ");
+	CreatePassiveSentence(L"毒の時間が長くなるぞ");
+	CreatePassiveSentence(L"毒のカウントふよりつが2倍");
+	CreatePassiveSentence(L"回復りょうが少し上がるぞ");
 	CreatePassiveSentence(L"リロードしたらたまに攻撃だ");
 	CreatePassiveSentence(L"5の倍数で威力アップ");
 	CreatePassiveSentence(L"ダメージをうけるたび、威力+0.2");

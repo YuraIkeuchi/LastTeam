@@ -84,8 +84,8 @@ void ResultSkill::InPassive(std::vector<int>& Passive) {
 	std::vector<int> itr = Passive;
 	for (ResultUI& resultUI : pickSkills) {
 		if (resultUI.isSkill) { continue; }
-		if (resultUI.ID == 1) {
-			player_->SetMaxHp(
+		if (resultUI.ID == (int)Passive::ABILITY::HP_UP) {
+			player_->SetHpUper(
 				player_->GetMaxHp() * 1.3f);
 		}
 		itr.push_back(resultUI.ID);

@@ -86,9 +86,10 @@ public:
 	float GetMaxHp() { return m_MaxHP; }
 	float GetHp() { return m_HP; }
 
-	void SetMaxHp(float maxhp) {
+	void SetHpUper(float maxhp) {
+		float gain_hp = maxhp - m_MaxHP;
 		m_MaxHP = maxhp;
-		m_HP = maxhp;
+		m_HP += gain_hp;
 	}
 
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
