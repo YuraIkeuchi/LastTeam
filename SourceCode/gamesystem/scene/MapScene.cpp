@@ -82,10 +82,15 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		mapKinds[4] = { PASSIVE,-1,BATTLE };
 		mapKinds[5] = { -1,BOSS,-1 };
 		mapKinds[6] = { PASSIVE,-1,BATTLE };
-		mapKinds[7] = { PASSIVE,-1,PASSIVE };
+		mapKinds[7] = { PASSIVE,BATTLE,PASSIVE };
 		mapKinds[8] = { BATTLE,-1,PASSIVE };
-		mapKinds[9] = { PASSIVE,-1,BATTLE };
-		mapKinds[10] = { -1,BOSS,-1 };
+		mapKinds[9] = { -1,BOSS,-1 };
+		mapKinds[10] = { PASSIVE,PASSIVE,BATTLE };
+		mapKinds[11] = { PASSIVE,BATTLE,BATTLE };
+		mapKinds[12] = { BATTLE,PASSIVE,PASSIVE };
+		mapKinds[13] = { -1,BOSS,-1 };
+
+
 	}
 	MapCreate();
 
