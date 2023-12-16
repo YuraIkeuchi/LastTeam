@@ -27,6 +27,7 @@ public:
 		BOOMERAN,
 		FRONT,
 		SICKLE,
+		HEAL,
 	};
 	//FBXの名前
 	enum FBXName {
