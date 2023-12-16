@@ -141,7 +141,7 @@ public:
 	bool GetIsFivePower() { return m_FivePower && (m_HandedCount % 5 == 0); }
 	bool GetTakenDamageUp() { return m_TakenDamageUp; }
 
-	void SetPassiveActive();
+	void SetPassiveActive(int id);
 	
 	int GetTakenDamageNum() { return m_TakenDamageNum; }
 	void SetTakenDamageNum(int num) { m_TakenDamageNum = num; }
@@ -190,7 +190,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {};
+	std::vector <int> m_StartPassive= {2};
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -198,6 +198,7 @@ private:
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 	unique_ptr<IKESprite> gaugeCover = nullptr;
 	unique_ptr<IKESprite> passiveActive = nullptr;
+	unique_ptr<IKESprite> passiveAct = nullptr;
 	bool isPassive = false;
 	float passiveFrame = 0.f;
 	float passiveAlpha = 1.0f;

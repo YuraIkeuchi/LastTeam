@@ -62,7 +62,7 @@ public:
 	void ImGuiDraw();
 	//ƒpƒlƒ‹‚ð–ß‚·
 	void DeletePanel();
-
+	bool AllCleanCheack();
 	void RandomPanel(int num);
 	void ResetPanel();
 	void ResetAction();
