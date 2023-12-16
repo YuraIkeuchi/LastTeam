@@ -57,6 +57,7 @@ void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 	//shadow_tex->Draw();
 	IKETexture::PostDraw();
 	if (m_SuperPoison) {poison_tex->Draw();}
+	if (m_HealDamage) { healdamage_tex->Draw(); }
 	Obj_Draw();
 }
 //ImGui描画

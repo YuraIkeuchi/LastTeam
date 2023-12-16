@@ -100,6 +100,8 @@ void ThrowEnemy::Draw(DirectXCommon* dxCommon) {
 	//shadow_tex->Draw();
 	magic.tex->Draw();
 	if (m_SuperPoison) {poison_tex->Draw();}
+	if (m_HealDamage) { healdamage_tex->Draw(); }
+
 	IKETexture::PostDraw();
 	//“G‚Ì’e
 	for (unique_ptr<Boomerang>& newbullet : bullets) {

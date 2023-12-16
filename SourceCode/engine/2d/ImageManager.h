@@ -126,6 +126,7 @@ public:
 		ATTACK_TEX_10,
 		BOOM_DIR,
 		POISON_EFFECT,
+		HEAL_DAMAGE
 	};
 	enum particleName
 	{

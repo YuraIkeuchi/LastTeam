@@ -52,6 +52,11 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 	poison_tex->TextureCreate();
 	poison_tex->Initialize();
 	poison_tex->SetRotation({ 90.0f,0.0f,0.0f });
+	healdamage_tex = std::make_unique<IKETexture>(ImageManager::HEAL_DAMAGE, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	healdamage_tex->TextureCreate();
+	healdamage_tex->Initialize();
+	healdamage_tex->SetRotation({ 90.0f,0.0f,0.0f });
+
 }
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;
@@ -115,7 +120,7 @@ void InterEnemy::Update() {
 			_healnumber.erase(cbegin(_healnumber) + i);
 		}
 	}
-
+	HealDamageEffect();
 	SuperPoisonEffect();
 	//だめーじ関係
 	DamageUpdate();
@@ -137,6 +142,25 @@ void InterEnemy::AwakeUpdate() {
 	}
 
 	Obj_SetParam();
+}
+void InterEnemy::HealDamageEffect() {
+	if (!m_HealDamage) { return; }
+	if (Helper::FrameCheck(m_HealFrame, 1 / 30.f)) {
+		m_HealDamage = false;
+		m_HealFrame = 0.f;
+	} else {
+		XMFLOAT3 scale = {
+			Ease(Out,Back,m_HealFrame,0.f,0.5f),
+			Ease(Out,Back,m_HealFrame,0.f,0.5f),
+			Ease(Out,Back,m_HealFrame,0.f,0.5f)
+		};
+		float alpha = Ease(In, Quint, m_HealFrame, 1.f, 0.f);
+		float posY = Ease(Out, Cubic, m_HealFrame, 0.5f, 2.5f);
+		healdamage_tex->SetScale(scale);
+		healdamage_tex->SetColor(XMFLOAT4{ 1.f,1.f,1.f,alpha });
+		healdamage_tex->SetPosition({ m_Position.x,posY,m_Position.z });
+		healdamage_tex->Update();
+	}
 }
 void InterEnemy::SuperPoisonEffect() {
 	if (!m_SuperPoison) { return; }

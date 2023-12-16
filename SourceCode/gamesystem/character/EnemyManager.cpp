@@ -145,6 +145,7 @@ void EnemyManager::BombDamage() {
 void EnemyManager::HealingDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimpleDamege(5.f);
+		enemy->SetHealDamage(true);
 	}
 }
 
