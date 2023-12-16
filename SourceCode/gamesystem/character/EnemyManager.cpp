@@ -142,6 +142,12 @@ void EnemyManager::BombDamage() {
 	}
 }
 
+void EnemyManager::HealingDamage() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SimpleDamege(5.f);
+	}
+}
+
 void EnemyManager::Heal()
 {
 	const float l_HealPower = 5.0f;

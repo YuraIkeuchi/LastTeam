@@ -92,6 +92,8 @@ public:
 		m_HP += gain_hp;
 	}
 
+	void SetHealingDamage(bool flag) { m_healingDamage = flag; }
+
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 
 	void SetDelay(const bool Delay) { m_Delay = Delay; }
@@ -209,6 +211,7 @@ private:
 
 	bool m_FinishGameOver = false;
 
+	bool m_healingDamage = false;
 
 	//攻撃時の動きのための変数
 	float m_BaseScale = {};

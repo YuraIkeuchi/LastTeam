@@ -21,6 +21,7 @@ public:
 		FIVE_POWER,
 		TAKENDAMAGEUP,
 		ATTACK_POISON,
+		HEAL_ATTACK,
 		MAX_ABILITY
 	};
 	Passive(int id, XMFLOAT2 pos = { 0.f,0.f }, XMFLOAT2 size = {64.f,64.f});

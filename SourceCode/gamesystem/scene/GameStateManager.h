@@ -140,9 +140,10 @@ public:
 	void TakenDamageCheck(int Damage);
 	bool GetIsFivePower() { return m_FivePower && (m_HandedCount % 5 == 0); }
 	bool GetTakenDamageUp() { return m_TakenDamageUp; }
-	bool GetAttackedPoison() {
-		return m_AttackedPoison;
-	}
+	bool GetAttackedPoison() {	return m_AttackedPoison;}
+	bool GetHealDamage() { return m_healingDamage; }
+	void SetHealDamage(bool flag) { m_healingDamage=flag; }
+
 	void SetPassiveActive(int id);
 	
 	int GetTakenDamageNum() { return m_TakenDamageNum; }
@@ -192,7 +193,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {};
+	std::vector <int> m_StartPassive= {10};
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -253,13 +254,15 @@ private:
 	bool m_FivePower = false;
 	bool m_TakenDamageUp = false;
 	bool m_AttackedPoison = false;
+	bool m_healingDamage = false;
+
 	bool m_BirthSkill = false;
 
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 1,2,7,10 };
+	vector <int> m_StartNumber = { 8 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

@@ -257,9 +257,9 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			std::string name = _area->GetStateName();
 
 			if (name == "DRAIN") {
-				float rate = 0.2f;
+				float rate = 0.5f;
 				if (m_IsDrainUp) {
-					rate *= 2.f;
+					rate += 0.2f;
 					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::DRAIN_HEALUP);
 				}
 				player->HealPlayer(damage * rate);		//HP回復
@@ -305,8 +305,12 @@ void InterEnemy::SimpleDamege(float damage) {
 	if (m_HP <= 0.0f) { return; }
 	float hp = m_HP;
 	hp -= damage;
+	if (hp < 1.0f) {
+		damage -= 1.0f;
+	}
 	Helper::Clamp(hp, 1.0f, m_HP);
 	m_HP = hp;
+	BirthDamage(damage);
 	BirthParticle();
 }
 

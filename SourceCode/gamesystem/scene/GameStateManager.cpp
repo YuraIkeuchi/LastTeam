@@ -496,6 +496,9 @@ void GameStateManager::PassiveCheck() {
 		case Passive::ABILITY::ATTACK_POISON:
 			m_AttackedPoison = true;
 			break;
+		case Passive::ABILITY::HEAL_ATTACK:
+			player->SetHealingDamage(true);
+			break;
 		default:
 			assert(0);
 			break;

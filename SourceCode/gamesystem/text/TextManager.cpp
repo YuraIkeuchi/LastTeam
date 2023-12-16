@@ -51,6 +51,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveSentence(L"5の倍数で威力アップ");
 	CreatePassiveSentence(L"ダメージをうけるたび、威力+0.2");
 	CreatePassiveSentence(L"スキルがあたると毒を１ふよ");
+	CreatePassiveSentence(L"回復するたびに5ダメージ");
 
 	CreateSkillSentence(L"ドドドな近距離攻撃");
 	CreateSkillDamage(L"威力:15（大）");

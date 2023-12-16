@@ -49,6 +49,7 @@ public:
 
 	void BombDamage();
 
+	void HealingDamage();
 	void Heal();
 private:
 	/// <summary>
