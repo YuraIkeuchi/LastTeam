@@ -85,6 +85,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 	m_CoolTime = {};
 	m_NowHeight = {};
 	m_NowWidth = {};
+	m_healingDamage = false;
 	//数値化したHP表示のための変数
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		m_DigitNumber[i] = {};
@@ -595,6 +596,10 @@ void Player::MoveCommon(float& pos, float velocity) {
 //プレイヤーのHP回復
 void Player::HealPlayer(const float power) {
 	m_HP += power;
+	if (m_healingDamage) {
+		GameStateManager::GetInstance()->SetHealDamage(true);
+		GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::HEAL_ATTACK);
+	}
 	HealParticle();
 }
 //プレイヤーのダメージ判定

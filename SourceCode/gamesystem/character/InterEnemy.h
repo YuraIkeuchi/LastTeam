@@ -44,6 +44,8 @@ protected:
 	array<unique_ptr<DrawPoisonNumber>, NUMBER_MAX> _drawPoisonnumber;
 	unique_ptr<IKESprite> poisonState;
 
+	unique_ptr<IKETexture> poison_tex;
+	unique_ptr<IKETexture> healdamage_tex;
 	unique_ptr<IKETexture> _charge;
 	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
@@ -125,7 +127,12 @@ protected:
 	bool m_Damege = false;
 	int m_DamageTimer = {};
 	int m_FlashCount = {};
+	
+	bool m_SuperPoison = false;
+	bool m_HealDamage = false;
+	float m_HealFrame = 0.f;
 
+	float m_poisonFrame = 0.f;
 	float m_OverFrame = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
@@ -136,7 +143,7 @@ public://getter setter
 	void SetDrainUp(bool IsDrainUp) { m_IsDrainUp = IsDrainUp; }
 	void SetLastEnemy(bool LastEnemy) { m_LastEnemy = LastEnemy; }
 	static void SetPlayer(Player* player) { InterEnemy::player = player; }
-
+	void SetHealDamage(bool HealDamage) { m_HealDamage = HealDamage; }
 	const float GetHP() { return m_HP; }
 	const bool GetAlive() { return m_Alive; }
 	const bool GetDeath() { return m_Death; }
@@ -176,6 +183,10 @@ public:
 	XMFLOAT3 SetPannelPos(int width, int height);
 
 	void AwakeUpdate();
+
+	void HealDamageEffect();
+
+	void SuperPoisonEffect();
 
 	void DeathUpdate();
 private:

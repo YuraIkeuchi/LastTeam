@@ -475,10 +475,10 @@ void GameStateManager::PassiveCheck() {
 		case Passive::ABILITY::RELOAD_LOCK:
 			m_IsReload = false;
 			break;
-		case Passive::ABILITY::POIZON_GAUGEUP:
+		case Passive::ABILITY::POISON_GAUGEUP:
 			m_poizonLong = true;
 			break;
-		case Passive::ABILITY::POIZON_DAMAGEUP:
+		case Passive::ABILITY::POISON_DAMAGEUP:
 			m_IsVenom = true;
 			break;
 		case Passive::ABILITY::DRAIN_HEALUP:
@@ -492,6 +492,12 @@ void GameStateManager::PassiveCheck() {
 			break;
 		case Passive::ABILITY::TAKENDAMAGEUP:
 			m_TakenDamageUp = true;
+			break;
+		case Passive::ABILITY::ATTACK_POISON:
+			m_AttackedPoison = true;
+			break;
+		case Passive::ABILITY::HEAL_ATTACK:
+			player->SetHealingDamage(true);
 			break;
 		default:
 			assert(0);

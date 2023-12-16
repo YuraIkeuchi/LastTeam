@@ -52,6 +52,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(PASSIVE_07, L"Resources/2d/objicon/Passive/PASSIVE_07.png");
 	IKESprite::LoadTexture(PASSIVE_08, L"Resources/2d/objicon/Passive/PASSIVE_08.png");
 	IKESprite::LoadTexture(PASSIVE_09, L"Resources/2d/objicon/Passive/PASSIVE_09.png");
+	IKESprite::LoadTexture(PASSIVE_10, L"Resources/2d/objicon/Passive/PASSIVE_10.png");
 	IKESprite::LoadTexture(PASSIVE_FRAME, L"Resources/2d/objicon/Passive_Frame.png");
 	IKESprite::LoadTexture(GAUGE, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(GAUGECOVER, L"Resources/2d/objicon/SkillGauge.png");
@@ -121,6 +122,9 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(ATTACK_TEX_9, L"Resources/2d/objicon/AttackSKill/Skill9.png");
 	IKETexture::LoadTexture(ATTACK_TEX_10, L"Resources/2d/objicon/AttackSKill/Skill10.png");
 	IKETexture::LoadTexture(BOOM_DIR, L"Resources/2d/effect/Up.png");
+	IKETexture::LoadTexture(POISON_EFFECT, L"Resources/2d/effect/poison.png");
+	IKETexture::LoadTexture(HEAL_DAMAGE, L"Resources/2d/effect/shine2.png");
+
 }
 
 //非同期処理でのテクスチャの読み込み

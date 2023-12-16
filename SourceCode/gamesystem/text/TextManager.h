@@ -37,17 +37,6 @@ public:
 		RESULT,
 		EXTRA,
 	};
-	enum Passive{
-		RELOAD_UP,
-		HP_UP,
-		RELOAD_LOCK,
-		POIZON_GAUGEUP,
-		POIZON_DAMAGEUP,
-		SKILL_RECYCLE,
-		RELOAD_DAMAGE,
-		MAX_ABILITY
-	};
-
 
 	enum PosType {
 		FIRST_POS = 0,

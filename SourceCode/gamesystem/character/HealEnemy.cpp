@@ -94,6 +94,8 @@ void HealEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
+	if (m_SuperPoison) {poison_tex->Draw();}
+	if (m_HealDamage) { healdamage_tex->Draw(); }
 	IKETexture::PostDraw();
 	Obj_Draw();
 }

@@ -61,6 +61,7 @@ public:
 		PASSIVE_07,
 		PASSIVE_08,
 		PASSIVE_09,
+		PASSIVE_10,
 		PASSIVE_FRAME,
 		GAUGE,
 		GAUGECOVER,
@@ -124,6 +125,8 @@ public:
 		ATTACK_TEX_9,
 		ATTACK_TEX_10,
 		BOOM_DIR,
+		POISON_EFFECT,
+		HEAL_DAMAGE
 	};
 	enum particleName
 	{

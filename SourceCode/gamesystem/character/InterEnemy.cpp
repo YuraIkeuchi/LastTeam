@@ -48,6 +48,14 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 		_drawPoisonnumber[i] = make_unique<DrawPoisonNumber>(0.5f);
 		_drawPoisonnumber[i]->Initialize();
 	}
+	poison_tex = std::make_unique<IKETexture>(ImageManager::POISON_EFFECT, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,0.5f,1.f,1.f });
+	poison_tex->TextureCreate();
+	poison_tex->Initialize();
+	poison_tex->SetRotation({ 90.0f,0.0f,0.0f });
+	healdamage_tex = std::make_unique<IKETexture>(ImageManager::HEAL_DAMAGE, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	healdamage_tex->TextureCreate();
+	healdamage_tex->Initialize();
+	healdamage_tex->SetRotation({ 90.0f,0.0f,0.0f });
 
 }
 void InterEnemy::SkipInitialize() {
@@ -112,6 +120,8 @@ void InterEnemy::Update() {
 			_healnumber.erase(cbegin(_healnumber) + i);
 		}
 	}
+	HealDamageEffect();
+	SuperPoisonEffect();
 	//だめーじ関係
 	DamageUpdate();
 	//数値化したHP
@@ -132,6 +142,44 @@ void InterEnemy::AwakeUpdate() {
 	}
 
 	Obj_SetParam();
+}
+void InterEnemy::HealDamageEffect() {
+	if (!m_HealDamage) { return; }
+	if (Helper::FrameCheck(m_HealFrame, 1 / 30.f)) {
+		m_HealDamage = false;
+		m_HealFrame = 0.f;
+	} else {
+		XMFLOAT3 scale = {
+			Ease(Out,Back,m_HealFrame,0.f,0.5f),
+			Ease(Out,Back,m_HealFrame,0.f,0.5f),
+			Ease(Out,Back,m_HealFrame,0.f,0.5f)
+		};
+		float alpha = Ease(In, Quint, m_HealFrame, 1.f, 0.f);
+		float posY = Ease(Out, Cubic, m_HealFrame, 0.5f, 2.5f);
+		healdamage_tex->SetScale(scale);
+		healdamage_tex->SetColor(XMFLOAT4{ 1.f,1.f,1.f,alpha });
+		healdamage_tex->SetPosition({ m_Position.x,posY,m_Position.z });
+		healdamage_tex->Update();
+	}
+}
+void InterEnemy::SuperPoisonEffect() {
+	if (!m_SuperPoison) { return; }
+	if (Helper::FrameCheck(m_poisonFrame, 1 / 30.f)) {
+		m_SuperPoison = false;
+		m_poisonFrame = 0.f;
+	} else {
+		XMFLOAT3 scale = {
+			Ease(Out,Back,m_poisonFrame,0.f,0.5f),
+			Ease(Out,Back,m_poisonFrame,0.f,0.5f),
+			Ease(Out,Back,m_poisonFrame,0.f,0.5f)
+		};
+		float alpha = Ease(In, Quint, m_poisonFrame, 1.f, 0.f);
+		float posY = Ease(Out, Cubic, m_poisonFrame, 0.5f, 2.5f);
+		poison_tex->SetScale(scale);
+		poison_tex->SetColor(XMFLOAT4{ 1.f,0.5f,1.f,alpha });
+		poison_tex->SetPosition({ m_Position.x,posY,m_Position.z });
+		poison_tex->Update();
+	}
 }
 //描画
 void InterEnemy::Draw(DirectXCommon* dxCommon) {
@@ -233,9 +281,9 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			std::string name = _area->GetStateName();
 
 			if (name == "DRAIN") {
-				float rate = 0.2f;
+				float rate = 0.5f;
 				if (m_IsDrainUp) {
-					rate *= 2.f;
+					rate += 0.2f;
 					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::DRAIN_HEALUP);
 				}
 				player->HealPlayer(damage * rate);		//HP回復
@@ -244,9 +292,16 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				if (!m_IsVenom) {
 					m_PoisonToken += 4;
 				} else {
-					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POIZON_DAMAGEUP);
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POISON_DAMAGEUP);
+					m_SuperPoison = true;
 					m_PoisonToken += 8;
 				}
+			}
+
+			if (GameStateManager::GetInstance()->GetAttackedPoison()) {
+				GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::ATTACK_POISON);
+				m_Poison = true;
+				m_PoisonToken += 1;
 			}
 			BirthParticle();
 
@@ -274,8 +329,12 @@ void InterEnemy::SimpleDamege(float damage) {
 	if (m_HP <= 0.0f) { return; }
 	float hp = m_HP;
 	hp -= damage;
+	if (hp < 1.0f) {
+		damage -= 1.0f;
+	}
 	Helper::Clamp(hp, 1.0f, m_HP);
 	m_HP = hp;
+	BirthDamage(damage);
 	BirthParticle();
 }
 
@@ -460,9 +519,13 @@ void InterEnemy::PoisonState() {
 			//GameStateManager::GetInstance()->SetPassiveActive();
 			m_PoisonToken /= 4;
 		} else {
-			m_PoisonToken /= 2;
+			if (m_PoisonToken %2 ==0) {
+				m_PoisonToken /= 2;
+			} else {
+				m_PoisonToken++;
+				m_PoisonToken /= 2;
+			}
 		}
-
 		m_PoisonTimer = 0;
 	}
 }
