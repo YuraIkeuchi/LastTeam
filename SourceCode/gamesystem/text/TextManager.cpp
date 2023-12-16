@@ -41,16 +41,27 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateWord(TUTORIAL_END, L"手に入れたスキルを駆使して",L"敵を倒そう!");
 	CreateWord(RESULT, L"スキル効果");
 
+	CreatePassiveName(L"なまえ：ランナーズハイ");
 	CreatePassiveSentence(L"リロードが早くなるぞ");
+	CreatePassiveName(L"なまえ：アドレナリンソウル");
 	CreatePassiveSentence(L"体力増加、少し回復");
+	CreatePassiveName(L"なまえ：パラドックススキル");
 	CreatePassiveSentence(L"リロードしても消えないぞ");
+	CreatePassiveName(L"なまえ：エンドレス・ポイズン");
 	CreatePassiveSentence(L"毒の時間が長くなるぞ");
+	CreatePassiveName(L"なまえ：ポイズン・クリティカル");
 	CreatePassiveSentence(L"毒のカウントふよりつが2倍");
+	CreatePassiveName(L"なまえ：アテナシステム");
 	CreatePassiveSentence(L"回復りょうが少し上がるぞ");
+	CreatePassiveName(L"なまえ：オートマティックアサシン");
 	CreatePassiveSentence(L"リロードしたらたまに攻撃だ");
+	CreatePassiveName(L"なまえ：テイク・ファイブ");
 	CreatePassiveSentence(L"5の倍数で威力アップ");
+	CreatePassiveName(L"なまえ：ガーディアンフォース");
 	CreatePassiveSentence(L"ダメージをうけるたび、威力+0.2");
+	CreatePassiveName(L"なまえ：ポイズン・ビトレイヤー");
 	CreatePassiveSentence(L"スキルがあたると毒を１ふよ");
+	CreatePassiveName(L"なまえ：ヒーリング・バロール");
 	CreatePassiveSentence(L"回復するたびに5ダメージ");
 
 	CreateSkillSentence(L"ドドドな近距離攻撃");
@@ -247,6 +258,10 @@ void TextManager::CreateCon(Conversation con, Word word)
 
 void TextManager::CreatePassiveSentence(wchar_t* tex1) {
 	passiveSentence.emplace_back(tex1);
+}
+
+void TextManager::CreatePassiveName(wchar_t* tex1) {
+	passiveName.emplace_back(tex1);
 }
 
 void TextManager::CreateSkillSentence(wchar_t* tex1) {

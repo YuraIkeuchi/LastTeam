@@ -306,8 +306,8 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	} else {
 		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_00 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.sentence[0] = L"パッシブ：";
-		resultUI.sentence[1] = resultUI.text_->GetPasiveSentence(resultUI.ID);
-		resultUI.sentence[2] = L" ";
+		resultUI.sentence[1] = resultUI.text_->GetPassiveName(resultUI.ID);
+		resultUI.sentence[2] = resultUI.text_->GetPasiveSentence(resultUI.ID);
 	}
 	resultUI.icon->SetAnchorPoint({ 0.5f,0.5f });
 	resultUI.icon->SetPosition(resultUI.position);
