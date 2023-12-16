@@ -66,7 +66,8 @@ void StagePanel::Update() {
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Update();
-		if (actions[i]->GetAlive() && actions[i]->GetDelete()) {
+		if (actions[i]->GetAlive() &&
+			actions[i]->GetDelete()) {
 			if(actions[i]->GetDiscard()){
 			GameStateManager::GetInstance()->GetDiscardSkill(actions[i]->GetSkillID());
 			}
@@ -74,7 +75,9 @@ void StagePanel::Update() {
 			actions[i]->SetAlive(false);
 		}
 	}
-
+	auto result = std::remove_if(actions.begin(), actions.end(),
+		[](unique_ptr<InterAction>& act) { return act->GetDelete(); });
+	actions.erase(result, actions.end());
 	if (m_ActionCount == 0) {
 		m_AllDelete = true;
 	}
@@ -187,6 +190,12 @@ void StagePanel::DeletePanel() {
 			}
 		}
 	}
+}
+bool StagePanel::AllCleanCheack() {
+	if (actions.size()>0) {
+		return false;
+	}
+	return true;
 }
 //パネルをセットする
 void StagePanel::RandomPanel(int num) {

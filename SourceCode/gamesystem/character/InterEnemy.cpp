@@ -8,6 +8,7 @@
 #include <TutorialTask.h>
 #include "ImageManager.h"
 #include <Slow.h>
+#include "Passive.h"
 Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
 	//本当は4~7
@@ -208,13 +209,13 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				}
 				if (GameStateManager::GetInstance()->GetIsFivePower()) {
 					damage *= 1.2f;
-					GameStateManager::GetInstance()->SetPassiveActive();
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::FIVE_POWER);
 				}
 				if (GameStateManager::GetInstance()->GetTakenDamageUp()) {
 					float up = (float)GameStateManager::GetInstance()->GetTakenDamageNum() * 0.2f;
 					if (up >= 1.0f) {
 						damage += up;
-						GameStateManager::GetInstance()->SetPassiveActive();
+						GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::TAKENDAMAGEUP);
 					}
 				}
 			} else {
@@ -235,7 +236,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				float rate = 0.2f;
 				if (m_IsDrainUp) {
 					rate *= 2.f;
-					GameStateManager::GetInstance()->SetPassiveActive();
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::DRAIN_HEALUP);
 				}
 				player->HealPlayer(damage * rate);		//HP回復
 			} else if (name == "POISON") {
@@ -243,7 +244,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				if (!m_IsVenom) {
 					m_PoisonToken += 4;
 				} else {
-					GameStateManager::GetInstance()->SetPassiveActive();
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POIZON_DAMAGEUP);
 					m_PoisonToken += 8;
 				}
 			}
@@ -413,26 +414,28 @@ void InterEnemy::HPManage() {
 	}
 
 	//描画する数字と座標をここでセットする
-	if (m_PoisonToken >= 100) {
-		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 2.0f, m_Position.y, m_Position.z - 0.55f });
-		_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
-		_drawPoisonnumber[THIRD_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
-		XMFLOAT2 pos = _drawPoisonnumber[THIRD_DIGHT]->GetPosition();
-		poisonState->SetPosition({ pos.x - 35.f,pos.y });
-	} else if (m_PoisonToken >= 10) {
-		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
-		_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
-		XMFLOAT2 pos = _drawPoisonnumber[SECOND_DIGHT]->GetPosition();
-		poisonState->SetPosition({ pos.x - 35.f,pos.y });
-	} else {
-		_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
-		XMFLOAT2 pos = _drawPoisonnumber[FIRST_DIGHT]->GetPosition();
-		poisonState->SetPosition({ pos.x - 35.f,pos.y });
-	}
 	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
 		_drawPoisonnumber[i]->GetCameraData();
 		_drawPoisonnumber[i]->SetNumber(m_PoisonTokenNum[i]);
 		_drawPoisonnumber[i]->Update();
+	}
+	if (m_Poison) {
+		if (m_PoisonToken >= 100) {
+			_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 2.0f, m_Position.y, m_Position.z - 0.55f });
+			_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
+			_drawPoisonnumber[THIRD_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+			XMFLOAT2 pos = _drawPoisonnumber[THIRD_DIGHT]->GetPosition();
+			poisonState->SetPosition({ pos.x - 35.f,pos.y });
+		} else if (m_PoisonToken >= 10) {
+			_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
+			_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+			XMFLOAT2 pos = _drawPoisonnumber[SECOND_DIGHT]->GetPosition();
+			poisonState->SetPosition({ pos.x - 35.f,pos.y });
+		} else {
+			_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+			XMFLOAT2 pos = _drawPoisonnumber[FIRST_DIGHT]->GetPosition();
+			poisonState->SetPosition({ pos.x - 35.f,pos.y });
+		}
 	}
 }
 

@@ -195,6 +195,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		gaugeUI->Draw();
 		//gaugeCover->Draw();
 		if (isPassive) {
+			passiveAct->Draw();
 			passiveActive->Draw();
 		}
 		onomatope->Draw();
@@ -426,14 +427,16 @@ void GameStateManager::GaugeUpdate() {
 			if (r_num < 30) {
 				//エネミーに3ダメージ
 				m_ReloadDamage = true;
-				SetPassiveActive();
+				SetPassiveActive((int)Passive::ABILITY::RELOAD_DAMAGE);
 			}
 		}
 		if (m_IsReload) {
 			StagePanel::GetInstance()->ResetAction();
 			StagePanel::GetInstance()->ResetPanel();
 		} else {
-			SetPassiveActive();
+			if (!StagePanel::GetInstance()->AllCleanCheack()) {
+				SetPassiveActive((int)Passive::ABILITY::RELOAD_LOCK);
+			}
 		}
 		//パネル置く数
 		int panel_num = 3;
@@ -667,15 +670,22 @@ void GameStateManager::PassiveActive() {
 			passiveFrame = 0.f;
 			passiveAlphaFrame = 0.f;
 			passiveActive->SetColor({ 1,1,1,1 });
+			passiveAct->SetColor({ 1,1,1,1});
 		} else {
 			float alpha = Ease(In, Quint, passiveAlphaFrame, 1.f, 0.f);
 			passiveActive->SetColor({ 1,1,1,alpha });
+			passiveAct->SetColor({ 1,1,1,alpha });
+
 		}
 	} else {
 		XMFLOAT2 size = {};
 		size.x = Ease(Out, Elastic, passiveFrame, 384.f * 0.4f, 384.f);
 		size.y = Ease(Out, Elastic, passiveFrame, 74.f * 0.4f, 74.f);
 		passiveActive->SetSize(size);
+		XMFLOAT2 size_p = {};
+		size_p.x = Ease(Out, Back, passiveFrame, 0.f, 64.f);
+		size_p.y = Ease(Out, Back, passiveFrame, 0.f, 64.f);
+		passiveAct->SetSize(size_p);
 	}
 }
 
@@ -715,8 +725,11 @@ void GameStateManager::TakenDamageCheck(int Damage) {
 	m_TakenDamageNum++;
 	resultReport->SetTakenDamage(m_MaxTakenDamage);
 }
-void GameStateManager::SetPassiveActive() {
+void GameStateManager::SetPassiveActive(int id) {
 	isPassive = true;
+	passiveAct = IKESprite::Create(ImageManager::PASSIVE_01 + id, {0.f,0.f});
+	passiveAct->SetPosition( { 640.f, 110.0f });
+	passiveAct->SetAnchorPoint({0.5f,0.5f});
 	passiveFrame = 0.f;
 	passiveAlphaFrame = 0.f;
 	passiveActive->SetColor({ 1,1,1,1 });

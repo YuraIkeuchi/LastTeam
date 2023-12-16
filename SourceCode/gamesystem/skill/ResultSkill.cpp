@@ -255,7 +255,7 @@ void ResultSkill::StarEffectUpdate() {
 				star.isVanish = true;
 			} else {
 				float alpha = Ease(In, Quad, star.frameA, 1.0f, 0.f);
-				float rot = Ease(In, Quad, star.frameA, 0.0f, 180.f);
+				float rot = Ease(In, Quad, star.frameA, 0.0f, 90.f);
 				star.tex->SetColor({ 1,1,1,alpha });
 				star.tex->SetRotation(rot);
 
@@ -265,7 +265,9 @@ void ResultSkill::StarEffectUpdate() {
 			star.tex->SetPosition({
 				star.position.x + sinf(star.angle) * star.dia,
 				star.position.y - cosf(star.angle) * star.dia
-				});
+			});
+			float size = Ease(Out,Back,star.frame,0.f,128.f);
+			star.tex->SetSize({ size ,size });
 		}
 	}
 
