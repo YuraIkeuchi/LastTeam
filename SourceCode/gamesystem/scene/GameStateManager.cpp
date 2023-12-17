@@ -362,8 +362,12 @@ void GameStateManager::PlayerNowPanel(const int NowWidth, const int NowHeight) {
 void GameStateManager::UseSkill() {
 	if (m_AllActCount == 0) { return; }
 	if (!m_Delay) { return; }
-	m_ChargeScale = Helper::Lerp(1.0f, 0.0f, m_DelayTimer, m_Act[0].ActDelay);		//線形補間でチャージを表してる
-	if (Helper::CheckMin(m_DelayTimer, m_Act[0].ActDelay, 1)) {
+	int delay = m_Act[0].ActDelay;
+	if (m_ExtendQueen) {
+		delay =(int)((float)delay * 0.7f);
+	}
+	m_ChargeScale = Helper::Lerp(1.0f, 0.0f, m_DelayTimer, delay);		//線形補間でチャージを表してる
+	if (Helper::CheckMin(m_DelayTimer, delay, 1)) {
 		if (m_Act[0].SkillType == 0) {
 			BirthArea();
 			if (m_Act[0].StateName != "Refrain") {
@@ -498,6 +502,18 @@ void GameStateManager::PassiveCheck() {
 			break;
 		case Passive::ABILITY::HEAL_ATTACK:
 			player->SetHealingDamage(true);
+			break;
+		case Passive::ABILITY::EXTEND_KNIGHT:
+			m_ExtendKnight = true;
+			break;
+		case Passive::ABILITY::EXTEND_ROOK:
+			m_ExtendRook = true;
+			break;
+		case Passive::ABILITY::EXTEND_QUEEN:
+			m_ExtendQueen = true;
+			break;
+		case Passive::ABILITY::EXTEND_BISHOP:
+			m_ExtendBishop = true;
 			break;
 		default:
 			assert(0);

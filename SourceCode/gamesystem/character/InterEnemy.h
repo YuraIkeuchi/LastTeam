@@ -151,6 +151,7 @@ public://getter setter
 
 	void SimpleDamege(float damage = 3.f);
 	void SimpleHeal(float heal = 5.f);
+	void SimplePosion(int poison);
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>

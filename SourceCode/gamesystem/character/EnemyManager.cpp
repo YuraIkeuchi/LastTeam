@@ -43,7 +43,7 @@ void EnemyManager::Update() {
 		enemy->Update();
 		enemy->DeathUpdate();
 	}
-
+	PoisonRook();
 	//敵の削除
 	for (int i = 0; i < enemys.size(); i++) {
 		if (enemys[i] == nullptr) {
@@ -134,6 +134,16 @@ void EnemyManager::ReLoadDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimpleDamege(3.f);
 	}
+}
+
+void EnemyManager::PoisonRook() {
+	if (GameStateManager::GetInstance()->GetRookPoison() <= 0) { return; }
+	int poison = GameStateManager::GetInstance()->GetRookPoison();
+	poison /= (int)enemys.size();
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SimplePosion(poison);
+	}
+	GameStateManager::GetInstance()->SetRookPoison(0);
 }
 
 void EnemyManager::BombDamage() {
