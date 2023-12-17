@@ -131,7 +131,8 @@ void FrontEnemy::Finalize() {
 void FrontEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1) && (StagePanel::GetInstance()->GetPanelType(player->GetNowWidth() + 1, player->GetNowHeight()) == 0)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1) && (StagePanel::GetInstance()->GetPanelType(player->GetNowWidth() + 1, player->GetNowHeight()) == 0)
+		&& (!StagePanel::GetInstance()->GetisEnemyHit(player->GetNowWidth() + 1, player->GetNowHeight()))) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		_AttackState = ATTACK_WARP;
