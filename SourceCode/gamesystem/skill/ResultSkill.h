@@ -51,6 +51,7 @@ private:
 	struct ShineEffect {
 		unique_ptr<IKESprite> tex;
 		float frame = 0.f;
+ 		float frameA = 0.f;
 		float kFrame = 30.f;
 		XMFLOAT2 position = { 0.f,0.f };
 		XMFLOAT2 size = { 0.f,0.f };

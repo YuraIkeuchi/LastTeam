@@ -58,15 +58,15 @@ void ResultReport::Update() {
 		damage_dealt[i]->Update();
 		damage_taken[i]->Update();
 	}
-	if (Input::GetInstance()->TriggerButton(Input::A)){
+	if (Input::GetInstance()->TriggerButton(Input::A)) {
 		if (state == FINISH) { return; }
 		DamageIntNum(dealtDamage, dealNum);
 		DamageIntNum(takenDamage, takeNum);
 		for (auto i = 0; i < DAMAGEMAX; i++) {
 			damage_taken[i]->SetNumber(takeNum[i]);
 			damage_dealt[i]->SetNumber(dealNum[i]);
-		}		
-		rate->SetSize({1024.f,128.f});
+		}
+		rate->SetSize({ 1024.f,128.f });
 		state = FINISH;
 	}
 	SmokeUpdate();
@@ -200,7 +200,7 @@ void ResultReport::StampUpdate() {
 void ResultReport::FinishUpdate() {
 
 	if ((Input::GetInstance()->TriggerButton(Input::B) ||
-		Input::GetInstance()->TriggerKey(DIK_SPACE))&&
+		Input::GetInstance()->TriggerKey(DIK_SPACE)) &&
 		!m_Feed) {
 		m_Feed = true;
 	}
@@ -214,13 +214,13 @@ void ResultReport::FinishUpdate() {
 }
 
 void ResultReport::SmokeInit(XMFLOAT2 pos) {
-	for (int i = 0; i < 4;i++) {
-		int r_Rot = Helper::GetRanNum(0,360);
+	for (int i = 0; i < 4; i++) {
+		int r_Rot = Helper::GetRanNum(0, 360);
 		SmokeEffect itr;
 		itr.tex = IKESprite::Create(ImageManager::SMOKE, {});
 		itr.tex->SetAnchorPoint({ 0.5f,0.5f });
 		itr.tex->SetRotation((float)r_Rot);
-		itr.size = {64.f,64.f};
+		itr.size = { 64.f,64.f };
 		itr.pos = { pos.x + margin[i].x,pos.y + margin[i].y };
 		itr.tex->SetSize(itr.size);
 		itr.kFrameMax = 30.f;
@@ -231,7 +231,7 @@ void ResultReport::SmokeInit(XMFLOAT2 pos) {
 		shine.tex = IKESprite::Create(ImageManager::SHINE_S, { -100.f,0.f });
 		shine.tex->SetAnchorPoint({ 0.5f,0.5f });
 		shine.tex->SetSize({ 64.f,64.f });
-		shine.angle = ((i + 1) * 90.f) * (XM_PI / 180.f);
+		shine.angle = ((i * 90.f) + 45.f) * (XM_PI / 180.f);
 		shine.position = pos;
 		shines.push_back(std::move(shine));
 	}
@@ -239,20 +239,20 @@ void ResultReport::SmokeInit(XMFLOAT2 pos) {
 
 void ResultReport::SmokeUpdate() {
 	for (SmokeEffect& smoke : smokes) {
-			if (Helper::FrameCheck(smoke.frame, 1 / smoke.kFrameMax)) {
-				smoke.isVanish = true;
-			} else {
-				smoke.size.x = Ease(Out, Quad, smoke.frame, 64.f, 86.f);
-				smoke.size.y = Ease(Out, Quad, smoke.frame, 64.f, 86.f);
-				smoke.tex->SetSize(smoke.size);
-				XMFLOAT2 pos = {};
-				pos.x = Ease(In, Back, smoke.frame, smoke.pos.x, smoke.pos.x);
-				pos.y = Ease(In, Back, smoke.frame, smoke.pos.y, smoke.pos.y+180.f);
-				smoke.tex->SetPosition(pos);
-			}
+		if (Helper::FrameCheck(smoke.frame, 1 / smoke.kFrameMax)) {
+			smoke.isVanish = true;
+		} else {
+			smoke.size.x = Ease(Out, Quad, smoke.frame, 64.f, 86.f);
+			smoke.size.y = Ease(Out, Quad, smoke.frame, 64.f, 86.f);
+			smoke.tex->SetSize(smoke.size);
+			XMFLOAT2 pos = {};
+			pos.x = Ease(In, Back, smoke.frame, smoke.pos.x, smoke.pos.x);
+			pos.y = Ease(In, Back, smoke.frame, smoke.pos.y, smoke.pos.y + 180.f);
+			smoke.tex->SetPosition(pos);
 		}
+	}
 	smokes.remove_if([](SmokeEffect& shine) {
-			return shine.isVanish; });
+		return shine.isVanish; });
 	for (ShineEffect& shine : shines) {
 		if (Helper::FrameCheck(shine.frame, 1 / shine.kFrame)) {
 			shine.isVanish = true;
@@ -285,7 +285,7 @@ void ResultReport::DamageIntNum(int num, vector<int>& nums) {
 		int t_num = number / 10;
 		nums[1] = t_num;
 		number -= t_num * 10;
-	} 
+	}
 	if (number >= 0) {
 		nums[2] = number;
 	}

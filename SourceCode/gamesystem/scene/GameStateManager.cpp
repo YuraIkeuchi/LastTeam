@@ -520,7 +520,7 @@ void GameStateManager::PassiveCheck() {
 			break;
 		}
 	}
-	const int PASSIVE_MAX = 7;
+	const int PASSIVE_MAX = (int)Passive::ABILITY::MAX_ABILITY;
 	NotPassiveIDs.clear();
 	if (GotPassiveIDs.size() == 0) {
 		for (int j = 0; j < PASSIVE_MAX; j++) {

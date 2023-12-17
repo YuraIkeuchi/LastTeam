@@ -119,8 +119,8 @@ void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCom
 	havePassive[num].text_->Initialize(dxCommon);
 	havePassive[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
 	havePassive[num].baseSentence[0] = L"パッシブ：";
-	havePassive[num].baseSentence[1] = havePassive[num].text_->GetPasiveSentence(havePassive[num].ID);
-	havePassive[num].baseSentence[2] = L"";
+	havePassive[num].baseSentence[1] = havePassive[num].text_->GetPassiveName(havePassive[num].ID);
+	havePassive[num].baseSentence[2] = havePassive[num].text_->GetPasiveSentence(havePassive[num].ID);
 	havePassive[num].text_->SetCreateSentence(havePassive[num].baseSentence[0], havePassive[num].baseSentence[1], havePassive[num].baseSentence[2]);
 }
 //移動
