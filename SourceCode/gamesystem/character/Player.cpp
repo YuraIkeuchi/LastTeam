@@ -515,8 +515,7 @@ void Player::Move() {
 				m_LimitCount++;
 			}
 			m_InputTimer[DIR_RIGHT] = {};
-		}
-		else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
+		} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
 			if (m_NowWidth > 0) {
 				BirthImagePlayer();
 				MoveCommon(m_Position.x, l_SubVelocity);
@@ -607,6 +606,19 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	m_HP -= Damage;
 	GameStateManager::GetInstance()->TakenDamageCheck((int)Damage);
 	GameStateManager::GetInstance()->MissAttack();
+	//パッシブ効果処理
+	if (GameStateManager::GetInstance()->GetExtendBishop()) {
+		float gain = Damage * 0.1f;
+		Helper::Clamp(gain, 1.f, m_HP);
+		HealPlayer(gain);
+		GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::EXTEND_BISHOP);
+	}
+	if (GameStateManager::GetInstance()->GetExtendRook()) {
+		float poison = Damage * 0.5f;
+		Helper::Clamp(poison, 1.f, m_HP);
+		GameStateManager::GetInstance()->AddRookPoison((int)poison);
+		GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::EXTEND_ROOK);
+	}
 	m_BaseScale = 0.5f;
 	m_AfterScale = m_BaseScale;
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };

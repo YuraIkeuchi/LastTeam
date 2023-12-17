@@ -63,6 +63,14 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveSentence(L"スキルがあたると毒を１ふよ");
 	CreatePassiveName(L"なまえ：ヒーリング・バロール");
 	CreatePassiveSentence(L"回復するたびに5ダメージ");
+	CreatePassiveName(L"なまえ：エクステンド・ナイト");
+	CreatePassiveSentence(L"前２マスにいると、威力アップ");
+	CreatePassiveName(L"なまえ：エクステンド・ルーク");
+	CreatePassiveSentence(L"ダメージをうけると毒をふよ");
+	CreatePassiveName(L"なまえ：エクステンド・クイーン");
+	CreatePassiveSentence(L"ディレイじかんおおはばたんしゅく");
+	CreatePassiveName(L"なまえ：エクステンド・ビショップ");
+	CreatePassiveSentence(L"ダメージをうけると回復");
 
 	CreateSkillSentence(L"ドドドな近距離攻撃");
 	CreateSkillDamage(L"威力:15（大）");
