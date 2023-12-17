@@ -143,6 +143,12 @@ void StagePanel::ImGuiDraw() {
 		if (actions[i] == nullptr)continue;
 		actions[i]->ImGuiDraw();
 	}
+
+	ImGui::Begin("Panel");
+	ImGui::SliderFloat("Dis", &panels[0][0].Disolve, 0.0f, 2.0f);
+	ImGui::End();
+
+	panels[0][0].object->SetDisolve(panels[0][0].Disolve);
 }
 //オノマトペの描画
 void StagePanel::OnomatoDraw() {
