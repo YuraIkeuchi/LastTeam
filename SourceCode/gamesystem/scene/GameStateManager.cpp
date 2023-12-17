@@ -102,6 +102,24 @@ void GameStateManager::Update() {
 	if (ResultUpdate()) { return; }
 	const int l_AddCounterScore = 10;
 	m_AllScore = (m_CounterCount * l_AddCounterScore) + m_PosScore;
+	//今いる位置でスコアチェンジ
+	switch (m_NowWidth) {
+	case 0:
+		m_PosScore -= 2;
+		break;
+	case 1:
+		m_PosScore--;
+		break;
+	case 2:
+		m_PosScore++;
+		break;
+	case 3:
+		m_PosScore += 2;
+		break;
+	default:
+		break;
+	}
+	Helper::Clamp(m_PosScore,-1000,1000);
 
 	//カウンターの処理
 	if (m_Counter) {

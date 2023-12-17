@@ -64,7 +64,18 @@ void ResultReport::Update() {
 		DamageIntNum(takenDamage, takeNum);
 		for (auto i = 0; i < DAMAGEMAX; i++) {
 			damage_taken[i]->SetNumber(takeNum[i]);
+			damage_taken[i]->SetSize({ 128.f ,128.f });
 			damage_dealt[i]->SetNumber(dealNum[i]);
+			damage_dealt[i]->SetSize({ 128.f ,128.f });
+		}
+		if (score >= 0) {
+			rate = IKESprite::Create(ImageManager::RESULTREPORTATTACK, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
+			rate->SetAnchorPoint({ 0.5f,0.5f });
+			rate->SetRotation(-2.f);
+		} else {
+			rate = IKESprite::Create(ImageManager::RESULTREPORTDEFFENCE, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
+			rate->SetAnchorPoint({ 0.5f,0.5f });
+			rate->SetRotation(-2.f);
 		}
 		rate->SetSize({ 1024.f,128.f });
 		state = FINISH;
