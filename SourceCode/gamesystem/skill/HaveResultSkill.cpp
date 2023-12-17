@@ -166,6 +166,19 @@ void HaveResultSkill::Move() {
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		m_isMove = true;
 	}
+
+	//持ってるスキルの削除
+	if (m_SelectCount < (int)(haveSkills.size())) {
+		if (input->TriggerButton(input->X) && haveSkills.size() != 0) {
+			haveSkills.erase(cbegin(haveSkills) + m_SelectCount);
+			m_DeleteMove = true;
+		}
+	}
+
+	//スキルの削除後で本実装
+	/*for (int i = 0; i < haveSkills.size(); i++) {
+		DeleteMove(i);
+	}*/
 }
 //エリアの生成
 void HaveResultSkill::BirthArea(const int Area) {
@@ -180,4 +193,32 @@ void HaveResultSkill::BirthArea(const int Area) {
 			}
 		}
 	}
+}
+
+void HaveResultSkill::DeleteMove(const int num) {
+	//if (!m_DeleteMove) { return; }
+	//XMFLOAT2 l_BasePos = { 640.0f,250.0f };
+	//float l_AfterPosX = { l_BasePos.x + (num * 150.0f) };
+
+	//static float frame = 0.f;
+	//static float addFrame = 1.f / 15.f;
+
+	//if (Helper::FrameCheck(frame, addFrame)) {
+	//	m_DeleteMove = false;
+	//	frame = 0.f;
+	//}
+	//haveSkills[num].position.x = Ease(In,Cubic,frame,haveSkills[num].position.x, l_AfterPosX);
+	//haveSkills[num].icon->SetPosition({ haveSkills[num].position.x - m_AddPosX,haveSkills[num].position.y });
+	////if (!m_DeleteMove) { return; }
+
+	////for (auto i = 0; i < haveSkills.size(); i++) {
+	////	haveSkills[i].position.x = Ease(In, Cubic, frame, haveSkills[i].position.x, 0.0f);
+	////	haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
+	////}
+
+	////for (auto i = 0; i < havePassive.size(); i++) {
+	////	havePassive[i].position.x = Ease(In, Cubic, frame, havePassive[i].position.x, havePassive[i].position.x);
+	////	havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
+	////}
+
 }

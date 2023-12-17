@@ -11,7 +11,7 @@
 //ƒ‚ƒfƒ‹“Ç‚İ‚İ
 HealEnemy::HealEnemy() {
 	//‹¤’Ê‚Ì‰Šú‰»ˆ—
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::HEAL));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();

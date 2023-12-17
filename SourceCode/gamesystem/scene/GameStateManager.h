@@ -262,7 +262,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 7,8 };
+	vector <int> m_StartNumber = { 0,1,7,8 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
