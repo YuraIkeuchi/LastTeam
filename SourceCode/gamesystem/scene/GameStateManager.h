@@ -144,7 +144,7 @@ public:
 	bool GetHealDamage() { return m_healingDamage; }
 	void SetHealDamage(bool flag) { m_healingDamage=flag; }
 
-	bool GetExtendKnight() { return m_ExtendKnight&&(player->GetNowWidth()>=2); }
+	bool GetExtendKnight() { return m_ExtendKnight&&(player->GetNowWidth()==3); }
 	bool GetExtendRook() { return m_ExtendRook; }
 	bool GetExtendQueen() { return m_ExtendQueen; }
 	bool GetExtendBishop() { return m_ExtendBishop;}
@@ -276,7 +276,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 8 };
+	vector <int> m_StartNumber = { 1,2,6 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

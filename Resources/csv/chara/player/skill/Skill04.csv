@@ -3,7 +3,7 @@ SkillType,0
 Delay,10
 Name,Death
 StateName,NONE
-Damege,5
+Damege,25
 DistanceX,1
 DistanceY,1
 AttackArea,1 1 1

@@ -756,6 +756,7 @@ void GameStateManager::SetPassiveActive(int id) {
 	passiveAlphaFrame = 0.f;
 	passiveActive->SetColor({ 1,1,1,1 });
 }
+
 //捨てたカードの再シャッフル
 void GameStateManager::DeckDiscard() {
 	StagePanel::GetInstance()->ResetPanel();
