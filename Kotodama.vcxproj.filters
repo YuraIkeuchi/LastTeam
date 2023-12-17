@@ -469,6 +469,12 @@
     <ClCompile Include="SourceCode\gamesystem\text\DrawPoisonNumber.cpp">
       <Filter>gamesystem\Text</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\ClouserEnemy.cpp">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\EnemyRock.cpp">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -904,6 +910,12 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\DrawPoisonNumber.h">
       <Filter>gamesystem\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\ClouserEnemy.h">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\EnemyRock.h">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

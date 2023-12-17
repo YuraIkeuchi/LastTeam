@@ -148,10 +148,11 @@ void StagePanel::ImGuiDraw() {
 	}
 
 	ImGui::Begin("Panel");
-	ImGui::SliderFloat("Dis", &panels[0][0].Disolve, 0.0f, 2.0f);
-	ImGui::End();
-
-	panels[0][0].object->SetDisolve(panels[0][0].Disolve);
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isClose);
+		}
+	}
 }
 //オノマトペの描画
 void StagePanel::OnomatoDraw() {
@@ -310,7 +311,26 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& width, int& height, bool m_A
 			}
 		}
 	}
-
+}
+void StagePanel::ClosePanel(IKEObject3d* obj, bool Alive) {
+	m_OBB1.SetParam_Pos(obj->GetPosition());
+	m_OBB1.SetParam_Rot(obj->GetMatrot());
+	m_OBB1.SetParam_Scl(obj->GetScale());
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			m_OBB2.SetParam_Pos(panels[i][j].position);
+			m_OBB2.SetParam_Rot(panels[i][j].object->GetMatrot());
+			m_OBB2.SetParam_Scl({ 0.5f,1.0f,0.5f });
+			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
+				if (Alive) {
+					panels[i][j].isClose = true;
+				}
+				else {
+					panels[i][j].isClose = false;
+				}
+			}
+		}
+	}
 }
 //敵の弾とパネルの当たり判定
 void StagePanel::SetPanelSearch(IKEObject3d* obj, int& width, int& height) {
