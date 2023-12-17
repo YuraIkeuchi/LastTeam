@@ -1,0 +1,4 @@
+//追加されるPoisonTokenの数
+ADD_TOKEN,8
+//毒ダメージまでの時間
+TIMER_MAX,140
