@@ -115,6 +115,8 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(PLAYERAREA, L"Resources/2d/objicon/Areas/PlayerAttack.png");
 	IKETexture::LoadTexture(POISONAREA, L"Resources/2d/objicon/Areas/PoizonAttack.png");
 	IKETexture::LoadTexture(HEALAREA, L"Resources/2d/objicon/Areas/HealArea.png");
+	IKETexture::LoadTexture(BUFFAREA, L"Resources/2d/objicon/Areas/Muscle.png");
+	IKETexture::LoadTexture(HATENAAREA, L"Resources/2d/objicon/Areas/hatena.png");
 	IKETexture::LoadTexture(ENEMYPREDICT, L"Resources/2d/objicon/Areas/Predict.png");
 	IKETexture::LoadTexture(PLAYERPREDICT, L"Resources/2d/objicon/Areas/PlayerPredict.png");
 	IKETexture::LoadTexture(ATTACK_TEX_0, L"Resources/2d/objicon/AttackSKill/Skill0.png");
@@ -133,7 +135,6 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(BOOM_DIR, L"Resources/2d/effect/Up.png");
 	IKETexture::LoadTexture(POISON_EFFECT, L"Resources/2d/effect/poison.png");
 	IKETexture::LoadTexture(HEAL_DAMAGE, L"Resources/2d/effect/shine2.png");
-
 }
 
 //非同期処理でのテクスチャの読み込み

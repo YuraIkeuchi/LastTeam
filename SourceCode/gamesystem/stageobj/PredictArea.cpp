@@ -7,18 +7,40 @@
 PredictArea::PredictArea(const string& name) {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
+			//普通の
 			if (name == "ENEMY") {
-				panels[i][j].tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,0.4f,0.4f,1.f }));
+				panels[i][j].tex[PREDICT_ATTACK].reset(new IKETexture(ImageManager::AREA, {}, {1.f,1.f,1.f}, {1.f,0.4f,0.4f,1.f}));
 				panels[i][j].color = { 1.f,0.4f,0.4f,1.f };
 			}
 			else if(name == "PLAYER") {
-				panels[i][j].tex.reset(new IKETexture(ImageManager::PLAYERPREDICT, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+				panels[i][j].tex[PREDICT_ATTACK].reset(new IKETexture(ImageManager::PLAYERPREDICT, {}, {1.f,1.f,1.f}, {1.f,1.f,1.f,1.f}));
 			}
-			panels[i][j].tex->TextureCreate();
-			panels[i][j].tex->Initialize();
+			panels[i][j].tex[PREDICT_ATTACK]->TextureCreate();
+			panels[i][j].tex[PREDICT_ATTACK]->Initialize();
 			float baseScale = PANEL_SIZE * 0.1f;
-			panels[i][j].tex->SetScale({ baseScale,baseScale,baseScale });
-			panels[i][j].tex->SetRotation({ 90.0f,0.0f,0.0f });
+			panels[i][j].tex[PREDICT_ATTACK]->SetScale({ baseScale,baseScale,baseScale });
+			panels[i][j].tex[PREDICT_ATTACK]->SetRotation({ 90.0f,0.0f,0.0f });
+
+			//バフ
+			panels[i][j].tex[PREDICT_BUFF].reset(new IKETexture(ImageManager::BUFFAREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+			panels[i][j].tex[PREDICT_BUFF]->TextureCreate();
+			panels[i][j].tex[PREDICT_BUFF]->Initialize();
+			panels[i][j].tex[PREDICT_BUFF]->SetScale({ baseScale,baseScale,baseScale });
+			panels[i][j].tex[PREDICT_BUFF]->SetRotation({ 90.0f,0.0f,0.0f });
+
+			//はてな
+			panels[i][j].tex[PREDICT_HATENA].reset(new IKETexture(ImageManager::HATENAAREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+			panels[i][j].tex[PREDICT_HATENA]->TextureCreate();
+			panels[i][j].tex[PREDICT_HATENA]->Initialize();
+			panels[i][j].tex[PREDICT_HATENA]->SetScale({ baseScale,baseScale,baseScale });
+			panels[i][j].tex[PREDICT_HATENA]->SetRotation({ 90.0f,0.0f,0.0f });
+
+			//回復
+			panels[i][j].tex[PREDICT_HEAL].reset(new IKETexture(ImageManager::HEALAREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+			panels[i][j].tex[PREDICT_HEAL]->TextureCreate();
+			panels[i][j].tex[PREDICT_HEAL]->Initialize();
+			panels[i][j].tex[PREDICT_HEAL]->SetScale({ baseScale,baseScale,baseScale });
+			panels[i][j].tex[PREDICT_HEAL]->SetRotation({ 90.0f,0.0f,0.0f });
 		}
 	}
 
@@ -40,9 +62,11 @@ void PredictArea::Update() {
 	//プレイヤーが居るマスが黄色くなる
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			panels[i][j].tex->Update();
-			panels[i][j].tex->SetPosition(panels[i][j].position);
-			panels[i][j].tex->SetColor(panels[i][j].color);
+			panels[i][j].tex[m_DrawDype]->Update();
+			panels[i][j].tex[m_DrawDype]->SetPosition(panels[i][j].position);
+			panels[i][j].tex[m_DrawDype]->SetColor(panels[i][j].color);
+
+
 		}
 	}
 
@@ -58,7 +82,7 @@ void PredictArea::Draw(DirectXCommon* dxCommon) {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
 			if (panels[i][j].predict) {
-				panels[i][j].tex->Draw();
+				panels[i][j].tex[m_DrawDype]->Draw();
 			}
 		}
 	}

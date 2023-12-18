@@ -368,6 +368,22 @@ void GameStateManager::PredictManager() {
 	else {
 		predictarea->SetPredict(m_NowWidth, m_NowHeight,true);
 	}
+	if (m_Act[0].SkillType == 0) {
+		if (m_Act[0].StateName == "REGENE") {
+			predictarea->SetDrawDype(PREDICT_HEAL);
+		}
+		else {
+			predictarea->SetDrawDype(PREDICT_ATTACK);
+		}
+	}
+	else if (m_Act[0].SkillType == 1) {
+		if (m_Act[0].StateName == "NEXT") {
+			predictarea->SetDrawDype(PREDICT_BUFF);
+		}
+		else if (m_Act[0].StateName == "RANDOM") {
+			predictarea->SetDrawDype(PREDICT_HATENA);
+		}
+	}
 	predictarea->Update();
 }
 //プレイヤーの現在パネル
