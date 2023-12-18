@@ -233,10 +233,10 @@ void GameStateManager::ImGuiDraw() {
 		ImGui::Text("ID[%d]:[%d]", i, m_Act[i].ActID);
 	}
 	ImGui::End();*/
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->ImGuiDraw();
-	}
+	//for (auto i = 0; i < attackarea.size(); i++) {
+	//	if (attackarea[i] == nullptr)continue;
+	//	attackarea[i]->ImGuiDraw();
+	//}
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
@@ -256,7 +256,7 @@ void GameStateManager::ActUIDraw() {
 }
 //スキルを入手(InterActionCPPで使ってます)
 void GameStateManager::AddSkill(const int SkillType, const int ID, const float damage, const int Delay,
-	vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name) {
+	vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name,int Token) {
 	ActState act;
 	act.SkillType = SkillType;
 	if (act.SkillType == 0 || act.SkillType == 1 || act.SkillType == 3) {
@@ -266,6 +266,7 @@ void GameStateManager::AddSkill(const int SkillType, const int ID, const float d
 		act.AttackTimer.resize(7);
 		act.DistanceX = DisX;
 		act.DistanceY = DisY;
+		act.PoisonToken = Token;
 
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
@@ -319,6 +320,7 @@ void GameStateManager::BirthArea() {
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(damage);
 				newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
+				newarea->SetPoisonToken(m_Act[0].PoisonToken);
 				if (m_Act[0].ActID == 10) {
 					//固定ダメージ
 					newarea->SetIsFixed(true);

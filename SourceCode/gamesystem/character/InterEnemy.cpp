@@ -292,11 +292,11 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			} else if (name == "POISON") {
 				m_Poison = true;
 				if (!m_IsVenom) {
-					m_PoisonToken += m_AddPoisonToken;
+					m_PoisonToken += _area->GetPoisonToken();
 				} else {
 					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POISON_DAMAGEUP);
 					m_SuperPoison = true;
-					m_PoisonToken += m_AddPoisonToken * 2;
+					m_PoisonToken += _area->GetPoisonToken() * 2;
 				}
 			}
 

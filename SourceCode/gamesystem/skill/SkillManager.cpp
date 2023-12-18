@@ -58,25 +58,25 @@ void SkillManager::UIDraw() {
 }
 
 void SkillManager::ImGuiDraw() {
-	//for (SkillBase* newskill : skill) {
-	//	if (newskill != nullptr) {
-	//		newskill->ImGuiDraw();
-	//	}
-	//}
+	for (SkillBase* newskill : skill) {
+		if (newskill != nullptr) {
+			newskill->ImGuiDraw();
+		}
+	}
 
-	ImGui::Begin("Mana");
-	//ImGui::Text("Num:%d", m_DeckNum);
-	ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
-	ImGui::Text("m_DeckNum:%d", m_DeckNum);
-	//ImGui::Text("m_DeckSize:%d", (int)m_DeckDate.size());
-	for (int i = 0; i < m_DeckDate.size(); i++) {
-		ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
-	}
-	ImGui::End();
-	for (auto i = 0; i < deckui.size(); i++) {
-		if (deckui[i] == nullptr)continue;
-		deckui[i]->ImGuiDraw();
-	}
+	//ImGui::Begin("Mana");
+	////ImGui::Text("Num:%d", m_DeckNum);
+	//ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
+	//ImGui::Text("m_DeckNum:%d", m_DeckNum);
+	////ImGui::Text("m_DeckSize:%d", (int)m_DeckDate.size());
+	//for (int i = 0; i < m_DeckDate.size(); i++) {
+	//	ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
+	//}
+	//ImGui::End();
+	//for (auto i = 0; i < deckui.size(); i++) {
+	//	if (deckui[i] == nullptr)continue;
+	//	deckui[i]->ImGuiDraw();
+	//}
 }
 
 int SkillManager::IDSearch(const int BirthNum) {
@@ -99,7 +99,7 @@ void SkillManager::ResetBirth() {
 }
 
 //スキルのデータを渡す(攻撃)
-void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, vector<std::vector<int>>& timer, int& DisX, int& DisY, string& name) {
+void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, vector<std::vector<int>>& timer, int& DisX, int& DisY, string& name,int& Token) {
 	if (skill[m_BirthNow]->GetSkillType() != SkillType::damege)
 	{
 		assert(0);
@@ -111,6 +111,7 @@ void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vec
 	area = atkSkill->GetArea();		//範囲
 	timer = atkSkill->GetTimer();
 	name = atkSkill->GetStateName();		//付与状態
+	Token = atkSkill->GetPoisonToken();
 	//プレイヤーからの距離
 	int l_DistanceX = {};
 	int l_DistanceY = {};
@@ -147,8 +148,8 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 	while (std::getline(popcom, line)) {
 		std::istringstream line_stream(line);
 		std::string word;
+		std::string word2;
 		std::getline(line_stream, word, ',');
-
 		if (word.find("//") == 0) {
 			continue;
 		}
@@ -190,6 +191,14 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 				if (atkSkill != nullptr)
 				{
 					atkSkill->SetStateName(word);
+				}
+			}
+			else if (word.find("TOKEN") == 0) {
+				std::getline(line_stream, word, ',');
+				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+				if (atkSkill != nullptr)
+				{
+					atkSkill->SetPoisonToken(std::stoi(word));
 				}
 			}
 			else if (word.find("InvocatingTime") == 0) {
@@ -297,6 +306,7 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 				}
 				break;
 			}
+
 		}
 		else {
 			if (word.find("StateName") == 0) {

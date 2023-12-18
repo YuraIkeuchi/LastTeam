@@ -40,7 +40,7 @@ public:
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
 	void AddSkill(const int SkillType, const int ID, const float damage, const int Delay,
-		vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name);
+		vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name,int Token);
 
 	/// <summary>
 	/// エネミーのデータをコンテナに追加
@@ -168,6 +168,7 @@ private:
 		int DistanceX;		//プレイヤーからの距離
 		int DistanceY;		//プレイヤーからの距離
 		string StateName;		//付与状態
+		int PoisonToken;		//ポイズンの時間
 	};
 
 	struct DamageEffect {

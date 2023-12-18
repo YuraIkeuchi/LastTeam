@@ -55,6 +55,7 @@ public:
 	const std::vector<std::vector<int>> GetArea() { return m_Area; }
 	const std::vector<std::vector<int>> GetTimer() { return m_Timer; }
 	int GetState() { return _state; }
+	const int GetPoisonToken() { return m_PoisonToken; }
 
 	void SetState(const int state) { _state= state; }
 	void SetAlive(const bool Alive) { m_Alive = Alive; }
@@ -86,6 +87,7 @@ protected:
 	int m_DistanceX = {};
 	int m_DistanceY = {};
 	string StateName = {};
+	int m_PoisonToken = {};
 
 	struct Shadow {
 		unique_ptr<IKETexture> tex;
