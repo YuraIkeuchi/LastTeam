@@ -586,7 +586,7 @@ bool Player::HPEffect() {
 }
 //プレイヤーの情報をセーブ
 void Player::PlayerSave() {
-	const float l_StartHp = 100.0f;
+	const float l_StartHp = 500.0f;
 	std::ofstream playerofs("Resources/csv/chara/player/player.csv");  // ファイルパスを指定する
 	playerofs << "STARTHP" << "," << l_StartHp << std::endl;
 	playerofs << "NOWHP" << "," << m_HP << std::endl;

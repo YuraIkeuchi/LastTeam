@@ -26,7 +26,7 @@ DrawDamageNumber::DrawDamageNumber(const float scale, const bool move) {
 
 //èâä˙âª
 void DrawDamageNumber::Initialize() {
-	m_AfterPos = { m_Position.x,m_Position.y - 120.0f };
+	m_AfterPos = { m_Position.x,m_Position.y - 60.0f };
 	m_Alive = true;
 }
 //çXêV
@@ -76,13 +76,17 @@ void DrawDamageNumber::GetCameraData() {
 void DrawDamageNumber::NumberMove() {
 	static float addFrame = 1.f / 100.f;
 	if (Helper::FrameCheck(m_Frame, addFrame)) {
-		m_Alive = false;
+		if (Helper::FrameCheck(m_FrameS, 1/10.f)) {
+			m_Alive = false;
+		} else {
+			float alpha = Ease(In, Quad, m_FrameS, 1.0f,0.f);
+			for (int i = 0; i < _Number.size(); i++) {
+				_Number[i]->SetColor({1,1,1,alpha });
+			}
+		}
+	} else {
+		m_Position = { m_Position.x,
+		Ease(Out,Back,m_Frame,m_Position.y,m_AfterPos.y) };
 	}
 
-	m_Position = { m_Position.x,
-	Ease(In,Cubic,m_Frame,m_Position.y,m_AfterPos.y) };
-
-	m_Size = { Ease(In,Cubic,m_Frame,m_Size.x,m_AfterSize),
-		Ease(In,Cubic,m_Frame,m_Size.y,m_AfterSize),
-	};
 }

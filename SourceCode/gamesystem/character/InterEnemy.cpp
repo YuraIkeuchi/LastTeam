@@ -533,10 +533,10 @@ void InterEnemy::PoisonState() {
 			//GameStateManager::GetInstance()->SetPassiveActive();
 			m_PoisonToken /= 4;
 		} else {
-			if (m_PoisonToken %2 ==0) {
+			if (m_PoisonToken % 2 == 0) {
 				m_PoisonToken /= 2;
 			} else {
-				if (m_PoisonToken!=1) {
+				if (m_PoisonToken != 1) {
 					m_PoisonToken++;
 					m_PoisonToken /= 2;
 				} else {
@@ -574,7 +574,7 @@ void InterEnemy::BirthDamage(const float Damage) {
 			_newnumber->SetNumber(l_DightDamage[i]);
 			_damagenumber.push_back(std::move(_newnumber));
 		}
-	}
+	} 
 	else {
 		int l_DightDamage[DAMAGE_MAX];
 		for (auto i = 0; i < DAMAGE_MAX; i++) {
