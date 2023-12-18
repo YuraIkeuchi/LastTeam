@@ -107,7 +107,7 @@ public:
 	void AttackMove();
 	//縮小する
 	void ShrinkScale();
-
+	void BoundMove();
 
 private:
 	//三桁表示まで
@@ -231,4 +231,7 @@ private:
 	float m_AddPower = 0.0f;
 	//重力加速度
 	float m_Gravity = 0.02f;
+
+	bool m_Bound = {};
+	
 };

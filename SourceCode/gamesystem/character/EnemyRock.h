@@ -16,10 +16,12 @@ public:
 
 		//ステータス初期化
 	void InitState(const int width, const int height);
+
 private:
 	//関数ポインタ
 	static void(EnemyRock::* stateTable[])();
 
+	bool RockCollide();
 private:
 	void Inter();//生成
 	void Attack();//攻撃
@@ -36,4 +38,5 @@ private:
 	float m_BaseScale = {};
 	float m_Frame = {};
 	int m_Timer = {};
+	bool m_Hit = false;
 };
