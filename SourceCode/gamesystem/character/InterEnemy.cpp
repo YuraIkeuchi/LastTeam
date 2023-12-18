@@ -57,6 +57,8 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 	healdamage_tex->Initialize();
 	healdamage_tex->SetRotation({ 90.0f,0.0f,0.0f });
 
+	m_AddPoisonToken = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "ADD_TOKEN")));
+	m_PoisonTimerMax = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "TIMER_MAX")));
 }
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;
@@ -295,11 +297,11 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			} else if (name == "POISON") {
 				m_Poison = true;
 				if (!m_IsVenom) {
-					m_PoisonToken += 4;
+					m_PoisonToken += _area->GetPoisonToken();
 				} else {
 					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POISON_DAMAGEUP);
 					m_SuperPoison = true;
-					m_PoisonToken += 8;
+					m_PoisonToken += _area->GetPoisonToken() * 2;
 				}
 			}
 
@@ -518,9 +520,8 @@ void InterEnemy::PoisonState() {
 	//毒ヒット時タイマーリセットするか
 	//仕様変更必要
 	//新毒仕様
-	int kTimerMax = 140;//
 	m_PoisonTimer++;
-	if (m_PoisonTimer % kTimerMax == 0) {	//一定フレームで1ずつ減らす
+	if (m_PoisonTimer % m_PoisonTimerMax == 0) {	//一定フレームで1ずつ減らす
 		m_HP -= m_PoisonToken;
 		BirthDamage((float)m_PoisonToken);
 		BirthPoisonParticle();

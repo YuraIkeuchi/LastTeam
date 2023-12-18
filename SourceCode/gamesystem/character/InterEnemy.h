@@ -134,6 +134,8 @@ protected:
 
 	float m_poisonFrame = 0.f;
 	float m_OverFrame = {};
+	int m_AddPoisonToken = {};
+	int m_PoisonTimerMax = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };

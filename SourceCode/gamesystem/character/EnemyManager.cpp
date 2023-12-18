@@ -9,6 +9,7 @@
 #include "BossEnemy.h"
 #include "FrontEnemy.h"
 #include "ThrowEnemy.h"
+#include "ClouserEnemy.h"
 #include <StagePanel.h>
 #include <GameStateManager.h>
 #include <Helper.h>
@@ -241,6 +242,13 @@ void EnemyManager::Spawn2Map() {
 			}
 			else if (x == '8') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<ThrowEnemy>();
+				//enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '9') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<ClouserEnemy>();
 				//enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));

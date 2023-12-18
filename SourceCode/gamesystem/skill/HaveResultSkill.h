@@ -27,6 +27,7 @@ public:
 	void CreateAttackSkill(const int num,const int id, DirectXCommon* dxCommon);
 	void CreatePassiveSkill(const int num, const int id, DirectXCommon* dxCommon);
 	void BirthArea(const int num);
+	void DeleteMove(const int num);
 private:
 	static const int S_DAMAGEMAX = 2;
 private:
@@ -60,7 +61,6 @@ private:
 	bool m_isMove = false;
 
 	XMFLOAT2 m_SelectPos = {};
-
-	
+	bool m_DeleteMove = false;
 };
 

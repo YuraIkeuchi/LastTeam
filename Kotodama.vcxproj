@@ -111,6 +111,8 @@
     <ClCompile Include="lib\imgui\include\imgui_impl_win32.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_tables.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_widgets.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\ClouserEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\EnemyRock.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\FrontEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\ThrowEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp" />
@@ -328,8 +330,10 @@
     <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\BossEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\ClouserEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CreateBombEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\EnemyManager.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\EnemyRock.h" />
     <ClInclude Include="SourceCode\gamesystem\character\FrontEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\HealEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\ImagePlayer.h" />
