@@ -98,8 +98,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"回復!or自傷・・・ 威力:10");
 	CreateSkillSentence(L"自機や敵全てに回復を!");
 	CreateSkillDamage(L"回復床設置 威力:20");
-	CreateSkillSentence(L"中毒はしらぬまに…");
-	CreateSkillDamage(L"威力:10(毒を3倍に増やす)");
+	CreateSkillSentence(L"中毒はしらぬまに");
+	CreateSkillDamage(L"威力:10(もってる毒を3倍)");
 
 	//ラスボス
 	//コンヴァージョン初期化

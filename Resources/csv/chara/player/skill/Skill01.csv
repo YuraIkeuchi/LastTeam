@@ -1,9 +1,11 @@
-ID,0
+ID,1
 SkillType,0
-Delay,5
-Name,punch
+Delay,8
+Name,kick
 StateName,NONE
-Damege,75
+Damege,40
 DistanceX,1
-AttackAreA,1
-TimeR,1
+AttackArea,1 0
+AttackAreA,1 0
+Timer,1 0
+TimeR,10 0

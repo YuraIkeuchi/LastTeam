@@ -66,7 +66,7 @@ void GameStateManager::Initialize() {
 	DeckInitialize();
 
 	//デッキにないカードを検索する
-	const int CARD_MAX = 13;
+	const int CARD_MAX = SkillManager::GetInstance()->GetSkillMax();
 	m_NotDeckNumber.clear();
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
 		for (int j = 0; j < CARD_MAX; j++) {

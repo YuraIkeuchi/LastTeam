@@ -46,6 +46,7 @@ public:
 public:
 	const int GetDeckUISize() { return (int)deckui.size(); }
 	const int GetDeckNum() { return m_DeckNum; }
+	const int GetSkillMax() { return m_SKILLMAX; }
 	std::vector<SkillBase*>GetSkillBase() { return skill; }
 private:
 	std::vector<unique_ptr<DeckUI>> deckui;
@@ -53,5 +54,6 @@ private:
 	int m_DeckNum = {};
 	int m_BirthNow = {};
 	int m_DeckRemain = {};
+	int m_SKILLMAX = 0;
 	std::vector<int> m_DeckDate;
 };

@@ -1,16 +1,4 @@
-ID,10
-SkillType,0
-Delay,10
-Name,Refrain
-StateName,Refrain
-Damege,0
-DistanceX,1
-DistanceY,1
-AttackArea,1 1 1 0
-AttackArea,0 1 0 0
-AttackArea,0 0 0 0
-AttackAreA,0 0 0 0
-Timer,1 1 1 0
-Timer,0 1 0 0
-Timer,0 0 0 0
-TimeR,0 0 0 0
+ID,11
+SkillType,1
+Delay,15
+StateName,RANDOM
