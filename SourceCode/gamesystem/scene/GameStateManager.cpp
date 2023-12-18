@@ -342,17 +342,22 @@ void GameStateManager::PredictManager() {
 	l_BirthBaseX = m_NowWidth + m_Act[0].DistanceX;;		//生成の初めの位置を見てる
 	l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
 
-	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
-		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
+	if (m_Act[0].SkillType == 0) {
+		for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
+			for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 
-			int AreaX = {};
-			int AreaY = {};
-			AreaX = l_BirthBaseX + i;
-			AreaY = l_BirthBaseY - j;
-			if (m_Act[0].AttackArea[i][j] == 1 && (AreaY < 4) && (AreaY >= 0)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				predictarea->SetPredict(AreaX, AreaY, true);
+				int AreaX = {};
+				int AreaY = {};
+				AreaX = l_BirthBaseX + i;
+				AreaY = l_BirthBaseY - j;
+				if (m_Act[0].AttackArea[i][j] == 1 && (AreaY < 4) && (AreaY >= 0)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+					predictarea->SetPredict(AreaX, AreaY, true);
+				}
 			}
 		}
+	}
+	else {
+		predictarea->SetPredict(m_NowWidth, m_NowHeight,true);
 	}
 	predictarea->Update();
 }
