@@ -36,7 +36,7 @@ protected:
 protected:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
-	static const int DAMAGE_MAX = 2;
+	static const int DAMAGE_MAX = 3;
 protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
 	std::vector<unique_ptr<DrawDamageNumber>> _damagenumber;

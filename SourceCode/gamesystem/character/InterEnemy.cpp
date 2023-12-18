@@ -529,10 +529,10 @@ void InterEnemy::PoisonState() {
 			//GameStateManager::GetInstance()->SetPassiveActive();
 			m_PoisonToken /= 4;
 		} else {
-			if (m_PoisonToken %2 ==0) {
+			if (m_PoisonToken % 2 == 0) {
 				m_PoisonToken /= 2;
 			} else {
-				if (m_PoisonToken!=1) {
+				if (m_PoisonToken != 1) {
 					m_PoisonToken++;
 					m_PoisonToken /= 2;
 				} else {
@@ -555,9 +555,9 @@ void InterEnemy::BirthDamage(const float Damage) {
 		_newnumber->Initialize();
 		_newnumber->SetNumber(l_InterDamage);
 		_damagenumber.push_back(std::move(_newnumber));
-	} else {
-		int l_DightDamage[DAMAGE_MAX];
-		for (auto i = 0; i < DAMAGE_MAX; i++) {
+	} else 	if (l_InterDamage < 100) {
+		int l_DightDamage[2] = {};
+		for (auto i = 0; i < 2; i++) {
 			l_DightDamage[i] = Helper::getDigits(l_InterDamage, i, i);
 			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
 			_newnumber->GetCameraData();
@@ -565,6 +565,23 @@ void InterEnemy::BirthDamage(const float Damage) {
 				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
 			} else {
 				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_damagenumber.push_back(std::move(_newnumber));
+		}
+	} else {
+		int l_DightDamage[DAMAGE_MAX] = {};
+		for (auto i = 0; i < DAMAGE_MAX; i++) {
+			l_DightDamage[i] = Helper::getDigits(l_InterDamage, i, i);
+			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
+			} else if (i == 1) {
+				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+			} else {
+				_newnumber->SetExplain({ m_Position.x - 0.9f, m_Position.y, m_Position.z + 1.0f });
 			}
 			_newnumber->Initialize();
 			_newnumber->SetNumber(l_DightDamage[i]);
