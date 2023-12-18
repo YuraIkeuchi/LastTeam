@@ -37,6 +37,7 @@ void GameStateManager::Initialize() {
 	actui.clear();
 	m_Act.clear();
 	attackarea.clear();
+	regenearea.clear();
 	//一旦クリア方式で
 	GotPassives.clear();
 	PassiveCheck();
@@ -155,6 +156,15 @@ void GameStateManager::Update() {
 			attackarea.erase(cbegin(attackarea) + i);
 		}
 	}
+	//回復エリアの更新(実際はスキルになると思う)
+	for (auto i = 0; i < regenearea.size(); i++) {
+		if (regenearea[i] == nullptr)continue;
+		regenearea[i]->Update();
+
+		if (!regenearea[i]->GetAlive()) {
+			regenearea.erase(cbegin(regenearea) + i);
+		}
+	}
 
 	GaugeUpdate();
 	//攻撃した瞬間
@@ -223,6 +233,10 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 			if (attackarea[i] == nullptr)continue;
 			attackarea[i]->Draw(dxCommon);
 		}
+		for (auto i = 0; i < regenearea.size(); i++) {
+			if (regenearea[i] == nullptr)continue;
+			regenearea[i]->Draw(dxCommon);
+		}
 
 		if (m_AllActCount != 0) {
 			predictarea->Draw(dxCommon);
@@ -242,19 +256,6 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	/*ImGui::Begin("STATE");
-	ImGui::Text("m_HandedCount:%d", m_HandedCount);
-	for (int i = 0; i < m_DiscardNumber.size(); i++) {
-		ImGui::Text("Discard[%d]:[%d]", i, m_DiscardNumber[i]);
-	}
-	for (int i = 0; i < m_Act.size(); i++) {
-		ImGui::Text("ID[%d]:[%d]", i, m_Act[i].ActID);
-	}
-	ImGui::End();*/
-	//for (auto i = 0; i < attackarea.size(); i++) {
-	//	if (attackarea[i] == nullptr)continue;
-	//	attackarea[i]->ImGuiDraw();
-	//}
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
@@ -334,17 +335,25 @@ void GameStateManager::BirthArea() {
 			AreaX = l_BirthBaseX + i;
 			AreaY = l_BirthBaseY - j;
 			if (m_Act[0].AttackArea[i][j] == 1 && ((AreaY < 4) && (AreaY >= 0)) && (AreaX < 8)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player");
-				newarea->InitState(AreaX, AreaY);
-				newarea->SetDamage(damage);
-				newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
-				newarea->SetPoisonToken(m_Act[0].PoisonToken);
-				if (m_Act[0].ActID == 10) {
-					//固定ダメージ
-					newarea->SetIsFixed(true);
+				//回復エリアの生成かどうか決める
+				if (m_Act[0].StateName == "REGENE") {
+					std::unique_ptr<RegeneArea> newarea = std::make_unique<RegeneArea>();
+					newarea->InitState(AreaX, AreaY);
+					regenearea.emplace_back(std::move(newarea));
 				}
-				newarea->SetStateName(m_Act[0].StateName);
-				attackarea.emplace_back(std::move(newarea));
+				else {
+					std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player");
+					newarea->InitState(AreaX, AreaY);
+					newarea->SetDamage(damage);
+					newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
+					newarea->SetPoisonToken(m_Act[0].PoisonToken);
+					if (m_Act[0].ActID == 10) {
+						//固定ダメージ
+						newarea->SetIsFixed(true);
+					}
+					newarea->SetStateName(m_Act[0].StateName);
+					attackarea.emplace_back(std::move(newarea));
+				}
 			}
 		}
 	}
@@ -376,6 +385,22 @@ void GameStateManager::PredictManager() {
 	}
 	else {
 		predictarea->SetPredict(m_NowWidth, m_NowHeight,true);
+	}
+	if (m_Act[0].SkillType == 0) {
+		if (m_Act[0].StateName == "REGENE") {
+			predictarea->SetDrawDype(PREDICT_HEAL);
+		}
+		else {
+			predictarea->SetDrawDype(PREDICT_ATTACK);
+		}
+	}
+	else if (m_Act[0].SkillType == 1) {
+		if (m_Act[0].StateName == "NEXT") {
+			predictarea->SetDrawDype(PREDICT_BUFF);
+		}
+		else if (m_Act[0].StateName == "RANDOM") {
+			predictarea->SetDrawDype(PREDICT_HATENA);
+		}
 	}
 	predictarea->Update();
 }

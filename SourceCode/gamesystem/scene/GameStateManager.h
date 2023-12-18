@@ -8,6 +8,7 @@
 #include "ActionUI.h"
 #include "AttackArea.h"
 #include "PredictArea.h"
+#include "RegeneArea.h"
 #include <Passive.h>
 #include "GameObject/GameObject.h"
 #include "Player.h"
@@ -223,7 +224,8 @@ private:
 
 	// 攻撃エリア
 	vector<unique_ptr<AttackArea>> attackarea;
-
+	// 回復エリア
+	vector<unique_ptr<RegeneArea>> regenearea;
 	unique_ptr<Onomatope> onomatope = nullptr;
 	//カウンター
 	bool m_Counter = false;
@@ -277,7 +279,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 7,8,9,10,11 };
+	vector <int> m_StartNumber = { 7,8,9,10,11,12 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

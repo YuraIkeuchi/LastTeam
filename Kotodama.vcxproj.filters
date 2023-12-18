@@ -427,9 +427,6 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\ImagePlayer.cpp">
-      <Filter>gamesystem\charactor\Player</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\TackleEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
@@ -474,6 +471,9 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\EnemyRock.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\RegeneArea.cpp">
+      <Filter>gamesystem\stageobj\Area</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -869,9 +869,6 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\ImagePlayer.h">
-      <Filter>gamesystem\charactor\Player</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\TackleEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
@@ -916,6 +913,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\EnemyRock.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\RegeneArea.h">
+      <Filter>gamesystem\stageobj\Area</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

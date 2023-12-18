@@ -2,13 +2,11 @@
 #include"DirectXCommon.h"
 #include "IKETexture.h"
 #include <DirectXMath.h>
-#include <ObjCommon.h>
 
 using namespace std;         //  名前空間指定
 
 //攻撃エリアクラス
-class AttackArea :
-	public ObjCommon {
+class RegeneArea{
 protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	// DirectX::を省略
@@ -18,42 +16,28 @@ protected:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	AttackArea(string& m_Name);
+	RegeneArea();
 public:
 	//初期化
-	bool Initialize() override;
+	bool Initialize();
 	//ステータス初期化
 	void InitState(const int width, const int height);
 	//更新
-	void Update() override;
+	void Update();
 	//描画
-	void Draw(DirectXCommon* dxCommon) override;
+	void Draw(DirectXCommon* dxCommon);
 	//ImGui
 	void ImGuiDraw();
 private:
 	XMFLOAT3 SetPanelPos(const int width, const int height);
-	void Move();
 public:
-	//gettersetter
-	const bool GetHit() { return m_Hit; }
 	const bool GetAlive() { return m_Alive; }
-	const bool GetIsFixed() { return isFixed; }
-	const string GetName() { return m_Name; }
 
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetNowHeight() { return m_NowHeight; }
 	const int GetTimer() { return m_Timer; }
-	const float GetDamage() { return m_Damage; }
-	const std::string GetStateName() { return StateName; }
-	const int GetPoisonToken() { return m_PoisonToken; }
 
-	void SetHit(const bool Hit) { m_Hit = Hit; }
 	void SetTimer(const int Timer) { m_Timer = Timer; }
-	void SetName(const string name) { m_Name = name; }
-	void SetDamage(const float Damage) { m_Damage = Damage; }
-	void SetIsFixed(bool flag) { isFixed = flag; }
-	void SetStateName(const std::string name) { StateName = name; }
-	void SetPoisonToken(const int PoisonToken) { m_PoisonToken = PoisonToken; }
 private:
 	//パネル
 	struct Panel {
@@ -63,22 +47,10 @@ private:
 		bool predict = false;
 	};
 	Panel panels;
-	string m_Name = "none";
 	//生存関係
 	bool m_Alive = false;
 	int m_BirthTimer = 0;
 	int m_Timer = {};
-	//ヒットしたかどうか
-	bool m_Hit = false;
-	//他の補正をかけない
-	bool isFixed = false;
 	int m_NowWidth = {};
 	int m_NowHeight = {};
-	int m_PoisonToken = {};
-	float m_Damage = {};
-	std::string StateName = "NONE";
-	//上昇度
-	float m_AddPower = 0.0f;
-	//重力加速度
-	float m_Gravity = 0.02f;
 };

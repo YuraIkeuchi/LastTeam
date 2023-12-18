@@ -6,7 +6,7 @@
 #include <Input.h>
 #include <array>
 #include "DrawNumber.h"
-#include "ImagePlayer.h"
+#include "DrawHealNumber.h"
 
 using namespace DirectX;
 
@@ -74,7 +74,7 @@ private:
 	void BirthPoisonParticle();
 	//ダメージの更新
 	void DamageUpdate();
-	void BirthImagePlayer();
+	void BirthHealNumber(const float heal);
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }
@@ -107,7 +107,10 @@ public:
 	void AttackMove();
 	//縮小する
 	void ShrinkScale();
+	//バウンド
 	void BoundMove();
+	//回復
+	void RegeneUpdate();
 
 private:
 	//三桁表示まで
@@ -116,6 +119,7 @@ private:
 	static const int DIR_MAX = 4;
 
 	static float startHP;
+	static const int HEAL_MAX = 3;
 public:
 	//キャラの状態
 	enum CharaState {
@@ -179,6 +183,7 @@ private:
 		THIRD_DIGHT
 	};
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
+	std::vector<unique_ptr<DrawHealNumber>> _healnumber;
 	unique_ptr<IKESprite> slash_;
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _MaxHp;
 
@@ -206,9 +211,6 @@ private:
 		MOVE_DISOLVE,//残像
 	}_MoveType = MOVE_EASE;
 
-	//残像用のプレイヤー
-	std::vector<unique_ptr<ImagePlayer>> imageplayer;
-
 	bool m_FinishGameOver = false;
 
 	bool m_healingDamage = false;
@@ -233,5 +235,5 @@ private:
 	float m_Gravity = 0.02f;
 
 	bool m_Bound = {};
-	
+	int m_HealTimer = {};
 };

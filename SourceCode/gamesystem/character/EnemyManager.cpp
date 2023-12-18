@@ -42,7 +42,6 @@ void EnemyManager::Update() {
 			player->SetGrazePos({ 1000.0f,0.0f,0.0f });
 		}
 		enemy->Update();
-		enemy->DeathUpdate();
 	}
 	PoisonRook();
 	//敵の削除

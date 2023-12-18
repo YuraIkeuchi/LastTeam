@@ -150,6 +150,7 @@ void Player::Update() {
 		AttackMove();
 		ShrinkScale();
 		BoundMove();
+		RegeneUpdate();
 		//表示用のHP
 		m_InterHP = (int)(m_HP);
 		m_InterMaxHP = (int)m_MaxHP;
@@ -174,13 +175,15 @@ void Player::Update() {
 		hptex_under->SetPosition(m_HPPos);
 		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 
-		//手に入れたスキルのUIの更新
-		for (auto i = 0; i < imageplayer.size(); i++) {
-			if (imageplayer[i] == nullptr)continue;
-			imageplayer[i]->Update();
+		//数字の削除
+		for (int i = 0; i < _healnumber.size(); i++) {
+			if (_healnumber[i] == nullptr) {
+				continue;
+			}
 
-			if (!imageplayer[i]->GetAlive()) {
-				imageplayer.erase(cbegin(imageplayer) + i);
+			_healnumber[i]->Update();
+			if (!_healnumber[i]->GetAlive()) {
+				_healnumber.erase(cbegin(_healnumber) + i);
 			}
 		}
 
@@ -208,11 +211,6 @@ void Player::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	IKETexture::PostDraw();
-	//手に入れたスキルのUIの更新
-	for (auto i = 0; i < imageplayer.size(); i++) {
-		if (imageplayer[i] == nullptr)continue;
-		imageplayer[i]->Draw(dxCommon);
-	}
 	if(m_Color.w != 0.0f)
 	Obj_Draw();
 }
@@ -241,7 +239,12 @@ void Player::UIDraw() {
 	if (m_InterMaxHP >= 100) {
 		_MaxHp[THIRD_DIGHT]->Draw();
 	}
-
+	//敵のヒールテキスト
+	for (unique_ptr<DrawHealNumber>& newnumber : _healnumber) {
+		if (newnumber != nullptr) {
+			newnumber->Draw();
+		}
+	}
 	IKESprite::PostDraw();
 }
 //ImGui
@@ -432,11 +435,20 @@ void Player::MoveCommon(float& pos, float velocity) {
 }
 //プレイヤーのHP回復
 void Player::HealPlayer(const float power) {
-	m_HP += power;
+	if (m_HP >= m_MaxHP) { return; }
+	float l_HealNum = {};
 	if (m_healingDamage) {
 		GameStateManager::GetInstance()->SetHealDamage(true);
 		GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::HEAL_ATTACK);
 	}
+	if (m_MaxHP - m_HP >= power) {
+		l_HealNum = power;
+	}
+	else {
+		l_HealNum = m_MaxHP - m_HP;
+	}
+	BirthHealNumber(l_HealNum);
+	m_HP += power;
 	HealParticle();
 }
 //プレイヤーのダメージ判定
@@ -602,13 +614,7 @@ void Player::DamageUpdate() {
 		m_Color.w = 0.0f;
 	}
 }
-//残像作る
-void Player::BirthImagePlayer() {
-	std::unique_ptr<ImagePlayer> newimage = std::make_unique<ImagePlayer>();
-	newimage->Initialize();
-	newimage->SetPosition(m_Position);
-	imageplayer.push_back(std::move(newimage));
-}
+
 //ゲームーオーバー時
 void Player::GameOverUpdate() {
 	const float l_AddRotZ = 0.5f;
@@ -695,4 +701,69 @@ void Player::BoundMove() {
 		m_Position.y,
 		Ease(In,Cubic,m_Frame,m_Position.z,m_AfterPos.z),
 	};
+}
+//回復
+void Player::RegeneUpdate() {
+	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
+		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
+			HealPlayer(20.0f);
+			m_HealTimer = {};
+		}
+	}
+	else {
+		m_HealTimer = {};
+	}
+}
+void Player::BirthHealNumber(const float heal) {
+	int l_InterHeal = {};//int変換したダメージ
+	l_InterHeal = (int)heal;
+	if (l_InterHeal < 10) {
+
+		unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+		_newnumber->GetCameraData();
+		_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
+		_newnumber->Initialize();
+		_newnumber->SetNumber(l_InterHeal);
+		_healnumber.push_back(std::move(_newnumber));
+	}
+	else if(l_InterHeal >= 10 && l_InterHeal < 100) {
+
+		int l_DightDamage[HEAL_MAX - 1];
+		for (auto i = 0; i < HEAL_MAX - 1; i++) {
+			l_DightDamage[i] = Helper::getDigits(l_InterHeal, i, i);
+			unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			else {
+				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_healnumber.push_back(std::move(_newnumber));
+		}
+
+	}
+	else {
+
+		int l_DightDamage[HEAL_MAX];
+		for (auto i = 0; i < HEAL_MAX; i++) {
+			l_DightDamage[i] = Helper::getDigits(l_InterHeal, i, i);
+			unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.6f, m_Position.y, m_Position.z + 1.0f });
+			}
+			else if(i == 1) {
+				_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
+			}
+			else {
+				_newnumber->SetExplain({ m_Position.x - 0.6f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_healnumber.push_back(std::move(_newnumber));
+		}
+	}
 }

@@ -45,6 +45,7 @@ private:
 		float Frame = {};
 		float Disolve = {};
 		bool isClose = false;
+		bool isHeal = false;
 	};
 
 public:
@@ -70,6 +71,7 @@ public:
 	void ResetAction();
 	void EnemyHitReset();
 	void PoisonUpdate();
+
 	//色変更(敵)
 	void SetEnemyHit(IKEObject3d* obj,int& width, int& height,bool m_Alive);
 	//今いる位置のパネル番号を検索
@@ -81,6 +83,7 @@ public:
 	void ClosePanel(IKEObject3d* obj, bool m_Alive);
 	//毒の配置(かぶらないように)
 	void PoisonSetPanel(int& width, int& height);
+
 	//アクションの全削除
 	void DeleteAction();
 private:
@@ -102,11 +105,16 @@ public:
 		return panels[width][height].predict = Flag;
 	}
 
+	bool SetHeal(int width, int height, bool Flag) {
+		return panels[width][height].isHeal = Flag;
+	}
+
 	const bool GetAllDelete() { return m_AllDelete; }
 	const bool GetCreateFinish() { return m_CreateFinish; }
 	const int GetPanelType(const int width, const int height) { return panels[width][height].type; }
 	const int GetisEnemyHit(const int width, const int height) { return panels[width][height].isEnemyHit; }
 	const int GetClose(const int width, const int height) { return panels[width][height].isClose; }
+	const int GetHeal(const int width, const int height) { return panels[width][height].isHeal; }
 	void SetCreateFinish(const bool CreateFinish) { m_CreateFinish = CreateFinish; }
 private:
 	static Player* player;
