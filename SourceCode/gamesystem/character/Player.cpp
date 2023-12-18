@@ -330,12 +330,6 @@ void Player::Move() {
 			m_AfterPos.x = m_Position.x + l_SubVelocity;
 			m_Move = true;
 			m_LimitCount++;
-		} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
-			if (m_NowWidth > 0) {
-				BirthImagePlayer();
-				MoveCommon(m_Position.x, l_SubVelocity);
-				m_LimitCount++;
-			}
 			m_InputTimer[DIR_LEFT] = {};
 		}
 	}
