@@ -149,6 +149,7 @@ void Player::Update() {
 		DamageUpdate();
 		AttackMove();
 		ShrinkScale();
+		BoundMove();
 		//表示用のHP
 		m_InterHP = (int)(m_HP);
 		m_InterMaxHP = (int)m_MaxHP;
@@ -254,7 +255,7 @@ void Player::ImGuiDraw() {
 }
 //移動
 void Player::Move() {
-	if (m_Delay) { return; }
+	if (m_Delay || m_Bound) { return; }
 	if (GameStateManager::GetInstance()->GetResetPredict()) { return; }
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
 	const int l_TargetTimer = 8;
@@ -460,6 +461,7 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	m_AfterScale = m_BaseScale;
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	m_Delay = false;
+	m_Frame = {};
 	m_ShrinkTimer = {};
 	//ダメージの種類によってパーティクルを変える
 	if (name == "NORMAL") {
@@ -468,6 +470,29 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	} else if (name == "POISON") {
 		BirthPoisonParticle();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Fire.wav", 0.04f);
+	}
+	else if (name == "BOUND") {
+		DamageParticle();
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+		m_Bound = true;
+		if (m_NowWidth != 0) {
+			m_AfterPos = { m_Position.x - 1.5f,m_Position.y,m_Position.z };
+			m_NowWidth--;
+		}
+		else {
+			if (m_NowHeight == 0) {
+				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
+				m_NowHeight++;
+			}
+			else if (m_NowHeight == 3) {
+				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z - 1.5f };
+				m_NowHeight--;
+			}
+			else {
+				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
+				m_NowHeight++;
+			}
+		}
 	}
 	m_Damege = true;
 	m_DamageTimer = {};
@@ -655,4 +680,19 @@ void Player::ShrinkScale() {
 
 	m_BaseScale = Ease(In, Cubic, 0.7f, m_BaseScale, m_AfterScale);
 	m_Scale = { m_BaseScale,m_BaseScale ,m_BaseScale };
+}
+//バウンドしたときの動き
+void Player::BoundMove() {
+	if (!m_Bound) { return; }
+	const float l_AddFrame = 1 / 10.0f;
+	if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+		m_Frame = {};
+		m_Bound = false;
+		GameStateManager::GetInstance()->SetResetPredict(true);
+	}
+
+	m_Position = { Ease(In,Cubic,m_Frame,m_Position.x,m_AfterPos.x),
+		m_Position.y,
+		Ease(In,Cubic,m_Frame,m_Position.z,m_AfterPos.z),
+	};
 }

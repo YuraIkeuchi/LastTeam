@@ -49,6 +49,7 @@ void EnemyRock::Action() {
 	//“–‚½‚è”»’è
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//“–‚½‚è”»’è
+	RockCollide();//Šâ‚Ì“–‚½‚è”»’è
 
 	if (m_HP <= 0.0f && _charaState != STATE_SPECIAL) {
 		Attack();
@@ -107,4 +108,22 @@ void EnemyRock::Close()
 	}
 
 	StagePanel::GetInstance()->ClosePanel(m_Object.get(), m_Alive);
+}
+
+bool EnemyRock::RockCollide() {
+	if (_charaState != STATE_ATTACK) { return false; }
+	if (m_Hit) { return false; }
+	XMFLOAT3 l_PlayerPos = player->GetPosition();
+	const float l_Damage = 0.5f;
+	const float l_Radius = 0.15f;
+	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
+		player->RecvDamage(m_Damage, "BOUND");
+		m_Hit = true;
+		return true;
+	}
+	else {
+		return false;
+	}
+
+	return false;
 }
