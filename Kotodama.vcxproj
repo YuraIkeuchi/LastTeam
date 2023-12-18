@@ -233,6 +233,7 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PoisonArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\RegeneArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\ResultAreaUI.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\Sickle.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\StageBack.cpp" />
@@ -383,6 +384,7 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PoisonArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\RegeneArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\ResultAreaUI.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\Sickle.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\StageBack.h" />

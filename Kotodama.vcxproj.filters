@@ -475,6 +475,9 @@
     <ClCompile Include="SourceCode\gamesystem\character\EnemyRock.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\RegeneArea.cpp">
+      <Filter>gamesystem\stageobj\Area</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -916,6 +919,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\EnemyRock.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\RegeneArea.h">
+      <Filter>gamesystem\stageobj\Area</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
