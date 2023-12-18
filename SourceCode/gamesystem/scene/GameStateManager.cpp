@@ -65,7 +65,7 @@ void GameStateManager::Initialize() {
 	DeckInitialize();
 
 	//デッキにないカードを検索する
-	const int CARD_MAX = 11;
+	const int CARD_MAX = 12;
 	m_NotDeckNumber.clear();
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
 		for (int j = 0; j < CARD_MAX; j++) {
@@ -385,11 +385,23 @@ void GameStateManager::UseSkill() {
 
 			}
 		} else if (m_Act[0].SkillType == 1) {
-			for (int i = 0; i < 2; i++) {
-				RandPowerUpInit();
+			if (m_Act[0].StateName == "NEXT") {
+				for (int i = 0; i < 2; i++) {
+					RandPowerUpInit();
+				}
+				BirthBuff();
+				onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
 			}
-			BirthBuff();
-			onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
+			else if (m_Act[0].StateName == "RANDOM") {
+				int l_rand = {};
+				l_rand = Helper::GetRanNum(0, 1);
+				if (l_rand == 0) {
+					player->HealPlayer(10.0f);
+				}
+				else {
+					player->RecvDamage(10.0f);
+				}
+			}
 		}
 
 		FinishAct();
