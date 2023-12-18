@@ -65,7 +65,7 @@ void GameStateManager::Initialize() {
 	DeckInitialize();
 
 	//デッキにないカードを検索する
-	const int CARD_MAX = 11;
+	const int CARD_MAX = 12;
 	m_NotDeckNumber.clear();
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
 		for (int j = 0; j < CARD_MAX; j++) {
@@ -251,10 +251,10 @@ void GameStateManager::ImGuiDraw() {
 		ImGui::Text("ID[%d]:[%d]", i, m_Act[i].ActID);
 	}
 	ImGui::End();*/
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->ImGuiDraw();
-	}
+	//for (auto i = 0; i < attackarea.size(); i++) {
+	//	if (attackarea[i] == nullptr)continue;
+	//	attackarea[i]->ImGuiDraw();
+	//}
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
@@ -274,7 +274,7 @@ void GameStateManager::ActUIDraw() {
 }
 //スキルを入手(InterActionCPPで使ってます)
 void GameStateManager::AddSkill(const int SkillType, const int ID, const float damage, const int Delay,
-	vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name) {
+	vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name,int Token) {
 	ActState act;
 	act.SkillType = SkillType;
 	if (act.SkillType == 0 || act.SkillType == 1 || act.SkillType == 3) {
@@ -284,6 +284,7 @@ void GameStateManager::AddSkill(const int SkillType, const int ID, const float d
 		act.AttackTimer.resize(7);
 		act.DistanceX = DisX;
 		act.DistanceY = DisY;
+		act.PoisonToken = Token;
 
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
@@ -337,6 +338,7 @@ void GameStateManager::BirthArea() {
 				newarea->InitState(AreaX, AreaY);
 				newarea->SetDamage(damage);
 				newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
+				newarea->SetPoisonToken(m_Act[0].PoisonToken);
 				if (m_Act[0].ActID == 10) {
 					//固定ダメージ
 					newarea->SetIsFixed(true);
@@ -358,17 +360,22 @@ void GameStateManager::PredictManager() {
 	l_BirthBaseX = m_NowWidth + m_Act[0].DistanceX;;		//生成の初めの位置を見てる
 	l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
 
-	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
-		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
+	if (m_Act[0].SkillType == 0) {
+		for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
+			for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 
-			int AreaX = {};
-			int AreaY = {};
-			AreaX = l_BirthBaseX + i;
-			AreaY = l_BirthBaseY - j;
-			if (m_Act[0].AttackArea[i][j] == 1 && (AreaY < 4) && (AreaY >= 0)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				predictarea->SetPredict(AreaX, AreaY, true);
+				int AreaX = {};
+				int AreaY = {};
+				AreaX = l_BirthBaseX + i;
+				AreaY = l_BirthBaseY - j;
+				if (m_Act[0].AttackArea[i][j] == 1 && (AreaY < 4) && (AreaY >= 0)) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
+					predictarea->SetPredict(AreaX, AreaY, true);
+				}
 			}
 		}
+	}
+	else {
+		predictarea->SetPredict(m_NowWidth, m_NowHeight,true);
 	}
 	predictarea->Update();
 }
@@ -401,11 +408,23 @@ void GameStateManager::UseSkill() {
 
 			}
 		} else if (m_Act[0].SkillType == 1) {
-			for (int i = 0; i < 2; i++) {
-				RandPowerUpInit();
+			if (m_Act[0].StateName == "NEXT") {
+				for (int i = 0; i < 2; i++) {
+					RandPowerUpInit();
+				}
+				BirthBuff();
+				onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
 			}
-			BirthBuff();
-			onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
+			else if (m_Act[0].StateName == "RANDOM") {
+				int l_rand = {};
+				l_rand = Helper::GetRanNum(0, 1);
+				if (l_rand == 0) {
+					player->HealPlayer(10.0f);
+				}
+				else {
+					player->RecvDamage(10.0f);
+				}
+			}
 		}
 
 		FinishAct();

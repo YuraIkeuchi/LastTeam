@@ -57,6 +57,8 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 	healdamage_tex->Initialize();
 	healdamage_tex->SetRotation({ 90.0f,0.0f,0.0f });
 
+	m_AddPoisonToken = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "ADD_TOKEN")));
+	m_PoisonTimerMax = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "TIMER_MAX")));
 }
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;
@@ -295,11 +297,11 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			} else if (name == "POISON") {
 				m_Poison = true;
 				if (!m_IsVenom) {
-					m_PoisonToken += 4;
+					m_PoisonToken += _area->GetPoisonToken();
 				} else {
 					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POISON_DAMAGEUP);
 					m_SuperPoison = true;
-					m_PoisonToken += 8;
+					m_PoisonToken += _area->GetPoisonToken() * 2;
 				}
 			}
 
@@ -518,9 +520,8 @@ void InterEnemy::PoisonState() {
 	//毒ヒット時タイマーリセットするか
 	//仕様変更必要
 	//新毒仕様
-	int kTimerMax = 140;//
 	m_PoisonTimer++;
-	if (m_PoisonTimer % kTimerMax == 0) {	//一定フレームで1ずつ減らす
+	if (m_PoisonTimer % m_PoisonTimerMax == 0) {	//一定フレームで1ずつ減らす
 		m_HP -= m_PoisonToken;
 		BirthDamage((float)m_PoisonToken);
 		BirthPoisonParticle();
@@ -528,10 +529,10 @@ void InterEnemy::PoisonState() {
 			//GameStateManager::GetInstance()->SetPassiveActive();
 			m_PoisonToken /= 4;
 		} else {
-			if (m_PoisonToken %2 ==0) {
+			if (m_PoisonToken % 2 == 0) {
 				m_PoisonToken /= 2;
 			} else {
-				if (m_PoisonToken!=1) {
+				if (m_PoisonToken != 1) {
 					m_PoisonToken++;
 					m_PoisonToken /= 2;
 				} else {
@@ -554,9 +555,9 @@ void InterEnemy::BirthDamage(const float Damage) {
 		_newnumber->Initialize();
 		_newnumber->SetNumber(l_InterDamage);
 		_damagenumber.push_back(std::move(_newnumber));
-	} else {
-		int l_DightDamage[DAMAGE_MAX];
-		for (auto i = 0; i < DAMAGE_MAX; i++) {
+	} else 	if (l_InterDamage < 100) {
+		int l_DightDamage[2] = {};
+		for (auto i = 0; i < 2; i++) {
 			l_DightDamage[i] = Helper::getDigits(l_InterDamage, i, i);
 			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
 			_newnumber->GetCameraData();
@@ -564,6 +565,23 @@ void InterEnemy::BirthDamage(const float Damage) {
 				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
 			} else {
 				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_damagenumber.push_back(std::move(_newnumber));
+		}
+	} else {
+		int l_DightDamage[DAMAGE_MAX] = {};
+		for (auto i = 0; i < DAMAGE_MAX; i++) {
+			l_DightDamage[i] = Helper::getDigits(l_InterDamage, i, i);
+			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
+			} else if (i == 1) {
+				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+			} else {
+				_newnumber->SetExplain({ m_Position.x - 0.9f, m_Position.y, m_Position.z + 1.0f });
 			}
 			_newnumber->Initialize();
 			_newnumber->SetNumber(l_DightDamage[i]);

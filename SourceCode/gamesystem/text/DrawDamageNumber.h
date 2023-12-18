@@ -59,6 +59,7 @@ private:
 	//•`‰æ‚·‚é”š
 	int m_Number = {};
 	float m_Frame = {};
+	float m_FrameS = 0.f;
 	bool m_Alive = false;
 	bool m_Move = false;
 };

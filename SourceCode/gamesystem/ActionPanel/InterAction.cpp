@@ -38,7 +38,7 @@ void InterAction::Collide()
 		player->GetPosition().z, m_Radius)){
 
 		//プレイヤーの行動数を増やしパネルを戻す
-		GameStateManager::GetInstance()->AddSkill(m_SkillType,m_SkillID,m_Damage,m_Delay,m_Area,m_Timer,m_DistanceX,m_DistanceY,StateName);
+		GameStateManager::GetInstance()->AddSkill(m_SkillType,m_SkillID,m_Damage,m_Delay,m_Area,m_Timer,m_DistanceX,m_DistanceY,StateName,m_PoisonToken);
 		StagePanel::GetInstance()->DeletePanel();
 		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
 			TutorialTask::GetInstance()->SetTutorialState(TASK_ATTACK);
@@ -102,12 +102,12 @@ void InterAction::Vanish() {
 void InterAction::GetSkillData() {
 	SkillManager::GetInstance()->GetSkillType(m_SkillType);
 	if (m_SkillType == (int)SkillType::damege) {
-		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area,m_Timer, m_DistanceX, m_DistanceY, StateName);
+		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area,m_Timer, m_DistanceX, m_DistanceY, StateName,m_PoisonToken);
 	}
 	else if (m_SkillType == (int)SkillType::buff) {
 		SkillManager::GetInstance()->GetSpecialSkillDate(m_Delay,StateName);
 	} else if (m_SkillType == (int)SkillType::specialDamage) {
-		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area,m_Timer, m_DistanceX, m_DistanceY, StateName);
+		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area,m_Timer, m_DistanceX, m_DistanceY, StateName,m_PoisonToken);
 
 	}
 }

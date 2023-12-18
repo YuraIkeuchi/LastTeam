@@ -102,6 +102,7 @@ public:
 		ATTACK_8,
 		ATTACK_9,
 		ATTACK_10,
+		ATTACK_11,
 		TUTORIAL_WINDOW,
 	};
 	//テクスチャの名前
@@ -128,6 +129,7 @@ public:
 		ATTACK_TEX_8,
 		ATTACK_TEX_9,
 		ATTACK_TEX_10,
+		ATTACK_TEX_11,
 		BOOM_DIR,
 		POISON_EFFECT,
 		HEAL_DAMAGE

@@ -10,9 +10,10 @@ public:
 	float GetDamege() { return damege; }
 	std::vector<std::vector<int>> GetArea() { return area; }
 	std::vector<std::vector<int>> GetTimer() { return timer; }
-	int GetDistanceX() { return distanceX; }
-	int GetDistanceY() { return distanceY; }
+	const int GetDistanceX() { return distanceX; }
+	const int GetDistanceY() { return distanceY; }
 	std::string GetStateName() { return StateName; }
+	const int GetPoisonToken() { return m_PoisonToken; }
 
 	void SetDamege(const float damege) { this->damege = damege; }
 	void SetArea(std::vector<std::vector<int>> area) { this->area = area; }
@@ -21,6 +22,7 @@ public:
 	void SetDistanceX(const int distanceX) { this->distanceX = distanceX; }
 	void SetDistanceY(const int distanceY) { this->distanceY = distanceY; }
 	void SetStateName(const std::string name) { this->StateName = name; }
+	void SetPoisonToken(const int token) { this->m_PoisonToken = token; }
 protected:
 	float damege = 0.0f;
 
@@ -35,6 +37,7 @@ protected:
 	bool selfDamege = false;
 	int distanceX = 0;
 	int distanceY = 0;
+	int m_PoisonToken = {};
 
 	std::string StateName = "NONE";
 	std::vector<std::vector<int>> area;

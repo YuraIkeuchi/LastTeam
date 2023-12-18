@@ -45,6 +45,7 @@ public:
 	const int GetTimer() { return m_Timer; }
 	const float GetDamage() { return m_Damage; }
 	const std::string GetStateName() { return StateName; }
+	const int GetPoisonToken() { return m_PoisonToken; }
 
 	void SetHit(const bool Hit) { m_Hit = Hit; }
 	void SetTimer(const int Timer) { m_Timer = Timer; }
@@ -52,6 +53,7 @@ public:
 	void SetDamage(const float Damage) { m_Damage = Damage; }
 	void SetIsFixed(bool flag) { isFixed = flag; }
 	void SetStateName(const std::string name) { StateName = name; }
+	void SetPoisonToken(const int PoisonToken) { m_PoisonToken = PoisonToken; }
 private:
 	//ÉpÉlÉã
 	struct Panel {
@@ -72,6 +74,7 @@ private:
 	bool isFixed = false;
 	int m_NowWidth = {};
 	int m_NowHeight = {};
+	int m_PoisonToken = {};
 	float m_Damage = {};
 	std::string StateName = "NONE";
 	//è„è∏ìx

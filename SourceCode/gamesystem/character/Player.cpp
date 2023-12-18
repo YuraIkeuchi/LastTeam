@@ -149,6 +149,7 @@ void Player::Update() {
 		DamageUpdate();
 		AttackMove();
 		ShrinkScale();
+		BoundMove();
 		//表示用のHP
 		m_InterHP = (int)(m_HP);
 		m_InterMaxHP = (int)m_MaxHP;
@@ -248,13 +249,13 @@ void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("ScaleX:%f", m_BaseScale);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
-	ImGui::Text("POSX:%f", m_Position.x);
-	ImGui::Text("POSZ:%f", m_Position.z);
+	ImGui::Text("POSX:%d", m_NowWidth);
+	ImGui::Text("POSZ:%d", m_NowHeight);
 	ImGui::End();
 }
 //移動
 void Player::Move() {
-	if (m_Delay) { return; }
+	if (m_Delay || m_Bound) { return; }
 	if (GameStateManager::GetInstance()->GetResetPredict()) { return; }
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
 	const int l_TargetTimer = 8;
@@ -262,269 +263,106 @@ void Player::Move() {
 	const float l_SubVelocity = -PANEL_SIZE;
 	const int l_AddSpace = 1;
 	const int l_SubSpace = -1;
-	//普通
-	if (_MoveType == MOVE_NONE) {
-		//ボタンでマスを移動する
-		if (MoveButtonKey()) {
-			if (UpButtonKey()) {
-				m_InputTimer[DIR_UP]++;
-			}
-			else if (DownButtonKey()) {
-				m_InputTimer[DIR_DOWN]++;
-			}
-			else if (RightButtonKey()) {
-				m_InputTimer[DIR_RIGHT]++;
-			}
-			else if (LeftButtonKey()) {
-				m_InputTimer[DIR_LEFT]++;
-			}
+	if (MoveButtonKey()
+		&& !m_Move) {
+		if (UpButtonKey()) {
+			m_InputTimer[DIR_UP]++;
 		}
-		else {			//離した瞬間
-			if (m_LimitCount == 0) {
-				if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
-					MoveCommon(m_Position.z, l_AddVelocity);
-					m_InputTimer[DIR_UP] = {};
-				}
-				else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
-					MoveCommon(m_Position.z, l_SubVelocity);
-					m_InputTimer[DIR_DOWN] = {};
-				}
-				else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-					MoveCommon(m_Position.x, l_AddVelocity);
-					m_InputTimer[DIR_RIGHT] = {};
-				}
-				else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
-					MoveCommon(m_Position.x, l_SubVelocity);
-					m_InputTimer[DIR_LEFT] = {};
-				}
-			}
-			for (int i = 0; i < DIR_MAX; i++) {
-				m_InputTimer[i] = {};
-			}
-			m_LimitCount = {};
+		else if (DownButtonKey()) {
+			m_InputTimer[DIR_DOWN]++;
 		}
-
-		//一定フレーム立つと選択マス移動
-		if (m_InputTimer[DIR_UP] == l_TargetTimer) {
-			if (m_NowHeight < PANEL_HEIGHT - 1) {
-				MoveCommon(m_Position.z, l_AddVelocity);
-				m_LimitCount++;
-			}
-			m_InputTimer[DIR_UP] = {};
+		else if (RightButtonKey()) {
+			m_InputTimer[DIR_RIGHT]++;
 		}
-		else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
-			if (m_NowHeight > 0) {
-				MoveCommon(m_Position.z, l_SubVelocity);
-				m_LimitCount++;
-			}
-			m_InputTimer[DIR_DOWN] = {};
-		}
-		else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
-			if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-				MoveCommon(m_Position.x, l_AddVelocity);
-				m_LimitCount++;
-			}
-			m_InputTimer[DIR_RIGHT] = {};
-		}
-		else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
-			if (m_NowWidth > 0) {
-				MoveCommon(m_Position.x, l_SubVelocity);
-				m_LimitCount++;
-			}
-			m_InputTimer[DIR_LEFT] = {};
+		else if (LeftButtonKey()) {
+			m_InputTimer[DIR_LEFT]++;
 		}
 	}
-	//イージング
-	else if (_MoveType == MOVE_EASE) {
-		if (MoveButtonKey()
-			&& !m_Move) {
-			if (UpButtonKey()) {
-				m_InputTimer[DIR_UP]++;
-			}
-			else if (DownButtonKey()) {
-				m_InputTimer[DIR_DOWN]++;
-			}
-			else if (RightButtonKey()) {
-				m_InputTimer[DIR_RIGHT]++;
-			}
-			else if (LeftButtonKey()) {
-				m_InputTimer[DIR_LEFT]++;
-			}
-		}
-		else {			//離した瞬間
-			if (m_LimitCount == 0 && !m_Move) {
-				if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
-					m_Move = true;
-					m_AfterPos.z = m_Position.z + l_AddVelocity;
-					m_InputTimer[DIR_UP] = {};
-				}
-				else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
-					m_AfterPos.z = m_Position.z + l_SubVelocity;
-					m_Move = true;
-					m_InputTimer[DIR_DOWN] = {};
-				}
-				else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-					m_AfterPos.x = m_Position.x + l_AddVelocity;
-					m_Move = true;
-					m_InputTimer[DIR_RIGHT] = {};
-				}
-				else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
-					m_AfterPos.x = m_Position.x + l_SubVelocity;
-					m_Move = true;
-					m_InputTimer[DIR_LEFT] = {};
-				}
-			}
-			for (int i = 0; i < DIR_MAX; i++) {
-				m_InputTimer[i] = {};
-			}
-			m_LimitCount = {};
-		}
-
-		//一定フレーム立つと選択マス移動
-		if (!m_Move) {
-			if (m_InputTimer[DIR_UP] == l_TargetTimer) {
-				if (m_NowHeight < PANEL_HEIGHT - 1) {
-					m_AfterPos.z = m_Position.z + l_AddVelocity;
-					m_Move = true;
-					m_LimitCount++;
-				}
+	else {			//離した瞬間
+		if (m_LimitCount == 0 && !m_Move) {
+			if (m_InputTimer[DIR_UP] != 0 && (m_NowHeight < PANEL_HEIGHT - 1) && (!StagePanel::GetInstance()->GetClose(m_NowWidth, m_NowHeight + 1))) {
+				m_Move = true;
+				m_AfterPos.z = m_Position.z + l_AddVelocity;
 				m_InputTimer[DIR_UP] = {};
 			}
-			else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
-				if (m_NowHeight > 0) {
-					m_AfterPos.z = m_Position.z + l_SubVelocity;
-					m_Move = true;
-					m_LimitCount++;
-				}
+			else if (m_InputTimer[DIR_DOWN] != 0 && (m_NowHeight > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth, m_NowHeight - 1))) {
+				m_AfterPos.z = m_Position.z + l_SubVelocity;
+				m_Move = true;
 				m_InputTimer[DIR_DOWN] = {};
 			}
-			else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
-				if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-					m_AfterPos.x = m_Position.x + l_AddVelocity;
-					m_Move = true;
-					m_LimitCount++;
-				}
+			else if (m_InputTimer[DIR_RIGHT] != 0 && (m_NowWidth < (PANEL_WIDTH / 2) - 1) && (!StagePanel::GetInstance()->GetClose(m_NowWidth + 1, m_NowHeight))) {
+				m_AfterPos.x = m_Position.x + l_AddVelocity;
+				m_Move = true;
 				m_InputTimer[DIR_RIGHT] = {};
 			}
-			else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
-				if (m_NowWidth > 0) {
-					m_AfterPos.x = m_Position.x + l_SubVelocity;
-					m_Move = true;
-					m_LimitCount++;
-				}
+			else if (m_InputTimer[DIR_LEFT] != 0 && (m_NowWidth > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth - 1, m_NowHeight))) {
+				m_AfterPos.x = m_Position.x + l_SubVelocity;
+				m_Move = true;
 				m_InputTimer[DIR_LEFT] = {};
 			}
 		}
-
-
-		//イージングで移動するためのもの
-		if (m_Move) {
-			float l_AddScale = 0.1f;
-			//拡縮処理
-			if (_AttackState == ATTACK_NONE) {
-				if (m_MoveFrame < m_FrameMax / 2) {
-					m_BaseScale -= l_AddScale;
-				}
-				else {
-					m_BaseScale += l_AddScale;
-				}
-			}
-			if (Helper::FrameCheck(m_MoveFrame, 0.2f)) {
-				m_MoveFrame = {};
-				m_Move = false;
-				for (int i = 0; i < 4; i++) {
-					m_InputTimer[i] = {};
-				}
-				//GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
-				GameStateManager::GetInstance()->SetResetPredict(true);
-				m_Scale = { 0.5f,0.5f,0.5f };
-			}
-
-			m_Position = { Ease(Out,Cubic,m_MoveFrame,m_Position.x,m_AfterPos.x),
-			m_Position.y,
-			Ease(Out,Cubic,m_MoveFrame,m_Position.z,m_AfterPos.z) };
+		for (int i = 0; i < DIR_MAX; i++) {
+			m_InputTimer[i] = {};
 		}
+		m_LimitCount = {};
 	}
-	//残像
-	else {
-		//ボタンでマスを移動する
-		if (MoveButtonKey()) {
-			if (UpButtonKey()) {
-				m_InputTimer[DIR_UP]++;
-			}
-			else if (DownButtonKey()) {
-				m_InputTimer[DIR_DOWN]++;
-			}
-			else if (RightButtonKey()) {
-				m_InputTimer[DIR_RIGHT]++;
-			}
-			else if (LeftButtonKey()) {
-				m_InputTimer[DIR_LEFT]++;
-			}
-		}
-		else {			//離した瞬間
-			if (m_LimitCount == 0) {
-				if (m_InputTimer[DIR_UP] != 0 && m_NowHeight < PANEL_HEIGHT - 1) {
-					BirthImagePlayer();
-					MoveCommon(m_Position.z, l_AddVelocity);
-					m_InputTimer[DIR_UP] = {};
-				}
-				else if (m_InputTimer[DIR_DOWN] != 0 && m_NowHeight > 0) {
-					BirthImagePlayer();
-					MoveCommon(m_Position.z, l_SubVelocity);
-					m_InputTimer[DIR_DOWN] = {};
-				}
-				else if (m_InputTimer[DIR_RIGHT] != 0 && m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-					BirthImagePlayer();
-					MoveCommon(m_Position.x, l_AddVelocity);
-					m_InputTimer[DIR_RIGHT] = {};
-				}
-				else if (m_InputTimer[DIR_LEFT] != 0 && m_NowWidth > 0) {
-					BirthImagePlayer();
-					MoveCommon(m_Position.x, l_SubVelocity);
-					m_InputTimer[DIR_LEFT] = {};
-				}
-			}
-			for (int i = 0; i < DIR_MAX; i++) {
-				m_InputTimer[i] = {};
-			}
-			m_LimitCount = {};
-		}
 
-		//一定フレーム立つと選択マス移動
-		if (m_InputTimer[DIR_UP] == l_TargetTimer) {
-			if (m_NowHeight < PANEL_HEIGHT - 1) {
-				BirthImagePlayer();
-				MoveCommon(m_Position.z, l_AddVelocity);
-				m_LimitCount++;
-			}
+	//一定フレーム立つと選択マス移動
+	if (!m_Move) {
+		if (m_InputTimer[DIR_UP] == l_TargetTimer && (m_NowHeight < PANEL_HEIGHT - 1) && (!StagePanel::GetInstance()->GetClose(m_NowWidth, m_NowHeight + 1))) {
+			m_AfterPos.z = m_Position.z + l_AddVelocity;
+			m_Move = true;
+			m_LimitCount++;
 			m_InputTimer[DIR_UP] = {};
 		}
-		else if (m_InputTimer[DIR_DOWN] == l_TargetTimer) {
-			if (m_NowHeight > 0) {
-				BirthImagePlayer();
-				MoveCommon(m_Position.z, l_SubVelocity);
-				m_LimitCount++;
-			}
+		else if (m_InputTimer[DIR_DOWN] == l_TargetTimer && (m_NowHeight > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth, m_NowHeight - 1))) {
+			m_AfterPos.z = m_Position.z + l_SubVelocity;
+			m_Move = true;
+			m_LimitCount++;
 			m_InputTimer[DIR_DOWN] = {};
 		}
-		else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer) {
-			if (m_NowWidth < (PANEL_WIDTH / 2) - 1) {
-				BirthImagePlayer();
-				MoveCommon(m_Position.x, l_AddVelocity);
-				m_LimitCount++;
-			}
+		else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer && (m_NowWidth < (PANEL_WIDTH / 2) - 1) && (!StagePanel::GetInstance()->GetClose(m_NowWidth + 1, m_NowHeight))) {
+			m_AfterPos.x = m_Position.x + l_AddVelocity;
+			m_Move = true;
+			m_LimitCount++;
 			m_InputTimer[DIR_RIGHT] = {};
-		} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer) {
-			if (m_NowWidth > 0) {
-				BirthImagePlayer();
-				MoveCommon(m_Position.x, l_SubVelocity);
-				m_LimitCount++;
-			}
+		}
+		else if (m_InputTimer[DIR_LEFT] == l_TargetTimer && (m_NowWidth > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth - 1, m_NowHeight))) {
+			m_AfterPos.x = m_Position.x + l_SubVelocity;
+			m_Move = true;
+			m_LimitCount++;
 			m_InputTimer[DIR_LEFT] = {};
 		}
 	}
 
+
+	//イージングで移動するためのもの
+	if (m_Move) {
+		float l_AddScale = 0.1f;
+		//拡縮処理
+		if (_AttackState == ATTACK_NONE) {
+			if (m_MoveFrame < m_FrameMax / 2) {
+				m_BaseScale -= l_AddScale;
+			}
+			else {
+				m_BaseScale += l_AddScale;
+			}
+		}
+		if (Helper::FrameCheck(m_MoveFrame, 0.2f)) {
+			m_MoveFrame = {};
+			m_Move = false;
+			for (int i = 0; i < 4; i++) {
+				m_InputTimer[i] = {};
+			}
+			//GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
+			GameStateManager::GetInstance()->SetResetPredict(true);
+			m_Scale = { 0.5f,0.5f,0.5f };
+		}
+
+		m_Position = { Ease(Out,Cubic,m_MoveFrame,m_Position.x,m_AfterPos.x),
+		m_Position.y,
+		Ease(Out,Cubic,m_MoveFrame,m_Position.z,m_AfterPos.z) };
+	}
 	m_Scale = { m_BaseScale,m_BaseScale ,m_BaseScale };
 }
 bool Player::MoveButtonKey() {
@@ -623,6 +461,7 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	m_AfterScale = m_BaseScale;
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	m_Delay = false;
+	m_Frame = {};
 	m_ShrinkTimer = {};
 	//ダメージの種類によってパーティクルを変える
 	if (name == "NORMAL") {
@@ -631,6 +470,29 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	} else if (name == "POISON") {
 		BirthPoisonParticle();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Fire.wav", 0.04f);
+	}
+	else if (name == "BOUND") {
+		DamageParticle();
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+		m_Bound = true;
+		if (m_NowWidth != 0) {
+			m_AfterPos = { m_Position.x - 1.5f,m_Position.y,m_Position.z };
+			m_NowWidth--;
+		}
+		else {
+			if (m_NowHeight == 0) {
+				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
+				m_NowHeight++;
+			}
+			else if (m_NowHeight == 3) {
+				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z - 1.5f };
+				m_NowHeight--;
+			}
+			else {
+				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
+				m_NowHeight++;
+			}
+		}
 	}
 	m_Damege = true;
 	m_DamageTimer = {};
@@ -818,4 +680,19 @@ void Player::ShrinkScale() {
 
 	m_BaseScale = Ease(In, Cubic, 0.7f, m_BaseScale, m_AfterScale);
 	m_Scale = { m_BaseScale,m_BaseScale ,m_BaseScale };
+}
+//バウンドしたときの動き
+void Player::BoundMove() {
+	if (!m_Bound) { return; }
+	const float l_AddFrame = 1 / 10.0f;
+	if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+		m_Frame = {};
+		m_Bound = false;
+		GameStateManager::GetInstance()->SetResetPredict(true);
+	}
+
+	m_Position = { Ease(In,Cubic,m_Frame,m_Position.x,m_AfterPos.x),
+		m_Position.y,
+		Ease(In,Cubic,m_Frame,m_Position.z,m_AfterPos.z),
+	};
 }

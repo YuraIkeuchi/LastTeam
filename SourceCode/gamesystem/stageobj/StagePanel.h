@@ -44,6 +44,7 @@ private:
 		int TargetTimer = {};
 		float Frame = {};
 		float Disolve = {};
+		bool isClose = false;
 	};
 
 public:
@@ -77,6 +78,7 @@ public:
 	XMFLOAT3 EnemySetPanel(const bool LastEnemy);
 	//敵の配置(プレイヤーの前に来るやつ)
 	XMFLOAT3 FrontPlayerSetPanel();
+	void ClosePanel(IKEObject3d* obj, bool m_Alive);
 	//毒の配置(かぶらないように)
 	void PoisonSetPanel(int& width, int& height);
 	//アクションの全削除
@@ -104,7 +106,7 @@ public:
 	const bool GetCreateFinish() { return m_CreateFinish; }
 	const int GetPanelType(const int width, const int height) { return panels[width][height].type; }
 	const int GetisEnemyHit(const int width, const int height) { return panels[width][height].isEnemyHit; }
-
+	const int GetClose(const int width, const int height) { return panels[width][height].isClose; }
 	void SetCreateFinish(const bool CreateFinish) { m_CreateFinish = CreateFinish; }
 private:
 	static Player* player;
