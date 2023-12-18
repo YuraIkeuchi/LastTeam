@@ -271,7 +271,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				}
 
 				if (GameStateManager::GetInstance()->GetTakenDamageUp()) {
-					float up = (float)GameStateManager::GetInstance()->GetTakenDamageNum() * 0.2f;
+					float up = (float)GameStateManager::GetInstance()->GetTakenDamageNum() * 0.5f;
 					if (up >= 1.0f) {
 						damage += up;
 						GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::TAKENDAMAGEUP);
@@ -306,6 +306,10 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POISON_DAMAGEUP);
 					m_SuperPoison = true;
 					m_PoisonToken += _area->GetPoisonToken() * 2;
+				}
+			} else if (name == "VENOM") {
+				if (m_Poison) {
+					m_PoisonToken *= 3;
 				}
 			}
 

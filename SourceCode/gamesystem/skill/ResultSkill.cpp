@@ -266,7 +266,7 @@ void ResultSkill::RandShineInit() {
 void ResultSkill::ShineEffectUpdate() {
 	for (ShineEffect& shine : shines) {
 		if (Helper::FrameCheck(shine.frame, 1 / shine.kFrame)) {
-			if (Helper::FrameCheck(shine.frameA, 1.f / 15.f)) {
+			if (Helper::FrameCheck(shine.frameA, 1.f / 10.f)) {
 				RandShineInit();
 				shine.isVanish = true;
 			} else {
