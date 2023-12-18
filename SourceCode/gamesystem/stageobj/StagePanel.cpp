@@ -147,12 +147,13 @@ void StagePanel::ImGuiDraw() {
 		actions[i]->ImGuiDraw();
 	}
 
-	/*ImGui::Begin("Panel");
+	ImGui::Begin("Panel");
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isClose);
+			ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isHeal);
 		}
-	}*/
+	}
+	ImGui::End();
 }
 //オノマトペの描画
 void StagePanel::OnomatoDraw() {

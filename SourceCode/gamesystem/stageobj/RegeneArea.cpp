@@ -27,14 +27,16 @@ void RegeneArea::InitState(const int width, const int height) {
 	panels.position.y = 0.03f;
 	m_Alive = true;
 	m_Timer = {};
+	StagePanel::GetInstance()->SetHeal(m_NowWidth, m_NowHeight, true);
 }
 
 //XV
 void RegeneArea::Update() {
-	const int l_TargetTimer = 200;
+	const int l_TargetTimer = 300;
 	if (Helper::CheckMin(m_BirthTimer, l_TargetTimer, 1)) {
 		if (Helper::CheckMax(panels.color.w,0.0f, -0.05f)) {
 			m_Alive = false;
+			StagePanel::GetInstance()->SetHeal(m_NowWidth, m_NowHeight, false);
 		}
 	}
 	panels.tex->Update();

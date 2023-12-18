@@ -124,6 +124,7 @@ void InterEnemy::Update() {
 	}
 	HealDamageEffect();
 	SuperPoisonEffect();
+	RegeneUpdate();
 	//だめーじ関係
 	DamageUpdate();
 	//数値化したHP
@@ -555,9 +556,9 @@ void InterEnemy::BirthDamage(const float Damage) {
 		_newnumber->Initialize();
 		_newnumber->SetNumber(l_InterDamage);
 		_damagenumber.push_back(std::move(_newnumber));
-	} else {
-		int l_DightDamage[DAMAGE_MAX];
-		for (auto i = 0; i < DAMAGE_MAX; i++) {
+	} else if(l_InterDamage >= 10 && l_InterDamage < 100) {
+		int l_DightDamage[DAMAGE_MAX - 1];
+		for (auto i = 0; i < DAMAGE_MAX - 1; i++) {
 			l_DightDamage[i] = Helper::getDigits(l_InterDamage, i, i);
 			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
 			_newnumber->GetCameraData();
@@ -571,16 +572,76 @@ void InterEnemy::BirthDamage(const float Damage) {
 			_damagenumber.push_back(std::move(_newnumber));
 		}
 	}
+	else {
+		int l_DightDamage[DAMAGE_MAX];
+		for (auto i = 0; i < DAMAGE_MAX; i++) {
+			l_DightDamage[i] = Helper::getDigits(l_InterDamage, i, i);
+			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.6f, m_Position.y, m_Position.z + 1.0f });
+			}
+			else if (i == 1) {
+				_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
+			}
+			else {
+				_newnumber->SetExplain({ m_Position.x - 0.6f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_damagenumber.push_back(std::move(_newnumber));
+		}
+	}
 }
 void InterEnemy::BirthHealNumber(const float heal) {
 	int l_InterHeal = {};//int変換したダメージ
 	l_InterHeal = (int)heal;
-	unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
-	_newnumber->GetCameraData();
-	_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
-	_newnumber->Initialize();
-	_newnumber->SetNumber(l_InterHeal);
-	_healnumber.push_back(std::move(_newnumber));
+	if (l_InterHeal < 10) {
+
+		unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+		_newnumber->GetCameraData();
+		_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
+		_newnumber->Initialize();
+		_newnumber->SetNumber(l_InterHeal);
+		_healnumber.push_back(std::move(_newnumber));
+	}
+	else if (l_InterHeal >= 10 && l_InterHeal < 100) {
+		int l_DightDamage[HEAL_MAX - 1];
+		for (auto i = 0; i < HEAL_MAX - 1; i++) {
+			l_DightDamage[i] = Helper::getDigits(l_InterHeal, i, i);
+			unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			else {
+				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_healnumber.push_back(std::move(_newnumber));
+		}
+	}
+	else {
+		int l_DightDamage[HEAL_MAX];
+		for (auto i = 0; i < HEAL_MAX; i++) {
+			l_DightDamage[i] = Helper::getDigits(l_InterHeal, i, i);
+			unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.6f, m_Position.y, m_Position.z + 1.0f });
+			}
+			else if (i == 1) {
+				_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
+			}
+			else {
+				_newnumber->SetExplain({ m_Position.x - 0.6f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_healnumber.push_back(std::move(_newnumber));
+		}
+	}
 }
 //ダメージ関係
 void InterEnemy::DamageUpdate() {
@@ -626,4 +687,16 @@ void InterEnemy::DeathUpdate() {
 	}
 
 	Obj_SetParam();
+}
+//リジュネ回復
+void InterEnemy::RegeneUpdate() {
+	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
+		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
+			SimpleHeal(10.0f);
+			m_HealTimer = {};
+		}
+	}
+	else {
+		m_HealTimer = {};
+	}
 }

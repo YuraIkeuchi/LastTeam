@@ -36,7 +36,8 @@ protected:
 protected:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
-	static const int DAMAGE_MAX = 2;
+	static const int DAMAGE_MAX = 3;
+	static const int HEAL_MAX = 3;
 protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
 	std::vector<unique_ptr<DrawDamageNumber>> _damagenumber;
@@ -136,6 +137,7 @@ protected:
 	float m_OverFrame = {};
 	int m_AddPoisonToken = {};
 	int m_PoisonTimerMax = {};
+	int m_HealTimer = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -207,6 +209,7 @@ private:
 	//ダメージの更新
 	void DamageUpdate();
 	void BirthHealNumber(const float heal);
+	void RegeneUpdate();
 protected:
 	void Collide(vector<unique_ptr<AttackArea>>& area);
 	//毒の状態

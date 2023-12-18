@@ -427,9 +427,6 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\ImagePlayer.cpp">
-      <Filter>gamesystem\charactor\Player</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\TackleEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
@@ -871,9 +868,6 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\ImagePlayer.h">
-      <Filter>gamesystem\charactor\Player</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\TackleEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
