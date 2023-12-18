@@ -66,17 +66,20 @@ void InterEnemy::SkipInitialize() {
 //更新
 void InterEnemy::Update() {
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
-	if (m_HP != 0.0f) {
-		//各行動
-		if (m_EnemyTag != "Bomb") {
-			if (m_Alive) {
-				Action();
-			}
-		} else {
+	if (m_EnemyTag != "Bomb") {
+		if (m_HP != 0.0f) {
+			if(m_Alive)
 			Action();
 		}
-	} else {
 	}
+	else {
+		Action();
+	}
+	
+	if (m_HP <= 0.0f && m_EnemyTag != "Bomb") {
+		DeathUpdate();
+	}
+
 
 	const int l_BasePanelCount = 4;
 	Helper::CheckMax(m_DamegeTimer, 0, -1);

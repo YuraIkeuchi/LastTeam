@@ -435,7 +435,7 @@ void Player::MoveCommon(float& pos, float velocity) {
 }
 //プレイヤーのHP回復
 void Player::HealPlayer(const float power) {
-	if (m_HP == m_MaxHP) { return; }
+	if (m_HP >= m_MaxHP) { return; }
 	float l_HealNum = {};
 	if (m_healingDamage) {
 		GameStateManager::GetInstance()->SetHealDamage(true);
@@ -706,7 +706,7 @@ void Player::BoundMove() {
 void Player::RegeneUpdate() {
 	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
 		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
-			HealPlayer(3.0f);
+			HealPlayer(20.0f);
 			m_HealTimer = {};
 		}
 	}
@@ -727,6 +727,7 @@ void Player::BirthHealNumber(const float heal) {
 		_healnumber.push_back(std::move(_newnumber));
 	}
 	else if(l_InterHeal >= 10 && l_InterHeal < 100) {
+
 		int l_DightDamage[HEAL_MAX - 1];
 		for (auto i = 0; i < HEAL_MAX - 1; i++) {
 			l_DightDamage[i] = Helper::getDigits(l_InterHeal, i, i);
@@ -742,8 +743,10 @@ void Player::BirthHealNumber(const float heal) {
 			_newnumber->SetNumber(l_DightDamage[i]);
 			_healnumber.push_back(std::move(_newnumber));
 		}
+
 	}
 	else {
+
 		int l_DightDamage[HEAL_MAX];
 		for (auto i = 0; i < HEAL_MAX; i++) {
 			l_DightDamage[i] = Helper::getDigits(l_InterHeal, i, i);
