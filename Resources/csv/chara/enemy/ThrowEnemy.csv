@@ -17,7 +17,7 @@ Interval,200
 *---------------------------*
 
 //弾のダメージ
-BULLET_DAMAGE,7
+BULLET_DAMAGE,35
 
 //弾のスピード
 SPEED,0.1
