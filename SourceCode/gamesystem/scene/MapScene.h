@@ -141,7 +141,7 @@ private:
 	int oldPickInd = pickIndex;
 
 	XMFLOAT2 scroll = { 0,0 };
-
+	float oldScroll = 0.f;
 	std::vector<unique_ptr<IKESprite>> roads;
 	std::vector<XMFLOAT2> roadsPos;
 

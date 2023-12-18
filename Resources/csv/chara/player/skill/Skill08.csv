@@ -4,7 +4,7 @@ Delay,35
 Name,yabu
 StateName,POISON
 TOKEN,8
-Damege,3
+Damege,15
 DistanceX,1
 DistanceY,1
 AttackArea,1 1 1

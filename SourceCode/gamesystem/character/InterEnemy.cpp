@@ -261,6 +261,11 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					damage *= 1.2f;
 					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::FIVE_POWER);
 				}
+				if (GameStateManager::GetInstance()->GetExtendKnight()) {
+					damage *= 1.25f;
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::EXTEND_KNIGHT);
+				}
+
 				if (GameStateManager::GetInstance()->GetTakenDamageUp()) {
 					float up = (float)GameStateManager::GetInstance()->GetTakenDamageNum() * 0.2f;
 					if (up >= 1.0f) {
@@ -358,7 +363,11 @@ void InterEnemy::SimpleHeal(float heal) {
 	}
 }
 
+void InterEnemy::SimplePosion(int poison) {
+	m_Poison = true;
+	m_PoisonToken += poison;
 
+}
 //パーティクル(ダメージ)
 void InterEnemy::BirthParticle() {
 	const XMFLOAT4 s_color = { 1.0f,0.3f,0.0f,1.0f };
@@ -523,8 +532,12 @@ void InterEnemy::PoisonState() {
 			if (m_PoisonToken %2 ==0) {
 				m_PoisonToken /= 2;
 			} else {
-				m_PoisonToken++;
-				m_PoisonToken /= 2;
+				if (m_PoisonToken!=1) {
+					m_PoisonToken++;
+					m_PoisonToken /= 2;
+				} else {
+					m_PoisonToken /= 2;
+				}
 			}
 		}
 		m_PoisonTimer = 0;

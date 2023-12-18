@@ -144,6 +144,15 @@ public:
 	bool GetHealDamage() { return m_healingDamage; }
 	void SetHealDamage(bool flag) { m_healingDamage=flag; }
 
+	bool GetExtendKnight() { return m_ExtendKnight&&(player->GetNowWidth()==3); }
+	bool GetExtendRook() { return m_ExtendRook; }
+	bool GetExtendQueen() { return m_ExtendQueen; }
+	bool GetExtendBishop() { return m_ExtendBishop;}
+
+	int GetRookPoison() { return m_RookPoison; }
+	void AddRookPoison(int add) { m_RookPoison += add; }
+	void SetRookPoison(int num) { m_RookPoison = num; }
+
 	void SetPassiveActive(int id);
 	
 	int GetTakenDamageNum() { return m_TakenDamageNum; }
@@ -194,7 +203,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {10};
+	std::vector <int> m_StartPassive= { };
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -256,6 +265,11 @@ private:
 	bool m_TakenDamageUp = false;
 	bool m_AttackedPoison = false;
 	bool m_healingDamage = false;
+	bool m_ExtendKnight = false;
+	bool m_ExtendRook = false;
+	int m_RookPoison = 0;
+	bool m_ExtendQueen = false;
+	bool m_ExtendBishop = false;
 
 	bool m_BirthSkill = false;
 
@@ -263,7 +277,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 0,1,7,8 };
+	vector <int> m_StartNumber = { 1,2,9 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

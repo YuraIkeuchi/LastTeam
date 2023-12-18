@@ -111,21 +111,49 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 	std::shuffle(noPassive.begin(), noPassive.end(), engine);
 
 	if (isBattle) {
-		for (int i = 0; i < 4; i++) {
-			ResultUI resultUI = CreateUI(true, noDeck[i], BasePos[nowPos]);
-			choiceSkills.push_back(std::move(resultUI));
-		}
-		//パッシブ
-		ResultUI passiveUI = CreateUI(false, noPassive[0], BasePos[nowPos]);
-		choiceSkills.push_back(std::move(passiveUI));
-	} else {
-		for (int i = 0; i < 4; i++) {
-			ResultUI passiveUI = CreateUI(false, noPassive[i], BasePos[nowPos]);
+		//バトルステージ時スキルたくさん取ってたら
+		if(noDeck.size() < 4){
+			for (int i = 0; i < noDeck.size(); i++) {
+				ResultUI resultUI = CreateUI(true, noDeck[i], BasePos[nowPos]);
+				choiceSkills.push_back(std::move(resultUI));
+			}
+			int balance = 5 - (int)noDeck.size();
+			for (int i = 0; i < balance; i++) {
+				ResultUI passiveUI = CreateUI(false, noPassive[i], BasePos[nowPos]);
+				choiceSkills.push_back(std::move(passiveUI));
+			}
+		} else {
+			for (int i = 0; i < 4; i++) {
+				ResultUI resultUI = CreateUI(true, noDeck[i], BasePos[nowPos]);
+				choiceSkills.push_back(std::move(resultUI));
+			}
+			//パッシブ
+			ResultUI passiveUI = CreateUI(false, noPassive[0], BasePos[nowPos]);
 			choiceSkills.push_back(std::move(passiveUI));
 		}
-		//スキル
-		ResultUI resultUI = CreateUI(true, noDeck[0], BasePos[nowPos]);
-		choiceSkills.push_back(std::move(resultUI));
+	} else {
+		//パッシブステージ時パッシブたくさん取ってたら
+		if (noPassive.size() < 4) {
+			for (int i = 0; i < noPassive.size(); i++) {
+				ResultUI passiveUI = CreateUI(false, noPassive[i], BasePos[nowPos]);
+				choiceSkills.push_back(std::move(passiveUI));
+			}
+			int balance = 5 - (int)noPassive.size();
+			for (int i = 0; i < balance; i++) {
+				//スキル
+				ResultUI resultUI = CreateUI(true, noDeck[i], BasePos[nowPos]);
+				choiceSkills.push_back(std::move(resultUI));
+			}
+
+		} else {
+			for (int i = 0; i < 4; i++) {
+				ResultUI passiveUI = CreateUI(false, noPassive[i], BasePos[nowPos]);
+				choiceSkills.push_back(std::move(passiveUI));
+			}
+			//スキル
+			ResultUI resultUI = CreateUI(true, noDeck[0], BasePos[nowPos]);
+			choiceSkills.push_back(std::move(resultUI));
+		}
 	}
 
 	for (int i = 0; i < 5; i++) {
@@ -225,10 +253,12 @@ void ResultSkill::RandShineInit() {
 	float posX = (float)Helper::GetRanNum(128, 1150);
 	float posY = (float)Helper::GetRanNum(128, 360);
 	float frame = (float)Helper::GetRanNum(30, 45);
+	float rot = (float)Helper::GetRanNum(0, 5);
 	ShineEffect itr;
 	itr.tex = IKESprite::Create(ImageManager::SHINE, { posX,posY });
 	itr.tex->SetAnchorPoint({ 0.5f,0.5f });
 	itr.tex->SetSize(itr.size);
+	itr.tex->SetRotation(rot);
 	itr.kFrame = frame;
 	shines.push_back(std::move(itr));
 }
@@ -236,11 +266,16 @@ void ResultSkill::RandShineInit() {
 void ResultSkill::ShineEffectUpdate() {
 	for (ShineEffect& shine : shines) {
 		if (Helper::FrameCheck(shine.frame, 1 / shine.kFrame)) {
-			RandShineInit();
-			shine.isVanish = true;
+			if (Helper::FrameCheck(shine.frameA, 1.f / 15.f)) {
+				RandShineInit();
+				shine.isVanish = true;
+			} else {
+				float alpha = Ease(In, Cubic, shine.frameA, 1.0f,0.f);
+				shine.tex->SetColor({1,1,1,alpha });
+			}
 		} else {
-			shine.size.x = Ease(Out, Quad, shine.frame, 0.f, 32.f);
-			shine.size.y = Ease(Out, Quad, shine.frame, 0.f, 32.f);
+			shine.size.x = Ease(Out, Back, shine.frame, 0.f, 32.f);
+			shine.size.y = Ease(Out, Back, shine.frame, 0.f, 32.f);
 			shine.tex->SetSize(shine.size);
 		}
 	}
@@ -306,8 +341,8 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	} else {
 		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_00 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.sentence[0] = L"パッシブ：";
-		resultUI.sentence[1] = resultUI.text_->GetPasiveSentence(resultUI.ID);
-		resultUI.sentence[2] = L" ";
+		resultUI.sentence[1] = resultUI.text_->GetPassiveName(resultUI.ID);
+		resultUI.sentence[2] = resultUI.text_->GetPasiveSentence(resultUI.ID);
 	}
 	resultUI.icon->SetAnchorPoint({ 0.5f,0.5f });
 	resultUI.icon->SetPosition(resultUI.position);

@@ -196,7 +196,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		isStart = true;
 	} else {
 		m_State = State::mainState;
-		scroll.x = -(UIs[nowHierarchy][nowIndex].pos.x / 2.f);
+		scroll.x = -UIs[nowHierarchy][nowIndex].pos.x + 128.f;
 		charaSize = { 128.f,128.f };
 		chara->SetSize(charaSize);
 	}
@@ -554,8 +554,9 @@ void MapScene::ImGuiDraw() {
 	ImGui::Begin("Map");
 	//ImGui::Text("%f", framePos.x);
 	//ImGui::Text("%f", eFrame);
-	ImGui::Text("HIERARCHY:%f", startAlpha);
-	//ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
+	ImGui::Text("HIERARCHY:%f", scroll.x);
+	ImGui::Text("PICKHIERARCHY:%f", -UIs[nowHierarchy][nowIndex].pos.x);
+	ImGui::Text("PICK:%d", -UIs[nowHierarchy][nowIndex].pos.x);
 	//ImGui::Text("PICKINDEX:%d", pickIndex);
 	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
 	//ImGui::Text("nowindel:%d", nowIndex);
@@ -591,7 +592,12 @@ void MapScene::BlackOut() {
 void MapScene::Move() {
 	Input* input = Input::GetInstance();
 	if (end) { return; }
-
+	if (input->PushButton(input->RB)) {
+		scroll.x+=10;
+	}
+	if (input->PushButton(input->LB)) {
+		scroll.x-=10;
+	}
 	if ((input->TiltStick(input->L_UP) || input->PushButton(input->UP) ||input->TriggerKey(DIK_W))
 		&& !moved) {
 		if (pickNextIndex == 0) { return; }
@@ -616,6 +622,7 @@ void MapScene::Move() {
 		clearHierarchy++;
 		onomatope->AddOnomato(Foot, { 640.f,360.f });
 		onomatope->AddOnomato(Foot, { 100.f,700.f }, 10.f);
+		oldScroll = scroll.x;
 		moved = true;
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Run.wav", 0.05f);
 	}
@@ -637,6 +644,7 @@ void MapScene::Move() {
 			mov_frame = 0.0f;
 			oldIndex = nowIndex;
 			oldHierarchy = nowHierarchy;
+			oldScroll = scroll.x;
 			if (nowHierarchy != MaxLength) {
 				pickHierarchy = nowHierarchy + 1;
 				pickNextIndex = 0;
@@ -652,7 +660,7 @@ void MapScene::Move() {
 
 		charaPos.x = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.x);
 		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y + 30.f, UIs[nowHierarchy][nowIndex].pos.y+30.f);
-		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowHierarchy][nowIndex].pos.x / 2);
+		scroll.x = Ease(In, Quad, mov_frame, oldScroll, -UIs[nowHierarchy][nowIndex].pos.x + 128.f);
 	}
 	scroll.x = clamp(scroll.x, -lastScroll, 340.f);
 }
@@ -813,6 +821,9 @@ void MapScene::CheckState() {
 			} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
 				ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
 				isBattle = false;
+			} else if (UIs[nowHierarchy][nowIndex].Tag == BOSS) {
+				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
+				isBattle = true;
 			}
 
 			std::string r_map = ss.str();
