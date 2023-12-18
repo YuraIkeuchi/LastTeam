@@ -58,7 +58,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveName(L"なまえ：テイク・ファイブ");
 	CreatePassiveSentence(L"5の倍数で威力アップ");
 	CreatePassiveName(L"なまえ：ガーディアンフォース");
-	CreatePassiveSentence(L"ダメージをうけるたび、威力+0.2");
+	CreatePassiveSentence(L"ダメージをうけるたび、威力+0.5");
 	CreatePassiveName(L"なまえ：ポイズン・ビトレイヤー");
 	CreatePassiveSentence(L"スキルがあたると毒を１ふよ");
 	CreatePassiveName(L"なまえ：ヒーリング・バロール");
@@ -98,6 +98,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"回復!or自傷・・・ 威力:10");
 	CreateSkillSentence(L"自機や敵全てに回復を!");
 	CreateSkillDamage(L"回復床設置 威力:20");
+	CreateSkillSentence(L"中毒はしらぬまに…");
+	CreateSkillDamage(L"威力:10(毒を3倍に増やす)");
 
 	//ラスボス
 	//コンヴァージョン初期化

@@ -74,7 +74,7 @@ void DrawDamageNumber::GetCameraData() {
 }
 //“®‚«
 void DrawDamageNumber::NumberMove() {
-	static float addFrame = 1.f / 100.f;
+	static float addFrame = 1.f / 50.f;
 	if (Helper::FrameCheck(m_Frame, addFrame)) {
 		if (Helper::FrameCheck(m_FrameS, 1/10.f)) {
 			m_Alive = false;

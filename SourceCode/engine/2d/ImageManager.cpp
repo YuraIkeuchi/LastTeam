@@ -95,6 +95,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ATTACK_10, L"Resources/2d/objicon/AttackSKill/Skill10.png");
 	IKESprite::LoadTexture(ATTACK_11, L"Resources/2d/objicon/AttackSKill/Skill11.png");
 	IKESprite::LoadTexture(ATTACK_12, L"Resources/2d/objicon/AttackSKill/Skill12.png");
+	IKESprite::LoadTexture(ATTACK_13, L"Resources/2d/objicon/AttackSKill/Skill13.png");
 	IKESprite::LoadTexture(TUTORIAL_WINDOW, L"Resources/2d/objicon/Tutorial.png");
 }
 
@@ -132,6 +133,7 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(ATTACK_TEX_10, L"Resources/2d/objicon/AttackSKill/Skill10.png");
 	IKETexture::LoadTexture(ATTACK_TEX_11, L"Resources/2d/objicon/AttackSKill/Skill11.png");
 	IKETexture::LoadTexture(ATTACK_TEX_12, L"Resources/2d/objicon/AttackSKill/Skill12.png");
+	IKETexture::LoadTexture(ATTACK_TEX_13, L"Resources/2d/objicon/AttackSKill/Skill13.png");
 	IKETexture::LoadTexture(BOOM_DIR, L"Resources/2d/effect/Up.png");
 	IKETexture::LoadTexture(POISON_EFFECT, L"Resources/2d/effect/poison.png");
 	IKETexture::LoadTexture(HEAL_DAMAGE, L"Resources/2d/effect/shine2.png");
