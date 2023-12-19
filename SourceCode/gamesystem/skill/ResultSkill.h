@@ -45,6 +45,7 @@ private:
 		int DisX = {};
 		int DisY = {};
 		int Damage = {};
+		int Delay = 0;
 		wchar_t* sentence[3] = { L"",L"",L"" };
 	};
 

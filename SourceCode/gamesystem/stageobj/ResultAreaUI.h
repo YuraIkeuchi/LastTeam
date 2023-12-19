@@ -38,6 +38,10 @@ public:
 public:
 
 	//gettersetter
+	void SetDelay(int delay) {
+		m_Delay = delay;
+	}
+
 	void SetPanelNumber(const int Width, const int Height) {
 		m_Width = Width;
 		m_Height = Height;
@@ -56,5 +60,6 @@ private:
 	int m_Height = {};
 	int m_DistanceX = {};
 	int m_DistanceY = {};
+	int m_Delay = 0;
 	std::unique_ptr<IKESprite> player_panel;
 };
