@@ -20,6 +20,7 @@ void SkillManager::Initialize()
 	m_SKILLMAX = 14;
 	//一旦3に指定(実際はCSVとかになるかな)
 	skill.resize(m_SKILLMAX);
+	m_Delays.resize(m_SKILLMAX);
 	//ここはもう少しやりようがあるかもしれない
 	for (int i = 0; i < m_SKILLMAX; i++) {
 		skill[i] = new AttackSkill();
@@ -179,6 +180,7 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 		else if (word.find("Delay") == 0) {
 			std::getline(line_stream, word, ',');
 			skill[id]->SetLatency(std::stoi(word));
+			m_Delays[id] = std::stoi(word);
 		}
 		if (skill[id]->GetSkillType() == SkillType::damege) {
 			if (word.find("Name") == 0) {

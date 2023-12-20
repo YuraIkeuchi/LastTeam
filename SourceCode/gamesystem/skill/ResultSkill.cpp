@@ -31,6 +31,15 @@ void ResultSkill::Update() {
 	Move();
 	ShineEffectUpdate();
 	StarEffectUpdate();
+	for (ResultUI& itr : choiceSkills) {
+		if (!itr.isSkill) { continue; }
+		if (itr.no == 2) {
+			for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
+				pickAreas->Update();
+			}
+		}
+	}
+
 }
 
 void ResultSkill::Draw(DirectXCommon* dxCommon) {
@@ -221,6 +230,11 @@ void ResultSkill::Move() {
 			}
 		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
+		for (ResultUI& itr : choiceSkills) {
+			for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
+				pickAreas->ResetTimer();
+			}
+		}
 		isMove = true;
 	}
 	if ((input->TriggerButton(Input::B) ||
@@ -333,6 +347,7 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 		resultUI.icon = IKESprite::Create(ImageManager::ATTACK_0 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
 		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY, resultUI.Damage);//IDに応じた攻撃エリア、距離、ダメージを取得する
+		resultUI.Delay = SkillManager::GetInstance()->GetDelay(id);
 		//桁数によって描画する桁数が違う
 		BirthArea(resultUI);
 		resultUI.sentence[0] = L"スキル：";
@@ -368,6 +383,7 @@ void ResultSkill::BirthArea(ResultUI& resultUI) {
 			if (resultUI.area[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				std::unique_ptr<ResultAreaUI> newarea = std::make_unique<ResultAreaUI>();
 				newarea->SetPanelNumber(i, j);
+				newarea->SetDelay(resultUI.Delay);
 				newarea->SetDistance(resultUI.DisX, resultUI.DisY);
 				newarea->Initialize();
 				resultUI.resultarea.push_back(std::move(newarea));
