@@ -35,7 +35,11 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	cheack->SetColor({1.2f,1.2f,1.2f,1});
 	cheack->SetSize({ 0.f,0.f });
 	cheack->SetAnchorPoint({ 0.5f,0.5f });
-
+	if (s_Countinue) {		//コンティニューをしていた場合CSVからゲームデータ引き継ぎ(このシーンではマップデータ)
+		GameStateManager::GetInstance()->OpenGameDate();
+		nowHierarchy = GameStateManager::GetInstance()->GetHierarchy();
+		nowIndex = GameStateManager::GetInstance()->GetIndex();
+	}
 	const int NumberCount = 2;
 	const float l_Width_Cut = 320.0f;
 	const float l_Height_Cut = 64.0f;

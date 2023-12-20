@@ -870,7 +870,6 @@ void GameStateManager::SaveGame() {
 }
 
 void GameStateManager::OpenGameDate() {
-
 	//攻撃スキルデータ
 	savedata.m_DeckNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/GameData/GameData.csv", "DeckSize")));
 	savedata.m_OpenDeckNumber.resize(savedata.m_DeckNum);

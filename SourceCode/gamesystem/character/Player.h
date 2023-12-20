@@ -92,6 +92,8 @@ public:
 		m_HP += gain_hp;
 	}
 
+	void SetHp(float hp) { m_HP = hp; }
+
 	void SetHealingDamage(bool flag) { m_healingDamage = flag; }
 
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }

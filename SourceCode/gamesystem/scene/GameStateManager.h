@@ -166,6 +166,10 @@ public:
 	void SetMapData(int index, int Hierarchy) { savedata.m_SaveIndex = index; savedata.m_SaveHierarchy = Hierarchy; }
 	void SetSaveHP(float hp) { savedata.m_SaveHP = hp; }
 
+	//セーブデータ
+	const float GetOpenHP() { return savedata.m_OpenHP; }
+	const int GetHierarchy() { return savedata.m_OpenHierarchy; }
+	const int GetIndex() { return savedata.m_OpenIndex; }
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
