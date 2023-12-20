@@ -31,6 +31,15 @@ void ResultSkill::Update() {
 	Move();
 	ShineEffectUpdate();
 	StarEffectUpdate();
+	for (ResultUI& itr : choiceSkills) {
+		if (!itr.isSkill) { continue; }
+		if (itr.no == 2) {
+			for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
+				pickAreas->Update();
+			}
+		}
+	}
+
 }
 
 void ResultSkill::Draw(DirectXCommon* dxCommon) {
@@ -221,6 +230,11 @@ void ResultSkill::Move() {
 			}
 		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
+		for (ResultUI& itr : choiceSkills) {
+			for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
+				pickAreas->ResetTimer();
+			}
+		}
 		isMove = true;
 	}
 	if ((input->TriggerButton(Input::B) ||

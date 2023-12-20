@@ -2,6 +2,7 @@
 #include "IKESprite.h"
 #include <DirectXMath.h>
 #include <memory>
+#include <DrawNumber.h>
 static const int RESULT_HEIGHT = 4;
 static const int RESULT_WIDTH = 8;
 class ResultAreaUI {
@@ -36,6 +37,7 @@ public:
 	void ImGuiDraw();
 
 public:
+	void ResetTimer();
 
 	//gettersetter
 	void SetDelay(int delay) {
@@ -60,6 +62,15 @@ private:
 	int m_Height = {};
 	int m_DistanceX = {};
 	int m_DistanceY = {};
+	XMFLOAT2 prePos = {};
+	//
+	float finishDelay = 0.f;
+	//‘Ò‹@
+	bool isJump = false;
+	std::array<std::unique_ptr<DrawNumber>, 2> _DelayTimer;
+	std::array<int, 2> _Delays;
 	int m_Delay = 0;
+	int m_Frame = 0;
+
 	std::unique_ptr<IKESprite> player_panel;
 };
