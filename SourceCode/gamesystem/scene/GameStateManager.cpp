@@ -842,3 +842,17 @@ void GameStateManager::MissAttack() {
 	m_DelayTimer = {};
 	m_ChargeScale = 5.0f;
 }
+//ゲームデータをセーブする
+void GameStateManager::SaveGame() {
+	//普通の柱
+	std::ofstream normalofs(L"Resources/csv/GameData/GameData.csv");  // ファイルパスを指定する
+	normalofs << "DeckSize" << "," << m_DeckNumber.size() << std::endl;
+	for (int i = 0; i < m_DeckNumber.size(); i++) {
+		normalofs << "Number" << "," << m_DeckNumber[i]
+			<<std::endl;
+	}
+	normalofs << "PlayerHP" << "," << savedata.m_SaveHP << std::endl;
+	normalofs << "Index" << "," << savedata.m_SaveIndex << std::endl;
+	normalofs << "Hierarchy" << "," << savedata.m_SaveHierarchy << std::endl;
+
+}

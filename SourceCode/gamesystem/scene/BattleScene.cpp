@@ -189,6 +189,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	SceneChanger::GetInstance()->Update();
 	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
+		GameStateManager::GetInstance()->SetSaveHP(player_->GetHp());
 		if (_ChangeType == CHANGE_MAP) {
 			if (!s_LastStage) {
 				SceneManager::GetInstance()->ChangeScene("MAP");

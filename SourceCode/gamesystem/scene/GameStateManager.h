@@ -58,6 +58,7 @@ public:
 	//
 	void DamageEffectInit(XMFLOAT2 pos);
 
+	void SaveGame();
 private:
 	void PredictManager();
 	//攻撃した瞬間
@@ -158,6 +159,9 @@ public:
 	
 	int GetTakenDamageNum() { return m_TakenDamageNum; }
 	void SetTakenDamageNum(int num) { m_TakenDamageNum = num; }
+
+	void SetMapData(int index, int Hierarchy) { savedata.m_SaveIndex = index; savedata.m_SaveHierarchy = Hierarchy; }
+	void SetSaveHP(float hp) { savedata.m_SaveHP = hp; }
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -279,7 +283,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 6,10,11,12,13 };
+	vector <int> m_StartNumber = { 6};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -351,4 +355,12 @@ private:
 	/// エネミー管理用のコンテナ
 	/// </summary>
 	vector<weak_ptr<BaseEnemy>> enemys_container_;
+
+	struct SaveData {
+		int m_SaveIndex = {};
+		int m_SaveHierarchy = {};
+		float m_SaveHP = {};
+	};
+	
+	SaveData savedata;
 };
