@@ -848,8 +848,13 @@ void GameStateManager::SaveGame() {
 	std::ofstream normalofs(L"Resources/csv/GameData/GameData.csv");  // ファイルパスを指定する
 	normalofs << "DeckSize" << "," << m_DeckNumber.size() << std::endl;
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
-		normalofs << "Number" << "," << m_DeckNumber[i]
+		normalofs << "DeckNumber" << "," << m_DeckNumber[i]
 			<<std::endl;
+	}
+	normalofs << "PassiveSize" << "," << GotPassiveIDs.size() << std::endl;
+	for (int i = 0; i < GotPassiveIDs.size(); i++) {
+		normalofs << "PassiveNumber" << "," << GotPassiveIDs[i]
+			<< std::endl;
 	}
 	normalofs << "PlayerHP" << "," << savedata.m_SaveHP << std::endl;
 	normalofs << "Index" << "," << savedata.m_SaveIndex << std::endl;
