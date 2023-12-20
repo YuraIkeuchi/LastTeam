@@ -256,7 +256,15 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	SkillManager::GetInstance()->ImGuiDraw();
+	//SkillManager::GetInstance()->ImGuiDraw();
+	if (savedata.m_DeckNum != 0) {
+		ImGui::Begin("Deck");
+		for (int i = 0; i < savedata.m_DeckNum; i++) {
+			ImGui::Text("DeckNum[%d]:%d", i, m_DeckNumber[i]);
+			ImGui::Text("OpenDeckNum[%d]:%d", i, savedata.m_OpenDeckNumber[i]);
+		}
+		ImGui::End();
+	}
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -859,5 +867,32 @@ void GameStateManager::SaveGame() {
 	normalofs << "PlayerHP" << "," << savedata.m_SaveHP << std::endl;
 	normalofs << "Index" << "," << savedata.m_SaveIndex << std::endl;
 	normalofs << "Hierarchy" << "," << savedata.m_SaveHierarchy << std::endl;
+}
+
+void GameStateManager::OpenGameDate() {
+
+	//攻撃スキルデータ
+	savedata.m_DeckNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/GameData/GameData.csv", "DeckSize")));
+	savedata.m_OpenDeckNumber.resize(savedata.m_DeckNum);
+	m_DeckNumber.resize(savedata.m_DeckNum);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/GameData/GameData.csv", savedata.m_OpenDeckNumber, "DeckNumber");
+	for (int i = 0; i < savedata.m_DeckNum; i++) {
+		m_DeckNumber[i] = savedata.m_OpenDeckNumber[i];
+	}
+
+	//パッシブスキル読み取り
+	savedata.m_PassiveNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/GameData/GameData.csv", "PassiveSize")));
+	savedata.m_OpenPassiveNumber.resize(savedata.m_PassiveNum);
+	GotPassiveIDs.resize(savedata.m_PassiveNum);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/GameData/GameData.csv", savedata.m_OpenPassiveNumber, "PassiveNumber");
+	for (int i = 0; i < savedata.m_PassiveNum; i++) {
+		GotPassiveIDs[i] = savedata.m_OpenPassiveNumber[i];
+	}
+
+	//HP
+	savedata.m_OpenHP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/GameData/GameData.csv", "PlayerHP")));
+	//マップデータ
+	savedata.m_OpenHierarchy = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/GameData/GameData.csv", "Hierarchy")));
+	savedata.m_OpenIndex = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/GameData/GameData.csv", "Index")));
 
 }
