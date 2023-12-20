@@ -29,8 +29,13 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	player_->Initialize();
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
+	if (s_Countinue) {		//コンティニューをしていた場合CSVからゲームデータ引き継ぎ
+		player_->SetHp(GameStateManager::GetInstance()->GetOpenHP());
+		s_Countinue = false;
+	}
 	GameStateManager::SetPlayer(player_.get());
 	GameStateManager::GetInstance()->Initialize();
+	
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
@@ -83,13 +88,19 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 				if (m_ChangeTimer == 1) {
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameOver.wav", 0.1f);
 				}
+
+				//タイトル戻るかコンティニューしてマップ行くか決まる
+				if ((input->TriggerButton(input->A)) && nowHierarchy >= 6) {		//コンティニュー
+					SceneChanger::GetInstance()->SetChangeStart(true);
+					s_Countinue = true;
+				}
+				else if ((input->TriggerButton(input->B))) {
+					SceneChanger::GetInstance()->SetChangeStart(true);
+					s_Countinue = false;
+				}
 			}
 			else {
 				m_GameOverPos.y = { Ease(In,Cubic,m_GameOverFrame,m_GameOverPos.y,0.0f) };
-			}
-
-			if (m_ChangeTimer == 100) {
-				SceneChanger::GetInstance()->SetChangeStart(true);
 			}
 		}
 	}
@@ -189,6 +200,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	SceneChanger::GetInstance()->Update();
 	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
+		GameStateManager::GetInstance()->SetSaveHP(player_->GetHp());
+		//ゲームクリア
 		if (_ChangeType == CHANGE_MAP) {
 			if (!s_LastStage) {
 				SceneManager::GetInstance()->ChangeScene("MAP");
@@ -197,8 +210,13 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 				SceneManager::GetInstance()->ChangeScene("CLEAR");
 			}
 		}
-		else {
-			SceneManager::GetInstance()->ChangeScene("TITLE");
+		else {		//ゲームオーバー
+			if (!s_Countinue) {
+				SceneManager::GetInstance()->ChangeScene("TITLE");
+			}
+			else {		//コンティニューをしてマップに戻る
+				SceneManager::GetInstance()->ChangeScene("MAP");
+			}
 		}
 		player_->PlayerSave();
 		SceneChanger::GetInstance()->SetChange(false);
@@ -278,8 +296,8 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
-	//enemyManager->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
+	////enemyManager->ImGuiDraw();
 	player_->ImGuiDraw();
 }
 

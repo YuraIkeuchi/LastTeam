@@ -58,6 +58,9 @@ public:
 	//
 	void DamageEffectInit(XMFLOAT2 pos);
 
+	void SaveGame();
+
+	void OpenGameDate();
 private:
 	void PredictManager();
 	//攻撃した瞬間
@@ -94,6 +97,7 @@ private:
 
 	void DamageEffectUpdate();
 
+	void OpenFile();
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -158,6 +162,14 @@ public:
 	
 	int GetTakenDamageNum() { return m_TakenDamageNum; }
 	void SetTakenDamageNum(int num) { m_TakenDamageNum = num; }
+
+	void SetMapData(int index, int Hierarchy) { savedata.m_SaveIndex = index; savedata.m_SaveHierarchy = Hierarchy; }
+	void SetSaveHP(float hp) { savedata.m_SaveHP = hp; }
+
+	//セーブデータ
+	const float GetOpenHP() { return savedata.m_OpenHP; }
+	const int GetHierarchy() { return savedata.m_OpenHierarchy; }
+	const int GetIndex() { return savedata.m_OpenIndex; }
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -279,7 +291,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = { 6,10,11,12,13 };
+	vector <int> m_StartNumber = { 6};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -351,4 +363,23 @@ private:
 	/// エネミー管理用のコンテナ
 	/// </summary>
 	vector<weak_ptr<BaseEnemy>> enemys_container_;
+
+	struct SaveData {
+		int m_SaveIndex = {};
+		int m_SaveHierarchy = {};
+		float m_SaveHP = {};
+		int m_OpenIndex = {};
+		int m_OpenHierarchy = {};
+		float m_OpenHP = {};
+		vector<int> m_OpenDeckNumber = {};
+		vector<int> m_OpenPassiveNumber = {};
+		int m_DeckNum = {};
+		int m_PassiveNum = {};
+		//普通の敵
+		std::ifstream dataFile;
+		std::stringstream dataPopcom;
+		std::string dataLine;
+	};
+	
+	SaveData savedata;
 };

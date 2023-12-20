@@ -286,6 +286,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			}
 			m_Damege = true;
 			m_DamageTimer = {};
+			Helper::Clamp(damage, 0.0f, 999.0f);
 			m_HP -= damage;
 			GameStateManager::GetInstance()->DamageCheck((int)damage);
 			BirthDamage(damage);
