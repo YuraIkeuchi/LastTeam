@@ -90,7 +90,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 				}
 
 				//タイトル戻るかコンティニューしてマップ行くか決まる
-				if ((input->TriggerButton(input->A)) && nowHierarchy >= 5) {		//コンティニュー
+				if ((input->TriggerButton(input->A)) && nowHierarchy >= 6) {		//コンティニュー
 					SceneChanger::GetInstance()->SetChangeStart(true);
 					s_Countinue = true;
 				}
