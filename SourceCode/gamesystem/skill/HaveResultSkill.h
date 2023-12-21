@@ -27,7 +27,8 @@ public:
 	void CreateAttackSkill(const int num,const int id, DirectXCommon* dxCommon);
 	void CreatePassiveSkill(const int num, const int id, DirectXCommon* dxCommon);
 	void BirthArea(const int num);
-	void DeleteMove(const int num);
+	void SetDeleteAfter(const int num);
+	void DeleteMove();
 private:
 	static const int S_DAMAGEMAX = 2;
 private:
@@ -37,6 +38,7 @@ private:
 		std::unique_ptr<TextManager> text_;
 		vector<std::unique_ptr<ResultAreaUI>> resultarea;
 		XMFLOAT2 position = { 640.f,320.f };
+		XMFLOAT2 afterpos = { 0.0f,320.0f };
 		XMFLOAT2 size = { 128.f,128.f };
 		int no = -1;
 		int ID = -1;
