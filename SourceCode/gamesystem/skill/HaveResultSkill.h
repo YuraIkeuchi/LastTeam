@@ -27,6 +27,8 @@ public:
 	void CreateAttackSkill(const int num,const int id, DirectXCommon* dxCommon);
 	void CreatePassiveSkill(const int num, const int id, DirectXCommon* dxCommon);
 	void BirthArea(const int num);
+
+private:
 	void SetDeleteAfter(const int num);
 	void DeleteMove();
 private:

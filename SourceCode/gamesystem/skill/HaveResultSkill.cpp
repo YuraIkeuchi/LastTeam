@@ -5,6 +5,7 @@
 #include <Easing.h>
 #include <SkillManager.h>
 #include <Audio.h>
+#include <GameStateManager.h>
 HaveResultSkill::HaveResultSkill() {
 
 }
@@ -170,8 +171,9 @@ void HaveResultSkill::Move() {
 
 	//持ってるスキルの削除
 	if (m_SelectCount < (int)(haveSkills.size())) {
-		if (input->TriggerButton(input->X) && haveSkills.size() != 0) {
+		if (input->TriggerButton(input->X) && haveSkills.size() != 1) {
 			haveSkills.erase(cbegin(haveSkills) + m_SelectCount);
+			GameStateManager::GetInstance()->DeleteDeck(m_SelectCount);
 			for (int i = 0; i < haveSkills.size(); i++) {
 				SetDeleteAfter(i);
 			}
@@ -202,16 +204,17 @@ void HaveResultSkill::BirthArea(const int Area) {
 void HaveResultSkill::SetDeleteAfter(const int num) {
 	XMFLOAT2 l_BasePos = { 640.0f,250.0f };
 	haveSkills[num].afterpos.x = {l_BasePos.x + (num * 150.0f)};
+	if(havePassive.size() != 0)
+	havePassive[num].afterpos.x = { l_BasePos.x + ((num + (int)haveSkills.size()) * 150.0f) };
 	//float l_AfterPosX = { l_BasePos.x + (num * 150.0f) };
 
 	//static float frame = 0.f;
 	//static float addFrame = 1.f / 15.f;
 }
+//削除されたときの動き
 void HaveResultSkill::DeleteMove() {
 	if (!m_DeleteMove) { return; }
-	//XMFLOAT2 l_BasePos = { 640.0f,250.0f };
-	//float l_AfterPosX = { l_BasePos.x + (num * 150.0f) };
-
+	
 	static float frame = 0.f;
 	static float addFrame = 1.f / 15.f;
 
@@ -219,18 +222,21 @@ void HaveResultSkill::DeleteMove() {
 		m_DeleteMove = false;
 		frame = 0.f;
 	}
-	//haveSkills[num].position.x = Ease(In,Cubic,frame,haveSkills[num].position.x, l_AfterPosX);
-	//haveSkills[num].icon->SetPosition({ haveSkills[num].position.x - m_AddPosX,haveSkills[num].position.y });
-	////if (!m_DeleteMove) { return; }
-
+	//イージングで動かす
 	for (auto i = 0; i < haveSkills.size(); i++) {
 		haveSkills[i].position.x = Ease(In, Cubic, frame, haveSkills[i].position.x, haveSkills[i].afterpos.x);
 		haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
 	}
 
-	////for (auto i = 0; i < havePassive.size(); i++) {
-	////	havePassive[i].position.x = Ease(In, Cubic, frame, havePassive[i].position.x, havePassive[i].position.x);
-	////	havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
-	////}
-
+	if (havePassive.size() != 0) {
+		for (auto i = 0; i < havePassive.size(); i++) {
+			havePassive[i].position.x = Ease(In, Cubic, frame, havePassive[i].position.x, havePassive[i].afterpos.x);
+			havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
+		}
+	}
+	else {	//セレクトフレームが空欄にならないように
+		if (m_SelectPos.x > haveSkills[haveSkills.size() - 1].position.x) {
+			m_SelectPos.x = Ease(In, Cubic, frame, m_SelectPos.x, haveSkills[haveSkills.size() - 1].position.x);
+		}
+	}
 }

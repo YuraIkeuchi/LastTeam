@@ -893,5 +893,8 @@ void GameStateManager::OpenGameDate() {
 	//マップデータ
 	savedata.m_OpenHierarchy = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/GameData/GameData.csv", "Hierarchy")));
 	savedata.m_OpenIndex = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/GameData/GameData.csv", "Index")));
-
+}
+//スキルの削除
+void GameStateManager::DeleteDeck(const int num) {
+	m_DeckNumber.erase(cbegin(m_DeckNumber) + num);
 }

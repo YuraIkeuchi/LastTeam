@@ -61,6 +61,8 @@ public:
 	void SaveGame();
 
 	void OpenGameDate();
+
+	void DeleteDeck(const int num);
 private:
 	void PredictManager();
 	//攻撃した瞬間
