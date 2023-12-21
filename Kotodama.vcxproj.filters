@@ -256,7 +256,7 @@
       <Filter>gamesystem\gamecamera</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\text\TextManager.cpp">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\SceneSave.cpp">
       <Filter>gamesystem\scene\Base</Filter>
@@ -268,7 +268,7 @@
       <Filter>gamesystem\scene\EndRoll</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\MessageWindow\MessageWindow.cpp">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\NormalEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
@@ -322,7 +322,7 @@
       <Filter>gamesystem\scene\Title</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\text\DrawNumber.cpp">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\TutorialTask.cpp">
       <Filter>gamesystem\scene\Tutorial</Filter>
@@ -419,7 +419,7 @@
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\text\DrawDamageNumber.cpp">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\stageobj\StageBack.cpp">
       <Filter>gamesystem\stageobj\Common</Filter>
@@ -461,10 +461,10 @@
       <Filter>gamesystem\skill</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\text\DrawHealNumber.cpp">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\text\DrawPoisonNumber.cpp">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\ClouserEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
@@ -679,7 +679,7 @@
       <Filter>engine\2d\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\TextManager.h">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\enginebase\resource.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\SceneSave.h">
@@ -698,7 +698,7 @@
       <Filter>gamesystem\scene\EndRoll</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\MessageWindow\MessageWindow.h">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\NormalEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
@@ -755,7 +755,7 @@
       <Filter>gamesystem\scene\Title</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\DrawNumber.h">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\TutorialTask.h">
       <Filter>gamesystem\scene\Tutorial</Filter>
@@ -861,7 +861,7 @@
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\DrawDamageNumber.h">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\StageBack.h">
       <Filter>gamesystem\stageobj\Common</Filter>
@@ -903,10 +903,10 @@
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\DrawHealNumber.h">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\text\DrawPoisonNumber.h">
-      <Filter>gamesystem\Text</Filter>
+      <Filter>gamesystem\stageobj\Text</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\ClouserEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
@@ -1044,9 +1044,6 @@
     <Filter Include="engine\2d\PostEffect">
       <UniqueIdentifier>{85600317-d81b-41d8-b573-6151f83a2f80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\Text">
-      <UniqueIdentifier>{6b589362-730f-4fb1-bae8-d3a3afeff414}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gamesystem\scene">
       <UniqueIdentifier>{88dffa51-41c6-421c-ae0e-d8f4ba011bb3}</UniqueIdentifier>
     </Filter>
@@ -1136,6 +1133,9 @@
     </Filter>
     <Filter Include="gamesystem\effect">
       <UniqueIdentifier>{658fcd81-1150-436e-89a4-06ef3a211bc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gamesystem\stageobj\Text">
+      <UniqueIdentifier>{6b589362-730f-4fb1-bae8-d3a3afeff414}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

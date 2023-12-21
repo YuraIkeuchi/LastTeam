@@ -5,6 +5,7 @@
 #include <Easing.h>
 #include <SkillManager.h>
 #include <Audio.h>
+#include <GameStateManager.h>
 HaveResultSkill::HaveResultSkill() {
 
 }
@@ -20,7 +21,8 @@ void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetSize({ 128.0f,128.0f });
-	selectFrame->SetPosition({ 640.0f,250.0f });
+	m_SelectPos = { 640.0f,250.0f };
+	selectFrame->SetPosition(m_SelectPos);
 }
 
 void HaveResultSkill::Update() {
@@ -29,6 +31,7 @@ void HaveResultSkill::Update() {
 
 	//動き
 	Move();
+	DeleteMove();
 }
 
 void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
@@ -63,8 +66,11 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 }
 void HaveResultSkill::ImGuiDraw() {
 	ImGui::Begin("Have");
-	ImGui::Text("ID:%d", haveSkills[m_SelectCount].ID);
-	ImGui::Text("ID:%d", haveSkills[m_SelectCount].Damage);
+	ImGui::Text("PosX:%f", haveSkills[haveSkills.size() - 1].position.x);
+	ImGui::Text("SelectPos:%f",m_AddPosX);
+	ImGui::Text("AfterPos:%f", m_AfterAddPosX);
+	ImGui::Text("SelectCount:%d", m_SelectCount);
+	ImGui::Text("Size:%d", (int)haveSkills.size());
 	ImGui::End();
 }
 
@@ -169,16 +175,18 @@ void HaveResultSkill::Move() {
 
 	//持ってるスキルの削除
 	if (m_SelectCount < (int)(haveSkills.size())) {
-		if (input->TriggerButton(input->X) && haveSkills.size() != 0) {
+		if (input->TriggerButton(input->X) && haveSkills.size() != 1) {
 			haveSkills.erase(cbegin(haveSkills) + m_SelectCount);
+			GameStateManager::GetInstance()->DeleteDeck(m_SelectCount);
+			for (int i = 0; i < haveSkills.size(); i++) {
+				SetDeleteAfter(i);
+			}
+			for (int i = 0; i < havePassive.size(); i++) {
+				SetPassiveDeleteAfter(i);
+			}
 			m_DeleteMove = true;
 		}
 	}
-
-	//スキルの削除後で本実装
-	/*for (int i = 0; i < haveSkills.size(); i++) {
-		DeleteMove(i);
-	}*/
 }
 //エリアの生成
 void HaveResultSkill::BirthArea(const int Area) {
@@ -194,31 +202,56 @@ void HaveResultSkill::BirthArea(const int Area) {
 		}
 	}
 }
+//デリート後のイージング後のポジション
+void HaveResultSkill::SetDeleteAfter(const int num) {
+	XMFLOAT2 l_BasePos = { 640.0f,250.0f };
+	haveSkills[num].afterpos.x = { l_BasePos.x + (num * 150.0f) };
+	
+	if(havePassive.size () == 0){
+		if (m_SelectCount == haveSkills.size()) {
+			m_AfterAddPosX = (m_SelectCount - 1) * 150.0f;
+			m_AddPosX = (m_SelectCount) * 150.0f;
+		}
+	}
+}
+void HaveResultSkill::SetPassiveDeleteAfter(const int num) {
+	XMFLOAT2 l_BasePos = { 640.0f,250.0f };
+	if (havePassive.size() != 0) {
+		havePassive[num].afterpos.x = { l_BasePos.x + ((num + (int)haveSkills.size()) * 150.0f) };
+	}
+}
+//削除されたときの動き
+void HaveResultSkill::DeleteMove() {
+	if (!m_DeleteMove) { return; }
+	
+	static float frame = 0.f;
+	static float addFrame = 1.f / 15.f;
 
-void HaveResultSkill::DeleteMove(const int num) {
-	//if (!m_DeleteMove) { return; }
-	//XMFLOAT2 l_BasePos = { 640.0f,250.0f };
-	//float l_AfterPosX = { l_BasePos.x + (num * 150.0f) };
+	if (Helper::FrameCheck(frame, addFrame)) {
+		if (m_SelectCount == haveSkills.size() && havePassive.size() == 0) {
+			m_SelectCount--;
+		}
+		m_DeleteMove = false;
+		frame = 0.f;
+	}
+	//イージングで動かす
+	for (auto i = 0; i < haveSkills.size(); i++) {
+		haveSkills[i].position.x = Ease(In, Cubic, frame, haveSkills[i].position.x, haveSkills[i].afterpos.x);
+		haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
+	}
 
-	//static float frame = 0.f;
-	//static float addFrame = 1.f / 15.f;
-
-	//if (Helper::FrameCheck(frame, addFrame)) {
-	//	m_DeleteMove = false;
-	//	frame = 0.f;
-	//}
-	//haveSkills[num].position.x = Ease(In,Cubic,frame,haveSkills[num].position.x, l_AfterPosX);
-	//haveSkills[num].icon->SetPosition({ haveSkills[num].position.x - m_AddPosX,haveSkills[num].position.y });
-	////if (!m_DeleteMove) { return; }
-
-	////for (auto i = 0; i < haveSkills.size(); i++) {
-	////	haveSkills[i].position.x = Ease(In, Cubic, frame, haveSkills[i].position.x, 0.0f);
-	////	haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
-	////}
-
-	////for (auto i = 0; i < havePassive.size(); i++) {
-	////	havePassive[i].position.x = Ease(In, Cubic, frame, havePassive[i].position.x, havePassive[i].position.x);
-	////	havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
-	////}
-
+	if (havePassive.size() != 0) {
+		for (auto i = 0; i < havePassive.size(); i++) {
+			havePassive[i].position.x = Ease(In, Cubic, frame, havePassive[i].position.x, havePassive[i].afterpos.x);
+			havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
+		}
+	}
+	else {
+		if (m_SelectCount == haveSkills.size()) {
+			m_AddPosX = Ease(In, Cubic, frame, m_AddPosX, m_AfterAddPosX);
+			for (auto i = 0; i < haveSkills.size(); i++) {
+				haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
+			}
+		}
+	}
 }
