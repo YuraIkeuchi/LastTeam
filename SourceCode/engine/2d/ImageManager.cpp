@@ -61,6 +61,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(GAUGE, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(GAUGECOVER, L"Resources/2d/objicon/SkillGauge.png");
 	IKESprite::LoadTexture(HANDSCOVER, L"Resources/2d/objicon/HandsCover.png");
+	IKESprite::LoadTexture(SKILLCANCEL, L"Resources/2d/objicon/SkillCancel.png");
 	IKESprite::LoadTexture(TITLETEXT, L"Resources/2d/sceneback/TitleText.png");
 	IKESprite::LoadTexture(GAMEOVERBACK, L"Resources/2d/sceneback/Gameover.png");
 	IKESprite::LoadTexture(GAMECLEARBACK, L"Resources/2d/sceneback/GameClear.png");

@@ -39,8 +39,6 @@ void Player::LoadResource() {
 	_MaxHp[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 160.0f,m_HPPos.y + 20.0f });
 	_MaxHp[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 140.0f,m_HPPos.y + 20.0f });
 	_MaxHp[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 120.f, m_HPPos.y + 20.0f });
-
-
 	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();
 	shadow_tex->Initialize();
@@ -473,6 +471,7 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	m_AfterScale = m_BaseScale;
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	m_Delay = false;
+	m_Cancel = true;
 	m_Frame = {};
 	m_ShrinkTimer = {};
 	//ダメージの種類によってパーティクルを変える
@@ -599,6 +598,7 @@ void Player::DamageUpdate() {
 	if (Helper::CheckMin(m_DamageTimer, l_TargetTimer, 1)) {
 		m_DamageTimer = {};
 		m_FlashCount = {};
+		m_Cancel = false;
 		m_Damege = false;
 	}
 

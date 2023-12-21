@@ -47,6 +47,8 @@ void GameStateManager::Initialize() {
 	gaugeUI->SetSize({ basesize.x,0.f });
 	gaugeCover = IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f + 32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
+	cancelSkill = IKESprite::Create(ImageManager::SKILLCANCEL, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
+
 	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 640.f,50.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
 	resultReport = make_unique<ResultReport>();
@@ -277,6 +279,9 @@ void GameStateManager::ActUIDraw() {
 		if (actui[i] == nullptr)continue;
 		actui[i]->Draw();
 	}
+	if (player->GetCancel()) {
+		cancelSkill->Draw();
+	}
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		passive->Draw();
 	}
@@ -373,7 +378,7 @@ void GameStateManager::BirthArea() {
 }
 //予測エリア関係
 void GameStateManager::PredictManager() {
-	if (m_AllActCount == 0) { return; }
+	//if (m_AllActCount == 0) { return; }
 	if (m_Act.empty()) { return; }
 	predictarea->ResetPredict();
 	int l_BirthBaseX = {};

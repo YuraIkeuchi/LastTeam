@@ -233,6 +233,7 @@ private:
 	float passiveAlphaFrame = 0.0f;
 
 	std::unique_ptr<IKESprite> handsFrame;
+	unique_ptr<IKESprite> cancelSkill;
 
 	XMFLOAT2 basesize = { 46.f,400.f };
 
