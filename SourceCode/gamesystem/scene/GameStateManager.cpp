@@ -257,13 +257,18 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 //描画
 void GameStateManager::ImGuiDraw() {
 	//SkillManager::GetInstance()->ImGuiDraw();
-	if (savedata.m_DeckNum != 0) {
+	/*if (savedata.m_DeckNum != 0) {
 		ImGui::Begin("Deck");
 		for (int i = 0; i < savedata.m_DeckNum; i++) {
 			ImGui::Text("DeckNum[%d]:%d", i, m_DeckNumber[i]);
 			ImGui::Text("OpenDeckNum[%d]:%d", i, savedata.m_OpenDeckNumber[i]);
 		}
 		ImGui::End();
+	}*/
+	if (isFinish) {
+		if (_ResultType != GET_SKILL) {
+			haveSkill->ImGuiDraw();
+		}
 	}
 }
 //手に入れたUIの描画

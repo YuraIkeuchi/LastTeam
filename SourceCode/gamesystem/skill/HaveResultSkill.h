@@ -30,6 +30,7 @@ public:
 
 private:
 	void SetDeleteAfter(const int num);
+	void SetPassiveDeleteAfter(const int num);
 	void DeleteMove();
 private:
 	static const int S_DAMAGEMAX = 2;
@@ -59,6 +60,7 @@ private:
 	std::vector<HaveUI> haveSkills;
 	std::vector<HaveUI> havePassive;
 	float m_AddPosX = {};
+	float m_AfterAddPosX = {};
 	int m_SelectCount = {};
 	int m_OldCount = 0;
 	int m_SelectTimer = {};

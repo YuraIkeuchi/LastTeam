@@ -218,7 +218,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= { };
+	std::vector <int> m_StartPassive= {1,2 };
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
