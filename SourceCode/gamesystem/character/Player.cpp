@@ -470,8 +470,10 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	m_BaseScale = 0.5f;
 	m_AfterScale = m_BaseScale;
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
+	if (m_Delay) {
+		m_Cancel = true;
+	}
 	m_Delay = false;
-	m_Cancel = true;
 	m_Frame = {};
 	m_ShrinkTimer = {};
 	//ダメージの種類によってパーティクルを変える
