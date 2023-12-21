@@ -1,11 +1,14 @@
-ID,7
+ID,8
 SkillType,0
-Delay,35
-Name,yabu
-StateName,POISON
-Damege,3
+Delay,30
+Name,yabu2
+StateName,DRAIN
+Damege,50
 DistanceX,1
 DistanceY,1
+AttackArea,0 1 0
 AttackArea,1 1 1
-AttackArea,1 1 1
-AttackAreA,0 0 0
+AttackAreA,0 1 0
+Timer,0 1 0
+Timer,1 1 1
+TimeR,0 1 0

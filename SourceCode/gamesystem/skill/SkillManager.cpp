@@ -15,20 +15,21 @@ SkillManager* SkillManager::GetInstance()
 }
 
 void SkillManager::Initialize()
-{
-	const int l_SKILLMAX = 11;
+{	
+	//ここをいじればGameStateManagerも変わります
+	m_SKILLMAX = 14;
 	//一旦3に指定(実際はCSVとかになるかな)
-	skill.resize(l_SKILLMAX);
+	skill.resize(m_SKILLMAX);
+	m_Delays.resize(m_SKILLMAX);
 	//ここはもう少しやりようがあるかもしれない
-	for (int i = 0; i < l_SKILLMAX - 1; i++) {
+	for (int i = 0; i < m_SKILLMAX; i++) {
 		skill[i] = new AttackSkill();
 	}
-
+	//スペシャルスキルはこちらに上書きしてください
 	skill[9] = new SpecialSkill();
-	skill[10] = new AttackSkill();
-
+	skill[11] = new SpecialSkill();
 	//csv読み取り
-	for (int i = 1; i < l_SKILLMAX + 1; i++)
+	for (int i = 0; i < m_SKILLMAX; i++)
 	{
 		CreateSkill(i);
 	}
@@ -58,25 +59,25 @@ void SkillManager::UIDraw() {
 }
 
 void SkillManager::ImGuiDraw() {
-	//for (SkillBase* newskill : skill) {
-	//	if (newskill != nullptr) {
-	//		newskill->ImGuiDraw();
-	//	}
-	//}
+	for (SkillBase* newskill : skill) {
+		if (newskill != nullptr) {
+			newskill->ImGuiDraw();
+		}
+	}
 
-	ImGui::Begin("Mana");
-	//ImGui::Text("Num:%d", m_DeckNum);
+	//ImGui::Begin("Mana");
+	////ImGui::Text("Num:%d", m_DeckNum);
 	//ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
-	ImGui::Text("m_DeckNum:%d", m_DeckNum);
-	//ImGui::Text("m_DeckSize:%d", (int)m_DeckDate.size());
-	for (int i = 0; i < m_DeckDate.size(); i++) {
-		ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
-	}
-	ImGui::End();
-	for (auto i = 0; i < deckui.size(); i++) {
-		if (deckui[i] == nullptr)continue;
-		deckui[i]->ImGuiDraw();
-	}
+	//ImGui::Text("m_DeckNum:%d", m_DeckNum);
+	////ImGui::Text("m_DeckSize:%d", (int)m_DeckDate.size());
+	//for (int i = 0; i < m_DeckDate.size(); i++) {
+	//	ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
+	//}
+	//ImGui::End();
+	//for (auto i = 0; i < deckui.size(); i++) {
+	//	if (deckui[i] == nullptr)continue;
+	//	deckui[i]->ImGuiDraw();
+	//}
 }
 
 int SkillManager::IDSearch(const int BirthNum) {
@@ -99,7 +100,7 @@ void SkillManager::ResetBirth() {
 }
 
 //スキルのデータを渡す(攻撃)
-void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY, string& name) {
+void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, vector<std::vector<int>>& timer, int& DisX, int& DisY, string& name,int& Token) {
 	if (skill[m_BirthNow]->GetSkillType() != SkillType::damege)
 	{
 		assert(0);
@@ -109,7 +110,9 @@ void SkillManager::GetAttackSkillData(float& damage, int& delay, vector<std::vec
 	damage = atkSkill->GetDamege();		//ダメージ
 	delay = skill[m_BirthNow]->Getlatency();		//硬直時間
 	area = atkSkill->GetArea();		//範囲
+	timer = atkSkill->GetTimer();
 	name = atkSkill->GetStateName();		//付与状態
+	Token = atkSkill->GetPoisonToken();
 	//プレイヤーからの距離
 	int l_DistanceX = {};
 	int l_DistanceY = {};
@@ -140,74 +143,85 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 	std::string line;
 	//アタックエリア用
 	std::vector<std::vector<int> > MyVector;
+	//タイマー用
+	std::vector<std::vector<int> > MyTimer;
 
 	while (std::getline(popcom, line)) {
 		std::istringstream line_stream(line);
 		std::string word;
+		std::string word2;
 		std::getline(line_stream, word, ',');
-
 		if (word.find("//") == 0) {
 			continue;
 		}
 		else if (word.find("ID") == 0) {
 			std::getline(line_stream, word, ',');
-			skill[id - 1]->SetID(std::stoi(word));
+			skill[id]->SetID(std::stoi(word));
 		}
 		else if (word.find("SkillType") == 0) {
 			std::getline(line_stream, word, ',');
 			if (std::stoi(word) == 0)
 			{
-				skill[id - 1]->SetSkillType(SkillType::damege);
+				skill[id]->SetSkillType(SkillType::damege);
 			}
 			else if (std::stoi(word) == 1)
 			{
-				skill[id - 1]->SetSkillType(SkillType::buff);
+				skill[id]->SetSkillType(SkillType::buff);
 			}
 			else if (std::stoi(word) == 2)
 			{
-				skill[id - 1]->SetSkillType(SkillType::debuff);
+				skill[id]->SetSkillType(SkillType::debuff);
 			}
 			else if (std::stoi(word) == 3)
 			{
-				skill[id - 1]->SetSkillType(SkillType::max);
+				skill[id]->SetSkillType(SkillType::max);
 			}
 		}
 		else if (word.find("Delay") == 0) {
 			std::getline(line_stream, word, ',');
-			skill[id - 1]->SetLatency(std::stoi(word));
+			skill[id]->SetLatency(std::stoi(word));
+			m_Delays[id] = std::stoi(word);
 		}
-		if (skill[id - 1]->GetSkillType() == SkillType::damege) {
+		if (skill[id]->GetSkillType() == SkillType::damege) {
 			if (word.find("Name") == 0) {
 				std::getline(line_stream, word, ',');
-				skill[id - 1]->SetName(word);
+				skill[id]->SetName(word);
 			}
 			else if (word.find("StateName") == 0) {
 				std::getline(line_stream, word, ',');
-				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id]);
 				if (atkSkill != nullptr)
 				{
 					atkSkill->SetStateName(word);
 				}
 			}
+			else if (word.find("TOKEN") == 0) {
+				std::getline(line_stream, word, ',');
+				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id]);
+				if (atkSkill != nullptr)
+				{
+					atkSkill->SetPoisonToken(std::stoi(word));
+				}
+			}
 			else if (word.find("InvocatingTime") == 0) {
 				std::getline(line_stream, word, ',');
-				skill[id - 1]->SetInvocatingTime(std::stoi(word));
+				skill[id]->SetInvocatingTime(std::stoi(word));
 			}
 			else if (word.find("restraintTime") == 0) {
 				std::getline(line_stream, word, ',');
-				skill[id - 1]->SetRestraintTime(std::stoi(word));
+				skill[id]->SetRestraintTime(std::stoi(word));
 			}
 			else if (word.find("Rarity") == 0) {
 				std::getline(line_stream, word, ',');
-				skill[id - 1]->SetRarity(std::stoi(word));
+				skill[id]->SetRarity(std::stoi(word));
 			}
 			else if (word.find("PopRate") == 0) {
 				std::getline(line_stream, word, ',');
-				skill[id - 1]->SetPopRate(std::stoi(word));
+				skill[id]->SetPopRate(std::stoi(word));
 			}
 			else if (word.find("Damege") == 0) {
 				std::getline(line_stream, word, ',');
-				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id]);
 				if (atkSkill != nullptr)
 				{
 					atkSkill->SetDamege(std::stof(word));
@@ -215,7 +229,7 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 			}
 			else if (word.find("DistanceX") == 0) {
 				std::getline(line_stream, word, ',');
-				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id]);
 				if (atkSkill != nullptr)
 				{
 					atkSkill->SetDistanceX(std::stoi(word));
@@ -223,7 +237,7 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 			}
 			else if (word.find("DistanceY") == 0) {
 				std::getline(line_stream, word, ',');
-				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id]);
 				if (atkSkill != nullptr)
 				{
 					atkSkill->SetDistanceY(std::stoi(word));
@@ -253,18 +267,53 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 					MyVector.push_back(row);
 				}
 
-				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id - 1]);
+				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id]);
 				if (atkSkill != nullptr)
 				{
 					atkSkill->SetArea(MyVector);
 				}
+			}
+			else if (word.find("Timer") == 0) {
+				while (std::getline(line_stream, word)) {
+					std::vector<int> row;
+					stringstream ss;
+					int X = 0;
+					for (char& x : word) {
+						ss << word;
+						ss >> X;
+						if (x != ' ')
+							row.push_back(X);
+					}
+					MyTimer.push_back(row);
+				}
+			}
+			else if (word.find("TimeR") == 0) {
+				while (std::getline(line_stream, word)) {
+					std::vector<int> row;
+					stringstream ss;
+					int X = 0;
+					for (char& x : word) {
+						ss << word;
+						ss >> X;
+						if (x != ' ')
+							row.push_back(X);
+					}
+					MyTimer.push_back(row);
+				}
+
+				AttackSkill* atkSkill = dynamic_cast<AttackSkill*>(skill[id]);
+				if (atkSkill != nullptr)
+				{
+					atkSkill->SetTimer(MyTimer);
+				}
 				break;
 			}
+
 		}
 		else {
 			if (word.find("StateName") == 0) {
 				std::getline(line_stream, word, ',');
-				SpecialSkill* specialSkill = dynamic_cast<SpecialSkill*>(skill[id - 1]);
+				SpecialSkill* specialSkill = dynamic_cast<SpecialSkill*>(skill[id]);
 				if (specialSkill != nullptr)
 				{
 					specialSkill->SetStateName(word);
@@ -288,8 +337,6 @@ bool SkillManager::CreateSkill(int id) {
 	}
 	std::string csv_ = ss.str();
 	LoadCsvSkill(csv_, id);
-
-	//Player::GetInstance()->SetDelayTimer(m_Delay);
 	return true;
 }
 

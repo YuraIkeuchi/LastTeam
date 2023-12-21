@@ -10,21 +10,12 @@
 #include <StagePanel.h>
 //ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
 BossEnemy::BossEnemy() {
-	m_Object.reset(new IKEObject3d());
-	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
-	m_Object->SetLightEffect(false);
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
-	//HPII
-	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
-	hptex->SetColor({0.5f,1.0f,0.5f,1.0f});
-	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
-		_drawnumber[i]->Initialize();
-	}
 
 	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();
@@ -147,6 +138,8 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
+	if (m_SuperPoison) {poison_tex->Draw();}
+	if (m_HealDamage) { healdamage_tex->Draw(); }
 	IKETexture::PostDraw();
 	//“G‚Ì’e
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
@@ -215,7 +208,6 @@ void BossEnemy::BirthBullet() {
 	newbullet->Initialize();
 	newbullet->SetPlayer(player);
 	newbullet->SetShotDir(m_ShotDir);
-	newbullet->SetPolterType(TYPE_FOLLOW);
 	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.8f,m_Position.z });
 	bullets.emplace_back(newbullet);
 }

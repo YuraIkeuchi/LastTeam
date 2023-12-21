@@ -7,6 +7,9 @@
 #include "Bomb.h"
 #include "HealEnemy.h"
 #include "BossEnemy.h"
+#include "FrontEnemy.h"
+#include "ThrowEnemy.h"
+#include "ClouserEnemy.h"
 #include "BossEnemy2.h"
 #include <StagePanel.h>
 #include <GameStateManager.h>
@@ -41,7 +44,7 @@ void EnemyManager::Update() {
 		}
 		enemy->Update();
 	}
-
+	PoisonRook();
 	//敵の削除
 	for (int i = 0; i < enemys.size(); i++) {
 		if (enemys[i] == nullptr) {
@@ -120,7 +123,6 @@ void EnemyManager::PoizonVenom() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SetPoizonVenom(true);
 	}
-
 }
 
 void EnemyManager::DrainHealUp() {
@@ -135,9 +137,26 @@ void EnemyManager::ReLoadDamage() {
 	}
 }
 
+void EnemyManager::PoisonRook() {
+	if (GameStateManager::GetInstance()->GetRookPoison() <= 0) { return; }
+	int poison = GameStateManager::GetInstance()->GetRookPoison();
+	poison /= (int)enemys.size();
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SimplePosion(poison);
+	}
+	GameStateManager::GetInstance()->SetRookPoison(0);
+}
+
 void EnemyManager::BombDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->SimpleDamege(20.f);
+	}
+}
+
+void EnemyManager::HealingDamage() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimpleDamege(5.f);
+		enemy->SetHealDamage(true);
 	}
 }
 
@@ -209,6 +228,27 @@ void EnemyManager::Spawn2Map() {
 			}
 			else if (x == '6') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<HealEnemy>();
+				//enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '7') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<FrontEnemy>();
+				//enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '8') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<ThrowEnemy>();
+				//enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == '9') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<ClouserEnemy>();
 				//enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
 				enemys.push_back(std::move(enemy_));

@@ -47,8 +47,11 @@ public:
 	/// </summary>
 	void ReLoadDamage();
 
+	void PoisonRook();
+
 	void BombDamage();
 
+	void HealingDamage();
 	void Heal();
 private:
 	/// <summary>

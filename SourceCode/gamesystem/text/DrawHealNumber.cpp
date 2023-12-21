@@ -33,7 +33,6 @@ void DrawHealNumber::Update() {
 		_Number[i]->SetPosition(m_Position);
 		_Number[i]->SetSize(m_Size);
 		_Number[i]->SetColor(m_Color);
-
 	}
 
 	NumberMove();

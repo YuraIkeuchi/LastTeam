@@ -10,23 +10,13 @@
 #include <StagePanel.h>
 //ÉÇÉfÉãì«Ç›çûÇ›
 HealEnemy::HealEnemy() {
-	m_Object.reset(new IKEObject3d());
-	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
-	m_Object->SetLightEffect(false);
+	//ã§í ÇÃèâä˙âªèàóù
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::HEAL));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
-	//HPII
-	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
-	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
-
-	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
-		_drawnumber[i]->Initialize();
-	}
 
 	//shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	//shadow_tex->TextureCreate();
@@ -36,9 +26,8 @@ HealEnemy::HealEnemy() {
 //èâä˙âª
 bool HealEnemy::Initialize() {
 	//m_Position = randPanelPos();
-	m_Rotation = { 0.0f,0.0f,0.0f };
-	m_Color = { 1.0f,0.0f,0.5f,1.0f };
-	m_Scale = { 0.4f,0.4f,0.4f };
+	m_Rotation = { 0.0f,180.0f,0.0f };
+	m_Scale = { 0.6f,0.6f,0.6f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/HealEnemy.csv", "hp")));
 	m_MaxHP = m_HP;
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/HealEnemy.csv", "LIMIT_NUM")));
@@ -105,13 +94,17 @@ void HealEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
+	if (m_SuperPoison) {poison_tex->Draw();}
+	if (m_HealDamage) { healdamage_tex->Draw(); }
 	IKETexture::PostDraw();
 	Obj_Draw();
 }
 //ImGuiï`âÊ
 void HealEnemy::ImGui_Origin() {
 	ImGui::Begin("Heal");
-	ImGui::Text("Last:%d", m_LastEnemy);
+	ImGui::Text("CoolT:%d", coolTimer);
+	ImGui::Text("Warp:%d", m_Warp);
+	ImGui::Text("frame:%f", magic.Frame);
 	ImGui::End();
 }
 //äJï˙
@@ -150,6 +143,7 @@ void HealEnemy::Teleport() {
 
 	if (Helper::CheckMin(coolTimer, l_RandTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
+		coolTimer = {};
 	}
 
 	if (m_Warp) {
@@ -182,6 +176,7 @@ void HealEnemy::BirthMagic() {
 			magic.AfterScale = 0.2f;
 			magic.Alive = false;
 			magic.State = MAGIC_BIRTH;
+			m_Warp = false;
 		}
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
@@ -219,10 +214,10 @@ void HealEnemy::AttackMove() {
 	if (!m_Rot) { return; }
 	const float l_AddFrame = 1 / 20.0f;
 	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
-		m_Rotation.y = 270.0f;
+		m_Rotation.y = 180.0f;
 		m_Rot = false;
 		m_AttackFrame = {};
 	}
 
-	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
+	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 540.0f);
 }

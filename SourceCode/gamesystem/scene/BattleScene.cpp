@@ -29,8 +29,13 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	player_->Initialize();
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
+	if (s_Countinue) {		//コンティニューをしていた場合CSVからゲームデータ引き継ぎ
+		player_->SetHp(GameStateManager::GetInstance()->GetOpenHP());
+		s_Countinue = false;
+	}
 	GameStateManager::SetPlayer(player_.get());
 	GameStateManager::GetInstance()->Initialize();
+	
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
@@ -57,10 +62,8 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 
 	gameoversprite = IKESprite::Create(ImageManager::GAMEOVERBACK, { 0.0f,0.0f });
 	Slow::GetInstance()->Initialize();
-	skipUI = IKESprite::Create(ImageManager::TUTORIAL_SKIPUI, { 940.f ,5.f });
-	skipUnder = IKESprite::Create(ImageManager::FEED, { 940.f + (128.f * scale_skip) ,5.f });
-	skipBack = IKESprite::Create(ImageManager::FEED, { 940.f + (128.f * scale_skip),5.f });
-	skipUI->SetSize({ 472.f * scale_skip ,96.f * scale_skip });
+	skipUI = IKESprite::Create(ImageManager::RESULTSKIP, { 10.f,10.f }, { 1.f,1.f, 1.f, 1.f });
+	skipUI->SetSize({ 512.f * scale_skip,128.f * scale_skip });
 
 	Feed* feed_ = new Feed();
 	feed.reset(feed_);
@@ -85,40 +88,42 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 				if (m_ChangeTimer == 1) {
 					Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameOver.wav", 0.1f);
 				}
+
+				//タイトル戻るかコンティニューしてマップ行くか決まる
+				if ((input->TriggerButton(input->A)) && nowHierarchy >= 6) {		//コンティニュー
+					SceneChanger::GetInstance()->SetChangeStart(true);
+					s_Countinue = true;
+				}
+				else if ((input->TriggerButton(input->B))) {
+					SceneChanger::GetInstance()->SetChangeStart(true);
+					s_Countinue = false;
+				}
 			}
 			else {
 				m_GameOverPos.y = { Ease(In,Cubic,m_GameOverFrame,m_GameOverPos.y,0.0f) };
-			}
-
-			if (m_ChangeTimer == 100) {
-				SceneChanger::GetInstance()->SetChangeStart(true);
 			}
 		}
 	}
 	else {		//ゲームオーバー以外
 		if (m_IsBackKey) {
 			const float frameMax = 5.f;
-			if (Helper::FrameCheck(m_Frame, 1 / frameMax)) {
-				m_Skip = true;
-				m_IsBackKey = false;
-			}
-			else {
-				float siz = 0.f;
-				siz = Ease(In, Quad, m_Frame, 0.f, 344.f);
-				skipUnder->SetSize({ siz * scale_skip,96.f * scale_skip });
-			}
+			m_Skip = true;
+			m_IsBackKey = false;
 			return;
 		}
 
-		if ((input->TriggerButton(input->BACK) ||
+		if ((input->TriggerButton(input->A) ||
 			input->TriggerKey(DIK_BACK)) &&
 			!m_IsBackKey &&
 			!m_Skip) {
 			m_IsBackKey = true;
 		}
+		skip_alpha += 0.05f;
+		skipUI->SetColor({ 1.f,1.f,1.f,abs(sinf(skip_alpha)) });
 		SkipUpdate();
+
 		if (m_SkipFeed) {
-			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 60.0f, m_SkipFeed);
+			feed->FeedIn(Feed::FeedType::WHITE, 1.0f / 30.0f, m_SkipFeed);
 		}
 		player_->AwakeUpdate();
 		player_->Update();
@@ -127,6 +132,12 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			enemyManager->ReLoadDamage();
 			GameStateManager::GetInstance()->SetIsReloadDamage(false);
 		}
+
+		if (GameStateManager::GetInstance()->GetHealDamage()) {
+			enemyManager->HealingDamage();
+			GameStateManager::GetInstance()->SetHealDamage(false);
+		}
+
 
 		if (GameStateManager::GetInstance()->GetIsBombDamage()) {
 			enemyManager->BombDamage();
@@ -189,6 +200,8 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	SceneChanger::GetInstance()->Update();
 	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
+		GameStateManager::GetInstance()->SetSaveHP(player_->GetHp());
+		//ゲームクリア
 		if (_ChangeType == CHANGE_MAP) {
 			if (!s_LastStage) {
 				SceneManager::GetInstance()->ChangeScene("MAP");
@@ -197,13 +210,17 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 				SceneManager::GetInstance()->ChangeScene("CLEAR");
 			}
 		}
-		else {
-			SceneManager::GetInstance()->ChangeScene("TITLE");
+		else {		//ゲームオーバー
+			if (!s_Countinue) {
+				SceneManager::GetInstance()->ChangeScene("TITLE");
+			}
+			else {		//コンティニューをしてマップに戻る
+				SceneManager::GetInstance()->ChangeScene("MAP");
+			}
 		}
 		player_->PlayerSave();
 		SceneChanger::GetInstance()->SetChange(false);
 	}
-
 	gameoversprite->SetPosition(m_GameOverPos);
 }
 //描画
@@ -235,8 +252,6 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_Skip && !GameStateManager::GetInstance()->GetGameStart()) {
 		IKESprite::PreDraw();
-		skipBack->Draw();
-		skipUnder->Draw();
 		skipUI->Draw();
 		IKESprite::PostDraw();
 	}
@@ -281,7 +296,9 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
+	////enemyManager->ImGuiDraw();
+	player_->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {

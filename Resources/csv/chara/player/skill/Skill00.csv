@@ -1,0 +1,9 @@
+ID,0
+SkillType,0
+Delay,5
+Name,punch
+StateName,NONE
+Damege,75
+DistanceX,1
+AttackAreA,1
+TimeR,1

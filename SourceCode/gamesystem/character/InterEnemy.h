@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "DrawDamageNumber.h"
 #include "DrawHealNumber.h"
+#include "DrawPoisonNumber.h"
 
 using namespace std;         //  名前空間指定
 //キャラの状態
@@ -35,11 +36,18 @@ protected:
 protected:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
-	static const int DAMAGE_MAX = 2;
+	static const int DAMAGE_MAX = 3;
+	static const int HEAL_MAX = 3;
+
 protected:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
 	std::vector<unique_ptr<DrawDamageNumber>> _damagenumber;
 	std::vector<unique_ptr<DrawHealNumber>> _healnumber;
+	array<unique_ptr<DrawPoisonNumber>, NUMBER_MAX> _drawPoisonnumber;
+	unique_ptr<IKESprite> poisonState;
+
+	unique_ptr<IKETexture> poison_tex;
+	unique_ptr<IKETexture> healdamage_tex;
 	unique_ptr<IKETexture> _charge;
 	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
@@ -86,9 +94,13 @@ protected:
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//整数にしたHP
 
+	//数値化したPOISON表示のための変数
+	array<int, NUMBER_MAX> m_PoisonTokenNum;
+
 	bool m_Poison = false;
 	bool m_PoisonLong = false;
 	bool m_IsVenom = false;
+	int m_PoisonToken = 0;
 	bool m_IsDrainUp = false;
 	int m_PoisonTimer = {};
 	bool m_Alive = true;
@@ -117,6 +129,16 @@ protected:
 	bool m_Damege = false;
 	int m_DamageTimer = {};
 	int m_FlashCount = {};
+	
+	bool m_SuperPoison = false;
+	bool m_HealDamage = false;
+	float m_HealFrame = 0.f;
+
+	float m_poisonFrame = 0.f;
+	float m_OverFrame = {};
+	int m_AddPoisonToken = {};
+	int m_PoisonTimerMax = {};
+	int m_HealTimer = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -126,7 +148,7 @@ public://getter setter
 	void SetDrainUp(bool IsDrainUp) { m_IsDrainUp = IsDrainUp; }
 	void SetLastEnemy(bool LastEnemy) { m_LastEnemy = LastEnemy; }
 	static void SetPlayer(Player* player) { InterEnemy::player = player; }
-
+	void SetHealDamage(bool HealDamage) { m_HealDamage = HealDamage; }
 	const float GetHP() { return m_HP; }
 	const bool GetAlive() { return m_Alive; }
 	const bool GetDeath() { return m_Death; }
@@ -134,12 +156,14 @@ public://getter setter
 
 	void SimpleDamege(float damage = 3.f);
 	void SimpleHeal(float heal = 5.f);
+	void SimplePosion(int poison);
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	virtual bool Initialize()override;
+	void BaseInitialize(IKEModel* _model);
 	void SkipInitialize();
 	/// <summary>
 	/// 終了
@@ -165,6 +189,12 @@ public:
 	XMFLOAT3 SetPannelPos(int width, int height);
 
 	void AwakeUpdate();
+
+	void HealDamageEffect();
+
+	void SuperPoisonEffect();
+
+	void DeathUpdate();
 private:
 	void BirthParticle();
 	//HPの割合を求める
@@ -180,6 +210,7 @@ private:
 	//ダメージの更新
 	void DamageUpdate();
 	void BirthHealNumber(const float heal);
+	void RegeneUpdate();
 protected:
 	void Collide(vector<unique_ptr<AttackArea>>& area);
 	//毒の状態

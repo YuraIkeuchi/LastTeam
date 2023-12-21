@@ -22,8 +22,12 @@ public:
 		CANNON,
 		SQUID,
 		MISSILE,
-		BOMBER
-
+		BOMBER,
+		THROW,
+		BOOMERAN,
+		FRONT,
+		SICKLE,
+		HEAL,
 	};
 	//FBXの名前
 	enum FBXName {

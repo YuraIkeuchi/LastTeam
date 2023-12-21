@@ -6,7 +6,9 @@
 #include <GameStateManager.h>
 #include <ParticleEmitter.h>
 #include <TutorialTask.h>
+#include "ImageManager.h"
 #include <Slow.h>
+#include "Passive.h"
 Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
 	//本当は4~7
@@ -25,6 +27,39 @@ XMFLOAT3 InterEnemy::SetPannelPos(int width, int height) {
 bool InterEnemy::Initialize() {
 	return true;
 }
+void InterEnemy::BaseInitialize(IKEModel* _model) {
+	m_Object.reset(new IKEObject3d());
+	m_Object->Initialize();
+	m_Object->SetModel(_model);
+	m_Object->SetLightEffect(false);
+
+	//HPII
+	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
+
+	for (auto i = 0; i < _drawnumber.size(); i++) {
+		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
+		_drawnumber[i]->Initialize();
+	}
+	poisonState = IKESprite::Create(ImageManager::POIZONCOVER, { 0.0f,0.0f });
+	poisonState->SetSize({ 32.f,32.f });
+	poisonState->SetAnchorPoint({ 0.5f,0.5f });
+	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
+		_drawPoisonnumber[i] = make_unique<DrawPoisonNumber>(0.5f);
+		_drawPoisonnumber[i]->Initialize();
+	}
+	poison_tex = std::make_unique<IKETexture>(ImageManager::POISON_EFFECT, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,0.5f,1.f,1.f });
+	poison_tex->TextureCreate();
+	poison_tex->Initialize();
+	poison_tex->SetRotation({ 90.0f,0.0f,0.0f });
+	healdamage_tex = std::make_unique<IKETexture>(ImageManager::HEAL_DAMAGE, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	healdamage_tex->TextureCreate();
+	healdamage_tex->Initialize();
+	healdamage_tex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	m_AddPoisonToken = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "ADD_TOKEN")));
+	m_PoisonTimerMax = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "TIMER_MAX")));
+}
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;
 }
@@ -32,15 +67,19 @@ void InterEnemy::SkipInitialize() {
 void InterEnemy::Update() {
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
 	if (m_EnemyTag != "Bomb") {
-		if (m_Alive) {
+		if (m_HP != 0.0f) {
+			if(m_Alive)
 			Action();
 		}
 	}
 	else {
 		Action();
 	}
+	
+	if (m_HP <= 0.0f && m_EnemyTag != "Bomb") {
+		DeathUpdate();
+	}
 
-	//各行動
 
 	const int l_BasePanelCount = 4;
 	Helper::CheckMax(m_DamegeTimer, 0, -1);
@@ -50,18 +89,16 @@ void InterEnemy::Update() {
 	m_InterHP = (int)(m_HP);
 
 	////敵のマスを取得する
-	if (m_EnemyTag == "Normal") {
-	}
-	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight,m_Alive);
+	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight, m_Alive);
 
 	if (m_HP != 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
 			_drawnumber[i]->Update();
 		}
-	}
-	else {
+
+	} else {
 		if (m_EnemyTag != "Bomb") {
-			m_Alive = false;
+			//m_Alive = false;
 		}
 	}
 
@@ -88,6 +125,9 @@ void InterEnemy::Update() {
 			_healnumber.erase(cbegin(_healnumber) + i);
 		}
 	}
+	HealDamageEffect();
+	SuperPoisonEffect();
+	RegeneUpdate();
 	//だめーじ関係
 	DamageUpdate();
 	//数値化したHP
@@ -109,6 +149,44 @@ void InterEnemy::AwakeUpdate() {
 
 	Obj_SetParam();
 }
+void InterEnemy::HealDamageEffect() {
+	if (!m_HealDamage) { return; }
+	if (Helper::FrameCheck(m_HealFrame, 1 / 30.f)) {
+		m_HealDamage = false;
+		m_HealFrame = 0.f;
+	} else {
+		XMFLOAT3 scale = {
+			Ease(Out,Back,m_HealFrame,0.f,0.5f),
+			Ease(Out,Back,m_HealFrame,0.f,0.5f),
+			Ease(Out,Back,m_HealFrame,0.f,0.5f)
+		};
+		float alpha = Ease(In, Quint, m_HealFrame, 1.f, 0.f);
+		float posY = Ease(Out, Cubic, m_HealFrame, 0.5f, 2.5f);
+		healdamage_tex->SetScale(scale);
+		healdamage_tex->SetColor(XMFLOAT4{ 1.f,1.f,1.f,alpha });
+		healdamage_tex->SetPosition({ m_Position.x,posY,m_Position.z });
+		healdamage_tex->Update();
+	}
+}
+void InterEnemy::SuperPoisonEffect() {
+	if (!m_SuperPoison) { return; }
+	if (Helper::FrameCheck(m_poisonFrame, 1 / 30.f)) {
+		m_SuperPoison = false;
+		m_poisonFrame = 0.f;
+	} else {
+		XMFLOAT3 scale = {
+			Ease(Out,Back,m_poisonFrame,0.f,0.5f),
+			Ease(Out,Back,m_poisonFrame,0.f,0.5f),
+			Ease(Out,Back,m_poisonFrame,0.f,0.5f)
+		};
+		float alpha = Ease(In, Quint, m_poisonFrame, 1.f, 0.f);
+		float posY = Ease(Out, Cubic, m_poisonFrame, 0.5f, 2.5f);
+		poison_tex->SetScale(scale);
+		poison_tex->SetColor(XMFLOAT4{ 1.f,0.5f,1.f,alpha });
+		poison_tex->SetPosition({ m_Position.x,posY,m_Position.z });
+		poison_tex->Update();
+	}
+}
 //描画
 void InterEnemy::Draw(DirectXCommon* dxCommon) {
 }
@@ -126,7 +204,7 @@ void InterEnemy::ImGuiDraw() {
 void InterEnemy::UIDraw() {
 	//if (!GameStateManager::GetInstance()->GetGameStart() && m_EnemyTag != "Mob") { return; }
 	IKESprite::PreDraw();
-	if (m_Alive) {
+	if (m_HP != 0.0f) {
 		//HPバー
 		hptex->Draw();
 		//HP(数字)
@@ -149,6 +227,19 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
+	if (m_Poison) {
+		poisonState->Draw();
+		//敵のポイズンテキスト
+		if (m_PoisonToken >= 0) {
+			_drawPoisonnumber[FIRST_DIGHT]->Draw();
+		}
+		if (m_PoisonToken >= 10) {
+			_drawPoisonnumber[SECOND_DIGHT]->Draw();
+		}
+		if (m_PoisonToken >= 100) {
+			_drawPoisonnumber[THIRD_DIGHT]->Draw();
+		}
+	}
 	IKESprite::PostDraw();
 }
 //当たり判定
@@ -160,32 +251,88 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) &&
 			!_area->GetHit() && _area->GetName() == "Player") {
 			float damage = _area->GetDamage();
-			if (_charaState == STATE_ATTACK && !GameStateManager::GetInstance()->GetCounter()) {
-				GameStateManager::GetInstance()->SetCounter(true);
-				damage *= 1.5f;
-			}
-			if (GameStateManager::GetInstance()->GetBuff()) {
-				damage *= 2.0f;
-			}
-			if (GameStateManager::GetInstance()->GetIsFivePower()) {
-				damage *= 1.2f;
+			//固定ダメージか否か
+			if (!_area->GetIsFixed()) {
+				if (_charaState == STATE_ATTACK &&
+					!GameStateManager::GetInstance()->GetCounter()) {
+					GameStateManager::GetInstance()->SetCounter(true);
+					damage *= 1.5f;
+				}
+				if (GameStateManager::GetInstance()->GetBuff()) {
+					damage *= 2.0f;
+				}
+				if (GameStateManager::GetInstance()->GetIsFivePower()) {
+					damage *= 1.2f;
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::FIVE_POWER);
+				}
+				if (GameStateManager::GetInstance()->GetExtendKnight()) {
+					damage *= 1.25f;
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::EXTEND_KNIGHT);
+				}
+
+				if (GameStateManager::GetInstance()->GetTakenDamageUp()) {
+					float up = (float)GameStateManager::GetInstance()->GetTakenDamageNum() * 0.5f;
+					if (up >= 1.0f) {
+						damage += up;
+						GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::TAKENDAMAGEUP);
+					}
+				}
+			} else {
+				if (_charaState == STATE_ATTACK &&
+					!GameStateManager::GetInstance()->GetCounter()) {
+					GameStateManager::GetInstance()->SetCounter(true);
+				}
+
 			}
 			m_Damege = true;
 			m_DamageTimer = {};
+			Helper::Clamp(damage, 0.0f, 999.0f);
 			m_HP -= damage;
 			GameStateManager::GetInstance()->DamageCheck((int)damage);
 			BirthDamage(damage);
 			std::string name = _area->GetStateName();
 
 			if (name == "DRAIN") {
-				float rate = 0.2f;
-				if (m_IsDrainUp) { rate *= 2.f; }
+				float rate = 0.5f;
+				if (m_IsDrainUp) {
+					rate += 0.2f;
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::DRAIN_HEALUP);
+				}
 				player->HealPlayer(damage * rate);		//HP回復
-			}
-			else if (name == "POISON") {
+			} else if (name == "POISON") {
 				m_Poison = true;
+				if (!m_IsVenom) {
+					m_PoisonToken += _area->GetPoisonToken();
+				} else {
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POISON_DAMAGEUP);
+					m_SuperPoison = true;
+					m_PoisonToken += _area->GetPoisonToken() * 2;
+				}
+			} else if (name == "VENOM") {
+				if (m_Poison) {
+					m_PoisonToken *= 3;
+				}
+			}
+
+			if (GameStateManager::GetInstance()->GetAttackedPoison()) {
+				GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::ATTACK_POISON);
+				m_Poison = true;
+				m_PoisonToken += 1;
 			}
 			BirthParticle();
+
+			Camera* camera = Helper::GetCamera();
+			m_MatView = camera->GetViewMatrix();
+			m_MatProjection = camera->GetProjectionMatrix();
+			m_MatPort = camera->GetViewPort();
+			//HPバー
+			XMVECTOR tex2DPos = { m_Position.x, m_Position.y, m_Position.z };
+			tex2DPos = Helper::PosDivi(tex2DPos, m_MatView, false);
+			tex2DPos = Helper::PosDivi(tex2DPos, m_MatProjection, true);
+			tex2DPos = Helper::WDivision(tex2DPos, false);
+			tex2DPos = Helper::PosDivi(tex2DPos, m_MatPort, false);
+
+			GameStateManager::GetInstance()->DamageEffectInit({ tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] });
 			_area->SetHit(true);
 			//チュートリアル専用
 			if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
@@ -196,19 +343,40 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 }
 void InterEnemy::SimpleDamege(float damage) {
 	if (m_HP <= 0.0f) { return; }
-	m_HP -= damage;
+	float hp = m_HP;
+	hp -= damage;
+	if (hp < 1.0f) {
+		damage -= 1.0f;
+	}
+	Helper::Clamp(hp, 1.0f, m_HP);
+	m_HP = hp;
+	BirthDamage(damage);
 	BirthParticle();
 }
 
-void InterEnemy::SimpleHeal(float heal)
-{
+void InterEnemy::SimpleHeal(float heal) {
 	if (m_HP <= 0.0f) { return; }
-	m_HP += heal;
-	BirthHealParticle();
-	BirthHealNumber(heal);
+
+	float l_HealNum = {};
+
+	if (m_HP != m_MaxHP) {
+		BirthHealParticle();
+
+		if (m_MaxHP - m_HP >= heal) {
+			l_HealNum = heal;
+		} else {
+			l_HealNum = m_MaxHP - m_HP;
+		}
+		BirthHealNumber(l_HealNum);
+		m_HP += heal;
+	}
 }
 
+void InterEnemy::SimplePosion(int poison) {
+	m_Poison = true;
+	m_PoisonToken += poison;
 
+}
 //パーティクル(ダメージ)
 void InterEnemy::BirthParticle() {
 	const XMFLOAT4 s_color = { 1.0f,0.3f,0.0f,1.0f };
@@ -217,13 +385,12 @@ void InterEnemy::BirthParticle() {
 	const float e_scale = 0.0f;
 	int l_Life = {};
 	float l_Divi = {};
-	
+
 	//最後の敵かどうかでパーティクルが変わる
-	if(m_LastEnemy && m_HP <= 0.1f) {
+	if (m_LastEnemy && m_HP <= 0.1f) {
 		l_Life = 500;
 		l_Divi = 20.0f;
-	}
-	else {
+	} else {
 		l_Life = 50;
 		l_Divi = 8.0f;
 	}
@@ -244,19 +411,17 @@ void InterEnemy::BirthPoisonParticle() {
 	if (!m_LastEnemy) {
 		l_Life = 50;
 		l_Divi = 3.0f;
-	}
-	else {
+	} else {
 		if (m_HP == 0.0f) {
 			l_Life = 500;
 			l_Divi = 20.0f;
-		}
-		else {
+		} else {
 			l_Life = 50;
 			l_Divi = 8.0f;
 		}
 	}
 	for (int i = 0; i < 3; i++) {
-		ParticleEmitter::GetInstance()->PoisonEffect(l_Life, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color,0.02f,l_Divi);
+		ParticleEmitter::GetInstance()->PoisonEffect(l_Life, { m_Position.x,m_Position.y + 1.0f,m_Position.z }, s_scale, e_scale, s_color, e_color, 0.02f, l_Divi);
 	}
 }
 
@@ -273,13 +438,11 @@ void InterEnemy::BirthHealParticle() {
 	if (!m_LastEnemy) {
 		l_Life = 50;
 		l_Divi = 5.0f;
-	}
-	else {
+	} else {
 		if (m_HP == 0.0f) {
 			l_Life = 500;
 			l_Divi = 20.0f;
-		}
-		else {
+		} else {
 			l_Life = 50;
 			l_Divi = 8.0f;
 		}
@@ -311,9 +474,9 @@ void InterEnemy::WorldDivision() {
 	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 
 	//描画する数字と座標をここでセットする
-	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.55f, m_Position.y, m_Position.z - 0.55f });
-	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 0.2f, m_Position.y, m_Position.z - 0.55f });
-	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.15f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.35f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.35f, m_Position.y, m_Position.z - 0.55f });
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i]->GetCameraData();
 		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
@@ -324,31 +487,69 @@ void InterEnemy::HPManage() {
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		m_DigitNumber[i] = Helper::getDigits(m_InterHP, i, i);
 	}
+
+	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
+		m_PoisonTokenNum[i] = Helper::getDigits(m_PoisonToken, i, i);
+	}
+
+	//描画する数字と座標をここでセットする
+	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
+		_drawPoisonnumber[i]->GetCameraData();
+		_drawPoisonnumber[i]->SetNumber(m_PoisonTokenNum[i]);
+		_drawPoisonnumber[i]->Update();
+	}
+	if (m_Poison) {
+		if (m_PoisonToken >= 100) {
+			_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 2.0f, m_Position.y, m_Position.z - 0.55f });
+			_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
+			_drawPoisonnumber[THIRD_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+			XMFLOAT2 pos = _drawPoisonnumber[THIRD_DIGHT]->GetPosition();
+			poisonState->SetPosition({ pos.x - 35.f,pos.y });
+		} else if (m_PoisonToken >= 10) {
+			_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.65f, m_Position.y, m_Position.z - 0.55f });
+			_drawPoisonnumber[SECOND_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+			XMFLOAT2 pos = _drawPoisonnumber[SECOND_DIGHT]->GetPosition();
+			poisonState->SetPosition({ pos.x - 35.f,pos.y });
+		} else {
+			_drawPoisonnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 1.3f, m_Position.y, m_Position.z - 0.55f });
+			XMFLOAT2 pos = _drawPoisonnumber[FIRST_DIGHT]->GetPosition();
+			poisonState->SetPosition({ pos.x - 35.f,pos.y });
+		}
+	}
 }
 
 //毒
 void InterEnemy::PoisonState() {
-	float damage = {};
 	if (!m_Poison) { return; }
-	int kTimerMax = 800;
-	if (m_PoisonLong) { kTimerMax *= 2; }
-	m_PoisonTimer++;
-
-	if (m_PoisonTimer % 80 == 0) {	//一定フレームで1ずつ減らす
-		if (!m_IsVenom) {
-			damage = 1.0f;
-			m_HP -= damage;
-		} else {
-			damage = 2.0f;
-			m_HP -= damage;
-		}
-		BirthDamage(damage);
-		BirthPoisonParticle();
-	}
-
-	if (m_PoisonTimer == kTimerMax) {	//一定時間立ったら毒終了
+	if (m_PoisonToken <= 0) {
 		m_Poison = false;
-		m_PoisonTimer = {};
+		m_PoisonToken = 0;
+		m_PoisonTimer = 0;
+	}
+	//毒ヒット時タイマーリセットするか
+	//仕様変更必要
+	//新毒仕様
+	m_PoisonTimer++;
+	if (m_PoisonTimer % m_PoisonTimerMax == 0) {	//一定フレームで1ずつ減らす
+		m_HP -= m_PoisonToken;
+		BirthDamage((float)m_PoisonToken);
+		BirthPoisonParticle();
+		if (m_PoisonLong) {
+			//GameStateManager::GetInstance()->SetPassiveActive();
+			m_PoisonToken /= 4;
+		} else {
+			if (m_PoisonToken % 2 == 0) {
+				m_PoisonToken /= 2;
+			} else {
+				if (m_PoisonToken != 1) {
+					m_PoisonToken++;
+					m_PoisonToken /= 2;
+				} else {
+					m_PoisonToken /= 2;
+				}
+			}
+		}
+		m_PoisonTimer = 0;
 	}
 }
 //ダメージテキスト
@@ -363,7 +564,22 @@ void InterEnemy::BirthDamage(const float Damage) {
 		_newnumber->Initialize();
 		_newnumber->SetNumber(l_InterDamage);
 		_damagenumber.push_back(std::move(_newnumber));
-	}
+	} else if(l_InterDamage >= 10 && l_InterDamage < 100) {
+		int l_DightDamage[DAMAGE_MAX - 1];
+		for (auto i = 0; i < DAMAGE_MAX - 1; i++) {
+			l_DightDamage[i] = Helper::getDigits(l_InterDamage, i, i);
+			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
+			} else {
+				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_damagenumber.push_back(std::move(_newnumber));
+		}
+	} 
 	else {
 		int l_DightDamage[DAMAGE_MAX];
 		for (auto i = 0; i < DAMAGE_MAX; i++) {
@@ -371,10 +587,13 @@ void InterEnemy::BirthDamage(const float Damage) {
 			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
 			_newnumber->GetCameraData();
 			if (i == 0) {
-				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
+				_newnumber->SetExplain({ m_Position.x + 0.6f, m_Position.y, m_Position.z + 1.0f });
+			}
+			else if (i == 1) {
+				_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
 			}
 			else {
-				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+				_newnumber->SetExplain({ m_Position.x - 0.6f, m_Position.y, m_Position.z + 1.0f });
 			}
 			_newnumber->Initialize();
 			_newnumber->SetNumber(l_DightDamage[i]);
@@ -385,12 +604,52 @@ void InterEnemy::BirthDamage(const float Damage) {
 void InterEnemy::BirthHealNumber(const float heal) {
 	int l_InterHeal = {};//int変換したダメージ
 	l_InterHeal = (int)heal;
-	unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
-	_newnumber->GetCameraData();
-	_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
-	_newnumber->Initialize();
-	_newnumber->SetNumber(l_InterHeal);
-	_healnumber.push_back(std::move(_newnumber));
+	if (l_InterHeal < 10) {
+
+		unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+		_newnumber->GetCameraData();
+		_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
+		_newnumber->Initialize();
+		_newnumber->SetNumber(l_InterHeal);
+		_healnumber.push_back(std::move(_newnumber));
+	}
+	else if (l_InterHeal >= 10 && l_InterHeal < 100) {
+		int l_DightDamage[HEAL_MAX - 1];
+		for (auto i = 0; i < HEAL_MAX - 1; i++) {
+			l_DightDamage[i] = Helper::getDigits(l_InterHeal, i, i);
+			unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			else {
+				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_healnumber.push_back(std::move(_newnumber));
+		}
+	}
+	else {
+		int l_DightDamage[HEAL_MAX];
+		for (auto i = 0; i < HEAL_MAX; i++) {
+			l_DightDamage[i] = Helper::getDigits(l_InterHeal, i, i);
+			unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
+			_newnumber->GetCameraData();
+			if (i == 0) {
+				_newnumber->SetExplain({ m_Position.x + 0.6f, m_Position.y, m_Position.z + 1.0f });
+			}
+			else if (i == 1) {
+				_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
+			}
+			else {
+				_newnumber->SetExplain({ m_Position.x - 0.6f, m_Position.y, m_Position.z + 1.0f });
+			}
+			_newnumber->Initialize();
+			_newnumber->SetNumber(l_DightDamage[i]);
+			_healnumber.push_back(std::move(_newnumber));
+		}
+	}
 }
 //ダメージ関係
 void InterEnemy::DamageUpdate() {
@@ -409,8 +668,43 @@ void InterEnemy::DamageUpdate() {
 
 	if (m_FlashCount % 2 != 0) {
 		m_Color.w = 1.0f;
+	} else {
+		m_Color.w = 0.0f;
+	}
+}
+
+//死んだときの動き
+void InterEnemy::DeathUpdate() {
+	if (m_HP != 0.0f) { return; }
+
+	const float l_AddFrame = 0.05f;
+	float RotPower = 5.0f;
+	m_Color.w = 1.0f;
+
+	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
+		m_OverFrame = 1.0f;
+		m_Alive = false;
+	} else {
+		RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);
+		m_Rotation.y += RotPower;
+		m_Position.y = Ease(In, Cubic, m_OverFrame, m_Position.y, 0.5f);
+
+		m_Scale = { Ease(In,Cubic,m_OverFrame,m_Scale.x,0.0f),
+			Ease(In,Cubic,m_OverFrame,m_Scale.y,0.0f),
+		Ease(In,Cubic,m_OverFrame,m_Scale.z,0.0f) };
+	}
+
+	Obj_SetParam();
+}
+//リジュネ回復
+void InterEnemy::RegeneUpdate() {
+	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
+		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
+			SimpleHeal(10.0f);
+			m_HealTimer = {};
+		}
 	}
 	else {
-		m_Color.w = 0.0f;
+		m_HealTimer = {};
 	}
 }

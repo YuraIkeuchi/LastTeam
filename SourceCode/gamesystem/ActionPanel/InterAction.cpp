@@ -31,14 +31,14 @@ void InterAction::ImGuiDraw() {
 //プレイヤーとパネルの当たり判定
 void InterAction::Collide()
 {
-	if (m_Delete) { return; }
+	if (_state == STATE_VANISH || m_Delete) { return; }
 	if (Collision::CircleCollision(
 		m_Position.x, m_Position.z, m_Radius, 
 		player->GetPosition().x,
 		player->GetPosition().z, m_Radius)){
 
 		//プレイヤーの行動数を増やしパネルを戻す
-		GameStateManager::GetInstance()->AddSkill(m_SkillType,m_SkillID,m_Damage,m_Delay,m_Area,m_DistanceX,m_DistanceY,StateName);
+		GameStateManager::GetInstance()->AddSkill(m_SkillType,m_SkillID,m_Damage,m_Delay,m_Area,m_Timer,m_DistanceX,m_DistanceY,StateName,m_PoisonToken);
 		StagePanel::GetInstance()->DeletePanel();
 		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
 			TutorialTask::GetInstance()->SetTutorialState(TASK_ATTACK);
@@ -80,8 +80,8 @@ void InterAction::Alive() {
 
 void InterAction::Vanish() {
 
-	float Psca = Ease(In,Quad, m_VanishFrame,0.15f,0.f);
-	float sca = Ease(In, Quad, m_VanishFrame, 0.3f, 0.f);
+	float Psca = Ease(Out,Cubic, m_VanishFrame,0.15f,0.f);
+	float sca = Ease(Out, Cubic, m_VanishFrame, 0.3f, 0.f);
 	
 	m_Position.y = Ease(In, Quad, m_VanishFrame, 0.0f, -3.0f);
 	m_PannelScale = { Psca,Psca,Psca };
@@ -92,6 +92,7 @@ void InterAction::Vanish() {
 	m_Pannel->SetScale(m_PannelScale);
 	m_Pannel->Update();
 	if (Helper::FrameCheck(m_VanishFrame, 1 / kVanishMax)) {
+		m_Discard = true;
 		m_Delete = true;
 		m_VanishFrame = 0;
 	}
@@ -101,12 +102,12 @@ void InterAction::Vanish() {
 void InterAction::GetSkillData() {
 	SkillManager::GetInstance()->GetSkillType(m_SkillType);
 	if (m_SkillType == (int)SkillType::damege) {
-		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area, m_DistanceX, m_DistanceY, StateName);
+		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area,m_Timer, m_DistanceX, m_DistanceY, StateName,m_PoisonToken);
 	}
 	else if (m_SkillType == (int)SkillType::buff) {
 		SkillManager::GetInstance()->GetSpecialSkillDate(m_Delay,StateName);
 	} else if (m_SkillType == (int)SkillType::specialDamage) {
-		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area, m_DistanceX, m_DistanceY, StateName);
+		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area,m_Timer, m_DistanceX, m_DistanceY, StateName,m_PoisonToken);
 
 	}
 }

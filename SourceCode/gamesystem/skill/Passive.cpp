@@ -12,7 +12,7 @@ Passive::~Passive() {
 }
 
 void Passive::Initialize() {
-	icon = IKESprite::Create(ImageManager::PASSIVE_01 + spriteNum, pos);
+	icon = IKESprite::Create(ImageManager::PASSIVE_00 + spriteNum, pos);
 	icon->SetSize(size);
 
 }
@@ -61,7 +61,7 @@ bool Passive::CreatePassive(int id) {
 	string directory = "Resources/csv/chara/player/passive/Passive";
 
 	std::stringstream ss;
-	if (id > 10) {
+	if (id >= 10) {
 		ss << directory << id << ".csv";
 	} else {
 		ss << directory << "0" << id << ".csv";

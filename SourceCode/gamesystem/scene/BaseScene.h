@@ -93,6 +93,8 @@ public:
 	static bool s_GameLoop;
 	//ラストステージかどうか
 	static bool s_LastStage;
+	//コンティニューしたかどうか
+	static bool s_Countinue;
 
 	//マップの位置
 	static int nowIndex;

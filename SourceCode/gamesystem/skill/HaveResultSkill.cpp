@@ -5,6 +5,7 @@
 #include <Easing.h>
 #include <SkillManager.h>
 #include <Audio.h>
+#include <GameStateManager.h>
 HaveResultSkill::HaveResultSkill() {
 
 }
@@ -20,24 +21,17 @@ void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetSize({ 128.0f,128.0f });
-	selectFrame->SetPosition({ 640.0f,250.0f });
+	m_SelectPos = { 640.0f,250.0f };
+	selectFrame->SetPosition(m_SelectPos);
 }
 
 void HaveResultSkill::Update() {
-	for (HaveUI& resultUI : haveSkills) {
-		if (resultUI.isSkill) {
-			resultUI.DamageNumber[0]->Update();
-			if (resultUI.Damage >= 10) {
-				resultUI.DamageNumber[1]->Update();
-			}
-		}
-	}
-	
 	for (HaveUI& PassiveUI : havePassive) {
 	}
 
 	//動き
 	Move();
+	DeleteMove();
 }
 
 void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
@@ -48,14 +42,6 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 	selectFrame->Draw();
 	for (HaveUI& resultUI : haveSkills) {
 		resultUI.icon->Draw();
-		if (resultUI.isSkill) {
-			if (resultUI.Damage != 0) {			//攻撃力が0なら描画しない
-				resultUI.DamageNumber[0]->Draw();
-			}
-			if (resultUI.Damage >= 10) {		//二桁め
-				resultUI.DamageNumber[1]->Draw();
-			}
-		}
 	}
 	
 	for (HaveUI& PassiveUI : havePassive) {
@@ -80,8 +66,11 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 }
 void HaveResultSkill::ImGuiDraw() {
 	ImGui::Begin("Have");
-	ImGui::Text("ID:%d", haveSkills[m_SelectCount].ID);
-	ImGui::Text("ID:%d", haveSkills[m_SelectCount].Damage);
+	ImGui::Text("PosX:%f", haveSkills[haveSkills.size() - 1].position.x);
+	ImGui::Text("SelectPos:%f",m_AddPosX);
+	ImGui::Text("AfterPos:%f", m_AfterAddPosX);
+	ImGui::Text("SelectCount:%d", m_SelectCount);
+	ImGui::Text("Size:%d", (int)haveSkills.size());
 	ImGui::End();
 }
 
@@ -114,25 +103,6 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 	haveSkills[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	haveSkills[num].icon->SetPosition(haveSkills[num].position);
 	haveSkills[num].icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
-	//ダメージ数によって描画する桁数が違う
-	if (haveSkills[num].Damage < 10) {
-		haveSkills[num].DamageNumber[0] = make_unique<DrawNumber>(0.4f);
-		haveSkills[num].DamageNumber[0]->Initialize();
-		haveSkills[num].DamageNumber[0]->SetNumber(haveSkills[num].Damage);
-		haveSkills[num].DamageNumber[0]->SetPosition({ haveSkills[num].position.x - 10.0f, haveSkills[num].position.y});
-	}
-	else {
-		int l_DightDamage[S_DAMAGEMAX];
-		for (auto i = 0; i < S_DAMAGEMAX; i++) {
-			haveSkills[num].DamageNumber[i] = make_unique<DrawNumber>(0.4f);
-			haveSkills[num].DamageNumber[i]->Initialize();
-			l_DightDamage[i] = Helper::getDigits(haveSkills[num].Damage, i, i);
-			haveSkills[num].DamageNumber[i]->SetNumber(l_DightDamage[i]);
-		}
-
-		haveSkills[num].DamageNumber[0]->SetPosition({ haveSkills[num].position.x + 10.0f, haveSkills[num].position.y});
-		haveSkills[num].DamageNumber[1]->SetPosition({ haveSkills[num].position.x - 10.0f, haveSkills[num].position.y});
-	}
 	haveSkills[num].text_ = make_unique<TextManager>();
 	haveSkills[num].text_->Initialize(dxCommon);
 	haveSkills[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
@@ -147,7 +117,7 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCommon* dxCommon) {
 	XMFLOAT2 l_BasePos = { 640.0f,250.0f };
 	havePassive[num].position = { l_BasePos.x + ((num + (int)haveSkills.size()) * 150.0f),l_BasePos.y };
-	havePassive[num].icon = IKESprite::Create(ImageManager::PASSIVE_01 + havePassive[num].ID, {0.0f,0.0f});
+	havePassive[num].icon = IKESprite::Create(ImageManager::PASSIVE_00 + havePassive[num].ID, {0.0f,0.0f});
 	havePassive[num].icon->SetSize({ 64.0f,64.0f });
 	havePassive[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	havePassive[num].icon->SetPosition(havePassive[num].position);
@@ -155,8 +125,8 @@ void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCom
 	havePassive[num].text_->Initialize(dxCommon);
 	havePassive[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
 	havePassive[num].baseSentence[0] = L"パッシブ：";
-	havePassive[num].baseSentence[1] = havePassive[num].text_->GetPasiveSentence(havePassive[num].ID);
-	havePassive[num].baseSentence[2] = L"";
+	havePassive[num].baseSentence[1] = havePassive[num].text_->GetPassiveName(havePassive[num].ID);
+	havePassive[num].baseSentence[2] = havePassive[num].text_->GetPasiveSentence(havePassive[num].ID);
 	havePassive[num].text_->SetCreateSentence(havePassive[num].baseSentence[0], havePassive[num].baseSentence[1], havePassive[num].baseSentence[2]);
 }
 //移動
@@ -173,25 +143,24 @@ void HaveResultSkill::Move() {
 		else {
 			m_AddPosX = Ease(InOut, Circ, frame, m_AddPosX, 150.0f * m_SelectCount);
 		}
-
 		for (auto i = 0; i < haveSkills.size(); i++) {
 			haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
-			haveSkills[i].DamageNumber[0]->SetPosition({ (haveSkills[i].position.x + 10.0f) - m_AddPosX,haveSkills[i].position.y});
-			if (haveSkills[i].Damage >= 10) {
-				haveSkills[i].DamageNumber[1]->SetPosition({ (haveSkills[i].position.x - 10.0f) - m_AddPosX,haveSkills[i].position.y});
-			}
 		}
+
 		for (auto i = 0; i < havePassive.size(); i++) {
 			havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
 		}
 	}
 
 	if (input->TiltPushStick(input->L_LEFT) ||
-		input->TiltPushStick(input->L_RIGHT)||
-		input->PushButton(input->LEFT)||
+		input->TiltPushStick(input->L_RIGHT) ||
+		input->TriggerKey(DIK_A) ||
+		input->TriggerKey(DIK_D) ||
+		input->PushButton(input->LEFT) ||
 		input->PushButton(input->RIGHT)) {
 		if (m_isMove) { return; }
-		if (input->TiltPushStick(input->L_RIGHT)||
+		if (input->TiltPushStick(input->L_RIGHT) ||
+			input->TriggerKey(DIK_D) ||
 			input->PushButton(input->RIGHT)) {
 			if (m_SelectCount == ((int)(haveSkills.size()) + (int)(havePassive.size())) - 1) { return; }
 			m_SelectCount++;
@@ -203,10 +172,24 @@ void HaveResultSkill::Move() {
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		m_isMove = true;
 	}
+
+	//持ってるスキルの削除
+	if (m_SelectCount < (int)(haveSkills.size())) {
+		if (input->TriggerButton(input->X) && haveSkills.size() != 1) {
+			haveSkills.erase(cbegin(haveSkills) + m_SelectCount);
+			GameStateManager::GetInstance()->DeleteDeck(m_SelectCount);
+			for (int i = 0; i < haveSkills.size(); i++) {
+				SetDeleteAfter(i);
+			}
+			for (int i = 0; i < havePassive.size(); i++) {
+				SetPassiveDeleteAfter(i);
+			}
+			m_DeleteMove = true;
+		}
+	}
 }
 //エリアの生成
 void HaveResultSkill::BirthArea(const int Area) {
-	
 	for (auto i = 0; i < haveSkills[Area].area.size(); i++) {
 		for (auto j = 0; j < haveSkills[Area].area.size(); j++) {		
 			if (haveSkills[Area].area[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
@@ -215,6 +198,59 @@ void HaveResultSkill::BirthArea(const int Area) {
 				newarea->SetDistance(haveSkills[Area].DisX, haveSkills[Area].DisY);
 				newarea->Initialize();
 				haveSkills[Area].resultarea.push_back(std::move(newarea));
+			}
+		}
+	}
+}
+//デリート後のイージング後のポジション
+void HaveResultSkill::SetDeleteAfter(const int num) {
+	XMFLOAT2 l_BasePos = { 640.0f,250.0f };
+	haveSkills[num].afterpos.x = { l_BasePos.x + (num * 150.0f) };
+	
+	if(havePassive.size () == 0){
+		if (m_SelectCount == haveSkills.size()) {
+			m_AfterAddPosX = (m_SelectCount - 1) * 150.0f;
+			m_AddPosX = (m_SelectCount) * 150.0f;
+		}
+	}
+}
+void HaveResultSkill::SetPassiveDeleteAfter(const int num) {
+	XMFLOAT2 l_BasePos = { 640.0f,250.0f };
+	if (havePassive.size() != 0) {
+		havePassive[num].afterpos.x = { l_BasePos.x + ((num + (int)haveSkills.size()) * 150.0f) };
+	}
+}
+//削除されたときの動き
+void HaveResultSkill::DeleteMove() {
+	if (!m_DeleteMove) { return; }
+	
+	static float frame = 0.f;
+	static float addFrame = 1.f / 15.f;
+
+	if (Helper::FrameCheck(frame, addFrame)) {
+		if (m_SelectCount == haveSkills.size() && havePassive.size() == 0) {
+			m_SelectCount--;
+		}
+		m_DeleteMove = false;
+		frame = 0.f;
+	}
+	//イージングで動かす
+	for (auto i = 0; i < haveSkills.size(); i++) {
+		haveSkills[i].position.x = Ease(In, Cubic, frame, haveSkills[i].position.x, haveSkills[i].afterpos.x);
+		haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
+	}
+
+	if (havePassive.size() != 0) {
+		for (auto i = 0; i < havePassive.size(); i++) {
+			havePassive[i].position.x = Ease(In, Cubic, frame, havePassive[i].position.x, havePassive[i].afterpos.x);
+			havePassive[i].icon->SetPosition({ havePassive[i].position.x - m_AddPosX,havePassive[i].position.y });
+		}
+	}
+	else {
+		if (m_SelectCount == haveSkills.size()) {
+			m_AddPosX = Ease(In, Cubic, frame, m_AddPosX, m_AfterAddPosX);
+			for (auto i = 0; i < haveSkills.size(); i++) {
+				haveSkills[i].icon->SetPosition({ haveSkills[i].position.x - m_AddPosX,haveSkills[i].position.y });
 			}
 		}
 	}

@@ -30,10 +30,6 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	//ワード追加
 	CreateWord(NONE, L"");
 	CreateWord(TITLE, L"Bボタン:ゲーム");
-	CreateWord(MAP_01, L"始めようここから！");
-	CreateWord(MAP_BATTLE, L"バトルカードいっぱい！");
-	CreateWord(MAP_PASSIVE, L"パッシブが欲しいあなたへ！");
-	CreateWord(MAP_BOSS, L"手強そうだ！");
 	CreateWord(TUTORIAL_START, L"ここでは戦い方を教える", L"まずはパッドかスティックで移動してみろ");
 	CreateWord(TUTORIAL_GET, L"ステージに何か出てきたぞ、取ってみろ");
 	CreateWord(TUTORIAL_EXPLAIN, L"下にカードが出ただろう", L"そのカードに応じてプレイヤーは動ける");
@@ -45,37 +41,65 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateWord(TUTORIAL_END, L"手に入れたスキルを駆使して",L"敵を倒そう!");
 	CreateWord(RESULT, L"スキル効果");
 
+	CreatePassiveName(L"なまえ：ランナーズハイ");
 	CreatePassiveSentence(L"リロードが早くなるぞ");
-	CreatePassiveSentence(L"全回復、体力増加");
+	CreatePassiveName(L"なまえ：アドレナリンソウル");
+	CreatePassiveSentence(L"体力増加、少し回復");
+	CreatePassiveName(L"なまえ：パラドックススキル");
 	CreatePassiveSentence(L"リロードしても消えないぞ");
-	CreatePassiveSentence(L"毒の時間が長いぞ");
-	CreatePassiveSentence(L"毒の威力が上がるぞ");
-	CreatePassiveSentence(L"ドレイン威力が上がるぞ");
-	CreatePassiveSentence(L"リロードしたら攻撃だ");
-	CreatePassiveSentence(L"5の倍すうで威力アップ");
+	CreatePassiveName(L"なまえ：エンドレス・ポイズン");
+	CreatePassiveSentence(L"毒の時間が長くなるぞ");
+	CreatePassiveName(L"なまえ：ポイズン・クリティカル");
+	CreatePassiveSentence(L"毒のカウントふよりつが2倍");
+	CreatePassiveName(L"なまえ：アテナシステム");
+	CreatePassiveSentence(L"回復りょうが少し上がるぞ");
+	CreatePassiveName(L"なまえ：オートマティックアサシン");
+	CreatePassiveSentence(L"リロードしたらたまに攻撃だ");
+	CreatePassiveName(L"なまえ：テイク・ファイブ");
+	CreatePassiveSentence(L"5の倍数で威力アップ");
+	CreatePassiveName(L"なまえ：ガーディアンフォース");
+	CreatePassiveSentence(L"ダメージをうけるたび、威力+0.5");
+	CreatePassiveName(L"なまえ：ポイズン・ビトレイヤー");
+	CreatePassiveSentence(L"スキルがあたると毒を１ふよ");
+	CreatePassiveName(L"なまえ：ヒーリング・バロール");
+	CreatePassiveSentence(L"回復するたびに5ダメージ");
+	CreatePassiveName(L"なまえ：エクステンド・ナイト");
+	CreatePassiveSentence(L"最ゼンマスにいると、威力アップ");
+	CreatePassiveName(L"なまえ：エクステンド・ルーク");
+	CreatePassiveSentence(L"ダメージをうけると毒をふよ");
+	CreatePassiveName(L"なまえ：エクステンド・クイーン");
+	CreatePassiveSentence(L"ディレイじかんおおはばたんしゅく");
+	CreatePassiveName(L"なまえ：エクステンド・ビショップ");
+	CreatePassiveSentence(L"ダメージをうけると回復");
 
 	CreateSkillSentence(L"ドドドな近距離攻撃");
-	CreateSkillDamage(L"威力:15");
+	CreateSkillDamage(L"威力:75（大）");
 	CreateSkillSentence(L"ドゴンな近中距離攻撃");
-	CreateSkillDamage(L"威力:8");
+	CreateSkillDamage(L"威力:40（中）");
 	CreateSkillSentence(L"バコン!な一列攻撃");
-	CreateSkillDamage(L"威力:5");
+	CreateSkillDamage(L"威力:25（小）");
 	CreateSkillSentence(L"ザクッな近距離攻撃");
-	CreateSkillDamage(L"威力:5");
+	CreateSkillDamage(L"威力:25（小）");
 	CreateSkillSentence(L"少し強い近中距離攻撃");
-	CreateSkillDamage(L"威力:10");
+	CreateSkillDamage(L"威力:50（中）");
 	CreateSkillSentence(L"少し強い中遠距離攻撃");
-	CreateSkillDamage(L"威力:10");
+	CreateSkillDamage(L"威力:50（中）");
 	CreateSkillSentence(L"ドドドな遠距離攻撃");
-	CreateSkillDamage(L"威力:15");
+	CreateSkillDamage(L"威力:75（大）");
 	CreateSkillSentence(L"イヤーナ毒攻撃だ");
-	CreateSkillDamage(L"威力:3");
+	CreateSkillDamage(L"威力:15（小）毒：8ふよ");
 	CreateSkillSentence(L"回復できる攻撃だ");
-	CreateSkillDamage(L"威力:9");
+	CreateSkillDamage(L"威力:50（中）");
 	CreateSkillSentence(L"次の攻撃を強く!");
-	CreateSkillDamage(L"威力:次のスキル2倍");
-	CreateSkillSentence(L"ドゴンの威力もういっかい");
-	CreateSkillDamage(L"威力:バトル中のさいだい威力");
+	CreateSkillDamage(L"威力:0(次のスキル2倍)");
+	CreateSkillSentence(L"最大の火力を再現！");
+	CreateSkillDamage(L"威力:バトル中の最大威力(固定)");
+	CreateSkillSentence(L"勝負には運も不可欠!");
+	CreateSkillDamage(L"回復!or自傷・・・ 威力:10");
+	CreateSkillSentence(L"自機や敵全てに回復を!");
+	CreateSkillDamage(L"回復床設置 威力:20");
+	CreateSkillSentence(L"中毒はしらぬまに");
+	CreateSkillDamage(L"威力:10(もってる毒を3倍)");
 
 	//ラスボス
 	//コンヴァージョン初期化
@@ -248,6 +272,10 @@ void TextManager::CreateCon(Conversation con, Word word)
 
 void TextManager::CreatePassiveSentence(wchar_t* tex1) {
 	passiveSentence.emplace_back(tex1);
+}
+
+void TextManager::CreatePassiveName(wchar_t* tex1) {
+	passiveName.emplace_back(tex1);
 }
 
 void TextManager::CreateSkillSentence(wchar_t* tex1) {

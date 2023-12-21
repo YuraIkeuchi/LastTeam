@@ -7,7 +7,7 @@
 #include "PredictArea.h"
 using namespace std;         //  名前空間指定
 
-//攻撃エリアクラス
+//毒エリアクラス
 class PoisonArea : public ObjCommon{
 protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;

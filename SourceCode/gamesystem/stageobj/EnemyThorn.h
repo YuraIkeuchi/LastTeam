@@ -6,7 +6,7 @@
 
 using namespace std;         //  名前空間指定
 
-//攻撃エリアクラス
+//トゲクラス
 class EnemyThorn :
 public ObjCommon{
 protected:

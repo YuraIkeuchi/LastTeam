@@ -24,10 +24,6 @@ public:
 	{
 		NONE = 0,
 		TITLE,
-		MAP_01,
-		MAP_BATTLE,
-		MAP_PASSIVE,
-		MAP_BOSS,
 		TUTORIAL_START,
 		TUTORIAL_GET,
 		TUTORIAL_EXPLAIN,
@@ -41,17 +37,6 @@ public:
 		RESULT,
 		EXTRA,
 	};
-	enum Passive{
-		RELOAD_UP,
-		HP_UP,
-		RELOAD_LOCK,
-		POIZON_GAUGEUP,
-		POIZON_DAMAGEUP,
-		SKILL_RECYCLE,
-		RELOAD_DAMAGE,
-		MAX_ABILITY
-	};
-
 
 	enum PosType {
 		FIRST_POS = 0,
@@ -86,6 +71,8 @@ public:
 	void SetCreateSentence(wchar_t* tex1, wchar_t* tex2 = L" ", wchar_t* tex3 = L" ");
 
 	wchar_t* GetPasiveSentence(int ID) { return passiveSentence[ID]; };
+	wchar_t* GetPassiveName(int ID) { return passiveName[ID]; };
+
 	wchar_t* GetSkillSentence(int ID) { return skillSentence[ID]; };
 	wchar_t* GetSkillDamage(int ID) { return skillDamage[ID]; };
 
@@ -99,6 +86,7 @@ private:
 	void CreateCon(Conversation con, Word word);
 
 	void CreatePassiveSentence(wchar_t* tex1);
+	void CreatePassiveName(wchar_t* tex1);
 
 	void CreateSkillSentence(wchar_t* tex1);
 	void CreateSkillDamage(wchar_t* tex1);
@@ -107,6 +95,7 @@ private:
 	std::map<TextManager::Name, Word> wordlist_;
 
 	std::vector<wchar_t*> passiveSentence;
+	std::vector<wchar_t*> passiveName;
 	std::vector<wchar_t*> skillSentence;
 	std::vector<wchar_t*> skillDamage;
 

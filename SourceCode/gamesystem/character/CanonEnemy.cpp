@@ -11,23 +11,13 @@
 
 //モデル読み込み
 CanonEnemy::CanonEnemy() {
-	m_Object.reset(new IKEObject3d());
-	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::CANNON));
-	m_Object->SetLightEffect(false);
+
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::CANNON));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
-	//HPII
-	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
-	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
-
-	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
-		_drawnumber[i]->Initialize();
-	}
 
 	//shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	//shadow_tex->TextureCreate();
@@ -119,6 +109,8 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
+	if (m_SuperPoison) { poison_tex->Draw(); }
+
 	IKETexture::PostDraw();
 	//敵の弾
 	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
@@ -162,7 +154,7 @@ void CanonEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 	const float l_AddFrame = 1 / 30.0f;
-	
+
 	//弾の生成関係
 	if (_CanonType == CANON_SET) {
 		if (coolTimer == 101) {		//ここで撃つ方向を決める
@@ -170,18 +162,15 @@ void CanonEnemy::Attack() {
 			//敵が端にいた場合反射によって回転が変に見えるから指定する
 			if (m_NowHeight == 0 && m_ShotDir == 2) {
 				m_ShotDir = 1;
-			}
-			else if (m_NowHeight == 3 && m_ShotDir == 1) {
+			} else if (m_NowHeight == 3 && m_ShotDir == 1) {
 				m_ShotDir = 2;
 			}
 			//弾を撃つ方向で向きが変わる
 			if (m_ShotDir == 0) {
 				m_AfterRotY = 270.0f;
-			}
-			else if (m_ShotDir == 1) {
+			} else if (m_ShotDir == 1) {
 				m_AfterRotY = 315.0f;
-			}
-			else {
+			} else {
 				m_AfterRotY = 225.0f;
 			}
 		}
@@ -194,18 +183,15 @@ void CanonEnemy::Attack() {
 
 			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
 		}
-	}
-	else if (_CanonType == CANON_THROW) {
+	} else if (_CanonType == CANON_THROW) {
 		m_AttackCount++;
 		BirthBullet();
 		if (m_AttackCount != m_BulletNum) {
 			_CanonType = CANON_SET;
-		}
-		else {
+		} else {
 			_CanonType = CANON_END;
 		}
-	}
-	else {
+	} else {
 		m_CheckPanel = true;
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
@@ -221,7 +207,7 @@ void CanonEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL];
-	
+
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
@@ -232,15 +218,13 @@ void CanonEnemy::Teleport() {
 }
 //弾の生成
 void CanonEnemy::BirthBullet() {
-		//障害物の発生
-		EnemyBullet* newbullet;
-		newbullet = new EnemyBullet();
-		newbullet->Initialize();
-		newbullet->SetPlayer(player);
-		newbullet->SetShotDir(m_ShotDir);
-		newbullet->SetPolterType(TYPE_FOLLOW);
-		newbullet->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
-		bullets.emplace_back(newbullet);
+	//弾の発生
+	unique_ptr<EnemyBullet> newbullet = make_unique<EnemyBullet>();
+	newbullet->Initialize();
+	newbullet->SetPlayer(player);
+	newbullet->SetShotDir(m_ShotDir);
+	newbullet->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+	bullets.emplace_back(std::move(newbullet));
 }
 //魔法陣生成
 void CanonEnemy::BirthMagic() {
@@ -249,7 +233,7 @@ void CanonEnemy::BirthMagic() {
 	const int l_TargetTimer = 20;
 	if (magic.State == MAGIC_BIRTH) {			//魔法陣を広げる
 		magic.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
-		
+
 		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			if (Helper::CheckMin(magic.Timer, l_TargetTimer, 1)) {
 				m_Warp = true;
@@ -260,8 +244,7 @@ void CanonEnemy::BirthMagic() {
 			}
 		}
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
-	}
-	else {			//魔法陣を縮める
+	} else {			//魔法陣を縮める
 		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
@@ -287,8 +270,7 @@ void CanonEnemy::WarpEnemy() {
 			StagePanel::GetInstance()->EnemyHitReset();
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
-	}
-	else {			//キャラが大きくなっている
+	} else {			//キャラが大きくなっている
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;

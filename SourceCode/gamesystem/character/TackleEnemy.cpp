@@ -10,23 +10,13 @@
 #include <StagePanel.h>
 //モデル読み込み
 TackleEnemy::TackleEnemy() {
-	m_Object.reset(new IKEObject3d());
-	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::SQUID));
-	m_Object->SetLightEffect(false);
+	//共通の初期化処理
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SQUID));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
-	//HPII
-	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
-	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
-
-	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
-		_drawnumber[i]->Initialize();
-	}
 
 	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();
@@ -97,6 +87,8 @@ void TackleEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
+	if (m_SuperPoison) {poison_tex->Draw();}
+	if (m_HealDamage) { healdamage_tex->Draw(); }
 	IKETexture::PostDraw();
 	if (m_Color.w != 0.0f)
 	Obj_Draw();

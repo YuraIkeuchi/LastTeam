@@ -148,7 +148,7 @@ private: // 静的メンバ変数
 	static ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 private:
 	UINT texNumber = 0;
-	bool ClipF;
+	bool ClipF=false;
 	float CenterPos;
 private: // 静的メンバ関数
 	/// デスクリプタヒープの初期化
@@ -178,7 +178,6 @@ public: // メンバ関数
 	void AffineUpdate();
 	//行列の更新
 	void UpdateWorldMatrix();
-
 	/// 描画
 	void Draw();
 	void Draw2(DirectXCommon* dxcomn);
@@ -250,7 +249,7 @@ private: // メンバ変数
 	// ローカル座標
 	XMFLOAT3 position = { 0, 0, 0 };
 	// ローカルワールド変換行列
-	XMMATRIX matWorld;
+	XMMATRIX matWorld = {};
 	// ビルボード
 	bool isBillboard = false;
 

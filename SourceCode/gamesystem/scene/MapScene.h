@@ -96,7 +96,7 @@ private:
 
 	unique_ptr<Onomatope> onomatope = nullptr;
 
-	static array<array<int, 3>, 10> mapKinds;
+	static array<array<int, 3>, 15> mapKinds;
 	unique_ptr<IKESprite> screen = nullptr;
 	unique_ptr<IKESprite> startButton = nullptr;
 	unique_ptr<IKESprite> cheack= nullptr;
@@ -105,12 +105,14 @@ private:
 	XMFLOAT2 cheackSize = {};
 	unique_ptr<IKESprite> cheack_OK[2] = {};
 	unique_ptr<IKESprite> cheack_NO[2] = {};
+	unique_ptr<IKESprite> comment[4] = {};
+	int nowComment = 0;
 	int nowCheack = 0;
 	float cFrame = 0;
 	float cAdd = 0.03f;
 
 	static bool isStart;
-	float startAlpha = 0.f;
+	float startAlpha =  XM_PI / 2.f;
 	unique_ptr<IKESprite> frame = nullptr;
 	unique_ptr<IKESprite> chara = nullptr;
 
@@ -120,7 +122,7 @@ private:
 
 	float delayFrame = 0.f;
 	array<array<UI, INDEX>, 20> UIs;
-	float homeY[INDEX] = { 110.f,360.f,610.f };
+	float homeY[INDEX] = { 160.f,360.f,560.f };
 	float homeX = 360.f;
 	float interbal = 300.f;
 
@@ -139,7 +141,7 @@ private:
 	int oldPickInd = pickIndex;
 
 	XMFLOAT2 scroll = { 0,0 };
-
+	float oldScroll = 0.f;
 	std::vector<unique_ptr<IKESprite>> roads;
 	std::vector<XMFLOAT2> roadsPos;
 

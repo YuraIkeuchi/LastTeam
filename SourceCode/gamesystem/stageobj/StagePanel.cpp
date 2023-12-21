@@ -42,6 +42,8 @@ bool StagePanel::Initialize(const float PosY) {
 			panels[i][j].type = NO_PANEL;
 			panels[i][j].isHit = false;
 			panels[i][j].isPoison = false;
+			panels[i][j].isClose = false;
+			panels[i][j].isHeal = false;
 			panels[i][j].PoisonTimer = {};
 			panels[i][j].Frame = {};
 			panels[i][j].TargetTimer = (i * 5) + (j * 40);
@@ -66,12 +68,18 @@ void StagePanel::Update() {
 	for (auto i = 0; i < actions.size(); i++) {
 		if (actions[i] == nullptr)continue;
 		actions[i]->Update();
-		if (actions[i]->GetAlive() && actions[i]->GetDelete()) {
+		if (actions[i]->GetAlive() &&
+			actions[i]->GetDelete()) {
+			if(actions[i]->GetDiscard()){
+			GameStateManager::GetInstance()->GetDiscardSkill(actions[i]->GetSkillID());
+			}
 			m_ActionCount--;
 			actions[i]->SetAlive(false);
 		}
 	}
-
+	auto result = std::remove_if(actions.begin(), actions.end(),
+		[](unique_ptr<InterAction>& act) { return act->GetDelete(); });
+	actions.erase(result, actions.end());
 	if (m_ActionCount == 0) {
 		m_AllDelete = true;
 	}
@@ -140,6 +148,14 @@ void StagePanel::ImGuiDraw() {
 		if (actions[i] == nullptr)continue;
 		actions[i]->ImGuiDraw();
 	}
+
+	ImGui::Begin("Panel");
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isClose);
+		}
+	}
+	ImGui::End();
 }
 //オノマトペの描画
 void StagePanel::OnomatoDraw() {
@@ -185,6 +201,12 @@ void StagePanel::DeletePanel() {
 		}
 	}
 }
+bool StagePanel::AllCleanCheack() {
+	if (actions.size()>0) {
+		return false;
+	}
+	return true;
+}
 //パネルをセットする
 void StagePanel::RandomPanel(int num) {
 	
@@ -217,7 +239,7 @@ void StagePanel::RandomPanel(int num) {
 		//パネル探索（開いてるのが3追加の場合書いてない）
 
 		while (!isSet) {
-			if (panels[width][height].type != NO_PANEL ||
+			if (panels[width][height].type != NO_PANEL || panels[width][height].isEnemyHit ||
 				(width == p_width && height == p_height)) {
 				width = Helper::GetRanNum(0, 3);
 				height = Helper::GetRanNum(0, 3);
@@ -292,7 +314,26 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& width, int& height, bool m_A
 			}
 		}
 	}
-
+}
+void StagePanel::ClosePanel(IKEObject3d* obj, bool Alive) {
+	m_OBB1.SetParam_Pos(obj->GetPosition());
+	m_OBB1.SetParam_Rot(obj->GetMatrot());
+	m_OBB1.SetParam_Scl(obj->GetScale());
+	for (int i = 0; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			m_OBB2.SetParam_Pos(panels[i][j].position);
+			m_OBB2.SetParam_Rot(panels[i][j].object->GetMatrot());
+			m_OBB2.SetParam_Scl({ 0.5f,1.0f,0.5f });
+			if ((Collision::OBBCollision(m_OBB1, m_OBB2))) {
+				if (Alive) {
+					panels[i][j].isClose = true;
+				}
+				else {
+					panels[i][j].isClose = false;
+				}
+			}
+		}
+	}
 }
 //敵の弾とパネルの当たり判定
 void StagePanel::SetPanelSearch(IKEObject3d* obj, int& width, int& height) {
@@ -371,6 +412,9 @@ XMFLOAT3 StagePanel::EnemySetPanel(const bool LastEnemy) {
 	}
 
 	return SetPositon(width, height);
+}
+XMFLOAT3 StagePanel::FrontPlayerSetPanel() {
+	return SetPositon(player->GetNowWidth() + 1, player->GetNowHeight());		//プレイヤーの正面
 }
 void StagePanel::PoisonSetPanel(int& width, int& height) {
 	bool isSet = false;

@@ -42,15 +42,10 @@ bool EnemyBullet::Initialize() {
 	panels.color = { 1.f,1.f,1.f,1.f };
 	return true;
 }
-//状態遷移
-/*CharaStateのState並び順に合わせる*/
-void (EnemyBullet::* EnemyBullet::stateTable[])() = {
-	&EnemyBullet::Throw,//投げる
-};
+
 //更新
 void EnemyBullet::Update() {
-	//状態移行(charastateに合わせる)
-	(this->*stateTable[m_PolterType])();
+	Throw();
 	//タイプによって色を一旦変えてる
 	Obj_SetParam();
 
@@ -109,7 +104,7 @@ void EnemyBullet::Throw() {
 			m_ThrowType = THROW_INTER;
 		}
 		
-		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.10f);
+		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.1f);
 	}
 	//狙う方向を決める
 	else if (m_ThrowType == THROW_INTER) {

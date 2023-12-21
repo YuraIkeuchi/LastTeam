@@ -6,7 +6,7 @@
 #include <Input.h>
 #include <array>
 #include "DrawNumber.h"
-#include "ImagePlayer.h"
+#include "DrawHealNumber.h"
 
 using namespace DirectX;
 
@@ -74,7 +74,7 @@ private:
 	void BirthPoisonParticle();
 	//ダメージの更新
 	void DamageUpdate();
-	void BirthImagePlayer();
+	void BirthHealNumber(const float heal);
 public:
 	//getter setter
 	const int GetNowHeight() { return m_NowHeight; }
@@ -86,10 +86,15 @@ public:
 	float GetMaxHp() { return m_MaxHP; }
 	float GetHp() { return m_HP; }
 
-	void SetMaxHp(float maxhp) {
+	void SetHpUper(float maxhp) {
+		float gain_hp = maxhp - m_MaxHP;
 		m_MaxHP = maxhp;
-		m_HP = maxhp;
+		m_HP += gain_hp;
 	}
+
+	void SetHp(float hp) { m_HP = hp; }
+
+	void SetHealingDamage(bool flag) { m_healingDamage = flag; }
 
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 
@@ -104,7 +109,10 @@ public:
 	void AttackMove();
 	//縮小する
 	void ShrinkScale();
-
+	//バウンド
+	void BoundMove();
+	//回復
+	void RegeneUpdate();
 
 private:
 	//三桁表示まで
@@ -113,6 +121,7 @@ private:
 	static const int DIR_MAX = 4;
 
 	static float startHP;
+	static const int HEAL_MAX = 3;
 public:
 	//キャラの状態
 	enum CharaState {
@@ -176,6 +185,7 @@ private:
 		THIRD_DIGHT
 	};
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawnumber;
+	std::vector<unique_ptr<DrawHealNumber>> _healnumber;
 	unique_ptr<IKESprite> slash_;
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _MaxHp;
 
@@ -203,11 +213,9 @@ private:
 		MOVE_DISOLVE,//残像
 	}_MoveType = MOVE_EASE;
 
-	//残像用のプレイヤー
-	std::vector<unique_ptr<ImagePlayer>> imageplayer;
-
 	bool m_FinishGameOver = false;
 
+	bool m_healingDamage = false;
 
 	//攻撃時の動きのための変数
 	float m_BaseScale = {};
@@ -227,4 +235,7 @@ private:
 	float m_AddPower = 0.0f;
 	//重力加速度
 	float m_Gravity = 0.02f;
+
+	bool m_Bound = {};
+	int m_HealTimer = {};
 };

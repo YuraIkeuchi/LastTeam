@@ -2,11 +2,8 @@
 #include "ObjCommon.h"
 #include "IKETexture.h"
 #include "Player.h"
-enum PolterType {
-	TYPE_FOLLOW,
-	TYPE_BOUND,
-};
-//ボスが生む攻撃音符クラス
+
+//敵の攻撃弾クラス
 class EnemyBullet :
 	public ObjCommon {
 protected:
@@ -47,7 +44,6 @@ public:
 	const bool& GetAlive() { return m_Alive; }
 
 	void SetAlive(const bool Alive) { m_Alive = Alive; }
-	void SetPolterType(const int PolterType) { m_PolterType = PolterType; }
 
 	void SetTargetTimer(const int TargetTimer) { m_TargetTimer = TargetTimer; }
 	void SetShotDir(const int ShotDir) { m_ShotDir = ShotDir; }
@@ -68,7 +64,6 @@ private:
 	int m_NowWidth = {};
 	int m_NowHeight = {};
 	bool m_Alive = true;//生存フラグ
-	int m_PolterType = TYPE_FOLLOW;
 
 	int m_TargetTimer = {};//出現時間の目標
 

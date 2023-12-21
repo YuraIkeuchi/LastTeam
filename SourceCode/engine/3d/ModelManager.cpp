@@ -22,6 +22,11 @@ void ModelManager::StartInitialize()
 	LoadModel(SQUID, "squid");
 	LoadModel(MISSILE, "missile");
 	LoadModel(BOMBER, "bomber");
+	LoadModel(THROW, "ThrowEnemy");
+	LoadModel(BOOMERAN, "Boomeran");
+	LoadModel(FRONT, "FrontEnemy");
+	LoadModel(SICKLE, "Sickle");
+	LoadModel(HEAL, "Heal");
 }
 
 //モデル読み込み(非同期処理で読み込むもの)

@@ -1,6 +1,7 @@
 #include "ResultAreaUI.h"
 #include "CsvLoader.h"
 #include "ImageManager.h"
+#include <Helper.h>
 
 //リソース読み込み
 ResultAreaUI::ResultAreaUI() {
@@ -12,6 +13,13 @@ ResultAreaUI::ResultAreaUI() {
 	player_panel = IKESprite::Create(ImageManager::MAP_CHARA, { 0,0 });
 	player_panel->SetAnchorPoint({ 0.5f,0.5f });
 	player_panel->SetSize({ 64.0f,64.0f });
+	for (int i = 0; i < 2;i++) {
+		_DelayTimer[i] = make_unique<DrawNumber>(0.5f);
+		_DelayTimer[i]->Initialize();
+	}
+	_DelayTimer[0]->SetPosition({ 180.0f,360.0f + 135.0f });
+	_DelayTimer[1]->SetPosition({ 155.0f,360.0f + 135.0f });
+
 }
 //初期化
 bool ResultAreaUI::Initialize() {
@@ -26,7 +34,40 @@ bool ResultAreaUI::Initialize() {
 
 //更新処理
 void ResultAreaUI::Update() {
-	
+	for (auto i = 0; i < _DelayTimer.size(); i++) {
+		_DelayTimer[i]->SetNumber(_Delays[i]);
+		_DelayTimer[i]->Update();
+		if (m_Delay <= m_Frame) {
+			_DelayTimer[i]->SetColor({1.f,0.8f,0.f,1.f});
+		} else {
+			_DelayTimer[i]->SetColor({ 1.f,1.f,1.f,1.f });
+		}
+		_Delays[i] = Helper::getDigits(m_Frame, i, i);
+	}
+	if (!isJump) {
+		m_Frame++;
+		if (m_Delay <= m_Frame) {
+			prePos = player_panel->GetPosition();
+			XMFLOAT2 panel = player_panel->GetPosition();
+			panel.y -= 10.f;
+			player_panel->SetPosition(panel);
+			isJump = true;
+		}
+	} else {
+		float y_temp = player_panel->GetPosition().y;
+		XMFLOAT2 panel= player_panel->GetPosition();
+		panel.y += (panel.y - prePos.y) + 1;
+		prePos.y = y_temp;
+		if (495.0f <= panel.y) {
+			if (Helper::FrameCheck(finishDelay,1.f/45.f)) {
+				isJump = false;
+				m_Frame = 0;
+				finishDelay = 0.f;
+			}
+			panel.y = 495.0f;
+		}
+		player_panel->SetPosition(panel);
+	}
 }
 
 //描画
@@ -34,10 +75,34 @@ void ResultAreaUI::Draw() {
 	IKESprite::PreDraw();
 	panels.sprite->Draw();
 	player_panel->Draw();
+	if (m_Frame>=10) {
+		_DelayTimer[1]->Draw();
+	}
+	_DelayTimer[0]->Draw();
 	IKESprite::PostDraw();
 }
 
 //ImGui
 void ResultAreaUI::ImGuiDraw() {
 	
+}
+
+void ResultAreaUI::ResetTimer() {
+	m_Frame = 0;
+	isJump=false;
+	finishDelay = 0.f;
+	XMFLOAT2 panel = player_panel->GetPosition();
+	panel.y = 495.0f;
+	player_panel->SetPosition(panel);
+
+	for (auto i = 0; i < _DelayTimer.size(); i++) {
+		_DelayTimer[i]->SetNumber(_Delays[i]);
+		_DelayTimer[i]->Update();
+		if (m_Delay <= m_Frame) {
+			_DelayTimer[i]->SetColor({ 1.f,0.8f,0.f,1.f });
+		} else {
+			_DelayTimer[i]->SetColor({ 1.f,1.f,1.f,1.f });
+		}
+		_Delays[i] = Helper::getDigits(m_Frame, i, i);
+	}
 }

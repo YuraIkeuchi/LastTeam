@@ -27,9 +27,8 @@ private:
 	void SkipUpdate();
 private:
 	unique_ptr<IKESprite> skipUI = nullptr;
-	unique_ptr<IKESprite> skipUnder = nullptr;
-	unique_ptr<IKESprite> skipBack = nullptr;
-	float scale_skip = 0.7f;
+	float skip_alpha = 0.f;
+	float scale_skip = 0.4f;
 	unique_ptr<EnemyManager> enemyManager = nullptr;
 
 	unique_ptr<IKESprite> ui = nullptr;

@@ -38,19 +38,24 @@ public:
 	//IDÇåüçı
 	int IDSearch(const int BirthNum);
 	void GetSkillType(int& SkillType);
-	void GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, int& DisX, int& DisY,string& name);
+	void GetAttackSkillData(float& damage, int& delay, vector<std::vector<int>>& area, vector<std::vector<int>>& timer, int& DisX, int& DisY,string& name,
+		int& Token);
 	void GetSpecialSkillDate(int& delay,string& name);
 
 	void SetDeckState(const int DeckNum);
 public:
 	const int GetDeckUISize() { return (int)deckui.size(); }
 	const int GetDeckNum() { return m_DeckNum; }
+	const int GetSkillMax() { return m_SKILLMAX; }
+	const int GetDelay(int id) { return m_Delays[id]; }
 	std::vector<SkillBase*>GetSkillBase() { return skill; }
 private:
 	std::vector<unique_ptr<DeckUI>> deckui;
 	std::vector<SkillBase*> skill;
+	std::vector<int> m_Delays = {};
 	int m_DeckNum = {};
 	int m_BirthNow = {};
 	int m_DeckRemain = {};
+	int m_SKILLMAX = 0;
 	std::vector<int> m_DeckDate;
 };

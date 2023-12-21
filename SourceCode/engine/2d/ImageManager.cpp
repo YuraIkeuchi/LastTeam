@@ -11,13 +11,23 @@ void ImageManager::StartLoad2D()
 {
 	IKESprite::LoadTexture(FEED, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(SHINE, L"Resources/2d/effect/shine.png");
+	IKESprite::LoadTexture(PLASHINE, L"Resources/2d/effect/effect3.png");
+	IKESprite::LoadTexture(SHINE_S, L"Resources/2d/effect/effect4.png");
+	IKESprite::LoadTexture(SHINE_L, L"Resources/2d/effect/effect5.png");
+	IKESprite::LoadTexture(SMOKE, L"Resources/2d/effect/smoke.png");
 	IKESprite::LoadTexture(POWERUP, L"Resources/2d/effect/Up.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
+	IKESprite::LoadTexture(POIZONCOVER, L"Resources/2d/objicon/Numbers/PoisonFrame.png");
 	IKESprite::LoadTexture(HPNUMBERUI, L"Resources/2d/objicon/Numbers/Num.png");
+	IKESprite::LoadTexture(POISONNUMBER, L"Resources/2d/objicon/Numbers/Num_Poison.png");
 	IKESprite::LoadTexture(DAMAGENUMBER, L"Resources/2d/objicon/Numbers/Num_Damage.png");
 	IKESprite::LoadTexture(HEALNUMBER, L"Resources/2d/objicon/Numbers/Num_Heal.png");
 	IKESprite::LoadTexture(SLASH, L"Resources/2d/objicon/Numbers/slash.png");
 	IKESprite::LoadTexture(MAPSCREEN, L"Resources/2d/sceneback/mapscreen.png");
+	IKESprite::LoadTexture(MAPCOMMENT00, L"Resources/2d/objicon/Map/Comment_00.png");
+	IKESprite::LoadTexture(MAPCOMMENT01, L"Resources/2d/objicon/Map/Comment_01.png");
+	IKESprite::LoadTexture(MAPCOMMENT02, L"Resources/2d/objicon/Map/Comment_02.png");
+	IKESprite::LoadTexture(MAPCOMMENT03, L"Resources/2d/objicon/Map/Comment_03.png");
 	IKESprite::LoadTexture(MAPSTART, L"Resources/2d/objicon/Map/map_start.png");
 	IKESprite::LoadTexture(MAPROAD, L"Resources/2d/objicon/Map/map_road.png");
 	IKESprite::LoadTexture(MAP_CHARA, L"Resources/2d/objicon/Map/map_chara.png");
@@ -31,14 +41,22 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(MAP_CHEACK_OK, L"Resources/2d/objicon/Map/T_OK.png");
 	IKESprite::LoadTexture(MAP_CHEACK_NO, L"Resources/2d/objicon/Map/T_Cancel.png");
 	IKESprite::LoadTexture(TUTORIAL_SKIPUI, L"Resources/2d/objicon/SKIP.png");
-	IKESprite::LoadTexture(PASSIVE_01, L"Resources/2d/objicon/Passive/Passive_01.png");
-	IKESprite::LoadTexture(PASSIVE_02, L"Resources/2d/objicon/Passive/Passive_02.png");
-	IKESprite::LoadTexture(PASSIVE_03, L"Resources/2d/objicon/Passive/Passive_03.png");
-	IKESprite::LoadTexture(PASSIVE_04, L"Resources/2d/objicon/Passive/Passive_04.png");
-	IKESprite::LoadTexture(PASSIVE_05, L"Resources/2d/objicon/Passive/Passive_05.png");
-	IKESprite::LoadTexture(PASSIVE_06, L"Resources/2d/objicon/Passive/Passive_06.png");
-	IKESprite::LoadTexture(PASSIVE_07, L"Resources/2d/objicon/Passive/Passive_07.png");
-	IKESprite::LoadTexture(PASSIVE_08, L"Resources/2d/objicon/Passive/Passive_08.png");
+	IKESprite::LoadTexture(PASSIVE_ACTIVE, L"Resources/2d/objicon/Passive/Passive_Active.png");
+	IKESprite::LoadTexture(PASSIVE_00, L"Resources/2d/objicon/Passive/Passive_00.png");
+	IKESprite::LoadTexture(PASSIVE_01, L"Resources/2d/objicon/Passive/PASSIVE_01.png");
+	IKESprite::LoadTexture(PASSIVE_02, L"Resources/2d/objicon/Passive/PASSIVE_02.png");
+	IKESprite::LoadTexture(PASSIVE_03, L"Resources/2d/objicon/Passive/PASSIVE_03.png");
+	IKESprite::LoadTexture(PASSIVE_04, L"Resources/2d/objicon/Passive/PASSIVE_04.png");
+	IKESprite::LoadTexture(PASSIVE_05, L"Resources/2d/objicon/Passive/PASSIVE_05.png");
+	IKESprite::LoadTexture(PASSIVE_06, L"Resources/2d/objicon/Passive/PASSIVE_06.png");
+	IKESprite::LoadTexture(PASSIVE_07, L"Resources/2d/objicon/Passive/PASSIVE_07.png");
+	IKESprite::LoadTexture(PASSIVE_08, L"Resources/2d/objicon/Passive/PASSIVE_08.png");
+	IKESprite::LoadTexture(PASSIVE_09, L"Resources/2d/objicon/Passive/PASSIVE_09.png");
+	IKESprite::LoadTexture(PASSIVE_10, L"Resources/2d/objicon/Passive/PASSIVE_10.png");
+	IKESprite::LoadTexture(PASSIVE_11, L"Resources/2d/objicon/Passive/PASSIVE_11.png");
+	IKESprite::LoadTexture(PASSIVE_12, L"Resources/2d/objicon/Passive/PASSIVE_12.png");
+	IKESprite::LoadTexture(PASSIVE_13, L"Resources/2d/objicon/Passive/PASSIVE_13.png");
+	IKESprite::LoadTexture(PASSIVE_14, L"Resources/2d/objicon/Passive/PASSIVE_14.png");
 	IKESprite::LoadTexture(PASSIVE_FRAME, L"Resources/2d/objicon/Passive_Frame.png");
 	IKESprite::LoadTexture(GAUGE, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(GAUGECOVER, L"Resources/2d/objicon/SkillGauge.png");
@@ -52,6 +70,9 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ONOMATO_03, L"Resources/2d/objicon/Onomatope/03_GAMEOVER.png");
 	IKESprite::LoadTexture(ONOMATO_04, L"Resources/2d/objicon/Onomatope/04_Charged.png");
 	IKESprite::LoadTexture(ONOMATO_05, L"Resources/2d/objicon/Onomatope/05_Counter.png");
+	IKESprite::LoadTexture(ONOMATO_06, L"Resources/2d/objicon/Onomatope/06_Attack02.png");
+	IKESprite::LoadTexture(ONOMATO_07, L"Resources/2d/objicon/Onomatope/07_Attack03.png");
+	IKESprite::LoadTexture(ONOMATO_08, L"Resources/2d/objicon/Onomatope/08_Attack04.png");
 	IKESprite::LoadTexture(RESULTBACKSCREEN, L"Resources/2d/sceneback/ResultSkill_BS.png");
 	IKESprite::LoadTexture(RESULTATTACKAREA, L"Resources/2d/objicon/Areas/AttackArea.png");
 	IKESprite::LoadTexture(RESULTNOWCHECK, L"Resources/2d/objicon/SkillCheackNow.png");
@@ -72,6 +93,9 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ATTACK_8, L"Resources/2d/objicon/AttackSKill/Skill8.png");
 	IKESprite::LoadTexture(ATTACK_9, L"Resources/2d/objicon/AttackSKill/Skill9.png");
 	IKESprite::LoadTexture(ATTACK_10, L"Resources/2d/objicon/AttackSKill/Skill10.png");
+	IKESprite::LoadTexture(ATTACK_11, L"Resources/2d/objicon/AttackSKill/Skill11.png");
+	IKESprite::LoadTexture(ATTACK_12, L"Resources/2d/objicon/AttackSKill/Skill12.png");
+	IKESprite::LoadTexture(ATTACK_13, L"Resources/2d/objicon/AttackSKill/Skill13.png");
 	IKESprite::LoadTexture(TUTORIAL_WINDOW, L"Resources/2d/objicon/Tutorial.png");
 }
 
@@ -91,6 +115,9 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/Areas/DamageArea.png");
 	IKETexture::LoadTexture(PLAYERAREA, L"Resources/2d/objicon/Areas/PlayerAttack.png");
 	IKETexture::LoadTexture(POISONAREA, L"Resources/2d/objicon/Areas/PoizonAttack.png");
+	IKETexture::LoadTexture(HEALAREA, L"Resources/2d/objicon/Areas/HealArea.png");
+	IKETexture::LoadTexture(BUFFAREA, L"Resources/2d/objicon/Areas/Muscle.png");
+	IKETexture::LoadTexture(HATENAAREA, L"Resources/2d/objicon/Areas/hatena.png");
 	IKETexture::LoadTexture(ENEMYPREDICT, L"Resources/2d/objicon/Areas/Predict.png");
 	IKETexture::LoadTexture(PLAYERPREDICT, L"Resources/2d/objicon/Areas/PlayerPredict.png");
 	IKETexture::LoadTexture(ATTACK_TEX_0, L"Resources/2d/objicon/AttackSKill/Skill0.png");
@@ -104,7 +131,12 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(ATTACK_TEX_8, L"Resources/2d/objicon/AttackSKill/Skill8.png");
 	IKETexture::LoadTexture(ATTACK_TEX_9, L"Resources/2d/objicon/AttackSKill/Skill9.png");
 	IKETexture::LoadTexture(ATTACK_TEX_10, L"Resources/2d/objicon/AttackSKill/Skill10.png");
-	IKETexture::LoadTexture(SHOCKWAVE, L"Resources/2d/objicon/ShockWave.png");
+	IKETexture::LoadTexture(ATTACK_TEX_11, L"Resources/2d/objicon/AttackSKill/Skill11.png");
+	IKETexture::LoadTexture(ATTACK_TEX_12, L"Resources/2d/objicon/AttackSKill/Skill12.png");
+	IKETexture::LoadTexture(ATTACK_TEX_13, L"Resources/2d/objicon/AttackSKill/Skill13.png");
+	IKETexture::LoadTexture(BOOM_DIR, L"Resources/2d/effect/Up.png");
+	IKETexture::LoadTexture(POISON_EFFECT, L"Resources/2d/effect/poison.png");
+	IKETexture::LoadTexture(HEAL_DAMAGE, L"Resources/2d/effect/shine2.png");
 }
 
 //非同期処理でのテクスチャの読み込み

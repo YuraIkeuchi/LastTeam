@@ -10,7 +10,7 @@
 #include <StagePanel.h>
 
 
-array<array<int, 3>, 10> MapScene::mapKinds;
+array<array<int, 3>, 15> MapScene::mapKinds;
 bool MapScene::isStart = true;
 void (MapScene::* MapScene::stateTable[])() = {
 	&MapScene::InitState,//
@@ -32,9 +32,14 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	screen->SetSize({ 1280.f,720.f });
 
 	cheack = IKESprite::Create(ImageManager::MAP_CHEACK, { 640.f,360.f });
+	cheack->SetColor({1.2f,1.2f,1.2f,1});
 	cheack->SetSize({ 0.f,0.f });
 	cheack->SetAnchorPoint({ 0.5f,0.5f });
-
+	if (s_Countinue) {		//コンティニューをしていた場合CSVからゲームデータ引き継ぎ(このシーンではマップデータ)
+		GameStateManager::GetInstance()->OpenGameDate();
+		nowHierarchy = GameStateManager::GetInstance()->GetHierarchy();
+		nowIndex = GameStateManager::GetInstance()->GetIndex();
+	}
 	const int NumberCount = 2;
 	const float l_Width_Cut = 320.0f;
 	const float l_Height_Cut = 64.0f;
@@ -53,17 +58,24 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 		cheack_OK[i]->SetSize({ 0.f,0.f });
 		cheack_OK[i]->SetAnchorPoint({ 0.5f,0.5f });
+		cheack_OK[i]->SetColor({ 1.2f,1.2f,1.2f,1 });
 
 		cheack_NO[i]->SetSize({ 0.f,0.f });
 		cheack_NO[i]->SetAnchorPoint({ 0.5f,0.5f });
+		cheack_NO[i]->SetColor({ 1.2f,1.2f,1.2f,1 });
 	}
+	comment[0] = IKESprite::Create(ImageManager::MAPCOMMENT00, { 1260.f-512.f,600.f });
+	comment[1] = IKESprite::Create(ImageManager::MAPCOMMENT01, { 1260.f-512.f,600.f });
+	comment[2] = IKESprite::Create(ImageManager::MAPCOMMENT02, { 1260.f-512.f,600.f });
+	comment[3] = IKESprite::Create(ImageManager::MAPCOMMENT03, { 1260.f-512.f,600.f });
 
+	nowComment = 0;
 
 	UIs[0][Middle].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
 	UIs[0][Middle].pos = { homeX ,homeY[Middle] };
 	UIs[0][Middle].open = true;
 	UIs[0][Middle].hierarchy = 0;
-	UIs[0][Middle].size = { 128.f,128.f };
+	UIs[0][Middle].size = { 186.f,186.f };
 	UIs[0][Middle].sprite->SetAnchorPoint({ 0.5f,0.5f });
 	homeX += interbal;
 
@@ -73,14 +85,17 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		mapKinds[3] = { -1,BATTLE,-1 };
 		mapKinds[4] = { PASSIVE,-1,BATTLE };
 		mapKinds[5] = { -1,BOSS,-1 };
+		mapKinds[6] = { PASSIVE,-1,BATTLE };
+		mapKinds[7] = { PASSIVE,BATTLE,PASSIVE };
+		mapKinds[8] = { BATTLE,-1,PASSIVE };
+		mapKinds[9] = { -1,BOSS,-1 };
+		mapKinds[10] = { PASSIVE,PASSIVE,BATTLE };
+		mapKinds[11] = { PASSIVE,BATTLE,BATTLE };
+		mapKinds[12] = { BATTLE,PASSIVE,PASSIVE };
+		mapKinds[13] = { -1,BOSS,-1 };
 	}
 	MapCreate();
 
-	//テキスト
-	text_ = make_unique<TextManager>();
-	text_->Initialize(dxCommon);
-	text_->SetConversation(TextManager::MAP_01, { -300.0f,-80.0f });
-	//text_->SetConversation(TextManager::TITLE);
 
 	switch (dungeons[0]) {
 	case 1:
@@ -132,7 +147,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 						int next = UIs[i][j].nextIndex[l];
 						XMFLOAT2 pos = {
 						Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.x,UIs[i + 1][next].pos.x),
-						Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y,UIs[i + 1][next].pos.y)
+						Ease(In,Linear,(float)k / 10.0f,UIs[i][j].pos.y+30.f,UIs[i + 1][next].pos.y+30.f)
 						};
 						unique_ptr<IKESprite> road = IKESprite::Create(ImageManager::MAPROAD, pos);
 						road->SetAnchorPoint({ 0.5f,0.5f });
@@ -185,7 +200,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		isStart = true;
 	} else {
 		m_State = State::mainState;
-		scroll.x = -(UIs[nowHierarchy][nowIndex].pos.x / 2.f);
+		scroll.x = -UIs[nowHierarchy][nowIndex].pos.x + 128.f;
 		charaSize = { 128.f,128.f };
 		chara->SetSize(charaSize);
 	}
@@ -196,13 +211,13 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 
 	switch (UIs[pickHierarchy][pickIndex].Tag) {
 	case BATTLE:
-		text_->SetConversation(TextManager::MAP_BATTLE, { -300.0f,-80.0f });
-		break;
-	case BOSS:
-		text_->SetConversation(TextManager::MAP_BOSS, { -300.0f,-80.0f });
+		nowComment = 1;
 		break;
 	case PASSIVE:
-		text_->SetConversation(TextManager::MAP_PASSIVE, { -300.0f,-80.0f });
+		nowComment = 2;
+		break;
+	case BOSS:
+		nowComment = 3;
 		break;
 	default:
 		break;
@@ -211,7 +226,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	oldHierarchy = nowHierarchy;
 	oldIndex = nowIndex;
 
-	charaPos = { UIs[nowHierarchy][nowIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.y };
+	charaPos = { UIs[nowHierarchy][nowIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.y + 30.f};
 	framePos = UIs[pickHierarchy][pickIndex].pos;
 	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
@@ -225,6 +240,11 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	}
 	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
+	}
+
+	GameStateManager::GetInstance()->SetMapData(nowIndex, nowHierarchy);
+	if ((nowHierarchy == 5 || nowHierarchy == 9) && !s_Countinue) {
+		GameStateManager::GetInstance()->SaveGame();
 	}
 }
 
@@ -248,6 +268,19 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	frame->SetSize(size);
 
 	onomatope->Update();
+	switch (UIs[pickHierarchy][pickIndex].Tag) {
+	case BATTLE:
+		nowComment = 1;
+		break;
+	case PASSIVE:
+		nowComment = 2;
+		break;
+	case BOSS:
+		nowComment = 3;
+		break;
+	default:
+		break;
+	}
 	(this->*stateTable[(size_t)m_State])();
 }
 
@@ -297,10 +330,8 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	}
 	onomatope->Draw();
 	IKESprite::PostDraw();
-
-	text_->TestDraw(dxCommon);
-
 	IKESprite::PreDraw();
+	comment[nowComment]->Draw();
 	cheack->Draw();
 	cheack_OK[1 - nowCheack]->Draw();
 	cheack_NO[nowCheack]->Draw();
@@ -361,7 +392,7 @@ MapScene::UI MapScene::TestPannel(int Index, int Hierarchy) {
 		break;
 	}
 
-	itr.size = { 128.f,128.f };
+	itr.size = { 186.f,186.f };
 	itr.sprite->SetAnchorPoint({ 0.5f,0.5f });
 	return itr;
 }
@@ -370,7 +401,7 @@ void MapScene::RoadUpdate() {
 	for (int k = 0; k < 10; k++) {
 		XMFLOAT2 pos = {
 		Ease(In,Linear,(float)k / 10.0f,UIs[nowHierarchy][nowIndex].pos.x,UIs[pickHierarchy][pickIndex].pos.x),
-		Ease(In,Linear,(float)k / 10.0f,UIs[nowHierarchy][nowIndex].pos.y,UIs[pickHierarchy][pickIndex].pos.y)
+		Ease(In,Linear,(float)k / 10.0f,UIs[nowHierarchy][nowIndex].pos.y+30.f,UIs[pickHierarchy][pickIndex].pos.y + 30.f)
 		};
 		starRoadsPos[k] = pos;
 	}
@@ -529,19 +560,20 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	//ImGui::Begin("Map");
+	ImGui::Begin("Map");
 	//ImGui::Text("%f", framePos.x);
 	//ImGui::Text("%f", eFrame);
-	//ImGui::Text("HIERARCHY:%d", UIs[nowHierarchy][nowIndex].hierarchy);
-	//ImGui::Text("PICKHIERARCHY:%d", UIs[pickHierarchy][pickIndex].hierarchy);
+	//ImGui::Text("HIERARCHY:%f", scroll.x);
+	//ImGui::Text("PICKHIERARCHY:%f", -UIs[nowHierarchy][nowIndex].pos.x);
+	//ImGui::Text("PICK:%d", -UIs[nowHierarchy][nowIndex].pos.x);
 	//ImGui::Text("PICKINDEX:%d", pickIndex);
 	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
-	//ImGui::Text("nowindel:%d", nowIndex);
-	//ImGui::Text("nowHie:%d", nowHierarchy);
+	ImGui::Text("nowindel:%d", nowIndex);
+	ImGui::Text("nowHie:%d", nowHierarchy);
 	//for (int i = 0; i < 3; i++) {
 	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
 	//}
-	//ImGui::End();
+	ImGui::End();
 }
 
 void MapScene::BlackOut() {
@@ -569,7 +601,12 @@ void MapScene::BlackOut() {
 void MapScene::Move() {
 	Input* input = Input::GetInstance();
 	if (end) { return; }
-
+	if (input->PushButton(input->RB)) {
+		scroll.x+=10;
+	}
+	if (input->PushButton(input->LB)) {
+		scroll.x-=10;
+	}
 	if ((input->TiltStick(input->L_UP) || input->PushButton(input->UP) ||input->TriggerKey(DIK_W))
 		&& !moved) {
 		if (pickNextIndex == 0) { return; }
@@ -594,6 +631,7 @@ void MapScene::Move() {
 		clearHierarchy++;
 		onomatope->AddOnomato(Foot, { 640.f,360.f });
 		onomatope->AddOnomato(Foot, { 100.f,700.f }, 10.f);
+		oldScroll = scroll.x;
 		moved = true;
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Run.wav", 0.05f);
 	}
@@ -603,20 +641,6 @@ void MapScene::Move() {
 		framePos = UIs[pickHierarchy][pickIndex].pos;
 
 		if (oldPickInd != pickIndex) {
-			wchar_t* sample = L" ふ";
-			switch (UIs[pickHierarchy][pickIndex].Tag) {
-			case BATTLE:
-				text_->SetConversation(TextManager::MAP_BATTLE, { -300.0f,-80.0f });
-				break;
-			case BOSS:
-				text_->SetConversation(TextManager::MAP_BOSS, { -300.0f,-80.0f });
-				break;
-			case PASSIVE:
-				text_->SetConversation(TextManager::MAP_PASSIVE, { -300.0f,-80.0f });
-				break;
-			default:
-				break;
-			}
 			oldPickHis = pickHierarchy;
 			oldPickInd = pickIndex;
 		}
@@ -629,6 +653,7 @@ void MapScene::Move() {
 			mov_frame = 0.0f;
 			oldIndex = nowIndex;
 			oldHierarchy = nowHierarchy;
+			oldScroll = scroll.x;
 			if (nowHierarchy != MaxLength) {
 				pickHierarchy = nowHierarchy + 1;
 				pickNextIndex = 0;
@@ -643,8 +668,8 @@ void MapScene::Move() {
 		}
 
 		charaPos.x = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.x);
-		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y, UIs[nowHierarchy][nowIndex].pos.y);
-		scroll.x = Ease(In, Quad, mov_frame, scroll.x, -UIs[nowHierarchy][nowIndex].pos.x / 2);
+		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y + 30.f, UIs[nowHierarchy][nowIndex].pos.y+30.f);
+		scroll.x = Ease(In, Quad, mov_frame, oldScroll, -UIs[nowHierarchy][nowIndex].pos.x + 128.f);
 	}
 	scroll.x = clamp(scroll.x, -lastScroll, 340.f);
 }
@@ -655,7 +680,7 @@ void MapScene::Finalize() {
 
 void MapScene::InitState() {
 	const float addFrame = 1.0f / 45.f;
-	const float addFrameS = 1.0f / 80.f;
+	const float addFrameS = 1.0f / 180.f;
 	static float scrollFrame = 0.0f;
 	static float s_frame = 0.0f;
 	if (Helper::FrameCheck(scrollFrame, addFrameS)) {
@@ -664,8 +689,8 @@ void MapScene::InitState() {
 			scrollFrame = 0.0f;
 			s_frame = 0.0f;
 		} else {
-			charaSize.x = Ease(In, Elastic, s_frame, 0.f, 128.f);
-			charaSize.y = Ease(In, Linear, s_frame, 0.f, 128.f);
+			charaSize.x = Ease(In, Elastic, s_frame, 0.f, 186.f);
+			charaSize.y = Ease(In, Linear, s_frame, 0.f, 186.f);
 		}
 	} else {
 		scroll.x = Ease(In, Linear, scrollFrame, -lastScroll, 0.f);
@@ -690,7 +715,7 @@ void MapScene::MainState() {
 	Move();
 	RoadUpdate();
 	if (isStart) {
-		startAlpha += 0.05f;
+		startAlpha += 0.02f;
 		startButton->SetColor({1,1,1,abs(sinf(startAlpha))});
 	}
 	for (array<UI, INDEX>& ui : UIs) {
@@ -805,6 +830,9 @@ void MapScene::CheckState() {
 			} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
 				ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
 				isBattle = false;
+			} else if (UIs[nowHierarchy][nowIndex].Tag == BOSS) {
+				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
+				isBattle = true;
 			}
 
 			std::string r_map = ss.str();
