@@ -218,7 +218,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {1,2 };
+	std::vector <int> m_StartPassive= { };
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -233,6 +233,7 @@ private:
 	float passiveAlphaFrame = 0.0f;
 
 	std::unique_ptr<IKESprite> handsFrame;
+	unique_ptr<IKESprite> cancelSkill;
 
 	XMFLOAT2 basesize = { 46.f,400.f };
 
@@ -293,7 +294,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = {0,1,2,3,4,6};
+	vector <int> m_StartNumber = {6,13};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

@@ -129,7 +129,7 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay)
 	}
 	str.basePos = basePos;
 
-	onomatoList.push_back(std::move(str));
+	//onomatoList.push_back(std::move(str));
 }
 
 void Onomatope::FootUpdate(OnomatoStruct& onomato) {
