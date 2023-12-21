@@ -49,6 +49,7 @@ private:
 		vector<std::vector<int>> area;	//”ÍˆÍ
 		int DisX = {};
 		int DisY = {};
+		int Delay = 0;
 		wchar_t* baseSentence[3] = { L"",L"",L""};
 		int Damage = {};
 	};
