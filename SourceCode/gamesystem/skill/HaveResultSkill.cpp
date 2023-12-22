@@ -28,7 +28,11 @@ void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
 void HaveResultSkill::Update() {
 	for (HaveUI& PassiveUI : havePassive) {
 	}
-
+	if (m_SelectCount < (int)(haveSkills.size())) {
+		for (auto i = 0; i < haveSkills[m_SelectCount].resultarea.size(); i++) {
+			haveSkills[m_SelectCount].resultarea[i]->Update();
+		}
+	}
 	//動き
 	Move();
 	DeleteMove();
@@ -103,6 +107,7 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 	haveSkills[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	haveSkills[num].icon->SetPosition(haveSkills[num].position);
 	haveSkills[num].icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
+	haveSkills[num].Delay = SkillManager::GetInstance()->GetDelay(id);
 	haveSkills[num].text_ = make_unique<TextManager>();
 	haveSkills[num].text_->Initialize(dxCommon);
 	haveSkills[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
@@ -169,6 +174,11 @@ void HaveResultSkill::Move() {
 			if (m_SelectCount == 0) { return; }
 			m_SelectCount--;
 		}
+		for (HaveUI& itr : haveSkills) {
+			for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
+				pickAreas->ResetTimer();
+			}
+		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		m_isMove = true;
 	}
@@ -195,6 +205,7 @@ void HaveResultSkill::BirthArea(const int Area) {
 			if (haveSkills[Area].area[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				std::unique_ptr<ResultAreaUI> newarea = std::make_unique<ResultAreaUI>();
 				newarea->SetPanelNumber(i, j);
+				newarea->SetDelay(haveSkills[Area].Delay);
 				newarea->SetDistance(haveSkills[Area].DisX, haveSkills[Area].DisY);
 				newarea->Initialize();
 				haveSkills[Area].resultarea.push_back(std::move(newarea));

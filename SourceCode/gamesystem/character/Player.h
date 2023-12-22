@@ -81,6 +81,8 @@ public:
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetCharaState() { return _charaState; }
 	const bool GetDelay() { return m_Delay; }
+	const bool GetCancel() { return m_Cancel; }
+
 	const bool GetFinishGameOver() { return m_FinishGameOver; }
 
 	float GetMaxHp() { return m_MaxHP; }
@@ -99,6 +101,8 @@ public:
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 
 	void SetDelay(const bool Delay) { m_Delay = Delay; }
+
+	void SetCancel(const bool cancel) { m_Cancel = cancel; }
 
 	void Setname(const string name) { m_name = name; }
 
@@ -190,6 +194,7 @@ private:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _MaxHp;
 
 	bool m_Delay = false;
+	bool m_Cancel = false;
 	string m_name = "NONE";
 
 	//影の変数
