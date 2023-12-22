@@ -18,7 +18,7 @@ protected:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	AttackArea(string& m_Name);
+	AttackArea(string& userName,string& stateName = (string)"None");
 public:
 	//初期化
 	bool Initialize() override;
@@ -31,8 +31,14 @@ public:
 	//ImGui
 	void ImGuiDraw();
 private:
+	static void (AttackArea::* stateTable[])();
+
+private:
+	void SlashMove();
+	void StoneMove();
+	void PoisonMove();
+private:
 	XMFLOAT3 SetPanelPos(const int width, const int height);
-	void Move();
 public:
 	//gettersetter
 	const bool GetHit() { return m_Hit; }
@@ -52,9 +58,14 @@ public:
 	void SetName(const string name) { m_Name = name; }
 	void SetDamage(const float Damage) { m_Damage = Damage; }
 	void SetIsFixed(bool flag) { isFixed = flag; }
-	void SetStateName(const std::string name) { StateName = name; }
 	void SetPoisonToken(const int PoisonToken) { m_PoisonToken = PoisonToken; }
 private:
+
+	enum EffectPattern {
+		Slash,
+		Stone,
+		Poison,
+	}_EffectState = Slash;
 	//パネル
 	struct Panel {
 		unique_ptr<IKETexture> tex = nullptr;
@@ -81,4 +92,11 @@ private:
 	float m_AddPower = 0.0f;
 	//重力加速度
 	float m_Gravity = 0.02f;
+
+	enum ThornState {
+		THORN_UP,
+		THORN_END,
+	}_ThornState = THORN_UP;
+
+	float m_Frame = {};
 };

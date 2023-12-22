@@ -355,7 +355,7 @@ void GameStateManager::BirthArea() {
 					regenearea.emplace_back(std::move(newarea));
 				}
 				else {
-					std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player");
+					std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player",m_Act[0].StateName);
 					newarea->InitState(AreaX, AreaY);
 					newarea->SetDamage(damage);
 					newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
@@ -364,7 +364,6 @@ void GameStateManager::BirthArea() {
 						//固定ダメージ
 						newarea->SetIsFixed(true);
 					}
-					newarea->SetStateName(m_Act[0].StateName);
 					attackarea.emplace_back(std::move(newarea));
 				}
 			}

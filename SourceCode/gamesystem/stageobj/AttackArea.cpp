@@ -4,8 +4,15 @@
 #include <GameStateManager.h>
 #include <Helper.h>
 //“Ç‚Ýž‚Ý
-AttackArea::AttackArea(string& m_Name) {
-	this->m_Name = m_Name;
+AttackArea::AttackArea(string& userName, string& stateName) {
+	this->m_Name = userName;
+	this->StateName = stateName;
+	if (StateName == "POISON" || StateName == "VENOM") {
+		_EffectState = Poison;
+	}
+	else {
+		_EffectState = Stone;
+	}
 	UINT texNum = ImageManager::AREA;
 	if (this->m_Name =="Player") {
 		texNum = ImageManager::PLAYERAREA;
@@ -17,13 +24,25 @@ AttackArea::AttackArea(string& m_Name) {
 	panels.tex->SetScale({ baseScale,baseScale,baseScale });
 	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
-	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BULLET);
+	if (_EffectState != Poison) {
+		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BULLET);
+	}
+	else {
+		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::THORN);
+	}
 	m_Object = make_unique<IKEObject3d>();
 	m_Object->Initialize();
 	m_Object->SetModel(m_Model);
 
 	Initialize();
 }
+//ó‘Ô‘JˆÚ
+/*CharaState‚ÌState•À‚Ñ‡‚É‡‚í‚¹‚é*/
+void (AttackArea::* AttackArea::stateTable[])() = {
+	&AttackArea::SlashMove,//ŽaŒ‚
+	&AttackArea::StoneMove,//Šâ—Ž‚Æ‚µ
+	&AttackArea::PoisonMove,//“ÅŒn
+};
 //‰Šú‰»
 bool AttackArea::Initialize() {
 	return true;
@@ -39,8 +58,14 @@ void AttackArea::InitState(const int width, const int height) {
 	m_Hit = false;
 	m_Timer = false;
 	m_Rotation = { 0.0f,0.0f,0.0f };
-	m_Scale = { 0.2f,0.2f,0.2f };
-	m_Position = { panels.position.x,2.0f,panels.position.z };
+	if (_EffectState != Poison) {
+		m_Scale = { 0.2f,0.2f,0.2f };
+		m_Position = { panels.position.x,2.0f,panels.position.z };
+	}
+	else {
+		m_Scale = { 0.4f,0.25f,0.4f };
+		m_Position = { panels.position.x,-0.5f,panels.position.z };
+	}
 }
 
 //XV
@@ -54,7 +79,8 @@ void AttackArea::Update() {
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor(panels.color);
 	m_BirthTimer++;
-	Move();
+	//ó‘ÔˆÚs(charastate‚É‡‚í‚¹‚é)
+	(this->*stateTable[_EffectState])();
 	Obj_SetParam();
 }
 //•`‰æ
@@ -76,12 +102,40 @@ void AttackArea::ImGuiDraw() {
 XMFLOAT3 AttackArea::SetPanelPos(const int width, const int height) {
 	return StagePanel::GetInstance()->SetPositon(width, height);;
 }
-
-void AttackArea::Move() {
+//ŽaŒ‚Œn
+void AttackArea::SlashMove() {
 	if (m_Timer > m_BirthTimer) { return; }
 	m_AddPower -= m_Gravity;
 	if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
 		m_Alive = false;
 		GameStateManager::GetInstance()->SetBuff(false);
+	}
+}
+//Šâ—Ž‚Æ‚µŒn
+void AttackArea::StoneMove() {
+	if (m_Timer > m_BirthTimer) { return; }
+	m_AddPower -= m_Gravity;
+	if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+		m_Alive = false;
+		GameStateManager::GetInstance()->SetBuff(false);
+	}
+}
+//“ÅŒn
+void AttackArea::PoisonMove() {
+	static float addFrame = 1.f / 10.f;
+	if (m_Timer > m_BirthTimer) { return; }
+	if (_ThornState == THORN_UP) {
+		if (Helper::FrameCheck(m_Frame, addFrame)) {
+			_ThornState = THORN_END;
+			m_Frame = {};
+		}
+		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.4f);
+	}
+	else {
+		if (Helper::FrameCheck(m_Frame, addFrame)) {
+			m_Alive = false;
+			GameStateManager::GetInstance()->SetBuff(false);
+		}
+		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 	}
 }
