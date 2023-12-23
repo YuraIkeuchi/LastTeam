@@ -60,7 +60,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveName(L"なまえ：ガーディアンフォース");
 	CreatePassiveSentence(L"ダメージをうけるたび、威力+0.5");
 	CreatePassiveName(L"なまえ：ポイズン・ビトレイヤー");
-	CreatePassiveSentence(L"スキルがあたると毒を１ふよ");
+	CreatePassiveSentence(L"スキルがあたると毒を１付与");
 	CreatePassiveName(L"なまえ：ヒーリング・バロール");
 	CreatePassiveSentence(L"回復するたびに5ダメージ");
 	CreatePassiveName(L"なまえ：エクステンド・ナイト");

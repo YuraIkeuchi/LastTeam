@@ -137,7 +137,8 @@ void GameStateManager::Update() {
 				for (int i = 0; i < 2; i++) {
 					RandPowerUpInit();
 				}
-				BirthBuff();				SetPassiveActive((int)Passive::ABILITY::COUNTER_BUFF);
+				BirthBuff();
+				SetPassiveActive((int)Passive::ABILITY::COUNTER_BUFF);
 			}
 			onomatope->AddOnomato(Counter, { 640.f,660.f });
 			m_CounterTimer = {};
@@ -342,14 +343,14 @@ void GameStateManager::BirthActUI(const int ID, const int Type) {
 
 //攻撃エリアの生成(無理やり処理)
 void GameStateManager::BirthArea() {
-	int l_BirthBaseX = {};
-	int l_BirthBaseY = {};
+	int l_BirthBaseX = m_NowWidth + m_Act[0].DistanceX;	//生成の初めの位置を見てる
+	int l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
 	int Timer = {};
-	l_BirthBaseX = m_NowWidth + m_Act[0].DistanceX;		//生成の初めの位置を見てる
-	l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
 	int AreaX = {};
 	int AreaY = {};
 	float damage = m_Act[0].ActDamage;
+	//このスキルにバフを載せたか
+	bool isBuffed = false;
 	if (m_Act[0].ActID == 10) {
 		//リフレイン攻撃
 		damage = (float)m_MaxDamage;
@@ -374,11 +375,20 @@ void GameStateManager::BirthArea() {
 					if (m_Act[0].ActID == 10) {
 						//固定ダメージ
 						newarea->SetIsFixed(true);
+					} else {
+						if (m_Buff) {
+							newarea->SetBuff(true);
+							isBuffed = true;
+						}
 					}
 					attackarea.emplace_back(std::move(newarea));
 				}
 			}
 		}
+	}
+	if (isBuffed) {
+		//固定ダメではバフ載らないようにした
+		m_Buff = false;
 	}
 }
 //予測エリア関係
@@ -457,7 +467,10 @@ void GameStateManager::UseSkill() {
 			}
 		} else if (m_Act[0].SkillType == 1) {
 			if (m_Act[0].StateName == "NEXT") {
-
+				for (int i = 0; i < 2; i++) {
+					RandPowerUpInit();
+				}
+				BirthBuff();
 				onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
 			}
 			else if (m_Act[0].StateName == "RANDOM") {
