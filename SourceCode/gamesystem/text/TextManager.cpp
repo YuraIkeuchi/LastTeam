@@ -50,7 +50,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveName(L"なまえ：エンドレス・ポイズン");
 	CreatePassiveSentence(L"毒の時間が長くなるぞ");
 	CreatePassiveName(L"なまえ：ポイズン・クリティカル");
-	CreatePassiveSentence(L"毒のカウントふよりつが2倍");
+	CreatePassiveSentence(L"毒のカウント付与率が2倍");
 	CreatePassiveName(L"なまえ：カウンターブロー");
 	CreatePassiveSentence(L"カウンターしたらバフがつくぞ！");
 	CreatePassiveName(L"なまえ：オートマティックアサシン");
@@ -64,11 +64,11 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveName(L"なまえ：ヒーリング・バロール");
 	CreatePassiveSentence(L"回復するたびに5ダメージ");
 	CreatePassiveName(L"なまえ：エクステンド・ナイト");
-	CreatePassiveSentence(L"最ゼンマスにいると、威力アップ");
+	CreatePassiveSentence(L"最前マスにいると、威力アップ");
 	CreatePassiveName(L"なまえ：エクステンド・ルーク");
-	CreatePassiveSentence(L"ダメージをうけると毒をふよ");
+	CreatePassiveSentence(L"ダメージをうけると毒を付与");
 	CreatePassiveName(L"なまえ：エクステンド・クイーン");
-	CreatePassiveSentence(L"ディレイじかんおおはばたんしゅく");
+	CreatePassiveSentence(L"ディレイ時間大はばたんしゅく");
 	CreatePassiveName(L"なまえ：エクステンド・ビショップ");
 	CreatePassiveSentence(L"ダメージをうけると回復");
 
@@ -87,7 +87,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillSentence(L"ドドドな遠距離攻撃");
 	CreateSkillDamage(L"威力:75（大）");
 	CreateSkillSentence(L"イヤーナ毒攻撃だ");
-	CreateSkillDamage(L"威力:15（小）毒：8ふよ");
+	CreateSkillDamage(L"威力:15（小）毒：8付与");
 	CreateSkillSentence(L"回復できる攻撃だ");
 	CreateSkillDamage(L"威力:50（中）");
 	CreateSkillSentence(L"次の攻撃を強く!");
