@@ -180,10 +180,8 @@ void Player::Update() {
 					OldHpPercent() * m_HPSize.x,
 					m_HPSize.y };
 				hpDiftex->SetSize({
-					Ease(In,Quad,0.2f,size_s.x,size_e.x),
+					Ease(In,Quad,0.4f,size_s.x,size_e.x),
 					m_HPSize.y });
-			} else {
-
 			}
 		}
 		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });

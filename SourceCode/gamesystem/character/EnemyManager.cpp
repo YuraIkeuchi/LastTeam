@@ -124,11 +124,6 @@ void EnemyManager::PoizonVenom() {
 	}
 }
 
-void EnemyManager::DrainHealUp() {
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SetDrainUp(true);
-	}
-}
 
 void EnemyManager::ReLoadDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
