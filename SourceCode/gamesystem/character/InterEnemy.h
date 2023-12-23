@@ -101,7 +101,6 @@ protected:
 	bool m_PoisonLong = false;
 	bool m_IsVenom = false;
 	int m_PoisonToken = 0;
-	bool m_IsDrainUp = false;
 	int m_PoisonTimer = {};
 	bool m_Alive = true;
 	bool m_Death = false;
@@ -145,7 +144,6 @@ public://getter setter
 	
 	void SetPoizonLong(bool isPoison) { m_PoisonLong = isPoison; }
 	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
-	void SetDrainUp(bool IsDrainUp) { m_IsDrainUp = IsDrainUp; }
 	void SetLastEnemy(bool LastEnemy) { m_LastEnemy = LastEnemy; }
 	static void SetPlayer(Player* player) { InterEnemy::player = player; }
 	void SetHealDamage(bool HealDamage) { m_HealDamage = HealDamage; }

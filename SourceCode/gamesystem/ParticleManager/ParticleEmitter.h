@@ -56,6 +56,9 @@ private: //メンバ変数
 	unique_ptr<ParticleManager> poisonParticle;
 	//パーティクルマネージャー(ヒール)
 	unique_ptr<ParticleManager> healParticle;
+	//パーティクルマネージャー(ヒール2)
+	unique_ptr<ParticleManager> healParticleSecond;
+
 private:
 	int m_Timer = 0;
 };

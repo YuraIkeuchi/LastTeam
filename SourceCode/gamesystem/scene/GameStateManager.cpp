@@ -133,6 +133,12 @@ void GameStateManager::Update() {
 
 		if (Helper::CheckMin(m_CounterTimer, 20, 1)) {		//一定フレームでカウンター終了
 			m_Counter = false;
+			if (m_CounterBuff&& !m_Buff) {
+				for (int i = 0; i < 2; i++) {
+					RandPowerUpInit();
+				}
+				BirthBuff();				SetPassiveActive((int)Passive::ABILITY::COUNTER_BUFF);
+			}
 			onomatope->AddOnomato(Counter, { 640.f,660.f });
 			m_CounterTimer = {};
 		}
@@ -451,10 +457,7 @@ void GameStateManager::UseSkill() {
 			}
 		} else if (m_Act[0].SkillType == 1) {
 			if (m_Act[0].StateName == "NEXT") {
-				for (int i = 0; i < 2; i++) {
-					RandPowerUpInit();
-				}
-				BirthBuff();
+
 				onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
 			}
 			else if (m_Act[0].StateName == "RANDOM") {
@@ -564,8 +567,8 @@ void GameStateManager::PassiveCheck() {
 		case Passive::ABILITY::POISON_DAMAGEUP:
 			m_IsVenom = true;
 			break;
-		case Passive::ABILITY::DRAIN_HEALUP:
-			m_IsDrainUp = true;
+		case Passive::ABILITY::COUNTER_BUFF:
+			m_CounterBuff = true;
 			break;
 		case Passive::ABILITY::RELOAD_DAMAGE:
 			m_IsReloadDamage = true;

@@ -294,10 +294,6 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 
 			if (name == "DRAIN") {
 				float rate = 0.5f;
-				if (m_IsDrainUp) {
-					rate += 0.2f;
-					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::DRAIN_HEALUP);
-				}
 				player->HealPlayer(damage * rate);		//HP回復
 			} else if (name == "POISON") {
 				m_Poison = true;

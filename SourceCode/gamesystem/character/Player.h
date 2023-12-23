@@ -54,6 +54,8 @@ private:
 	void BirthParticle();
 	//HPの割合を求める
 	float HpPercent();
+	//HPの割合を求める
+	float OldHpPercent();
 
 public:
 	//プレイヤーの回復
@@ -168,9 +170,12 @@ private:
 
 	//HPの表示
 	unique_ptr<IKESprite> hptex;
+	unique_ptr<IKESprite> hpDiftex;
 	unique_ptr<IKESprite> hptex_under;
 	float m_HP = {};
 	float m_OldHP = m_HP;
+	float hp_frame = 0.f;
+	float hp_wait = 0.f;
 	bool isDamage = false;
 	bool isHeal = false;
 	float m_MaxHP = {};

@@ -140,6 +140,9 @@ public:
 	void SetIsHeal(bool flag) { m_Heal = flag; }
 	bool GetIsHeal() { return m_Heal; }
 
+	void SetCounterBuff(bool flag) { m_CounterBuff = flag; }
+	bool GetCounterBuff() { return m_CounterBuff; }
+
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart;}
 	bool GetGameStart() { return m_GameStart; }
 
@@ -218,7 +221,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= { };
+	std::vector <int> m_StartPassive= { 5 };
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -246,7 +249,7 @@ private:
 	bool m_Counter = false;
 	int m_CounterTimer = {};
 	int m_CounterCount = {};
-
+	bool m_CounterBuff = false;
 	//位置のスコア
 	int m_PosScore = {};
 
@@ -277,7 +280,6 @@ private:
 	bool m_Heal = false;
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
-	bool m_IsDrainUp = false;
 	bool m_FivePower = false;
 	bool m_TakenDamageUp = false;
 	bool m_AttackedPoison = false;
@@ -294,7 +296,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = {6,7,13};
+	vector <int> m_StartNumber = {8,7,13};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

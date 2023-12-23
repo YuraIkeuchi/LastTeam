@@ -39,10 +39,6 @@ public:
 	/// </summary>
 	void PoizonVenom();
 	/// <summary>
-	/// パッシブがあればドレイン上昇(バトルシーン)
-	/// </summary>
-	void DrainHealUp();
-	/// <summary>
 	/// 
 	/// </summary>
 	void ReLoadDamage();

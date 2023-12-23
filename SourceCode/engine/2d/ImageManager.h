@@ -147,6 +147,7 @@ public:
 		Normal,
 		Smoke,
 		Heal,
+		Plus,
 	};
 
 public:
