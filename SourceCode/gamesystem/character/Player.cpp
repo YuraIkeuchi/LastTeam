@@ -515,12 +515,13 @@ void Player::TitleUpdate() {
 }
 //パーティクル(回復)
 void Player::HealParticle() {
+	if (isHeal) { return; }
 	XMFLOAT4 s_color = { 0.5f,1.0f,0.1f,1.0f };
 	XMFLOAT4 e_color = { 0.5f,1.0f,0.1f,1.0f };
 	float s_scale = 1.0f;
-	float e_scale = 0.0f;
-	for (int i = 0; i < 15; i++) {
-		ParticleEmitter::GetInstance()->HealEffect(50, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
+	float e_scale = 0.5f;
+	for (int i = 0; i < 8; i++) {
+		ParticleEmitter::GetInstance()->HealEffect(45, { m_Position.x,m_Position.y,m_Position.z }, s_scale, e_scale, s_color, e_color);
 	}
 }
 //ダメージパーティクル
