@@ -20,7 +20,8 @@ void Player::LoadResource() {
 	//HPII
 	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
 	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
-
+	hpDiftex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	hpDiftex->SetColor({ 1.0f,1.0f,0.5f,1.0f });
 	hptex_under = IKESprite::Create(ImageManager::FEED, { 0.0f,0.0f });
 	hptex_under->SetSize(m_HPSize);
 	for (auto i = 0; i < _drawnumber.size(); i++) {
@@ -170,7 +171,21 @@ void Player::Update() {
 			}
 		}
 		hptex->SetPosition(m_HPPos);
+		hpDiftex->SetPosition(m_HPPos);
 		hptex_under->SetPosition(m_HPPos);
+		if ((!isHeal && !isDamage)) {
+			if (Helper::FrameCheck(hp_wait,1.f/30.f)) {
+				XMFLOAT2 size_s = hpDiftex->GetSize();
+				XMFLOAT2 size_e = {
+					OldHpPercent() * m_HPSize.x,
+					m_HPSize.y };
+				hpDiftex->SetSize({
+					Ease(In,Quad,0.2f,size_s.x,size_e.x),
+					m_HPSize.y });
+			} else {
+
+			}
+		}
 		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 
 		//数字の削除
@@ -217,6 +232,7 @@ void Player::UIDraw() {
 	IKESprite::PreDraw();
 	//HPバー
 	hptex_under->Draw();
+	hpDiftex->Draw();
 	hptex->Draw();
 	if (m_InterHP != 0) {
 		_drawnumber[FIRST_DIGHT]->Draw();
@@ -421,6 +437,11 @@ float Player::HpPercent() {
 	Helper::Clamp(temp, 0.0f, 1.0f);
 	return temp;
 }
+float Player::OldHpPercent() {
+	float temp = m_OldHP / m_MaxHP;
+	Helper::Clamp(temp, 0.0f, 1.0f);
+	return temp;
+}
 //ディレイ処理
 void Player::Delay() {
 
@@ -444,6 +465,9 @@ void Player::HealPlayer(const float power) {
 	}
 	else {
 		l_HealNum = m_MaxHP - m_HP;
+	}
+	if (isHeal || isDamage) {
+		hp_frame = 0.f;
 	}
 	BirthHealNumber(l_HealNum);
 	m_HP += power;
@@ -472,6 +496,9 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	if (m_Delay) {
 		m_Cancel = true;
+	}
+	if (isHeal || isDamage) {
+		hp_frame = 0.f;
 	}
 	m_Delay = false;
 	m_Frame = {};
@@ -545,10 +572,9 @@ void Player::BirthPoisonParticle() {
 }
 bool Player::HPEffect() {
 	if (m_OldHP == m_HP) { return false; }
-	static float frame = 0.f;
 	static float frameMax = 1 / 10.0f;
 	if (isHeal || isDamage) {
-		if (Helper::FrameCheck(frame, frameMax)) {
+		if (Helper::FrameCheck(hp_frame, frameMax)) {
 			XMFLOAT2 size = { 32.f,32.f };
 			_drawnumber[FIRST_DIGHT]->SetSize(size);
 			_drawnumber[SECOND_DIGHT]->SetSize(size);
@@ -557,15 +583,15 @@ bool Player::HPEffect() {
 			_drawnumber[SECOND_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
 			_drawnumber[THIRD_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
 			hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
-			frame = 0.f;
+			hp_frame = 0.f;
 			isHeal = false;
 			isDamage = false;
 			m_OldHP = m_HP;
 			return false;
 		} else {
 			XMFLOAT2 size = {64.f,64.f};
-			size.x=Ease(Out,Quad,frame,64.f,32.f);
-			size.y=Ease(Out,Quad,frame,64.f,32.f);
+			size.x=Ease(Out,Quad, hp_frame,64.f,32.f);
+			size.y=Ease(Out,Quad, hp_frame,64.f,32.f);
 			_drawnumber[FIRST_DIGHT]->SetSize(size);
 			_drawnumber[SECOND_DIGHT] ->SetSize(size);
 			_drawnumber[THIRD_DIGHT]->SetSize(size);
@@ -573,17 +599,20 @@ bool Player::HPEffect() {
 	}
 	if (m_OldHP < m_HP) {
 		isHeal = true;
+		hp_wait = 0.f;
 		hptex->SetColor({ 0.0f,1.0f,0.0f,1.0f });
 		_drawnumber[FIRST_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
 		_drawnumber[SECOND_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
 		_drawnumber[THIRD_DIGHT]->SetColor({ 0.f,1.0f,0.f,1.0f });
 	} else {
 		isDamage = true;
+		hp_wait = 0.f;
 		hptex->SetColor({ 1.0f,0.5f,0.5f,1.0f });
 		_drawnumber[FIRST_DIGHT]->SetColor({ 1.f,0.0f,0.f,1.0f });
 		_drawnumber[SECOND_DIGHT]->SetColor({ 1.f,0.0f,0.f,1.0f });
 		_drawnumber[THIRD_DIGHT]->SetColor({ 1.f,0.0f,0.f,1.0f });
 	}
+
 	return true;
 }
 //プレイヤーの情報をセーブ
