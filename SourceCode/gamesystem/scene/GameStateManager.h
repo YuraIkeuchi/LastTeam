@@ -70,7 +70,7 @@ private:
 	//攻撃エリアの生成
 	void BirthArea();
 	//バフ状況
-	void BirthBuff();
+	void BirthBuff(string& stateName);
 	//行動UIの生成
 	void BirthActUI(const int ID, const int Type);
 	//スキルの使用
@@ -293,7 +293,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = {7,9,13,14};
+	vector <int> m_StartNumber = {6,7,9,13,14};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -318,7 +318,6 @@ private:
 
 	//バフ(一旦一個)
 	bool m_Buff = false;
-	bool m_Shield = false;
 	bool m_Choice = false;
 	enum ResultType {
 		GET_SKILL,

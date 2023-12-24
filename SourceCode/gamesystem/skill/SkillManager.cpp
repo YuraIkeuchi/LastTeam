@@ -32,7 +32,9 @@ void SkillManager::Initialize()
 	//csv読み取り
 	for (int i = 0; i < m_SKILLMAX; i++)
 	{
+
 		CreateSkill(i);
+
 	}
 }
 
