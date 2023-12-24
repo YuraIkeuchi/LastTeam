@@ -42,6 +42,7 @@ private:
 public:
 	//gettersetter
 	const bool GetHit() { return m_Hit; }
+	const bool GetBuff() { return m_Buff; }
 	const bool GetAlive() { return m_Alive; }
 	const bool GetIsFixed() { return isFixed; }
 	const string GetName() { return m_Name; }
@@ -54,6 +55,7 @@ public:
 	const int GetPoisonToken() { return m_PoisonToken; }
 
 	void SetHit(const bool Hit) { m_Hit = Hit; }
+	void SetBuff(const bool Buff) { m_Buff=Buff; }
 	void SetTimer(const int Timer) { m_Timer = Timer; }
 	void SetName(const string name) { m_Name = name; }
 	void SetDamage(const float Damage) { m_Damage = Damage; }
@@ -79,6 +81,7 @@ private:
 	bool m_Alive = false;
 	int m_BirthTimer = 0;
 	int m_Timer = {};
+	bool m_Buff = false;
 	//ÉqÉbÉgÇµÇΩÇ©Ç«Ç§Ç©
 	bool m_Hit = false;
 	//ëºÇÃï‚ê≥ÇÇ©ÇØÇ»Ç¢
