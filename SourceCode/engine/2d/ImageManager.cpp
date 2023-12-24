@@ -74,6 +74,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ONOMATO_06, L"Resources/2d/objicon/Onomatope/06_Attack02.png");
 	IKESprite::LoadTexture(ONOMATO_07, L"Resources/2d/objicon/Onomatope/07_Attack03.png");
 	IKESprite::LoadTexture(ONOMATO_08, L"Resources/2d/objicon/Onomatope/08_Attack04.png");
+	IKESprite::LoadTexture(ONOMATO_09, L"Resources/2d/objicon/Onomatope/09_Diffence.png");
 	IKESprite::LoadTexture(RESULTBACKSCREEN, L"Resources/2d/sceneback/ResultSkill_BS.png");
 	IKESprite::LoadTexture(RESULTATTACKAREA, L"Resources/2d/objicon/Areas/AttackArea.png");
 	IKESprite::LoadTexture(RESULTNOWCHECK, L"Resources/2d/objicon/SkillCheackNow.png");
