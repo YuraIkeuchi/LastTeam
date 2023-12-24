@@ -17,7 +17,7 @@ SkillManager* SkillManager::GetInstance()
 void SkillManager::Initialize()
 {	
 	//ここをいじればGameStateManagerも変わります
-	m_SKILLMAX = 14;
+	m_SKILLMAX = 15;
 	//一旦3に指定(実際はCSVとかになるかな)
 	skill.resize(m_SKILLMAX);
 	m_Delays.resize(m_SKILLMAX);
@@ -28,6 +28,7 @@ void SkillManager::Initialize()
 	//スペシャルスキルはこちらに上書きしてください
 	skill[9] = new SpecialSkill();
 	skill[11] = new SpecialSkill();
+	skill[14] = new SpecialSkill();
 	//csv読み取り
 	for (int i = 0; i < m_SKILLMAX; i++)
 	{
@@ -321,6 +322,7 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 			}
 		}
 	}
+
 }
 
 bool SkillManager::CreateSkill(int id) {
