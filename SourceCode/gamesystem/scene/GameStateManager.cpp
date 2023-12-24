@@ -137,7 +137,7 @@ void GameStateManager::Update() {
 				for (int i = 0; i < 2; i++) {
 					RandPowerUpInit();
 				}
-				BirthBuff();
+				BirthBuff((string)"NEXT");
 				SetPassiveActive((int)Passive::ABILITY::COUNTER_BUFF);
 			}
 			onomatope->AddOnomato(Counter, { 640.f,660.f });
@@ -265,15 +265,9 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	//SkillManager::GetInstance()->ImGuiDraw();
-	/*if (savedata.m_DeckNum != 0) {
-		ImGui::Begin("Deck");
-		for (int i = 0; i < savedata.m_DeckNum; i++) {
-			ImGui::Text("DeckNum[%d]:%d", i, m_DeckNumber[i]);
-			ImGui::Text("OpenDeckNum[%d]:%d", i, savedata.m_OpenDeckNumber[i]);
-		}
-		ImGui::End();
-	}*/
+	ImGui::Begin("Deck");
+	ImGui::Text("Buff:%d", m_Buff);
+	ImGui::End();
 	if (isFinish) {
 		if (_ResultType != GET_SKILL) {
 			haveSkill->ImGuiDraw();
@@ -466,11 +460,12 @@ void GameStateManager::UseSkill() {
 
 			}
 		} else if (m_Act[0].SkillType == 1) {
-			if (m_Act[0].StateName == "NEXT" || m_Act[0].StateName == "SHIELD") {
+			if (m_Act[0].StateName == "NEXT" || m_Act[0].StateName == "SHILED") {
+
 				for (int i = 0; i < 2; i++) {
 					RandPowerUpInit();
 				}
-				BirthBuff();
+				BirthBuff(m_Act[0].StateName);
 				onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
 			}
 			else if (m_Act[0].StateName == "RANDOM") {
@@ -735,8 +730,13 @@ void GameStateManager::StageClearInit() {
 	isFinish = true;
 }
 //バフの生成
-void GameStateManager::BirthBuff() {
-	m_Buff = true;		//一旦中身はこれだけ
+void GameStateManager::BirthBuff(string& stateName) {
+	if (stateName == "NEXT") {
+		m_Buff = true;		//一旦中身はこれだけ
+	}
+	else{
+		player->SetShield(true);
+	}
 }
 void GameStateManager::DeckReset() {
 	m_DeckNumber.resize((int)(m_StartNumber.size()));

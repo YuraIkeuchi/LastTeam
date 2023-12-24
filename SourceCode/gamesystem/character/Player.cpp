@@ -52,6 +52,7 @@ bool Player::Initialize() {
 	LoadCSV();
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	m_AddDisolve = 2.0f;
+	m_Shield = false;
 	//CSV読み込み
 	return true;
 }
@@ -473,18 +474,23 @@ void Player::HealPlayer(const float power) {
 }
 //プレイヤーのダメージ判定
 void Player::RecvDamage(const float Damage, const string& name) {
-	m_HP -= Damage;
-	GameStateManager::GetInstance()->TakenDamageCheck((int)Damage);
+	float l_Damage = Damage;
+	if (m_Shield) {		//シールド時食らうダメージが半分
+		l_Damage = Damage / 2;
+		m_Shield = false;
+	}
+	m_HP -= l_Damage;
+	GameStateManager::GetInstance()->TakenDamageCheck((int)l_Damage);
 	GameStateManager::GetInstance()->MissAttack();
 	//パッシブ効果処理
 	if (GameStateManager::GetInstance()->GetExtendBishop()) {
-		float gain = Damage * 0.1f;
+		float gain = l_Damage * 0.1f;
 		Helper::Clamp(gain, 1.f, m_HP);
 		HealPlayer(gain);
 		GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::EXTEND_BISHOP);
 	}
 	if (GameStateManager::GetInstance()->GetExtendRook()) {
-		float poison = Damage * 0.5f;
+		float poison = l_Damage * 0.5f;
 		Helper::Clamp(poison, 1.f, m_HP);
 		GameStateManager::GetInstance()->AddRookPoison((int)poison);
 		GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::EXTEND_ROOK);
