@@ -227,7 +227,7 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
-	if (m_Poison) {
+	if (m_Poison && m_EnemyTag != "Bomb") {
 		poisonState->Draw();
 		//敵のポイズンテキスト
 		if (m_PoisonToken >= 0) {
