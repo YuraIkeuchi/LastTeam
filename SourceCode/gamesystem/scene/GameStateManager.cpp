@@ -418,7 +418,7 @@ void GameStateManager::PredictManager() {
 		}
 	}
 	else if (m_Act[0].SkillType == 1) {
-		if (m_Act[0].StateName == "NEXT") {
+		if (m_Act[0].StateName == "NEXT" || m_Act[0].StateName == "SHILED") {
 			predictarea->SetDrawDype(PREDICT_BUFF);
 		}
 		else if (m_Act[0].StateName == "RANDOM") {
@@ -456,7 +456,7 @@ void GameStateManager::UseSkill() {
 
 			}
 		} else if (m_Act[0].SkillType == 1) {
-			if (m_Act[0].StateName == "NEXT") {
+			if (m_Act[0].StateName == "NEXT" || m_Act[0].StateName == "SHIELD") {
 
 				onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
 			}

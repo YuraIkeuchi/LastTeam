@@ -296,7 +296,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = {8,7,13};
+	vector <int> m_StartNumber = {7,9,13,14};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -321,6 +321,7 @@ private:
 
 	//バフ(一旦一個)
 	bool m_Buff = false;
+	bool m_Shield = false;
 	bool m_Choice = false;
 	enum ResultType {
 		GET_SKILL,
