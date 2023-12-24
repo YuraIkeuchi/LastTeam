@@ -108,7 +108,6 @@ void AttackArea::SlashMove() {
 	m_AddPower -= m_Gravity;
 	if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
 		m_Alive = false;
-		GameStateManager::GetInstance()->SetBuff(false);
 	}
 }
 //Šâ—Ž‚Æ‚µŒn
@@ -117,7 +116,6 @@ void AttackArea::StoneMove() {
 	m_AddPower -= m_Gravity;
 	if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
 		m_Alive = false;
-		GameStateManager::GetInstance()->SetBuff(false);
 	}
 }
 //“ÅŒn
@@ -134,7 +132,6 @@ void AttackArea::PoisonMove() {
 	else {
 		if (Helper::FrameCheck(m_Frame, addFrame)) {
 			m_Alive = false;
-			GameStateManager::GetInstance()->SetBuff(false);
 		}
 		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 	}

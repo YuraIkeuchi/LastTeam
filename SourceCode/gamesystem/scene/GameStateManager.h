@@ -105,7 +105,6 @@ public:
 	const bool GetCounter() { return m_Counter; }
 	const bool GetIsChangeScene() { return isChangeScene; }
 	const bool GetIsFinish() { return isFinish; }
-	const bool GetBuff() { return m_Buff; }
 
 	const bool GetPoisonSkill() { return  m_poizonLong; }
 	const bool GetPoisonVenom() { return  m_IsVenom; }
@@ -129,8 +128,6 @@ public:
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
 	//void SetPlayer(std::weak_ptr<Player> player) { player_ = player; }
 	// 仮
-	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
-
 	void SetIsReloadDamage(bool flag) { m_ReloadDamage = flag; }
 	bool GetIsReloadDamage() { return m_ReloadDamage; }
 
