@@ -274,6 +274,11 @@ void GameStateManager::ImGuiDraw() {
 			haveSkill->ImGuiDraw();
 		}
 	}
+
+	for (auto i = 0; i < attackarea.size(); i++) {
+		if (attackarea[i] == nullptr)continue;
+		attackarea[i]->ImGuiDraw();
+	}
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {

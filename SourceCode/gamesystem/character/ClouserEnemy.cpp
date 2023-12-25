@@ -60,7 +60,12 @@ void (ClouserEnemy::* ClouserEnemy::stateTable[])() = {
 
 //s“®
 void ClouserEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	}
+	else {
+		InductionMove();
+	}
 	Obj_SetParam();
 	//“–‚½‚è”»’è
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -119,8 +124,10 @@ void ClouserEnemy::Draw(DirectXCommon* dxCommon) {
 //ImGui•`‰æ
 void ClouserEnemy::ImGui_Origin() {
 	ImGui::Begin("Area");
-	ImGui::Text("AttackCount:%d", m_AttackCount);
-	ImGui::Text("cool:%d", coolTimer);
+	ImGui::Text("Height:%d", m_NowWidth);
+	ImGui::Text("Induction:%d", m_Induction);
+	ImGui::Text("InductionFrame:%f", m_InductionFrame);
+	ImGui::Text("InductionPos:%f", m_InductionPos);
 	ImGui::End();
 	predictarea->ImGuiDraw();
 }

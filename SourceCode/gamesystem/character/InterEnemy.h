@@ -138,6 +138,9 @@ protected:
 	int m_AddPoisonToken = {};
 	int m_PoisonTimerMax = {};
 	int m_HealTimer = {};
+	bool m_Induction = false;
+	float m_InductionFrame = {};
+	float m_InductionPos = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -193,6 +196,8 @@ public:
 	void SuperPoisonEffect();
 
 	void DeathUpdate();
+
+	void InductionMove();
 private:
 	void BirthParticle();
 	//HPの割合を求める
