@@ -784,8 +784,6 @@ void MapScene::CheckState() {
 
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
-			//チュートリアルのタスク
-			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 			TutorialTask::GetInstance()->SetViewSkill(false);
 			SceneManager::GetInstance()->ChangeScene("TUTORIAL");
 			SceneChanger::GetInstance()->SetChange(false);
@@ -840,8 +838,6 @@ void MapScene::CheckState() {
 			delayFrame = 0.f;
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
-			//チュートリアルのタスク
-			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 			TutorialTask::GetInstance()->SetViewSkill(true);
 			SceneManager::GetInstance()->ChangeScene("BATTLE");
 			SceneChanger::GetInstance()->SetChange(false);

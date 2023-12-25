@@ -115,6 +115,8 @@ public:
 		ATTACK_19,
 		ATTACK_20,
 		TUTORIAL_WINDOW,
+		TUTORIAL_TASK,
+		TUTORIAL_CHECK,
 	};
 	//テクスチャの名前
 	enum tex2dName

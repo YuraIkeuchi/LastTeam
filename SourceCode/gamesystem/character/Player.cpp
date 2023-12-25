@@ -7,6 +7,7 @@
 #include <StagePanel.h>
 #include <ImageManager.h>
 #include <ParticleEmitter.h>
+#include <TutorialTask.h>
 #include "imgui.h"
 
 float Player::startHP = 0.f;
@@ -354,6 +355,7 @@ void Player::Move() {
 
 	//イージングで移動するためのもの
 	if (m_Move) {
+		TutorialTask::GetInstance()->SetTaskFinish(true, TASK_MOVE);
 		float l_AddScale = 0.1f;
 		//拡縮処理
 		if (_AttackState == ATTACK_NONE) {

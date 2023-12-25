@@ -30,12 +30,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	//ワード追加
 	CreateWord(NONE, L"");
 	CreateWord(TITLE, L"Bボタン:ゲーム");
-	CreateWord(TUTORIAL_START, L"ここでは戦い方を教える", L"まずはパッドかスティックで移動してみろ");
-	CreateWord(TUTORIAL_GET, L"ステージに何か出てきたぞ、取ってみろ");
-	CreateWord(TUTORIAL_EXPLAIN, L"下にカードが出ただろう", L"そのカードに応じてプレイヤーは動ける");
-	CreateWord(TUTORIAL_MARK, L"赤いエリアが出てきただろう", L"それが攻撃エリアだと思ってくれればいい");
-	CreateWord(TUTORIAL_TEXT_ATTACK, L"エリアに敵を収めて",L"Bボタンで攻撃してみろ");
-	CreateWord(TUTORIAL_TEXT_DAMAGE, L"よし、よくできた", L"じゃあ敵を倒してみよう");
+	CreateWord(TUTORIAL_START, L"ここでは戦い方を教える");
+	CreateWord(TUTORIAL_TASK, L"右の課題をクリアすれば自ずと",L"戦い方を理解するだろう");
 	CreateWord(TUTORIAL_SKILL, L"敵を倒すとスキルが手に入るぞ", L"スキルは攻撃やパッシブなどがあるぞ");
 	CreateWord(TUTORIAL_CHOICE, L"下の3つのスキルから", L"1つ選択してみよう");
 	CreateWord(TUTORIAL_END, L"手に入れたスキルを駆使して",L"敵を倒そう!");

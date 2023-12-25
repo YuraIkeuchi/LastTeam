@@ -3,7 +3,6 @@
 #include "ImageManager.h"
 #include <StagePanel.h>
 #include "MobEnemy.h"
-#include "TutorialTask.h"
 #include "GameStateManager.h"
 #include "TextManager.h"
 #include <StageBack.h>
@@ -72,8 +71,6 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	if ((input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = PLAY;
-		//チュートリアルのタスク
-		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 	}
 	

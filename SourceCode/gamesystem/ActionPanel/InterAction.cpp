@@ -40,9 +40,7 @@ void InterAction::Collide()
 		//プレイヤーの行動数を増やしパネルを戻す
 		GameStateManager::GetInstance()->AddSkill(m_SkillType,m_SkillID,m_Damage,m_Delay,m_Area,m_Timer,m_DistanceX,m_DistanceY,StateName,m_PoisonToken);
 		StagePanel::GetInstance()->DeletePanel();
-		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
-			TutorialTask::GetInstance()->SetTutorialState(TASK_ATTACK);
-		}
+		TutorialTask::GetInstance()->SetTaskFinish(true, TASK_GET);
 		m_Delete = true;
 	}
 }

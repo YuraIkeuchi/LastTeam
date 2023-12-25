@@ -106,6 +106,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ATTACK_19, L"Resources/2d/objicon/AttackSKill/Skill19.png");
 	IKESprite::LoadTexture(ATTACK_20, L"Resources/2d/objicon/AttackSKill/Skill20.png");
 	IKESprite::LoadTexture(TUTORIAL_WINDOW, L"Resources/2d/objicon/Tutorial.png");
+	IKESprite::LoadTexture(TUTORIAL_TASK, L"Resources/2d/objicon/TutorialTask.png");
+	IKESprite::LoadTexture(TUTORIAL_CHECK, L"Resources/2d/objicon/TutorialCheck.png");
 }
 
 //非同期処理で読み込むスプライト

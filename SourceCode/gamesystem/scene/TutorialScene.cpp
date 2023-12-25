@@ -12,11 +12,7 @@
 //��ԑJ��
 /*state�̕��я��ɍ��킹��*/
 void (TutorialScene::* TutorialScene::stateTable[])() = {
-	&TutorialScene::IntroState,//
-	&TutorialScene::MoveState,//
-	&TutorialScene::GetState,//�X�L���Q�b�g
-	&TutorialScene::AttackState,//�U��
-	&TutorialScene::DamageState,//�_���[�W��^����
+	&TutorialScene::PlayState,//�_���[�W��^����
 	&TutorialScene::TutorialEnd,//�I���
 };
 //������
@@ -34,8 +30,6 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 	text_->Initialize(dxCommon);
 	text_->SetConversation(TextManager::TUTORIAL_START, m_TextPos);
 
-	_nowstate = TUTORIAL_INTRO;
-
 	player_ = make_unique<Player>();
 	player_->LoadResource();
 	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
@@ -46,6 +40,8 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 	GameStateManager::SetPlayer(player_.get());
 	GameStateManager::GetInstance()->Initialize();
 	GameStateManager::GetInstance()->SetGameStart(true);
+
+	TutorialTask::GetInstance()->Initialize();
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->Initialize();
@@ -84,7 +80,6 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 		if (Helper::FrameCheck(frame, 1 / frameMax)) {
 			m_Skip = true;
 			m_IsBackKey = false;
-			_nowstate = TUTORIAL_DAMAGE;
 		} else {
 			float siz = 0.f;
 			siz = Ease(In, Quad, frame, 0.f, 344.f);
@@ -94,6 +89,15 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	}
 	Input* input = Input::GetInstance();
 
+	if (!m_FeedEnd) {
+		m_TextTimer++;
+	}
+
+	Helper::Clamp(m_TextTimer, 0, 200);
+
+	if (m_TextTimer == 150) {
+		text_->SetConversation(TextManager::TUTORIAL_TASK, m_TextPos);
+	}
 	lightGroup->Update();
 	//�e�N���X�X�V
 	camerawork->Update(camera);
@@ -127,7 +131,6 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	if (SceneChanger::GetInstance()->GetChange()) {
 		TutorialTask::GetInstance()->SetViewSkill(true);
 		player_->PlayerSave();
-		TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 		SceneManager::GetInstance()->ChangeScene("MAP");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
@@ -144,6 +147,8 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	Ease(In,Cubic,window.m_Frame,0.0f,164.0f), };
 	window.sprite->SetSize(window.m_Size);
 	window.sprite->SetPosition(window.m_Pos);
+
+	TutorialTask::GetInstance()->Update();
 }
 
 void TutorialScene::Draw(DirectXCommon* dxCommon) {
@@ -178,6 +183,7 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 		GameStateManager::GetInstance()->ActUIDraw();
 		enemy->UIDraw();
 		player_->UIDraw();
+		TutorialTask::GetInstance()->Draw();
 	}
 	if (!TutorialTask::GetInstance()->GetViewSkill()) {
 		window.sprite->Draw();
@@ -212,12 +218,13 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
-	//ImGui::Begin("Tutorial");
-	//ImGui::Text("Timer:%d", m_Timer);
-	//ImGui::Text("State:%d", _nowstate);
-	//ImGui::End();
+	ImGui::Begin("Tutorial");
+	ImGui::Text("Timer:%d", m_Timer);
+	ImGui::Text("State:%d", _nowstate);
+	ImGui::Text("Skip:%d", m_Skip);
+	ImGui::End();
 	///*
-	//TutorialTask::GetInstance()->ImGuiDraw();
+	TutorialTask::GetInstance()->ImGuiDraw();
 	//player_->ImGuiDraw();
 	//*/
 	//GameStateManager::GetInstance()->ImGuiDraw();
@@ -226,71 +233,12 @@ void TutorialScene::ImGuiDraw() {
 void TutorialScene::Finalize() {
 
 }
-//�ŏ��̌��
-void TutorialScene::IntroState() {
-	Input* input = Input::GetInstance();
-	/*if (Helper::CheckMin(m_Timer, 150, 1)) {
-		_nowstate = TUTORIAL_MOVE;
-		m_Timer = {};
-	}*/
-	if ((input->TriggerButton(input->A))) {
-		_nowstate = TUTORIAL_MOVE;
-		m_Timer = {};
-	}
-}
-//�ړ�
-void TutorialScene::MoveState() {
-	if (Helper::CheckMin(m_Timer, 50, 1)) {
-		m_Timer = {};
-		TutorialTask::GetInstance()->SetTutorialState(TASK_BIRTH_BEFORE);
-	}
 
-	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTHSKIL) {
-		m_TextPos = { -30.0f,-30.0f };
-		text_->SetConversation(TextManager::TUTORIAL_GET, m_TextPos);
-		_nowstate = TUTORIAL_GETSKILL;
-	}
-}
-//�X�L���Q�b�g
-void TutorialScene::GetState() {
-	Input* input = Input::GetInstance();
-	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
-		m_TextPos = { -10.0f,-30.0f };
-		text_->SetConversation(TextManager::TUTORIAL_EXPLAIN, m_TextPos);
-
-
-		if ((input->TriggerButton(input->A))) {
-			m_TextPos = { -10.0f,-30.f };
-			text_->SetConversation(TextManager::TUTORIAL_MARK, m_TextPos);
-			_nowstate = TUTORIAL_ATTACK;
-			m_Timer = {};
-		}
-	}
-
-	if (enemy->GetHP() <= 0.0f) {
-		m_Skip = true;
-		m_IsBackKey = false;
-		_nowstate = TUTORIAL_DAMAGE;
-	}
-}
-//�U��
-void TutorialScene::AttackState() {
-	Input* input = Input::GetInstance();
-	Helper::CheckMin(m_Timer, 410, 1);
-	
-	if ((input->TriggerButton(input->A)) && m_Timer > 10)  {
-		text_->SetConversation(TextManager::TUTORIAL_TEXT_ATTACK, m_TextPos);
-	}
-	if (TutorialTask::GetInstance()->GetTutorialState() == TASK_DAMAGE) {
-		text_->SetConversation(TextManager::TUTORIAL_TEXT_DAMAGE, m_TextPos);
-		_nowstate = TUTORIAL_DAMAGE;
-		m_Timer = {};
-	}
-}
-//�_���[�W��������
-void TutorialScene::DamageState() {
+void TutorialScene::PlayState() {
 	Input* input = Input::GetInstance();
 	if (enemy->GetHP() <= 0.0f || m_Skip) {
+
+		TutorialTask::GetInstance()->SetTaskFinish(true, TASK_BREAK);
 		if (!m_FeedStart) {
 			m_Feed = true;
 			m_FeedStart = true;
@@ -306,7 +254,7 @@ void TutorialScene::DamageState() {
 		if (m_FeedEnd) {
 			window.m_Pos = { 640.0f,550.0f };
 			Audio::GetInstance()->StopWave(AUDIO_MAIN);
-			m_Timer++;
+			Helper::CheckMin(m_Timer, 100, 1);
 			if (m_Timer == 1) {
 				m_TextPos = { 120.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_SKILL, m_TextPos);
