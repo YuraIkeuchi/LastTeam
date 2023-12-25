@@ -147,6 +147,8 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	Ease(In,Cubic,window.m_Frame,0.0f,164.0f), };
 	window.sprite->SetSize(window.m_Size);
 	window.sprite->SetPosition(window.m_Pos);
+
+	TutorialTask::GetInstance()->Update();
 }
 
 void TutorialScene::Draw(DirectXCommon* dxCommon) {
@@ -181,6 +183,7 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 		GameStateManager::GetInstance()->ActUIDraw();
 		enemy->UIDraw();
 		player_->UIDraw();
+		TutorialTask::GetInstance()->Draw();
 	}
 	if (!TutorialTask::GetInstance()->GetViewSkill()) {
 		window.sprite->Draw();

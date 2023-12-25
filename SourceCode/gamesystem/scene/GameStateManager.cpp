@@ -493,7 +493,7 @@ void GameStateManager::UseSkill() {
 				}
 			}
 		}
-
+		TutorialTask::GetInstance()->SetTaskFinish(true, TASK_ATTACK);
 		FinishAct();
 		if (m_AllActCount == 0) {
 			player->AttackCheck(true);

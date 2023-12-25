@@ -1,5 +1,8 @@
 #pragma once
+#include "IKESprite.h"
+#include <memory>
 
+using namespace std;
 //チュートリアルの進行状況を示すやつ
 enum TutorialState {
 	TASK_MOVE,
@@ -8,11 +11,23 @@ enum TutorialState {
 	TASK_BREAK,
 };
 class TutorialTask {
+private:
+	// DirectX::を省略
+	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
+	using XMVECTOR = DirectX::XMVECTOR;
+	using XMMATRIX = DirectX::XMMATRIX;
+
 public:
 	static TutorialTask* GetInstance();
 
 	//初期化
 	void Initialize();
+
+	void Update();
+
+	void Draw();
 
 	void ImGuiDraw();
 public:
@@ -28,6 +43,18 @@ private:
 	static const int TASK_MAX = 4;
 private:
 	bool m_TaskFinish[TASK_MAX];
+
+	struct TutorialParts {
+		unique_ptr<IKESprite> text;
+		unique_ptr<IKESprite> check;
+		XMFLOAT2 pos;
+		XMFLOAT4 color = {1.0f,1.0f,1.0f,0.0f};
+		XMFLOAT2 size = {};
+		XMFLOAT2 aftersize = {50.0f,50.0f};
+		float frame = {};
+	};
+
+	TutorialParts tutorial[TASK_MAX];
 	bool m_ChoiceSkill = false;
 	bool m_ViewSkill = false;
 };
