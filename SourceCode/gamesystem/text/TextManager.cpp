@@ -110,7 +110,12 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"威力:75");
 	CreateSkillSentence(L"あてられるならあててみな");
 	CreateSkillDamage(L"威力:100(はんいがかわる)");
-
+	CreateSkillSentence(L"全てを犠牲に・・・");
+	CreateSkillDamage(L"手札を全て捨てる");
+	CreateSkillSentence(L"敵を引き寄せろ!");
+	CreateSkillDamage(L"威力:30 敵を前に寄せる");
+	CreateSkillSentence(L"敵を吹き飛ばせ!");
+	CreateSkillDamage(L"威力:30 敵を後ろに飛ばす");
 	//ラスボス
 	//コンヴァージョン初期化
 	Create(dxcomon);

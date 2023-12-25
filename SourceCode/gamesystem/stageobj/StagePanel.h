@@ -112,6 +112,7 @@ public:
 	const bool GetAllDelete() { return m_AllDelete; }
 	const bool GetCreateFinish() { return m_CreateFinish; }
 	const int GetPanelType(const int width, const int height) { return panels[width][height].type; }
+	const XMFLOAT3& GetPosition(const int width, const int height) { return panels[width][height].position; }
 	const int GetisEnemyHit(const int width, const int height) { return panels[width][height].isEnemyHit; }
 	const int GetClose(const int width, const int height) { return panels[width][height].isClose; }
 	const int GetHeal(const int width, const int height) { return panels[width][height].isHeal; }

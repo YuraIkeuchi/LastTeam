@@ -309,6 +309,45 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					m_PoisonToken *= 3;
 				}
 			}
+			else if (name == "FAR" && !m_Induction && m_NowWidth != PANEL_WIDTH - 1) {
+				m_Induction = true;
+				m_InductionFrame = {};
+				for (int i = PANEL_WIDTH / 2; i < PANEL_WIDTH; i++) {
+					if (m_NowWidth == i) { continue; }
+					if (StagePanel::GetInstance()->GetisEnemyHit(i, m_NowHeight)) {
+						
+						m_InductionPos = StagePanel::GetInstance()->GetPosition(i - 1, m_NowHeight).x;
+						break;
+					}
+					else {
+						if (i == PANEL_WIDTH - 1) {
+
+							m_InductionPos = StagePanel::GetInstance()->GetPosition(PANEL_WIDTH - 1, m_NowHeight).x;
+							break;
+						}
+					}
+				}
+			}
+			else if (name == "NEAR" && !m_Induction && m_NowWidth != PANEL_WIDTH / 2) {
+				m_Induction = true;
+				m_InductionFrame = {};
+				for(int i = PANEL_WIDTH - 1; i >= (PANEL_WIDTH / 2); i--) {
+
+					if (m_NowWidth == i) { continue; }
+					if (StagePanel::GetInstance()->GetisEnemyHit(i, m_NowHeight)) {
+
+						m_InductionPos = StagePanel::GetInstance()->GetPosition(i + 1, m_NowHeight).x;
+						break;
+					}
+					else {
+						if (i == PANEL_WIDTH / 2) {
+
+							m_InductionPos = StagePanel::GetInstance()->GetPosition(PANEL_WIDTH / 2, m_NowHeight).x;
+							break;
+						}
+					}
+				}
+			}
 
 			if (GameStateManager::GetInstance()->GetAttackedPoison()) {
 				GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::ATTACK_POISON);
@@ -698,5 +737,18 @@ void InterEnemy::RegeneUpdate() {
 	}
 	else {
 		m_HealTimer = {};
+	}
+}
+//誘導された動き
+void InterEnemy::InductionMove() {
+	const float l_AddFrame = 1 / 10.0f;
+
+	if (Helper::FrameCheck(m_InductionFrame, l_AddFrame)) {
+		m_Induction = false;
+		m_InductionFrame = {};
+		StagePanel::GetInstance()->EnemyHitReset();
+	}
+	else {
+		m_Position.x = Ease(In, Cubic, m_InductionFrame, m_Position.x, m_InductionPos);
 	}
 }

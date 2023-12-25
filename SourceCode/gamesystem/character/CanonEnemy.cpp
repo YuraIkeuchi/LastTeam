@@ -63,7 +63,12 @@ void (CanonEnemy::* CanonEnemy::stateTable[])() = {
 
 //行動
 void CanonEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	}
+	else {
+		InductionMove();
+	}
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -130,8 +135,10 @@ void CanonEnemy::ImGui_Origin() {
 		}
 	}*/
 	ImGui::Begin("Canon");
-	ImGui::Text("Height:%d", m_NowHeight);
-	ImGui::Text("ShotDir:%d", m_ShotDir);
+	ImGui::Text("Height:%d", m_NowWidth);
+	ImGui::Text("Induction:%d", m_Induction);
+	ImGui::Text("InductionFrame:%f", m_InductionFrame);
+	ImGui::Text("InductionPos:%f", m_InductionPos);
 	ImGui::End();
 }
 //開放

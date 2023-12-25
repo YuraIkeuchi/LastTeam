@@ -38,7 +38,12 @@ void (NormalEnemy::* NormalEnemy::stateTable[])() = {
 
 //行動
 void NormalEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	}
+	else {
+		InductionMove();
+	}
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();

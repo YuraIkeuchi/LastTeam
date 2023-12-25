@@ -62,7 +62,12 @@ void (PoisonEnemy::* PoisonEnemy::stateTable[])() = {
 
 //s“®
 void PoisonEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	}
+	else {
+		InductionMove();
+	}
 	Obj_SetParam();
 	//“–‚½‚è”»’è
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -124,8 +129,10 @@ void PoisonEnemy::ImGui_Origin() {
 	//	poisonarea[i]->ImGuiDraw();
 	//}
 	ImGui::Begin("Poison");
-	ImGui::Text("Frame:%f", m_ScaleFrame);
-	ImGui::Text("Scale:%f", m_BaseScale);
+	ImGui::Text("Height:%d", m_NowWidth);
+	ImGui::Text("Induction:%d", m_Induction);
+	ImGui::Text("InductionFrame:%f", m_InductionFrame);
+	ImGui::Text("InductionPos:%f", m_InductionPos);
 	ImGui::End();
 }
 //ŠJ•ú

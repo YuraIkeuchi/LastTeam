@@ -64,7 +64,12 @@ void (TackleEnemy::* TackleEnemy::stateTable[])() = {
 
 //行動
 void TackleEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	}
+	else {
+		InductionMove();
+	}
 	Obj_SetParam();
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//当たり判

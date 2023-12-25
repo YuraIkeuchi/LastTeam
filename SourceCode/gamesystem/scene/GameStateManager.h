@@ -76,7 +76,7 @@ private:
 	//スキルの使用
 	void UseSkill();
 	//行動の終了
-	void FinishAct();
+	void FinishAct(bool AllFinish = false);
 	//
 	void GaugeUpdate();
 
@@ -294,7 +294,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = {15,16,17,18,19,20};
+	vector <int> m_StartNumber = {22,23 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

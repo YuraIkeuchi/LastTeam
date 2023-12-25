@@ -274,6 +274,11 @@ void GameStateManager::ImGuiDraw() {
 			haveSkill->ImGuiDraw();
 		}
 	}
+
+	for (auto i = 0; i < attackarea.size(); i++) {
+		if (attackarea[i] == nullptr)continue;
+		attackarea[i]->ImGuiDraw();
+	}
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -439,7 +444,7 @@ void GameStateManager::PredictManager() {
 		if (m_Act[0].StateName == "NEXT" || m_Act[0].StateName == "SHILED") {
 			predictarea->SetDrawDype(PREDICT_BUFF);
 		}
-		else if (m_Act[0].StateName == "RANDOM") {
+		else if (m_Act[0].StateName == "RANDOM" || m_Act[0].StateName == "REMOVE") {
 			predictarea->SetDrawDype(PREDICT_HATENA);
 		}
 	}
@@ -494,7 +499,13 @@ void GameStateManager::UseSkill() {
 			}
 		}
 		TutorialTask::GetInstance()->SetTaskFinish(true, TASK_ATTACK);
-		FinishAct();
+		//全スキル除去にするかどうか決める
+		if (m_Act[0].StateName == "REMOVE") {
+			FinishAct(true);
+		}
+		else {
+			FinishAct();
+		}
 		if (m_AllActCount == 0) {
 			player->AttackCheck(true);
 		} else {
@@ -508,11 +519,22 @@ void GameStateManager::UseSkill() {
 	}
 }
 //行動の終了
-void GameStateManager::FinishAct() {
-	m_DiscardNumber.push_back(m_Act[0].ActID);
-	m_Act.erase(m_Act.begin());
-	m_AllActCount--;
-	actui[0]->SetUse(true);
+void GameStateManager::FinishAct(bool AllFinish) {
+	if (!AllFinish) {
+		m_DiscardNumber.push_back(m_Act[0].ActID);
+		m_Act.erase(m_Act.begin());
+		m_AllActCount--;
+		actui[0]->SetUse(true);
+	}
+	else {
+		for (int i = 0; i < m_Act.size(); i++) {
+			m_DiscardNumber.push_back(m_Act[i].ActID);
+			
+			actui[i]->SetUse(true);
+		}
+		m_AllActCount = {};
+		m_Act.clear();
+	}
 	//デッキがない且つ手札を使い切ってたらまた再配布
 	if (m_AllActCount == 0 && StagePanel::GetInstance()->GetAllDelete()) {
 		//デッキの初期化
