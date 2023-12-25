@@ -89,7 +89,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillSentence(L"イヤーナ毒攻撃だ");
 	CreateSkillDamage(L"威力:10（小）毒：8付与");
 	CreateSkillSentence(L"回復できる攻撃だ");
-	CreateSkillDamage(L"威力:50（中）");
+	CreateSkillDamage(L"威力:50（中）ドレイン");
 	CreateSkillSentence(L"次の攻撃を強く!");
 	CreateSkillDamage(L"威力:0(次のスキル2倍)");
 	CreateSkillSentence(L"最大の火力を再現！");
@@ -102,6 +102,10 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"威力:10(もってる毒を3倍)");
 	CreateSkillSentence(L"鉄壁の守り!");
 	CreateSkillDamage(L"受けるダメージを一回だけ半減");
+	CreateSkillSentence(L"毒（中）付与の中距離攻撃");
+	CreateSkillDamage(L"威力:3（小）毒：12付与");
+	CreateSkillSentence(L"回復しつつ遠距離攻撃");
+	CreateSkillDamage(L"威力:30（中）ドレイン");
 
 	//ラスボス
 	//コンヴァージョン初期化
