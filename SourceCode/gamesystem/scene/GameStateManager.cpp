@@ -439,7 +439,7 @@ void GameStateManager::PredictManager() {
 		if (m_Act[0].StateName == "NEXT" || m_Act[0].StateName == "SHILED") {
 			predictarea->SetDrawDype(PREDICT_BUFF);
 		}
-		else if (m_Act[0].StateName == "RANDOM") {
+		else if (m_Act[0].StateName == "RANDOM" || m_Act[0].StateName == "REMOVE") {
 			predictarea->SetDrawDype(PREDICT_HATENA);
 		}
 	}
