@@ -318,6 +318,14 @@ void GameStateManager::AddSkill(const int SkillType, const int ID, const float d
 	}
 	act.ActDelay = Delay;
 	act.StateName = name;
+	if (act.StateName == "SHUFFLE") {
+		act.DistanceX = Helper::GetRanNum(1, 4);
+		act.DistanceY = Helper::GetRanNum(-1, 1);
+		// シャッフル
+		//std::random_device seed_gen;
+		//std::mt19937 engine(seed_gen());
+		//std::shuffle(act.AttackArea.begin(), act.AttackArea.end(), engine);
+	}
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;

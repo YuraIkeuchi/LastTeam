@@ -108,6 +108,12 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"威力:30（中）ドレイン");
 	CreateSkillSentence(L"前のおれよりつよくなる");
 	CreateSkillDamage(L"威力:チョク前の威力の1.5倍");
+	CreateSkillSentence(L"ディレイはながいがエリアが大きい");
+	CreateSkillDamage(L"威力:50");
+	CreateSkillSentence(L"ディレイはながいが威力が大きい");
+	CreateSkillDamage(L"威力:75");
+	CreateSkillSentence(L"あてられるならあててみな");
+	CreateSkillDamage(L"威力:100(はんいがかわる)");
 
 	//ラスボス
 	//コンヴァージョン初期化
