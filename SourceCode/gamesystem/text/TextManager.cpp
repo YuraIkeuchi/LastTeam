@@ -106,6 +106,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"威力:3（小）毒：12付与");
 	CreateSkillSentence(L"回復しつつ遠距離攻撃");
 	CreateSkillDamage(L"威力:30（中）ドレイン");
+	CreateSkillSentence(L"前のおれよりつよくなる");
+	CreateSkillDamage(L"威力:チョク前の威力の1.5倍");
 
 	//ラスボス
 	//コンヴァージョン初期化

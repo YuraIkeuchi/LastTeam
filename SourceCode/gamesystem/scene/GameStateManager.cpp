@@ -23,6 +23,7 @@ void GameStateManager::Initialize() {
 
 	//全体スコア
 	m_AllScore = {};
+	m_OldDamage = 0;
 	m_MaxDamage = 0;
 	m_MaxTakenDamage = 0;
 	m_MaxTakenDamage = 0;
@@ -349,6 +350,10 @@ void GameStateManager::BirthArea() {
 		//リフレイン攻撃
 		damage = (float)m_MaxDamage;
 	}
+	if (m_Act[0].ActID == 17) {
+		//倍率攻撃
+		damage = (float)m_OldDamage*1.5f;
+	}
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 			AreaX = l_BirthBaseX + i;
@@ -380,6 +385,7 @@ void GameStateManager::BirthArea() {
 			}
 		}
 	}
+	m_OldDamage = (int)damage;
 	if (isBuffed) {
 		//固定ダメではバフ載らないようにした
 		m_Buff = false;

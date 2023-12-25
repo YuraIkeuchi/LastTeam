@@ -252,6 +252,7 @@ private:
 
 	//全体スコア
 	int m_AllScore = {};
+	int m_OldDamage = 0;
 	int m_MaxDamage = 0;
 	int m_MaxTakenDamage = 0;
 	int m_TakenDamageNum = 0;
@@ -293,7 +294,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = {15,16};
+	vector <int> m_StartNumber = {15,16,17};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
