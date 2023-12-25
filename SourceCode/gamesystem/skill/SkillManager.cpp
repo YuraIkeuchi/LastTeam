@@ -17,7 +17,8 @@ SkillManager* SkillManager::GetInstance()
 void SkillManager::Initialize()
 {	
 	//ここをいじればGameStateManagerも変わります
-	m_SKILLMAX = 15;
+	//総スキル+1
+	m_SKILLMAX = 21;
 	//一旦3に指定(実際はCSVとかになるかな)
 	skill.resize(m_SKILLMAX);
 	m_Delays.resize(m_SKILLMAX);
@@ -32,9 +33,7 @@ void SkillManager::Initialize()
 	//csv読み取り
 	for (int i = 0; i < m_SKILLMAX; i++)
 	{
-
 		CreateSkill(i);
-
 	}
 }
 
