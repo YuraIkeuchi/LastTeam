@@ -195,7 +195,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			player_->SetDelay(true);
 		}
 	}
-
 	//共通の更新
 	SceneChanger::GetInstance()->Update();
 	//シーン切り替え処理

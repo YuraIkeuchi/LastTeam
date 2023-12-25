@@ -330,10 +330,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 
 			GameStateManager::GetInstance()->DamageEffectInit({ tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] });
 			_area->SetHit(true);
-			//チュートリアル専用
-			if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
-				TutorialTask::GetInstance()->SetTutorialState(TASK_DAMAGE);
-			}
+			TutorialTask::GetInstance()->SetTaskFinish(true, TASK_ATTACK);
 		}
 	}
 }

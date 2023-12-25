@@ -525,9 +525,7 @@ void GameStateManager::GaugeUpdate() {
 	if (m_Act.size() == m_DeckNumber.size()) {
 		m_GaugeCount = 0.0f;
 	} else {
-		if (TutorialTask::GetInstance()->GetTutorialState() >= TASK_BIRTH_BEFORE) {
-			m_GaugeCount += 1.0f * m_DiameterGauge;
-		}
+		m_GaugeCount += 1.0f * m_DiameterGauge;
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReloadDamage) {
@@ -555,9 +553,6 @@ void GameStateManager::GaugeUpdate() {
 			StagePanel::GetInstance()->RandomPanel(SkillManager::GetInstance()->GetDeckNum());
 		}
 		m_GaugeCount = 0;
-		if (TutorialTask::GetInstance()->GetTutorialState() == TASK_BIRTH_BEFORE) {		//チュートリアル専用
-			TutorialTask::GetInstance()->SetTutorialState(TASK_BIRTHSKIL);
-		}
 		if (SkillManager::GetInstance()->GetDeckNum() == 0 && StagePanel::GetInstance()->GetAllDelete()) {
 			DeckDiscard();
 		}

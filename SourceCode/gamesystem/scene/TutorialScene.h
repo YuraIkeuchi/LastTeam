@@ -26,11 +26,7 @@ private:
 	//void TutorialManager();//チュートリアルの進行状況
 
 	static void (TutorialScene::* stateTable[])();
-	void IntroState();
-	void MoveState();	//動く
-	void GetState();	//スキルゲット
-	void AttackState();		//攻撃
-	void DamageState();//ダメージを与える
+	void PlayState();//チュートリアル動かし
 	void TutorialEnd();//終わり
 	void Skip();		//スキップ
 
@@ -52,17 +48,14 @@ private:
 	int m_Timer = {};
 
 	enum TutorialState {
-		TUTORIAL_INTRO,
-		TUTORIAL_MOVE,
-		TUTORIAL_GETSKILL,
-		TUTORIAL_ATTACK,
-		TUTORIAL_DAMAGE,
+		TUTORIAL_PLAY,
 		TUTORIAL_FINISH,
-	}_nowstate = TUTORIAL_INTRO;
+	}_nowstate = TUTORIAL_PLAY;
 
 	bool m_End = false;
 	bool m_Skip = false;
 	bool m_IsBackKey = false;
+	int m_TextTimer = {};
 	struct Window {
 		unique_ptr<IKESprite> sprite;
 		XMFLOAT2 m_Size = {};
