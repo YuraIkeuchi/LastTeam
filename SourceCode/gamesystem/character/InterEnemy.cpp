@@ -569,7 +569,7 @@ void InterEnemy::PoisonState() {
 		BirthPoisonParticle();
 		if (m_PoisonLong) {
 			//GameStateManager::GetInstance()->SetPassiveActive();
-			float poisons = m_PoisonToken;
+			float poisons = (float)m_PoisonToken;
 			poisons *= 0.75f;
 			//四捨五入
 			poisons += 0.5f;
