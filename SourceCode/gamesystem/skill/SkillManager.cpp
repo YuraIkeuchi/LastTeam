@@ -44,12 +44,11 @@ void SkillManager::Update() {
 		if (deckui[i] == nullptr)continue;
 		deckui[i]->SetActCount(i);
 		deckui[i]->Update();
-
-
-		if (!deckui[i]->GetAlive()) {
-			deckui.erase(cbegin(deckui) + i);
-		}
 	}
+	auto result = std::remove_if(deckui.begin(), deckui.end(),
+		[](unique_ptr<DeckUI>& deck) { return !deck->GetAlive(); });
+	deckui.erase(result, deckui.end());
+
 }
 //UIの描画(ほんますまんpart2)
 void SkillManager::UIDraw() {
