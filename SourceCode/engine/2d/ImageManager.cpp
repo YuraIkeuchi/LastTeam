@@ -10,6 +10,7 @@ ImageManager* ImageManager::GetInstance()
 void ImageManager::StartLoad2D()
 {
 	IKESprite::LoadTexture(FEED, L"Resources/2d/effect/white1x1.png");
+	IKESprite::LoadTexture(VIGNETTE, L"Resources/2d/sceneback/vignette.png");
 	IKESprite::LoadTexture(SHINE, L"Resources/2d/effect/shine.png");
 	IKESprite::LoadTexture(PLASHINE, L"Resources/2d/effect/effect3.png");
 	IKESprite::LoadTexture(SHINE_S, L"Resources/2d/effect/effect4.png");

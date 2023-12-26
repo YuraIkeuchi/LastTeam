@@ -32,6 +32,7 @@ private:
 	unique_ptr<EnemyManager> enemyManager = nullptr;
 
 	unique_ptr<IKESprite> ui = nullptr;
+	unique_ptr<IKESprite> vignette = nullptr;
 
 	enum ChangeType {
 		CHANGE_MAP,
