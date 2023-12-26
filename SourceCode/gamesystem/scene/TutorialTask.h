@@ -8,6 +8,7 @@ enum TutorialState {
 	TASK_MOVE,
 	TASK_GET,
 	TASK_ATTACK,
+	TASK_COUNTER,
 	TASK_BREAK,
 };
 class TutorialTask {
@@ -40,7 +41,7 @@ public:
 	void SetViewSkill(const bool ViewSkill) { m_ViewSkill = ViewSkill; }
 
 private:
-	static const int TASK_MAX = 4;
+	static const int TASK_MAX = 5;
 private:
 	bool m_TaskFinish[TASK_MAX];
 

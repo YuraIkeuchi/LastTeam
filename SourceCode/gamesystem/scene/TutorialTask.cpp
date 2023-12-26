@@ -25,13 +25,13 @@ void TutorialTask::Initialize() {
 			{ static_cast<float>(number_index_x) * l_Width_Cut, static_cast<float>(number_index_y) * l_Height_Cut },
 			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
 		tutorial[i].text->SetAnchorPoint({ 0.5f,0.5f });
-		tutorial[i].pos = { 1100.0f,200 + (80.0f * i) };
+		tutorial[i].pos = { 1020.0f,200 + (80.0f * i) };
 		tutorial[i].text->SetSize({ l_Width_Cut,l_Height_Cut });
 		tutorial[i].text->SetPosition(tutorial[i].pos);
 		tutorial[i].text->SetScale({ 0.8f });
 
 		tutorial[i].check = IKESprite::Create(ImageManager::TUTORIAL_CHECK, { 0.0f,0.0f });
-		tutorial[i].check->SetPosition({ 940.0f,200 + (80.0f * i) });
+		tutorial[i].check->SetPosition({ 860.0f,200 + (80.0f * i) });
 		tutorial[i].check->SetAnchorPoint({ 0.5f,0.5f });
 		tutorial[i].size = { 150.0f,150.0f };
 	}

@@ -260,6 +260,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					!GameStateManager::GetInstance()->GetCounter()) {
 					GameStateManager::GetInstance()->SetCounter(true);
 					damage *= 1.5f;
+					TutorialTask::GetInstance()->SetTaskFinish(true, TASK_COUNTER);
 				}
 				if (GameStateManager::GetInstance()->GetIsFivePower()) {
 					damage *= 1.2f;
@@ -287,6 +288,9 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			m_Damege = true;
 			m_DamageTimer = {};
 			Helper::Clamp(damage, 0.0f, 999.0f);
+			if (m_EnemyTag == "Mob" && !TutorialTask::GetInstance()->GetTaskFinish(TASK_COUNTER)) {
+				damage = 0.0f;
+			}
 			m_HP -= damage;
 			GameStateManager::GetInstance()->DamageCheck((int)damage);
 			BirthDamage(damage);
@@ -295,7 +299,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			if (name == "DRAIN") {
 				float rate = 0.5f;
 				player->HealPlayer(damage * rate);		//HP回復
-			} else if (name == "POISON") {
+			} else if (name == "POISON") {		//毒
 				m_Poison = true;
 				if (!m_IsVenom) {
 					m_PoisonToken += _area->GetPoisonToken();
@@ -304,12 +308,12 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					m_SuperPoison = true;
 					m_PoisonToken += _area->GetPoisonToken() * 2;
 				}
-			} else if (name == "VENOM") {
+			} else if (name == "VENOM") {		//ヴェノム効果
 				if (m_Poison) {
 					m_PoisonToken *= 3;
 				}
 			}
-			else if (name == "FAR" && !m_Induction && m_NowWidth != PANEL_WIDTH - 1) {
+			else if (name == "FAR" && !m_Induction && m_NowWidth != PANEL_WIDTH - 1) {		//敵を吹き飛ばす
 				m_Induction = true;
 				m_InductionFrame = {};
 				for (int i = PANEL_WIDTH / 2; i < PANEL_WIDTH; i++) {
@@ -328,20 +332,18 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					}
 				}
 			}
-			else if (name == "NEAR" && !m_Induction && m_NowWidth != PANEL_WIDTH / 2) {
+			else if (name == "NEAR" && !m_Induction && m_NowWidth != PANEL_WIDTH / 2) {		//敵を引き寄せる
 				m_Induction = true;
 				m_InductionFrame = {};
 				for(int i = PANEL_WIDTH - 1; i >= (PANEL_WIDTH / 2); i--) {
 
 					if (m_NowWidth == i) { continue; }
 					if (StagePanel::GetInstance()->GetisEnemyHit(i, m_NowHeight)) {
-
 						m_InductionPos = StagePanel::GetInstance()->GetPosition(i + 1, m_NowHeight).x;
 						break;
 					}
 					else {
 						if (i == PANEL_WIDTH / 2) {
-
 							m_InductionPos = StagePanel::GetInstance()->GetPosition(PANEL_WIDTH / 2, m_NowHeight).x;
 							break;
 						}
