@@ -65,7 +65,7 @@ private:
 	int m_NowHeight = {};
 	bool m_Alive = true;//生存フラグ
 
-	int m_TargetTimer = {};//出現時間の目標
+	int m_TargetTimer = 40;//出現時間の目標
 
 	int m_ThrowTimer = {};
 
