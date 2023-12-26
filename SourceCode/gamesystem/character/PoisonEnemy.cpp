@@ -48,7 +48,7 @@ bool PoisonEnemy::Initialize() {
 	magic.State = {};
 
 	enemywarp.AfterScale = {};
-	enemywarp.Scale = 0.5f;
+	enemywarp.Scale = 0.7f;
 
 	m_AddDisolve = 2.0f;
 	return true;
@@ -130,7 +130,7 @@ void PoisonEnemy::ImGui_Origin() {
 	//}
 	ImGui::Begin("Poison");
 	ImGui::Text("Height:%d", m_NowWidth);
-	ImGui::Text("Induction:%d", m_Induction);
+	ImGui::Text("ScaleX:%f", m_Scale.x);
 	ImGui::Text("InductionFrame:%f", m_InductionFrame);
 	ImGui::Text("InductionPos:%f", m_InductionPos);
 	ImGui::End();
@@ -170,7 +170,7 @@ void PoisonEnemy::Attack() {
 		}
 	}
 	else if (_PoisonType == Poison_THROW) {
-		l_AfterScale = 0.5f;
+		l_AfterScale = 0.7f;
 		l_AddFrame = 1 / 20.0f;
 		if (Helper::FrameCheck(m_ScaleFrame, l_AddFrame)) {
 			m_AttackCount++;
@@ -258,7 +258,7 @@ void PoisonEnemy::WarpEnemy() {
 	if (enemywarp.State == WARP_START) {			//ÉLÉÉÉâÇ™è¨Ç≥Ç≠Ç»ÇÈ
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
-			enemywarp.AfterScale = 0.5f;
+			enemywarp.AfterScale = 0.7f;
 			enemywarp.State = WARP_END;
 			coolTimer = {};
 			m_Position = l_RandPos;

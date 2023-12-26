@@ -79,5 +79,7 @@ private:
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};
+	float m_BaseScale = {};
+	float m_ScaleFrame = {};
 };
 

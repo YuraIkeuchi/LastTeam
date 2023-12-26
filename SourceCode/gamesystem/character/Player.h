@@ -84,7 +84,7 @@ public:
 	const int GetCharaState() { return _charaState; }
 	const bool GetDelay() { return m_Delay; }
 	const bool GetCancel() { return m_Cancel; }
-	const bool GetShield() { return m_Shield; }
+	const float GetShieldHP() { return m_ShieldHP; }
 
 	const bool GetFinishGameOver() { return m_FinishGameOver; }
 
@@ -104,7 +104,7 @@ public:
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 
 	void SetDelay(const bool Delay) { m_Delay = Delay; }
-	void SetShield(const bool Shield) { m_Shield = Shield; }
+	void SetShieldHP(const float ShieldHP) { m_ShieldHP = ShieldHP; }
 
 	void SetCancel(const bool cancel) { m_Cancel = cancel; }
 
@@ -251,5 +251,5 @@ private:
 	bool m_Bound = {};
 	int m_HealTimer = {};
 
-	bool m_Shield = false;
+	float m_ShieldHP = {};
 };

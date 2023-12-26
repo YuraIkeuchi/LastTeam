@@ -53,7 +53,7 @@ bool Player::Initialize() {
 	LoadCSV();
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	m_AddDisolve = 2.0f;
-	m_Shield = false;
+	m_ShieldHP = 0.0f;
 	//CSV読み込み
 	return true;
 }
@@ -264,7 +264,7 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("ScaleX:%f", m_BaseScale);
+	ImGui::Text("ShieldHP:%f", m_ShieldHP);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::Text("POSX:%d", m_NowWidth);
 	ImGui::Text("POSZ:%d", m_NowHeight);
@@ -477,11 +477,21 @@ void Player::HealPlayer(const float power) {
 //プレイヤーのダメージ判定
 void Player::RecvDamage(const float Damage, const string& name) {
 	float l_Damage = Damage;
-	if (m_Shield) {		//シールド時食らうダメージが半分
+	if (m_ShieldHP != 0.0f) {		//シールド時食らうダメージはシールドHPが負担
+		if (l_Damage <= m_ShieldHP) {
+			m_ShieldHP -= l_Damage;
+		}
+		else {
+			m_HP -= l_Damage - m_ShieldHP;
+			m_ShieldHP = 0.0f;
+		}
 		l_Damage = Damage / 2;
-		m_Shield = false;
 	}
-	m_HP -= l_Damage;
+	else {
+		m_HP -= l_Damage;
+	}
+
+	Helper::Clamp(m_ShieldHP, 0.0f, 10.0f);
 	GameStateManager::GetInstance()->TakenDamageCheck((int)l_Damage);
 	GameStateManager::GetInstance()->MissAttack();
 	//パッシブ効果処理

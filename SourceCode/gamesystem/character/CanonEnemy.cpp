@@ -29,7 +29,6 @@ CanonEnemy::CanonEnemy() {
 bool CanonEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Scale = { 0.6f,0.6f,0.6f };
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "LIMIT_NUM")));
 
 	m_Limit.resize(LimitSize);
@@ -50,7 +49,9 @@ bool CanonEnemy::Initialize() {
 	magic.State = {};
 
 	enemywarp.AfterScale = {};
-	enemywarp.Scale = 0.5f;
+	enemywarp.Scale = 0.6f;
+	m_BaseScale = 0.6f;
+	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	m_AddDisolve = 2.0f;
 	return true;
 }
@@ -135,7 +136,7 @@ void CanonEnemy::ImGui_Origin() {
 		}
 	}*/
 	ImGui::Begin("Canon");
-	ImGui::Text("Height:%d", m_NowWidth);
+	ImGui::Text("Scale:%f", m_Scale.x);
 	ImGui::Text("Induction:%d", m_Induction);
 	ImGui::Text("InductionFrame:%f", m_InductionFrame);
 	ImGui::Text("InductionPos:%f", m_InductionPos);
@@ -161,9 +162,12 @@ void CanonEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 	const float l_AddFrame = 1 / 30.0f;
-
+	float l_AddScaleFrame = {};
+	float l_AfterScale = {};
 	//弾の生成関係
 	if (_CanonType == CANON_SET) {
+		l_AddScaleFrame = 1 / 20.0f;
+		l_AfterScale = 0.9f;
 		if (coolTimer == 101) {		//ここで撃つ方向を決める
 			m_ShotDir = Helper::GetRanNum(0, 2);
 			//敵が端にいた場合反射によって回転が変に見えるから指定する
@@ -183,21 +187,32 @@ void CanonEnemy::Attack() {
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
-				m_RotFrame = {};
-				coolTimer = {};
-				_CanonType = CANON_THROW;
+				if (Helper::FrameCheck(m_ScaleFrame, l_AddFrame)) {
+					m_RotFrame = {};
+					m_ScaleFrame = {};
+					coolTimer = {};
+					_CanonType = CANON_THROW;
+					BirthBullet();
+				}
 			}
 
+			m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
 			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
 		}
 	} else if (_CanonType == CANON_THROW) {
-		m_AttackCount++;
-		BirthBullet();
-		if (m_AttackCount != m_BulletNum) {
-			_CanonType = CANON_SET;
-		} else {
-			_CanonType = CANON_END;
+		l_AfterScale = 0.6f;
+		l_AddScaleFrame = 1 / 10.0f;
+		if (Helper::FrameCheck(m_ScaleFrame, l_AddScaleFrame)) {
+			m_ScaleFrame = {};
+			m_AttackCount++;
+			if (m_AttackCount != m_BulletNum) {
+				_CanonType = CANON_SET;
+			}
+			else {
+				_CanonType = CANON_END;
+			}
 		}
+		m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
 	} else {
 		m_CheckPanel = true;
 		m_AttackCount = {};
@@ -206,6 +221,8 @@ void CanonEnemy::Attack() {
 		_CanonType = CANON_SET;
 		StagePanel::GetInstance()->EnemyHitReset();
 	}
+
+	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 }
 
 //ワープ
@@ -231,6 +248,7 @@ void CanonEnemy::BirthBullet() {
 	newbullet->SetPlayer(player);
 	newbullet->SetShotDir(m_ShotDir);
 	newbullet->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+	newbullet->SetTargetTimer(5);
 	bullets.emplace_back(std::move(newbullet));
 }
 //魔法陣生成
@@ -268,7 +286,7 @@ void CanonEnemy::WarpEnemy() {
 	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
-			enemywarp.AfterScale = 0.5f;
+			enemywarp.AfterScale = 0.6f;
 			enemywarp.State = WARP_END;
 			coolTimer = {};
 			m_Position = l_RandPos;

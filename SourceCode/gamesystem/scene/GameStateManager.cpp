@@ -766,7 +766,7 @@ void GameStateManager::BirthBuff(string& stateName) {
 		m_Buff = true;		//一旦中身はこれだけ
 	}
 	else{
-		player->SetShield(true);
+		player->SetShieldHP(45.0f);
 	}
 }
 void GameStateManager::DeckReset() {

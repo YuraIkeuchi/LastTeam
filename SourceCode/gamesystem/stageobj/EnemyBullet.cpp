@@ -112,7 +112,7 @@ void EnemyBullet::Throw() {
 		XMMATRIX matRot = {};
 		mt19937 mt{ std::random_device{}() };
 		m_ThrowTimer++;
-		if (m_ThrowTimer == l_BaseTimer) {
+		if (m_ThrowTimer == m_TargetTimer) {
 			float l_Rot = {};
 			if (m_ShotDir == DIR_STRAIGHT) {
 				l_Rot = -90.0f;
