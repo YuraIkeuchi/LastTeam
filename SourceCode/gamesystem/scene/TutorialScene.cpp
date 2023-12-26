@@ -6,7 +6,7 @@
 #include <ImageManager.h>
 #include <TutorialTask.h>
 #include <Helper.h>
-#include "MobEnemy.h"
+#include "TutorialEnemy.h"
 #include <SceneManager.h>
 #include <StageBack.h>
 //��ԑJ��
@@ -65,7 +65,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 
 	//敵
 	InterEnemy::SetPlayer(player_.get());
-	enemy = std::make_unique<MobEnemy>();
+	enemy = std::make_unique<TutorialEnemy>();
 	enemy->Initialize();
 
 	TutorialTask::GetInstance()->SetChoiceSkill(false);
