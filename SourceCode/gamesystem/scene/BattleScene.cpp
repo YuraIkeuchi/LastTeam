@@ -64,7 +64,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	Slow::GetInstance()->Initialize();
 	skipUI = IKESprite::Create(ImageManager::RESULTSKIP, { 10.f,10.f }, { 1.f,1.f, 1.f, 1.f });
 	skipUI->SetSize({ 512.f * scale_skip,128.f * scale_skip });
-
+	vignette = IKESprite::Create(ImageManager::VIGNETTE, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.6f });
 	Feed* feed_ = new Feed();
 	feed.reset(feed_);
 }
@@ -277,6 +277,7 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	StageBack::GetInstance()->Draw(dxCommon);
+	vignette->Draw();
 	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	StagePanel::GetInstance()->Draw(dxCommon);

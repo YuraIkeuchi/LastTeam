@@ -122,6 +122,7 @@ public:
 	//回復
 	void RegeneUpdate();
 
+	void ShieldUpdate();
 private:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
@@ -252,4 +253,17 @@ private:
 	int m_HealTimer = {};
 
 	float m_ShieldHP = {};
+	float m_ShieldHPMAX = 45.f;
+	XMFLOAT2 m_ShieldPos = { 420.f,5.f };
+	XMFLOAT2 m_ShieldSize = { 200.0f,40.0f };
+	unique_ptr<IKESprite> shieldtex;
+	unique_ptr<IKESprite> shieldtex_under;
+	//数値化したHP表示のための変数
+	array<int, NUMBER_MAX> m_DigitShield;
+	int m_InterShield = {};//整数にしたHP
+	array<int, NUMBER_MAX> m_DigitShieldMax;
+	int m_InterMaxShield = {};//整数にしたHP
+	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawShield;
+	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawShieldMAX;
+
 };

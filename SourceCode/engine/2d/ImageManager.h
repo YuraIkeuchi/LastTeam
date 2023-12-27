@@ -19,6 +19,7 @@ public:
 	enum texName
 	{
 		FEED,
+		VIGNETTE,
 		SHINE,
 		PLASHINE,
 		SHINE_S,
