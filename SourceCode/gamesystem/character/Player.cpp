@@ -41,9 +41,9 @@ void Player::LoadResource() {
 		_drawShieldMAX[i] = make_unique<DrawNumber>(0.5f);
 		_drawShieldMAX[i]->Initialize();
 	}
-	_drawShield[FIRST_DIGHT]->SetPosition({ m_ShieldPos.x + 80.0f,m_ShieldPos.y + 20.0f });
-	_drawShield[SECOND_DIGHT]->SetPosition({ m_ShieldPos.x + 60.0f,m_ShieldPos.y + 20.0f });
-	_drawShield[THIRD_DIGHT]->SetPosition({ m_ShieldPos.x + 40.f, m_ShieldPos.y + 20.0f });
+	_drawShield[FIRST_DIGHT]->SetPosition({ m_ShieldPos.x + 100.0f,m_ShieldPos.y + 20.0f });
+	_drawShield[SECOND_DIGHT]->SetPosition({ m_ShieldPos.x + 80.0f,m_ShieldPos.y + 20.0f });
+	_drawShield[THIRD_DIGHT]->SetPosition({ m_ShieldPos.x + 60.f, m_ShieldPos.y + 20.0f });
 	_drawShieldMAX[FIRST_DIGHT]->SetPosition({ m_ShieldPos.x + 160.0f,m_ShieldPos.y + 20.0f });
 	_drawShieldMAX[SECOND_DIGHT]->SetPosition({ m_ShieldPos.x + 140.0f,m_ShieldPos.y + 20.0f });
 	_drawShieldMAX[THIRD_DIGHT]->SetPosition({ m_ShieldPos.x + 120.f, m_ShieldPos.y + 20.0f });
@@ -284,13 +284,13 @@ void Player::UIDraw() {
 		_drawShield[THIRD_DIGHT]->Draw();
 	}
 	if (m_InterMaxShield != 0) {
-		_drawShieldMAX[FIRST_DIGHT]->Draw();
+		//_drawShieldMAX[FIRST_DIGHT]->Draw();
 	}
 	if (m_InterMaxShield >= 10) {
-		_drawShieldMAX[SECOND_DIGHT]->Draw();
+		//_drawShieldMAX[SECOND_DIGHT]->Draw();
 	}
 	if (m_InterMaxShield >= 100) {
-		_drawShieldMAX[THIRD_DIGHT]->Draw();
+		//_drawShieldMAX[THIRD_DIGHT]->Draw();
 	}
 	//敵のヒールテキスト
 	for (unique_ptr<DrawHealNumber>& newnumber : _healnumber) {
