@@ -48,6 +48,7 @@ protected:
 
 	unique_ptr<IKETexture> poison_tex;
 	unique_ptr<IKETexture> healdamage_tex;
+	unique_ptr<IKETexture> counter_tex;
 	unique_ptr<IKETexture> _charge;
 	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
@@ -129,6 +130,9 @@ protected:
 	int m_DamageTimer = {};
 	int m_FlashCount = {};
 	
+	float m_CounterFrame = 0.f;
+
+
 	bool m_SuperPoison = false;
 	bool m_HealDamage = false;
 	float m_HealFrame = 0.f;
@@ -198,6 +202,8 @@ public:
 	void DeathUpdate();
 
 	void InductionMove();
+
+	void CounterUpdate();
 private:
 	void BirthParticle();
 	//HPの割合を求める

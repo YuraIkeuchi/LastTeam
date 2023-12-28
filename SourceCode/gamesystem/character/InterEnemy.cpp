@@ -57,6 +57,12 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 	healdamage_tex->Initialize();
 	healdamage_tex->SetRotation({ 90.0f,0.0f,0.0f });
 
+	counter_tex = std::make_unique<IKETexture>(ImageManager::COUNTER, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	counter_tex->TextureCreate();
+	counter_tex->Initialize();
+	counter_tex->SetIsBillboard(true);
+	//counter_tex->SetRotation({ 45.0f,0.0f,0.0f });
+
 	m_AddPoisonToken = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "ADD_TOKEN")));
 	m_PoisonTimerMax = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "TIMER_MAX")));
 }
@@ -134,6 +140,22 @@ void InterEnemy::Update() {
 	HPManage();
 	//UIをワールド座標に変換する
 	WorldDivision();
+
+	if (Helper::FrameCheck(m_CounterFrame, 1 / 45.f)) {
+		m_CounterFrame = 0.f;
+	} else {
+		XMFLOAT3 scale = {
+			Ease(InOut,Back,m_CounterFrame,0.f,0.4f),
+			Ease(InOut,Back,m_CounterFrame,0.f,0.4f),
+			Ease(InOut,Back,m_CounterFrame,0.f,0.4f)
+		};
+		float alpha = Ease(InOut, Sine, m_CounterFrame, 1.f, 0.f);
+		counter_tex->SetScale(scale);
+		counter_tex->SetColor(XMFLOAT4{ 1.f,1.f,1.f,alpha });
+		counter_tex->SetPosition({ m_Position.x,m_Position.y+0.5f,m_Position.z });
+		counter_tex->Update();
+	}
+
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
@@ -760,5 +782,24 @@ void InterEnemy::InductionMove() {
 	}
 	else {
 		m_Position.x = Ease(In, Cubic, m_InductionFrame, m_Position.x, m_InductionPos);
+	}
+}
+
+void InterEnemy::CounterUpdate() {
+
+	if (Helper::FrameCheck(m_CounterFrame, 1 / 45.f)) {
+		m_CounterFrame = 0.f;
+	} else {
+		XMFLOAT3 scale = {
+			Ease(Out,Back,m_CounterFrame,0.f,0.3f),
+			Ease(Out,Back,m_CounterFrame,0.f,0.3f),
+			Ease(Out,Back,m_CounterFrame,0.f,0.3f)
+		};
+		float alpha = Ease(In, Quint, m_CounterFrame, 1.f, 0.f);
+		float posY = Ease(Out, Cubic, m_CounterFrame, 0.5f, 2.5f);
+		counter_tex->SetScale(scale);
+		counter_tex->SetColor(XMFLOAT4{ 1.f,1.f,1.f,alpha });
+		counter_tex->SetPosition({ m_Position.x,posY,m_Position.z });
+		counter_tex->Update();
 	}
 }

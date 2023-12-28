@@ -159,6 +159,9 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	counter_tex->Draw();
+	IKETexture::PostDraw();
 }
 //ImGui•`‰æ
 void BossEnemy::ImGui_Origin() {

@@ -165,6 +165,7 @@ public:
 		BOOM_DIR,
 		POISON_EFFECT,
 		HEAL_DAMAGE,
+		COUNTER,
 	};
 	enum particleName
 	{

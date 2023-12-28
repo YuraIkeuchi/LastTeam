@@ -112,6 +112,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(TUTORIAL_WINDOW, L"Resources/2d/objicon/Tutorial.png");
 	IKESprite::LoadTexture(TUTORIAL_TASK, L"Resources/2d/objicon/TutorialTask.png");
 	IKESprite::LoadTexture(TUTORIAL_CHECK, L"Resources/2d/objicon/TutorialCheck.png");
+
+
 }
 
 //非同期処理で読み込むスプライト
@@ -162,6 +164,7 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(BOOM_DIR, L"Resources/2d/effect/Up.png");
 	IKETexture::LoadTexture(POISON_EFFECT, L"Resources/2d/effect/poison.png");
 	IKETexture::LoadTexture(HEAL_DAMAGE, L"Resources/2d/effect/shine2.png");
+	IKETexture::LoadTexture(COUNTER, L"Resources/2d/effect/Counter.png");
 }
 
 //非同期処理でのテクスチャの読み込み
