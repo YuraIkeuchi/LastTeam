@@ -46,6 +46,7 @@ private:
 		float Disolve = {};
 		bool isClose = false;
 		bool isHeal = false;
+		bool isRock = false;
 	};
 
 public:
@@ -111,6 +112,10 @@ public:
 
 	bool SetClose(int width, int height, bool Flag) {
 		return panels[width][height].isClose = Flag;
+	}
+
+	bool SetRock(int width, int height, bool Flag) {
+		return panels[width][height].isRock = Flag;
 	}
 
 	const bool GetAllDelete() { return m_AllDelete; }

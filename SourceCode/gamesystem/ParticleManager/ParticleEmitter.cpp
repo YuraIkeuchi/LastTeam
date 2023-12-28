@@ -19,7 +19,7 @@ void ParticleEmitter::Initialize()
 	poisonParticle.reset(ParticleManager::Create(ImageManager::Normal));
 	healParticle.reset(ParticleManager::Create(ImageManager::Heal));
 	healParticleSecond.reset(ParticleManager::Create(ImageManager::Plus));
-	smokeParticle.reset(ParticleManager::Create(ImageManager::Normal));
+	smokeParticle.reset(ParticleManager::Create(ImageManager::Smoke));
 }
 
 void ParticleEmitter::Update()
@@ -39,7 +39,7 @@ void ParticleEmitter::FlontDrawAll() {
 	poisonParticle->Draw(AddBlendType);
 	healParticle->Draw(AddBlendType);
 	healParticleSecond->Draw(AddBlendType);
-	smokeParticle->Draw(AddBlendType);
+	smokeParticle->Draw(AlphaBlendType);
 }
 //炎のパーティクル
 void ParticleEmitter::FireEffect(const int life, const XMFLOAT3& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor)
@@ -109,23 +109,14 @@ void ParticleEmitter::HealEffect(const int life, const XMFLOAT3& l_pos, const fl
 }
 
 void ParticleEmitter::SmokeEffect(const int life, const XMFLOAT3& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor,const int number) {
-	const float l_Velocity = 0.2f;
+	const float l_Velocity = 0.1f;
 	XMFLOAT3 pos = l_pos;
 	float angle = {};
-	angle = (float)number * 90.0f;
-	const float rnd_vel = 0.1f;
+	angle = number * 45.0f;
 	XMFLOAT3 vel{};
-	if (number == 0) {
-		vel.x = 0.1f;
-	}
-	else if (number == 1) {
-		vel.z = 0.1f;
-	}else if (number == 2) {
-		vel.x = -0.1f;
-	}
-	else if (number == 3) {
-		vel.z = -0.1f;
-	}
+	vel.x = l_Velocity * sinf(angle);
+	vel.y = 0.0f;
+	vel.z = l_Velocity * -cosf(angle);
 	smokeParticle->Add(life, pos, vel, XMFLOAT3(), startscale, endscale, startcolor, endcolor,{});
 }
 
