@@ -25,7 +25,7 @@ AttackArea::AttackArea(string& userName, string& stateName) {
 	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
 	if (_EffectState != Poison) {
-		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BULLET);
+		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::DOGO);
 	}
 	else {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::THORN);
@@ -59,8 +59,10 @@ void AttackArea::InitState(const int width, const int height) {
 	m_Timer = false;
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	if (_EffectState != Poison) {
-		m_Scale = { 0.2f,0.2f,0.2f };
-		m_Position = { panels.position.x,2.0f,panels.position.z };
+		m_Rotation.y = 270.0f;
+		m_Scale = { 0.3f,0.3f,0.3f };
+		m_Position = { panels.position.x,3.0f,panels.position.z };
+		m_Object->SetBillboard(true);
 	}
 	else {
 		m_Scale = { 0.4f,0.25f,0.4f };
@@ -107,15 +109,15 @@ void AttackArea::SlashMove() {
 	if (m_Timer > m_BirthTimer) { return; }
 	m_AddPower -= m_Gravity;
 	if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
-		m_Alive = false;
+		//m_Alive = false;
 	}
 }
 //Šâ—Ž‚Æ‚µŒn
 void AttackArea::StoneMove() {
 	if (m_Timer > m_BirthTimer) { return; }
 	m_AddPower -= m_Gravity;
-	if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
-		m_Alive = false;
+	if (Helper::CheckMax(m_Position.y, 1.0f, m_AddPower)) {
+		//m_Alive = false;
 	}
 }
 //“ÅŒn
@@ -131,7 +133,7 @@ void AttackArea::PoisonMove() {
 	}
 	else {
 		if (Helper::FrameCheck(m_Frame, addFrame)) {
-			m_Alive = false;
+			//m_Alive = false;
 		}
 		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 	}

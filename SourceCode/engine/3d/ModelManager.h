@@ -29,6 +29,7 @@ public:
 		SICKLE,
 		HEAL,
 		ROCK,
+		DOGO,
 	};
 	//FBXの名前
 	enum FBXName {
