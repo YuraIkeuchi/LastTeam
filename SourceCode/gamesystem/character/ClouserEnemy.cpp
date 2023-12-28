@@ -164,6 +164,7 @@ void ClouserEnemy::Attack() {
 		Helper::Clamp(m_RandWigth, 0, 3);
 		Helper::Clamp(m_RandHeight, 0, 3);
 		BirthPredict(m_RandWigth, m_RandHeight);
+		StagePanel::GetInstance()->SetClose(m_RandWigth, m_RandHeight, true);
 	}
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		BirthArea(m_RandWigth, m_RandHeight);

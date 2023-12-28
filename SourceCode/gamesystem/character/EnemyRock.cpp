@@ -88,8 +88,8 @@ void EnemyRock::Inter() {
 	const float l_AddDisolve = 0.05f;
 	if (Helper::CheckMax(m_AddDisolve,0.0f,-l_AddDisolve)) {
 		shake->SetShakeStart(true);
-		shake->ShakePos(m_ShakePos.x, 1, -1, 10, 30);
-		shake->ShakePos(m_ShakePos.y, 1, -1, 10, 30);
+		shake->ShakePos(m_ShakePos.x, 1, -1, 15, 30);
+		shake->ShakePos(m_ShakePos.y, 1, -1, 15, 30);
 		m_Position.x += m_ShakePos.x;
 		m_Position.y += m_ShakePos.y;
 		if (!shake->GetShakeStart()) {
