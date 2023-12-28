@@ -28,6 +28,7 @@ public:
 		FRONT,
 		SICKLE,
 		HEAL,
+		ROCK,
 	};
 	//FBXの名前
 	enum FBXName {

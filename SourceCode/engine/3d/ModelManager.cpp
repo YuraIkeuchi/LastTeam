@@ -27,6 +27,7 @@ void ModelManager::StartInitialize()
 	LoadModel(FRONT, "FrontEnemy");
 	LoadModel(SICKLE, "Sickle");
 	LoadModel(HEAL, "Heal");
+	LoadModel(ROCK, "Rock");
 }
 
 //モデル読み込み(非同期処理で読み込むもの)

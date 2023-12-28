@@ -12,7 +12,7 @@
 //ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
 EnemyRock::EnemyRock() {
 
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::BULLET));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::ROCK));
 	shake = make_unique<Shake>();
 }
 //‰Šú‰»
@@ -32,7 +32,7 @@ void EnemyRock::InitState(const int width, const int height) {
 	m_NowWidth = width, m_NowHeight = height;
 	m_Position = SetPannelPos(width, height);
 	m_Position.y = 2.0f;
-
+	m_BaseScale = 0.4f;
 	m_ReturnPos = m_Position;
 	m_AddDisolve = 2.0f;
 }
@@ -48,7 +48,6 @@ void (EnemyRock::* EnemyRock::stateTable[])() = {
 void EnemyRock::Action() {
 
 	(this->*stateTable[_charaState])();
-	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//“–‚½‚è”»’è
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
