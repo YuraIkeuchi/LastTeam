@@ -8,7 +8,7 @@
 #include "ImageManager.h"
 #include <GameStateManager.h>
 #include <StagePanel.h>
-
+#include <ParticleEmitter.h>
 //モデル読み込み
 EnemyRock::EnemyRock() {
 
@@ -24,7 +24,7 @@ bool EnemyRock::Initialize() {
 	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/Rock.csv", "Damage")));
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
-	m_EnemyTag = "EnemyRock";
+	m_EnemyTag = "Rock";
 	return true;
 }
 //ステータス初期化
@@ -107,6 +107,7 @@ void EnemyRock::Attack() {
 	if (Helper::CheckMin(m_Timer, 20, 1)) {
 		m_AddPower -= m_Gravity;
 		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			BirthParticle();
 			_charaState = STATE_SPECIAL;
 			m_Position.y = 0.1f;
 		}
@@ -118,6 +119,7 @@ void EnemyRock::Close()
 	const float l_AddFrame = 1 / 30.0f;
 	if (Helper::CheckMin(m_Timer, kIntervalMax, 1)) {
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
 			m_Alive = false;
 		}
 		else {
@@ -144,4 +146,14 @@ bool EnemyRock::RockCollide() {
 	}
 
 	return false;
+}
+
+void EnemyRock::BirthParticle() {
+	int l_life = 20;
+	const float s_Scale = 1.5f;
+	const float e_Scale = 0.0f;
+	const XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
+	for (int i = 1; i < 7; i++) {
+		ParticleEmitter::GetInstance()->SmokeEffect(l_life,m_Position, s_Scale, e_Scale, color, color, i);
+	}
 }

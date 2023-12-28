@@ -724,6 +724,9 @@ void InterEnemy::DeathUpdate() {
 
 	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
 		m_OverFrame = 1.0f;
+		if (m_EnemyTag == "Rock") {
+			StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
+		}
 		m_Alive = false;
 	} else {
 		RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);
