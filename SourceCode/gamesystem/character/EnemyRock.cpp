@@ -8,7 +8,7 @@
 #include "ImageManager.h"
 #include <GameStateManager.h>
 #include <StagePanel.h>
-
+#include <ParticleEmitter.h>
 //ÉÇÉfÉãì«Ç›çûÇ›
 EnemyRock::EnemyRock() {
 
@@ -107,6 +107,7 @@ void EnemyRock::Attack() {
 	if (Helper::CheckMin(m_Timer, 20, 1)) {
 		m_AddPower -= m_Gravity;
 		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			BirthParticle();
 			_charaState = STATE_SPECIAL;
 			m_Position.y = 0.1f;
 		}
@@ -144,4 +145,14 @@ bool EnemyRock::RockCollide() {
 	}
 
 	return false;
+}
+
+void EnemyRock::BirthParticle() {
+	int l_life = 50;
+	const float s_Scale = 1.0f;
+	const float e_Scale = 0.0f;
+	const XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
+	for (int i = 0; i < 4; i++) {
+		ParticleEmitter::GetInstance()->SmokeEffect(l_life,m_Position, s_Scale, e_Scale, color, color, i);
+	}
 }

@@ -22,6 +22,8 @@ private:
 	static void(EnemyRock::* stateTable[])();
 
 	bool RockCollide();
+
+	void BirthParticle();
 private:
 	void Inter();//¶¬
 	void Attack();//UŒ‚
