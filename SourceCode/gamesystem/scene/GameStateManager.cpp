@@ -123,7 +123,7 @@ void GameStateManager::Update() {
 	default:
 		break;
 	}
-	Helper::Clamp(m_PosScore,-1000,1000);
+	Helper::Clamp(m_PosScore, -1000, 1000);
 
 	//カウンターの処理
 	if (m_Counter) {
@@ -134,7 +134,7 @@ void GameStateManager::Update() {
 
 		if (Helper::CheckMin(m_CounterTimer, 20, 1)) {		//一定フレームでカウンター終了
 			m_Counter = false;
-			if (m_CounterBuff&& !m_Buff) {
+			if (m_CounterBuff && !m_Buff) {
 				for (int i = 0; i < 2; i++) {
 					RandPowerUpInit();
 				}
@@ -233,7 +233,9 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		gaugeUI->Draw();
 		//gaugeCover->Draw();
 		if (isPassive) {
-			passiveAct->Draw();
+			for (std::unique_ptr<IKESprite>& passiveAct : passiveActs) {
+				passiveAct->Draw();
+			}
 			passiveActive->Draw();
 		}
 		onomatope->Draw();
@@ -300,7 +302,7 @@ void GameStateManager::ActUIDraw() {
 }
 //スキルを入手(InterActionCPPで使ってます)
 void GameStateManager::AddSkill(const int SkillType, const int ID, const float damage, const int Delay,
-	vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name,int Token) {
+	vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name, int Token) {
 	ActState act;
 	act.SkillType = SkillType;
 	if (act.SkillType == 0 || act.SkillType == 1 || act.SkillType == 3) {
@@ -365,7 +367,7 @@ void GameStateManager::BirthArea() {
 	}
 	if (m_Act[0].ActID == 17) {
 		//倍率攻撃
-		damage = (float)m_OldDamage*1.5f;
+		damage = (float)m_OldDamage * 1.5f;
 	}
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
@@ -377,9 +379,8 @@ void GameStateManager::BirthArea() {
 					std::unique_ptr<RegeneArea> newarea = std::make_unique<RegeneArea>();
 					newarea->InitState(AreaX, AreaY);
 					regenearea.emplace_back(std::move(newarea));
-				}
-				else {
-					std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player",m_Act[0].StateName);
+				} else {
+					std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player", m_Act[0].StateName);
 					newarea->InitState(AreaX, AreaY);
 					newarea->SetDamage(damage);
 					newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
@@ -428,23 +429,19 @@ void GameStateManager::PredictManager() {
 				}
 			}
 		}
-	}
-	else {
-		predictarea->SetPredict(m_NowWidth, m_NowHeight,true);
+	} else {
+		predictarea->SetPredict(m_NowWidth, m_NowHeight, true);
 	}
 	if (m_Act[0].SkillType == 0) {
 		if (m_Act[0].StateName == "REGENE") {
 			predictarea->SetDrawDype(PREDICT_HEAL);
-		}
-		else {
+		} else {
 			predictarea->SetDrawDype(PREDICT_ATTACK);
 		}
-	}
-	else if (m_Act[0].SkillType == 1) {
+	} else if (m_Act[0].SkillType == 1) {
 		if (m_Act[0].StateName == "NEXT" || m_Act[0].StateName == "SHILED") {
 			predictarea->SetDrawDype(PREDICT_BUFF);
-		}
-		else if (m_Act[0].StateName == "RANDOM" || m_Act[0].StateName == "REMOVE") {
+		} else if (m_Act[0].StateName == "RANDOM" || m_Act[0].StateName == "REMOVE") {
 			predictarea->SetDrawDype(PREDICT_HATENA);
 		}
 	}
@@ -460,7 +457,7 @@ void GameStateManager::UseSkill() {
 	if (!m_Delay) { return; }
 	int delay = m_Act[0].ActDelay;
 	if (m_ExtendQueen) {
-		delay =(int)((float)delay * 0.7f);
+		delay = (int)((float)delay * 0.7f);
 	}
 	m_ChargeScale = Helper::Lerp(1.0f, 0.0f, m_DelayTimer, delay);		//線形補間でチャージを表してる
 	if (Helper::CheckMin(m_DelayTimer, delay, 1)) {
@@ -486,14 +483,12 @@ void GameStateManager::UseSkill() {
 				}
 				BirthBuff(m_Act[0].StateName);
 				onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
-			}
-			else if (m_Act[0].StateName == "RANDOM") {
+			} else if (m_Act[0].StateName == "RANDOM") {
 				int l_rand = {};
 				l_rand = Helper::GetRanNum(0, 1);
 				if (l_rand == 0) {
 					player->HealPlayer(10.0f);
-				}
-				else {
+				} else {
 					player->RecvDamage(10.0f);
 				}
 			}
@@ -502,8 +497,7 @@ void GameStateManager::UseSkill() {
 		//全スキル除去にするかどうか決める
 		if (m_Act[0].StateName == "REMOVE") {
 			FinishAct(true);
-		}
-		else {
+		} else {
 			FinishAct();
 		}
 		if (m_AllActCount == 0) {
@@ -525,11 +519,10 @@ void GameStateManager::FinishAct(bool AllFinish) {
 		m_Act.erase(m_Act.begin());
 		m_AllActCount--;
 		actui[0]->SetUse(true);
-	}
-	else {
+	} else {
 		for (int i = 0; i < m_Act.size(); i++) {
 			m_DiscardNumber.push_back(m_Act[i].ActID);
-			
+
 			actui[i]->SetUse(true);
 		}
 		m_AllActCount = {};
@@ -552,7 +545,7 @@ void GameStateManager::GaugeUpdate() {
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReloadDamage) {
 			int r_num = Helper::GetRanNum(0, 99);
-			if (r_num < 30) {
+			if (r_num < 50) {
 				//エネミーに3ダメージ
 				m_ReloadDamage = true;
 				SetPassiveActive((int)Passive::ABILITY::RELOAD_DAMAGE);
@@ -764,8 +757,7 @@ void GameStateManager::StageClearInit() {
 void GameStateManager::BirthBuff(string& stateName) {
 	if (stateName == "NEXT") {
 		m_Buff = true;		//一旦中身はこれだけ
-	}
-	else{
+	} else {
 		player->SetShieldHP(45.0f);
 	}
 }
@@ -811,19 +803,66 @@ void GameStateManager::PowerUpEffectUpdate() {
 }
 
 void GameStateManager::PassiveActive() {
-	if (!isPassive) { return; }
+	if (!isPassive) {
+		if (passiveActiveNum.size() == 0) { return; }
+		passiveActs.resize(passiveActiveNum.size());
+		for (int i = 0; i < passiveActiveNum.size(); i++) {
+			passiveActs[i] = IKESprite::Create(ImageManager::PASSIVE_00 + passiveActiveNum[i], { 0.f,0.f });
+			passiveActs[i]->SetSize({ 0.f, 0.f });
+			passiveActs[i]->SetAnchorPoint({ 0.5f,0.5f });
+		}
+		float dif = 40.f;
+		float dif_twice = dif * 2.0f;
+		switch (passiveActs.size()) {
+		case 1:
+			passiveActs[0]->SetPosition({ 640.f, 120.f });
+			break;
+		case 2:
+			passiveActs[0]->SetPosition({ 640.f - dif, 120.f });
+			passiveActs[1]->SetPosition({ 640.f + dif, 120.f });
+			break;
+		case 3:
+			passiveActs[0]->SetPosition({ 640.f - dif_twice, 120.f });
+			passiveActs[1]->SetPosition({ 640.f, 120.f });
+			passiveActs[2]->SetPosition({ 640.f + dif_twice, 120.f });
+			break;
+		case 4:
+			passiveActs[0]->SetPosition({ 640.f - dif - dif_twice, 120.f });
+			passiveActs[1]->SetPosition({ 640.f - dif, 120.f });
+			passiveActs[2]->SetPosition({ 640.f + dif, 120.f });
+			passiveActs[3]->SetPosition({ 640.f + dif + dif_twice, 120.f });
+			break;
+		case 5:
+			passiveActs[0]->SetPosition({ 640.f - dif_twice - dif_twice, 120.f });
+			passiveActs[1]->SetPosition({ 640.f - dif_twice, 120.f });
+			passiveActs[2]->SetPosition({ 640.f, 120.f });
+			passiveActs[3]->SetPosition({ 640.f + dif_twice, 120.f });
+			passiveActs[4]->SetPosition({ 640.f + dif_twice + dif_twice, 120.f });
+			break;
+		default:
+			assert(0);
+			break;
+		}
+		passiveFrame = 0.f;
+		passiveAlphaFrame = 0.f;
+		passiveActive->SetColor({ 1,1,1,1 });
+		passiveActiveNum.clear();
+		isPassive = true;
+		return;
+	}
 	if (Helper::FrameCheck(passiveFrame, 1.f / 60.f)) {
 		if (Helper::FrameCheck(passiveAlphaFrame, 1.f / 30.0f)) {
 			isPassive = false;
 			passiveFrame = 0.f;
 			passiveAlphaFrame = 0.f;
 			passiveActive->SetColor({ 1,1,1,1 });
-			passiveAct->SetColor({ 1,1,1,1});
+			passiveActs.clear();
 		} else {
 			float alpha = Ease(In, Quint, passiveAlphaFrame, 1.f, 0.f);
 			passiveActive->SetColor({ 1,1,1,alpha });
-			passiveAct->SetColor({ 1,1,1,alpha });
-
+			for (std::unique_ptr<IKESprite>& passiveAct : passiveActs) {
+				passiveAct->SetColor({ 1,1,1,alpha });
+			}
 		}
 	} else {
 		XMFLOAT2 size = {};
@@ -833,7 +872,9 @@ void GameStateManager::PassiveActive() {
 		XMFLOAT2 size_p = {};
 		size_p.x = Ease(Out, Back, passiveFrame, 0.f, 64.f);
 		size_p.y = Ease(Out, Back, passiveFrame, 0.f, 64.f);
-		passiveAct->SetSize(size_p);
+		for (std::unique_ptr<IKESprite>& passiveAct : passiveActs) {
+			passiveAct->SetSize(size_p);
+		}
 	}
 }
 
@@ -846,7 +887,7 @@ void GameStateManager::DamageEffectUpdate() {
 			damage.tex->SetPosition({
 				damage.position.x + sinf(damage.angle) * damage.dia,
 				damage.position.y - cosf(damage.angle) * damage.dia
-			});
+				});
 			float rot = Ease(In, Quad, damage.frame, 0.0f, 180.f);
 			damage.tex->SetRotation(rot);
 			float alpha = Ease(In, Quad, damage.frame, 1.0f, 0.f);
@@ -874,13 +915,20 @@ void GameStateManager::TakenDamageCheck(int Damage) {
 	resultReport->SetTakenDamage(m_MaxTakenDamage);
 }
 void GameStateManager::SetPassiveActive(int id) {
-	isPassive = true;
+	if (passiveActiveNum.size() > 5) { return; }
+	for (int& num : passiveActiveNum) {
+		if (num == id) {
+			return;
+		}
+	}
+	passiveActiveNum.push_back(id);
+	/*isPassive = true;
 	passiveAct = IKESprite::Create(ImageManager::PASSIVE_00 + id, {0.f,0.f});
 	passiveAct->SetPosition( { 640.f, 110.0f });
 	passiveAct->SetAnchorPoint({0.5f,0.5f});
 	passiveFrame = 0.f;
 	passiveAlphaFrame = 0.f;
-	passiveActive->SetColor({ 1,1,1,1 });
+	passiveActive->SetColor({ 1,1,1,1 });*/
 }
 
 //捨てたカードの再シャッフル
@@ -913,7 +961,7 @@ void GameStateManager::SaveGame() {
 	normalofs << "DeckSize" << "," << m_DeckNumber.size() << std::endl;
 	for (int i = 0; i < m_DeckNumber.size(); i++) {
 		normalofs << "DeckNumber" << "," << m_DeckNumber[i]
-			<<std::endl;
+			<< std::endl;
 	}
 	normalofs << "PassiveSize" << "," << GotPassiveIDs.size() << std::endl;
 	for (int i = 0; i < GotPassiveIDs.size(); i++) {

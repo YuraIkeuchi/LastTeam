@@ -218,7 +218,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {  };
+	std::vector <int> m_StartPassive= { 3,9,11,6 };
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -226,7 +226,9 @@ private:
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 	unique_ptr<IKESprite> gaugeCover = nullptr;
 	unique_ptr<IKESprite> passiveActive = nullptr;
-	unique_ptr<IKESprite> passiveAct = nullptr;
+	std::vector<unique_ptr<IKESprite>> passiveActs ;
+	std::vector<int> passiveActiveNum;
+
 	bool isPassive = false;
 	float passiveFrame = 0.f;
 	float passiveAlpha = 1.0f;
@@ -294,7 +296,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = {14,22,23};
+	vector <int> m_StartNumber = {7};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
