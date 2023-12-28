@@ -123,13 +123,17 @@ void ClouserEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void ClouserEnemy::ImGui_Origin() {
-	ImGui::Begin("Area");
+	/*ImGui::Begin("Area");
 	ImGui::Text("Height:%d", m_NowWidth);
 	ImGui::Text("Induction:%d", m_Induction);
 	ImGui::Text("InductionFrame:%f", m_InductionFrame);
 	ImGui::Text("InductionPos:%f", m_InductionPos);
 	ImGui::End();
-	predictarea->ImGuiDraw();
+	predictarea->ImGuiDraw();*/
+	for (auto i = 0; i < enerock.size(); i++) {
+		if (enerock[i] == nullptr)continue;
+		enerock[i]->ImGui_Origin();
+	}
 }
 //ŠJ•ú
 void ClouserEnemy::Finalize() {

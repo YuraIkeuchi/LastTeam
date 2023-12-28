@@ -13,6 +13,7 @@
 EnemyRock::EnemyRock() {
 
 	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::BULLET));
+	shake = make_unique<Shake>();
 }
 //èâä˙âª
 bool EnemyRock::Initialize() {
@@ -31,6 +32,9 @@ void EnemyRock::InitState(const int width, const int height) {
 	m_NowWidth = width, m_NowHeight = height;
 	m_Position = SetPannelPos(width, height);
 	m_Position.y = 2.0f;
+
+	m_ReturnPos = m_Position;
+	m_AddDisolve = 2.0f;
 }
 
 
@@ -70,7 +74,11 @@ void EnemyRock::Draw(DirectXCommon* dxCommon) {
 }
 //ImGuiï`âÊ
 void EnemyRock::ImGui_Origin() {
-	
+	ImGui::Begin("RockEnemy");
+	ImGui::Text("AddDisolve:%f", m_AddDisolve);
+	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::Text("ShakePosX:%f", m_ShakePos.x);
+	ImGui::End();
 }
 //äJï˙
 void EnemyRock::Finalize() {
@@ -78,20 +86,31 @@ void EnemyRock::Finalize() {
 }
 //ë“ã@
 void EnemyRock::Inter() {
-	const float l_AddFrame = 1 / 30.0f;
-	const float l_AfterScale = 0.2f;
-	if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
-		m_Frame = {};
-		_charaState = STATE_ATTACK;
+	const float l_AddDisolve = 0.05f;
+	if (Helper::CheckMax(m_AddDisolve,0.0f,-l_AddDisolve)) {
+		shake->SetShakeStart(true);
+		shake->ShakePos(m_ShakePos.x, 1, -1, 10, 30);
+		shake->ShakePos(m_ShakePos.y, 1, -1, 10, 30);
+		m_Position.x += m_ShakePos.x;
+		m_Position.y += m_ShakePos.y;
+		if (!shake->GetShakeStart()) {
+			m_ShakePos = { 0.0f,0.0f,0.0f };
+			m_Frame = {};
+			_charaState = STATE_ATTACK;
+			m_Position = m_ReturnPos;
+		}
+
+	
 	}
-	m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, l_AfterScale);
 }
 //çUåÇ
 void EnemyRock::Attack() {
-	m_AddPower -= m_Gravity;
-	if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
-		_charaState = STATE_SPECIAL;
-		m_Position.y = 0.1f;
+	if (Helper::CheckMin(m_Timer, 20, 1)) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			_charaState = STATE_SPECIAL;
+			m_Position.y = 0.1f;
+		}
 	}
 }
 
