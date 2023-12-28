@@ -109,6 +109,10 @@ public:
 		return panels[width][height].isHeal = Flag;
 	}
 
+	bool SetClose(int width, int height, bool Flag) {
+		return panels[width][height].isClose = Flag;
+	}
+
 	const bool GetAllDelete() { return m_AllDelete; }
 	const bool GetCreateFinish() { return m_CreateFinish; }
 	const int GetPanelType(const int width, const int height) { return panels[width][height].type; }

@@ -1,6 +1,6 @@
 #pragma once
-#pragma once
 #include"InterEnemy.h"
+#include "Shake.h"
 
 using namespace std;         //  名前空間指定
 //爆弾の敵
@@ -35,8 +35,12 @@ private:
 	float m_AddPower = 0.0f;
 	//重力加速度
 	float m_Gravity = 0.02f;
-	float m_BaseScale = {};
+	float m_BaseScale = 0.2f;
 	float m_Frame = {};
 	int m_Timer = {};
 	bool m_Hit = false;
+	XMFLOAT3 m_ReturnPos = {};
+	//シェイク用変数
+	XMFLOAT3 m_ShakePos = { 0.0f,0.0f,0.0f };
+	unique_ptr<Shake> shake;
 };
