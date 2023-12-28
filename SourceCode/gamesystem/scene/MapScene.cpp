@@ -811,28 +811,27 @@ void MapScene::CheckState() {
 			std::stringstream ss;
 			const std::string BaseName = "Resources/csv/EnemySpawn/";
 			string levelName = "None";
+			bool isBattle = true;
 			if (nowHierarchy == MaxLength) {
 				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
 				s_LastStage = true;
+			} else {
+				if (nowHierarchy < (MaxLength / 2) + 2) {	//なんマス目に居るかで難易度が変わる
+					levelName = "Weak";
+				} else {
+					levelName = "Strong";
+				}
+				if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
+					ss << BaseName + levelName + "/BattleMap0" << 1 << ".csv";
+					isBattle = true;
+				} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
+					ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
+					isBattle = false;
+				} else if (UIs[nowHierarchy][nowIndex].Tag == BOSS) {
+					ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
+					isBattle = true;
+				}
 			}
-			bool isBattle = true;
-			if (nowHierarchy < (MaxLength / 2) + 2) {	//なんマス目に居るかで難易度が変わる
-				levelName = "Weak";
-			}
-			else {
-				levelName = "Strong";
-			}
-			if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
-				ss << BaseName + levelName + "/BattleMap0" << 1 << ".csv";
-				isBattle = true;
-			} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
-				ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
-				isBattle = false;
-			} else if (UIs[nowHierarchy][nowIndex].Tag == BOSS) {
-				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
-				isBattle = true;
-			}
-
 			std::string r_map = ss.str();
 			GameStateManager::GetInstance()->SetEnemySpawnText(r_map, isBattle);
 			delayFrame = 0.f;
