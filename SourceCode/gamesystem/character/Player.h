@@ -252,18 +252,13 @@ private:
 	bool m_Bound = {};
 	int m_HealTimer = {};
 
-	float m_ShieldHP = {};
+	float m_ShieldHP = 45.f;
 	float m_ShieldHPMAX = 45.f;
-	XMFLOAT2 m_ShieldPos = { 420.f,5.f };
-	XMFLOAT2 m_ShieldSize = { 200.0f,40.0f };
-	unique_ptr<IKESprite> shieldtex;
-	unique_ptr<IKESprite> shieldtex_under;
+	XMFLOAT2 m_ShieldPos = { m_HPPos.x + 200.f,5.f };
+	unique_ptr<IKESprite> shieldCover;
 	//数値化したHP表示のための変数
-	array<int, NUMBER_MAX> m_DigitShield;
+	array<int, 2> m_DigitShield;
 	int m_InterShield = {};//整数にしたHP
-	array<int, NUMBER_MAX> m_DigitShieldMax;
-	int m_InterMaxShield = {};//整数にしたHP
-	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawShield;
-	array<unique_ptr<DrawNumber>, NUMBER_MAX> _drawShieldMAX;
+	array<unique_ptr<DrawNumber>, 2> _drawShield;
 
 };

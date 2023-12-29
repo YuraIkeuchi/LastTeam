@@ -31,26 +31,23 @@ void Player::LoadResource() {
 		_MaxHp[i] = make_unique<DrawNumber>(0.5f);
 		_MaxHp[i]->Initialize();
 	}
-	shieldtex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
-	shieldtex->SetColor({ 0.5f,0.5f,1.f,1.f });
-	shieldtex_under = IKESprite::Create(ImageManager::FEED, { 0.0f,0.0f });
-	shieldtex_under->SetSize(m_ShieldSize);
-	for (auto i = 0; i < _drawnumber.size(); i++) {
+
+	shieldCover = IKESprite::Create(ImageManager::SHIELDCOVER, { 0.0f,0.0f });
+	shieldCover->SetAnchorPoint({ 0.5f,0.5f });
+	shieldCover->SetColor({1.3f,1.3f, 1.3f, 1.f});
+	shieldCover->SetPosition({ m_ShieldPos.x, m_ShieldPos.y + 20.0f });
+	for (auto i = 0; i < _drawShield.size(); i++) {
 		_drawShield[i] = make_unique<DrawNumber>(0.5f);
 		_drawShield[i]->Initialize();
-		_drawShieldMAX[i] = make_unique<DrawNumber>(0.5f);
-		_drawShieldMAX[i]->Initialize();
+		_drawShield[i]->SetColor({ 0.7f,0.7f,1.f,1.0f });
 	}
-	_drawShield[FIRST_DIGHT]->SetPosition({ m_ShieldPos.x + 100.0f,m_ShieldPos.y + 20.0f });
-	_drawShield[SECOND_DIGHT]->SetPosition({ m_ShieldPos.x + 80.0f,m_ShieldPos.y + 20.0f });
-	_drawShield[THIRD_DIGHT]->SetPosition({ m_ShieldPos.x + 60.f, m_ShieldPos.y + 20.0f });
-	_drawShieldMAX[FIRST_DIGHT]->SetPosition({ m_ShieldPos.x + 160.0f,m_ShieldPos.y + 20.0f });
-	_drawShieldMAX[SECOND_DIGHT]->SetPosition({ m_ShieldPos.x + 140.0f,m_ShieldPos.y + 20.0f });
-	_drawShieldMAX[THIRD_DIGHT]->SetPosition({ m_ShieldPos.x + 120.f, m_ShieldPos.y + 20.0f });
+	_drawShield[FIRST_DIGHT]->SetPosition({ m_ShieldPos.x + 60.0f,m_ShieldPos.y + 20.0f });
+	_drawShield[SECOND_DIGHT]->SetPosition({ m_ShieldPos.x + 40.0f,m_ShieldPos.y + 20.0f });
 
 	_drawnumber[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 80.0f,m_HPPos.y + 20.0f });
 	_drawnumber[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 60.0f,m_HPPos.y + 20.0f });
 	_drawnumber[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 40.f, m_HPPos.y + 20.0f });
+
 	slash_ = IKESprite::Create(ImageManager::SLASH, { m_HPPos.x + 100.f,m_HPPos.y + 20.0f });
 	slash_->SetScale(0.5f);
 	slash_->SetAnchorPoint({ 0.5f,0.5f });
@@ -69,7 +66,7 @@ bool Player::Initialize() {
 	LoadCSV();
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	m_AddDisolve = 2.0f;
-	m_ShieldHP = 0.0f;
+	m_ShieldHP = 45.f;
 	//CSV読み込み
 	return true;
 }
@@ -271,27 +268,14 @@ void Player::UIDraw() {
 	if (m_InterMaxHP >= 100) {
 		_MaxHp[THIRD_DIGHT]->Draw();
 	}
-
-	shieldtex_under->Draw();
-	shieldtex->Draw();
 	if (m_InterShield != 0) {
+		shieldCover->Draw();
 		_drawShield[FIRST_DIGHT]->Draw();
 	}
 	if (m_InterShield >= 10) {
 		_drawShield[SECOND_DIGHT]->Draw();
 	}
-	if (m_InterShield >= 100) {
-		_drawShield[THIRD_DIGHT]->Draw();
-	}
-	if (m_InterMaxShield != 0) {
-		//_drawShieldMAX[FIRST_DIGHT]->Draw();
-	}
-	if (m_InterMaxShield >= 10) {
-		//_drawShieldMAX[SECOND_DIGHT]->Draw();
-	}
-	if (m_InterMaxShield >= 100) {
-		//_drawShieldMAX[THIRD_DIGHT]->Draw();
-	}
+
 	//敵のヒールテキスト
 	for (unique_ptr<DrawHealNumber>& newnumber : _healnumber) {
 		if (newnumber != nullptr) {
@@ -803,7 +787,6 @@ void Player::RegeneUpdate() {
 }
 void Player::ShieldUpdate() {
 	m_InterShield = (int)(m_ShieldHP);
-	m_InterMaxShield = (int)m_ShieldHPMAX;
 
 	if (m_ShieldHP > 0.0f) {
 		for (auto i = 0; i < _drawShield.size(); i++) {
@@ -811,23 +794,13 @@ void Player::ShieldUpdate() {
 			Helper::Clamp(m_ShieldHP, 0.0f, m_ShieldHPMAX);
 			// 表示用のHP
 			m_InterShield = (int)(m_ShieldHP);
-			m_InterMaxShield = (int)m_ShieldHPMAX;
 			for (auto i = 0; i < _drawShield.size(); i++) {
 				_drawShield[i]->SetNumber(m_DigitShield[i]);
 				_drawShield[i]->Update();
-				_drawShieldMAX[i]->SetNumber(m_DigitShieldMax[i]);
-				_drawShieldMAX[i]->Update();
 				m_DigitShield[i] = Helper::getDigits((int)m_ShieldHP, i, i);
-				m_DigitShieldMax[i] = Helper::getDigits((int)m_ShieldHPMAX, i, i);
 			}
 		}
 	}
-	shieldtex->SetPosition(m_ShieldPos);
-	shieldtex_under->SetPosition(m_ShieldPos);
-	shieldtex->SetSize({ (m_ShieldHP/ m_ShieldHPMAX) * m_ShieldSize.x,m_ShieldSize.y });
-
-
-
 
 }
 void Player::BirthHealNumber(const float heal) {
