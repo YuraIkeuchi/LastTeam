@@ -531,7 +531,7 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	}
 
 	Helper::Clamp(m_ShieldHP, 0.0f, 10.0f);
-	GameStateManager::GetInstance()->TakenDamageCheck((int)l_Damage);
+	GameStateManager::GetInstance()->TakenDamageCheck((int)Damage);
 	GameStateManager::GetInstance()->MissAttack();
 	//パッシブ効果処理
 	if (GameStateManager::GetInstance()->GetExtendBishop()) {

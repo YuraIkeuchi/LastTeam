@@ -48,6 +48,8 @@ protected:
 
 	unique_ptr<IKETexture> poison_tex;
 	unique_ptr<IKETexture> healdamage_tex;
+	unique_ptr<IKETexture> counter_tex;
+	unique_ptr<IKETexture> counter2Tex;
 	unique_ptr<IKETexture> _charge;
 	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
@@ -129,6 +131,10 @@ protected:
 	int m_DamageTimer = {};
 	int m_FlashCount = {};
 	
+	bool isCounterEffect = false;
+	float m_CounterFrame = 0.f;
+	float m_CounterFinishFrame = 0.f;
+
 	bool m_SuperPoison = false;
 	bool m_HealDamage = false;
 	float m_HealFrame = 0.f;
@@ -180,7 +186,11 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
+	void BaseFrontDraw(DirectXCommon* dxCommon);
+
 	virtual void Draw(DirectXCommon* dxCommon)override;
+	
+	void BaseBackDraw(DirectXCommon* dxCommon);
 
 	void ImGuiDraw();
 
@@ -198,6 +208,8 @@ public:
 	void DeathUpdate();
 
 	void InductionMove();
+
+	void CounterUpdate();
 private:
 	void BirthParticle();
 	//HPの割合を求める

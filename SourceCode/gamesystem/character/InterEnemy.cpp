@@ -57,6 +57,15 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 	healdamage_tex->Initialize();
 	healdamage_tex->SetRotation({ 90.0f,0.0f,0.0f });
 
+	counter_tex = std::make_unique<IKETexture>(ImageManager::COUNTER, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	counter_tex->TextureCreate();
+	counter_tex->Initialize();
+	counter_tex->SetIsBillboard(true);
+	//counter_tex->SetRotation({ 45.0f,0.0f,0.0f });
+	counter2Tex = std::make_unique<IKETexture>(ImageManager::COUNTER_TWO, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	counter2Tex->TextureCreate();
+	counter2Tex->Initialize();
+	counter2Tex->SetIsBillboard(true);
 	m_AddPoisonToken = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "ADD_TOKEN")));
 	m_PoisonTimerMax = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "TIMER_MAX")));
 }
@@ -134,6 +143,7 @@ void InterEnemy::Update() {
 	HPManage();
 	//UIをワールド座標に変換する
 	WorldDivision();
+
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
@@ -187,8 +197,21 @@ void InterEnemy::SuperPoisonEffect() {
 		poison_tex->Update();
 	}
 }
+void InterEnemy::BaseFrontDraw(DirectXCommon* dxCommon) {
+	if (m_SuperPoison) { poison_tex->Draw(); }
+	if (m_HealDamage) { healdamage_tex->Draw(); }
+
+}
 //描画
 void InterEnemy::Draw(DirectXCommon* dxCommon) {
+}
+
+void InterEnemy::BaseBackDraw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	counter_tex->Draw();
+	counter2Tex->Draw();
+	IKETexture::PostDraw();
+
 }
 
 void InterEnemy::ImGuiDraw() {
@@ -259,6 +282,9 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				if (_charaState == STATE_ATTACK &&
 					!GameStateManager::GetInstance()->GetCounter()) {
 					GameStateManager::GetInstance()->SetCounter(true);
+					isCounterEffect = true;
+					m_CounterFrame = 0.f;
+					m_CounterFinishFrame = 0.f;
 					damage *= 1.5f;
 					TutorialTask::GetInstance()->SetTaskFinish(true, TASK_COUNTER);
 				}
@@ -763,5 +789,45 @@ void InterEnemy::InductionMove() {
 	}
 	else {
 		m_Position.x = Ease(In, Cubic, m_InductionFrame, m_Position.x, m_InductionPos);
+	}
+}
+
+void InterEnemy::CounterUpdate() {
+	if (!isCounterEffect) { return; }
+	if (!Helper::FrameCheck(m_CounterFrame, 1 / 40.f)) {
+		XMFLOAT3 scale = {
+			Ease(InOut,Back,m_CounterFrame,0.f,0.4f),
+			Ease(InOut,Back,m_CounterFrame,0.f,0.4f),
+			Ease(InOut,Back,m_CounterFrame,0.f,0.4f)
+		};
+		counter_tex->SetScale(scale);
+		float alpha = Ease(In, Sine, m_CounterFrame, 1.f, 0.f);
+		counter_tex->SetColor(XMFLOAT4{ 1.f,1.f,1.f,alpha });
+		counter_tex->Update();
+
+		counter_tex->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+		counter_tex->Update();
+
+		XMFLOAT3 scale2 = {
+		Ease(Out,Back,m_CounterFrame,0.f,-0.30f),
+		Ease(Out,Back,m_CounterFrame,0.f,-0.30f),
+		Ease(Out,Back,m_CounterFrame,0.f,-0.30f)
+		};
+		counter2Tex->SetScale(scale2);
+		float rot_ = Ease(Out, Quint, m_CounterFrame, 0.f, 180.0f);
+		counter2Tex->SetRotation({ 0.f,0.f,rot_ });
+		counter2Tex->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+		counter2Tex->Update();
+	}
+	if (m_CounterFrame >= 0.7f) {
+		if (Helper::FrameCheck(m_CounterFinishFrame, 1 / 20.f)) {
+			isCounterEffect = false;
+			counter2Tex->SetColor(XMFLOAT4{ 1.f,1.f,1.f,1.f });
+			counter2Tex->Update();
+		} else {
+			float alpha = Ease(InOut, Sine, m_CounterFinishFrame, 1.f, 0.f);
+			counter2Tex->SetColor(XMFLOAT4{ 0.8f,0.8f,0.8f,alpha });
+			counter2Tex->Update();
+		}
 	}
 }

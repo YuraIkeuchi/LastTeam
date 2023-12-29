@@ -73,6 +73,7 @@ void Bomb::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
+	if (m_HealDamage) { healdamage_tex->Draw(); }
 	if (_charaState == STATE_SPECIAL) {
 		//衝撃波の描画
 		shockWaveTex->Draw();
@@ -80,6 +81,8 @@ void Bomb::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PostDraw();
 	UIDraw();
 	Obj_Draw();
+	BaseBackDraw(dxCommon);
+
 }
 //ImGui描画
 void Bomb::ImGui_Origin() {
