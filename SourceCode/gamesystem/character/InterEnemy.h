@@ -18,6 +18,7 @@ enum CharaState {
 	STATE_INTER,
 	STATE_ATTACK,
 	STATE_SPECIAL,
+	STATE_STANDBY,
 };
 
 //敵基底
