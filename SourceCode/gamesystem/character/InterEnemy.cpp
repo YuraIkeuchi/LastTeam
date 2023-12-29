@@ -143,7 +143,7 @@ void InterEnemy::Update() {
 	HPManage();
 	//UIをワールド座標に変換する
 	WorldDivision();
-
+	CounterUpdate();
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
@@ -285,6 +285,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					isCounterEffect = true;
 					m_CounterFrame = 0.f;
 					m_CounterFinishFrame = 0.f;
+					effectPos = m_Position;
 					damage *= 1.5f;
 					TutorialTask::GetInstance()->SetTaskFinish(true, TASK_COUNTER);
 				}
@@ -805,7 +806,7 @@ void InterEnemy::CounterUpdate() {
 		counter_tex->SetColor(XMFLOAT4{ 1.f,1.f,1.f,alpha });
 		counter_tex->Update();
 
-		counter_tex->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+		counter_tex->SetPosition({ effectPos.x,effectPos.y + 0.5f,effectPos.z });
 		counter_tex->Update();
 
 		XMFLOAT3 scale2 = {
@@ -816,14 +817,12 @@ void InterEnemy::CounterUpdate() {
 		counter2Tex->SetScale(scale2);
 		float rot_ = Ease(Out, Quint, m_CounterFrame, 0.f, 180.0f);
 		counter2Tex->SetRotation({ 0.f,0.f,rot_ });
-		counter2Tex->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+		counter2Tex->SetPosition({ effectPos.x,effectPos.y + 0.5f,effectPos.z });
 		counter2Tex->Update();
 	}
 	if (m_CounterFrame >= 0.7f) {
 		if (Helper::FrameCheck(m_CounterFinishFrame, 1 / 20.f)) {
 			isCounterEffect = false;
-			counter2Tex->SetColor(XMFLOAT4{ 1.f,1.f,1.f,1.f });
-			counter2Tex->Update();
 		} else {
 			float alpha = Ease(InOut, Sine, m_CounterFinishFrame, 1.f, 0.f);
 			counter2Tex->SetColor(XMFLOAT4{ 0.8f,0.8f,0.8f,alpha });
