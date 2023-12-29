@@ -131,9 +131,9 @@ protected:
 	int m_DamageTimer = {};
 	int m_FlashCount = {};
 	
+	bool isCounterEffect = false;
 	float m_CounterFrame = 0.f;
 	float m_CounterFinishFrame = 0.f;
-
 
 	bool m_SuperPoison = false;
 	bool m_HealDamage = false;
