@@ -92,12 +92,12 @@ void TackleEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
-	if (m_SuperPoison) {poison_tex->Draw();}
-	if (m_HealDamage) { healdamage_tex->Draw(); }
-	counter_tex->Draw();
+	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-	if (m_Color.w != 0.0f)
-	Obj_Draw();
+	if (m_Color.w != 0.0f) {
+		Obj_Draw();
+	}
+	BaseBackDraw(dxCommon);
 }
 //ImGui描画
 void TackleEnemy::ImGui_Origin() {

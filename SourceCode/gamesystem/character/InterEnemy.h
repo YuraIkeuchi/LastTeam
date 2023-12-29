@@ -49,6 +49,7 @@ protected:
 	unique_ptr<IKETexture> poison_tex;
 	unique_ptr<IKETexture> healdamage_tex;
 	unique_ptr<IKETexture> counter_tex;
+	unique_ptr<IKETexture> counter2Tex;
 	unique_ptr<IKETexture> _charge;
 	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
@@ -131,6 +132,7 @@ protected:
 	int m_FlashCount = {};
 	
 	float m_CounterFrame = 0.f;
+	float m_CounterFinishFrame = 0.f;
 
 
 	bool m_SuperPoison = false;
@@ -184,7 +186,11 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
+	void BaseFrontDraw(DirectXCommon* dxCommon);
+
 	virtual void Draw(DirectXCommon* dxCommon)override;
+	
+	void BaseBackDraw(DirectXCommon* dxCommon);
 
 	void ImGuiDraw();
 

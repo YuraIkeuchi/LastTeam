@@ -165,6 +165,8 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(POISON_EFFECT, L"Resources/2d/effect/poison.png");
 	IKETexture::LoadTexture(HEAL_DAMAGE, L"Resources/2d/effect/shine2.png");
 	IKETexture::LoadTexture(COUNTER, L"Resources/2d/effect/Counter.png");
+	IKETexture::LoadTexture(COUNTER_TWO, L"Resources/2d/effect/effect6.png");
+
 }
 
 //非同期処理でのテクスチャの読み込み

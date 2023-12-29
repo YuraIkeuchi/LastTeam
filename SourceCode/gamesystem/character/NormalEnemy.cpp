@@ -59,12 +59,11 @@ void NormalEnemy::Action() {
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	//shadow_tex->Draw();
+	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-	if (m_SuperPoison) {poison_tex->Draw();}
-	if (m_HealDamage) { healdamage_tex->Draw(); }
-	counter_tex->Draw();
 	Obj_Draw();
+
+	BaseBackDraw(dxCommon);
 }
 //ImGui描画
 void NormalEnemy::ImGui_Origin() {

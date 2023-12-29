@@ -104,9 +104,7 @@ void ThrowEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
-	if (m_SuperPoison) {poison_tex->Draw();}
-	if (m_HealDamage) { healdamage_tex->Draw(); }
-	counter_tex->Draw();
+	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 	//“G‚Ì’e
 	for (unique_ptr<Boomerang>& newbullet : bullets) {
@@ -114,8 +112,10 @@ void ThrowEnemy::Draw(DirectXCommon* dxCommon) {
 			newbullet->Draw(dxCommon);
 		}
 	}
-	if (m_Color.w != 0.0f)
+	if (m_Color.w != 0.0f) {
 		Obj_Draw();
+	}
+	BaseBackDraw(dxCommon);
 }
 //ImGui•`‰æ
 void ThrowEnemy::ImGui_Origin() {
