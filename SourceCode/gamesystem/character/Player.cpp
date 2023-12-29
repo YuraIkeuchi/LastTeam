@@ -268,8 +268,8 @@ void Player::UIDraw() {
 	if (m_InterMaxHP >= 100) {
 		_MaxHp[THIRD_DIGHT]->Draw();
 	}
-	shieldCover->Draw();
 	if (m_InterShield != 0) {
+		shieldCover->Draw();
 		_drawShield[FIRST_DIGHT]->Draw();
 	}
 	if (m_InterShield >= 10) {
