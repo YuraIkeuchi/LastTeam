@@ -19,6 +19,7 @@ private:
 	void Inter();//待機
 	void Attack();
 	void Teleport();//移動
+	void StandBy();//移動
 
 	void WarpEnemy();//敵のワープ処理
 	//魔法陣
@@ -62,6 +63,26 @@ private:
 
 	EnemyWarp enemywarp;
 
+	struct PredictPanel {
+		unique_ptr<IKETexture> tex;
+		XMFLOAT3 pos = {};
+		XMFLOAT3 afterPos = {};
+		XMFLOAT3 beforePos = {};
+		XMFLOAT3 scale = {};
+		int width = -1;
+		int height = -1;
+		float usefulFrame = 0.f;
+		bool isVisible = false;
+		bool isVerse = false;
+		bool isVanish = false;
+	};
+
+	static const int kPanelMax = 8;
+	PredictPanel predictPanels[kPanelMax];
+	float predictFrame = 0.f;
+	int nextPredict = 0;
+	int m_OldWidth = m_NowWidth;
+	int m_OldHeight = m_NowHeight;
 	//インターバルとか
 	vector<int>m_Limit;
 	float m_Speed = {};

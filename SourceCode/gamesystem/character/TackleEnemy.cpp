@@ -40,8 +40,17 @@ bool TackleEnemy::Initialize() {
 	m_MaxHP = m_HP;
 	StagePanel::GetInstance()->EnemyHitReset();
 	m_ShadowScale = { 0.03f,0.03f,0.03f };
+	float baseScale = PANEL_SIZE * 0.1f;
 
-
+	for (PredictPanel& predictPanel : predictPanels) {
+		predictPanel.tex = std::make_unique<IKETexture>(ImageManager::AREA, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,0.4f,0.4f,1.f });
+		predictPanel.tex->TextureCreate();
+		predictPanel.tex->Initialize();
+		predictPanel.tex->SetScale({ baseScale ,baseScale ,baseScale });
+		predictPanel.tex->SetRotation({ 90.0f,0.0f,0.0f });
+	}
+	m_OldWidth = m_NowWidth;
+	m_OldHeight = m_NowHeight;
 	magic.Alive = false;
 	magic.Frame = {};
 	magic.Scale = {};
@@ -60,14 +69,14 @@ void (TackleEnemy::* TackleEnemy::stateTable[])() = {
 	&TackleEnemy::Inter,//動きの合間
 	&TackleEnemy::Attack,//動きの合間
 	&TackleEnemy::Teleport,//瞬間移動
+	&TackleEnemy::StandBy
 };
 
 //行動
 void TackleEnemy::Action() {
 	if (!m_Induction) {
 		(this->*stateTable[_charaState])();
-	}
-	else {
+	} else {
 		InductionMove();
 	}
 	Obj_SetParam();
@@ -81,16 +90,56 @@ void TackleEnemy::Action() {
 	//shadow_tex->SetPosition(m_ShadowPos);
 	//shadow_tex->SetScale(m_ShadowScale);
 	//shadow_tex->Update();
-
+	for (PredictPanel& predictPanel : predictPanels) {
+		if (predictPanel.isVerse) {
+			if (Helper::FrameCheck(predictPanel.usefulFrame, 1.f / 10.f)) {
+				predictPanel.usefulFrame = 0.f;
+				predictPanel.isVerse = false;
+			} else {
+				predictPanel.pos = {
+					Ease(In,Quad,predictPanel.usefulFrame,predictPanel.beforePos.x,predictPanel.afterPos.x),
+					Ease(In,Quad,predictPanel.usefulFrame,predictPanel.beforePos.y,predictPanel.afterPos.y),
+					Ease(In,Quad,predictPanel.usefulFrame,predictPanel.beforePos.z,predictPanel.afterPos.z),
+				};
+				predictPanel.scale = {
+					Ease(Out,Back,predictPanel.usefulFrame,0.f,PANEL_SIZE) * 0.1f,
+					Ease(Out,Back,predictPanel.usefulFrame,0.f,PANEL_SIZE) * 0.1f,
+					Ease(Out,Back,predictPanel.usefulFrame,0.f,PANEL_SIZE) * 0.1f
+				};
+			}
+		}
+		if (predictPanel.isVanish) {
+			if (Helper::FrameCheck(predictPanel.usefulFrame, 1.f / 10.f)) {
+				predictPanel.usefulFrame = 0.f;
+				predictPanel.isVanish = false;
+				predictPanel.isVisible = false;
+			} else {
+				predictPanel.scale = {
+					Ease(In,Circ,predictPanel.usefulFrame,PANEL_SIZE,0.f) * 0.1f,
+					Ease(In,Circ,predictPanel.usefulFrame,PANEL_SIZE,0.f) * 0.1f,
+					Ease(In,Circ,predictPanel.usefulFrame,PANEL_SIZE,0.f) * 0.1f
+				};
+			}
+		}
+		predictPanel.tex->SetScale(predictPanel.scale);
+		predictPanel.tex->SetPosition(predictPanel.pos);
+		predictPanel.tex->Update();
+	}
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+	m_OldWidth = m_NowWidth;
+	m_OldHeight = m_NowHeight;
 }
 //描画
 void TackleEnemy::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
+	for (PredictPanel& predictPanel : predictPanels) {
+		if (!predictPanel.isVisible) { continue; }
+		predictPanel.tex->Draw();
+	}
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
@@ -115,7 +164,7 @@ void TackleEnemy::Inter() {
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, kIntervalMax);
 	if (coolTimer == kIntervalMax) {
-		_charaState = STATE_ATTACK;
+		_charaState = STATE_STANDBY;
 		coolTimer = 0;
 	}
 }
@@ -128,6 +177,12 @@ void TackleEnemy::Attack() {
 		m_Frame = 1.0f;
 		m_Position.x -= m_Speed;
 		m_Rotation.x += l_AddRot;
+		for (PredictPanel& predictPanel : predictPanels) {
+			if (predictPanel.width >= m_OldWidth) {
+				predictPanel.isVanish = true;
+			}
+		}
+
 		if (m_Position.x < l_TargetX) {
 			m_CheckPanel = true;
 			_charaState = STATE_SPECIAL;
@@ -160,6 +215,30 @@ void TackleEnemy::Teleport() {
 	}
 }
 
+void TackleEnemy::StandBy() {
+	int nextWidthPanel = m_NowWidth - (nextPredict + 1);
+	if (nextWidthPanel < 0) {
+		_charaState = STATE_ATTACK;
+		nextPredict = 0;
+		predictFrame = 0.f;
+		return;
+	}
+
+	if (Helper::FrameCheck(predictFrame, 1.f / 5.0f)) {
+		XMFLOAT3 pos_ = { (PANEL_SIZE * nextWidthPanel) - (PREDICT_HEIGHT * PANEL_SIZE),0.02f,(PANEL_SIZE * m_NowHeight) };
+		predictPanels[nextPredict].beforePos = { pos_.x,pos_.y + 1.0f,pos_.z };
+		predictPanels[nextPredict].afterPos = pos_;
+		predictPanels[nextPredict].scale = {};
+		predictPanels[nextPredict].width = nextWidthPanel;
+		predictPanels[nextPredict].height = m_NowHeight;
+		predictPanels[nextPredict].isVisible = true;
+		predictPanels[nextPredict].isVerse = true;
+		nextPredict++;
+		predictFrame = 0.f;
+	}
+
+}
+
 //魔法陣生成
 void TackleEnemy::BirthMagic() {
 	if (!magic.Alive) { return; }
@@ -178,8 +257,7 @@ void TackleEnemy::BirthMagic() {
 			}
 		}
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
-	}
-	else {			//魔法陣を縮める
+	} else {			//魔法陣を縮める
 		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
@@ -205,8 +283,7 @@ void TackleEnemy::WarpEnemy() {
 			m_Rotation = { 0.0f,0.0f,0.0f };
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
-	}
-	else {			//キャラが大きくなっている
+	} else {			//キャラが大きくなっている
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
@@ -227,8 +304,7 @@ bool TackleEnemy::TackleCollide() {
 		player->RecvDamage(m_Damage, "NORMAL");
 		m_Hit = true;
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 
