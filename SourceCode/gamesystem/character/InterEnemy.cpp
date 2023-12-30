@@ -744,25 +744,33 @@ void InterEnemy::DamageUpdate() {
 //死んだときの動き
 void InterEnemy::DeathUpdate() {
 	if (m_HP != 0.0f) { return; }
-
+	const float l_AddDisolve = 0.1f;
 	const float l_AddFrame = 0.05f;
 	float RotPower = 5.0f;
 	m_Color.w = 1.0f;
 
-	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
-		m_OverFrame = 1.0f;
-		if (m_EnemyTag == "Rock") {
-			StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
+	if (m_EnemyTag != "Rock") {
+		if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
+			m_OverFrame = 1.0f;
+			m_Alive = false;
 		}
-		m_Alive = false;
-	} else {
-		RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);
-		m_Rotation.y += RotPower;
-		m_Position.y = Ease(In, Cubic, m_OverFrame, m_Position.y, 0.5f);
+		else {
+			RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_OverFrame, m_Position.y, 0.5f);
 
-		m_Scale = { Ease(In,Cubic,m_OverFrame,m_Scale.x,0.0f),
-			Ease(In,Cubic,m_OverFrame,m_Scale.y,0.0f),
-		Ease(In,Cubic,m_OverFrame,m_Scale.z,0.0f) };
+			m_Scale = { Ease(In,Cubic,m_OverFrame,m_Scale.x,0.0f),
+				Ease(In,Cubic,m_OverFrame,m_Scale.y,0.0f),
+			Ease(In,Cubic,m_OverFrame,m_Scale.z,0.0f) };
+		}
+	}
+	else {
+
+		m_Scale = Helper::Float3AddFloat(m_Scale, 0.02f);
+		if (Helper::CheckMin(m_AddDisolve, 2.5f, l_AddDisolve)) {
+			StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
+			m_Alive = false;
+		}
 	}
 
 	Obj_SetParam();

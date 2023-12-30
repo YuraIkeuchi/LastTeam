@@ -130,7 +130,7 @@ void PoisonEnemy::ImGui_Origin() {
 	//	poisonarea[i]->ImGuiDraw();
 	//}
 	ImGui::Begin("Poison");
-	ImGui::Text("Height:%d", m_NowWidth);
+	ImGui::Text("RotationY:%f", m_Rotation.y);
 	ImGui::Text("ScaleX:%f", m_Scale.x);
 	ImGui::Text("InductionFrame:%f", m_InductionFrame);
 	ImGui::Text("InductionPos:%f", m_InductionPos);

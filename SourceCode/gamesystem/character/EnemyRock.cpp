@@ -94,7 +94,7 @@ void EnemyRock::Draw(DirectXCommon* dxCommon) {
 void EnemyRock::ImGui_Origin() {
 	ImGui::Begin("RockEnemy");
 	ImGui::Text("AddDisolve:%f", m_AddDisolve);
-	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::Text("ScaleX:%f", m_Scale.x);
 	ImGui::Text("ShakePosX:%f", m_ShakePos.x);
 	ImGui::Text("MagPosX:%f", magic.Pos.x);
 	ImGui::Text("Scale:%f", magic.Scale);
