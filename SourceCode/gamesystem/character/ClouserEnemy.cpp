@@ -202,7 +202,7 @@ void ClouserEnemy::Teleport() {
 void ClouserEnemy::BirthArea(const int Width, const int Height) {
 	std::unique_ptr<EnemyRock> newarea = std::make_unique<EnemyRock>();
 	newarea->Initialize();
-	newarea->InitState(Width, Height);
+	newarea->InitState(Width, Height,{m_Position.x,m_Position.y + 2.0f,m_Position.z});
 	newarea->SetPlayer(player);
 	enerock.emplace_back(std::move(newarea));
 	predictarea->ResetPredict();

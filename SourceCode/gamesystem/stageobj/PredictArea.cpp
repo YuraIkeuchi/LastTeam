@@ -65,8 +65,6 @@ void PredictArea::Update() {
 			panels[i][j].tex[m_DrawDype]->Update();
 			panels[i][j].tex[m_DrawDype]->SetPosition(panels[i][j].position);
 			panels[i][j].tex[m_DrawDype]->SetColor(panels[i][j].color);
-
-
 		}
 	}
 
