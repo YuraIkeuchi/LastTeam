@@ -749,12 +749,13 @@ void InterEnemy::DeathUpdate() {
 	float RotPower = 5.0f;
 	m_Color.w = 1.0f;
 
+	
 	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
 		m_OverFrame = 1.0f;
-		if (m_EnemyTag == "Rock") {
-			StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
-		}
 		m_Alive = false;
+		if (m_EnemyTag == "Rock") {
+			StagePanel::GetInstance()->ClosePanel(m_Object.get(), m_Alive);
+		}
 	} else {
 		RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);
 		m_Rotation.y += RotPower;

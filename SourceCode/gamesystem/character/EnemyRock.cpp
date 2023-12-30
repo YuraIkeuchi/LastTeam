@@ -13,6 +13,10 @@
 EnemyRock::EnemyRock() {
 
 	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::ROCK));
+	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	magic.tex->TextureCreate();
+	magic.tex->Initialize();
+	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 	shake = make_unique<Shake>();
 }
 //初期化
@@ -28,13 +32,19 @@ bool EnemyRock::Initialize() {
 	return true;
 }
 //ステータス初期化
-void EnemyRock::InitState(const int width, const int height) {
+void EnemyRock::InitState(const int width, const int height, const XMFLOAT3& pos) {
+	magic.Pos = pos;
 	m_NowWidth = width, m_NowHeight = height;
 	m_Position = SetPannelPos(width, height);
-	m_Position.y = 2.0f;
+	m_Position.y = 2.5f;
 	m_BaseScale = 0.4f;
 	m_ReturnPos = m_Position;
 	m_AddDisolve = 2.0f;
+	magic.Alive = false;
+	magic.Frame = {};
+	magic.Scale = {};
+	magic.AfterScale = 0.15f;
+	magic.State = {};
 }
 
 
@@ -63,20 +73,32 @@ void EnemyRock::Action() {
 	//shadow_tex->SetScale(m_ShadowScale);
 	//shadow_tex->Update();
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
+
+	magic.tex->SetPosition(magic.Pos);
+	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
+	magic.tex->Update();
 }
 
 //描画
 void EnemyRock::Draw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	magic.tex->Draw();
 	if (!m_Alive) { return; }
-	UIDraw();
+	if (_charaState == STATE_SPECIAL) {
+		UIDraw();
+	}
+	if (m_Color.w != 0.0f)
 	Obj_Draw();
 }
 //ImGui描画
 void EnemyRock::ImGui_Origin() {
 	ImGui::Begin("RockEnemy");
 	ImGui::Text("AddDisolve:%f", m_AddDisolve);
-	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::Text("ScaleX:%f", m_Scale.x);
 	ImGui::Text("ShakePosX:%f", m_ShakePos.x);
+	ImGui::Text("MagPosX:%f", magic.Pos.x);
+	ImGui::Text("Scale:%f", magic.Scale);
+	ImGui::Text("RockState:%d", _RockState);
 	ImGui::End();
 }
 //開放
@@ -85,32 +107,59 @@ void EnemyRock::Finalize() {
 }
 //待機
 void EnemyRock::Inter() {
+	const float l_AddFrame = 1 / 30.0f;
 	const float l_AddDisolve = 0.05f;
-	if (Helper::CheckMax(m_AddDisolve,0.0f,-l_AddDisolve)) {
-		shake->SetShakeStart(true);
-		shake->ShakePos(m_ShakePos.x, 1, -1, 15, 30);
-		shake->ShakePos(m_ShakePos.y, 1, -1, 15, 30);
-		m_Position.x += m_ShakePos.x;
-		m_Position.y += m_ShakePos.y;
-		if (!shake->GetShakeStart()) {
-			m_ShakePos = { 0.0f,0.0f,0.0f };
-			m_Frame = {};
-			_charaState = STATE_ATTACK;
-			m_Position = m_ReturnPos;
+	if (_RockState == ROCK_MAGIC) {
+		if (Helper::FrameCheck(magic.Frame, l_AddFrame)) {
+			_RockState = ROCK_FOLLOW;
+			magic.Frame = {};
 		}
 
-	
+		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
+	}
+	else if (_RockState == ROCK_FOLLOW) {
+		if (Helper::FrameCheck(magic.Frame, l_AddFrame)) {
+			_RockState = ROCK_BIRTH;
+			magic.Frame = {};
+		}
+
+		magic.Pos = { Ease(In,Cubic,magic.Frame,magic.Pos.x,m_Position.x),
+		magic.Pos.y,
+		Ease(In,Cubic,magic.Frame,magic.Pos.z,m_Position.z) };
+	}
+	else {
+		RockParticle();
+		if (Helper::CheckMax(m_AddDisolve, 0.0f, -l_AddDisolve)) {
+			shake->SetShakeStart(true);
+			shake->ShakePos(m_ShakePos.x, 1, -1, 15, 30);
+			shake->ShakePos(m_ShakePos.y, 1, -1, 15, 30);
+			m_Position.x += m_ShakePos.x;
+			m_Position.y += m_ShakePos.y;
+			if (!shake->GetShakeStart()) {
+				m_ShakePos = { 0.0f,0.0f,0.0f };
+				m_Frame = {};
+				_charaState = STATE_ATTACK;
+				m_Position = m_ReturnPos;
+			}
+			magic.AfterScale = {};
+		}
 	}
 }
 //攻撃
 void EnemyRock::Attack() {
-	if (Helper::CheckMin(m_Timer, 20, 1)) {
-		m_AddPower -= m_Gravity;
-		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
-			BirthParticle();
-			_charaState = STATE_SPECIAL;
-			m_Position.y = 0.1f;
+	const float l_AddFrame = 1 / 30.0f;
+	if (Helper::FrameCheck(magic.Frame, l_AddFrame)) {
+		if (Helper::CheckMin(m_Timer, 20, 1)) {
+			m_AddPower -= m_Gravity;
+			if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+				BirthParticle();
+				_charaState = STATE_SPECIAL;
+				m_Position.y = 0.1f;
+			}
 		}
+	}
+	else {
+		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 }
 
@@ -155,5 +204,17 @@ void EnemyRock::BirthParticle() {
 	const XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 	for (int i = 1; i < 7; i++) {
 		ParticleEmitter::GetInstance()->SmokeEffect(l_life,m_Position, s_Scale, e_Scale, color, color, i);
+	}
+}
+
+void EnemyRock::RockParticle() {
+	int l_life = 50;
+	const float s_Scale = 0.4f;
+	const float e_Scale = 0.0f;
+	const XMFLOAT4 color = { 1.0f,0.8f,0.0f,1.0f };
+	m_ParticleTimer++;
+	if (m_ParticleTimer == 5) {
+		ParticleEmitter::GetInstance()->RockEffect(l_life, m_Position, s_Scale, e_Scale, color, color);
+		m_ParticleTimer = {};
 	}
 }

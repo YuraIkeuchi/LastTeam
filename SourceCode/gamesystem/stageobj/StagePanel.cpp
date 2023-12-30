@@ -154,7 +154,7 @@ void StagePanel::ImGuiDraw() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isClose);
-			ImGui::Text("Rock[%d][%d]:%d", i, j, panels[i][j].isRock);
+			//ImGui::Text("Rock[%d][%d]:%d", i, j, panels[i][j].isRock);
 		}
 	}
 	ImGui::End();
@@ -332,8 +332,12 @@ void StagePanel::ClosePanel(IKEObject3d* obj, bool Alive) {
 					panels[i][j].isClose = true;
 				}
 				else {
+
 					panels[i][j].isClose = false;
 				}
+			}
+			else {
+				panels[i][j].isClose = false;
 			}
 		}
 	}

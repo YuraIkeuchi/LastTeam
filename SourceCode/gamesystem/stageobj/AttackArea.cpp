@@ -60,7 +60,7 @@ void AttackArea::InitState(const int width, const int height) {
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	if (_EffectState != Poison) {
 		m_Rotation.y = 270.0f;
-		m_Scale = { 0.3f,0.3f,0.3f };
+		m_Scale = { 0.2f,0.2f,0.2f };
 		m_Position = { panels.position.x,3.0f,panels.position.z };
 		m_Object->SetBillboard(true);
 	}
@@ -97,7 +97,7 @@ void AttackArea::Draw(DirectXCommon* dxCommon) {
 //ImGui
 void AttackArea::ImGuiDraw() {
 	ImGui::Begin("Attack");
-	ImGui::Text("Timer:%d", m_Timer);
+	ImGui::Text("Scale:%f", m_Scale.x);
 	ImGui::End();
 }
 //ƒpƒlƒ‹‚ÌˆÊ’u‚É’u‚­
@@ -107,17 +107,39 @@ XMFLOAT3 AttackArea::SetPanelPos(const int width, const int height) {
 //ŽaŒ‚Œn
 void AttackArea::SlashMove() {
 	if (m_Timer > m_BirthTimer) { return; }
-	m_AddPower -= m_Gravity;
-	if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
-		//m_Alive = false;
+	if (_StoneType == STONE_FALL) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 1.0f, m_AddPower)) {
+			m_AddPower = 0.2f;
+			_StoneType = STONE_BOUND;
+		}
+	}
+	else {
+		m_AddPower -= m_Gravity;
+		m_Scale = Helper::Float3AddFloat(m_Scale, 0.2f);
+		Helper::CheckMax(m_Position.y, 1.0f, m_AddPower);
+		if (Helper::CheckMin(m_AddDisolve, 2.5f, 0.1f)) {
+			m_Alive = false;
+		}
 	}
 }
 //Šâ—Ž‚Æ‚µŒn
 void AttackArea::StoneMove() {
 	if (m_Timer > m_BirthTimer) { return; }
-	m_AddPower -= m_Gravity;
-	if (Helper::CheckMax(m_Position.y, 1.0f, m_AddPower)) {
-		//m_Alive = false;
+	if (_StoneType == STONE_FALL) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 1.0f, m_AddPower)) {
+			m_AddPower = 0.2f;
+			_StoneType = STONE_BOUND;
+		}
+	}
+	else {
+		m_AddPower -= m_Gravity;
+		m_Scale = Helper::Float3AddFloat(m_Scale, 0.02f);
+		Helper::CheckMax(m_Position.y, 1.0f, m_AddPower);
+		if (Helper::CheckMin(m_AddDisolve, 2.5f, 0.1f)) {
+			m_Alive = false;
+		}
 	}
 }
 //“ÅŒn
@@ -133,7 +155,7 @@ void AttackArea::PoisonMove() {
 	}
 	else {
 		if (Helper::FrameCheck(m_Frame, addFrame)) {
-			//m_Alive = false;
+			m_Alive = false;
 		}
 		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 	}

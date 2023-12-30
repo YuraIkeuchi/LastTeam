@@ -102,4 +102,9 @@ private:
 	}_ThornState = THORN_UP;
 
 	float m_Frame = {};
+
+	enum StoneType {
+		STONE_FALL,
+		STONE_BOUND,
+	}_StoneType = STONE_FALL;
 };
