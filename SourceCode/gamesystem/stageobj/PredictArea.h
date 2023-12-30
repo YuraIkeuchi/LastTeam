@@ -2,6 +2,7 @@
 #include "ObjCommon.h"
 #include <array>
 #include "IKETexture.h"
+#include "StagePanel.h"
 
 using namespace DirectX;
 using namespace std;
@@ -20,6 +21,8 @@ public:
 
 private:
 	static const int PREDICT_MAX = 4;
+	int PANELS_SIZE = PANEL_SIZE * 0.1f;
+
 private:
 
 	//ƒpƒlƒ‹
@@ -27,7 +30,12 @@ private:
 		unique_ptr<IKETexture> tex[PREDICT_MAX];
 		XMFLOAT3 position = { 0,0,0 };
 		XMFLOAT4 color = { 1,1,1,1 };
+		XMFLOAT3 scale = {};
 		bool predict = false;
+
+		bool isVisible = false;
+		bool isVerse = false;
+		bool isVanish = false;
 	};
 
 public:
@@ -70,4 +78,6 @@ private:
 	float m_SinAngle2 = {};
 	bool m_FlashStart = false;
 	float m_AddAngle = {};
+
+
 };

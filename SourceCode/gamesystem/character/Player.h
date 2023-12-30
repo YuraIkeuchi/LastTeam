@@ -252,7 +252,7 @@ private:
 	bool m_Bound = {};
 	int m_HealTimer = {};
 
-	float m_ShieldHP = 45.f;
+	float m_ShieldHP = 0.f;
 	float m_ShieldHPMAX = 45.f;
 	XMFLOAT2 m_ShieldPos = { m_HPPos.x + 200.f,5.f };
 	unique_ptr<IKESprite> shieldCover;

@@ -66,7 +66,7 @@ bool Player::Initialize() {
 	LoadCSV();
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	m_AddDisolve = 2.0f;
-	m_ShieldHP = 45.f;
+	m_ShieldHP = 0.f;
 	//CSV読み込み
 	return true;
 }

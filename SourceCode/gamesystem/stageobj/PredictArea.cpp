@@ -11,6 +11,7 @@ PredictArea::PredictArea(const string& name) {
 			if (name == "ENEMY") {
 				panels[i][j].tex[PREDICT_ATTACK].reset(new IKETexture(ImageManager::AREA, {}, {1.f,1.f,1.f}, {1.f,0.4f,0.4f,1.f}));
 				panels[i][j].color = { 1.f,0.4f,0.4f,1.f };
+				
 			}
 			else if(name == "PLAYER") {
 				panels[i][j].tex[PREDICT_ATTACK].reset(new IKETexture(ImageManager::PLAYERPREDICT, {}, {1.f,1.f,1.f}, {1.f,1.f,1.f,1.f}));
@@ -112,6 +113,10 @@ void PredictArea::ResetPredict() {
 	}
 	m_FlashStart = false;
 }
+
+
+
+
 //予測エリアのフラッシュ
 void PredictArea::FlashArea() {
 	if (m_FlashStart) {
