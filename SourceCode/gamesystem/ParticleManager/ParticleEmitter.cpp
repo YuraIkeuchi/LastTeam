@@ -20,6 +20,7 @@ void ParticleEmitter::Initialize()
 	healParticle.reset(ParticleManager::Create(ImageManager::Heal));
 	healParticleSecond.reset(ParticleManager::Create(ImageManager::Plus));
 	smokeParticle.reset(ParticleManager::Create(ImageManager::Smoke));
+	rockParticle.reset(ParticleManager::Create(ImageManager::Heal));
 }
 
 void ParticleEmitter::Update()
@@ -30,6 +31,7 @@ void ParticleEmitter::Update()
 	healParticle->Update();
 	healParticleSecond->Update();
 	smokeParticle->Update();
+	rockParticle->Update();
 }
 
 void ParticleEmitter::IntroDraw() {
@@ -40,6 +42,7 @@ void ParticleEmitter::FlontDrawAll() {
 	healParticle->Draw(AddBlendType);
 	healParticleSecond->Draw(AddBlendType);
 	smokeParticle->Draw(AlphaBlendType);
+	rockParticle->Draw(AddBlendType);
 }
 //炎のパーティクル
 void ParticleEmitter::FireEffect(const int life, const XMFLOAT3& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor)
@@ -128,6 +131,19 @@ void ParticleEmitter::AllDelete()
 	healParticle->AllDelete();
 	healParticleSecond->AllDelete();
 	smokeParticle->AllDelete();
+	rockParticle->AllDelete();
+}
+
+void ParticleEmitter::RockEffect(const int life, const XMFLOAT3& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor) {
+	XMFLOAT3 pos = l_pos;
+	const float rnd_vel = 0.05f;
+	XMFLOAT3 vel{};
+	vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+	vel.y = (float)rand() / RAND_MAX * rnd_vel * 1.2f;// -rnd_vel / 2.0f;
+	vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+
+	rockParticle->Add(life, pos, vel, {}, startscale, endscale, startcolor, endcolor, {});
 }
 
 void ParticleEmitter::LoadTexture() {

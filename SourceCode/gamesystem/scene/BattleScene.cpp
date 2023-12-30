@@ -283,13 +283,13 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->Draw(dxCommon);
 	player_->Draw(dxCommon);
 	if (player_->GetHp() > 0.0f) {
-		enemyManager->Draw(dxCommon);
 		if (GameStateManager::GetInstance()->GetGameStart()) {
 			GameStateManager::GetInstance()->Draw(dxCommon);
 			if (!enemyManager->BossDestroy()) {
 				StagePanel::GetInstance()->ActDraw(dxCommon);
 			}
 		}
+		enemyManager->Draw(dxCommon);
 	}
 	IKEObject3d::PostDraw();
 }

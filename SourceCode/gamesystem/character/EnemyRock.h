@@ -24,6 +24,8 @@ private:
 	bool RockCollide();
 
 	void BirthParticle();
+
+	void RockParticle();
 private:
 	void Inter();//生成
 	void Attack();//攻撃
@@ -40,6 +42,7 @@ private:
 	float m_BaseScale = 0.2f;
 	float m_Frame = {};
 	int m_Timer = {};
+	int m_ParticleTimer = {};
 	bool m_Hit = false;
 	XMFLOAT3 m_ReturnPos = {};
 	//シェイク用変数

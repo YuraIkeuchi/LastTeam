@@ -128,6 +128,7 @@ void EnemyRock::Inter() {
 		Ease(In,Cubic,magic.Frame,magic.Pos.z,m_Position.z) };
 	}
 	else {
+		RockParticle();
 		if (Helper::CheckMax(m_AddDisolve, 0.0f, -l_AddDisolve)) {
 			shake->SetShakeStart(true);
 			shake->ShakePos(m_ShakePos.x, 1, -1, 15, 30);
@@ -203,5 +204,17 @@ void EnemyRock::BirthParticle() {
 	const XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 	for (int i = 1; i < 7; i++) {
 		ParticleEmitter::GetInstance()->SmokeEffect(l_life,m_Position, s_Scale, e_Scale, color, color, i);
+	}
+}
+
+void EnemyRock::RockParticle() {
+	int l_life = 50;
+	const float s_Scale = 0.4f;
+	const float e_Scale = 0.0f;
+	const XMFLOAT4 color = { 1.0f,0.8f,0.0f,1.0f };
+	m_ParticleTimer++;
+	if (m_ParticleTimer == 5) {
+		ParticleEmitter::GetInstance()->RockEffect(l_life, m_Position, s_Scale, e_Scale, color, color);
+		m_ParticleTimer = {};
 	}
 }
