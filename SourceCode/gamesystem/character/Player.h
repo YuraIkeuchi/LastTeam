@@ -53,11 +53,12 @@ private:
 	//パーティクル
 	void BirthParticle();
 	//HPの割合を求める
-	float HpPercent();
-	//HPの割合を求める
 	float OldHpPercent();
 
 public:
+	//HPの割合を求める
+	float HpPercent();
+
 	//プレイヤーの回復
 	void HealPlayer(const float power);
 	//プレイヤーのダメージ

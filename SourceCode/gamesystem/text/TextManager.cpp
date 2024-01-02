@@ -64,7 +64,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreatePassiveName(L"なまえ：エクステンド・ルーク");
 	CreatePassiveSentence(L"ダメージをうけると毒を付与");
 	CreatePassiveName(L"なまえ：エクステンド・クイーン");
-	CreatePassiveSentence(L"ディレイ時間大はばたんしゅく");
+	CreatePassiveSentence(L"ディレイ時間大幅短縮！");
 	CreatePassiveName(L"なまえ：エクステンド・ビショップ");
 	CreatePassiveSentence(L"ダメージをうけると回復");
 
@@ -95,14 +95,14 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillSentence(L"自機や敵全てに回復を!");
 	CreateSkillDamage(L"回復床設置 威力:20");
 	CreateSkillSentence(L"中毒はしらぬまに");
-	CreateSkillDamage(L"威力:10(もってる毒を3倍)");
+	CreateSkillDamage(L"威力:10(敵に付与されてる毒を3倍)");
 	CreateSkillSentence(L"鉄壁の守り!");
 	CreateSkillDamage(L"受けるダメージを一回だけ半減");
 	CreateSkillSentence(L"毒（中）付与の中距離攻撃");
 	CreateSkillDamage(L"威力:3（小）毒：12付与");
 	CreateSkillSentence(L"回復しつつ遠距離攻撃");
 	CreateSkillDamage(L"威力:30（中）ドレイン");
-	CreateSkillSentence(L"前のおれよりつよくなる");
+	CreateSkillSentence(L"前のおれより強くなる");
 	CreateSkillDamage(L"威力:チョク前の威力の1.5倍");
 	CreateSkillSentence(L"ディレイはながいがエリアが大きい");
 	CreateSkillDamage(L"威力:50");
@@ -116,6 +116,11 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"威力:30 敵を前に寄せる");
 	CreateSkillSentence(L"敵を吹き飛ばせ!");
 	CreateSkillDamage(L"威力:30 敵を後ろに飛ばす");
+	CreateSkillSentence(L"敵を引き寄せろ!");
+	CreateSkillDamage(L"威力:30 敵を前に寄せる");
+	CreateSkillSentence(L"げんかいバトルたたきつけろ！");
+	CreateSkillDamage(L"威力:30 HPが半分なら威力２倍");
+
 	//ラスボス
 	//コンヴァージョン初期化
 	Create(dxcomon);

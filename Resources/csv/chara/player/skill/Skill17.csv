@@ -2,7 +2,7 @@ ID,17
 SkillType,0
 Delay,10
 Name,yabu2
-StateName,Boost
+StateName,BOOST
 Damege,1
 DistanceX,1
 DistanceY,1
