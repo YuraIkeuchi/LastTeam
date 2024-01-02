@@ -21,7 +21,7 @@ public:
 
 private:
 	static const int PREDICT_MAX = 4;
-	int PANELS_SIZE = PANEL_SIZE * 0.1f;
+	float PANELS_SIZE = PANEL_SIZE * 0.1f;
 
 private:
 

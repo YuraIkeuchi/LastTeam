@@ -361,14 +361,25 @@ void GameStateManager::BirthArea() {
 	float damage = m_Act[0].ActDamage;
 	//このスキルにバフを載せたか
 	bool isBuffed = false;
-	if (m_Act[0].ActID == 10) {
+
+	if (m_Act[0].StateName == "REFRAIN") {
 		//リフレイン攻撃
 		damage = (float)m_MaxDamage;
 	}
-	if (m_Act[0].ActID == 17) {
+	if (m_Act[0].StateName == "BOOST") {
 		//倍率攻撃
 		damage = (float)m_OldDamage * 1.5f;
 	}
+	if (m_Act[0].StateName == "MOROBA") {
+		//諸刃斬り
+		player->RecvDamage(damage);
+	}
+	if (m_Act[0].StateName == "REVENGE" &&
+		player->HpPercent() <= 0.5f) {
+		//HP半分以下で威力アップ
+		damage *= 2.0f;
+	}
+	
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 			AreaX = l_BirthBaseX + i;
