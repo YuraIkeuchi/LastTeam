@@ -688,9 +688,6 @@
     <ClInclude Include="SourceCode\gamesystem\scene\SceneSave.h">
       <Filter>gamesystem\scene\Base</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h">
-      <Filter>gamesystem\gamecamera</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\engine\audio\AudioManager.h">
       <Filter>engine\audio</Filter>
     </ClInclude>
@@ -922,6 +919,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\TutorialEnemy.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h">
+      <Filter>gamesystem\gamecamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

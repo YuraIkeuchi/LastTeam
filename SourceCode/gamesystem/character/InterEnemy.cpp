@@ -75,6 +75,7 @@ void InterEnemy::SkipInitialize() {
 //更新
 void InterEnemy::Update() {
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
+	if (GameStateManager::GetInstance()->GetBossCamera()) { return; }
 	if (m_EnemyTag != "Bomb") {
 		if (m_HP != 0.0f) {
 			if(m_Alive)
@@ -149,7 +150,6 @@ void InterEnemy::Update() {
 }
 //バトル前の更新
 void InterEnemy::AwakeUpdate() {
-	if (GameStateManager::GetInstance()->GetGameStart()) { return; }
 	if (!StagePanel::GetInstance()->GetCreateFinish()) { return; }
 	const float l_AddDisolve = 0.05f;
 	//ディゾルブを解除する

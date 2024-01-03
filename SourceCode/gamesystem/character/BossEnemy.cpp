@@ -162,9 +162,9 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void BossEnemy::ImGui_Origin() {
-	ImGui::Begin("Area");
-	ImGui::Text("AttackCount:%d", m_AttackCount);
-	ImGui::Text("cool:%d", coolTimer);
+	ImGui::Begin("Boss");
+	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::Text("PosZ:%f", m_Position.z);
 	ImGui::End();
 	predictarea->ImGuiDraw();
 }

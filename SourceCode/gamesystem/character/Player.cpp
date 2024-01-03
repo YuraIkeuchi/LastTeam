@@ -298,6 +298,7 @@ void Player::Move() {
 	if (m_Delay || m_Bound) { return; }
 	if (GameStateManager::GetInstance()->GetResetPredict()) { return; }
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
+	if (GameStateManager::GetInstance()->GetBossCamera()) { return; }
 	const int l_TargetTimer = 8;
 	const float l_AddVelocity = PANEL_SIZE;
 	const float l_SubVelocity = -PANEL_SIZE;
@@ -514,7 +515,7 @@ void Player::RecvDamage(const float Damage, const string& name) {
 		m_HP -= l_Damage;
 	}
 
-	Helper::Clamp(m_ShieldHP, 0.0f, 10.0f);
+	Helper::Clamp(m_ShieldHP, 0.0f,m_ShieldHPMAX);
 	GameStateManager::GetInstance()->TakenDamageCheck((int)Damage);
 	GameStateManager::GetInstance()->MissAttack();
 	//パッシブ効果処理

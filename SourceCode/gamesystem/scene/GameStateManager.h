@@ -93,8 +93,9 @@ private:
 	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
 	void RandPowerUpInit();
+	void RandShieldUpInit();
 	void PowerUpEffectUpdate();
-
+	void ShieldUpEffectUpdate();
 	void PassiveActive();
 
 	void DamageEffectUpdate();
@@ -142,6 +143,9 @@ public:
 
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart;}
 	bool GetGameStart() { return m_GameStart; }
+
+	void SetBossCamera(bool BossCamera) { m_BossCamera = BossCamera; }
+	bool GetBossCamera() { return m_BossCamera; }
 
 	void DamageCheck(int Damage);
 	void TakenDamageCheck(int Damage);
@@ -296,7 +300,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = {3,4,6,14,24,25};
+	vector <int> m_StartNumber = {3,4,6};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -338,8 +342,10 @@ private:
 		bool isVanish = false;
 	};
 	std::list<PowerUpEffect> powerup;
+	std::list<PowerUpEffect> shieldup;
 
 	bool m_GameStart = false;
+	bool m_BossCamera = false;
 
 	///=============================
 	/// 

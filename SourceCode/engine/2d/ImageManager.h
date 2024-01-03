@@ -26,6 +26,7 @@ public:
 		SHINE_L,
 		SMOKE,
 		POWERUP,
+		SHIELDUP,
 		ENEMYHPUI,
 		POIZONCOVER,
 		SHIELDCOVER,
@@ -124,6 +125,7 @@ public:
 		TUTORIAL_WINDOW,
 		TUTORIAL_TASK,
 		TUTORIAL_CHECK,
+		SYUUTYUU
 	};
 	//テクスチャの名前
 	enum tex2dName
