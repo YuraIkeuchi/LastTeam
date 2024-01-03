@@ -144,6 +144,9 @@ public:
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart;}
 	bool GetGameStart() { return m_GameStart; }
 
+	void SetBossCamera(bool BossCamera) { m_BossCamera = BossCamera; }
+	bool GetBossCamera() { return m_BossCamera; }
+
 	void DamageCheck(int Damage);
 	void TakenDamageCheck(int Damage);
 	bool GetIsFivePower() { return m_FivePower && (m_HandedCount % 5 == 0); }
@@ -297,7 +300,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 
-	vector <int> m_StartNumber = {3,4,6,9,14};
+	vector <int> m_StartNumber = {3,4,6};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -342,6 +345,7 @@ private:
 	std::list<PowerUpEffect> shieldup;
 
 	bool m_GameStart = false;
+	bool m_BossCamera = false;
 
 	///=============================
 	/// 

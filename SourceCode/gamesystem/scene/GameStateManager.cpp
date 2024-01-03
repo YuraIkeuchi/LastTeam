@@ -99,6 +99,7 @@ void GameStateManager::Initialize() {
 	predictarea->ResetPredict();
 
 	m_GameStart = false;
+	m_BossCamera = false;
 }
 
 //更新
@@ -219,6 +220,7 @@ void GameStateManager::AttackTrigger() {
 }
 void GameStateManager::Draw(DirectXCommon* dxCommon) {
 	if (!m_GameStart) { return; }
+	if (m_BossCamera) { return; }
 	if (!isFinish && !isChangeScene) {
 		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 		if (m_Delay && m_Act[0].ActDelay >= 30) {
@@ -270,7 +272,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 //描画
 void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("Deck");
-	ImGui::Text("Buff:%d", m_Buff);
+	ImGui::Text("BossCamera:%d",m_BossCamera);
 	ImGui::End();
 	if (isFinish) {
 		if (_ResultType != GET_SKILL) {
@@ -559,6 +561,7 @@ void GameStateManager::FinishAct(bool AllFinish) {
 
 void GameStateManager::GaugeUpdate() {
 	if (!m_GameStart) { return; }
+	if (m_BossCamera) { return; }
 	if (m_Act.size() == m_DeckNumber.size()) {
 		m_GaugeCount = 0.0f;
 	} else {

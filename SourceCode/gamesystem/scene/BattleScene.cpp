@@ -67,6 +67,11 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	vignette = IKESprite::Create(ImageManager::VIGNETTE, { 0.f,0.f }, { 0.f,0.f, 0.f, 0.6f });
 	Feed* feed_ = new Feed();
 	feed.reset(feed_);
+
+	//ボス登場演出のカメラ設定
+	if (nowHierarchy == 5 || nowHierarchy == 9 || nowHierarchy == 13) {
+		GameStateManager::GetInstance()->SetBossCamera(true);
+	}
 }
 //更新
 void BattleScene::Update(DirectXCommon* dxCommon)
@@ -76,6 +81,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	lightGroup->Update();
 	//�e�N���X�X�V
 	//カメラワーク更新
+	camerawork->BossUpdate(camera);
 	camerawork->Update(camera);
 	//ゲームオーバー処理
 	if (player_->GetHp() <= 0.0f) {
@@ -249,13 +255,14 @@ void BattleScene::Draw(DirectXCommon* dxCommon) {
 }
 //前方描画(奥に描画するやつ)
 void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
-	if (!m_Skip && !GameStateManager::GetInstance()->GetGameStart()) {
+	if (!m_Skip && (!GameStateManager::GetInstance()->GetGameStart() || GameStateManager::GetInstance()->GetBossCamera())) {
 		IKESprite::PreDraw();
 		skipUI->Draw();
 		IKESprite::PostDraw();
 	}
+	camerawork->Draw();
 	if (!m_FeedEnd){
-		if (player_->GetHp() > 0.0f && GameStateManager::GetInstance()->GetGameStart()) {
+		if (player_->GetHp() > 0.0f && GameStateManager::GetInstance()->GetGameStart() && !GameStateManager::GetInstance()->GetBossCamera()) {
 			ParticleEmitter::GetInstance()->FlontDrawAll();
 			player_->UIDraw();
 			enemyManager->UIDraw();
@@ -296,15 +303,16 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void BattleScene::ImGuiDraw() {
 	//GameStateManager::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
-	//enemyManager->ImGuiDraw();
-	player_->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
+	enemyManager->ImGuiDraw();
+	camerawork->ImGuiDraw();
+	//player_->ImGuiDraw();
 }
 
 void BattleScene::Finalize() {
 }
 void BattleScene::SkipUpdate() {
-	if (GameStateManager::GetInstance()->GetGameStart()) { return; }
+	if (GameStateManager::GetInstance()->GetGameStart() && !GameStateManager::GetInstance()->GetBossCamera()) { return; }
 	Input* input = Input::GetInstance();
 	if (m_Skip) {
 		if (!m_FeedStart) {
@@ -318,9 +326,11 @@ void BattleScene::SkipUpdate() {
 		if (m_SkipEnd) {
 			player_->SkipInitialize();
 			enemyManager->SkipInitialize();
+			camerawork->CameraSKip();
 			StagePanel::GetInstance()->Initialize();
 			StagePanel::GetInstance()->SetCreateFinish(true);
 			GameStateManager::GetInstance()->SetGameStart(true);
+			GameStateManager::GetInstance()->SetBossCamera(false);
 		}
 	}
 }

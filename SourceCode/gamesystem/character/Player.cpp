@@ -298,6 +298,7 @@ void Player::Move() {
 	if (m_Delay || m_Bound) { return; }
 	if (GameStateManager::GetInstance()->GetResetPredict()) { return; }
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
+	if (GameStateManager::GetInstance()->GetBossCamera()) { return; }
 	const int l_TargetTimer = 8;
 	const float l_AddVelocity = PANEL_SIZE;
 	const float l_SubVelocity = -PANEL_SIZE;
