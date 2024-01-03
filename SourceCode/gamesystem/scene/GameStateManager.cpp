@@ -493,7 +493,12 @@ void GameStateManager::UseSkill() {
 					RandPowerUpInit();
 				}
 				BirthBuff(m_Act[0].StateName);
-				onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
+				if (m_Act[0].StateName == "NEXT") {
+					onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
+				}
+				else {
+					onomatope->AddOnomato(Guard, { 340.0f,340.0f });
+				}
 			} else if (m_Act[0].StateName == "RANDOM") {
 				int l_rand = {};
 				l_rand = Helper::GetRanNum(0, 1);
