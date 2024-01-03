@@ -17,6 +17,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(SHINE_L, L"Resources/2d/effect/effect5.png");
 	IKESprite::LoadTexture(SMOKE, L"Resources/2d/effect/smoke.png");
 	IKESprite::LoadTexture(POWERUP, L"Resources/2d/effect/Up.png");
+	IKESprite::LoadTexture(SHIELDUP, L"Resources/2d/effect/ShieldUp.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 	IKESprite::LoadTexture(POIZONCOVER, L"Resources/2d/objicon/Numbers/PoisonFrame.png");
 	IKESprite::LoadTexture(SHIELDCOVER, L"Resources/2d/objicon/Numbers/ShieldFrame.png");

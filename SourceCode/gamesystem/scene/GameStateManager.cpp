@@ -198,6 +198,7 @@ void GameStateManager::Update() {
 
 	PassiveActive();
 	PowerUpEffectUpdate();
+	ShieldUpEffectUpdate();
 	DamageEffectUpdate();
 }
 //攻撃した瞬間
@@ -296,6 +297,9 @@ void GameStateManager::ActUIDraw() {
 	}
 	IKESprite::PreDraw();
 	for (PowerUpEffect& power : powerup) {
+		power.tex->Draw();
+	}
+	for (PowerUpEffect& power : shieldup) {
 		power.tex->Draw();
 	}
 	IKESprite::PostDraw();
@@ -488,15 +492,17 @@ void GameStateManager::UseSkill() {
 			}
 		} else if (m_Act[0].SkillType == 1) {
 			if (m_Act[0].StateName == "NEXT" || m_Act[0].StateName == "SHILED") {
-
-				for (int i = 0; i < 2; i++) {
-					RandPowerUpInit();
-				}
 				BirthBuff(m_Act[0].StateName);
 				if (m_Act[0].StateName == "NEXT") {
+					for (int i = 0; i < 2; i++) {
+						RandPowerUpInit();
+					}
 					onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
 				}
 				else {
+					for (int i = 0; i < 2; i++) {
+						RandShieldUpInit();
+					}
 					onomatope->AddOnomato(Guard, { 340.0f,340.0f });
 				}
 			} else if (m_Act[0].StateName == "RANDOM") {
@@ -799,6 +805,21 @@ void GameStateManager::RandPowerUpInit() {
 	itr.kFrame = 1 / frame;
 	powerup.push_back(std::move(itr));
 }
+//シールドのエフェクトの初期化
+void GameStateManager::RandShieldUpInit() {
+	float posX = (float)Helper::GetRanNum(25, 200);
+	float posY = (float)Helper::GetRanNum(550, 700);
+	float frame = (float)Helper::GetRanNum(30, 45);
+	PowerUpEffect itr;
+	itr.tex = IKESprite::Create(ImageManager::SHIELDUP, {});
+	itr.position = { posX,posY };
+	itr.tex->SetAnchorPoint({ 0.5f,0.5f });
+	itr.tex->SetSize(itr.size);
+	itr.tex->SetColor(itr.color);
+	itr.afterpos = { itr.position.x,itr.position.y - 50.0f };
+	itr.kFrame = 1 / frame;
+	shieldup.push_back(std::move(itr));
+}
 
 void GameStateManager::PowerUpEffectUpdate() {
 	for (PowerUpEffect& power : powerup) {
@@ -818,6 +839,24 @@ void GameStateManager::PowerUpEffectUpdate() {
 		return shine.isVanish; });
 }
 
+void GameStateManager::ShieldUpEffectUpdate() {
+	for (PowerUpEffect& power : shieldup) {
+		if (Helper::FrameCheck(power.frame, power.kFrame)) {
+			if (player->GetShieldHP() != 0.0f) {
+				RandShieldUpInit();
+			}
+			power.isVanish = true;
+		}
+		else {
+			power.position.y = Ease(In, Exp, power.frame, power.position.y, power.afterpos.y);
+			power.color.w = Ease(In, Exp, power.frame, 1.0f, 0.0f);
+			power.tex->SetPosition(power.position);
+			power.tex->SetColor(power.color);
+		}
+	}
+	shieldup.remove_if([](PowerUpEffect& shine) {
+		return shine.isVanish; });
+}
 void GameStateManager::PassiveActive() {
 	if (!isPassive) {
 		if (passiveActiveNum.size() == 0) { return; }

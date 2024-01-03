@@ -514,7 +514,7 @@ void Player::RecvDamage(const float Damage, const string& name) {
 		m_HP -= l_Damage;
 	}
 
-	Helper::Clamp(m_ShieldHP, 0.0f, 10.0f);
+	Helper::Clamp(m_ShieldHP, 0.0f,m_ShieldHPMAX);
 	GameStateManager::GetInstance()->TakenDamageCheck((int)Damage);
 	GameStateManager::GetInstance()->MissAttack();
 	//パッシブ効果処理
