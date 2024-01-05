@@ -28,7 +28,7 @@ AttackArea::AttackArea(string& userName, string& stateName) {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::DOGO);
 	}
 	else {
-		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::THORN);
+		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::DORO);
 	}
 	m_Object = make_unique<IKEObject3d>();
 	m_Object->Initialize();
@@ -65,8 +65,10 @@ void AttackArea::InitState(const int width, const int height) {
 		m_Object->SetBillboard(true);
 	}
 	else {
-		m_Scale = { 0.4f,0.25f,0.4f };
-		m_Position = { panels.position.x,-0.5f,panels.position.z };
+		m_Rotation.y = 270.0f;
+		m_Scale = { 0.2f,0.2f,0.2f };
+		m_Position = { panels.position.x,3.0f,panels.position.z };
+		m_Object->SetBillboard(true);
 	}
 }
 
@@ -144,19 +146,26 @@ void AttackArea::StoneMove() {
 }
 //“ÅŒn
 void AttackArea::PoisonMove() {
-	static float addFrame = 1.f / 10.f;
+	const XMFLOAT3 l_AfterScale = { 1.35f,0.05f,0.35f };
+	const float l_AddFrame = 1 / 30.0f;
 	if (m_Timer > m_BirthTimer) { return; }
-	if (_ThornState == THORN_UP) {
-		if (Helper::FrameCheck(m_Frame, addFrame)) {
-			_ThornState = THORN_END;
-			m_Frame = {};
+	if (_StoneType == STONE_FALL) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 1.0f, m_AddPower)) {
+			m_AddPower = 0.2f;
+			_StoneType = STONE_BOUND;
 		}
-		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.4f);
 	}
 	else {
-		if (Helper::FrameCheck(m_Frame, addFrame)) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 		}
-		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
+		else {
+			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,l_AfterScale.x),
+			Ease(In,Cubic,m_Frame,m_Scale.y,l_AfterScale.y),
+			Ease(In,Cubic,m_Frame,m_Scale.z,l_AfterScale.z), };
+
+			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, {});
+		}
 	}
 }

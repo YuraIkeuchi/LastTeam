@@ -30,6 +30,8 @@ public:
 		HEAL,
 		ROCK,
 		DOGO,
+		DORO,
+		ZASHU,
 	};
 	//FBXの名前
 	enum FBXName {
