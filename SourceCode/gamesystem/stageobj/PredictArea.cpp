@@ -91,6 +91,9 @@ void PredictArea::Update() {
 							Ease(Out,Back,panels[i][j].frame,0.f,PANEL_SIZE) * 0.1f
 						};
 					}
+					panels[i][j].tex[m_DrawDype]->SetScale(panels[i][j].scale);
+					panels[i][j].tex[m_DrawDype]->SetPosition(panels[i][j].position);
+					panels[i][j].tex[m_DrawDype]->Update();
 				}
 				if (panels[i][j].isVanish) {
 					if (Helper::FrameCheck(panels[i][j].frame, 1.f / 10.f)) {
@@ -104,10 +107,10 @@ void PredictArea::Update() {
 							Ease(In,Circ,panels[i][j].frame,PANEL_SIZE,0.f) * 0.1f
 						};
 					}
+					panels[i][j].tex[m_DrawDype]->SetScale(panels[i][j].scale);
+					panels[i][j].tex[m_DrawDype]->SetPosition(panels[i][j].position);
+					panels[i][j].tex[m_DrawDype]->Update();
 				}
-				panels[i][j].tex[m_DrawDype]->SetScale(panels[i][j].scale);
-				panels[i][j].tex[m_DrawDype]->SetPosition(panels[i][j].position);
-				panels[i][j].tex[m_DrawDype]->Update();
 			}
 		}
 	}
