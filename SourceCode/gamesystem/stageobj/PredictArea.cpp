@@ -3,6 +3,7 @@
 #include <ImageManager.h>
 #include <Helper.h>
 #include "StagePanel.h"
+#include <Easing.h>
 //リソース読み込み
 PredictArea::PredictArea(const string& name) {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
@@ -72,6 +73,43 @@ void PredictArea::Update() {
 	//敵の予測エリアのみ処理
 	if (name == "ENEMY") {
 		FlashArea();
+		for (int i = 0; i < PREDICT_WIDTH; i++) {
+			for (int j = 0; j < PREDICT_HEIGHT; j++) {
+				if (panels[i][j].isVerse) {
+					if (Helper::FrameCheck(panels[i][j].frame, 1.f / 10.f)) {
+						panels[i][j].frame = 0.f;
+						panels[i][j].isVerse = false;
+					} else {
+						panels[i][j].position = {
+							Ease(In,Quad,panels[i][j].frame,panels[i][j].beforePos.x,panels[i][j].afterPos.x),
+							Ease(In,Quad,panels[i][j].frame,panels[i][j].beforePos.y,panels[i][j].afterPos.y),
+							Ease(In,Quad,panels[i][j].frame,panels[i][j].beforePos.z,panels[i][j].afterPos.z),
+						};
+						panels[i][j].scale = {
+							Ease(Out,Back,panels[i][j].frame,0.f,PANEL_SIZE) * 0.1f,
+							Ease(Out,Back,panels[i][j].frame,0.f,PANEL_SIZE) * 0.1f,
+							Ease(Out,Back,panels[i][j].frame,0.f,PANEL_SIZE) * 0.1f
+						};
+					}
+				}
+				if (panels[i][j].isVanish) {
+					if (Helper::FrameCheck(panels[i][j].frame, 1.f / 10.f)) {
+						panels[i][j].frame = 0.f;
+						panels[i][j].isVanish = false;
+						panels[i][j].predict = false;
+					} else {
+						panels[i][j].scale = {
+							Ease(In,Circ,panels[i][j].frame,PANEL_SIZE,0.f) * 0.1f,
+							Ease(In,Circ,panels[i][j].frame,PANEL_SIZE,0.f) * 0.1f,
+							Ease(In,Circ,panels[i][j].frame,PANEL_SIZE,0.f) * 0.1f
+						};
+					}
+				}
+				panels[i][j].tex[m_DrawDype]->SetScale(panels[i][j].scale);
+				panels[i][j].tex[m_DrawDype]->SetPosition(panels[i][j].position);
+				panels[i][j].tex[m_DrawDype]->Update();
+			}
+		}
 	}
 }
 
@@ -131,4 +169,20 @@ void PredictArea::FlashArea() {
 	else {
 		m_SinAngle = 0.0f;
 	}
+}
+
+void PredictArea::VersePredict(int width, int height) {
+	if (name != "ENEMY") { assert(0); }
+	XMFLOAT3 pos_ = { (PANEL_SIZE * width) - (PREDICT_HEIGHT * PANEL_SIZE),0.02f,(PANEL_SIZE * height) };
+	panels[width][height].beforePos = { pos_.x,pos_.y + 1.0f,pos_.z };
+	panels[width][height].afterPos = pos_;
+	panels[width][height].scale = {};
+	panels[width][height].predict = true;
+	panels[width][height].isVerse = true;
+}
+
+void PredictArea::VanishPredict(int width, int height) {
+
+	panels[width][height].isVanish = true;
+
 }

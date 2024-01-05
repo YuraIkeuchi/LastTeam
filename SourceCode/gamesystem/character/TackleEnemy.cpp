@@ -40,15 +40,10 @@ bool TackleEnemy::Initialize() {
 	m_MaxHP = m_HP;
 	StagePanel::GetInstance()->EnemyHitReset();
 	m_ShadowScale = { 0.03f,0.03f,0.03f };
-	float baseScale = PANEL_SIZE * 0.1f;
+	//予測
+	predictArea = std::make_unique<PredictArea>("ENEMY");
+	predictArea->Initialize();
 
-	for (PredictPanel& predictPanel : predictPanels) {
-		predictPanel.tex = std::make_unique<IKETexture>(ImageManager::AREA, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,0.4f,0.4f,1.f });
-		predictPanel.tex->TextureCreate();
-		predictPanel.tex->Initialize();
-		predictPanel.tex->SetScale({ baseScale ,baseScale ,baseScale });
-		predictPanel.tex->SetRotation({ 90.0f,0.0f,0.0f });
-	}
 	m_OldWidth = m_NowWidth;
 	m_OldHeight = m_NowHeight;
 	magic.Alive = false;
@@ -90,41 +85,8 @@ void TackleEnemy::Action() {
 	//shadow_tex->SetPosition(m_ShadowPos);
 	//shadow_tex->SetScale(m_ShadowScale);
 	//shadow_tex->Update();
-	for (PredictPanel& predictPanel : predictPanels) {
-		if (predictPanel.isVerse) {
-			if (Helper::FrameCheck(predictPanel.usefulFrame, 1.f / 10.f)) {
-				predictPanel.usefulFrame = 0.f;
-				predictPanel.isVerse = false;
-			} else {
-				predictPanel.pos = {
-					Ease(In,Quad,predictPanel.usefulFrame,predictPanel.beforePos.x,predictPanel.afterPos.x),
-					Ease(In,Quad,predictPanel.usefulFrame,predictPanel.beforePos.y,predictPanel.afterPos.y),
-					Ease(In,Quad,predictPanel.usefulFrame,predictPanel.beforePos.z,predictPanel.afterPos.z),
-				};
-				predictPanel.scale = {
-					Ease(Out,Back,predictPanel.usefulFrame,0.f,PANEL_SIZE) * 0.1f,
-					Ease(Out,Back,predictPanel.usefulFrame,0.f,PANEL_SIZE) * 0.1f,
-					Ease(Out,Back,predictPanel.usefulFrame,0.f,PANEL_SIZE) * 0.1f
-				};
-			}
-		}
-		if (predictPanel.isVanish) {
-			if (Helper::FrameCheck(predictPanel.usefulFrame, 1.f / 10.f)) {
-				predictPanel.usefulFrame = 0.f;
-				predictPanel.isVanish = false;
-				predictPanel.isVisible = false;
-			} else {
-				predictPanel.scale = {
-					Ease(In,Circ,predictPanel.usefulFrame,PANEL_SIZE,0.f) * 0.1f,
-					Ease(In,Circ,predictPanel.usefulFrame,PANEL_SIZE,0.f) * 0.1f,
-					Ease(In,Circ,predictPanel.usefulFrame,PANEL_SIZE,0.f) * 0.1f
-				};
-			}
-		}
-		predictPanel.tex->SetScale(predictPanel.scale);
-		predictPanel.tex->SetPosition(predictPanel.pos);
-		predictPanel.tex->Update();
-	}
+	predictArea->Update();
+
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
@@ -136,13 +98,11 @@ void TackleEnemy::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
-	for (PredictPanel& predictPanel : predictPanels) {
-		if (!predictPanel.isVisible) { continue; }
-		predictPanel.tex->Draw();
-	}
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
+	predictArea->Draw(dxCommon);
 	IKETexture::PostDraw();
+
 	if (m_Color.w != 0.0f) {
 		Obj_Draw();
 	}
@@ -177,11 +137,8 @@ void TackleEnemy::Attack() {
 		m_Frame = 1.0f;
 		m_Position.x -= m_Speed;
 		m_Rotation.x += l_AddRot;
-		for (PredictPanel& predictPanel : predictPanels) {
-			if (predictPanel.width >= m_OldWidth) {
-				predictPanel.isVanish = true;
-			}
-		}
+		//通り過ぎたら削除
+		predictArea->VanishPredict(m_OldWidth, m_NowHeight);
 
 		if (m_Position.x < l_TargetX) {
 			m_CheckPanel = true;
@@ -225,14 +182,7 @@ void TackleEnemy::StandBy() {
 	}
 
 	if (Helper::FrameCheck(predictFrame, 1.f / 5.0f)) {
-		XMFLOAT3 pos_ = { (PANEL_SIZE * nextWidthPanel) - (PREDICT_HEIGHT * PANEL_SIZE),0.02f,(PANEL_SIZE * m_NowHeight) };
-		predictPanels[nextPredict].beforePos = { pos_.x,pos_.y + 1.0f,pos_.z };
-		predictPanels[nextPredict].afterPos = pos_;
-		predictPanels[nextPredict].scale = {};
-		predictPanels[nextPredict].width = nextWidthPanel;
-		predictPanels[nextPredict].height = m_NowHeight;
-		predictPanels[nextPredict].isVisible = true;
-		predictPanels[nextPredict].isVerse = true;
+		predictArea->VersePredict(nextWidthPanel, m_NowHeight);
 		nextPredict++;
 		predictFrame = 0.f;
 	}
