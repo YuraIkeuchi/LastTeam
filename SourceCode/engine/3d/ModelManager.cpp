@@ -29,6 +29,8 @@ void ModelManager::StartInitialize()
 	LoadModel(HEAL, "Heal");
 	LoadModel(ROCK, "Rock");
 	LoadModel(DOGO, "dogoxo");
+	LoadModel(DORO, "doroxo");
+	LoadModel(ZASHU, "zashu");
 }
 
 //モデル読み込み(非同期処理で読み込むもの)
