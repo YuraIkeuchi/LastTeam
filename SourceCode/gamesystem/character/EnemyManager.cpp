@@ -59,6 +59,11 @@ void EnemyManager::Update() {
 	}
 
 }
+void EnemyManager::ClearUpdate() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->ClearUpdate();
+	}
+}
 //スキップ時の初期化
 void EnemyManager::SkipInitialize() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
@@ -172,6 +177,7 @@ void EnemyManager::Spawn2Map() {
 	popcom << file.rdbuf();
 	file.close();
 	int height = 0;
+
 	while (std::getline(popcom, line)) {
 		std::istringstream line_stream(line);
 		std::string word;

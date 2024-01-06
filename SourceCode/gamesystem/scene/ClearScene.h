@@ -1,6 +1,7 @@
 #pragma once
 #include "IKESprite.h"
 #include "BaseScene.h"
+#include "EnemyManager.h"
 /// タイトルシーン
 class ClearScene : public BaseScene {
 public:
@@ -33,5 +34,6 @@ private://メンバ変数
 	void RandShineInit();
 	void ShineEffectUpdate();
 	std::list<ShineEffect> shines;
+	unique_ptr<EnemyManager> enemyManager = nullptr;
 };
 

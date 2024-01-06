@@ -309,3 +309,8 @@ void CanonEnemy::WarpEnemy() {
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
 }
+//クリアシーンの更新
+void CanonEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

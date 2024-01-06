@@ -280,3 +280,8 @@ void PoisonEnemy::WarpEnemy() {
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
 }
+//クリアシーンの更新
+void PoisonEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

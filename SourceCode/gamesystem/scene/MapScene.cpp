@@ -814,8 +814,8 @@ void MapScene::CheckState() {
 			bool isBattle = true;
 			if (nowHierarchy == MaxLength) {
 				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
-				s_LastStage = true;
 			} else {
+				s_LastStage = true;
 				if (nowHierarchy < (MaxLength / 2) + 2) {	//なんマス目に居るかで難易度が変わる
 					levelName = "Weak";
 				} else {

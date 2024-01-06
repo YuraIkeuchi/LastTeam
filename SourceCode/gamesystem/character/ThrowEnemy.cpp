@@ -243,3 +243,8 @@ void ThrowEnemy::WarpEnemy() {
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
 }
+//クリアシーンの更新
+void ThrowEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

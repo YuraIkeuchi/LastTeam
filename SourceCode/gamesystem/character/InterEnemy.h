@@ -187,6 +187,13 @@ public:
 	virtual void Action() = 0;//敵の行動
 
 	/// <summary>
+	/// クリアシーンの動き
+	/// </summary>
+	void ClearUpdate();
+
+	virtual void ClearAction() = 0;//クリアシーンの動き
+
+	/// <summary>
 	/// 描画
 	/// </summary>
 	void BaseFrontDraw(DirectXCommon* dxCommon);

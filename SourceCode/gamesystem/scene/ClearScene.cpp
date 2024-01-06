@@ -1,10 +1,12 @@
-#include "ClearScene.h"
+ï»¿#include "ClearScene.h"
 #include "ImageManager.h"
 #include <SceneManager.h>
 #include <Helper.h>
-//‰Šú‰»
+#include <GameStateManager.h>
+#include <StageBack.h>
+//åˆæœŸåŒ–
 void ClearScene::Initialize(DirectXCommon* dxCommon) {
-	//‹¤’Ê‚Ì‰Šú‰»
+	//å…±é€šã®åˆæœŸåŒ–
 	BaseInitialize(dxCommon);
 	sprite = IKESprite::Create(ImageManager::GAMECLEARBACK, { 0.0f,0.0f });
 
@@ -12,26 +14,49 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 		RandShineInit();
 	}
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameClear.wav", 0.04f);
+	std::string BaseName = "Resources/csv/EnemySpawn/Clear/ClearMap.csv";
+	GameStateManager::GetInstance()->SetEnemySpawnText(BaseName);
+
+	player_ = make_unique<Player>();
+	player_->LoadResource();
+	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
+	player_->Initialize();
+	//æ•µ
+	EnemyManager::SetPlayer(player_.get());
+	enemyManager = std::make_unique<EnemyManager>();
+	enemyManager->Initialize();
+
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ‘ãƒãƒ«ã®åˆæœŸåŒ–
+	StagePanel::GetInstance()->LoadResource();
+	StagePanel::GetInstance()->SetPlayer(player_.get());
+	StagePanel::GetInstance()->Initialize(0.0f);
 }
-//XV
+//æ›´æ–°
 void ClearScene::Update(DirectXCommon* dxCommon) {
 	Input* input = Input::GetInstance();
-	if ((input->TriggerButton(input->B)||input->TriggerKey(DIK_SPACE)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//ƒoƒgƒ‹
+	if ((input->TriggerButton(input->B)||input->TriggerKey(DIK_SPACE)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//ãƒãƒˆãƒ«
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 	}
 
-	if (SceneChanger::GetInstance()->GetChange()) {			//^‚ÁˆÃ‚É‚È‚Á‚½‚ç•Ï‚í‚é
+	if (SceneChanger::GetInstance()->GetChange()) {			//çœŸã£æš—ã«ãªã£ãŸã‚‰å¤‰ã‚ã‚‹
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
-
+	StagePanel::GetInstance()->Update();
+	enemyManager->ClearUpdate();
+	player_->ClearUpdate();
+	//ãƒ©ã‚¤ãƒˆæ›´æ–°
+	lightGroup->Update();
+	//ï¿½eï¿½Nï¿½ï¿½ï¿½Xï¿½Xï¿½V
+	//ã‚«ãƒ¡ãƒ©ãƒ¯ãƒ¼ã‚¯æ›´æ–°
+	camerawork->Update(camera);
 	ShineEffectUpdate();
 	SceneChanger::GetInstance()->Update();
 }
-//•`‰æ
+//æç”»
 void ClearScene::Draw(DirectXCommon* dxCommon) {
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚é‚©
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ã‚‹ã‹
 	if (PlayPostEffect) {
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
 		BackDraw(dxCommon);
@@ -53,28 +78,39 @@ void ClearScene::Draw(DirectXCommon* dxCommon) {
 		dxCommon->PostDraw();
 	}
 }
-//‘O–Ê•`‰æ
+//å‰é¢æç”»
 void ClearScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
-	sprite->Draw();
-	for (ShineEffect& shine : shines) {
+	//sprite->Draw();
+	/*for (ShineEffect& shine : shines) {
 		shine.tex->Draw();
-	}
+	}*/
 	IKESprite::PostDraw();
 
 	SceneChanger::GetInstance()->Draw();
 }
-//”w–Ê•`‰æ
+//èƒŒé¢æç”»
 void ClearScene::BackDraw(DirectXCommon* dxCommon) {
+	IKESprite::PreDraw();
+	StageBack::GetInstance()->Draw(dxCommon);
+	IKESprite::PostDraw();
+	IKEObject3d::PreDraw();
+	StagePanel::GetInstance()->Draw(dxCommon);
+	player_->Draw(dxCommon);
+	enemyManager->Draw(dxCommon);
+	IKEObject3d::PostDraw();
 }
-//ImGui•`‰æ
+//ImGuiæç”»
 void ClearScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	//ImGui::Begin("Clear");
 	//ImGui::Text("Clear");
 	//ImGui::End();
 	//SceneChanger::GetInstance()->ImGuiDraw();
+	camerawork->ImGuiDraw();
+	enemyManager->ImGuiDraw();
+	player_->ImGuiDraw();
 }
-//‰ğ•ú
+//è§£æ”¾
 void ClearScene::Finalize() {
 }
 

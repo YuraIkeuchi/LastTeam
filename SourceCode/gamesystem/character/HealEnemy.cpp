@@ -227,3 +227,8 @@ void HealEnemy::AttackMove() {
 
 	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 540.0f);
 }
+//クリアシーンの更新
+void HealEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

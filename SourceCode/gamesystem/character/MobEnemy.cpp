@@ -69,3 +69,8 @@ void MobEnemy::ImGui_Origin() {
 void MobEnemy::Finalize() {
 
 }
+//クリアシーンの更新
+void MobEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

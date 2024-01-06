@@ -11,6 +11,7 @@ public:
 	bool Initialize() override;//初期化
 	void Finalize() override;//開放
 	void Action()override;//更新
+	void ClearAction()override;//クリア更新
 	void ImGui_Origin()override;
 
 	void Draw(DirectXCommon* dxCommon) override;//描画

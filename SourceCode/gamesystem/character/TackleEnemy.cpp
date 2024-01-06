@@ -260,3 +260,8 @@ bool TackleEnemy::TackleCollide() {
 
 	return false;
 }
+//クリアシーンの更新
+void TackleEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

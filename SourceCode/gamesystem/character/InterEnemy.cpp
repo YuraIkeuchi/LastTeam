@@ -831,3 +831,9 @@ void InterEnemy::CounterUpdate() {
 		}
 	}
 }
+
+//クリアシーンの更新
+void InterEnemy::ClearUpdate() {
+	ClearAction();
+	//Obj_SetParam();
+}

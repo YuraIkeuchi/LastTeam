@@ -297,3 +297,8 @@ void FrontEnemy::FrontAttack() {
 		predictarea->SetTargetTimer(l_TargetTimer);
 	}
 }
+//クリアシーンの更新
+void FrontEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

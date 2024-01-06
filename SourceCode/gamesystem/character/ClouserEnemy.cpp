@@ -284,3 +284,8 @@ void ClouserEnemy::AttackMove() {
 
 	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
 }
+//クリアシーンの更新
+void ClouserEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

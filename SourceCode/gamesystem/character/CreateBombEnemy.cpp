@@ -256,3 +256,9 @@ void CreateBombEnemy::WarpEnemy() {
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
 }
+
+//クリアシーンの更新
+void CreateBombEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

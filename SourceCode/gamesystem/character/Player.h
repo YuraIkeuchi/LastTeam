@@ -36,6 +36,8 @@ public:
 	void TitleUpdate();
 
 	void SetTitleFlag(bool flag) { is_title = flag; }
+	//ゲームクリアの動き
+	void ClearUpdate();
 private:
 	//動き
 	void Move();

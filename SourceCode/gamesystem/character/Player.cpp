@@ -857,3 +857,8 @@ void Player::BirthHealNumber(const float heal) {
 		}
 	}
 }
+//クリアシーンの更新
+void Player::ClearUpdate() {
+	m_AddDisolve = 0.0f;
+	Obj_SetParam();
+}
