@@ -400,6 +400,26 @@ void GameStateManager::BirthArea() {
 		damage = m_MetroDamage * (float)(m_Metronome + 1);
 		m_Metronome++;
 	}
+	if (m_Act[0].StateName == "GORGEOUS") {
+		int num = Helper::GetRanNum(0,3);
+		switch (num) {
+		case 0:
+			m_Act[0].StateName = "DRAIN";
+			break;
+		case 1:
+			m_Act[0].StateName = "POISON";
+			m_Act[0].PoisonToken = (int)(15.f * player->HpPercent());
+			break;
+		case 2:
+			m_Act[0].StateName = "FAR";
+			break;
+		case 3:
+			m_Act[0].StateName = "NEAR";
+			break;
+		default:
+			break;
+		}
+	}
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 			AreaX = l_BirthBaseX + i;

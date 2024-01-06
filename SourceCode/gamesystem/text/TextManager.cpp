@@ -126,6 +126,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"威力:パッシブｘ１０　ドレイン");
 	CreateSkillSentence(L"使えば使うほど強くなる！");
 	CreateSkillDamage(L"威力:8ｘ試合で使った回数");
+	CreateSkillSentence(L"ランダムでゴージャスなスキルにチェンジ！");
+	CreateSkillDamage(L"威力:50 （毒・回復・引き寄せ・飛ばすのどれか）");
 
 	//ラスボス
 	//コンヴァージョン初期化
