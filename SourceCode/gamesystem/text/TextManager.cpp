@@ -120,6 +120,10 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillDamage(L"威力:30 敵を前に寄せる");
 	CreateSkillSentence(L"げんかいバトルたたきつけろ！");
 	CreateSkillDamage(L"威力:30 HPが半分なら威力２倍");
+	CreateSkillSentence(L"パッシブにおうじて毒を付与！");
+	CreateSkillDamage(L"威力:3 毒：パッシブｘ２付与");
+	CreateSkillSentence(L"パッシブにおうじて強くなる回復攻撃！");
+	CreateSkillDamage(L"威力:パッシブｘ１０　ドレイン");
 
 	//ラスボス
 	//コンヴァージョン初期化
