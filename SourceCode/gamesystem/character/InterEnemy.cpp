@@ -326,7 +326,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			if (name == "DRAIN") {
 				float rate = 0.5f;
 				player->HealPlayer(damage * rate);		//HP回復
-			} else if (name == "POISON") {		//毒
+			}else if (name == "POISON") {		//毒
 				m_Poison = true;
 				if (!m_IsVenom) {
 					m_PoisonToken += _area->GetPoisonToken();

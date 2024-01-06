@@ -113,17 +113,21 @@ void TextManager::Initialize(DirectXCommon* dxcomon)
 	CreateSkillSentence(L"全てを犠牲に・・・");
 	CreateSkillDamage(L"手札を全て捨てる");
 	CreateSkillSentence(L"敵を引き寄せろ!");
-	CreateSkillDamage(L"威力:30 敵を前に寄せる");
+	CreateSkillDamage(L"威力:30（中） 敵を前に寄せる");
 	CreateSkillSentence(L"敵を吹き飛ばせ!");
-	CreateSkillDamage(L"威力:30 敵を後ろに飛ばす");
+	CreateSkillDamage(L"威力:30（中） 敵を後ろに飛ばす");
 	CreateSkillSentence(L"敵を引き寄せろ!");
-	CreateSkillDamage(L"威力:30 敵を前に寄せる");
+	CreateSkillDamage(L"威力:30（中） 敵を前に寄せる");
 	CreateSkillSentence(L"げんかいバトルたたきつけろ！");
-	CreateSkillDamage(L"威力:30 HPが半分なら威力２倍");
-	CreateSkillSentence(L"パッシブにおうじて毒を付与！");
-	CreateSkillDamage(L"威力:3 毒：パッシブｘ２付与");
-	CreateSkillSentence(L"パッシブにおうじて強くなる回復攻撃！");
+	CreateSkillDamage(L"威力:30（中） HPが半分なら威力２倍");
+	CreateSkillSentence(L"パッシブに応じて毒を付与！");
+	CreateSkillDamage(L"威力:3（小） 毒：パッシブｘ２付与");
+	CreateSkillSentence(L"パッシブに応じて強くなる回復攻撃！");
 	CreateSkillDamage(L"威力:パッシブｘ１０　ドレイン");
+	CreateSkillSentence(L"使えば使うほど強くなる！");
+	CreateSkillDamage(L"威力:8ｘ試合で使った回数");
+	CreateSkillSentence(L"ランダムでゴージャスなスキルにチェンジ！");
+	CreateSkillDamage(L"威力:50 （毒・回復・引き寄せ・飛ばすのどれか）");
 
 	//ラスボス
 	//コンヴァージョン初期化
