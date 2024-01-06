@@ -339,8 +339,16 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				if (m_Poison) {
 					m_PoisonToken *= 3;
 				}
-			}
-			else if (name == "FAR" && !m_Induction && m_NowWidth != PANEL_WIDTH - 1 && _charaState != STATE_ATTACK) {		//敵を吹き飛ばす
+			} else if (name == "PASSIVEPOISON") {		//毒
+				m_Poison = true;
+				if (!m_IsVenom) {
+					m_PoisonToken += _area->GetPoisonToken();
+				} else {
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POISON_DAMAGEUP);
+					m_SuperPoison = true;
+					m_PoisonToken += _area->GetPoisonToken() * 2;
+				}
+			}else if (name == "FAR" && !m_Induction && m_NowWidth != PANEL_WIDTH - 1 && _charaState != STATE_ATTACK) {		//敵を吹き飛ばす
 				m_Induction = true;
 				m_InductionFrame = {};
 				for (int i = PANEL_WIDTH / 2; i < PANEL_WIDTH; i++) {

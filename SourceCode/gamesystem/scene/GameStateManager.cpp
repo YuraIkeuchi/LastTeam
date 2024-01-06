@@ -385,7 +385,14 @@ void GameStateManager::BirthArea() {
 		//HP半分以下で威力アップ
 		damage *= 2.0f;
 	}
-	
+	if (m_Act[0].StateName == "PASSIVEPOISON") {
+		m_Act[0].PoisonToken = (int)GotPassives.size() * 2;
+	}
+	if (m_Act[0].StateName == "PASSIVEDRAIN") {
+		damage = (float)GotPassives.size() * 10.f;
+		m_Act[0].StateName = "DRAIN";
+	}
+
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 			AreaX = l_BirthBaseX + i;
