@@ -19,7 +19,7 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 
 	player_ = make_unique<Player>();
 	player_->LoadResource();
-	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
+	player_->InitState({ 0.0f,0.1f,0.0f });
 	player_->Initialize();
 	//敵
 	EnemyManager::SetPlayer(player_.get());
@@ -107,9 +107,9 @@ void ClearScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	//ImGui::Text("Clear");
 	//ImGui::End();
 	//SceneChanger::GetInstance()->ImGuiDraw();
-	camerawork->ImGuiDraw();
-	enemyManager->ImGuiDraw();
-	player_->ImGuiDraw();
+	//camerawork->ImGuiDraw();
+	//enemyManager->ImGuiDraw();
+	//player_->ImGuiDraw();
 }
 //解放
 void ClearScene::Finalize() {

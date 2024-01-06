@@ -79,7 +79,6 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		SceneManager::GetInstance()->ChangeScene("CLEAR");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
-
 }
 //描画
 void TitleScene::Draw(DirectXCommon* dxCommon) {

@@ -263,5 +263,6 @@ private:
 	array<int, 2> m_DigitShield;
 	int m_InterShield = {};//整数にしたHP
 	array<unique_ptr<DrawNumber>, 2> _drawShield;
-
+	int m_ClearTimer = {};
+	float m_ClearFrame = {};
 };
