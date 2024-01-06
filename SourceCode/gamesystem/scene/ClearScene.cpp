@@ -24,6 +24,7 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 	//敵
 	EnemyManager::SetPlayer(player_.get());
 	enemyManager = std::make_unique<EnemyManager>();
+	enemyManager->SetClear(true);
 	enemyManager->Initialize();
 
 	//ステージパネルの初期化
@@ -50,7 +51,7 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	lightGroup->Update();
 	//�e�N���X�X�V
 	//カメラワーク更新
-	camerawork->Update(camera);
+	camerawork->ClearUpdate(camera);
 	ShineEffectUpdate();
 	SceneChanger::GetInstance()->Update();
 }

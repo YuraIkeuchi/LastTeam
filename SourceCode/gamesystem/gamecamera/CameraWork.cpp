@@ -109,3 +109,12 @@ void CameraWork::CameraSKip() {
 	target_ = { -1.5f,2.5f,0.f };
 	_CameraMove = CAMERA_BOSS;
 }
+void CameraWork::ClearUpdate(DebugCamera* camera) {
+	eye_ = { -0.8f,4.f,-4.5f };
+	target_ = { -0.8f,1.5f,0.f };
+
+	camera->SetEye(eye_);
+	camera->SetTarget(target_);
+
+	camera->Update();
+}
