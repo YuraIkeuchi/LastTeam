@@ -19,7 +19,20 @@ private:
 	void BackDraw(DirectXCommon* dxCommon);
 	void ImGuiDraw(DirectXCommon* dxCommon);
 	void FrontDraw(DirectXCommon* dxCommon);
+private:
+	static const int ATTACH_MAX = 2;
 private://ÉÅÉìÉoïœêî
 	unique_ptr<IKESprite> sprite;
+
+	int m_Timer = {};
+	//ÉpÉlÉã
+	struct GameOverAttach {
+		unique_ptr<IKEObject3d> object = nullptr;
+		unique_ptr<IKETexture> line = nullptr;
+		XMFLOAT3 position = { 0,0,0 };
+		XMFLOAT4 color = { 1,1,1,1 };
+	};
+
+	GameOverAttach attach[ATTACH_MAX];
 };
 

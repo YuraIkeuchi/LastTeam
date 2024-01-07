@@ -290,7 +290,9 @@ void Player::ImGuiDraw() {
 	ImGui::Text("ShieldHP:%f", m_ShieldHP);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSY:%f", m_Position.y);
 	ImGui::Text("POSZ:%f", m_Position.z);
+	ImGui::Text("ROTZ:%f", m_Rotation.z);
 	ImGui::End();
 }
 //移動
@@ -688,7 +690,7 @@ void Player::DamageUpdate() {
 }
 
 //ゲームーオーバー時
-void Player::GameOverUpdate() {
+void Player::DeathUpdate() {
 	const float l_AddRotZ = 0.5f;
 	const float l_AddFrame = 0.005f;
 	float RotPower = 5.0f;
@@ -876,5 +878,34 @@ void Player::ClearUpdate() {
 
 	m_Rotation.y = 180.0f;
 	m_AddDisolve = 0.0f;
+	Obj_SetParam();
+}
+//ゲームオーバーの更新
+void Player::GameOverUpdate(const int Timer) {
+	
+	if (_OverType == OVER_STOP) {
+		m_Position = { -1.0f,0.0f,0.0f };
+		m_Rotation = { 0.0f,180.0f,-90.0f };
+		m_AddDisolve = 0.0f;
+		if (Timer == 100) {
+			_OverType = OVER_JUMP;
+			m_AddPower = 0.3f;
+		}
+	}
+	else if (_OverType == OVER_JUMP) {
+		if (Helper::CheckMin(m_Rotation.z, 0.0f, 5.0f)) {
+			m_Rotation.z = {};
+		}
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_AddPower = {};
+			_OverType = OVER_MOVE;
+			m_Position.y = 0.1f;
+		}
+	}
+	else if (_OverType == OVER_MOVE) {
+
+	}
+
 	Obj_SetParam();
 }

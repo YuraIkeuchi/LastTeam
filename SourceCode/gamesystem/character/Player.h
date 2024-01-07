@@ -27,7 +27,6 @@ public:
 	void Update() override;
 	//描画
 	void Draw(DirectXCommon *dxCommon) override;
-	void GameOverUpdate();
 	//UI用
 	void UIDraw();
 	//ImGui
@@ -38,6 +37,10 @@ public:
 	void SetTitleFlag(bool flag) { is_title = flag; }
 	//ゲームクリアの動き
 	void ClearUpdate();
+	//ゲームオーバーの動き
+	void DeathUpdate();
+	//ゲームオーバーの動き
+	void GameOverUpdate(const int Timer);
 private:
 	//動き
 	void Move();
@@ -265,4 +268,11 @@ private:
 	array<unique_ptr<DrawNumber>, 2> _drawShield;
 	int m_ClearTimer = {};
 	float m_ClearFrame = {};
+
+	enum GameOverType {
+		OVER_STOP,
+		OVER_JUMP,
+		OVER_MOVE,
+		OVER_END
+	}_OverType = OVER_STOP;
 };

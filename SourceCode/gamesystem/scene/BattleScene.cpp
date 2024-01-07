@@ -87,7 +87,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	if (player_->GetHp() <= 0.0f) {
 		Audio::GetInstance()->StopWave(AUDIO_MAIN);
 		_ChangeType = CHANGE_OVER;
-		player_->GameOverUpdate();
+		player_->DeathUpdate();
 		if (player_->GetFinishGameOver()) {
 			if (Helper::FrameCheck(m_GameOverFrame, 0.01f)) {
 				m_ChangeTimer++;
