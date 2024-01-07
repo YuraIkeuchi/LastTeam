@@ -110,9 +110,15 @@ void CameraWork::CameraSKip() {
 	_CameraMove = CAMERA_BOSS;
 }
 void CameraWork::ClearUpdate(DebugCamera* camera) {
-	eye_ = { -0.8f,4.f,-4.5f };
-	target_ = { -0.8f,1.5f,0.f };
-
+	if (!m_ClearEnd) {
+		eye_ = { -0.8f,4.f,-4.5f };
+		target_ = { -0.8f,1.5f,0.f };
+	}
+	else {
+		m_AddCameraVel = Ease(In, Cubic, 0.5f, m_AddCameraVel, 0.2f);
+		eye_.y += m_AddCameraVel;
+		eye_.z -= m_AddCameraVel;
+	}
 	camera->SetEye(eye_);
 	camera->SetTarget(target_);
 

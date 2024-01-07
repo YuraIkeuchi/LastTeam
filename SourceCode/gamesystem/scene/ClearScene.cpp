@@ -13,7 +13,6 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 	for (int i = 0; i < 3; i++) {
 		RandShineInit();
 	}
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameClear.wav", 0.04f);
 	std::string BaseName = "Resources/csv/EnemySpawn/Clear/ClearMap.csv";
 	GameStateManager::GetInstance()->SetEnemySpawnText(BaseName);
 
@@ -77,23 +76,26 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	}
 	//スポットライトの動き
 	MoveSpotLight();
-	if (_AppState == APP_END) {
-		////丸影のためのやつ
-		//lightGroup->SetDirLightActive(0, true);
-		//lightGroup->SetDirLightActive(1, true);
-		//lightGroup->SetDirLightActive(2, true);
-		//for (int i = 0; i < SPOT_NUM; i++) {
-		//	lightGroup->SetSpotLightActive(i, false);
-		//}
-	}
+	
 	m_AppTimer++;
-	if (m_AppTimer == 340) {
+	if (m_AppTimer == 340) {		//クリアのスプライトが出る
 		_AppState = APP_NOTICE;
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameClear.wav", 0.04f);
 	}
-	//else if (m_AppTimer == 580) {
-	//	_AppState = APP_VANISH;
-	//}
+	else if (m_AppTimer == 500) {	//カメラが引く
+		_AppState = APP_VANISH;
+		camerawork->SetClearEnd(true);
+	}
+	else if (m_AppTimer == 550) {		//しーん遷移
+		SceneChanger::GetInstance()->SetChangeStart(true);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+	}
 
+	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
+		SceneManager::GetInstance()->ChangeScene("TITLE");
+		SceneChanger::GetInstance()->SetChange(false);
+	}
+	
 	if (m_AppTimer >= 340.0f) {
 		m_ClearSpritePos.y = Ease(In, Cubic, 0.5f, m_ClearSpritePos.y, 0.0f);
 	}
@@ -159,6 +161,7 @@ void ClearScene::BackDraw(DirectXCommon* dxCommon) {
 void ClearScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	ImGui::Begin("Clear");
 	ImGui::Text("DirX:%f",pointLightPos[0].x);
+	ImGui::Text("AttenX:%f", pointLightAtten[0].x);
 	ImGui::Text("Timer:%d", m_AppTimer);
 	ImGui::End();
 	//SceneChanger::GetInstance()->ImGuiDraw();
@@ -201,6 +204,7 @@ void ClearScene::ShineEffectUpdate() {
 void ClearScene::MoveSpotLight() {
 	const float l_AddAngle = 5.0f;
 	const float l_AddFrame = 0.5f;
+	const float l_AttenFrame = 0.25f;
 	const float l_PosMax = 1.5f;
 	const float l_PosMin = -1.5f;
 
@@ -223,6 +227,8 @@ void ClearScene::MoveSpotLight() {
 		SpotSet(pointLightPos[1], { {},{},{} }, l_AddFrame);
 	}
 	else if (_AppState == APP_VANISH) {
+		SpotSet(pointLightAtten[0], { 10.0f,{},10.0f }, l_AttenFrame);
+		SpotSet(pointLightAtten[1], { 10.0f,{},10.0f }, l_AttenFrame);
 		////角度
 		//SpotSet(spotLightDir[0], {}, l_AddFrame);
 		//SpotSet(spotLightDir[1], {}, l_AddFrame);

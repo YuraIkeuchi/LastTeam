@@ -30,6 +30,9 @@ public:
 	void CameraSKip();
 	void ImGuiDraw();
 	void Draw();
+
+public:
+	void SetClearEnd(const bool ClearEnd) { m_ClearEnd = ClearEnd; }
 private:
 	XMFLOAT3 m_AfterEye = { -3.0f,1.0f,3.0f };
 	XMFLOAT3 m_AfterTarget = { 3.0f,1.0f,3.0f };
@@ -42,6 +45,8 @@ private:
 
 	float m_Frame = {};
 	int m_waitTimer = {};
+	bool m_ClearEnd = false;
 
 	unique_ptr<IKESprite> syuutyuu;
+	float m_AddCameraVel = 0.0f;
 };
