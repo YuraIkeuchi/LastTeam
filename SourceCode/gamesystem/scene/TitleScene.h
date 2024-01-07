@@ -35,4 +35,12 @@ private:
 	unique_ptr<InterEnemy> enemy = nullptr;
 
 	unique_ptr<IKESprite> title_;
+	unique_ptr<IKESprite> player;
+	float rota = 0.f;
+	float rota2 = 0.f;
+
+	float rot = 0.f * XM_PI / 180.f;
+	vector<unique_ptr<IKESprite>> passives;
+	vector<unique_ptr<IKESprite>> skills;
+
 };

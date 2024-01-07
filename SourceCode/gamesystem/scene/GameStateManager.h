@@ -222,7 +222,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= { };
+	std::vector <int> m_StartPassive= {1,2,3,4 };
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -263,7 +263,9 @@ private:
 	int m_MaxTakenDamage = 0;
 	int m_TakenDamageNum = 0;
 	int m_HandedCount = 0;
-
+	
+	int m_Metronome = 0;
+	float m_MetroDamage = 8.f;
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
 	bool isBattleFromMap = true;
 	enum SkillType {
@@ -299,8 +301,8 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-
 	vector <int> m_StartNumber = {3,4,6};
+	//{3,4,7,13,26,27,28};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

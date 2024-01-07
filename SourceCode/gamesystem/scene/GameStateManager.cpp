@@ -23,6 +23,8 @@ void GameStateManager::Initialize() {
 
 	//全体スコア
 	m_AllScore = {};
+	m_Metronome = 0;
+	m_MetroDamage = 8.f;
 	m_OldDamage = 0;
 	m_MaxDamage = 0;
 	m_MaxTakenDamage = 0;
@@ -385,7 +387,39 @@ void GameStateManager::BirthArea() {
 		//HP半分以下で威力アップ
 		damage *= 2.0f;
 	}
-	
+	if (m_Act[0].StateName == "PASSIVEPOISON") {
+		m_Act[0].PoisonToken = (int)GotPassives.size() * 2;
+	}
+	if (m_Act[0].StateName == "PASSIVEDRAIN") {
+		damage = (float)GotPassives.size() * 10.f;
+		m_Act[0].StateName = "DRAIN";
+	}
+	if (m_Act[0].StateName == "METRONOME") {
+		//damage = m_MetroDamage;
+		//m_MetroDamage = m_MetroDamage * 2.f;
+		damage = m_MetroDamage * (float)(m_Metronome + 1);
+		m_Metronome++;
+	}
+	if (m_Act[0].StateName == "GORGEOUS") {
+		int num = Helper::GetRanNum(0,3);
+		switch (num) {
+		case 0:
+			m_Act[0].StateName = "DRAIN";
+			break;
+		case 1:
+			m_Act[0].StateName = "POISON";
+			m_Act[0].PoisonToken = (int)(15.f * player->HpPercent());
+			break;
+		case 2:
+			m_Act[0].StateName = "FAR";
+			break;
+		case 3:
+			m_Act[0].StateName = "NEAR";
+			break;
+		default:
+			break;
+		}
+	}
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 			AreaX = l_BirthBaseX + i;

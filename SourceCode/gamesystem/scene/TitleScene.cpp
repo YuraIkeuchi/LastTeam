@@ -52,6 +52,26 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 
 	//カード
 	title_ = IKESprite::Create(ImageManager::TITLETEXT, { 0.0f,0.0f });
+	player = IKESprite::Create(ImageManager::MAP_CHARA, { 0.0f,0.0f });
+	player->SetAnchorPoint({0.5f,1.0f});
+	player->SetSize({256.f,256.f});
+	//player->SetIsFlipX(true);
+	player->SetPosition({640.f-128.f,360.f+128.f});
+	for (int i = 0; i < 11;i++) {
+		unique_ptr<IKESprite> passive = IKESprite::Create(ImageManager::PASSIVE_00 + i, { 0,0 });
+		passive->SetSize({ 86.f,86.f });
+		//passive->SetAnchorPoint({0.5f,0.5f});
+		passive->SetPosition({128.0f * i,20.0f});
+		passives.push_back(std::move(passive));
+	}
+	
+	for (int i = 0; i < 11; i++) {
+		unique_ptr<IKESprite> skill = IKESprite::Create(ImageManager::ATTACK_0 + i, { 0,0 });
+		skill->SetSize({ 86.f,86.f });
+		//passive->SetAnchorPoint({0.5f,0.5f});
+		skill->SetPosition({ 128.0f * i,614.0f });
+		skills.push_back(std::move(skill));
+	}
 	GameStateManager::GetInstance()->DeckReset();
 	GameStateManager::GetInstance()->SetGameStart(true);
 }
@@ -67,7 +87,31 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemy->Update();
+	rota += 0.5f * XM_PI / 180.f;
+	rota2 += 3.f * XM_PI / 180.f;
+	float ease = Ease(InOut,Linear, abs(sinf(rota)),-15.f,15.f);
+	float ease_size= Ease(InOut, Cubic, abs(sinf(rota2)), 0.97f, 1.f);
+	float ease_size2 = Ease(InOut, Quint, abs(sinf(rota2)), 0.97f, 1.f);
+	//player->SetRotation(ease);
+	player->SetSize({ 256.f* ease_size,256.f * ease_size2 });
+	//player->SetPosition({ 640.f - 128.f,360.f + ease_size });
 
+	for (unique_ptr<IKESprite>& passive : passives) {
+		XMFLOAT2 pos = passive->GetPosition();
+		pos.x += 2.f;
+		if (pos.x >= 1280.f) {
+			pos.x = -128.f;
+		}
+		passive->SetPosition(pos);
+	}
+	for (unique_ptr<IKESprite>& skill : skills) {
+		XMFLOAT2 pos = skill->GetPosition();
+		pos.x -= 2.f;
+		if (pos.x <= -128.f) {
+			pos.x = 1280.f;
+		}
+		skill->SetPosition(pos);
+	}
 	if ((input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = PLAY;
@@ -116,10 +160,18 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	//title_[TITLE_BACK]->Draw();
 	StageBack::GetInstance()->Draw(dxCommon);
+	player->Draw();
+	for (unique_ptr<IKESprite>& passive:passives) {
+		passive->Draw();
+	}
+	for (unique_ptr<IKESprite>& skill : skills) {
+		skill->Draw();
+	}
+
 	IKESprite::PostDraw();
-	StagePanel::GetInstance()->Draw(dxCommon);
-	player_->Draw(dxCommon);
-	enemy->Draw(dxCommon);
+	//StagePanel::GetInstance()->Draw(dxCommon);
+	//player_->Draw(dxCommon);
+	//enemy->Draw(dxCommon);
 
 }
 //ImGui描画
