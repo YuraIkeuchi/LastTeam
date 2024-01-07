@@ -50,6 +50,9 @@ float4 main(VSOutput input) : SV_TARGET
 			float3 specular2 = pow(saturate(dot(reflect2, eyedir)), shininess) * m_specular;
 			disolvecolor.rgb = shadecolor.rgb += (diffuse2 + specular2) * dirLights[i].lightcolor;
 		}
+		else {
+			shadecolor.rgb = 0.5f;
+		}
 	}
 
 	// “_ŒõŒ¹

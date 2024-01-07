@@ -31,6 +31,31 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
 	StagePanel::GetInstance()->Initialize(0.0f);
+
+	//丸影のためのやつ
+	lightGroup->SetDirLightActive(0, false);
+	lightGroup->SetDirLightActive(1, false);
+	lightGroup->SetDirLightActive(2, false);
+	for (int i = 0; i < SPOT_NUM; i++) {
+		lightGroup->SetPointLightActive(i, true);
+	}
+
+	pointLightPos[0] = { 1.5,  1, 1 };
+	pointLightPos[1] = { -1.5, 1, 1 };
+
+	pointLightColor[0] = { 1.0f, 1.0f, 1.0f };
+	pointLightColor[1] = { 1.0f, 1.0f, 1.0f };
+	
+	pointLightAtten[0] = { 2.0f, 4.0f, 4.0f };
+	pointLightAtten[1] = { 2.0f, 4.0f, 4.0f };
+
+	pointLightPower[0] = { 20.0f, 20.0f, 20.0f };
+	pointLightPower[1] = { 20.0f, 20.0f, 20.0f };
+
+	for (int i = 0; i < SPOT_NUM; i++) {
+		m_AddAngleX[i] = (float)Helper::GetRanNum(0, 3);
+		m_AddAngleZ[i] = (float)Helper::GetRanNum(0, 3);
+	}
 }
 //更新
 void ClearScene::Update(DirectXCommon* dxCommon) {
@@ -44,6 +69,35 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
+	///スポットライト
+	for (int i = 0; i < SPOT_NUM; i++) {
+		lightGroup->SetPointLightPos(i, pointLightPos[i]);
+		lightGroup->SetPointLightColor(i, pointLightColor[i]);
+		lightGroup->SetPointLightAtten(i, pointLightAtten[i]);
+	}
+	//スポットライトの動き
+	MoveSpotLight();
+	if (_AppState == APP_END) {
+		////丸影のためのやつ
+		//lightGroup->SetDirLightActive(0, true);
+		//lightGroup->SetDirLightActive(1, true);
+		//lightGroup->SetDirLightActive(2, true);
+		//for (int i = 0; i < SPOT_NUM; i++) {
+		//	lightGroup->SetSpotLightActive(i, false);
+		//}
+	}
+	m_AppTimer++;
+	if (m_AppTimer == 340) {
+		_AppState = APP_NOTICE;
+	}
+	//else if (m_AppTimer == 580) {
+	//	_AppState = APP_VANISH;
+	//}
+
+	if (m_AppTimer >= 340.0f) {
+		m_ClearSpritePos.y = Ease(In, Cubic, 0.5f, m_ClearSpritePos.y, 0.0f);
+	}
+	sprite->SetPosition(m_ClearSpritePos);
 	StagePanel::GetInstance()->Update();
 	enemyManager->ClearUpdate();
 	player_->ClearUpdate();
@@ -82,7 +136,7 @@ void ClearScene::Draw(DirectXCommon* dxCommon) {
 //前面描画
 void ClearScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
-	//sprite->Draw();
+	sprite->Draw();
 	/*for (ShineEffect& shine : shines) {
 		shine.tex->Draw();
 	}*/
@@ -103,13 +157,14 @@ void ClearScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void ClearScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	//ImGui::Begin("Clear");
-	//ImGui::Text("Clear");
-	//ImGui::End();
+	ImGui::Begin("Clear");
+	ImGui::Text("DirX:%f",pointLightPos[0].x);
+	ImGui::Text("Timer:%d", m_AppTimer);
+	ImGui::End();
 	//SceneChanger::GetInstance()->ImGuiDraw();
 	//camerawork->ImGuiDraw();
 	//enemyManager->ImGuiDraw();
-	//player_->ImGuiDraw();
+	player_->ImGuiDraw();
 }
 //解放
 void ClearScene::Finalize() {
@@ -141,4 +196,45 @@ void ClearScene::ShineEffectUpdate() {
 	}
 	shines.remove_if([](ShineEffect& shine) {
 		return shine.isVanish; });
+}
+//スポットライトの動き
+void ClearScene::MoveSpotLight() {
+	const float l_AddAngle = 5.0f;
+	const float l_AddFrame = 0.5f;
+	const float l_PosMax = 1.5f;
+	const float l_PosMin = -1.5f;
+
+	//sin波によって上下に動く
+	if (_AppState == APP_START) {
+		for (int i = 0; i < SPOT_NUM; i++) {
+			m_Angle[i] += (l_AddAngle - (2.0f * i));
+			m_Angle2[i] = m_Angle[i] * (3.14f / 180.0f);
+			
+		}
+
+		pointLightPos[0].x = (sin(m_Angle2[0] + m_AddAngleX[0]) * 2.0f + (-3.0f));
+		pointLightPos[0].z = (sin(m_Angle2[0] + m_AddAngleZ[0]) * 1.0f + (3.0f));
+		pointLightPos[1].x = (sin(m_Angle2[1] + m_AddAngleX[1]) * 2.0f + (1.0f));
+		pointLightPos[1].z = (sin(m_Angle2[1] + m_AddAngleZ[1]) * 1.0f + (3.0f));
+
+	}
+	else if (_AppState == APP_NOTICE) {
+		SpotSet(pointLightPos[0], { {},{},{} }, l_AddFrame);
+		SpotSet(pointLightPos[1], { {},{},{} }, l_AddFrame);
+	}
+	else if (_AppState == APP_VANISH) {
+		////角度
+		//SpotSet(spotLightDir[0], {}, l_AddFrame);
+		//SpotSet(spotLightDir[1], {}, l_AddFrame);
+		////座標
+		//SpotSet(spotLightPos[0], { l_PosMax,spotLightPos[0].y,l_PosMax }, l_AddFrame);
+		//SpotSet(spotLightPos[1], { l_PosMax,spotLightPos[1].y,l_PosMin }, l_AddFrame);
+	}
+}
+//スポットライト
+void ClearScene::SpotSet(XMFLOAT3& Pos, const XMFLOAT3& AfterPos, const float AddFrame) {
+	Pos = { Ease(In,Cubic,AddFrame,Pos.x,AfterPos.x),
+		Pos.y,
+		Ease(In,Cubic,AddFrame,Pos.z,AfterPos.z),
+	};
 }

@@ -289,8 +289,8 @@ void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("ShieldHP:%f", m_ShieldHP);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
-	ImGui::Text("POSX:%d", m_NowWidth);
-	ImGui::Text("POSZ:%d", m_NowHeight);
+	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::End();
 }
 //移動
