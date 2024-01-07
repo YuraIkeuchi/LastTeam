@@ -882,17 +882,18 @@ void Player::ClearUpdate() {
 }
 //ゲームオーバーの更新
 void Player::GameOverUpdate(const int Timer) {
-	
-	if (_OverType == OVER_STOP) {
+	const float l_AddFrame = 1 / 30.0f;
+	Input* input = Input::GetInstance();
+	if (_OverType == OVER_STOP) {		//倒れてる
 		m_Position = { -1.0f,0.0f,0.0f };
 		m_Rotation = { 0.0f,180.0f,-90.0f };
 		m_AddDisolve = 0.0f;
-		if (Timer == 100) {
+		if (Timer == 130) {
 			_OverType = OVER_JUMP;
 			m_AddPower = 0.3f;
 		}
 	}
-	else if (_OverType == OVER_JUMP) {
+	else if (_OverType == OVER_JUMP) {		//起き上がる
 		if (Helper::CheckMin(m_Rotation.z, 0.0f, 5.0f)) {
 			m_Rotation.z = {};
 		}
@@ -903,8 +904,90 @@ void Player::GameOverUpdate(const int Timer) {
 			m_Position.y = 0.1f;
 		}
 	}
-	else if (_OverType == OVER_MOVE) {
+	else if (_OverType == OVER_MOVE) {		//動く
+		if ((input->TriggerButton(input->A)) || (input->TriggerButton(input->B))) {
+			m_OverMove = true;
+			if (input->TriggerButton(input->A)) {
+				m_SelectType = SELECT_YES;
+			}
+			else {
+				m_SelectType = SELECT_NO;
+			}
+		}
 
+		if (m_OverMove) {
+			if (Helper::FrameCheck(m_MoveFrame, l_AddFrame)) {
+				if (m_SelectType == SELECT_YES) {
+					if (Helper::CheckMax(m_Rotation.y, 180.0f, -10.0f)) {
+						m_Rotation.y = 180.0f;
+						_OverType = OVER_END;
+						m_MoveFrame = {};
+						m_AddPower = 0.3f;
+						m_Jump = true;
+					}
+				}
+				else {
+					if (Helper::CheckMin(m_Rotation.y, 180.0f, 10.0f)) {
+						m_Rotation.y = 180.0f;
+						_OverType = OVER_END;
+						m_MoveFrame = {};
+					}
+				}
+			}
+			else {
+				if (m_SelectType == SELECT_YES) {
+					if (Helper::CheckMin(m_Rotation.y, 270.0f, 10.0f)) {
+						m_Rotation.y = 270.0f;
+					}
+					m_Position.x = Ease(In, Cubic, m_MoveFrame, m_Position.x, -4.0f);
+				}
+				else {
+					if (Helper::CheckMax(m_Rotation.y, 90.0f, -10.0f)) {
+						m_Rotation.y = 90.0f;
+					}
+					m_Position.x = Ease(In, Cubic, m_MoveFrame, m_Position.x, 2.0f);
+				}
+
+
+			}
+		}
+	}
+	else {		//選択したあとの動き
+		if (m_SelectType == SELECT_YES) {
+			if (m_Jump) {
+				m_AddPower -= m_Gravity;
+				if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+					m_AddPower = {};
+					m_JumpCount++;
+					if (m_JumpCount == 2) {
+						m_SelectEnd = true;
+						m_Jump = false;
+						m_Position.y = 0.1f;
+					}
+					else {
+						m_AddPower = 0.3f;
+					}
+					
+				}
+			}
+		}
+		else {
+			const float l_AddRotZ = 0.5f;
+			const float l_AddFrame2 = 0.01f;
+			float RotPower = 2.0f;
+			if (Helper::FrameCheck(m_MoveFrame, l_AddFrame2)) {		//最初はイージングで回す
+				m_MoveFrame = 1.0f;
+				if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+					m_SelectEnd = true;
+				}
+			}
+			else {
+				RotPower = Ease(In, Cubic, m_MoveFrame, RotPower, 10.0f);
+				m_Rotation.z = Ease(In, Cubic, m_MoveFrame, m_Rotation.z, 45.0f);
+				m_Rotation.y += RotPower;
+				m_Position.y = Ease(In, Cubic, m_MoveFrame, m_Position.y, 0.5f);
+			}
+		}
 	}
 
 	Obj_SetParam();

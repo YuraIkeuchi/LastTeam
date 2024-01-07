@@ -93,7 +93,8 @@ public:
 	const float GetShieldHP() { return m_ShieldHP; }
 
 	const bool GetFinishGameOver() { return m_FinishGameOver; }
-
+	const bool GetSelectEnd() { return m_SelectEnd; }
+	const int GetSelectType() { return m_SelectType; }
 	float GetMaxHp() { return m_MaxHP; }
 	float GetHp() { return m_HP; }
 
@@ -110,6 +111,7 @@ public:
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 
 	void SetDelay(const bool Delay) { m_Delay = Delay; }
+	void SetSelectEnd(const bool SelectEnd) { m_SelectEnd = SelectEnd; }
 	void SetShieldHP(const float ShieldHP) { m_ShieldHP = ShieldHP; }
 
 	void SetCancel(const bool cancel) { m_Cancel = cancel; }
@@ -275,4 +277,17 @@ private:
 		OVER_MOVE,
 		OVER_END
 	}_OverType = OVER_STOP;
+
+	int m_SelectType = {};
+
+	bool m_SelectEnd = false;
+	enum SelectType {
+		SELECT_YES,
+		SELECT_NO,
+	};
+
+	bool m_OverMove = false;
+
+	int m_JumpCount = {};
+
 };
