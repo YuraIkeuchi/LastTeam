@@ -123,6 +123,10 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		SceneManager::GetInstance()->ChangeScene("MAP");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
+
+	if (input->TriggerButton(input->X)) {
+		SceneManager::GetInstance()->ChangeScene("CLEAR");
+	}
 }
 //描画
 void TitleScene::Draw(DirectXCommon* dxCommon) {

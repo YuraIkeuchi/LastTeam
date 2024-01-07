@@ -27,6 +27,7 @@ public:
 	void Update(DebugCamera* camera);//更新
 	void BossUpdate(DebugCamera* camera);
 	void ClearUpdate(DebugCamera* camera);
+	void GameOverUpdate(DebugCamera* camera);
 	void CameraSKip();
 	void ImGuiDraw();
 	void Draw();
