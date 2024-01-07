@@ -166,13 +166,15 @@ void ClouserEnemy::Attack() {
 		BirthPredict(m_RandWigth, m_RandHeight);
 		StagePanel::GetInstance()->SetRock(m_RandWigth, m_RandHeight, true);
 	}
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-		BirthArea(m_RandWigth, m_RandHeight);
-		coolTimer = {};
-		m_AttackCount++;
+	else if (coolTimer == 30) {
 		m_Jump = true;
 		m_AddPower = 0.2f;
 		m_Rot = true;
+		BirthArea(m_RandWigth, m_RandHeight);
+	}
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+		predictarea->ResetPredict();
+		coolTimer = {};
 		StagePanel::GetInstance()->EnemyHitReset();
 		m_CheckPanel = true;
 		m_AttackCount = {};
@@ -187,7 +189,7 @@ void ClouserEnemy::Attack() {
 void ClouserEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
-	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
+	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
@@ -205,8 +207,6 @@ void ClouserEnemy::BirthArea(const int Width, const int Height) {
 	newarea->InitState(Width, Height,{m_Position.x,m_Position.y + 2.0f,m_Position.z});
 	newarea->SetPlayer(player);
 	enerock.emplace_back(std::move(newarea));
-	predictarea->ResetPredict();
-
 }
 //—\‘ªƒGƒŠƒA
 void ClouserEnemy::BirthPredict(const int Width, const int Height) {

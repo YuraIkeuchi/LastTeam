@@ -120,7 +120,7 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		player_->PlayerSave();
-		SceneManager::GetInstance()->ChangeScene("CLEAR");
+		SceneManager::GetInstance()->ChangeScene("MAP");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 }

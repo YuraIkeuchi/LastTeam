@@ -107,7 +107,7 @@ void EnemyRock::Finalize() {
 }
 //‘Ò‹@
 void EnemyRock::Inter() {
-	const float l_AddFrame = 1 / 30.0f;
+	const float l_AddFrame = 1 / 20.0f;
 	const float l_AddDisolve = 0.05f;
 	if (_RockState == ROCK_MAGIC) {
 		if (Helper::FrameCheck(magic.Frame, l_AddFrame)) {
@@ -181,6 +181,7 @@ void EnemyRock::Close()
 
 bool EnemyRock::RockCollide() {
 	if (_charaState != STATE_ATTACK) { return false; }
+	if (m_Position.y >= 0.2f) { return false; }
 	if (m_Hit) { return false; }
 	XMFLOAT3 l_PlayerPos = player->GetPosition();
 	const float l_Damage = 0.5f;
