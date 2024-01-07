@@ -7,7 +7,6 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 	float scale = PANEL_SIZE * 0.1f;
 	//共通の初期化
 	BaseInitialize(dxCommon);
-	sprite = IKESprite::Create(ImageManager::GAMEOVERBACK, { 0.0f,0.0f });
 	Audio::GetInstance()->StopWave(AUDIO_MAIN);
 
 	player_ = make_unique<Player>();
@@ -29,6 +28,45 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 
 	attach[0].position = { 2.0f,0.0f,0.0f };
 	attach[1].position = { -4.0f,0.0f,0.0f };
+	//ゲームオーバーのサイズ
+	const int PartsWidth_Cut = 1000;
+	const int PartsHeight_Cut = 128;
+	//セレクトのサイズ
+	const int SelectWidth_Cut = 128;
+	const int SelectHeight_Cut = 64;
+
+
+	const int OverCount = OVER_MAX;
+	for (int i = 0; i < OVER_MAX; i++) {
+		gameover[i] = IKESprite::Create(ImageManager::GAMEOVERBACK, { 0.0f,0.0f });
+		int number_index_y = i / OverCount;
+		int number_index_x = i % OverCount;
+		gameover[i]->SetTextureRect(
+			{ static_cast<float>(number_index_x) * PartsWidth_Cut, static_cast<float>(number_index_y) * PartsHeight_Cut },
+			{ static_cast<float>(PartsWidth_Cut), static_cast<float>(PartsHeight_Cut) });
+		gameover[i]->SetAnchorPoint({ 0.5f,0.5f });
+		gameover[i]->SetSize({ PartsWidth_Cut,PartsHeight_Cut });
+		gameover[i]->SetScale(0.8f);
+		
+		select[i] = IKESprite::Create(ImageManager::GAMEOVER_SELECT, { 0.0f,0.0f });
+		int number_index_y2 = i / OverCount;
+		int number_index_x2 = i % OverCount;
+		select[i]->SetTextureRect(
+			{ static_cast<float>(number_index_x2) * SelectWidth_Cut, static_cast<float>(number_index_y2) * SelectHeight_Cut },
+			{ static_cast<float>(SelectWidth_Cut), static_cast<float>(SelectHeight_Cut) });
+		select[i]->SetAnchorPoint({ 0.5f,0.5f });
+		select[i]->SetScale(1.3f);
+		m_OverSize[i] = { SelectWidth_Cut, SelectHeight_Cut };
+	}
+
+	m_OverPos[0] = { 640.0f,150.0f };
+	m_OverPos[1] = { 640.0f,-150.0f };
+
+	m_SelectPos[0] = { 230.0f,600.0f };
+	m_SelectPos[1] = { 1000.0f,600.0f };
+
+	attach[0].line->SetColor({ 0.0f, 0.0f, 1.0f, 1.0f });
+	attach[1].line->SetColor({ 1.0f, 0.0f, 0.0f, 1.0f });
 }
 //更新
 void GameoverScene::Update(DirectXCommon* dxCommon) {
@@ -45,8 +83,13 @@ void GameoverScene::Update(DirectXCommon* dxCommon) {
 	for (int i = 0; i < ATTACH_MAX; i++) {
 		attach[i].object->SetPosition(attach[i].position);
 		attach[i].object->Update();
-		attach[i].line->SetPosition(attach[i].position);
+		attach[i].line->SetPosition({ attach[i].position.x,attach[i].position.y + 0.05f,attach[i].position.z });
 		attach[i].line->Update();
+	}
+	for (int i = 0; i < OVER_MAX; i++) {
+		gameover[i]->SetPosition(m_OverPos[i]);
+		select[i]->SetPosition(m_SelectPos[i]);
+		select[i]->SetSize(m_OverSize[i]);
 	}
 	player_->GameOverUpdate(m_Timer);
 	//ライト更新
@@ -82,7 +125,10 @@ void GameoverScene::Draw(DirectXCommon* dxCommon) {
 //前面描画
 void GameoverScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
-	sprite->Draw();
+	for (int i = 0; i < OVER_MAX; i++) {
+		gameover[i]->Draw();
+		select[i]->Draw();
+	}
 	IKESprite::PostDraw();
 	SceneChanger::GetInstance()->Draw();
 }
