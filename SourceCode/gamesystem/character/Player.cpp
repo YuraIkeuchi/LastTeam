@@ -289,8 +289,8 @@ void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("ShieldHP:%f", m_ShieldHP);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
-	ImGui::Text("POSX:%d", m_NowWidth);
-	ImGui::Text("POSZ:%d", m_NowHeight);
+	ImGui::Text("POSX:%f", m_Position.x);
+	ImGui::Text("POSZ:%f", m_Position.z);
 	ImGui::End();
 }
 //移動
@@ -856,4 +856,25 @@ void Player::BirthHealNumber(const float heal) {
 			_healnumber.push_back(std::move(_newnumber));
 		}
 	}
+}
+//クリアシーンの更新
+void Player::ClearUpdate() {
+	const int l_TargetTimer = 200;
+	const float l_AddFrame = 1 / 200.0f;
+	if (m_ClearTimer == 0) {
+		m_Position.y = 10.0f;
+	}
+
+	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
+			m_ClearFrame = 1.0f;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
+		}
+	}
+
+	m_Rotation.y = 180.0f;
+	m_AddDisolve = 0.0f;
+	Obj_SetParam();
 }

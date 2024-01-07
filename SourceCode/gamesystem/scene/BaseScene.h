@@ -66,14 +66,13 @@ public:
 	float lightColor2[3] = { 0,0,1 };
 
 	//点光源
-	float pointLightPos[3] = { 0,0,0 };
-	float pointLightColor[3] = { 1,1,1 };
-	float pointLightAtten[3] = { 15.0f,15.0f,15.0f };
-	float pointLightPower[3] = { 20.0f,20.0f,20.0f };
 	//スポットライト
-	XMFLOAT3 spotLightPos[4]={};
-	XMFLOAT3 spotLightDir[4] = {};
-	XMFLOAT3 spotLightColor[4] = {};
+	XMFLOAT3 pointLightPos[2] = {};
+	XMFLOAT3 pointLightAtten[2] = {};
+	XMFLOAT3 pointLightPower[2] = {};
+	XMFLOAT3 pointLightColor[2] = {};
+	
+	
 	float spotLightAtten[3] = { 0.0,0.0f,0.0f };
 	float spotLightFactorAngle[2] = { 20.0f,30.0f };
 	//丸影(プレイヤー)

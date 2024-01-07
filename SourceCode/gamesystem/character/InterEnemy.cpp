@@ -839,3 +839,10 @@ void InterEnemy::CounterUpdate() {
 		}
 	}
 }
+
+//クリアシーンの更新
+void InterEnemy::ClearUpdate() {
+	m_Rotation.y = 180.0f;
+	ClearAction();
+	//Obj_SetParam();
+}

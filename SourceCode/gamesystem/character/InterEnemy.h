@@ -150,6 +150,9 @@ protected:
 	bool m_Induction = false;
 	float m_InductionFrame = {};
 	float m_InductionPos = {};
+
+	int m_ClearTimer = {};
+	float m_ClearFrame = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -185,6 +188,13 @@ public:
 	void Update();
 
 	virtual void Action() = 0;//敵の行動
+
+	/// <summary>
+	/// クリアシーンの動き
+	/// </summary>
+	void ClearUpdate();
+
+	virtual void ClearAction() = 0;//クリアシーンの動き
 
 	/// <summary>
 	/// 描画

@@ -171,3 +171,8 @@ void Bomb::ShockWave()
 	//衝撃波を出す
 	//出し終わったらm_aliveをfalseに
 }
+//クリアシーンの更新
+void Bomb::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

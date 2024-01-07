@@ -99,3 +99,8 @@ void NormalEnemy::Attack() {
 
 void NormalEnemy::Standby() {
 }
+//クリアシーンの更新
+void NormalEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

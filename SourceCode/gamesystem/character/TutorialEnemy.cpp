@@ -231,3 +231,8 @@ bool TutorialEnemy::TackleCollide() {
 
 	return false;
 }
+//クリアシーンの更新
+void TutorialEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

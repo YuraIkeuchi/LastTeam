@@ -297,3 +297,22 @@ void FrontEnemy::FrontAttack() {
 		predictarea->SetTargetTimer(l_TargetTimer);
 	}
 }
+//クリアシーンの更新
+void FrontEnemy::ClearAction() {
+	const int l_TargetTimer = 40;
+	const float l_AddFrame = 1 / 200.0f;
+	if (m_ClearTimer == 0) {
+		m_Position.y = 10.0f;
+	}
+
+	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
+			m_ClearFrame = 1.0f;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
+		}
+	}
+	m_AddDisolve = {};
+	Obj_SetParam();
+}

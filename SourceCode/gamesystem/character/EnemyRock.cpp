@@ -218,3 +218,8 @@ void EnemyRock::RockParticle() {
 		m_ParticleTimer = {};
 	}
 }
+//クリアシーンの更新
+void EnemyRock::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}
