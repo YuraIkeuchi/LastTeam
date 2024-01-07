@@ -243,7 +243,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	}
 
 	GameStateManager::GetInstance()->SetMapData(nowIndex, nowHierarchy);
-	if ((nowHierarchy == 5 || nowHierarchy == 9) && !s_Countinue) {
+	if ((nowHierarchy == 0) || (nowHierarchy == 5 || nowHierarchy == 9) && !s_Countinue) {
 		GameStateManager::GetInstance()->SaveGame();
 	}
 }
@@ -814,8 +814,8 @@ void MapScene::CheckState() {
 			bool isBattle = true;
 			if (nowHierarchy == MaxLength) {
 				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
-			} else {
 				s_LastStage = true;
+			} else {
 				if (nowHierarchy < (MaxLength / 2) + 2) {	//なんマス目に居るかで難易度が変わる
 					levelName = "Weak";
 				} else {
