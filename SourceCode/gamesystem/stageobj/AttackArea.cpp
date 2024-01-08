@@ -134,6 +134,11 @@ void AttackArea::SlashMove() {
 			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, {});
 		}
 	}
+
+	//‚ ‚é’ö“xŒX‚¢‚½‚çUŒ‚”»’è
+	if (m_Rotation.x <= -30.0f) {
+		m_Attack = true;
+	}
 }
 //Šâ—‚Æ‚µŒn
 void AttackArea::StoneMove() {
@@ -152,6 +157,11 @@ void AttackArea::StoneMove() {
 		if (Helper::CheckMin(m_AddDisolve, 2.5f, 0.1f)) {
 			m_Alive = false;
 		}
+	}
+
+	//‚ ‚é’ö“x‚Ì‚‚³‚É‚È‚Á‚½‚çUŒ‚”»’è
+	if (m_Position.y <= 2.0f) {
+		m_Attack = true;
 	}
 }
 //“ÅŒn
@@ -177,5 +187,10 @@ void AttackArea::PoisonMove() {
 
 			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, {});
 		}
+	}
+
+	//‚ ‚é’ö“x‚Ì‚‚³‚É‚È‚Á‚½‚çUŒ‚”»’è
+	if (m_Position.y <= 2.0f) {
+		m_Attack = true;
 	}
 }

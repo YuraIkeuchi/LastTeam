@@ -11,6 +11,7 @@ public:
 	void Finalize() override;//開放
 	void Action()override;//更新
 	void ClearAction()override;//クリア更新
+	void GameOverAction()override;//ゲームオーバー更新
 	void ImGui_Origin()override;
 
 	void Draw(DirectXCommon* dxCommon) override;//描画
@@ -88,7 +89,6 @@ private:
 	//攻撃のインターバルとか
 	vector<int>m_AttackLimit;
 
-	float m_RotFrame = {};
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};

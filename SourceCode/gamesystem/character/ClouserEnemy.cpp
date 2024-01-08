@@ -303,3 +303,48 @@ void ClouserEnemy::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームオーバーシーンの更新
+void ClouserEnemy::GameOverAction() {
+	if (_GameOverState == OVER_STOP) {
+		m_Position = { -4.5f,0.0f,2.5f };
+		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
+		}
+		else if (player->GetSelectType() == 2) {
+			_GameOverState = OVER_NO;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_Position.y = 0.1f;
+			m_AddPower = {};
+			if (Helper::CheckMin(m_OverTimer, 30, 1)) {
+				m_OverTimer = {};
+				m_AddPower = 0.3f;
+			}
+		}
+	}
+	else {
+		const float l_AddRotZ = 0.5f;
+		const float l_AddFrame2 = 0.01f;
+		float RotPower = 15.0f;
+		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
+			m_RotFrame = 1.0f;
+			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+				m_Rotation.z = 90.0f;
+			}
+		}
+		else {
+			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 22.0f);
+			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_RotFrame, m_Position.y, 0.5f);
+		}
+	}
+
+	Obj_SetParam();
+}

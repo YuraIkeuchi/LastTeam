@@ -45,6 +45,7 @@ public:
 	const bool GetBuff() { return m_Buff; }
 	const bool GetAlive() { return m_Alive; }
 	const bool GetIsFixed() { return isFixed; }
+	const bool GetAttack() { return m_Attack; }
 	const string GetName() { return m_Name; }
 
 	const int GetNowWidth() { return m_NowWidth; }
@@ -79,6 +80,7 @@ private:
 	string m_Name = "none";
 	//¶‘¶ŠÖŒW
 	bool m_Alive = false;
+	bool m_Attack = false;//UŒ‚”»’è‚ÌuŠÔ
 	int m_BirthTimer = 0;
 	int m_Timer = {};
 	bool m_Buff = false;

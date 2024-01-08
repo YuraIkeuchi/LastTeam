@@ -692,7 +692,7 @@ void Player::DamageUpdate() {
 //ゲームーオーバー時
 void Player::DeathUpdate() {
 	const float l_AddRotZ = 0.5f;
-	const float l_AddFrame = 0.005f;
+	const float l_AddFrame = 0.01f;
 	float RotPower = 5.0f;
 	m_Color.w = 1.0f;
 

@@ -88,19 +88,17 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		_ChangeType = CHANGE_OVER;
 		player_->DeathUpdate();
 		if (player_->GetFinishGameOver()) {
-			if (Helper::FrameCheck(m_GameOverFrame, 0.01f)) {
-				m_ChangeTimer++;
-				if (m_ChangeTimer == 1) {
-					Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameOver.wav", 0.1f);
-				}
-
-				//タイトル戻るかコンティニューしてマップ行くか決まる
-				if (m_ChangeTimer == 20) {		//コンティニュー
-					SceneChanger::GetInstance()->SetChangeStart(true);
-					
-				}
-				
+			m_ChangeTimer++;
+			if (m_ChangeTimer == 1) {
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameOver.wav", 0.1f);
 			}
+
+			//タイトル戻るかコンティニューしてマップ行くか決まる
+			if (m_ChangeTimer == 20) {		//コンティニュー
+				SceneChanger::GetInstance()->SetChangeStart(true);
+
+			}
+
 		}
 	}
 	else {		//ゲームオーバー以外

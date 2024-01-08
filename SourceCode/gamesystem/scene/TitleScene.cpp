@@ -127,6 +127,10 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	if (input->TriggerButton(input->X)) {
 		SceneManager::GetInstance()->ChangeScene("CLEAR");
 	}
+
+	if (input->TriggerButton(input->Y)) {
+		SceneManager::GetInstance()->ChangeScene("GAMEOVER");
+	}
 }
 //描画
 void TitleScene::Draw(DirectXCommon* dxCommon) {

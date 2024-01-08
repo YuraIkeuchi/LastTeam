@@ -104,3 +104,7 @@ void NormalEnemy::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームオーバーシーンの更新
+void NormalEnemy::GameOverAction() {
+
+}
