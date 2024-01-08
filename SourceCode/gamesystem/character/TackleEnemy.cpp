@@ -289,9 +289,29 @@ void TackleEnemy::GameOverAction() {
 		if (player->GetSelectType() == 1) {
 			_GameOverState = OVER_YES;
 		}
+		else if (player->GetSelectType() == 2) {
+			_GameOverState = OVER_NO;
+		}
 	}
 	else if (_GameOverState == OVER_YES) {
 		m_Rotation.y += l_AddRot;
+	}
+	else {
+		const float l_AddRotZ = 0.5f;
+		const float l_AddFrame2 = 0.01f;
+		float RotPower = 10.0f;
+		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
+			m_RotFrame = 1.0f;
+			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+				m_Rotation.z = 90.0f;
+			}
+		}
+		else {
+			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 30.0f);
+			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_RotFrame, m_Position.y, 0.5f);
+		}
 	}
 
 	Obj_SetParam();

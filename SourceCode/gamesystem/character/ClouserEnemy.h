@@ -77,8 +77,7 @@ private:
 	EnemyWarp enemywarp;
 	//インターバルとか
 	vector<int>m_Limit;
-	
-	float m_RotFrame = {};
+
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};

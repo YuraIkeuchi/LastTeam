@@ -77,7 +77,6 @@ private:
 	//インターバルとか
 	vector<int>m_Limit;
 	int m_BulletNum = {};
-	float m_RotFrame = {};
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};

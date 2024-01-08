@@ -89,7 +89,6 @@ private:
 	//攻撃のインターバルとか
 	vector<int>m_AttackLimit;
 
-	float m_RotFrame = {};
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};
