@@ -539,5 +539,11 @@ void BossEnemy::ClearAction() {
 }
 //ゲームオーバーシーンの更新
 void BossEnemy::GameOverAction() {
+	if (_GameOverState == OVER_STOP) {
+		m_Position = { -3.0f,0.0f,1.5f };
+		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_AddDisolve = 0.0f;
+	}
 
+	Obj_SetParam();
 }

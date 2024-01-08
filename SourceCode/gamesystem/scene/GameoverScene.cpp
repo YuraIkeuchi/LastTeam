@@ -2,6 +2,7 @@
 #include "ImageManager.h"
 #include <SceneManager.h>
 #include <StagePanel.h>
+#include <GameStateManager.h>
 #include <Helper.h>
 //初期化
 void GameoverScene::Initialize(DirectXCommon* dxCommon) {
@@ -9,6 +10,8 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
 	Audio::GetInstance()->StopWave(AUDIO_MAIN);
+	std::string BaseName = "Resources/csv/EnemySpawn/Clear/ClearMap.csv";
+	GameStateManager::GetInstance()->SetEnemySpawnText(BaseName);
 
 	player_ = make_unique<Player>();
 	player_->LoadResource();
@@ -74,6 +77,11 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 
 	attach[0].line->SetColor({ 0.0f, 0.0f, 1.0f, 1.0f });
 	attach[1].line->SetColor({ 1.0f, 0.0f, 0.0f, 1.0f });
+
+	//敵
+	EnemyManager::SetPlayer(player_.get());
+	enemyManager = std::make_unique<EnemyManager>();
+	enemyManager->Initialize();
 }
 //更新
 void GameoverScene::Update(DirectXCommon* dxCommon) {
@@ -108,6 +116,7 @@ void GameoverScene::Update(DirectXCommon* dxCommon) {
 	}
 	GameOverMove();
 	player_->GameOverUpdate(m_Timer);
+	enemyManager->GameOverUpdate();
 	//ライト更新
 	lightGroup->Update();
 	//カメラワーク更新
@@ -155,6 +164,7 @@ void GameoverScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 	IKEObject3d::PreDraw();
 	player_->Draw(dxCommon);
+	enemyManager->Draw(dxCommon);
 	for (int i = 0; i < ATTACH_MAX; i++) {
 		attach[i].object->Draw();
 	}
@@ -171,6 +181,7 @@ void GameoverScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	ImGui::Text("OverTime:%d",m_Timer);
 	ImGui::End();
 	player_->ImGuiDraw();
+	enemyManager->ImGuiDraw();
 	//SceneChanger::GetInstance()->ImGuiDraw();
 }
 //解放

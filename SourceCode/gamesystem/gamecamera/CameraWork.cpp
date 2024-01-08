@@ -125,6 +125,6 @@ void CameraWork::ClearUpdate(DebugCamera* camera) {
 	camera->Update();
 }
 void CameraWork::GameOverUpdate(DebugCamera* camera) {
-	eye_ = { 0.0f,3.f,-4.5f };
+	eye_ = { 0.0f,3.f,-6.5f };
 	target_ = { 0.0f,0.5f,3.0f };
 }

@@ -153,6 +153,12 @@ protected:
 
 	int m_ClearTimer = {};
 	float m_ClearFrame = {};
+
+	enum GameOverState {
+		OVER_STOP,
+		OVER_YES,
+		OVER_NO,
+	}_GameOverState = OVER_STOP;
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };

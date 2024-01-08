@@ -64,6 +64,12 @@ void EnemyManager::ClearUpdate() {
 		enemy->ClearUpdate();
 	}
 }
+void EnemyManager::GameOverUpdate() {
+
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->GameOverUpdate();
+	}
+}
 //スキップ時の初期化
 void EnemyManager::SkipInitialize() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {

@@ -1,6 +1,7 @@
 #pragma once
 #include "IKESprite.h"
 #include "BaseScene.h"
+#include "EnemyManager.h"
 /// タイトルシーン
 class GameoverScene : public BaseScene {
 public:
@@ -25,7 +26,7 @@ private:
 	static const int ATTACH_MAX = 2;
 	static const int OVER_MAX = 2;
 private://メンバ変数
-
+	unique_ptr<EnemyManager> enemyManager = nullptr;
 	int m_Timer = {};
 	//パネル
 	struct GameOverAttach {

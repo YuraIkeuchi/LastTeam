@@ -278,5 +278,11 @@ void CreateBombEnemy::ClearAction() {
 }
 //ゲームオーバーシーンの更新
 void CreateBombEnemy::GameOverAction() {
+	if (_GameOverState == OVER_STOP) {
+		m_Position = { 2.5f,0.0f,2.5f };
+		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_AddDisolve = 0.0f;
+	}
 
+	Obj_SetParam();
 }

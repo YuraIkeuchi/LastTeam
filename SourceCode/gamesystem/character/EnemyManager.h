@@ -21,6 +21,7 @@ public:
 	void SkipInitialize();
 	void Update();
 	void ClearUpdate();
+	void GameOverUpdate();
 	void Draw(DirectXCommon* dxCommon);
 	void AwakeUpdate();
 	void SetCount();
