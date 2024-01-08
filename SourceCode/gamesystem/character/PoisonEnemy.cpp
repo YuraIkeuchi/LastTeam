@@ -301,10 +301,44 @@ void PoisonEnemy::ClearAction() {
 }
 //ゲームオーバーシーンの更新
 void PoisonEnemy::GameOverAction() {
+	float l_AfterScale = {};
+	float l_AddFrame = {};
 	if (_GameOverState == OVER_STOP) {
 		m_Position = { -6.0f,0.0f,3.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
+			_PoisonType = Poison_SET;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		if (_PoisonType == Poison_SET) {
+			l_AfterScale = 0.3f;
+			l_AddFrame = 1 / 30.0f;
+			if (Helper::FrameCheck(m_ScaleFrame, l_AddFrame)) {
+				if (Helper::CheckMin(m_OverTimer, 10, 1)) {
+					_PoisonType = Poison_THROW;
+					m_OverTimer = {};
+					m_ScaleFrame = {};
+				}
+			}
+			m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
+		}
+		else if (_PoisonType == Poison_THROW) {
+			l_AfterScale = 0.7f;
+			l_AddFrame = 1 / 10.0f;
+			if (Helper::FrameCheck(m_ScaleFrame, l_AddFrame)) {
+				if (Helper::CheckMin(m_OverTimer, 40, 1)) {
+					_PoisonType = Poison_SET;
+					m_OverTimer = {};
+					m_ScaleFrame = {};
+				}
+			}
+			m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
+			m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
+		}
 	}
 
 	Obj_SetParam();

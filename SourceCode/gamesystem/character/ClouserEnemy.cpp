@@ -309,6 +309,21 @@ void ClouserEnemy::GameOverAction() {
 		m_Position = { -4.5f,0.0f,2.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_Position.y = 0.1f;
+			m_AddPower = {};
+			if (Helper::CheckMin(m_OverTimer, 30, 1)) {
+				m_OverTimer = {};
+				m_AddPower = 0.3f;
+			}
+		}
 	}
 
 	Obj_SetParam();

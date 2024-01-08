@@ -248,10 +248,33 @@ void HealEnemy::ClearAction() {
 }
 //ゲームオーバーシーンの更新
 void HealEnemy::GameOverAction() {
+	const float l_AddFrame = 1 / 30.0f;
 	if (_GameOverState == OVER_STOP) {
 		m_Position = { 0.0f,0.0f,2.5f };
-		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_Rotation = { 0.0f,90.0f,0.0f };
 		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
+			m_Rot = true;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		if (Helper::CheckMin(m_OverTimer, 80, 1)) {
+			m_OverTimer = {};
+			m_Rot = true;
+		}
+
+		if (m_Rot) {
+			if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
+				m_Rotation.y = 90.0f;
+				m_Rot = false;
+				m_AttackFrame = {};
+			}
+
+			m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 450.0f);
+		}
+
 	}
 
 	Obj_SetParam();

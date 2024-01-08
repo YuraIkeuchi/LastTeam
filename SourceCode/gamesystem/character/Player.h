@@ -282,6 +282,7 @@ private:
 
 	bool m_SelectEnd = false;
 	enum SelectType {
+		NONE,
 		SELECT_YES,
 		SELECT_NO,
 	};

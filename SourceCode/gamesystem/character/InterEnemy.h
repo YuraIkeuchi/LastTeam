@@ -159,6 +159,7 @@ protected:
 		OVER_YES,
 		OVER_NO,
 	}_GameOverState = OVER_STOP;
+	int m_OverTimer = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };

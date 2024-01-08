@@ -281,10 +281,17 @@ void TackleEnemy::ClearAction() {
 }
 //ゲームオーバーシーンの更新
 void TackleEnemy::GameOverAction() {
+	const float l_AddRot = 20.0f;
 	if (_GameOverState == OVER_STOP) {
 		m_Position = { 4.0f,0.0f,3.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		m_Rotation.y += l_AddRot;
 	}
 
 	Obj_SetParam();

@@ -92,11 +92,11 @@ void GameoverScene::Update(DirectXCommon* dxCommon) {
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
-		if (player_->GetSelectType() == 0) {		//コンティニューをしてマップに戻る
+		if (player_->GetSelectType() == 1) {		//コンティニューをしてマップに戻る
 			s_Countinue = true;
 			SceneManager::GetInstance()->ChangeScene("MAP");
 		}
-		else {		//諦めてタイトルに戻る
+		else if(player_->GetSelectType() == 2) {		//諦めてタイトルに戻る
 			s_Countinue = false;
 			SceneManager::GetInstance()->ChangeScene("TITLE");
 		}
@@ -180,8 +180,8 @@ void GameoverScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	ImGui::Begin("Gameover");
 	ImGui::Text("OverTime:%d",m_Timer);
 	ImGui::End();
-	player_->ImGuiDraw();
-	enemyManager->ImGuiDraw();
+	//player_->ImGuiDraw();
+	//enemyManager->ImGuiDraw();
 	//SceneChanger::GetInstance()->ImGuiDraw();
 }
 //解放
