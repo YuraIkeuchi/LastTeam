@@ -537,3 +537,7 @@ void BossEnemy::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームオーバーシーンの更新
+void BossEnemy::GameOverAction() {
+
+}

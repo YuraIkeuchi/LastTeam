@@ -276,3 +276,7 @@ void CreateBombEnemy::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームオーバーシーンの更新
+void CreateBombEnemy::GameOverAction() {
+
+}

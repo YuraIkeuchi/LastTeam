@@ -246,3 +246,7 @@ void HealEnemy::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームオーバーシーンの更新
+void HealEnemy::GameOverAction() {
+
+}

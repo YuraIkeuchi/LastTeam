@@ -328,3 +328,7 @@ void CanonEnemy::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームーオーバーシーンの更新
+void CanonEnemy::GameOverAction() {
+
+}

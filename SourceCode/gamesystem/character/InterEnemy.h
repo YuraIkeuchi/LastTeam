@@ -197,6 +197,13 @@ public:
 	virtual void ClearAction() = 0;//クリアシーンの動き
 
 	/// <summary>
+	/// ゲームオーバーシーンの動き
+	/// </summary>
+	void GameOverUpdate();
+
+	virtual void GameOverAction() = 0;//ゲームオーバーシーンの動き
+
+	/// <summary>
 	/// 描画
 	/// </summary>
 	void BaseFrontDraw(DirectXCommon* dxCommon);

@@ -262,3 +262,7 @@ void ThrowEnemy::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームオーバーシーンの更新
+void ThrowEnemy::GameOverAction() {
+
+}

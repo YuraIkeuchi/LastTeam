@@ -299,3 +299,7 @@ void PoisonEnemy::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームオーバーシーンの更新
+void PoisonEnemy::GameOverAction() {
+
+}

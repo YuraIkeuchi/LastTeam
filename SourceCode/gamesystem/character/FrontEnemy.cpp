@@ -316,3 +316,7 @@ void FrontEnemy::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームオーバーシーンの更新
+void FrontEnemy::GameOverAction() {
+
+}

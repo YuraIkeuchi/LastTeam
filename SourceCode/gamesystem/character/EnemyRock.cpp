@@ -224,3 +224,7 @@ void EnemyRock::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームオーバーシーンの更新
+void EnemyRock::GameOverAction() {
+
+}

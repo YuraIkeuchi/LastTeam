@@ -303,3 +303,7 @@ void ClouserEnemy::ClearAction() {
 	m_AddDisolve = {};
 	Obj_SetParam();
 }
+//ゲームオーバーシーンの更新
+void ClouserEnemy::GameOverAction() {
+
+}

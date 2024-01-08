@@ -271,7 +271,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 	if (area.empty()) { return; }
 
 	for (unique_ptr<AttackArea>& _area : area) {
-		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) &&
+		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) && (_area->GetAttack()) &&
 			!_area->GetHit() && _area->GetName() == "Player") {
 			float damage = _area->GetDamage();
 			//固定ダメージか否か
@@ -845,4 +845,9 @@ void InterEnemy::ClearUpdate() {
 	m_Rotation.y = 180.0f;
 	ClearAction();
 	//Obj_SetParam();
+}
+
+//ゲームオーバーシーンの更新
+void InterEnemy::GameOverUpdate() {
+	GameOverAction();
 }
