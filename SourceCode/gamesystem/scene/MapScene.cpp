@@ -812,14 +812,24 @@ void MapScene::CheckState() {
 			const std::string BaseName = "Resources/csv/EnemySpawn/";
 			string levelName = "None";
 			bool isBattle = true;
-			if (nowHierarchy == MaxLength) {
+			if (nowHierarchy == 5) {
+				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
+			}
+			else if (nowHierarchy == 9) {
+				ss << BaseName + "Boss/BattleMap0" << 2 << ".csv";
+			}
+			else if (nowHierarchy == 13) {
 				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
 				s_LastStage = true;
-			} else {
-				if (nowHierarchy < (MaxLength / 2) + 2) {	//なんマス目に居るかで難易度が変わる
+			}
+			else {
+				if (nowHierarchy < 5) {	//なんマス目に居るかで難易度が変わる
 					levelName = "Weak";
-				} else {
+				} else if(nowHierarchy >= 6 && nowHierarchy < 9) {
 					levelName = "Strong";
+				}
+				else if (nowHierarchy >= 10) {
+					levelName = "Ultimate";
 				}
 				if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
 					ss << BaseName + levelName + "/BattleMap0" << 1 << ".csv";
