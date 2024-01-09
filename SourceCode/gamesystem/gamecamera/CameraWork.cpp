@@ -111,7 +111,7 @@ void CameraWork::CameraSKip() {
 }
 void CameraWork::ClearUpdate(DebugCamera* camera) {
 	if (!m_ClearEnd) {
-		eye_ = { -0.8f,4.f,-4.5f };
+		eye_ = { -0.8f,4.f,-5.5f };
 		target_ = { -0.8f,1.5f,0.f };
 	}
 	else {

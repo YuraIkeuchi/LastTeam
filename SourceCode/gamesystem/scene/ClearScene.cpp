@@ -18,7 +18,7 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 
 	player_ = make_unique<Player>();
 	player_->LoadResource();
-	player_->InitState({ 0.0f,0.1f,0.0f });
+	player_->InitState({ -0.75f,0.1f,-1.5f });
 	player_->Initialize();
 	//敵
 	EnemyManager::SetPlayer(player_.get());
@@ -55,6 +55,13 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 		m_AddAngleX[i] = (float)Helper::GetRanNum(0, 3);
 		m_AddAngleZ[i] = (float)Helper::GetRanNum(0, 3);
 	}
+
+	object = make_unique<IKEObject3d>();
+	object->Initialize();
+	object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PANEL));
+	object->SetScale({ PANEL_SIZE,0.01f,PANEL_SIZE });
+	object->SetPosition({ -0.75f,0.0f,-1.5f });
+	object->SetColor({ 0.5f,0.3f,0.1f,1.0f });
 }
 //更新
 void ClearScene::Update(DirectXCommon* dxCommon) {
@@ -103,6 +110,7 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->Update();
 	enemyManager->ClearUpdate();
 	player_->ClearUpdate();
+	object->Update();
 	//ライト更新
 	lightGroup->Update();
 	//�e�N���X�X�V
@@ -155,6 +163,7 @@ void ClearScene::BackDraw(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->Draw(dxCommon);
 	player_->Draw(dxCommon);
 	enemyManager->Draw(dxCommon);
+	object->Draw();
 	IKEObject3d::PostDraw();
 }
 //ImGui描画
@@ -223,8 +232,8 @@ void ClearScene::MoveSpotLight() {
 
 	}
 	else if (_AppState == APP_NOTICE) {
-		SpotSet(pointLightPos[0], { {},{},{} }, l_AddFrame);
-		SpotSet(pointLightPos[1], { {},{},{} }, l_AddFrame);
+		SpotSet(pointLightPos[0], { -0.75,{},-1.5f }, l_AddFrame);
+		SpotSet(pointLightPos[1], { -0.75,{},-1.5f }, l_AddFrame);
 	}
 	else if (_AppState == APP_VANISH) {
 		SpotSet(pointLightAtten[0], { 10.0f,{},10.0f }, l_AttenFrame);

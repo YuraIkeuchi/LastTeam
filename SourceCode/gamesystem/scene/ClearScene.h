@@ -38,6 +38,8 @@ private://ƒƒ“ƒo•Ï”
 		bool isVanish = false;
 	};
 
+	unique_ptr<IKEObject3d> object = nullptr;
+
 	void RandShineInit();
 	void ShineEffectUpdate();
 	std::list<ShineEffect> shines;
