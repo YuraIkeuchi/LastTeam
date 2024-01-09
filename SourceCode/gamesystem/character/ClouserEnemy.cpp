@@ -322,7 +322,7 @@ void ClouserEnemy::GameOverAction() {
 		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
 			m_Position.y = 0.1f;
 			m_AddPower = {};
-			if (Helper::CheckMin(m_OverTimer, 30, 1)) {
+			if (Helper::CheckMin(m_OverTimer, 10, 1)) {
 				m_OverTimer = {};
 				m_AddPower = 0.3f;
 			}

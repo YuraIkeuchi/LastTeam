@@ -478,6 +478,9 @@
     <ClCompile Include="SourceCode\gamesystem\character\TutorialEnemy.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\BossEnemy2.cpp">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -922,6 +925,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h">
       <Filter>gamesystem\gamecamera</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\BossEnemy2.h">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

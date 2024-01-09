@@ -7,6 +7,7 @@
 #include "Bomb.h"
 #include "HealEnemy.h"
 #include "BossEnemy.h"
+#include "BossEnemy2.h"
 #include "FrontEnemy.h"
 #include "ThrowEnemy.h"
 #include "ClouserEnemy.h"
@@ -260,6 +261,13 @@ void EnemyManager::Spawn2Map() {
 			}
 			else if (x == '9') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<ClouserEnemy>();
+				//enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == 'a') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy2>();
 				//enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
