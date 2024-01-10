@@ -149,12 +149,13 @@ void CanonEnemy::Finalize() {
 }
 //待機
 void CanonEnemy::Inter() {
+	const int l_RandTimer = Helper::GetRanNum(0, 40);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
 	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
-	if (coolTimer == l_TargetTimer) {
-		coolTimer = 100;
+	coolTimer = clamp(coolTimer, 0, l_TargetTimer + l_RandTimer);
+	if (coolTimer == l_TargetTimer + l_RandTimer) {
+		coolTimer = {};
 		_charaState = STATE_ATTACK;
 	}
 }

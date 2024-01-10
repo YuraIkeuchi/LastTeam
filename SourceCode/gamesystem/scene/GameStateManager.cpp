@@ -273,14 +273,14 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("Deck");
-	ImGui::Text("BossCamera:%d",m_BossCamera);
-	ImGui::End();
-	if (isFinish) {
-		if (_ResultType != GET_SKILL) {
-			haveSkill->ImGuiDraw();
-		}
-	}
+	//ImGui::Begin("Deck");
+	//ImGui::Text("BossCamera:%d",m_BossCamera);
+	//ImGui::End();
+	//if (isFinish) {
+	//	if (_ResultType != GET_SKILL) {
+	//		haveSkill->ImGuiDraw();
+	//	}
+	//}
 
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
@@ -420,6 +420,8 @@ void GameStateManager::BirthArea() {
 			break;
 		}
 	}
+
+	int l_SoundCount = {};
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 			AreaX = l_BirthBaseX + i;
@@ -436,6 +438,10 @@ void GameStateManager::BirthArea() {
 					newarea->SetDamage(damage);
 					newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
 					newarea->SetPoisonToken(m_Act[0].PoisonToken);
+					if (l_SoundCount == 0) {
+						newarea->SetSound(true);
+					}
+					l_SoundCount++;
 					if (m_Act[0].ActID == 10) {
 						//固定ダメージ
 						newarea->SetIsFixed(true);
