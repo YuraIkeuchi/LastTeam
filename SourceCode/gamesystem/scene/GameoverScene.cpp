@@ -244,6 +244,7 @@ void GameoverScene::GameOverMove() {
 					attach[i].frame = {};
 					m_Timer = {};
 					m_AddPower[SELECT_YES] = 35.0f;
+					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 				}
 				else if (player_->GetSelectType() == 2) {
 					_OverType = MOVE_NO_SELECT;
@@ -251,6 +252,7 @@ void GameoverScene::GameOverMove() {
 					attach[i].frame = {};
 					m_Timer = {};
 					m_AddPower[SELECT_NO] = 35.0f;
+					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 				}
 			}
 			else {

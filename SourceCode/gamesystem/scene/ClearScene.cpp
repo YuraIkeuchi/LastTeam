@@ -62,6 +62,10 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 	object->SetScale({ PANEL_SIZE,0.01f,PANEL_SIZE });
 	object->SetPosition({ -0.75f,0.0f,-1.5f });
 	object->SetColor({ 0.5f,0.3f,0.1f,1.0f });
+
+	/// <summary>
+	///	音入れ(エンドロール音希望)
+	/// </summary>
 }
 //更新
 void ClearScene::Update(DirectXCommon* dxCommon) {
@@ -86,8 +90,10 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	
 	m_AppTimer++;
 	if (m_AppTimer == 340) {		//クリアのスプライトが出る
+		/// <summary>
+		///	音入れ(ライトがあったときのバンッみたいな音)
+		/// </summary>
 		_AppState = APP_NOTICE;
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameClear.wav", 0.04f);
 	}
 	else if (m_AppTimer == 500) {	//カメラが引く
 		_AppState = APP_VANISH;
@@ -95,7 +101,15 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	}
 	else if (m_AppTimer == 550) {		//しーん遷移
 		SceneChanger::GetInstance()->SetChangeStart(true);
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameClear.wav", 0.04f);
+	}
+	
+	
+	if (m_AppTimer == 400) {
+		/// <summary>
+		///	音入れ(祝い音敵なやつ(口笛とか拍手音みたいなやつ))
+		/// </summary>
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameClear.wav", 0.04f);
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる

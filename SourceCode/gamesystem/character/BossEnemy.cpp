@@ -196,6 +196,7 @@ void BossEnemy::BirthBullet() {
 	/// <summary>
 	///	‰¹“ü‚ê(’e‚ð‘Å‚Â‰¹Šó–](ƒ|ƒ“ƒb‚Ý‚½‚¢‚È‚â‚Â)
 	/// </summary>
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	//’e‚Ì”­¶
 	bullets->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z }, m_ShotDir);
 }

@@ -301,7 +301,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {3,6,7};
+	vector <int> m_StartNumber = {8,12};
 	//{3,4,7,13,26,27,28};
 	vector<int> m_DeckNumber = m_StartNumber;
 
