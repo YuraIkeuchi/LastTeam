@@ -235,6 +235,9 @@ void ResultSkill::Move() {
 				pickAreas->ResetTimer();
 			}
 		}
+		/// <summary>
+		/// ここにスキル選択音（音入れ）
+		/// </summary>
 		isMove = true;
 	}
 	if ((input->TriggerButton(Input::B) ||
@@ -371,7 +374,7 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	}
 	resultUI.icon->SetSize(resultUI.size);
 	resultUI.oldNo = resultUI.no;
-	resultUI.text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
+	resultUI.text_->SetConversation(TextManager::RESULT, { -200.0f,80.0f });
 	resultUI.text_->SetCreateSentence(resultUI.sentence[0], resultUI.sentence[1], resultUI.sentence[2]);
 
 	nowPos++;
