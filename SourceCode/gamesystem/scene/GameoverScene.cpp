@@ -113,6 +113,7 @@ void GameoverScene::Update(DirectXCommon* dxCommon) {
 		gameover[i]->SetPosition(m_OverPos[i]);
 		select[i]->SetPosition(m_SelectPos[i]);
 		select[i]->SetSize(m_OverSize[i]);
+		select[i]->SetRotation(m_SelectRot[i]);
 	}
 	GameOverMove();
 	player_->GameOverUpdate(m_Timer);
@@ -179,6 +180,8 @@ void GameoverScene::BackDraw(DirectXCommon* dxCommon) {
 void GameoverScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	ImGui::Begin("Gameover");
 	ImGui::Text("OverTime:%d",m_Timer);
+	ImGui::Text("AddPower:%f", m_AddPower[SELECT_YES]);
+	ImGui::Text("POSY:%f", m_SelectPos[SELECT_YES].y);
 	ImGui::End();
 	//player_->ImGuiDraw();
 	//enemyManager->ImGuiDraw();
@@ -195,7 +198,7 @@ void GameoverScene::GameOverMove() {
 			_OverType = MOVE_OVER;
 		}
 	}
-	else if (_OverType == MOVE_OVER) {
+	else if (_OverType == MOVE_OVER) {		//ゲームオーバーの文字が落ちてくる
 		for (int i = 0; i < OVER_MAX; i++) {
 		if (Helper::FrameCheck(m_Frame[i], l_AddFrame)) {
 			if (Helper::CheckMin(m_Timer, 100, 1)) {
@@ -210,7 +213,7 @@ void GameoverScene::GameOverMove() {
 			}
 		}
 	}
-	else if (_OverType == MOVE_COUNTINUE) {
+	else if (_OverType == MOVE_COUNTINUE) {		//コンティニューが落ちてくる
 		for (int i = 0; i < OVER_MAX; i++) {
 		if (Helper::FrameCheck(m_Frame[i], l_AddFrame)) {
 			if (Helper::CheckMin(m_Timer, 150, 1)) {
@@ -223,7 +226,7 @@ void GameoverScene::GameOverMove() {
 			}
 		}
 	}
-	else if (_OverType == MOVE_PANEL) {
+	else if (_OverType == MOVE_PANEL) {		//パネルとかが浮かび上がる
 		for (int i = 0; i < OVER_MAX; i++) {
 			if (Helper::FrameCheck(m_Frame[i], l_AddFrame)) {
 				m_Frame[i] = 1.0f;
@@ -235,11 +238,19 @@ void GameoverScene::GameOverMove() {
 		}
 		for (int i = 0; i < ATTACH_MAX; i++) {
 			if (Helper::FrameCheck(attach[i].frame, l_AddFrame)) {
-				if (Helper::CheckMin(m_Timer, 250, 1)) {
-					_OverType = MOVE_SELECT;
+				if (player_->GetSelectType() == 1) {
+					_OverType = MOVE_YES_SELECT;
 					m_Frame[i] = {};
 					attach[i].frame = {};
 					m_Timer = {};
+					m_AddPower[SELECT_YES] = 35.0f;
+				}
+				else if (player_->GetSelectType() == 2) {
+					_OverType = MOVE_NO_SELECT;
+					m_Frame[i] = {};
+					attach[i].frame = {};
+					m_Timer = {};
+					m_AddPower[SELECT_NO] = 35.0f;
 				}
 			}
 			else {
@@ -248,7 +259,38 @@ void GameoverScene::GameOverMove() {
 		}
 
 	}
-	else {
+	else if(_OverType == MOVE_YES_SELECT) {		//はいの文字が動く
+		if (m_AddPower[SELECT_YES] <= 0.0f && m_SelectPos[SELECT_YES].y >= 100.0f) {
+			m_SelectPos[SELECT_YES].y = 100.0f;
+			if (Helper::FrameCheck(m_Frame[SELECT_YES], 0.01f)) {
+				m_Frame[SELECT_YES] = 1.0f;
+			}
+			else {
+				m_SelectRot[SELECT_YES] = Ease(Out, Cubic, m_Frame[SELECT_YES], m_SelectRot[SELECT_YES], 360.0f);
+			}
+		}
+		else {
+			m_AddPower[SELECT_YES] -= m_Gravity;
+			m_SelectPos[SELECT_YES].y -= m_AddPower[SELECT_YES];
+		}
 
+		m_SelectPos[SELECT_NO].y += 2.0f;
+		m_SelectRot[SELECT_NO] += 10.0f;
+	}
+	else {
+		m_AddPower[SELECT_NO] -= m_Gravity;
+		m_SelectPos[SELECT_NO].y -= m_AddPower[SELECT_NO];
+		m_SelectRot[SELECT_NO] += 5.0f;
+		m_SelectPos[SELECT_YES].y += 2.0f;
+		m_SelectRot[SELECT_YES] += 10.0f;
+	}
+
+	if (player_->GetSelectType() == 0) {
+		for (int i = 0; i < OVER_MAX; i++) {
+			m_Angle[i] += 2.0f;
+			m_Angle2[i] = m_Angle[i] * (3.14f / 180.0f);
+			m_OverSize[i] = { (sin(m_Angle2[i]) * 32.0f) + (200.0f),
+				(sin(m_Angle2[i]) * 16.0f) + (64.0f) };
+		}
 	}
 }
