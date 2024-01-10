@@ -70,7 +70,6 @@ public:
 		PASSIVE_13,
 		PASSIVE_14,
 		PASSIVE_FRAME,
-		GAUGE,
 		GAUGECOVER,
 		HANDSCOVER,
 		SKILLCANCEL,
@@ -130,7 +129,7 @@ public:
 		TUTORIAL_WINDOW,
 		TUTORIAL_TASK,
 		TUTORIAL_CHECK,
-		SYUUTYUU
+		SYUUTYUU,
 	};
 	//テクスチャの名前
 	enum tex2dName

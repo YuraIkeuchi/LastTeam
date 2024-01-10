@@ -152,6 +152,10 @@ void EnemyRock::Attack() {
 		if (Helper::CheckMin(m_Timer, 20, 1)) {
 			m_AddPower -= m_Gravity;
 			if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+				/// <summary>
+				///	音入れ(岩が落ちた重点音みたいな音(ドンッみたいな感じ))
+				/// </summary>
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 				BirthParticle();
 				_charaState = STATE_SPECIAL;
 				m_Position.y = 0.1f;

@@ -39,6 +39,7 @@ public:
 	const bool GetAlive() { return m_Alive; }
 	const float GetDamage() { return m_Damage; }
 
+	void SetSound(const bool Sound) { m_Sound = Sound; }
 	void SetHit(const bool Hit) { m_Hit = Hit; }
 	void SetPlayer(Player* player) { this->player = player; }
 
@@ -62,4 +63,5 @@ private:
 	}_ThornState = THORN_UP;
 
 	float m_Frame = {};
+	bool m_Sound = false;
 };
