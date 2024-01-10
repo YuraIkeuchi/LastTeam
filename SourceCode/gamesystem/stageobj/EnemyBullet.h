@@ -2,6 +2,7 @@
 #include "ObjCommon.h"
 #include "IKETexture.h"
 #include "Player.h"
+#include "PredictArea.h"
 
 //敵の攻撃弾クラス
 class EnemyBullet :
@@ -52,14 +53,6 @@ public:
 private:
 	unique_ptr<IKETexture> shadow_tex;
 	Player* player;
-	//パネル
-	struct Panel {
-		unique_ptr<IKETexture> tex = nullptr;
-		XMFLOAT3 position = { 0,0,0 };
-		XMFLOAT4 color = { 1,1,1,1 };
-		bool predict = false;
-	};
-	Panel panels;
 	//現在のマス番号
 	int m_NowWidth = {};
 	int m_NowHeight = {};
@@ -72,6 +65,7 @@ private:
 	enum ThrowType {
 		THROW_SET,
 		THROW_INTER,
+		THROW_READY,
 		THROW_PLAY,
 	};
 
@@ -96,7 +90,11 @@ private:
 
 	float m_Damage = {};
 
-
+	std::unique_ptr<PredictArea> predictArea;
+	float predictFrame = 0.f;
+	int nextPredict = 0;
+	int nextHeightPanel = m_NowHeight;
+	int rebirth = 1;
 	//影の変数
 	XMFLOAT3 m_ShadowPos = {};
 	XMFLOAT3 m_ShadowScale = {};
