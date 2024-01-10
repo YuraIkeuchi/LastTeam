@@ -10,7 +10,7 @@
 #include <StagePanel.h>
 //モデル読み込み
 MobEnemy::MobEnemy() {
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::FIRST_BOSS));
 	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();
 	shadow_tex->Initialize();
@@ -19,8 +19,8 @@ MobEnemy::MobEnemy() {
 //初期化
 bool MobEnemy::Initialize() {
 	m_Position = StagePanel::GetInstance()->SetPositon(4,1);
-	m_Rotation = { 0.0f,0.0f,0.0f };
-	m_Color = { 1.0f,0.0f,0.5f,1.0f };
+	m_Rotation = { 0.0f,-90.0f,0.0f };
+	m_Color = { 1.f,1.f,1.f,1.0f };
 	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = 15.0f;
 	m_MaxHP = m_HP;

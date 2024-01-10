@@ -10,7 +10,7 @@
 #include <StagePanel.h>
 //モデル読み込み
 BossEnemy::BossEnemy() {
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::FIRST_BOSS));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
@@ -28,9 +28,9 @@ BossEnemy::BossEnemy() {
 //初期化
 bool BossEnemy::Initialize() {
 	//m_Position = randPanelPos();
-	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Color = { 0.0f,1.0f,0.5f,1.0f };
-	m_Scale = { 0.4f,0.4f,0.4f };
+	m_Rotation = { 0.0f,-90.0f,0.0f };
+	m_Color = { 1.f,1.f,1.f,1.0f };
+	m_Scale = { 0.5f,0.5f,0.5f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "LIMIT_NUM")));
 
@@ -77,8 +77,7 @@ void (BossEnemy::* BossEnemy::attackTable[])() = {
 void BossEnemy::Action() {
 	if (!m_Induction) {
 		(this->*stateTable[_charaState])();
-	}
-	else {
+	} else {
 		InductionMove();
 	}
 	Obj_SetParam();
@@ -125,7 +124,7 @@ void BossEnemy::Action() {
 			enethorn.erase(cbegin(enethorn) + i);
 		}
 	}
-	
+
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	/*shadow_tex->SetPosition(m_ShadowPos);
@@ -228,19 +227,16 @@ void BossEnemy::BulletAttack() {
 			//敵が端にいた場合反射によって回転が変に見えるから指定する
 			if (m_NowHeight == 0 && m_ShotDir == 2) {
 				m_ShotDir = 1;
-			}
-			else if (m_NowHeight == 3 && m_ShotDir == 1) {
+			} else if (m_NowHeight == 3 && m_ShotDir == 1) {
 				m_ShotDir = 2;
 			}
 			//弾を撃つ方向で向きが変わる
 			if (m_ShotDir == 0) {
-				m_AfterRotY = 270.0f;
-			}
-			else if (m_ShotDir == 1) {
-				m_AfterRotY = 315.0f;
-			}
-			else {
-				m_AfterRotY = 225.0f;
+				m_AfterRotY = -90.0f;
+			} else if (m_ShotDir == 1) {
+				m_AfterRotY = -90.0f + 45.f;
+			} else {
+				m_AfterRotY = -90.0f - 45.f;
 			}
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
@@ -252,18 +248,15 @@ void BossEnemy::BulletAttack() {
 
 			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
 		}
-	}
-	else if (_BossType == Boss_THROW) {
+	} else if (_BossType == Boss_THROW) {
 		m_AttackCount++;
 		BirthBullet();
 		if (m_AttackCount != m_BulletNum) {
 			_BossType = Boss_SET;
-		}
-		else {
+		} else {
 			_BossType = Boss_END;
 		}
-	}
-	else {
+	} else {
 		m_CheckPanel = true;
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
@@ -278,7 +271,7 @@ void BossEnemy::RowAttack() {
 	l_TargetTimer = m_AttackLimit[ATTACK_ROW];
 	if (m_AttackCount != 4) {
 		if (coolTimer == 0) {		//予測エリア
-			BirthPredict({}, m_AttackCount,"Row");
+			BirthPredict({}, m_AttackCount, "Row");
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//実際の攻撃
 			m_Jump = true;
@@ -288,8 +281,7 @@ void BossEnemy::RowAttack() {
 			coolTimer = {};
 			m_AttackCount++;
 		}
-	}
-	else {
+	} else {
 		StagePanel::GetInstance()->EnemyHitReset();
 		m_CheckPanel = true;
 		m_AttackCount = {};
@@ -324,8 +316,7 @@ void BossEnemy::RandomAttack() {
 			m_AddPower = 0.2f;
 			m_Rot = true;
 		}
-	}
-	else {
+	} else {
 		StagePanel::GetInstance()->EnemyHitReset();
 		m_CheckPanel = true;
 		m_AttackCount = {};
@@ -346,8 +337,7 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 				enethorn.emplace_back(std::move(newarea));
 			}
 		}
-	}
-	else {		//ランダム(プレイヤーから近います)
+	} else {		//ランダム(プレイヤーから近います)
 		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
@@ -365,8 +355,7 @@ void BossEnemy::BirthPredict(const int Width, const int Height, const string& na
 				predictarea->SetPredict(i, Height, true);
 			}
 		}
-	}
-	else {//ランダム(プレイヤーから近います)
+	} else {//ランダム(プレイヤーから近います)
 		predictarea->SetPredict(Width, Height, true);
 	}
 	predictarea->SetFlashStart(true);
@@ -405,8 +394,7 @@ void BossEnemy::LoadCsvSkill(std::string& FileName, const int id) {
 				}
 				MyVector.push_back(row);
 			}
-		}
-		else if (word.find("AttackAreA") == 0) {
+		} else if (word.find("AttackAreA") == 0) {
 			while (std::getline(line_stream, word)) {
 				std::vector<int> row;
 
@@ -432,8 +420,7 @@ bool BossEnemy::CreateSkill(int id) {
 	if (id >= 10) {
 		ss << directory << id << ".csv";
 
-	}
-	else {
+	} else {
 		ss << directory << "0" << id << ".csv";
 	}
 	std::string csv_ = ss.str();
@@ -465,8 +452,7 @@ void BossEnemy::BirthMagic() {
 			}
 		}
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
-	}
-	else {			//魔法陣を縮める
+	} else {			//魔法陣を縮める
 		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
@@ -488,12 +474,11 @@ void BossEnemy::WarpEnemy() {
 			coolTimer = {};
 			m_Position = l_RandPos;
 			m_RotFrame = {};
-			m_Rotation.y = 270.0f;
+			m_Rotation.y = -90.0f;
 			StagePanel::GetInstance()->EnemyHitReset();
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
-	}
-	else {			//キャラが大きくなっている
+	} else {			//キャラが大きくなっている
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
@@ -511,7 +496,7 @@ void BossEnemy::AttackMove() {
 	if (!m_Rot) { return; }
 	const float l_AddFrame = 1 / 20.0f;
 	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
-		m_Rotation.y = 270.0f;
+		m_Rotation.y = -90.0f;
 		m_Rot = false;
 		m_AttackFrame = {};
 	}
@@ -529,8 +514,7 @@ void BossEnemy::ClearAction() {
 	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
 		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
 			m_ClearFrame = 1.0f;
-		}
-		else {
+		} else {
 			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
 		}
 	}
@@ -546,12 +530,10 @@ void BossEnemy::GameOverAction() {
 		if (player->GetSelectType() == 1) {
 			_GameOverState = OVER_YES;
 			m_AddPower = 0.3f;
-		}
-		else if (player->GetSelectType() == 2) {
+		} else if (player->GetSelectType() == 2) {
 			_GameOverState = OVER_NO;
 		}
-	}
-	else if (_GameOverState == OVER_YES) {
+	} else if (_GameOverState == OVER_YES) {
 		m_AddPower -= m_Gravity;
 		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
 			m_Position.y = 0.1f;
@@ -561,8 +543,7 @@ void BossEnemy::GameOverAction() {
 				m_AddPower = 0.3f;
 			}
 		}
-	}
-	else {
+	} else {
 		const float l_AddRotZ = 0.5f;
 		const float l_AddFrame2 = 0.01f;
 		float RotPower = 10.0f;
@@ -571,8 +552,7 @@ void BossEnemy::GameOverAction() {
 			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
 				m_Rotation.z = 90.0f;
 			}
-		}
-		else {
+		} else {
 			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 20.0f);
 			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
 			m_Rotation.y += RotPower;

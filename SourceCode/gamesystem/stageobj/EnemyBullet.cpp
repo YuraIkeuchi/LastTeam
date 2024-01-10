@@ -1,6 +1,5 @@
 ﻿#include "EnemyBullet.h"
 #include "Collision.h"
-#include "Player.h"
 #include "Helper.h"
 #include <StagePanel.h>
 #include <Easing.h>
@@ -12,13 +11,9 @@ EnemyBullet::EnemyBullet() {
 	m_Object = make_unique<IKEObject3d>();
 	m_Object->Initialize();
 	m_Object->SetModel(m_Model);
-
-	panels.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
-	panels.tex->TextureCreate();
-	panels.tex->Initialize();
-	float baseScale = PANEL_SIZE * 0.1f;
-	panels.tex->SetScale({ baseScale,baseScale,baseScale });
-	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
+	//予測
+	predictArea = std::make_unique<PredictArea>("ENEMY");
+	predictArea->Initialize();
 
 	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();
@@ -37,9 +32,7 @@ bool EnemyBullet::Initialize() {
 	m_ThrowType = THROW_SET;
 	m_AliveTimer = {};
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
-	panels.position = {};
 	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "BULLET_DAMAGE")));
-	panels.color = { 1.f,1.f,1.f,1.f };
 	return true;
 }
 
@@ -48,14 +41,10 @@ void EnemyBullet::Update() {
 	Throw();
 	//タイプによって色を一旦変えてる
 	Obj_SetParam();
+	predictArea->Update();
 
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//当たり判定
-
-	panels.position = {(PANEL_SIZE * m_NowWidth) - (PANEL_HEIGHT * PANEL_SIZE) ,0.011f,(PANEL_SIZE * m_NowHeight)};
-	panels.tex->SetPosition(panels.position);
-	panels.tex->SetColor({1.0f,0.3f,0.0f,1.0f});
-	panels.tex->Update();
 
 	m_ShadowPos = { m_Position.x,0.11f,m_Position.z };
 	shadow_tex->SetPosition(m_ShadowPos);
@@ -65,8 +54,8 @@ void EnemyBullet::Update() {
 //描画
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	panels.tex->Draw();
 	shadow_tex->Draw();
+	predictArea->Draw(dxCommon);
 	IKETexture::PostDraw();
 	Obj_Draw();
 }
@@ -80,11 +69,10 @@ bool EnemyBullet::Collide() {
 	const float l_Damage = 0.5f;
 	const float l_Radius = 0.15f;
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius) && (m_Alive)) {
-		player->RecvDamage(m_Damage,"NORMAL");
+		player->RecvDamage(m_Damage, "NORMAL");
 		m_Alive = false;
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 
@@ -103,7 +91,7 @@ void EnemyBullet::Throw() {
 			m_Frame = {};
 			m_ThrowType = THROW_INTER;
 		}
-		
+
 		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.1f);
 	}
 	//狙う方向を決める
@@ -116,11 +104,9 @@ void EnemyBullet::Throw() {
 			float l_Rot = {};
 			if (m_ShotDir == DIR_STRAIGHT) {
 				l_Rot = -90.0f;
-			}
-			else if (m_ShotDir == DIR_SLASHUP) {
+			} else if (m_ShotDir == DIR_SLASHUP) {
 				l_Rot = -45.0f;
-			}
-			else {
+			} else {
 				l_Rot = -135.0f;
 			}
 			matRot = XMMatrixRotationY(XMConvertToRadians(l_Rot));
@@ -128,11 +114,50 @@ void EnemyBullet::Throw() {
 			m_Angle.x = move.m128_f32[0];
 			m_Angle.y = move.m128_f32[2];
 			m_ThrowTimer = 0;
+			m_ThrowType = THROW_READY;
+			nextHeightPanel = m_NowHeight;
+		}
+	} else if (m_ThrowType == THROW_READY) {
+		int nextWidthPanel = m_NowWidth - (nextPredict + 1);
+		if (nextWidthPanel < 0) {
 			m_ThrowType = THROW_PLAY;
+			nextPredict = 0;
+			predictFrame = 0.f;
+			return;
+		}
+
+		if (Helper::FrameCheck(predictFrame, 1.f / 5.0f)) {
+			if (m_ShotDir == DIR_SLASHUP) {
+				nextHeightPanel += 1 * rebirth;
+
+				if (nextHeightPanel > 3) {
+					nextHeightPanel = 2;
+					rebirth = -1;
+				}
+
+				if (nextHeightPanel < 0) {
+					nextHeightPanel = 1;
+					rebirth = 1;
+				}
+			} else if (m_ShotDir == DIR_SLASHDOWN) {
+				nextHeightPanel -= 1 * rebirth;
+				if (nextHeightPanel < 0) {
+					nextHeightPanel = 1;
+					rebirth = -1;
+				}
+				if (nextHeightPanel > 3) {
+					nextHeightPanel = 2;
+					rebirth = 1;
+				}
+			}
+			predictArea->VersePredict(nextWidthPanel, nextHeightPanel);
+			nextPredict++;
+			predictFrame = 0.f;
 		}
 	}
 	//実際に狙っちゃう
 	else {
+		predictArea->VanishPredict(m_NowWidth, m_NowHeight);
 		m_Rotation.x += 5.0f;
 		//弾にスピードを加算
 		m_Position.x += m_Angle.x * m_AddSpeed;
@@ -140,7 +165,7 @@ void EnemyBullet::Throw() {
 		if (Helper::CheckNotValueRange(m_Position.z, 0.0f, 4.5f)) {		//反射する
 			m_Angle.y *= -1.0f;
 		}
-		if (Helper::CheckNotValueRange(m_Position.x, -6.0f,10.0f)) {
+		if (Helper::CheckNotValueRange(m_Position.x, -6.0f, 10.0f)) {
 			m_Alive = false;
 		}
 	}
