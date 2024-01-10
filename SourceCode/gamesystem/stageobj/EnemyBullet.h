@@ -35,6 +35,8 @@ public:
 
 	bool Collide();	//当たり判定
 
+	void InitState(const XMFLOAT3& pos, const int Shotdir);
+
 private://ステート
 	static void (EnemyBullet::* stateTable[])();
 private:
@@ -77,8 +79,6 @@ private:
 	XMFLOAT2 m_Angle = {};
 
 	float m_AddSpeed = {};//加速度
-
-	int m_AliveTimer = {};
 
 	//投げる方向
 	enum ThrowDir {

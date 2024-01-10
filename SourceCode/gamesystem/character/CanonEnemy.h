@@ -32,7 +32,7 @@ static const int BULLET_NUM = 3;
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
-	vector<unique_ptr<EnemyBullet>> bullets;//ポルターガイスト
+	unique_ptr<EnemyBullet> bullets;//ポルターガイスト
 
 	enum CanonType {
 		CANON_SET,

@@ -19,6 +19,11 @@ CanonEnemy::CanonEnemy() {
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
+	bullets = make_unique<EnemyBullet>();
+	bullets->Initialize();
+	bullets->SetPlayer(player);
+	bullets->SetTargetTimer(5);
+
 	//shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	//shadow_tex->TextureCreate();
 	//shadow_tex->Initialize();
@@ -76,23 +81,25 @@ void CanonEnemy::Action() {
 	Collide(_AttackArea);		//当たり判定
 	PoisonState();//毒
 	BirthMagic();//魔法陣
-	//敵の弾
-	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Update();
-		}
-	}
 
-	//障害物の削除
-	for (int i = 0; i < bullets.size(); i++) {
-		if (bullets[i] == nullptr) {
-			continue;
-		}
+	bullets->Update();
+	////敵の弾
+	//for (unique_ptr<EnemyBullet>& newbullet : bullets) {
+	//	if (newbullet != nullptr) {
+	//		newbullet->Update();
+	//	}
+	//}
 
-		if (!bullets[i]->GetAlive()) {
-			bullets.erase(cbegin(bullets) + i);
-		}
-	}
+	////障害物の削除
+	//for (int i = 0; i < bullets.size(); i++) {
+	//	if (bullets[i] == nullptr) {
+	//		continue;
+	//	}
+
+	//	if (!bullets[i]->GetAlive()) {
+	//		bullets.erase(cbegin(bullets) + i);
+	//	}
+	//}
 
 	//弾がなくなったら死亡(後で話し合う)
 	//if (!m_Alive && bullets.empty()) {
@@ -117,12 +124,16 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-	//敵の弾
-	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Draw(dxCommon);
-		}
+
+	if (bullets->GetAlive()) {
+		bullets->Draw(dxCommon);
 	}
+	////敵の弾
+	//for (unique_ptr<EnemyBullet>& newbullet : bullets) {
+	//	if (newbullet != nullptr) {
+	//		newbullet->Draw(dxCommon);
+	//	}
+	//}
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
 	BaseBackDraw(dxCommon);
@@ -136,12 +147,13 @@ void CanonEnemy::ImGui_Origin() {
 			newbullet->ImGuiDraw();
 		}
 	}*/
-	ImGui::Begin("Canon");
+	bullets->ImGuiDraw();
+	/*ImGui::Begin("Canon");
 	ImGui::Text("Scale:%f", m_Scale.x);
 	ImGui::Text("Induction:%d", m_Induction);
 	ImGui::Text("InductionFrame:%f", m_InductionFrame);
 	ImGui::Text("InductionPos:%f", m_InductionPos);
-	ImGui::End();
+	ImGui::End();*/
 }
 //開放
 void CanonEnemy::Finalize() {
@@ -149,12 +161,13 @@ void CanonEnemy::Finalize() {
 }
 //待機
 void CanonEnemy::Inter() {
+	const int l_RandTimer = Helper::GetRanNum(0, 40);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
 	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
-	if (coolTimer == l_TargetTimer) {
-		coolTimer = 100;
+	coolTimer = clamp(coolTimer, 0, l_TargetTimer + l_RandTimer);
+	if (coolTimer == l_TargetTimer + l_RandTimer) {
+		coolTimer = {};
 		_charaState = STATE_ATTACK;
 	}
 }
@@ -244,13 +257,7 @@ void CanonEnemy::Teleport() {
 //弾の生成
 void CanonEnemy::BirthBullet() {
 	//弾の発生
-	unique_ptr<EnemyBullet> newbullet = make_unique<EnemyBullet>();
-	newbullet->Initialize();
-	newbullet->SetPlayer(player);
-	newbullet->SetShotDir(m_ShotDir);
-	newbullet->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
-	newbullet->SetTargetTimer(5);
-	bullets.emplace_back(std::move(newbullet));
+	bullets->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z }, m_ShotDir);
 }
 //魔法陣生成
 void CanonEnemy::BirthMagic() {

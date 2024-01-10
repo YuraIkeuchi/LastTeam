@@ -2,6 +2,7 @@
 #include <StagePanel.h>
 #include <ImageManager.h>
 #include <GameStateManager.h>
+#include <Audio.h>
 #include <Helper.h>
 //読み込み
 AttackArea::AttackArea(string& userName, string& stateName) {
@@ -105,7 +106,7 @@ void AttackArea::Draw(DirectXCommon* dxCommon) {
 //ImGui
 void AttackArea::ImGuiDraw() {
 	ImGui::Begin("Attack");
-	ImGui::Text("Scale:%f", m_Scale.x);
+	ImGui::Text("Sound:%d", m_Sound);
 	ImGui::End();
 }
 //パネルの位置に置く
@@ -138,6 +139,13 @@ void AttackArea::SlashMove() {
 	//ある程度傾いたら攻撃判定
 	if (m_Rotation.x <= -30.0f) {
 		m_Attack = true;
+		/// <summary>
+		///	音入れ(斬撃音希望)
+		/// </summary>
+		if (m_Sound) {
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+			m_Sound = false;
+		}
 	}
 }
 //岩落とし系
@@ -159,9 +167,23 @@ void AttackArea::StoneMove() {
 		}
 	}
 
+	/// <summary>
+	///	音入れ
+	/// </summary>
+	if (m_Sound && m_Rotation.x <= -10.0f) {
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+	}
+
 	//ある程度の高さになったら攻撃判定
 	if (m_Position.y <= 2.0f) {
 		m_Attack = true;
+		/// <summary>
+		///	音入れ(岩が落ちる又は欠ける音希望)
+		/// </summary>
+		if (m_Sound) {
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+			m_Sound = false;
+		}
 	}
 }
 //毒系
@@ -192,5 +214,12 @@ void AttackArea::PoisonMove() {
 	//ある程度の高さになったら攻撃判定
 	if (m_Position.y <= 2.0f) {
 		m_Attack = true;
+		/// <summary>
+		///	音入れ(ドロドロしたものが地面に落ちる音希望(ベチャッみたいなやつ)
+		/// </summary>
+		if (m_Sound) {
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+			m_Sound = false;
+		}
 	}
 }
