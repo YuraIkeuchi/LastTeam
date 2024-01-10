@@ -184,12 +184,8 @@ void GameStateManager::Update() {
 	AttackTrigger();
 	UseSkill();
 	if (m_ResetPredict) {
-		m_PredictTimer++;
-		if (m_PredictTimer > 1) {
-			PredictManager();
-			m_ResetPredict = false;
-			m_PredictTimer = {};
-		}
+		PredictManager();
+		m_ResetPredict = false;
 	}
 	SkillManager::GetInstance()->Update();
 	player->SetDelay(m_Delay);
@@ -210,6 +206,7 @@ void GameStateManager::AttackTrigger() {
 	if (m_AllActCount == 0) { return; }
 	if (actui[0]->GetUse()) { return; }
 	if (player->GetCharaState() == 1) { return; }
+	if (player->GetMove()) { return; }
 	if (isFinish) { return; }
 	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える

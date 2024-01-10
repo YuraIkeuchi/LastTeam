@@ -24,6 +24,10 @@ BossEnemy::BossEnemy() {
 	//—\‘ª
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
+
+	bullets = make_unique<EnemyBullet>();
+	bullets->Initialize();
+	bullets->SetPlayer(player);
 }
 //‰Šú‰»
 bool BossEnemy::Initialize() {
@@ -98,23 +102,7 @@ void BossEnemy::Action() {
 	}
 
 	//“G‚Ì’e
-	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Update();
-		}
-	}
-
-	//áŠQ•¨‚Ìíœ
-	for (int i = 0; i < bullets.size(); i++) {
-		if (bullets[i] == nullptr) {
-			continue;
-		}
-
-		if (!bullets[i]->GetAlive()) {
-			bullets.erase(cbegin(bullets) + i);
-		}
-	}
-
+	bullets->Update();
 	//UŒ‚ƒGƒŠƒA‚ÌXV(ÀÛ‚ÍƒXƒLƒ‹‚É‚È‚é‚Æv‚¤)
 	for (auto i = 0; i < enethorn.size(); i++) {
 		if (enethorn[i] == nullptr)continue;
@@ -145,10 +133,8 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 	//“G‚Ì’e
-	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Draw(dxCommon);
-		}
+	if (bullets->GetAlive()) {
+		bullets->Draw(dxCommon);
 	}
 	for (auto i = 0; i < enethorn.size(); i++) {
 		if (enethorn[i] == nullptr)continue;
@@ -161,11 +147,12 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void BossEnemy::ImGui_Origin() {
-	ImGui::Begin("Boss");
-	ImGui::Text("PosX:%f", m_Position.x);
-	ImGui::Text("PosZ:%f", m_Position.z);
-	ImGui::End();
-	predictarea->ImGuiDraw();
+	//ImGui::Begin("Boss");
+	//ImGui::Text("PosX:%f", m_Position.x);
+	//ImGui::Text("PosZ:%f", m_Position.z);
+	//ImGui::End();
+	//predictarea->ImGuiDraw();
+	bullets->ImGuiDraw();
 }
 //ŠJ•ú
 void BossEnemy::Finalize() {
@@ -178,7 +165,7 @@ void BossEnemy::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = Helper::GetRanNum(0, 2);
+		int l_RandState = 0;
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -206,14 +193,8 @@ void BossEnemy::Teleport() {
 }
 //’e‚Ì¶¬
 void BossEnemy::BirthBullet() {
-	//áŠQ•¨‚Ì”­¶
-	EnemyBullet* newbullet;
-	newbullet = new EnemyBullet();
-	newbullet->Initialize();
-	newbullet->SetPlayer(player);
-	newbullet->SetShotDir(m_ShotDir);
-	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.8f,m_Position.z });
-	bullets.emplace_back(newbullet);
+	//’e‚Ì”­¶
+	bullets->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z }, m_ShotDir);
 }
 //UŒ‚‘JˆÚ
 //’e
@@ -222,7 +203,7 @@ void BossEnemy::BulletAttack() {
 	l_TargetTimer = m_AttackLimit[ATTACK_BULLET];
 	const float l_AddFrame = 1 / 30.0f;
 	if (_BossType == Boss_SET) {
-		if (coolTimer == 51) {		//‚±‚±‚ÅŒ‚‚Â•ûŒü‚ğŒˆ‚ß‚é
+		if (coolTimer == 10) {		//‚±‚±‚ÅŒ‚‚Â•ûŒü‚ğŒˆ‚ß‚é
 			m_ShotDir = Helper::GetRanNum(0, 2);
 			//“G‚ª’[‚É‚¢‚½ê‡”½Ë‚É‚æ‚Á‚Ä‰ñ“]‚ª•Ï‚ÉŒ©‚¦‚é‚©‚çw’è‚·‚é
 			if (m_NowHeight == 0 && m_ShotDir == 2) {
@@ -244,17 +225,21 @@ void BossEnemy::BulletAttack() {
 				m_RotFrame = {};
 				coolTimer = {};
 				_BossType = Boss_THROW;
+				BirthBullet();
 			}
 
 			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
 		}
 	} else if (_BossType == Boss_THROW) {
-		m_AttackCount++;
-		BirthBullet();
-		if (m_AttackCount != m_BulletNum) {
-			_BossType = Boss_SET;
-		} else {
-			_BossType = Boss_END;
+		if (!bullets->GetAlive()) {
+			coolTimer = {};
+			m_AttackCount++;
+			if (m_AttackCount != m_BulletNum) {
+				_BossType = Boss_SET;
+			}
+			else {
+				_BossType = Boss_END;
+			}
 		}
 	} else {
 		m_CheckPanel = true;

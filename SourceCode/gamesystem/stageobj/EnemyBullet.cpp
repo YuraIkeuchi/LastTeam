@@ -75,7 +75,7 @@ void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 void EnemyBullet::ImGuiDraw() {
 	ImGui::Begin("Bullet");
 	ImGui::Text("Alive:%d", m_Alive);
-	ImGui::Text("ThrowType:%d", m_ThrowType);
+	ImGui::Text("ShotDir:%d", m_ShotDir);
 	ImGui::Text("Scale:%f", m_BaseScale);
 	ImGui::Text("PosX:%f", m_Position.x);
 	ImGui::End();
