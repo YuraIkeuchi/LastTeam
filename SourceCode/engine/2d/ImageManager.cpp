@@ -61,7 +61,6 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(PASSIVE_13, L"Resources/2d/objicon/Passive/PASSIVE_13.png");
 	IKESprite::LoadTexture(PASSIVE_14, L"Resources/2d/objicon/Passive/PASSIVE_14.png");
 	IKESprite::LoadTexture(PASSIVE_FRAME, L"Resources/2d/objicon/Passive_Frame.png");
-	IKESprite::LoadTexture(GAUGE, L"Resources/2d/effect/white1x1.png");
 	IKESprite::LoadTexture(GAUGECOVER, L"Resources/2d/objicon/SkillGauge.png");
 	IKESprite::LoadTexture(HANDSCOVER, L"Resources/2d/objicon/HandsCover.png");
 	IKESprite::LoadTexture(SKILLCANCEL, L"Resources/2d/objicon/SkillCancel.png");
@@ -177,7 +176,7 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(ATTACK_TEX_28, L"Resources/2d/objicon/AttackSKill/Skill28.png");
 	IKETexture::LoadTexture(ATTACK_TEX_29, L"Resources/2d/objicon/AttackSKill/Skill29.png");
 
-	IKETexture::LoadTexture(BOOM_DIR, L"Resources/2d/effect/Up.png");
+	IKETexture::LoadTexture(BOOM_DIR, L"Resources/2d/effect/Dir.png");
 	IKETexture::LoadTexture(POISON_EFFECT, L"Resources/2d/effect/poison.png");
 	IKETexture::LoadTexture(HEAL_DAMAGE, L"Resources/2d/effect/shine2.png");
 	IKETexture::LoadTexture(COUNTER, L"Resources/2d/effect/Counter.png");

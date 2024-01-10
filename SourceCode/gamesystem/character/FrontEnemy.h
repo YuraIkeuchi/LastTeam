@@ -95,5 +95,7 @@ private:
 
 	int m_AttackWidth = {};
 	int m_AttackHeight = {};
+
+	XMFLOAT3 m_SicklePos = {};
 };
 

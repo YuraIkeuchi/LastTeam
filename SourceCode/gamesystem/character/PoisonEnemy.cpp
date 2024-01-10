@@ -214,6 +214,10 @@ void PoisonEnemy::Teleport() {
 }
 //“Å‚Ì¶¬
 void PoisonEnemy::BirthPoison() {
+	/// <summary>
+	///	‰¹“ü‚ê(’e‚ğ‘Å‚Â‰¹Šó–](ƒ|ƒ“ƒb‚İ‚½‚¢‚È‚â‚Â))
+	/// </summary>
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	int l_RandWidth;
 	int l_RandHeight;
 	StagePanel::GetInstance()->PoisonSetPanel(l_RandWidth,l_RandHeight);

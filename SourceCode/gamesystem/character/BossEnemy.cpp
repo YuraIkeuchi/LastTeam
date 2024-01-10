@@ -165,7 +165,7 @@ void BossEnemy::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = 0;
+		int l_RandState = 2;
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -193,6 +193,10 @@ void BossEnemy::Teleport() {
 }
 //弾の生成
 void BossEnemy::BirthBullet() {
+	/// <summary>
+	///	音入れ(弾を打つ音希望(ポンッみたいなやつ)
+	/// </summary>
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	//弾の発生
 	bullets->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z }, m_ShotDir);
 }
@@ -313,12 +317,17 @@ void BossEnemy::RandomAttack() {
 //攻撃エリア
 void BossEnemy::BirthArea(const int Width, const int Height, const string& name) {
 	if (name == "Row") {			//横一列
+		int l_SoundTimer = {};
 		for (auto i = 0; i < m_Area.size(); i++) {
 			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
 				newarea->Initialize();
 				newarea->InitState(i, Height);
 				newarea->SetPlayer(player);
+				if (l_SoundTimer == 0) {
+					newarea->SetSound(true);
+				}
+				l_SoundTimer++;
 				enethorn.emplace_back(std::move(newarea));
 			}
 		}
@@ -327,6 +336,7 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
 		newarea->SetPlayer(player);
+		newarea->SetSound(true);
 		enethorn.emplace_back(std::move(newarea));
 	}
 	predictarea->ResetPredict();
