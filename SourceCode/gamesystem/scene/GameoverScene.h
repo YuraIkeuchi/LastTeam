@@ -37,20 +37,23 @@ private://メンバ変数
 		float frame = {};
 	};
 
+	//タイトルのパーツに必要なもの
+	array<float, OVER_MAX> m_Angle = { 0.0f,170.0f };
+	array<float, OVER_MAX> m_Angle2;
+
 	unique_ptr<IKESprite> gameover[OVER_MAX];
 	unique_ptr<IKESprite> select[OVER_MAX];
 
 	array<XMFLOAT2,OVER_MAX> m_OverPos;
 	array<XMFLOAT2,OVER_MAX> m_SelectPos;
+	array<float, OVER_MAX> m_SelectRot;
 	array<XMFLOAT2,OVER_MAX> m_OverSize;
+	array<float, OVER_MAX> m_AddPower;
 	array<GameOverAttach,ATTACH_MAX> attach;
+
 
 	array<XMFLOAT2, OVER_MAX> m_AfterOverPos;
 	array<XMFLOAT2, OVER_MAX> m_AfterSelectPos;
-
-	//タイトルのパーツに必要なもの
-	array<float, OVER_MAX> m_Angle;
-	array<float, OVER_MAX> m_Angle2;
 
 	enum OverParts {
 		PARTS_OVER,
@@ -67,9 +70,12 @@ private://メンバ変数
 		MOVE_OVER,
 		MOVE_COUNTINUE,
 		MOVE_PANEL,
-		MOVE_SELECT
+		MOVE_YES_SELECT,
+		MOVE_NO_SELECT
 	}_OverType = MOVE_NONE;
 
 	array<float,OVER_MAX> m_Frame = {};
+	//重力加速度
+	float m_Gravity = 1.0f;
 };
 

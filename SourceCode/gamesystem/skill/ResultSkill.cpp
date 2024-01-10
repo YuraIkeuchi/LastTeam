@@ -342,8 +342,8 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	resultUI.position = pos;
 	resultUI.isSkill = isSkill;
 	resultUI.text_ = make_unique<TextManager>();
-	resultUI.text_->Initialize(dxcommon);
 	if (resultUI.isSkill) {
+		resultUI.text_->Initialize(dxcommon,LOAD_ATTACK);
 		resultUI.icon = IKESprite::Create(ImageManager::ATTACK_0 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
 		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY, resultUI.Damage);//IDに応じた攻撃エリア、距離、ダメージを取得する
@@ -354,6 +354,7 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 		resultUI.sentence[1] = resultUI.text_->GetSkillSentence(resultUI.ID);
 		resultUI.sentence[2] = resultUI.text_->GetSkillDamage(resultUI.ID);
 	} else {
+		resultUI.text_->Initialize(dxcommon, LOAD_PASSIVE);
 		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_00 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.sentence[0] = L"パッシブ：";
 		resultUI.sentence[1] = resultUI.text_->GetPassiveName(resultUI.ID);

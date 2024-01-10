@@ -4,6 +4,11 @@
 #include"Font.h"
 #include <map>
 using namespace std;         //  名前空間指定
+enum LoadType {
+	LOAD_TUTORIAL,
+	LOAD_PASSIVE,
+	LOAD_ATTACK,
+};
 class TextManager
 {
 private:
@@ -43,7 +48,7 @@ public:
 	//
 	void Create(DirectXCommon* dxcomon);
 
-	void Initialize(DirectXCommon* dxcomon);
+	void Initialize(DirectXCommon* dxcomon,const int LoadType);
 
 	void Draw(DirectXCommon* dxcommon);
 
