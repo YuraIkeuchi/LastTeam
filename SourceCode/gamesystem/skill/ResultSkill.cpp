@@ -272,7 +272,7 @@ void ResultSkill::RandShineInit() {
 	itr.tex = IKESprite::Create(ImageManager::SHINE, { posX,posY });
 	itr.tex->SetAnchorPoint({ 0.5f,0.5f });
 	itr.tex->SetSize(itr.size);
-	itr.tex->SetRotation(rot);
+	//itr.tex->SetRotation(rot);
 	itr.kFrame = frame;
 	shines.push_back(std::move(itr));
 }
@@ -284,8 +284,9 @@ void ResultSkill::ShineEffectUpdate() {
 				RandShineInit();
 				shine.isVanish = true;
 			} else {
-				float alpha = Ease(In, Cubic, shine.frameA, 1.0f,0.f);
-				shine.tex->SetColor({1,1,1,alpha });
+				shine.size.x = Ease(In, Circ, shine.frameA, 32.f, 0.f);
+				shine.size.y = Ease(In, Circ, shine.frameA, 32.f, 0.f);
+				shine.tex->SetSize(shine.size);
 			}
 		} else {
 			shine.size.x = Ease(Out, Back, shine.frame, 0.f, 32.f);
