@@ -64,7 +64,9 @@ void PredictArea::Update() {
 	//プレイヤーが居るマスが黄色くなる
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			panels[i][j].tex[m_DrawDype]->Update();
+			if (panels[i][j].predict) {
+				panels[i][j].tex[m_DrawDype]->Update();
+			}
 			panels[i][j].tex[m_DrawDype]->SetPosition(panels[i][j].position);
 			panels[i][j].tex[m_DrawDype]->SetColor(panels[i][j].color);
 		}
@@ -152,9 +154,6 @@ void PredictArea::ResetPredict() {
 	}
 	m_FlashStart = false;
 }
-
-
-
 
 //予測エリアのフラッシュ
 void PredictArea::FlashArea() {

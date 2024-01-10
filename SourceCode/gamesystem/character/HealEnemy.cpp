@@ -133,6 +133,7 @@ void HealEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Heal01.wav", 0.05f);
 	GameStateManager::GetInstance()->SetIsHeal(true);
 	m_Jump = true;
 	m_AddPower = 0.2f;

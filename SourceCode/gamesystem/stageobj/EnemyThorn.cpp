@@ -47,6 +47,13 @@ void EnemyThorn::Move() {
 		if (Helper::FrameCheck(m_Frame, addFrame)) {
 			_ThornState = THORN_STOP;
 			m_Frame = {};
+			/// <summary>
+			///	‰¹“ü‚ê(“Ë‚«Žh‚µ‰¹Šó–])
+			/// </summary>
+			if (m_Sound) {
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+				m_Sound = false;
+			}
 		}
 		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.4f);
 	}

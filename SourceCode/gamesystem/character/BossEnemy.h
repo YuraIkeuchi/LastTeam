@@ -45,7 +45,7 @@ private:
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
-	vector<unique_ptr<EnemyBullet>> bullets;//ポルターガイスト
+	unique_ptr<EnemyBullet> bullets;//敵の弾
 
 	enum BossType {
 		Boss_SET,

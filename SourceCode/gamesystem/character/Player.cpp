@@ -496,6 +496,7 @@ void Player::HealPlayer(const float power) {
 	if (isHeal || isDamage) {
 		hp_frame = 0.f;
 	}
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Heal01.wav", 0.05f);
 	BirthHealNumber(l_HealNum);
 	m_HP += power;
 	HealParticle();

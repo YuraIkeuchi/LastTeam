@@ -44,9 +44,9 @@ void GameStateManager::Initialize() {
 	//一旦クリア方式で
 	GotPassives.clear();
 	PassiveCheck();
-	skillUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.9f,0.9f,0.9f,1.f }, { 0.5f,1.f });
+	skillUI = IKESprite::Create(ImageManager::FEED, { 45.f,550.f }, { 0.9f,0.9f,0.9f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize(basesize);
-	gaugeUI = IKESprite::Create(ImageManager::GAUGE, { 45.f,550.f }, { 0.6f,0.6f,1.f,1.f }, { 0.5f,1.f });
+	gaugeUI = IKESprite::Create(ImageManager::FEED, { 45.f,550.f }, { 0.6f,0.6f,1.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
 	gaugeCover = IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f + 32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
@@ -184,12 +184,8 @@ void GameStateManager::Update() {
 	AttackTrigger();
 	UseSkill();
 	if (m_ResetPredict) {
-		m_PredictTimer++;
-		if (m_PredictTimer > 1) {
-			PredictManager();
-			m_ResetPredict = false;
-			m_PredictTimer = {};
-		}
+		PredictManager();
+		m_ResetPredict = false;
 	}
 	SkillManager::GetInstance()->Update();
 	player->SetDelay(m_Delay);
@@ -210,6 +206,7 @@ void GameStateManager::AttackTrigger() {
 	if (m_AllActCount == 0) { return; }
 	if (actui[0]->GetUse()) { return; }
 	if (player->GetCharaState() == 1) { return; }
+	if (player->GetMove()) { return; }
 	if (isFinish) { return; }
 	if (m_Delay) { return; }
 	//スキルが一個以上あったらスキル使える
@@ -273,14 +270,14 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("Deck");
-	ImGui::Text("BossCamera:%d",m_BossCamera);
-	ImGui::End();
-	if (isFinish) {
-		if (_ResultType != GET_SKILL) {
-			haveSkill->ImGuiDraw();
-		}
-	}
+	//ImGui::Begin("Deck");
+	//ImGui::Text("BossCamera:%d",m_BossCamera);
+	//ImGui::End();
+	//if (isFinish) {
+	//	if (_ResultType != GET_SKILL) {
+	//		haveSkill->ImGuiDraw();
+	//	}
+	//}
 
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
@@ -420,6 +417,8 @@ void GameStateManager::BirthArea() {
 			break;
 		}
 	}
+
+	int l_SoundCount = {};
 	for (auto i = 0; i < m_Act[0].AttackArea.size(); i++) {
 		for (auto j = 0; j < m_Act[0].AttackArea.size(); j++) {
 			AreaX = l_BirthBaseX + i;
@@ -436,6 +435,10 @@ void GameStateManager::BirthArea() {
 					newarea->SetDamage(damage);
 					newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
 					newarea->SetPoisonToken(m_Act[0].PoisonToken);
+					if (l_SoundCount == 0) {
+						newarea->SetSound(true);
+					}
+					l_SoundCount++;
 					if (m_Act[0].ActID == 10) {
 						//固定ダメージ
 						newarea->SetIsFixed(true);

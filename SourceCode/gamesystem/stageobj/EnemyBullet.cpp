@@ -28,12 +28,24 @@ bool EnemyBullet::Initialize() {
 	m_BaseScale = {};
 	m_Color = { 0.6f,0.1f,0.1f,1.0f };
 	m_AddSpeed = 1.0f;
-	m_Alive = true;
+	m_Alive = false;
 	m_ThrowType = THROW_SET;
-	m_AliveTimer = {};
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/CanonEnemy.csv", "BULLET_DAMAGE")));
 	return true;
+}
+
+void EnemyBullet::InitState(const XMFLOAT3& pos, const int ShotDir) {
+	m_Position = pos;
+	m_ShotDir = ShotDir;
+	m_Rotation.y = 270.0f;
+	m_Scale = { 0.0f,0.0f,0.0f };
+	m_BaseScale = {};
+	m_Color = { 0.6f,0.1f,0.1f,1.0f };
+	m_AddSpeed = 1.0f;
+	m_Alive = true;
+	m_ThrowType = THROW_SET;
+	m_ThrowTimer = {};
 }
 
 //更新
@@ -61,6 +73,12 @@ void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void EnemyBullet::ImGuiDraw() {
+	ImGui::Begin("Bullet");
+	ImGui::Text("Alive:%d", m_Alive);
+	ImGui::Text("ShotDir:%d", m_ShotDir);
+	ImGui::Text("Scale:%f", m_BaseScale);
+	ImGui::Text("PosX:%f", m_Position.x);
+	ImGui::End();
 }
 
 //当たり判定
@@ -80,7 +98,7 @@ bool EnemyBullet::Collide() {
 }
 //追従
 void EnemyBullet::Throw() {
-	const float l_AddFrame = 0.1f;
+	const float l_AddFrame = 0.5f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
 	//弾のマスを取得する
@@ -170,6 +188,7 @@ void EnemyBullet::Throw() {
 		}
 		if (Helper::CheckNotValueRange(m_Position.x, -6.0f, 10.0f)) {
 			m_Alive = false;
+			m_Position.x = -6.0f;
 		}
 	}
 }

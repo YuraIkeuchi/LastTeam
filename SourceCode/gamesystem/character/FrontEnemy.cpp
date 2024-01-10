@@ -140,8 +140,11 @@ void FrontEnemy::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1) && (StagePanel::GetInstance()->GetPanelType(player->GetNowWidth() + 1, player->GetNowHeight()) == 0)
 		&& (!StagePanel::GetInstance()->GetisEnemyHit(player->GetNowWidth() + 1, player->GetNowHeight()))) {
 		coolTimer = 0;
+		m_AttackWidth = player->GetNowWidth();
+		m_AttackHeight = player->GetNowHeight();
+		m_SicklePos = player->GetPosition();
 		_charaState = STATE_ATTACK;
-		_AttackState = ATTACK_WARP;
+		_AttackState = ATTACK_FRONT;
 	}
 }
 //çUåÇ
@@ -170,7 +173,7 @@ void FrontEnemy::Teleport() {
 void FrontEnemy::BirthArea(const int Width, const int Height) {
 	std::unique_ptr<Sickle> newarea = std::make_unique<Sickle>();
 	newarea->Initialize();
-	newarea->InitState(Width, Height,{m_Position.x - 1.5f,m_Position.y,m_Position.z});
+	newarea->InitState(Width, Height,{m_SicklePos.x,m_SicklePos.y,m_SicklePos.z});
 	newarea->SetPlayer(player);
 	sickle.emplace_back(std::move(newarea));
 	predictarea->ResetPredict();
@@ -226,10 +229,6 @@ void FrontEnemy::WarpEnemy(bool Attack) {
 			enemywarp.AfterScale = 0.5f;
 			enemywarp.State = WARP_END;
 			m_Position = l_RandPos;
-			if (Attack) {
-				m_AttackWidth = player->GetNowWidth();
-				m_AttackHeight = player->GetNowHeight();
-			}
 			m_RotFrame = {};
 			m_Rotation.y = 270.0f;
 			StagePanel::GetInstance()->EnemyHitReset();
@@ -241,13 +240,7 @@ void FrontEnemy::WarpEnemy(bool Attack) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
 			m_Warp = false;
-			if (Attack) {
-				_AttackState = ATTACK_FRONT;
-			}
-			else {
-
-				_charaState = STATE_INTER;
-			}
+			_charaState = STATE_INTER;
 			enemywarp.State = WARP_START;
 			coolTimer = {};
 		}
