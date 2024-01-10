@@ -109,7 +109,7 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 	haveSkills[num].icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
 	haveSkills[num].Delay = SkillManager::GetInstance()->GetDelay(id);
 	haveSkills[num].text_ = make_unique<TextManager>();
-	haveSkills[num].text_->Initialize(dxCommon);
+	haveSkills[num].text_->Initialize(dxCommon,LOAD_ATTACK);
 	haveSkills[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
 	haveSkills[num].baseSentence[0] = L"スキル：";
 	haveSkills[num].baseSentence[1] = haveSkills[num].text_->GetSkillSentence(haveSkills[num].ID);
@@ -127,7 +127,7 @@ void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCom
 	havePassive[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	havePassive[num].icon->SetPosition(havePassive[num].position);
 	havePassive[num].text_ = make_unique<TextManager>();
-	havePassive[num].text_->Initialize(dxCommon);
+	havePassive[num].text_->Initialize(dxCommon,LOAD_PASSIVE);
 	havePassive[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
 	havePassive[num].baseSentence[0] = L"パッシブ：";
 	havePassive[num].baseSentence[1] = havePassive[num].text_->GetPassiveName(havePassive[num].ID);

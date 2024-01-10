@@ -27,7 +27,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 
 	m_TextPos = { -10.0f,-30.0f };
 	text_ = make_unique<TextManager>();
-	text_->Initialize(dxCommon);
+	text_->Initialize(dxCommon,LOAD_TUTORIAL);
 	text_->SetConversation(TextManager::TUTORIAL_START, m_TextPos);
 
 	player_ = make_unique<Player>();
