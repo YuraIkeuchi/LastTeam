@@ -46,6 +46,10 @@ void EnemyBullet::InitState(const XMFLOAT3& pos, const int ShotDir) {
 	m_Alive = true;
 	m_ThrowType = THROW_SET;
 	m_ThrowTimer = {};
+	rebirth = 1;
+	Obj_SetParam();
+	//弾のマスを取得する
+	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 }
 
 //更新
