@@ -179,7 +179,7 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 	//StagePanel::GetInstance()->Draw(dxCommon);
 	//player_->Draw(dxCommon);
-	//enemy->Draw(dxCommon);
+	enemy->Draw(dxCommon);
 
 }
 //ImGui描画

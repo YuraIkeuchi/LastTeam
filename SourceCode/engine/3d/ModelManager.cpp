@@ -31,6 +31,8 @@ void ModelManager::StartInitialize()
 	LoadModel(DOGO, "dogoxo");
 	LoadModel(DORO, "doroxo");
 	LoadModel(ZASHU, "zashu");
+	LoadModel(FIRST_BOSS, "Golem");
+
 }
 
 //モデル読み込み(非同期処理で読み込むもの)

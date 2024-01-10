@@ -32,6 +32,7 @@ public:
 		DOGO,
 		DORO,
 		ZASHU,
+		FIRST_BOSS
 	};
 	//FBXの名前
 	enum FBXName {
