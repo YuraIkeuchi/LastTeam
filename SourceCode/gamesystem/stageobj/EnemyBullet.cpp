@@ -141,6 +141,9 @@ void EnemyBullet::Throw() {
 			m_ThrowType = THROW_PLAY;
 			nextPredict = 0;
 			predictFrame = 0.f;
+			/// <summary>
+			/// ここに発射音（音入れ）
+			/// </summary>
 			return;
 		}
 
