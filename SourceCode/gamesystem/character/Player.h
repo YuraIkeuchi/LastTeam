@@ -94,6 +94,7 @@ public:
 
 	const bool GetFinishGameOver() { return m_FinishGameOver; }
 	const bool GetSelectEnd() { return m_SelectEnd; }
+	const bool GetMove() { return m_Move; }
 	const int GetSelectType() { return m_SelectType; }
 	float GetMaxHp() { return m_MaxHP; }
 	float GetHp() { return m_HP; }

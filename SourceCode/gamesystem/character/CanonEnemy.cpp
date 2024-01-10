@@ -83,29 +83,7 @@ void CanonEnemy::Action() {
 	BirthMagic();//魔法陣
 
 	bullets->Update();
-	////敵の弾
-	//for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-	//	if (newbullet != nullptr) {
-	//		newbullet->Update();
-	//	}
-	//}
-
-	////障害物の削除
-	//for (int i = 0; i < bullets.size(); i++) {
-	//	if (bullets[i] == nullptr) {
-	//		continue;
-	//	}
-
-	//	if (!bullets[i]->GetAlive()) {
-	//		bullets.erase(cbegin(bullets) + i);
-	//	}
-	//}
-
-	//弾がなくなったら死亡(後で話し合う)
-	//if (!m_Alive && bullets.empty()) {
-	//	m_Death = true;
-	//}
-
+	
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	//shadow_tex->SetPosition(m_ShadowPos);
 	//shadow_tex->SetScale(m_ShadowScale);
@@ -148,12 +126,9 @@ void CanonEnemy::ImGui_Origin() {
 		}
 	}*/
 	bullets->ImGuiDraw();
-	/*ImGui::Begin("Canon");
-	ImGui::Text("Scale:%f", m_Scale.x);
-	ImGui::Text("Induction:%d", m_Induction);
-	ImGui::Text("InductionFrame:%f", m_InductionFrame);
-	ImGui::Text("InductionPos:%f", m_InductionPos);
-	ImGui::End();*/
+	ImGui::Begin("Canon");
+	ImGui::Text("ShotDir:%d", m_ShotDir);
+	ImGui::End();
 }
 //開放
 void CanonEnemy::Finalize() {
@@ -183,7 +158,7 @@ void CanonEnemy::Attack() {
 		l_AddScaleFrame = 1 / 20.0f;
 		l_AfterScale = 0.9f;
 		if (coolTimer == 101) {		//ここで撃つ方向を決める
-			m_ShotDir = Helper::GetRanNum(0, 2);
+			m_ShotDir = 2;
 			//敵が端にいた場合反射によって回転が変に見えるから指定する
 			if (m_NowHeight == 0 && m_ShotDir == 2) {
 				m_ShotDir = 1;

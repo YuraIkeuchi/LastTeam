@@ -155,9 +155,6 @@ void PredictArea::ResetPredict() {
 	m_FlashStart = false;
 }
 
-
-
-
 //予測エリアのフラッシュ
 void PredictArea::FlashArea() {
 	if (m_FlashStart) {
