@@ -11,6 +11,10 @@
 #include "imgui.h"
 
 float Player::startHP = 0.f;
+bool Player::isHpPassive = false;
+float Player::m_HP=0.f;
+float Player::m_MaxHP=0.f;
+
 //リソース読み込み
 void Player::LoadResource() {
 	m_Object.reset(new IKEObject3d());
@@ -806,6 +810,14 @@ void Player::ShieldUpdate() {
 		}
 	}
 
+}
+void Player::HpPassive() {
+	if (isHpPassive) { return; }
+	float afterMaxhp = m_MaxHP * 1.3f;
+	float gain_hp = afterMaxhp - m_MaxHP;
+	m_MaxHP = afterMaxhp;
+	m_HP += gain_hp;
+	Player::isHpPassive = true;
 }
 void Player::BirthHealNumber(const float heal) {
 	int l_InterHeal = {};//int変換したダメージ

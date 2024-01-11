@@ -132,11 +132,17 @@ public:
 	void RegeneUpdate();
 
 	void ShieldUpdate();
+
+	static void HpPassive();
 private:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
 
 	static const int DIR_MAX = 4;
+
+	static bool isHpPassive;
+	static float m_HP;
+	static float m_MaxHP;
 
 	static float startHP;
 	static const int HEAL_MAX = 3;
@@ -184,13 +190,11 @@ private:
 	unique_ptr<IKESprite> hptex;
 	unique_ptr<IKESprite> hpDiftex;
 	unique_ptr<IKESprite> hptex_under;
-	float m_HP = {};
 	float m_OldHP = m_HP;
 	float hp_frame = 0.f;
 	float hp_wait = 0.f;
 	bool isDamage = false;
 	bool isHeal = false;
-	float m_MaxHP = {};
 	//数値化したHP表示のための変数
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//整数にしたHP

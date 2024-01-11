@@ -122,6 +122,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(TUTORIAL_TASK, L"Resources/2d/objicon/TutorialTask.png");
 	IKESprite::LoadTexture(TUTORIAL_CHECK, L"Resources/2d/objicon/TutorialCheck.png");
 	IKESprite::LoadTexture(SYUUTYUU, L"Resources/2d/sceneback/syutyu.png");
+	IKESprite::LoadTexture(PLAYERPREDICT2D, L"Resources/2d/objicon/Areas/PlayerPredict.png");
+
 }
 
 //非同期処理で読み込むスプライト
