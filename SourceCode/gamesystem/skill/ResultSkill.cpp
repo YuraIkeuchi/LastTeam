@@ -18,8 +18,9 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetPosition(BasePos[2]);
-	skillCheack = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 1280.f,720.f });
-	skillCheack->SetAnchorPoint({ 1.f,1.f });
+	skillCheack = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 1280.f - 300.f,20.f });
+	skillCheack->SetAnchorPoint({ 0.f,0.f });
+	skillCheack->SetSize({ 328.f * 0.7f,128.f * 0.7f });
 	feedIn = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	feedIn->SetSize({ 1280.f,720.f });
 	StarInit();
@@ -93,10 +94,6 @@ void ResultSkill::InPassive(std::vector<int>& Passive) {
 	std::vector<int> itr = Passive;
 	for (ResultUI& resultUI : pickSkills) {
 		if (resultUI.isSkill) { continue; }
-		if (resultUI.ID == (int)Passive::ABILITY::HP_UP) {
-			player_->SetHpUper(
-				player_->GetMaxHp() * 1.3f);
-		}
 		itr.push_back(resultUI.ID);
 	}
 	Passive.resize(itr.size());
@@ -121,7 +118,7 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 
 	if (isBattle) {
 		//バトルステージ時スキルたくさん取ってたら
-		if(noDeck.size() < 4){
+		if (noDeck.size() < 4) {
 			for (int i = 0; i < noDeck.size(); i++) {
 				ResultUI resultUI = CreateUI(true, noDeck[i], BasePos[nowPos]);
 				choiceSkills.push_back(std::move(resultUI));
@@ -318,8 +315,8 @@ void ResultSkill::StarEffectUpdate() {
 			star.tex->SetPosition({
 				star.position.x + sinf(star.angle) * star.dia,
 				star.position.y - cosf(star.angle) * star.dia
-			});
-			float size = Ease(Out,Back,star.frame,0.f,128.f);
+				});
+			float size = Ease(Out, Back, star.frame, 0.f, 128.f);
 			star.tex->SetSize({ size ,size });
 		}
 	}
@@ -347,7 +344,7 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	resultUI.isSkill = isSkill;
 	resultUI.text_ = make_unique<TextManager>();
 	if (resultUI.isSkill) {
-		resultUI.text_->Initialize(dxcommon,LOAD_ATTACK);
+		resultUI.text_->Initialize(dxcommon, LOAD_ATTACK);
 		resultUI.icon = IKESprite::Create(ImageManager::ATTACK_0 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
 		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY, resultUI.Damage);//IDに応じた攻撃エリア、距離、ダメージを取得する

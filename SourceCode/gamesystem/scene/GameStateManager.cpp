@@ -651,6 +651,7 @@ void GameStateManager::PassiveCheck() {
 			m_DiameterGauge = passive->GetDiameter();
 			break;
 		case Passive::ABILITY::HP_UP:
+			Player::HpPassive();
 			break;
 		case Passive::ABILITY::RELOAD_LOCK:
 			m_IsReload = false;
