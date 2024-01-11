@@ -25,7 +25,6 @@ private:
 	void Attack();//UŒ‚
 	void Teleport();//ˆÚ“®
 	void BulletAttack();//’e‚ÌUŒ‚
-	void RowAttack();
 	void RandomAttack();
 	void BirthBullet();//
 	void BirthArea(const int Width, const int Height, const string& name);//UŒ‚ƒGƒŠƒA
@@ -38,6 +37,7 @@ private:
 	void PlayerCollide();
 	void WarpEnemy();//“G‚Ìƒ[ƒvˆ—
 	void AttackMove();//UŒ‚‚Ì“®‚«
+	void SelectSafeArea();
 //–‚–@w
 	void BirthMagic();
 private:
@@ -55,7 +55,6 @@ private:
 
 	enum AttackState {
 		ATTACK_BULLET,
-		ATTACK_ROW,
 		ATTACK_RANDOM,
 	}_AttackState = ATTACK_RANDOM;
 	std::vector<std::vector<int>> m_Area = {};
@@ -109,5 +108,7 @@ private:
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};
+
+	bool m_SafeArea[4][4];
 };
 
