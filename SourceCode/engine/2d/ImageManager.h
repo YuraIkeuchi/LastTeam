@@ -130,6 +130,7 @@ public:
 		TUTORIAL_TASK,
 		TUTORIAL_CHECK,
 		SYUUTYUU,
+		PLAYERPREDICT2D,
 	};
 	//テクスチャの名前
 	enum tex2dName
