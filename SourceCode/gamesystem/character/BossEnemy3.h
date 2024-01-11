@@ -110,5 +110,7 @@ private:
 	bool m_ChangeRot = {};
 
 	bool m_SafeArea[4][4];
+
+	int m_RockCount = {};
 };
 

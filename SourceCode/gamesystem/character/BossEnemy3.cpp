@@ -199,18 +199,30 @@ void BossEnemy3::Teleport() {
 }
 //íeÇÃê∂ê¨
 void BossEnemy3::BirthRock() {
-	for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-		for (int j = 0; j < PANEL_WIDTH; j++) {
-			if ((i == 1 || i == 2) && (j == 1 || j == 2)) {
-				std::unique_ptr<EnemyRock> newarea = std::make_unique<EnemyRock>();
-				newarea->Initialize();
-				newarea->InitState(i, j, { m_Position.x,m_Position.y + 2.0f,m_Position.z });
-				newarea->SetPlayer(player);
-				enerock.emplace_back(std::move(newarea));
-				StagePanel::GetInstance()->SetRock(i,j, true);
-			}
-		}
+	int l_width = {};
+	int l_height = {};
+	if (m_RockCount == 1) {
+		l_width = 2;
+		l_height = 1;
 	}
+	else if (m_RockCount == 2) {
+		l_width = 1;
+		l_height = 1;
+	}
+	else if (m_RockCount == 3) {
+		l_width = 2;
+		l_height = 2;
+	}
+	else {
+		l_width = 1;
+		l_height = 2;
+	}
+	std::unique_ptr<EnemyRock> newarea = std::make_unique<EnemyRock>();
+	newarea->Initialize();
+	newarea->InitState(l_width, l_height, { m_Position.x,m_Position.y + 2.0f,m_Position.z });
+	newarea->SetPlayer(player);
+	enerock.emplace_back(std::move(newarea));
+	StagePanel::GetInstance()->SetRock(l_width, l_height, true);
 }
 //çUåÇëJà⁄
 //íe
@@ -221,18 +233,26 @@ void BossEnemy3::RockAttack() {
 		//ê^ÇÒíÜ4É}ÉX
 		BirthPredict(m_RandWigth, m_RandHeight,"Rock");
 	}
-	else if (coolTimer == 50) {
-		m_Jump = true;
-		m_AddPower = 0.2f;
-		m_Rot = true;
-		BirthRock();
+	else if (coolTimer == l_TargetTimer - 60) {
+		if (m_RockCount != 4) {
+			m_Jump = true;
+			m_AddPower = 0.2f;
+			m_Rot = true;
+			m_RockCount++;
+			coolTimer = l_TargetTimer - 90;
+			BirthRock();
+		}
+
+		if (m_RockCount == 2) {
+			predictarea->ResetPredict();
+		}
 	}
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-		predictarea->ResetPredict();
 		coolTimer = {};
 		StagePanel::GetInstance()->EnemyHitReset();
 		m_CheckPanel = true;
 		m_AttackCount = {};
+		m_RockCount = {};
 		_charaState = STATE_SPECIAL;
 	}
 	predictarea->SetTargetTimer(l_TargetTimer);
