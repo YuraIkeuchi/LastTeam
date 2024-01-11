@@ -35,7 +35,7 @@ private:
 	int _charaState = STATE_INTER;
 	
 	std::vector<std::vector<int>> m_Area = {};
-	// 攻撃エリア
+	// 岩エリア
 	std::vector<unique_ptr<EnemyRock>> enerock;
 
 

@@ -1,6 +1,6 @@
 #pragma once
 #include"InterEnemy.h"
-#include "EnemyBullet.h"
+#include "EnemyRock.h"
 #include "EnemyThorn.h"
 
 using namespace std;         //  –¼‘O‹óŠÔw’è
@@ -24,9 +24,9 @@ private:
 	void Inter();//‘Ò‹@
 	void Attack();//UŒ‚
 	void Teleport();//ˆÚ“®
-	void BulletAttack();//’e‚ÌUŒ‚
+	void RockAttack();//Šâ‚ÌUŒ‚
 	void RandomAttack();
-	void BirthBullet();//
+	void BirthRock();//
 	void BirthArea(const int Width, const int Height, const string& name);//UŒ‚ƒGƒŠƒA
 	void BirthPredict(const int Width, const int Height, const string& name);//—\‘ªƒGƒŠƒA
 
@@ -45,8 +45,8 @@ private:
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
-	unique_ptr<EnemyBullet> bullets;//“G‚Ì’e
-
+		// ŠâƒGƒŠƒA
+	std::vector<unique_ptr<EnemyRock>> enerock;
 	enum BossType {
 		Boss_SET,
 		Boss_THROW,
@@ -54,7 +54,7 @@ private:
 	}_BossType = Boss_SET;
 
 	enum AttackState {
-		ATTACK_BULLET,
+		ATTACK_ROCK,
 		ATTACK_RANDOM,
 	}_AttackState = ATTACK_RANDOM;
 	std::vector<std::vector<int>> m_Area = {};

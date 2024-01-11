@@ -158,6 +158,7 @@ void EnemyRock::Attack() {
 				Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 				BirthParticle();
 				_charaState = STATE_SPECIAL;
+				StagePanel::GetInstance()->SetClose(m_NowWidth, m_NowHeight, true);
 				m_Position.y = 0.1f;
 			}
 		}
@@ -172,15 +173,16 @@ void EnemyRock::Close()
 	const float l_AddFrame = 1 / 30.0f;
 	if (Helper::CheckMin(m_Timer, kIntervalMax, 1)) {
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			StagePanel::GetInstance()->SetClose(m_NowWidth, m_NowHeight, false);
 			StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
 			m_Alive = false;
 		}
 		else {
 			m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.0f);
+			//StagePanel::GetInstance()->ClosePanel(m_Object.get(), m_Alive);
 		}
 	}
 
-	StagePanel::GetInstance()->ClosePanel(m_Object.get(), m_Alive);
 }
 
 bool EnemyRock::RockCollide() {

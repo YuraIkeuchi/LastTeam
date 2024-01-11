@@ -24,10 +24,6 @@ BossEnemy3::BossEnemy3() {
 	//—\‘ª
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
-
-	bullets = make_unique<EnemyBullet>();
-	bullets->Initialize();
-	bullets->SetPlayer(player);
 }
 //‰Šú‰»
 bool BossEnemy3::Initialize() {
@@ -78,7 +74,7 @@ void (BossEnemy3::* BossEnemy3::stateTable[])() = {
 };
 //UŒ‚‘JˆÚ
 void (BossEnemy3::* BossEnemy3::attackTable[])() = {
-	&BossEnemy3::BulletAttack,//’e‚ğ‘Å‚ÂUŒ‚
+	&BossEnemy3::RockAttack,//’e‚ğ‘Å‚ÂUŒ‚
 	&BossEnemy3::RandomAttack,//ƒ‰ƒ“ƒ_ƒ€
 };
 
@@ -107,8 +103,7 @@ void BossEnemy3::Action() {
 		}
 	}
 
-	//“G‚Ì’e
-	bullets->Update();
+	//“G‚ÌŠâ
 	//UŒ‚ƒGƒŠƒA‚ÌXV(ÀÛ‚ÍƒXƒLƒ‹‚É‚È‚é‚Æv‚¤)
 	for (auto i = 0; i < enethorn.size(); i++) {
 		if (enethorn[i] == nullptr)continue;
@@ -119,11 +114,17 @@ void BossEnemy3::Action() {
 		}
 	}
 
+	//ŠâƒGƒŠƒA‚ÌXV
+	for (auto i = 0; i < enerock.size(); i++) {
+		if (enerock[i] == nullptr)continue;
+		enerock[i]->Update();
+
+		if (!enerock[i]->GetAlive()) {
+			enerock.erase(cbegin(enerock) + i);
+		}
+	}
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
-	/*shadow_tex->SetPosition(m_ShadowPos);
-	shadow_tex->SetScale(m_ShadowScale);
-	shadow_tex->Update();*/
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
@@ -138,9 +139,9 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-	//“G‚Ì’e
-	if (bullets->GetAlive()) {
-		bullets->Draw(dxCommon);
+	for (auto i = 0; i < enerock.size(); i++) {
+		if (enerock[i] == nullptr)continue;
+		enerock[i]->Draw(dxCommon);
 	}
 	for (auto i = 0; i < enethorn.size(); i++) {
 		if (enethorn[i] == nullptr)continue;
@@ -158,7 +159,6 @@ void BossEnemy3::ImGui_Origin() {
 	//ImGui::Text("PosZ:%f", m_Position.z);
 	//ImGui::End();
 	//predictarea->ImGuiDraw();
-	bullets->ImGuiDraw();
 }
 //ŠJ•ú
 void BossEnemy3::Finalize() {
@@ -171,7 +171,7 @@ void BossEnemy3::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = 1;
+		int l_RandState = 0;
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -198,72 +198,46 @@ void BossEnemy3::Teleport() {
 	}
 }
 //’e‚Ì¶¬
-void BossEnemy3::BirthBullet() {
-	/// <summary>
-	///	‰¹“ü‚ê(’e‚ğ‘Å‚Â‰¹Šó–](ƒ|ƒ“ƒb‚İ‚½‚¢‚È‚â‚Â)
-	/// </summary>
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
-	//’e‚Ì”­¶
-	bullets->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z }, m_ShotDir);
+void BossEnemy3::BirthRock() {
+	for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
+		for (int j = 0; j < PANEL_WIDTH; j++) {
+			if ((i == 1 || i == 2) && (j == 1 || j == 2)) {
+				std::unique_ptr<EnemyRock> newarea = std::make_unique<EnemyRock>();
+				newarea->Initialize();
+				newarea->InitState(i, j, { m_Position.x,m_Position.y + 2.0f,m_Position.z });
+				newarea->SetPlayer(player);
+				enerock.emplace_back(std::move(newarea));
+				StagePanel::GetInstance()->SetRock(i,j, true);
+			}
+		}
+	}
 }
 //UŒ‚‘JˆÚ
 //’e
-void BossEnemy3::BulletAttack() {
+void BossEnemy3::RockAttack() {
 	int l_TargetTimer = {};
-	l_TargetTimer = m_AttackLimit[ATTACK_BULLET];
-	const float l_AddFrame = 1 / 30.0f;
-	if (_BossType == Boss_SET) {
-		if (coolTimer == 10) {		//‚±‚±‚ÅŒ‚‚Â•ûŒü‚ğŒˆ‚ß‚é
-			m_ShotDir = Helper::GetRanNum(0, 2);
-			//“G‚ª’[‚É‚¢‚½ê‡”½Ë‚É‚æ‚Á‚Ä‰ñ“]‚ª•Ï‚ÉŒ©‚¦‚é‚©‚çw’è‚·‚é
-			if (m_NowHeight == 0 && m_ShotDir == 2) {
-				m_ShotDir = 1;
-			}
-			else if (m_NowHeight == 3 && m_ShotDir == 1) {
-				m_ShotDir = 2;
-			}
-			//’e‚ğŒ‚‚Â•ûŒü‚ÅŒü‚«‚ª•Ï‚í‚é
-			if (m_ShotDir == 0) {
-				m_AfterRotY = -90.0f;
-			}
-			else if (m_ShotDir == 1) {
-				m_AfterRotY = -90.0f + 45.f;
-			}
-			else {
-				m_AfterRotY = -90.0f - 45.f;
-			}
-		}
-		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-			if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
-				m_RotFrame = {};
-				coolTimer = {};
-				_BossType = Boss_THROW;
-				BirthBullet();
-			}
-
-			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
-		}
+	l_TargetTimer = m_AttackLimit[ATTACK_ROCK];
+	if (coolTimer == 0) {
+		//^‚ñ’†4ƒ}ƒX
+		BirthPredict(m_RandWigth, m_RandHeight,"Rock");
 	}
-	else if (_BossType == Boss_THROW) {
-		if (!bullets->GetAlive()) {
-			coolTimer = {};
-			m_AttackCount++;
-			if (m_AttackCount != m_BulletNum) {
-				_BossType = Boss_SET;
-			}
-			else {
-				_BossType = Boss_END;
-			}
-		}
+	else if (coolTimer == 50) {
+		m_Jump = true;
+		m_AddPower = 0.2f;
+		m_Rot = true;
+		BirthRock();
 	}
-	else {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+		predictarea->ResetPredict();
+		coolTimer = {};
+		StagePanel::GetInstance()->EnemyHitReset();
 		m_CheckPanel = true;
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
-		coolTimer = {};
-		_BossType = Boss_SET;
-		StagePanel::GetInstance()->EnemyHitReset();
 	}
+	predictarea->SetTargetTimer(l_TargetTimer);
+	predictarea->Update();
+	predictarea->SetTimer(coolTimer);
 }
 //ƒ‰ƒ“ƒ_ƒ€ƒ}ƒXUŒ‚
 void BossEnemy3::RandomAttack() {
@@ -323,10 +297,21 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 
 //—\‘ªƒGƒŠƒA
 void BossEnemy3::BirthPredict(const int Width, const int Height, const string& name) {
-	for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-		for (int j = 0; j < PANEL_WIDTH; j++) {
-			if (!m_SafeArea[i][j]) {
-				predictarea->SetPredict(i, j, true);
+	if (name == "Random") {
+		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
+			for (int j = 0; j < PANEL_WIDTH; j++) {
+				if (!m_SafeArea[i][j]) {
+					predictarea->SetPredict(i, j, true);
+				}
+			}
+		}
+	}
+	else if (name == "Rock") {
+		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
+			for (int j = 0; j < PANEL_WIDTH; j++) {
+				if ((i == 1 || i == 2) && (j == 1 || j == 2)) {
+					predictarea->SetPredict(i, j, true);
+				}
 			}
 		}
 	}

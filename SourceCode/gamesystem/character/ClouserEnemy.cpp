@@ -83,7 +83,7 @@ void ClouserEnemy::Action() {
 		}
 	}
 
-	//攻撃エリアの更新(実際はスキルになると思う)
+	//岩エリアの更新
 	for (auto i = 0; i < enerock.size(); i++) {
 		if (enerock[i] == nullptr)continue;
 		enerock[i]->Update();
@@ -95,9 +95,6 @@ void ClouserEnemy::Action() {
 
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
-	/*shadow_tex->SetPosition(m_ShadowPos);
-	shadow_tex->SetScale(m_ShadowScale);
-	shadow_tex->Update();*/
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
