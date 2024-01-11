@@ -112,6 +112,7 @@
     <ClCompile Include="lib\imgui\include\imgui_tables.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_widgets.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\BossEnemy2.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\BossEnemy3.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\ClouserEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyRock.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\FrontEnemy.cpp" />
@@ -332,6 +333,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\BossEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\BossEnemy2.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\BossEnemy3.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\ClouserEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CreateBombEnemy.h" />
