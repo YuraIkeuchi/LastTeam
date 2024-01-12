@@ -130,7 +130,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillDamage(L"威力:パッシブｘ１０　ドレイン");
 			CreateSkillSentence(L"使えば使うほど強くなる！");
 			CreateSkillDamage(L"威力:8ｘ試合で使った回数");
-			CreateSkillSentence(L"ランダムで色んなスキルにチェンジ！");
+			CreateSkillSentence(L"ランダムで強いスキルにチェンジ！");
 			CreateSkillDamage(L"威力:50 （毒・回復・敵いどうのどれか）");
 		}
 	}
