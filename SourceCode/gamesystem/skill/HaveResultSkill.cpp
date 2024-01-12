@@ -16,8 +16,11 @@ HaveResultSkill::~HaveResultSkill() {
 void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
 	backScreen = IKESprite::Create(ImageManager::RESULTBACKSCREEN, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	backScreen->SetSize({ 1280.f,720.f });
-	skillCheack = IKESprite::Create(ImageManager::RESULTBACKCHECK, { 1280.f,720.f });
-	skillCheack->SetAnchorPoint({ 1.f,1.f });
+	top_title = IKESprite::Create(ImageManager::DECKSKILLTOP, { 640.f,70.f }, { 1.f,1.f, 1.f, 1.f });
+	top_title->SetSize({ 1280.f * 0.7f,128.f * 0.7f });
+	top_title->SetAnchorPoint({0.5f,0.5f});
+	skillCheack = IKESprite::Create(ImageManager::RESULTBACKCHECK, { 640.f,720.f });
+	skillCheack->SetAnchorPoint({ 0.5f,1.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetSize({ 128.0f,128.0f });
@@ -42,6 +45,7 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
+	top_title->Draw();
 	skillCheack->Draw();
 	selectFrame->Draw();
 	for (HaveUI& resultUI : haveSkills) {

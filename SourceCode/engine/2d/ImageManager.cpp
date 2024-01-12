@@ -123,6 +123,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(TUTORIAL_CHECK, L"Resources/2d/objicon/TutorialCheck.png");
 	IKESprite::LoadTexture(SYUUTYUU, L"Resources/2d/sceneback/syutyu.png");
 	IKESprite::LoadTexture(PLAYERPREDICT2D, L"Resources/2d/objicon/Areas/PlayerPredict.png");
+	IKESprite::LoadTexture(DECKSKILLTOP, L"Resources/2d/objicon/DeckSkillT.png");
+	IKESprite::LoadTexture(PICKSKILLTOP, L"Resources/2d/objicon/PickSkillT.png");
 
 }
 
