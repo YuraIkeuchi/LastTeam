@@ -67,8 +67,8 @@ private:
 	float finishDelay = 0.f;
 	//‘Ò‹@
 	bool isJump = false;
-	std::array<std::unique_ptr<DrawNumber>, 2> _DelayTimer;
-	std::array<int, 2> _Delays;
+	std::array<std::unique_ptr<DrawNumber>, 3> _DelayTimer;
+	std::array<int, 3> _Delays;
 	int m_Delay = 0;
 	int m_Frame = 0;
 
