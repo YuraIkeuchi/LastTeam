@@ -69,6 +69,7 @@ private:
 	void AttackTrigger();
 	//攻撃エリアの生成
 	void BirthArea();
+	bool GetIsFix(const string& name);
 	//バフ状況
 	void BirthBuff(string& stateName);
 	//行動UIの生成
@@ -299,8 +300,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {2,3,6,7,14,21};
-	//{3,4,7,13,26,27,28};
+	vector <int> m_StartNumber = {2,3,5};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

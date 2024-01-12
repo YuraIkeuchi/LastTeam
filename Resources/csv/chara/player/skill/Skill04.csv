@@ -1,9 +1,9 @@
 ID,4
 SkillType,0
-Delay,20
+Delay,15
 Name,kamasu
 StateName,NONE
-Damege,50
+Damege,45
 DistanceX,1
 DistanceY,1
 AttackArea,0 1 0 0

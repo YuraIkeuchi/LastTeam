@@ -150,8 +150,8 @@ void BossEnemy2::Inter() {
 			coolTimer = 0;
 			_charaState = STATE_ATTACK;
 			int l_RandState = Helper::GetRanNum(0, 2);
-			//_AttackState = (AttackState)(l_RandState);
-			_AttackState = ATTACK_RECOVERY;
+			_AttackState = (AttackState)(l_RandState);
+			//_AttackState = ATTACK_RECOVERY;
 		}
 	}
 	else {

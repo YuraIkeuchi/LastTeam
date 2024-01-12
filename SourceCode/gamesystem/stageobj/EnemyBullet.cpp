@@ -27,7 +27,7 @@ bool EnemyBullet::Initialize() {
 	m_Scale = { 0.0f,0.0f,0.0f };
 	m_BaseScale = {};
 	m_Color = { 0.6f,0.1f,0.1f,1.0f };
-	m_AddSpeed = 1.0f;
+	m_AddSpeed = 1.7f;
 	m_Alive = false;
 	m_ThrowType = THROW_SET;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -42,7 +42,7 @@ void EnemyBullet::InitState(const XMFLOAT3& pos, const int ShotDir) {
 	m_Scale = { 0.0f,0.0f,0.0f };
 	m_BaseScale = {};
 	m_Color = { 0.6f,0.1f,0.1f,1.0f };
-	m_AddSpeed = 1.0f;
+	m_AddSpeed = 1.7f;
 	m_Alive = true;
 	m_ThrowType = THROW_SET;
 	m_ThrowTimer = {};
