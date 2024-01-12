@@ -61,21 +61,15 @@ void SkillManager::UIDraw() {
 }
 
 void SkillManager::ImGuiDraw() {
-	for (SkillBase* newskill : skill) {
+	/*for (SkillBase* newskill : skill) {
 		if (newskill != nullptr) {
 			newskill->ImGuiDraw();
 		}
-	}
+	}*/
 
-	//ImGui::Begin("Mana");
-	////ImGui::Text("Num:%d", m_DeckNum);
-	//ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
-	//ImGui::Text("m_DeckNum:%d", m_DeckNum);
-	////ImGui::Text("m_DeckSize:%d", (int)m_DeckDate.size());
-	//for (int i = 0; i < m_DeckDate.size(); i++) {
-	//	ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
-	//}
-	//ImGui::End();
+	ImGui::Begin("Mana");
+	ImGui::Text("m_DeckNum:%d", m_DeckNum);
+	ImGui::End();
 	//for (auto i = 0; i < deckui.size(); i++) {
 	//	if (deckui[i] == nullptr)continue;
 	//	deckui[i]->ImGuiDraw();

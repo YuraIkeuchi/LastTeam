@@ -10,7 +10,7 @@
 #include <StagePanel.h>
 //ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
 ClouserEnemy::ClouserEnemy() {
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::ROCKENEMY));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
@@ -29,8 +29,7 @@ ClouserEnemy::ClouserEnemy() {
 bool ClouserEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Color = { 0.0f,0.0f,1.0f,1.0f };
-	m_Scale = { 0.4f,0.4f,0.4f };
+	m_Scale = { 0.6f,0.6f,0.6f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ClouserEnemy.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ClouserEnemy.csv", "LIMIT_NUM")));
 

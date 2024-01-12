@@ -93,9 +93,7 @@ private:
 	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
 	void RandPowerUpInit();
-	void RandShieldUpInit();
 	void PowerUpEffectUpdate();
-	void ShieldUpEffectUpdate();
 	void PassiveActive();
 
 	void DamageEffectUpdate();
@@ -301,7 +299,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {6,8,12};
+	vector <int> m_StartNumber = {2,3,6,7,14,21};
 	//{3,4,7,13,26,27,28};
 	vector<int> m_DeckNumber = m_StartNumber;
 
@@ -324,6 +322,9 @@ private:
 	float m_ChargeScale = {};
 	int m_DelayTimer = {};
 	bool m_DelayStart = false;
+	bool m_Shield = false;
+	int m_ShieldCount = {};
+	int m_DeleteNum = 0;
 
 	//バフ(一旦一個)
 	bool m_Buff = false;
@@ -344,7 +345,6 @@ private:
 		bool isVanish = false;
 	};
 	std::list<PowerUpEffect> powerup;
-	std::list<PowerUpEffect> shieldup;
 
 	bool m_GameStart = false;
 	bool m_BossCamera = false;

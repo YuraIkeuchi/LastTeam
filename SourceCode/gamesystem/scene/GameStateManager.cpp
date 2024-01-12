@@ -179,6 +179,14 @@ void GameStateManager::Update() {
 		}
 	}
 
+	//シールドは3秒くらい
+	if (m_Shield) {
+		if (Helper::CheckMin(m_ShieldCount, 400, 1)) {
+			m_ShieldCount = {};
+			m_Shield = false;
+		}
+	}
+
 	GaugeUpdate();
 	//攻撃した瞬間
 	AttackTrigger();
@@ -197,7 +205,6 @@ void GameStateManager::Update() {
 
 	PassiveActive();
 	PowerUpEffectUpdate();
-	ShieldUpEffectUpdate();
 	DamageEffectUpdate();
 }
 //攻撃した瞬間
@@ -270,19 +277,12 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	//ImGui::Begin("Deck");
-	//ImGui::Text("BossCamera:%d",m_BossCamera);
-	//ImGui::End();
-	//if (isFinish) {
-	//	if (_ResultType != GET_SKILL) {
-	//		haveSkill->ImGuiDraw();
-	//	}
-	//}
-
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->ImGuiDraw();
-	}
+	ImGui::Begin("Deck");
+	ImGui::Text("DeleteNum:%d",m_DeleteNum);
+	ImGui::Text("Shield:%d", m_Shield);
+	ImGui::End();
+	
+	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -300,9 +300,7 @@ void GameStateManager::ActUIDraw() {
 	for (PowerUpEffect& power : powerup) {
 		power.tex->Draw();
 	}
-	for (PowerUpEffect& power : shieldup) {
-		power.tex->Draw();
-	}
+
 	IKESprite::PostDraw();
 }
 //スキルを入手(InterActionCPPで使ってます)
@@ -539,9 +537,6 @@ void GameStateManager::UseSkill() {
 					onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
 				}
 				else {
-					for (int i = 0; i < 2; i++) {
-						RandShieldUpInit();
-					}
 					onomatope->AddOnomato(Guard, { 340.0f,340.0f });
 				}
 			} else if (m_Act[0].StateName == "RANDOM") {
@@ -557,6 +552,7 @@ void GameStateManager::UseSkill() {
 		TutorialTask::GetInstance()->SetTaskFinish(true, TASK_ATTACK);
 		//全スキル除去にするかどうか決める
 		if (m_Act[0].StateName == "REMOVE") {
+			m_DeleteNum = int(m_Act.size() - 1);
 			FinishAct(true);
 		} else {
 			FinishAct();
@@ -599,10 +595,13 @@ void GameStateManager::FinishAct(bool AllFinish) {
 void GameStateManager::GaugeUpdate() {
 	if (!m_GameStart) { return; }
 	if (m_BossCamera) { return; }
+	if (m_Act.size() != 0 && SkillManager::GetInstance()->GetDeckNum() == 0) {
+		m_GaugeCount = {};
+	}
 	if (m_Act.size() == m_DeckNumber.size()) {
 		m_GaugeCount = 0.0f;
 	} else {
-		m_GaugeCount += 1.0f * m_DiameterGauge;
+		m_GaugeCount += (1.0f * m_DiameterGauge) + (m_DeleteNum * 0.4f);
 	}
 	if (m_GaugeCount >= kGaugeCountMax) {
 		if (m_IsReloadDamage) {
@@ -633,6 +632,7 @@ void GameStateManager::GaugeUpdate() {
 		if (SkillManager::GetInstance()->GetDeckNum() == 0 && StagePanel::GetInstance()->GetAllDelete()) {
 			DeckDiscard();
 		}
+		m_DeleteNum = {};
 	}
 	float per = (m_GaugeCount / kGaugeCountMax);
 	float size = Ease(In, Quad, 0.5f, gaugeUI->GetSize().y, basesize.y * per);
@@ -820,7 +820,8 @@ void GameStateManager::BirthBuff(string& stateName) {
 	if (stateName == "NEXT") {
 		m_Buff = true;		//一旦中身はこれだけ
 	} else {
-		player->SetShieldHP(45.0f);
+		m_Shield = true;
+		//player->SetShieldHP(45.0f);
 	}
 }
 void GameStateManager::DeckReset() {
@@ -845,21 +846,6 @@ void GameStateManager::RandPowerUpInit() {
 	itr.kFrame = 1 / frame;
 	powerup.push_back(std::move(itr));
 }
-//シールドのエフェクトの初期化
-void GameStateManager::RandShieldUpInit() {
-	float posX = (float)Helper::GetRanNum(25, 200);
-	float posY = (float)Helper::GetRanNum(550, 700);
-	float frame = (float)Helper::GetRanNum(30, 45);
-	PowerUpEffect itr;
-	itr.tex = IKESprite::Create(ImageManager::SHIELDUP, {});
-	itr.position = { posX,posY };
-	itr.tex->SetAnchorPoint({ 0.5f,0.5f });
-	itr.tex->SetSize(itr.size);
-	itr.tex->SetColor(itr.color);
-	itr.afterpos = { itr.position.x,itr.position.y - 50.0f };
-	itr.kFrame = 1 / frame;
-	shieldup.push_back(std::move(itr));
-}
 
 void GameStateManager::PowerUpEffectUpdate() {
 	for (PowerUpEffect& power : powerup) {
@@ -879,24 +865,6 @@ void GameStateManager::PowerUpEffectUpdate() {
 		return shine.isVanish; });
 }
 
-void GameStateManager::ShieldUpEffectUpdate() {
-	for (PowerUpEffect& power : shieldup) {
-		if (Helper::FrameCheck(power.frame, power.kFrame)) {
-			if (player->GetShieldHP() != 0.0f) {
-				RandShieldUpInit();
-			}
-			power.isVanish = true;
-		}
-		else {
-			power.position.y = Ease(In, Exp, power.frame, power.position.y, power.afterpos.y);
-			power.color.w = Ease(In, Exp, power.frame, 1.0f, 0.0f);
-			power.tex->SetPosition(power.position);
-			power.tex->SetColor(power.color);
-		}
-	}
-	shieldup.remove_if([](PowerUpEffect& shine) {
-		return shine.isVanish; });
-}
 void GameStateManager::PassiveActive() {
 	if (!isPassive) {
 		if (passiveActiveNum.size() == 0) { return; }
@@ -1044,6 +1012,7 @@ void GameStateManager::GetDiscardSkill(const int ID) {
 	m_DiscardNumber.push_back(ID);
 }
 void GameStateManager::MissAttack() {
+	if (m_Shield) { return; }
 	m_ResetPredict = true;
 	m_Delay = false;
 	m_DelayTimer = {};

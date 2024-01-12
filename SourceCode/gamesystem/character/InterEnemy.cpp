@@ -322,7 +322,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			GameStateManager::GetInstance()->DamageCheck((int)damage);
 			BirthDamage(damage);
 			std::string name = _area->GetStateName();
-
+		
 			if (name == "DRAIN") {
 				float rate = 0.5f;
 				player->HealPlayer(damage * rate);		//HP回復

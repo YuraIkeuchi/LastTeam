@@ -34,6 +34,7 @@ public:
 		ZASHU,
 		FIRST_BOSS,
 		TORNADO,
+		ROCKENEMY,
 	};
 	//FBXの名前
 	enum FBXName {
