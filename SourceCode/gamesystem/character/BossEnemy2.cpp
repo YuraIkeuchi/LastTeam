@@ -10,7 +10,7 @@
 #include <StagePanel.h>
 //ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
 BossEnemy2::BossEnemy2() {
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SECOND_BOSS));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();

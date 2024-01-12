@@ -84,6 +84,7 @@ private:
 	DirectXCommon* dxcommon = nullptr;
 	Player* player_=nullptr;
 	std::unique_ptr<IKESprite> backScreen;
+	std::unique_ptr<IKESprite> top_title;
 	std::unique_ptr<IKESprite> skillCheack;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::unique_ptr<IKESprite> feedIn;

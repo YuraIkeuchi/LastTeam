@@ -130,6 +130,9 @@ public:
 		TUTORIAL_TASK,
 		TUTORIAL_CHECK,
 		SYUUTYUU,
+		PLAYERPREDICT2D,
+		DECKSKILLTOP,
+		PICKSKILLTOP,
 	};
 	//テクスチャの名前
 	enum tex2dName

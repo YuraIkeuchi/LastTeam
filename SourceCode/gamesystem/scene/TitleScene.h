@@ -43,4 +43,32 @@ private:
 	vector<unique_ptr<IKESprite>> passives;
 	vector<unique_ptr<IKESprite>> skills;
 
+	unique_ptr<IKESprite> magic_;
+	XMFLOAT2 magicbaseSize = { 256.f * 0.7f,256.f * 0.7f };
+	unique_ptr<IKESprite> onomatope_;
+	unique_ptr<IKESprite> onomatope2_;
+
+	static void(TitleScene::* stateTable[])();
+
+	int stateCount = 0;
+	int kWaitCountMax = 120;
+	int kOpenMagicCountMax = 60;
+	int kVerseOnomatoCountMax = 45;
+	int kCloseMagicCountMax = 30;
+
+	enum class STATE :int{
+		wait = 0,
+		openMagic,
+		verseOnomato,
+		verse2Onomato,
+		closeMagic
+
+	}state = STATE::wait;
+
+	void Wait();
+	void OpenMagic();
+	void VerseOnomato();
+	void Verse2Onomato();
+	void CloseMagic();
+
 };

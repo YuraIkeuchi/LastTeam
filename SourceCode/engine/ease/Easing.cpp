@@ -47,10 +47,18 @@ namespace EasingFunction {
     }
 
     float InBounce(float t)     {
-        float pow2;
-        int bounce = 4;
-        while (t < ((pow2 = powf(2, (float)-bounce)) - 1) / 11) {}
-        return 1 / powf(4, (float)3 - bounce) - 7.5625f * powf((pow2 * 3 - 2) / 22 - t, 2);
+        const float n1 = 7.5625f;
+        const float d1 = 2.75f;
+
+        if (t < 1.f / d1) {
+            return n1 * t * t;
+        } else if (t < 2.f / d1) {
+            return n1 * (t -= 1.5f / d1) * t + 0.75f;
+        } else if (t < 2.5f / d1) {
+            return n1 * (t -= 2.25f/ d1) * t + 0.9375f;
+        } else {
+            return n1 * (t -= 2.625f / d1) * t + 0.984375f;
+        }
     }
 
     float InLinear(float t)     {

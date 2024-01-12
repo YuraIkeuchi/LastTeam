@@ -6,6 +6,15 @@
 #include "GameStateManager.h"
 #include "TextManager.h"
 #include <StageBack.h>
+#include <Helper.h>
+
+void (TitleScene::* TitleScene::stateTable[])() = {
+	&TitleScene::Wait,//動きの合間
+	&TitleScene::OpenMagic,//動きの合間
+	&TitleScene::VerseOnomato,//瞬間移動
+	&TitleScene::Verse2Onomato,//瞬間移動
+	&TitleScene::CloseMagic
+};
 //初期化
 void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
@@ -53,18 +62,17 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//カード
 	title_ = IKESprite::Create(ImageManager::TITLETEXT, { 0.0f,0.0f });
 	player = IKESprite::Create(ImageManager::MAP_CHARA, { 0.0f,0.0f });
-	player->SetAnchorPoint({0.5f,1.0f});
-	player->SetSize({256.f,256.f});
-	//player->SetIsFlipX(true);
-	player->SetPosition({640.f-128.f,360.f+128.f});
-	for (int i = 0; i < 11;i++) {
+	player->SetAnchorPoint({ 0.5f,1.0f });
+	player->SetSize({ 256.f,256.f });
+	player->SetPosition({ 640.f - 128.f,360.f + 128.f });
+	for (int i = 0; i < 11; i++) {
 		unique_ptr<IKESprite> passive = IKESprite::Create(ImageManager::PASSIVE_00 + i, { 0,0 });
 		passive->SetSize({ 86.f,86.f });
 		//passive->SetAnchorPoint({0.5f,0.5f});
-		passive->SetPosition({128.0f * i,20.0f});
+		passive->SetPosition({ 128.0f * i,20.0f });
 		passives.push_back(std::move(passive));
 	}
-	
+
 	for (int i = 0; i < 11; i++) {
 		unique_ptr<IKESprite> skill = IKESprite::Create(ImageManager::ATTACK_0 + i, { 0,0 });
 		skill->SetSize({ 86.f,86.f });
@@ -72,6 +80,20 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 		skill->SetPosition({ 128.0f * i,614.0f });
 		skills.push_back(std::move(skill));
 	}
+	magic_ = IKESprite::Create(ImageManager::PLAYERPREDICT2D, { 700.f,380.f });
+	magic_->SetAnchorPoint({ 0.5f,0.5f });
+	magic_->SetSize(magicbaseSize);
+	magic_->SetSize({});
+	onomatope_ = IKESprite::Create(ImageManager::ONOMATO_03, { 700.f,380.f });
+	onomatope_->SetAnchorPoint({ 0.f,0.5f });
+	onomatope_->SetSize({});
+	//onomatope_
+	onomatope2_ = IKESprite::Create(ImageManager::ONOMATO_07, { 0.0f,0.0f });
+	onomatope2_->SetSize({});
+	onomatope2_->SetAnchorPoint({ 0.f,0.5f });
+
+
+
 	GameStateManager::GetInstance()->DeckReset();
 	GameStateManager::GetInstance()->SetGameStart(true);
 }
@@ -83,18 +105,17 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 	//各クラス更新
 	camerawork->Update(camera);
 
+	(this->*stateTable[static_cast<size_t>(state)])();
+
 	lightGroup->Update();
 	StagePanel::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
 	enemy->Update();
-	rota += 0.5f * XM_PI / 180.f;
+
 	rota2 += 3.f * XM_PI / 180.f;
-	float ease = Ease(InOut,Linear, abs(sinf(rota)),-15.f,15.f);
-	float ease_size= Ease(InOut, Cubic, abs(sinf(rota2)), 0.97f, 1.f);
+	float ease_size = Ease(InOut, Cubic, abs(sinf(rota2)), 0.97f, 1.f);
 	float ease_size2 = Ease(InOut, Quint, abs(sinf(rota2)), 0.97f, 1.f);
-	//player->SetRotation(ease);
-	player->SetSize({ 256.f* ease_size,256.f * ease_size2 });
-	//player->SetPosition({ 640.f - 128.f,360.f + ease_size });
+	player->SetSize({ 256.f * ease_size,256.f * ease_size2 });
 
 	for (unique_ptr<IKESprite>& passive : passives) {
 		XMFLOAT2 pos = passive->GetPosition();
@@ -112,12 +133,12 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		}
 		skill->SetPosition(pos);
 	}
-	if ((input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
+	if ((input->TriggerButton(input->B) || input->TriggerKey(DIK_SPACE)) && (!SceneChanger::GetInstance()->GetChangeStart())) {			//バトル
 		SceneChanger::GetInstance()->SetChangeStart(true);
 		_SceneType = PLAY;
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
 	}
-	
+
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		player_->PlayerSave();
 		SceneManager::GetInstance()->ChangeScene("MAP");
@@ -163,13 +184,19 @@ void TitleScene::FrontDraw(DirectXCommon* dxCommon) {
 	SceneChanger::GetInstance()->Draw();
 
 }
+
 //背面描画
 void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	//title_[TITLE_BACK]->Draw();
 	StageBack::GetInstance()->Draw(dxCommon);
 	player->Draw();
-	for (unique_ptr<IKESprite>& passive:passives) {
+
+	magic_->Draw();
+	onomatope_->Draw();
+	onomatope2_->Draw();
+
+	for (unique_ptr<IKESprite>& passive : passives) {
 		passive->Draw();
 	}
 	for (unique_ptr<IKESprite>& skill : skills) {
@@ -177,16 +204,103 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	}
 
 	IKESprite::PostDraw();
-	//StagePanel::GetInstance()->Draw(dxCommon);
-	//player_->Draw(dxCommon);
-	//enemy->Draw(dxCommon);
 
+	enemy->Draw(dxCommon);
 }
 //ImGui描画
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	//camerawork->ImGuiDraw();
-	//player_->ImGuiDraw();
 }
 //解放
 void TitleScene::Finalize() {
+}
+
+void TitleScene::Wait() {
+	stateCount++;
+	float frame = (float)stateCount / (float)30.f;
+	Helper::Clamp(frame, 0.f, 1.0f);
+	float alpha = Ease(In, Quad, frame, 1.f, 0);
+	onomatope2_->SetColor({ 1,1,1,alpha });
+
+	if (stateCount >= kWaitCountMax) {
+		state = STATE::openMagic;
+		stateCount = 0;
+	}
+}
+void TitleScene::OpenMagic() {
+	stateCount++;
+	float frame = (float)stateCount / (float)kOpenMagicCountMax;
+	XMFLOAT2 size = {
+		Ease(Out,Back,frame,0.f,magicbaseSize.x),
+		magicbaseSize.y
+	};
+	float rotMagic = Ease(In, Circ, frame, 0.f, 90.f);
+	magic_->SetSize(size);
+	magic_->SetRotation(rotMagic);
+	if (frame >= 1.0f) {
+		int r_num = Helper::GetRanNum(0, 99);
+		if (r_num < 50) {
+			state = STATE::verseOnomato;
+		} else {
+			state = STATE::verse2Onomato;
+		}
+		onomatope2_->SetColor({ 1,1,1,1 });
+		onomatope2_->SetPosition({ 0.f, -200.f });
+		stateCount = 0;
+	}
+}
+void TitleScene::VerseOnomato() {
+	stateCount++;
+	float frame = (float)stateCount / (float)kVerseOnomatoCountMax;
+	float frame2 = frame * 2.0f;
+	Helper::Clamp(frame2, 0.f, 1.0f);
+	XMFLOAT2 size = {
+		256.f,
+		Ease(Out,Exp,frame2,0.f,256.f)
+	};
+	XMFLOAT2 pos = {
+	Ease(Out,Quad,frame,700.f,1450.f),
+	380.f
+	};
+
+	onomatope_->SetSize(size);
+	onomatope_->SetPosition(pos);
+	if (stateCount >= kVerseOnomatoCountMax) {
+		state = STATE::closeMagic;
+		stateCount = 0;
+	}
+}
+
+void TitleScene::Verse2Onomato() {
+	stateCount++;
+	float frame = (float)stateCount / (float)kVerseOnomatoCountMax;
+	float frame2 = frame * 2.0f;
+	Helper::Clamp(frame2, 0.f, 1.0f);
+	XMFLOAT2 size = {
+		256.f,
+		Ease(Out,Exp,frame2,0.f,256.f)
+	};
+	XMFLOAT2 pos = {
+	875.f,
+	Ease(In,Bounce,frame,-200.f,450.f)
+	};
+
+	onomatope2_->SetSize(size);
+	onomatope2_->SetPosition(pos);
+	if (stateCount >= kVerseOnomatoCountMax) {
+		state = STATE::closeMagic;
+		stateCount = 0;
+	}
+}
+void TitleScene::CloseMagic() {
+	stateCount++;
+	float frame = (float)stateCount / (float)kCloseMagicCountMax;
+	XMFLOAT2 size = {
+		magicbaseSize.x,
+		Ease(Out,Exp,frame,magicbaseSize.y,0)
+	};
+	magic_->SetSize(size);
+	if (frame >= 1.0f) {
+		state = STATE::wait;
+		stateCount = 0;
+	}
 }
