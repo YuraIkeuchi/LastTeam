@@ -6,11 +6,7 @@ DeckNumber,18
 DeckNumber,8
 DeckNumber,16
 DeckNumber,21
-DeckNumber,10
-DeckNumber,23
-DeckNumber,9
-PassiveSize,1
-PassiveNumber,0
-PlayerHP,191
+PassiveSize,0
+PlayerHP,500
 Index,1
 Hierarchy,9
