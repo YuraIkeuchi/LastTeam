@@ -35,6 +35,7 @@ void ModelManager::StartInitialize()
 	LoadModel(TORNADO, "Tornado");
 	LoadModel(ROCKENEMY, "RockEnemy");
 	LoadModel(SECOND_BOSS, "stick");
+	LoadModel(LAST_BOSS, "LastBoss");
 }
 
 //モデル読み込み(非同期処理で読み込むもの)

@@ -35,7 +35,8 @@ public:
 		FIRST_BOSS,
 		TORNADO,
 		ROCKENEMY,
-		SECOND_BOSS
+		SECOND_BOSS,
+		LAST_BOSS
 	};
 	//FBXの名前
 	enum FBXName {

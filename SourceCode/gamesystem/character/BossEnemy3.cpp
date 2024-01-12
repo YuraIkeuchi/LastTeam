@@ -10,7 +10,7 @@
 #include <StagePanel.h>
 //ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
 BossEnemy3::BossEnemy3() {
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::FIRST_BOSS));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::LAST_BOSS));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
@@ -29,7 +29,7 @@ BossEnemy3::BossEnemy3() {
 bool BossEnemy3::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,-90.0f,0.0f };
-	m_Color = { 1.f,0.f,1.f,1.0f };
+	//m_Color = { 1.f,0.f,1.f,1.0f };
 	m_Scale = { 0.5f,0.5f,0.5f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy3.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy3.csv", "LIMIT_NUM")));
