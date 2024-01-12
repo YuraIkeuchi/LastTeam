@@ -1,10 +1,10 @@
 ID,7
 SkillType,0
-Delay,35
+Delay,30
 Name,yabu
 StateName,POISON
 TOKEN,8
-Damege,10
+Damege,5
 DistanceX,1
 DistanceY,1
 AttackArea,1 1 1

@@ -329,12 +329,7 @@ void GameStateManager::AddSkill(const int SkillType, const int ID, const float d
 	act.ActDelay = Delay;
 	act.StateName = name;
 	if (act.StateName == "SHUFFLE") {
-		act.DistanceX = Helper::GetRanNum(1, 4);
-		act.DistanceY = Helper::GetRanNum(-1, 1);
-		// シャッフル
-		//std::random_device seed_gen;
-		//std::mt19937 engine(seed_gen());
-		//std::shuffle(act.AttackArea.begin(), act.AttackArea.end(), engine);
+
 	}
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
@@ -356,8 +351,13 @@ void GameStateManager::BirthActUI(const int ID, const int Type) {
 
 //攻撃エリアの生成(無理やり処理)
 void GameStateManager::BirthArea() {
+
 	int l_BirthBaseX = m_NowWidth + m_Act[0].DistanceX;	//生成の初めの位置を見てる
 	int l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
+	if (m_Act[0].StateName == "SHUFFLE") {
+		l_BirthBaseX = Helper::GetRanNum(4,7);
+		l_BirthBaseY = Helper::GetRanNum(0,3);
+	}
 	int Timer = {};
 	int AreaX = {};
 	int AreaY = {};
@@ -437,7 +437,7 @@ void GameStateManager::BirthArea() {
 						newarea->SetSound(true);
 					}
 					l_SoundCount++;
-					if (m_Act[0].ActID == 10) {
+					if (GetIsFix(m_Act[0].StateName)) {
 						//固定ダメージ
 						newarea->SetIsFixed(true);
 					} else {
@@ -455,6 +455,19 @@ void GameStateManager::BirthArea() {
 	if (isBuffed) {
 		//固定ダメではバフ載らないようにした
 		m_Buff = false;
+	}
+}
+bool GameStateManager::GetIsFix(const string& name) {
+
+	if (name == "REFRAIN" ||
+		name == "MOROBA"||
+		name == "BOOST" ||
+		name == "PASSIVEDRAIN"||
+		name == "METRONOME"||
+		name == "SHUFFLE") {
+		return true;
+	} else {
+		return false;
 	}
 }
 //予測エリア関係
@@ -487,7 +500,9 @@ void GameStateManager::PredictManager() {
 	if (m_Act[0].SkillType == 0) {
 		if (m_Act[0].StateName == "REGENE") {
 			predictarea->SetDrawDype(PREDICT_HEAL);
-		} else {
+		} else if (m_Act[0].StateName == "SHUFFLE") {
+			predictarea->SetDrawDype(PREDICT_HATENA);
+		}else{
 			predictarea->SetDrawDype(PREDICT_ATTACK);
 		}
 	} else if (m_Act[0].SkillType == 1) {

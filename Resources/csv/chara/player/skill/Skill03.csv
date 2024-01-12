@@ -1,9 +1,9 @@
 ID,3
 SkillType,0
-Delay,10
+Delay,15
 Name,Death
 StateName,SLASH
-Damege,25
+Damege,50
 DistanceX,1
 DistanceY,1
 AttackArea,1 1 1

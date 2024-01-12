@@ -1,9 +1,9 @@
 ID,5
 SkillType,0
-Delay,30
+Delay,45
 Name,yabu
 StateName,NONE
-Damege,50
+Damege,45
 DistanceX,1
 DistanceY,1
 AttackArea,0 0 0 0
