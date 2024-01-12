@@ -33,6 +33,8 @@ public:
 		DORO,
 		ZASHU,
 		FIRST_BOSS,
+		TORNADO,
+		ROCKENEMY,
 		SECOND_BOSS
 	};
 	//FBXの名前

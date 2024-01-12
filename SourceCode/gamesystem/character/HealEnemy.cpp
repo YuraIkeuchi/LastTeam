@@ -232,6 +232,7 @@ void HealEnemy::AttackMove() {
 void HealEnemy::ClearAction() {
 	const int l_TargetTimer = 70;
 	const float l_AddFrame = 1 / 200.0f;
+	m_Rotation.y = 90.0f;
 	if (m_ClearTimer == 0) {
 		m_Position.y = 10.0f;
 	}

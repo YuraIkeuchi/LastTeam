@@ -32,8 +32,9 @@ void ModelManager::StartInitialize()
 	LoadModel(DORO, "doroxo");
 	LoadModel(ZASHU, "zashu");
 	LoadModel(FIRST_BOSS, "Golem");
+	LoadModel(TORNADO, "Tornado");
+	LoadModel(ROCKENEMY, "RockEnemy");
 	LoadModel(SECOND_BOSS, "stick");
-
 }
 
 //モデル読み込み(非同期処理で読み込むもの)
