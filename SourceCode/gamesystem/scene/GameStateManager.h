@@ -137,6 +137,9 @@ public:
 	void SetIsHeal(bool flag) { m_Heal = flag; }
 	bool GetIsHeal() { return m_Heal; }
 
+	void SetIsBomSuccess(bool flag) { isBomSuccess = flag; }
+	bool GetIsBomSuccess() { return isBomSuccess; }
+
 	void SetCounterBuff(bool flag) { m_CounterBuff = flag; }
 	bool GetCounterBuff() { return m_CounterBuff; }
 
@@ -185,6 +188,7 @@ private:
 	bool isFinish = false;
 	bool isChangeScene = false;
 	bool isResultFinish = false;
+	bool isBomSuccess = false;
 	struct ActState {
 		int SkillType;//スキルの種類
 		int ActID;//ID
@@ -300,7 +304,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {2,3,5};
+	vector <int> m_StartNumber = {0,2,3,5};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

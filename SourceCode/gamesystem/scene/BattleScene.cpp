@@ -134,7 +134,10 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			enemyManager->HealingDamage();
 			GameStateManager::GetInstance()->SetHealDamage(false);
 		}
-
+		if (GameStateManager::GetInstance()->GetIsBomSuccess()) {
+			enemyManager->BombDamage();
+			GameStateManager::GetInstance()->SetIsBomSuccess(false);
+		}
 
 		if (GameStateManager::GetInstance()->GetIsBombDamage()) {
 			enemyManager->BombDamage();

@@ -72,8 +72,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreatePassiveSentence(L"ダメージをうけると回復");
 		}
 		else {
-			CreateSkillSentence(L"ドドドな近距離攻撃");
-			CreateSkillDamage(L"威力:75（大）");
+			CreateSkillSentence(L"このスキルで敵を倒すと、敵全体にダメージ！");
+			CreateSkillDamage(L"威力:50（大）");
 			CreateSkillSentence(L"ドゴンな近中距離攻撃");
 			CreateSkillDamage(L"威力:40（中）");
 			CreateSkillSentence(L"バコン!な一列攻撃");
@@ -130,8 +130,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillDamage(L"威力:パッシブｘ１０　ドレイン");
 			CreateSkillSentence(L"使えば使うほど強くなる！");
 			CreateSkillDamage(L"威力:8ｘ試合で使った回数");
-			CreateSkillSentence(L"ランダムでゴージャスなスキルにチェンジ！");
-			CreateSkillDamage(L"威力:50 （毒・回復・引き寄せ・飛ばすのどれか）");
+			CreateSkillSentence(L"ランダムで色んなスキルにチェンジ！");
+			CreateSkillDamage(L"威力:50 （毒・回復・引き寄せ・飛ばす）");
 		}
 	}
 
