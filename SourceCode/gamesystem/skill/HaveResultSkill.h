@@ -56,6 +56,7 @@ private:
 	
 private:
 	std::unique_ptr<IKESprite> backScreen;
+	std::unique_ptr<IKESprite> top_title;
 	std::unique_ptr<IKESprite> skillCheack;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::vector<HaveUI> haveSkills;

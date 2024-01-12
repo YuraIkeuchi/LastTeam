@@ -32,6 +32,7 @@ void ModelManager::StartInitialize()
 	LoadModel(DORO, "doroxo");
 	LoadModel(ZASHU, "zashu");
 	LoadModel(FIRST_BOSS, "Golem");
+	LoadModel(SECOND_BOSS, "stick");
 
 }
 

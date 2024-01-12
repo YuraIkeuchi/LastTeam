@@ -18,9 +18,11 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetPosition(BasePos[2]);
-	skillCheack = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 1280.f - 300.f,20.f });
-	skillCheack->SetAnchorPoint({ 0.f,0.f });
-	skillCheack->SetSize({ 328.f * 0.7f,128.f * 0.7f });
+	skillCheack = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 1280.f,720.f });
+	skillCheack->SetAnchorPoint({ 1.f,1.f });
+	top_title = IKESprite::Create(ImageManager::PICKSKILLTOP, { 640.f,70.f }, { 1.f,1.f, 1.f, 1.f });
+	top_title->SetSize({1280.f* 0.7f,128.f*0.7f});
+	top_title->SetAnchorPoint({ 0.5f,0.5f });
 	feedIn = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	feedIn->SetSize({ 1280.f,720.f });
 	StarInit();
@@ -48,8 +50,8 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
+	top_title->Draw();
 	skillCheack->Draw();
-
 	if (TutorialTask::GetInstance()->GetViewSkill()) {
 		selectFrame->Draw();
 		for (ResultUI& resultUI : choiceSkills) {
@@ -266,7 +268,7 @@ bool ResultSkill::FeedOut() {
 void ResultSkill::RandShineInit() {
 	float posX = (float)Helper::GetRanNum(128, 1150);
 	float posY = (float)Helper::GetRanNum(128, 360);
-	float frame = (float)Helper::GetRanNum(30, 45);
+	float frame = (float)Helper::GetRanNum(10, 20);
 	float rot = (float)Helper::GetRanNum(0, 5);
 	ShineEffect itr;
 	itr.tex = IKESprite::Create(ImageManager::SHINE, { posX,posY });
