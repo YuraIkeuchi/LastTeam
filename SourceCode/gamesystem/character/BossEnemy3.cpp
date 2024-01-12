@@ -105,12 +105,12 @@ void BossEnemy3::Action() {
 
 	//敵の岩
 	//攻撃エリアの更新(実際はスキルになると思う)
-	for (auto i = 0; i < enethorn.size(); i++) {
-		if (enethorn[i] == nullptr)continue;
-		enethorn[i]->Update();
+	for (auto i = 0; i < enetornade.size(); i++) {
+		if (enetornade[i] == nullptr)continue;
+		enetornade[i]->Update();
 
-		if (!enethorn[i]->GetAlive()) {
-			enethorn.erase(cbegin(enethorn) + i);
+		if (!enetornade[i]->GetAlive()) {
+			enetornade.erase(cbegin(enetornade) + i);
 		}
 	}
 
@@ -143,9 +143,9 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 		if (enerock[i] == nullptr)continue;
 		enerock[i]->Draw(dxCommon);
 	}
-	for (auto i = 0; i < enethorn.size(); i++) {
-		if (enethorn[i] == nullptr)continue;
-		enethorn[i]->Draw(dxCommon);
+	for (auto i = 0; i < enetornade.size(); i++) {
+		if (enetornade[i] == nullptr)continue;
+		enetornade[i]->Draw(dxCommon);
 	}
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
@@ -171,7 +171,7 @@ void BossEnemy3::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = 0;
+		int l_RandState = 1;
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -297,12 +297,12 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 	for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
 		for (int j = 0; j < PANEL_WIDTH; j++) {
 			if (!m_SafeArea[i][j]) {
-				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
+				std::unique_ptr<EnemyTornade> newarea = std::make_unique<EnemyTornade>();
 				newarea->Initialize();
 				newarea->InitState(i, j);
 				newarea->SetPlayer(player);
 				newarea->SetSound(true);
-				enethorn.emplace_back(std::move(newarea));
+				enetornade.emplace_back(std::move(newarea));
 			}
 		}
 	}

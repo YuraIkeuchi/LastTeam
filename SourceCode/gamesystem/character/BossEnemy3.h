@@ -1,7 +1,7 @@
 #pragma once
 #include"InterEnemy.h"
 #include "EnemyRock.h"
-#include "EnemyThorn.h"
+#include "EnemyTornade.h"
 
 using namespace std;         //  名前空間指定
 //普通の敵
@@ -59,7 +59,7 @@ private:
 	}_AttackState = ATTACK_RANDOM;
 	std::vector<std::vector<int>> m_Area = {};
 	// 攻撃エリア
-	std::vector<unique_ptr<EnemyThorn>> enethorn;
+	std::vector<unique_ptr<EnemyTornade>> enetornade;
 
 
 	int m_RandWigth = {};
