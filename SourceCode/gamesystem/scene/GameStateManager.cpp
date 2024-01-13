@@ -238,8 +238,8 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 			damage.tex->Draw();
 		}
 		handsFrame->Draw();
-		skillUI->Draw();
-		gaugeUI->Draw();
+	
+		
 		//gaugeCover->Draw();
 		if (isPassive) {
 			for (std::unique_ptr<IKESprite>& passiveAct : passiveActs) {
@@ -249,7 +249,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		}
 		onomatope->Draw();
 		IKESprite::PostDraw();
-		SkillManager::GetInstance()->UIDraw();
+	
 		for (auto i = 0; i < attackarea.size(); i++) {
 			if (attackarea[i] == nullptr)continue;
 			attackarea[i]->Draw(dxCommon);
@@ -297,6 +297,9 @@ void GameStateManager::ActUIDraw() {
 		passive->Draw();
 	}
 	IKESprite::PreDraw();
+	skillUI->Draw();
+	gaugeUI->Draw();
+	SkillManager::GetInstance()->UIDraw();
 	for (PowerUpEffect& power : powerup) {
 		power.tex->Draw();
 	}
@@ -610,7 +613,7 @@ void GameStateManager::FinishAct(bool AllFinish) {
 void GameStateManager::GaugeUpdate() {
 	if (!m_GameStart) { return; }
 	if (m_BossCamera) { return; }
-	if (m_Act.size() != 0 && SkillManager::GetInstance()->GetDeckNum() == 0) {
+	if (m_Act.size() != 0 && SkillManager::GetInstance()->GetDeckNum() == 0 && !m_IsReload) {
 		m_GaugeCount = {};
 	}
 	if (m_Act.size() == m_DeckNumber.size()) {
