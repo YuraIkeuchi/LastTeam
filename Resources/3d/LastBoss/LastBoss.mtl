@@ -1,7 +1,7 @@
 # Blender 3.3.1 MTL File: 'LastBoss.blend'
 # www.blender.org
 
-newmtl マテリアル.007
+newmtl Material.001
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -9,9 +9,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd Cloud.png
+map_Kd stand_tex.png
 
-newmtl マテリアル.008
+newmtl human
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -19,9 +19,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd Hair.png
+map_Kd human_tex.png
 
-newmtl マテリアル.009
+newmtl マテリアル
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -29,9 +29,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd Tuno.png
+map_Kd book_tex.png
 
-newmtl マテリアル.010
+newmtl マテリアル.001
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -39,9 +39,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd Tuno.png
+map_Kd book_tex.png
 
-newmtl マテリアル.011
+newmtl マテリアル.005
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -49,9 +49,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd Body.png
+map_Kd hat.png
 
-newmtl マテリアル.012
+newmtl マテリアル.006
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
