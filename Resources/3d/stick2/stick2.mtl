@@ -1,4 +1,4 @@
-# Blender 3.3.1 MTL File: 'LastBoss.blend'
+# Blender 3.3.1 MTL File: 'stick.blend'
 # www.blender.org
 
 newmtl Material.001
@@ -11,16 +11,6 @@ d 1.000000
 illum 2
 map_Kd stand_tex.png
 
-newmtl human
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 2
-map_Kd human_tex.png
-
 newmtl マテリアル.002
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
@@ -29,7 +19,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd Ball.png
+map_Kd stick.png
 
 newmtl マテリアル.003
 Ns 250.000000
@@ -39,7 +29,17 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd Ball.png
+map_Kd face.png
+
+newmtl マテリアル.004
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd hige.png
 
 newmtl マテリアル.005
 Ns 250.000000
@@ -50,13 +50,3 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd hat.png
-
-newmtl マテリアル.006
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 2
-map_Kd Face.png
