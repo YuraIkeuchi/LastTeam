@@ -7,6 +7,8 @@
 #include "Bomb.h"
 #include "HealEnemy.h"
 #include "BossEnemy.h"
+#include "BossEnemy2.h"
+#include "BossEnemy3.h"
 #include "FrontEnemy.h"
 #include "ThrowEnemy.h"
 #include "ClouserEnemy.h"
@@ -59,6 +61,17 @@ void EnemyManager::Update() {
 		enemys[0]->SetLastEnemy(true);
 	}
 
+}
+void EnemyManager::ClearUpdate() {
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->ClearUpdate();
+	}
+}
+void EnemyManager::GameOverUpdate() {
+
+	for (unique_ptr<InterEnemy>& enemy : enemys) {
+		enemy->GameOverUpdate();
+	}
 }
 //スキップ時の初期化
 void EnemyManager::SkipInitialize() {
@@ -125,11 +138,6 @@ void EnemyManager::PoizonVenom() {
 	}
 }
 
-void EnemyManager::DrainHealUp() {
-	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SetDrainUp(true);
-	}
-}
 
 void EnemyManager::ReLoadDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
@@ -178,6 +186,12 @@ void EnemyManager::Spawn2Map() {
 	popcom << file.rdbuf();
 	file.close();
 	int height = 0;
+	int basewidth = 0;
+
+	if (!m_Clear) {
+		basewidth = 4;
+	}
+
 	while (std::getline(popcom, line)) {
 		std::istringstream line_stream(line);
 		std::string word;
@@ -194,63 +208,77 @@ void EnemyManager::Spawn2Map() {
 			} else if (x == '1') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<TackleEnemy>();
 				//enemy_->SetPlayer(player);
-				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '2') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<CanonEnemy>();
 				//enemy_->SetPlayer(player);
-				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '3') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<CreateBombEnemy>();
 				//enemy_->SetPlayer(player);
-				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '4') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<PoisonEnemy>();
 				//enemy_->SetPlayer(player);
-				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '5') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy2>();
 				//enemy_->SetPlayer(player);
-				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '6') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<HealEnemy>();
 				//enemy_->SetPlayer(player);
-				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '7') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<FrontEnemy>();
 				//enemy_->SetPlayer(player);
-				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '8') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<ThrowEnemy>();
 				//enemy_->SetPlayer(player);
-				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}
 			else if (x == '9') {
 				unique_ptr<InterEnemy> enemy_ = std::make_unique<ClouserEnemy>();
 				//enemy_->SetPlayer(player);
-				enemy_->SetPosition(enemy_->SetPannelPos(4 + width, 3 - height));
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == 'a') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy2>();
+				//enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
+				enemys.push_back(std::move(enemy_));
+				width++;
+			}
+			else if (x == 'b') {
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy3>();
+				//enemy_->SetPlayer(player);
+				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
 			}

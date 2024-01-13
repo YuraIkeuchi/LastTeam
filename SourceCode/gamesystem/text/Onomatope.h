@@ -15,6 +15,7 @@ enum OnomatoPattern {
 	Attack02,
 	Attack03,
 	Refrain,
+	Guard
 };
 class Onomatope {
 public:
@@ -51,6 +52,7 @@ private:
 	void LittleBurnUpdate(OnomatoStruct& onomato);
 	void StoneUpdate(OnomatoStruct& onomato);
 	void RefrainUpdate(OnomatoStruct& onomato);
+	void GuardUpdate(OnomatoStruct& onomato);
 private:
 	std::list<OnomatoStruct> onomatoList;
 	std::unique_ptr<IKESprite> Huu;

@@ -17,7 +17,8 @@ SkillManager* SkillManager::GetInstance()
 void SkillManager::Initialize()
 {	
 	//ここをいじればGameStateManagerも変わります
-	m_SKILLMAX = 14;
+	//総スキル+1
+	m_SKILLMAX = 30;
 	//一旦3に指定(実際はCSVとかになるかな)
 	skill.resize(m_SKILLMAX);
 	m_Delays.resize(m_SKILLMAX);
@@ -28,6 +29,8 @@ void SkillManager::Initialize()
 	//スペシャルスキルはこちらに上書きしてください
 	skill[9] = new SpecialSkill();
 	skill[11] = new SpecialSkill();
+	skill[14] = new SpecialSkill();
+	skill[21] = new SpecialSkill();
 	//csv読み取り
 	for (int i = 0; i < m_SKILLMAX; i++)
 	{
@@ -41,12 +44,11 @@ void SkillManager::Update() {
 		if (deckui[i] == nullptr)continue;
 		deckui[i]->SetActCount(i);
 		deckui[i]->Update();
-
-
-		if (!deckui[i]->GetAlive()) {
-			deckui.erase(cbegin(deckui) + i);
-		}
 	}
+	auto result = std::remove_if(deckui.begin(), deckui.end(),
+		[](unique_ptr<DeckUI>& deck) { return !deck->GetAlive(); });
+	deckui.erase(result, deckui.end());
+
 }
 //UIの描画(ほんますまんpart2)
 void SkillManager::UIDraw() {
@@ -59,21 +61,15 @@ void SkillManager::UIDraw() {
 }
 
 void SkillManager::ImGuiDraw() {
-	for (SkillBase* newskill : skill) {
+	/*for (SkillBase* newskill : skill) {
 		if (newskill != nullptr) {
 			newskill->ImGuiDraw();
 		}
-	}
+	}*/
 
-	//ImGui::Begin("Mana");
-	////ImGui::Text("Num:%d", m_DeckNum);
-	//ImGui::Text("m_DeckRemain:%d", m_DeckRemain);
-	//ImGui::Text("m_DeckNum:%d", m_DeckNum);
-	////ImGui::Text("m_DeckSize:%d", (int)m_DeckDate.size());
-	//for (int i = 0; i < m_DeckDate.size(); i++) {
-	//	ImGui::Text("Data[%d]:%d", i, m_DeckDate[i]);
-	//}
-	//ImGui::End();
+	ImGui::Begin("Mana");
+	ImGui::Text("m_DeckNum:%d", m_DeckNum);
+	ImGui::End();
 	//for (auto i = 0; i < deckui.size(); i++) {
 	//	if (deckui[i] == nullptr)continue;
 	//	deckui[i]->ImGuiDraw();
@@ -321,6 +317,7 @@ void SkillManager::LoadCsvSkill(std::string& FileName, const int id) {
 			}
 		}
 	}
+
 }
 
 bool SkillManager::CreateSkill(int id) {

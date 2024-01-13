@@ -28,6 +28,14 @@ public:
 		FRONT,
 		SICKLE,
 		HEAL,
+		ROCK,
+		DOGO,
+		DORO,
+		ZASHU,
+		FIRST_BOSS,
+		TORNADO,
+		ROCKENEMY,
+		SECOND_BOSS
 	};
 	//FBXの名前
 	enum FBXName {

@@ -10,7 +10,7 @@
 #include <StagePanel.h>
 //モデル読み込み
 BossEnemy::BossEnemy() {
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::FIRST_BOSS));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
@@ -24,13 +24,17 @@ BossEnemy::BossEnemy() {
 	//予測
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
+
+	bullets = make_unique<EnemyBullet>();
+	bullets->Initialize();
+	bullets->SetPlayer(player);
 }
 //初期化
 bool BossEnemy::Initialize() {
 	//m_Position = randPanelPos();
-	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Color = { 0.0f,1.0f,0.5f,1.0f };
-	m_Scale = { 0.4f,0.4f,0.4f };
+	m_Rotation = { 0.0f,-90.0f,0.0f };
+	m_Color = { 1.f,1.f,1.f,1.0f };
+	m_Scale = { 0.5f,0.5f,0.5f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "LIMIT_NUM")));
 
@@ -75,7 +79,11 @@ void (BossEnemy::* BossEnemy::attackTable[])() = {
 
 //行動
 void BossEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	} else {
+		InductionMove();
+	}
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -94,23 +102,7 @@ void BossEnemy::Action() {
 	}
 
 	//敵の弾
-	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Update();
-		}
-	}
-
-	//障害物の削除
-	for (int i = 0; i < bullets.size(); i++) {
-		if (bullets[i] == nullptr) {
-			continue;
-		}
-
-		if (!bullets[i]->GetAlive()) {
-			bullets.erase(cbegin(bullets) + i);
-		}
-	}
-
+	bullets->Update();
 	//攻撃エリアの更新(実際はスキルになると思う)
 	for (auto i = 0; i < enethorn.size(); i++) {
 		if (enethorn[i] == nullptr)continue;
@@ -120,7 +112,7 @@ void BossEnemy::Action() {
 			enethorn.erase(cbegin(enethorn) + i);
 		}
 	}
-	
+
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	/*shadow_tex->SetPosition(m_ShadowPos);
@@ -138,14 +130,11 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
-	if (m_SuperPoison) {poison_tex->Draw();}
-	if (m_HealDamage) { healdamage_tex->Draw(); }
+	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 	//敵の弾
-	for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Draw(dxCommon);
-		}
+	if (bullets->GetAlive()) {
+		bullets->Draw(dxCommon);
 	}
 	for (auto i = 0; i < enethorn.size(); i++) {
 		if (enethorn[i] == nullptr)continue;
@@ -154,14 +143,16 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
+	BaseBackDraw(dxCommon);
 }
 //ImGui描画
 void BossEnemy::ImGui_Origin() {
-	ImGui::Begin("Area");
-	ImGui::Text("AttackCount:%d", m_AttackCount);
-	ImGui::Text("cool:%d", coolTimer);
-	ImGui::End();
-	predictarea->ImGuiDraw();
+	//ImGui::Begin("Boss");
+	//ImGui::Text("PosX:%f", m_Position.x);
+	//ImGui::Text("PosZ:%f", m_Position.z);
+	//ImGui::End();
+	//predictarea->ImGuiDraw();
+	bullets->ImGuiDraw();
 }
 //開放
 void BossEnemy::Finalize() {
@@ -174,7 +165,7 @@ void BossEnemy::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = Helper::GetRanNum(0, 2);
+		int l_RandState = 2;
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -202,14 +193,12 @@ void BossEnemy::Teleport() {
 }
 //弾の生成
 void BossEnemy::BirthBullet() {
-	//障害物の発生
-	EnemyBullet* newbullet;
-	newbullet = new EnemyBullet();
-	newbullet->Initialize();
-	newbullet->SetPlayer(player);
-	newbullet->SetShotDir(m_ShotDir);
-	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.8f,m_Position.z });
-	bullets.emplace_back(newbullet);
+	/// <summary>
+	///	音入れ(弾を打つ音希望(ポンッみたいなやつ)
+	/// </summary>
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+	//弾の発生
+	bullets->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z }, m_ShotDir);
 }
 //攻撃遷移
 //弾
@@ -218,24 +207,21 @@ void BossEnemy::BulletAttack() {
 	l_TargetTimer = m_AttackLimit[ATTACK_BULLET];
 	const float l_AddFrame = 1 / 30.0f;
 	if (_BossType == Boss_SET) {
-		if (coolTimer == 51) {		//ここで撃つ方向を決める
+		if (coolTimer == 10) {		//ここで撃つ方向を決める
 			m_ShotDir = Helper::GetRanNum(0, 2);
 			//敵が端にいた場合反射によって回転が変に見えるから指定する
 			if (m_NowHeight == 0 && m_ShotDir == 2) {
 				m_ShotDir = 1;
-			}
-			else if (m_NowHeight == 3 && m_ShotDir == 1) {
+			} else if (m_NowHeight == 3 && m_ShotDir == 1) {
 				m_ShotDir = 2;
 			}
 			//弾を撃つ方向で向きが変わる
 			if (m_ShotDir == 0) {
-				m_AfterRotY = 270.0f;
-			}
-			else if (m_ShotDir == 1) {
-				m_AfterRotY = 315.0f;
-			}
-			else {
-				m_AfterRotY = 225.0f;
+				m_AfterRotY = -90.0f;
+			} else if (m_ShotDir == 1) {
+				m_AfterRotY = -90.0f + 45.f;
+			} else {
+				m_AfterRotY = -90.0f - 45.f;
 			}
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
@@ -243,22 +229,23 @@ void BossEnemy::BulletAttack() {
 				m_RotFrame = {};
 				coolTimer = {};
 				_BossType = Boss_THROW;
+				BirthBullet();
 			}
 
 			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
 		}
-	}
-	else if (_BossType == Boss_THROW) {
-		m_AttackCount++;
-		BirthBullet();
-		if (m_AttackCount != m_BulletNum) {
-			_BossType = Boss_SET;
+	} else if (_BossType == Boss_THROW) {
+		if (!bullets->GetAlive()) {
+			coolTimer = {};
+			m_AttackCount++;
+			if (m_AttackCount != m_BulletNum) {
+				_BossType = Boss_SET;
+			}
+			else {
+				_BossType = Boss_END;
+			}
 		}
-		else {
-			_BossType = Boss_END;
-		}
-	}
-	else {
+	} else {
 		m_CheckPanel = true;
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
@@ -273,7 +260,7 @@ void BossEnemy::RowAttack() {
 	l_TargetTimer = m_AttackLimit[ATTACK_ROW];
 	if (m_AttackCount != 4) {
 		if (coolTimer == 0) {		//予測エリア
-			BirthPredict({}, m_AttackCount,"Row");
+			BirthPredict({}, m_AttackCount, "Row");
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//実際の攻撃
 			m_Jump = true;
@@ -283,8 +270,7 @@ void BossEnemy::RowAttack() {
 			coolTimer = {};
 			m_AttackCount++;
 		}
-	}
-	else {
+	} else {
 		StagePanel::GetInstance()->EnemyHitReset();
 		m_CheckPanel = true;
 		m_AttackCount = {};
@@ -319,8 +305,7 @@ void BossEnemy::RandomAttack() {
 			m_AddPower = 0.2f;
 			m_Rot = true;
 		}
-	}
-	else {
+	} else {
 		StagePanel::GetInstance()->EnemyHitReset();
 		m_CheckPanel = true;
 		m_AttackCount = {};
@@ -332,21 +317,26 @@ void BossEnemy::RandomAttack() {
 //攻撃エリア
 void BossEnemy::BirthArea(const int Width, const int Height, const string& name) {
 	if (name == "Row") {			//横一列
+		int l_SoundTimer = {};
 		for (auto i = 0; i < m_Area.size(); i++) {
 			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
 				newarea->Initialize();
 				newarea->InitState(i, Height);
 				newarea->SetPlayer(player);
+				if (l_SoundTimer == 0) {
+					newarea->SetSound(true);
+				}
+				l_SoundTimer++;
 				enethorn.emplace_back(std::move(newarea));
 			}
 		}
-	}
-	else {		//ランダム(プレイヤーから近います)
+	} else {		//ランダム(プレイヤーから近います)
 		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
 		newarea->SetPlayer(player);
+		newarea->SetSound(true);
 		enethorn.emplace_back(std::move(newarea));
 	}
 	predictarea->ResetPredict();
@@ -360,8 +350,7 @@ void BossEnemy::BirthPredict(const int Width, const int Height, const string& na
 				predictarea->SetPredict(i, Height, true);
 			}
 		}
-	}
-	else {//ランダム(プレイヤーから近います)
+	} else {//ランダム(プレイヤーから近います)
 		predictarea->SetPredict(Width, Height, true);
 	}
 	predictarea->SetFlashStart(true);
@@ -400,8 +389,7 @@ void BossEnemy::LoadCsvSkill(std::string& FileName, const int id) {
 				}
 				MyVector.push_back(row);
 			}
-		}
-		else if (word.find("AttackAreA") == 0) {
+		} else if (word.find("AttackAreA") == 0) {
 			while (std::getline(line_stream, word)) {
 				std::vector<int> row;
 
@@ -427,8 +415,7 @@ bool BossEnemy::CreateSkill(int id) {
 	if (id >= 10) {
 		ss << directory << id << ".csv";
 
-	}
-	else {
+	} else {
 		ss << directory << "0" << id << ".csv";
 	}
 	std::string csv_ = ss.str();
@@ -460,8 +447,7 @@ void BossEnemy::BirthMagic() {
 			}
 		}
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
-	}
-	else {			//魔法陣を縮める
+	} else {			//魔法陣を縮める
 		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
@@ -483,12 +469,11 @@ void BossEnemy::WarpEnemy() {
 			coolTimer = {};
 			m_Position = l_RandPos;
 			m_RotFrame = {};
-			m_Rotation.y = 270.0f;
+			m_Rotation.y = -90.0f;
 			StagePanel::GetInstance()->EnemyHitReset();
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
-	}
-	else {			//キャラが大きくなっている
+	} else {			//キャラが大きくなっている
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
@@ -506,10 +491,69 @@ void BossEnemy::AttackMove() {
 	if (!m_Rot) { return; }
 	const float l_AddFrame = 1 / 20.0f;
 	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
-		m_Rotation.y = 270.0f;
+		m_Rotation.y = -90.0f;
 		m_Rot = false;
 		m_AttackFrame = {};
 	}
 
 	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
+}
+//クリアシーンの更新
+void BossEnemy::ClearAction() {
+	const int l_TargetTimer = 100;
+	const float l_AddFrame = 1 / 200.0f;
+	if (m_ClearTimer == 0) {
+		m_Position.y = 10.0f;
+	}
+
+	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
+			m_ClearFrame = 1.0f;
+		} else {
+			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
+		}
+	}
+	m_AddDisolve = {};
+	Obj_SetParam();
+}
+//ゲームオーバーシーンの更新
+void BossEnemy::GameOverAction() {
+	if (_GameOverState == OVER_STOP) {
+		m_Position = { -3.0f,0.0f,1.5f };
+		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
+		} else if (player->GetSelectType() == 2) {
+			_GameOverState = OVER_NO;
+		}
+	} else if (_GameOverState == OVER_YES) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_Position.y = 0.1f;
+			m_AddPower = {};
+			if (Helper::CheckMin(m_OverTimer, 25, 1)) {
+				m_OverTimer = {};
+				m_AddPower = 0.3f;
+			}
+		}
+	} else {
+		const float l_AddRotZ = 0.5f;
+		const float l_AddFrame2 = 0.01f;
+		float RotPower = 10.0f;
+		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
+			m_RotFrame = 1.0f;
+			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+				m_Rotation.z = 90.0f;
+			}
+		} else {
+			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 20.0f);
+			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_RotFrame, m_Position.y, 0.5f);
+		}
+	}
+
+	Obj_SetParam();
 }

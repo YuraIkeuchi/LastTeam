@@ -56,6 +56,10 @@ void Sickle::Move() {
 				_ThornState = THORN_END;
 				m_AliveTimer = {};
 				m_Frame = {};
+				/// <summary>
+				///	‰¹“ü‚ê(“Ë‚«Žh‚µ‰¹Šó–])
+				/// </summary>
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 			}
 		}
 		m_Rotation.x = Ease(In, Cubic, m_Frame, m_Rotation.x, -450.0f);

@@ -63,7 +63,12 @@ void (FrontEnemy::* FrontEnemy::attackTable[])() = {
 
 //行動
 void FrontEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	}
+	else {
+		InductionMove();
+	}
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -102,8 +107,7 @@ void FrontEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
-	if (m_SuperPoison) {poison_tex->Draw();}
-	if (m_HealDamage) { healdamage_tex->Draw(); }
+	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 
 	for (auto i = 0; i < sickle.size(); i++) {
@@ -113,6 +117,8 @@ void FrontEnemy::Draw(DirectXCommon* dxCommon) {
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
+	BaseBackDraw(dxCommon);
+
 }
 //ImGui描画
 void FrontEnemy::ImGui_Origin() {
@@ -134,8 +140,11 @@ void FrontEnemy::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1) && (StagePanel::GetInstance()->GetPanelType(player->GetNowWidth() + 1, player->GetNowHeight()) == 0)
 		&& (!StagePanel::GetInstance()->GetisEnemyHit(player->GetNowWidth() + 1, player->GetNowHeight()))) {
 		coolTimer = 0;
+		m_AttackWidth = player->GetNowWidth();
+		m_AttackHeight = player->GetNowHeight();
+		m_SicklePos = player->GetPosition();
 		_charaState = STATE_ATTACK;
-		_AttackState = ATTACK_WARP;
+		_AttackState = ATTACK_FRONT;
 	}
 }
 //攻撃
@@ -164,7 +173,7 @@ void FrontEnemy::Teleport() {
 void FrontEnemy::BirthArea(const int Width, const int Height) {
 	std::unique_ptr<Sickle> newarea = std::make_unique<Sickle>();
 	newarea->Initialize();
-	newarea->InitState(Width, Height,{m_Position.x - 1.5f,m_Position.y,m_Position.z});
+	newarea->InitState(Width, Height,{m_SicklePos.x,m_SicklePos.y,m_SicklePos.z});
 	newarea->SetPlayer(player);
 	sickle.emplace_back(std::move(newarea));
 	predictarea->ResetPredict();
@@ -220,10 +229,6 @@ void FrontEnemy::WarpEnemy(bool Attack) {
 			enemywarp.AfterScale = 0.5f;
 			enemywarp.State = WARP_END;
 			m_Position = l_RandPos;
-			if (Attack) {
-				m_AttackWidth = player->GetNowWidth();
-				m_AttackHeight = player->GetNowHeight();
-			}
 			m_RotFrame = {};
 			m_Rotation.y = 270.0f;
 			StagePanel::GetInstance()->EnemyHitReset();
@@ -235,13 +240,7 @@ void FrontEnemy::WarpEnemy(bool Attack) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
 			m_Warp = false;
-			if (Attack) {
-				_AttackState = ATTACK_FRONT;
-			}
-			else {
-
-				_charaState = STATE_INTER;
-			}
+			_charaState = STATE_INTER;
 			enemywarp.State = WARP_START;
 			coolTimer = {};
 		}
@@ -290,4 +289,75 @@ void FrontEnemy::FrontAttack() {
 		}
 		predictarea->SetTargetTimer(l_TargetTimer);
 	}
+}
+//クリアシーンの更新
+void FrontEnemy::ClearAction() {
+	const int l_TargetTimer = 40;
+	const float l_AddFrame = 1 / 200.0f;
+	if (m_ClearTimer == 0) {
+		m_Position.y = 10.0f;
+	}
+
+	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
+			m_ClearFrame = 1.0f;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
+		}
+	}
+	m_AddDisolve = {};
+	Obj_SetParam();
+}
+//ゲームオーバーシーンの更新
+void FrontEnemy::GameOverAction() {
+	const float l_AddFrame = 1 / 20.0f;
+	if (_GameOverState == OVER_STOP) {
+		m_Position = { -2.0f,0.0f,2.5f };
+		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
+			m_Rot = true;
+		}
+		else if (player->GetSelectType() == 2) {
+			_GameOverState = OVER_NO;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		if (Helper::CheckMin(m_OverTimer, 50, 1)) {
+			m_OverTimer = {};
+			m_Rot = true;
+		}
+
+		if (m_Rot) {
+			if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
+				m_Rotation.y = 180.0f;
+				m_Rot = false;
+				m_AttackFrame = {};
+			}
+
+			m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 540.0f);
+		}
+	}
+	else {
+		const float l_AddRotZ = 0.5f;
+		const float l_AddFrame2 = 0.01f;
+		float RotPower = 10.0f;
+		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
+			m_RotFrame = 1.0f;
+			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+				m_Rotation.z = 90.0f;
+			}
+		}
+		else {
+			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 27.0f);
+			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_RotFrame, m_Position.y, 0.5f);
+		}
+	}
+
+	Obj_SetParam();
 }

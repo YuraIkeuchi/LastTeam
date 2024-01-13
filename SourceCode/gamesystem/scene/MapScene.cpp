@@ -243,7 +243,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	}
 
 	GameStateManager::GetInstance()->SetMapData(nowIndex, nowHierarchy);
-	if ((nowHierarchy == 5 || nowHierarchy == 9) && !s_Countinue) {
+	if ((nowHierarchy == 0) || (nowHierarchy == 5 || nowHierarchy == 9) && !s_Countinue) {
 		GameStateManager::GetInstance()->SaveGame();
 	}
 }
@@ -784,8 +784,6 @@ void MapScene::CheckState() {
 
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
-			//チュートリアルのタスク
-			TutorialTask::GetInstance()->SetTutorialState(TASK_MOVE);
 			TutorialTask::GetInstance()->SetViewSkill(false);
 			SceneManager::GetInstance()->ChangeScene("TUTORIAL");
 			SceneChanger::GetInstance()->SetChange(false);
@@ -813,35 +811,42 @@ void MapScene::CheckState() {
 			std::stringstream ss;
 			const std::string BaseName = "Resources/csv/EnemySpawn/";
 			string levelName = "None";
-			if (nowHierarchy == MaxLength) {
+			bool isBattle = true;
+			if (nowHierarchy == 5) {
+				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
+			}
+			else if (nowHierarchy == 9) {
+				ss << BaseName + "Boss/BattleMap0" << 2 << ".csv";
+			}
+			else if (nowHierarchy == 13) {
 				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
 				s_LastStage = true;
 			}
-			bool isBattle = true;
-			if (nowHierarchy < (MaxLength / 2) + 2) {	//なんマス目に居るかで難易度が変わる
-				levelName = "Weak";
-			}
 			else {
-				levelName = "Strong";
+				if (nowHierarchy < 5) {	//なんマス目に居るかで難易度が変わる
+					levelName = "Weak";
+				} else if(nowHierarchy >= 6 && nowHierarchy < 9) {
+					levelName = "Strong";
+				}
+				else if (nowHierarchy >= 10) {
+					levelName = "Ultimate";
+				}
+				if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
+					ss << BaseName + levelName + "/BattleMap0" << 1 << ".csv";
+					isBattle = true;
+				} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
+					ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
+					isBattle = false;
+				} else if (UIs[nowHierarchy][nowIndex].Tag == BOSS) {
+					ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
+					isBattle = true;
+				}
 			}
-			if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
-				ss << BaseName + levelName + "/BattleMap0" << 1 << ".csv";
-				isBattle = true;
-			} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
-				ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
-				isBattle = false;
-			} else if (UIs[nowHierarchy][nowIndex].Tag == BOSS) {
-				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
-				isBattle = true;
-			}
-
 			std::string r_map = ss.str();
 			GameStateManager::GetInstance()->SetEnemySpawnText(r_map, isBattle);
 			delayFrame = 0.f;
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
-			//チュートリアルのタスク
-			TutorialTask::GetInstance()->SetTutorialState(TASK_END);
 			TutorialTask::GetInstance()->SetViewSkill(true);
 			SceneManager::GetInstance()->ChangeScene("BATTLE");
 			SceneChanger::GetInstance()->SetChange(false);

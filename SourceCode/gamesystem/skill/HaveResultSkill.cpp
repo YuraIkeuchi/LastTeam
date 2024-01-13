@@ -16,8 +16,11 @@ HaveResultSkill::~HaveResultSkill() {
 void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
 	backScreen = IKESprite::Create(ImageManager::RESULTBACKSCREEN, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	backScreen->SetSize({ 1280.f,720.f });
-	skillCheack = IKESprite::Create(ImageManager::RESULTBACKCHECK, { 1280.f,720.f });
-	skillCheack->SetAnchorPoint({ 1.f,1.f });
+	top_title = IKESprite::Create(ImageManager::DECKSKILLTOP, { 640.f,70.f }, { 1.f,1.f, 1.f, 1.f });
+	top_title->SetSize({ 1280.f * 0.7f,128.f * 0.7f });
+	top_title->SetAnchorPoint({0.5f,0.5f});
+	skillCheack = IKESprite::Create(ImageManager::RESULTBACKCHECK, { 640.f,720.f });
+	skillCheack->SetAnchorPoint({ 0.5f,1.f });
 	selectFrame = IKESprite::Create(ImageManager::PASSIVE_FRAME, { 200.f,200.f });
 	selectFrame->SetAnchorPoint({ 0.5f,0.5f });
 	selectFrame->SetSize({ 128.0f,128.0f });
@@ -28,7 +31,11 @@ void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
 void HaveResultSkill::Update() {
 	for (HaveUI& PassiveUI : havePassive) {
 	}
-
+	if (m_SelectCount < (int)(haveSkills.size())) {
+		for (auto i = 0; i < haveSkills[m_SelectCount].resultarea.size(); i++) {
+			haveSkills[m_SelectCount].resultarea[i]->Update();
+		}
+	}
 	//動き
 	Move();
 	DeleteMove();
@@ -38,6 +45,7 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 
 	IKESprite::PreDraw();
 	backScreen->Draw();
+	top_title->Draw();
 	skillCheack->Draw();
 	selectFrame->Draw();
 	for (HaveUI& resultUI : haveSkills) {
@@ -103,8 +111,9 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 	haveSkills[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	haveSkills[num].icon->SetPosition(haveSkills[num].position);
 	haveSkills[num].icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
+	haveSkills[num].Delay = SkillManager::GetInstance()->GetDelay(id);
 	haveSkills[num].text_ = make_unique<TextManager>();
-	haveSkills[num].text_->Initialize(dxCommon);
+	haveSkills[num].text_->Initialize(dxCommon,LOAD_ATTACK);
 	haveSkills[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
 	haveSkills[num].baseSentence[0] = L"スキル：";
 	haveSkills[num].baseSentence[1] = haveSkills[num].text_->GetSkillSentence(haveSkills[num].ID);
@@ -122,7 +131,7 @@ void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCom
 	havePassive[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	havePassive[num].icon->SetPosition(havePassive[num].position);
 	havePassive[num].text_ = make_unique<TextManager>();
-	havePassive[num].text_->Initialize(dxCommon);
+	havePassive[num].text_->Initialize(dxCommon,LOAD_PASSIVE);
 	havePassive[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
 	havePassive[num].baseSentence[0] = L"パッシブ：";
 	havePassive[num].baseSentence[1] = havePassive[num].text_->GetPassiveName(havePassive[num].ID);
@@ -169,6 +178,11 @@ void HaveResultSkill::Move() {
 			if (m_SelectCount == 0) { return; }
 			m_SelectCount--;
 		}
+		for (HaveUI& itr : haveSkills) {
+			for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
+				pickAreas->ResetTimer();
+			}
+		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 		m_isMove = true;
 	}
@@ -195,6 +209,7 @@ void HaveResultSkill::BirthArea(const int Area) {
 			if (haveSkills[Area].area[i][j] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
 				std::unique_ptr<ResultAreaUI> newarea = std::make_unique<ResultAreaUI>();
 				newarea->SetPanelNumber(i, j);
+				newarea->SetDelay(haveSkills[Area].Delay);
 				newarea->SetDistance(haveSkills[Area].DisX, haveSkills[Area].DisY);
 				newarea->Initialize();
 				haveSkills[Area].resultarea.push_back(std::move(newarea));

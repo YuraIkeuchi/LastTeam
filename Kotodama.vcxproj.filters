@@ -475,8 +475,17 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\RegeneArea.cpp">
       <Filter>gamesystem\stageobj\Area</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\TutorialEnemy.cpp">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\character\BossEnemy2.cpp">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\BossEnemy3.cpp">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyTornade.cpp">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -687,9 +696,6 @@
     <ClInclude Include="SourceCode\engine\enginebase\resource.h" />
     <ClInclude Include="SourceCode\gamesystem\scene\SceneSave.h">
       <Filter>gamesystem\scene\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h">
-      <Filter>gamesystem\gamecamera</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\audio\AudioManager.h">
       <Filter>engine\audio</Filter>
@@ -920,8 +926,20 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\RegeneArea.h">
       <Filter>gamesystem\stageobj\Area</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\TutorialEnemy.h">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h">
+      <Filter>gamesystem\gamecamera</Filter>
+    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\character\BossEnemy2.h">
       <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\BossEnemy3.h">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyTornade.h">
+      <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

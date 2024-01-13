@@ -38,7 +38,12 @@ void (NormalEnemy::* NormalEnemy::stateTable[])() = {
 
 //行動
 void NormalEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	}
+	else {
+		InductionMove();
+	}
 	m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -54,11 +59,11 @@ void NormalEnemy::Action() {
 void NormalEnemy::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	//shadow_tex->Draw();
+	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-	if (m_SuperPoison) {poison_tex->Draw();}
-	if (m_HealDamage) { healdamage_tex->Draw(); }
 	Obj_Draw();
+
+	BaseBackDraw(dxCommon);
 }
 //ImGui描画
 void NormalEnemy::ImGui_Origin() {
@@ -93,4 +98,13 @@ void NormalEnemy::Attack() {
 }
 
 void NormalEnemy::Standby() {
+}
+//クリアシーンの更新
+void NormalEnemy::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}
+//ゲームオーバーシーンの更新
+void NormalEnemy::GameOverAction() {
+
 }

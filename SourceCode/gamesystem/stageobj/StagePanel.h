@@ -46,6 +46,7 @@ private:
 		float Disolve = {};
 		bool isClose = false;
 		bool isHeal = false;
+		bool isRock = false;
 	};
 
 public:
@@ -109,9 +110,18 @@ public:
 		return panels[width][height].isHeal = Flag;
 	}
 
+	bool SetClose(int width, int height, bool Flag) {
+		return panels[width][height].isClose = Flag;
+	}
+
+	bool SetRock(int width, int height, bool Flag) {
+		return panels[width][height].isRock = Flag;
+	}
+
 	const bool GetAllDelete() { return m_AllDelete; }
 	const bool GetCreateFinish() { return m_CreateFinish; }
 	const int GetPanelType(const int width, const int height) { return panels[width][height].type; }
+	const XMFLOAT3& GetPosition(const int width, const int height) { return panels[width][height].position; }
 	const int GetisEnemyHit(const int width, const int height) { return panels[width][height].isEnemyHit; }
 	const int GetClose(const int width, const int height) { return panels[width][height].isClose; }
 	const int GetHeal(const int width, const int height) { return panels[width][height].isHeal; }

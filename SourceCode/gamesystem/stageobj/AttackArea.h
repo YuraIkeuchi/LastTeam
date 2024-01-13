@@ -18,7 +18,7 @@ protected:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	AttackArea(string& m_Name);
+	AttackArea(string& userName,string& stateName = (string)"None");
 public:
 	//èâä˙âª
 	bool Initialize() override;
@@ -31,13 +31,21 @@ public:
 	//ImGui
 	void ImGuiDraw();
 private:
+	static void (AttackArea::* stateTable[])();
+
+private:
+	void SlashMove();
+	void StoneMove();
+	void PoisonMove();
+private:
 	XMFLOAT3 SetPanelPos(const int width, const int height);
-	void Move();
 public:
 	//gettersetter
 	const bool GetHit() { return m_Hit; }
+	const bool GetBuff() { return m_Buff; }
 	const bool GetAlive() { return m_Alive; }
 	const bool GetIsFixed() { return isFixed; }
+	const bool GetAttack() { return m_Attack; }
 	const string GetName() { return m_Name; }
 
 	const int GetNowWidth() { return m_NowWidth; }
@@ -48,13 +56,20 @@ public:
 	const int GetPoisonToken() { return m_PoisonToken; }
 
 	void SetHit(const bool Hit) { m_Hit = Hit; }
+	void SetSound(const bool Sound) { m_Sound = Sound; }
+	void SetBuff(const bool Buff) { m_Buff=Buff; }
 	void SetTimer(const int Timer) { m_Timer = Timer; }
 	void SetName(const string name) { m_Name = name; }
 	void SetDamage(const float Damage) { m_Damage = Damage; }
 	void SetIsFixed(bool flag) { isFixed = flag; }
-	void SetStateName(const std::string name) { StateName = name; }
 	void SetPoisonToken(const int PoisonToken) { m_PoisonToken = PoisonToken; }
 private:
+
+	enum EffectPattern {
+		Slash,
+		Stone,
+		Poison,
+	}_EffectState = Slash;
 	//ÉpÉlÉã
 	struct Panel {
 		unique_ptr<IKETexture> tex = nullptr;
@@ -66,8 +81,10 @@ private:
 	string m_Name = "none";
 	//ê∂ë∂ä÷åW
 	bool m_Alive = false;
+	bool m_Attack = false;//çUåÇîªíËÇÃèuä‘
 	int m_BirthTimer = 0;
 	int m_Timer = {};
+	bool m_Buff = false;
 	//ÉqÉbÉgÇµÇΩÇ©Ç«Ç§Ç©
 	bool m_Hit = false;
 	//ëºÇÃï‚ê≥ÇÇ©ÇØÇ»Ç¢
@@ -81,4 +98,18 @@ private:
 	float m_AddPower = 0.0f;
 	//èdóÕâ¡ë¨ìx
 	float m_Gravity = 0.02f;
+
+	enum ThornState {
+		THORN_UP,
+		THORN_END,
+	}_ThornState = THORN_UP;
+
+	float m_Frame = {};
+
+	enum StoneType {
+		STONE_FALL,
+		STONE_BOUND,
+	}_StoneType = STONE_FALL;
+
+	bool m_Sound = false;
 };

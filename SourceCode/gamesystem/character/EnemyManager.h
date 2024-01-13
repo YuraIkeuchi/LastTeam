@@ -20,6 +20,8 @@ public:
 	void Initialize();
 	void SkipInitialize();
 	void Update();
+	void ClearUpdate();
+	void GameOverUpdate();
 	void Draw(DirectXCommon* dxCommon);
 	void AwakeUpdate();
 	void SetCount();
@@ -39,10 +41,6 @@ public:
 	/// </summary>
 	void PoizonVenom();
 	/// <summary>
-	/// パッシブがあればドレイン上昇(バトルシーン)
-	/// </summary>
-	void DrainHealUp();
-	/// <summary>
 	/// 
 	/// </summary>
 	void ReLoadDamage();
@@ -60,7 +58,7 @@ private:
 	void Spawn2Map();
 public:
 	static void SetPlayer(Player* player) { EnemyManager::player = player; }
-
+	void SetClear(const bool Clear) { m_Clear = Clear; }
 private:
 	static Player* player;
 	std::vector<unique_ptr<InterEnemy>> enemys;
@@ -69,5 +67,6 @@ private:
 	float BosscircleShadowAtten[3] = { 0.5f,0.6f,0.0f };
 	float BosscircleShadowFactorAngle[2] = { 0.0f, 0.3f };
 	int m_DeathCount = {};
+	bool m_Clear = false;
 };
 

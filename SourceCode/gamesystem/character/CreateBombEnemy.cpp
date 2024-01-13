@@ -58,7 +58,12 @@ void (CreateBombEnemy::* CreateBombEnemy::stateTable[])() = {
 
 //行動
 void CreateBombEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	}
+	else {
+		InductionMove();
+	}
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -93,8 +98,7 @@ void CreateBombEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
-	if (m_SuperPoison) {poison_tex->Draw();}
-	if (m_HealDamage) { healdamage_tex->Draw(); }
+	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 
 	//障害物の削除
@@ -105,8 +109,10 @@ void CreateBombEnemy::Draw(DirectXCommon* dxCommon) {
 
 		bomb[i]->Draw(dxCommon);
 	}
-	if (m_Color.w != 0.0f)
+	if (m_Color.w != 0.0f) {
 		Obj_Draw();
+	}
+	BaseBackDraw(dxCommon);
 }
 //ImGui描画
 void CreateBombEnemy::ImGui_Origin() {
@@ -249,4 +255,69 @@ void CreateBombEnemy::WarpEnemy() {
 	}
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
+}
+
+//クリアシーンの更新
+void CreateBombEnemy::ClearAction() {
+	const int l_TargetTimer = 100;
+	const float l_AddFrame = 1 / 200.0f;
+	if (m_ClearTimer == 0) {
+		m_Position.y = 10.0f;
+	}
+
+	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
+			m_ClearFrame = 1.0f;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
+		}
+	}
+	m_AddDisolve = {};
+	Obj_SetParam();
+}
+//ゲームオーバーシーンの更新
+void CreateBombEnemy::GameOverAction() {
+	if (_GameOverState == OVER_STOP) {
+		m_Position = { 2.5f,0.0f,2.5f };
+		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
+		}
+		else if (player->GetSelectType() == 2) {
+			_GameOverState = OVER_NO;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_Position.y = 0.1f;
+			m_AddPower = {};
+			if (Helper::CheckMin(m_OverTimer, 40, 1)) {
+				m_OverTimer = {};
+				m_AddPower = 0.3f;
+			}
+		}
+	}
+	else {
+		const float l_AddRotZ = 0.5f;
+		const float l_AddFrame2 = 0.01f;
+		float RotPower = 8.0f;
+		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
+			m_RotFrame = 1.0f;
+			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+				m_Rotation.z = 90.0f;
+			}
+		}
+		else {
+			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 18.0f);
+			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_RotFrame, m_Position.y, 0.5f);
+		}
+	}
+
+	Obj_SetParam();
 }

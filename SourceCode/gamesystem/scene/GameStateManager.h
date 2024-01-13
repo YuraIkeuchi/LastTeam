@@ -69,14 +69,15 @@ private:
 	void AttackTrigger();
 	//攻撃エリアの生成
 	void BirthArea();
+	bool GetIsFix(const string& name);
 	//バフ状況
-	void BirthBuff();
+	void BirthBuff(string& stateName);
 	//行動UIの生成
 	void BirthActUI(const int ID, const int Type);
 	//スキルの使用
 	void UseSkill();
 	//行動の終了
-	void FinishAct();
+	void FinishAct(bool AllFinish = false);
 	//
 	void GaugeUpdate();
 
@@ -94,7 +95,6 @@ private:
 	void InDeck();//デッキに組み込む
 	void RandPowerUpInit();
 	void PowerUpEffectUpdate();
-
 	void PassiveActive();
 
 	void DamageEffectUpdate();
@@ -105,7 +105,6 @@ public:
 	const bool GetCounter() { return m_Counter; }
 	const bool GetIsChangeScene() { return isChangeScene; }
 	const bool GetIsFinish() { return isFinish; }
-	const bool GetBuff() { return m_Buff; }
 
 	const bool GetPoisonSkill() { return  m_poizonLong; }
 	const bool GetPoisonVenom() { return  m_IsVenom; }
@@ -129,8 +128,6 @@ public:
 	void SetDiameterVel(const float DiameterVel) { this->m_DiameterVel = DiameterVel; }
 	//void SetPlayer(std::weak_ptr<Player> player) { player_ = player; }
 	// 仮
-	void SetBuff(const bool Buff) { this->m_Buff = Buff; }
-
 	void SetIsReloadDamage(bool flag) { m_ReloadDamage = flag; }
 	bool GetIsReloadDamage() { return m_ReloadDamage; }
 
@@ -140,8 +137,14 @@ public:
 	void SetIsHeal(bool flag) { m_Heal = flag; }
 	bool GetIsHeal() { return m_Heal; }
 
+	void SetCounterBuff(bool flag) { m_CounterBuff = flag; }
+	bool GetCounterBuff() { return m_CounterBuff; }
+
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart;}
 	bool GetGameStart() { return m_GameStart; }
+
+	void SetBossCamera(bool BossCamera) { m_BossCamera = BossCamera; }
+	bool GetBossCamera() { return m_BossCamera; }
 
 	void DamageCheck(int Damage);
 	void TakenDamageCheck(int Damage);
@@ -218,7 +221,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {1,2 };
+	std::vector <int> m_StartPassive= { };
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -226,13 +229,16 @@ private:
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 	unique_ptr<IKESprite> gaugeCover = nullptr;
 	unique_ptr<IKESprite> passiveActive = nullptr;
-	unique_ptr<IKESprite> passiveAct = nullptr;
+	std::vector<unique_ptr<IKESprite>> passiveActs ;
+	std::vector<int> passiveActiveNum;
+
 	bool isPassive = false;
 	float passiveFrame = 0.f;
 	float passiveAlpha = 1.0f;
 	float passiveAlphaFrame = 0.0f;
 
 	std::unique_ptr<IKESprite> handsFrame;
+	unique_ptr<IKESprite> cancelSkill;
 
 	XMFLOAT2 basesize = { 46.f,400.f };
 
@@ -245,17 +251,20 @@ private:
 	bool m_Counter = false;
 	int m_CounterTimer = {};
 	int m_CounterCount = {};
-
+	bool m_CounterBuff = false;
 	//位置のスコア
 	int m_PosScore = {};
 
 	//全体スコア
 	int m_AllScore = {};
+	int m_OldDamage = 0;
 	int m_MaxDamage = 0;
 	int m_MaxTakenDamage = 0;
 	int m_TakenDamageNum = 0;
 	int m_HandedCount = 0;
-
+	
+	int m_Metronome = 0;
+	float m_MetroDamage = 8.f;
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
 	bool isBattleFromMap = true;
 	enum SkillType {
@@ -276,7 +285,6 @@ private:
 	bool m_Heal = false;
 	bool m_poizonLong = false;
 	bool m_IsVenom = false;
-	bool m_IsDrainUp = false;
 	bool m_FivePower = false;
 	bool m_TakenDamageUp = false;
 	bool m_AttackedPoison = false;
@@ -292,8 +300,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-
-	vector <int> m_StartNumber = {0,1,2,3,4,6};
+	vector <int> m_StartNumber = {2,3,5};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -315,6 +322,9 @@ private:
 	float m_ChargeScale = {};
 	int m_DelayTimer = {};
 	bool m_DelayStart = false;
+	bool m_Shield = false;
+	int m_ShieldCount = {};
+	int m_DeleteNum = 0;
 
 	//バフ(一旦一個)
 	bool m_Buff = false;
@@ -337,6 +347,7 @@ private:
 	std::list<PowerUpEffect> powerup;
 
 	bool m_GameStart = false;
+	bool m_BossCamera = false;
 
 	///=============================
 	/// 

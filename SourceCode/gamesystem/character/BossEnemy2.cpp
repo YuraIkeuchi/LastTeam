@@ -10,21 +10,12 @@
 #include <StagePanel.h>
 //モデル読み込み
 BossEnemy2::BossEnemy2() {
-	m_Object.reset(new IKEObject3d());
-	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
-	m_Object->SetLightEffect(false);
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SECOND_BOSS));
+
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
-	//HPII
-	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
-	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
-	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
-		_drawnumber[i]->Initialize();
-	}
 
 	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();
@@ -38,7 +29,7 @@ BossEnemy2::BossEnemy2() {
 bool BossEnemy2::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Color = { 0.0f,1.0f,0.5f,1.0f };
+	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy2.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy2.csv", "LIMIT_NUM")));
@@ -159,8 +150,8 @@ void BossEnemy2::Inter() {
 			coolTimer = 0;
 			_charaState = STATE_ATTACK;
 			int l_RandState = Helper::GetRanNum(0, 2);
-			//_AttackState = (AttackState)(l_RandState);
-			_AttackState = ATTACK_RECOVERY;
+			_AttackState = (AttackState)(l_RandState);
+			//_AttackState = ATTACK_RECOVERY;
 		}
 	}
 	else {
@@ -193,6 +184,7 @@ void BossEnemy2::Teleport() {
 //回転攻撃
 void BossEnemy2::SpinningAttack()
 {
+
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_SPINNING];
 
@@ -221,6 +213,7 @@ void BossEnemy2::SpinningAttack()
 
 //衝撃波攻撃
 void BossEnemy2::ShockWaveAttack() {
+
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_SHOCKWAVE];
 
@@ -250,6 +243,7 @@ void BossEnemy2::ShockWaveAttack() {
 
 //回復行動
 void BossEnemy2::Recovery() {
+
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_RECOVERY];
 	m_Rot = true;
@@ -631,4 +625,68 @@ void BossEnemy2::AttackMove() {
 	}
 
 	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
+}
+//クリアシーンの更新
+void BossEnemy2::ClearAction() {
+	const int l_TargetTimer = 130;
+	const float l_AddFrame = 1 / 200.0f;
+	if (m_ClearTimer == 0) {
+		m_Position.y = 10.0f;
+	}
+
+	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
+			m_ClearFrame = 1.0f;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
+		}
+	}
+	m_AddDisolve = {};
+	Obj_SetParam();
+}
+//ゲームオーバーシーンの更新
+void BossEnemy2::GameOverAction() {
+	if (_GameOverState == OVER_STOP) {
+		m_Position = { 1.0f,0.0f,3.5f };
+		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
+		}
+		else if (player->GetSelectType() == 2) {
+			_GameOverState = OVER_NO;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_Position.y = 0.1f;
+			m_AddPower = {};
+			if (Helper::CheckMin(m_OverTimer, 20, 1)) {
+				m_OverTimer = {};
+				m_AddPower = 0.3f;
+			}
+		}
+	}
+	else {
+		const float l_AddRotZ = 0.5f;
+		const float l_AddFrame2 = 0.01f;
+		float RotPower = 10.0f;
+		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
+			m_RotFrame = 1.0f;
+			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+				m_Rotation.z = 90.0f;
+			}
+		}
+		else {
+			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 20.0f);
+			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_RotFrame, m_Position.y, 0.5f);
+		}
+	}
+
+	Obj_SetParam();
 }

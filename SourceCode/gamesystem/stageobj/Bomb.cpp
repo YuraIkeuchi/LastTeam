@@ -73,6 +73,7 @@ void Bomb::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
+	if (m_HealDamage) { healdamage_tex->Draw(); }
 	if (_charaState == STATE_SPECIAL) {
 		//衝撃波の描画
 		shockWaveTex->Draw();
@@ -80,6 +81,8 @@ void Bomb::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PostDraw();
 	UIDraw();
 	Obj_Draw();
+	BaseBackDraw(dxCommon);
+
 }
 //ImGui描画
 void Bomb::ImGui_Origin() {
@@ -159,6 +162,12 @@ void Bomb::ShockWave()
 	m_shockWaveScale.z += m_addShockWaveScale;
 
 	m_shockWaveTimer++;
+	if (m_shockWaveTimer == 1) {
+		/// <summary>
+		///	音入れ(爆発音みたいな音(ボンッみたいな音))
+		/// </summary>
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+	}
 	m_shockWaveTimer = clamp(m_shockWaveTimer, 0, m_maxShockWaveTimer);
 	//時間切れ
 	if (m_shockWaveTimer == m_maxShockWaveTimer) {
@@ -167,4 +176,13 @@ void Bomb::ShockWave()
 	}
 	//衝撃波を出す
 	//出し終わったらm_aliveをfalseに
+}
+//クリアシーンの更新
+void Bomb::ClearAction() {
+	m_AddDisolve = {};
+	Obj_SetParam();
+}
+//ゲームオーバーシーンの更新
+void Bomb::GameOverAction() {
+
 }

@@ -42,6 +42,10 @@ public: //メンバ関数
 	void Break(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const float Gravity, float divi);
 	//ヒールエフェクト
 	void HealEffect(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor);
+	//煙エフェクト
+	void SmokeEffect(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor,const int number);
+	//岩のエフェクト
+	void RockEffect(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor);
 	void AllDelete();
 private: //メンバ関数
 	/// <summary>
@@ -56,6 +60,11 @@ private: //メンバ変数
 	unique_ptr<ParticleManager> poisonParticle;
 	//パーティクルマネージャー(ヒール)
 	unique_ptr<ParticleManager> healParticle;
+	//パーティクルマネージャー(ヒール2)
+	unique_ptr<ParticleManager> healParticleSecond;
+	unique_ptr<ParticleManager> smokeParticle;
+	//パーティクルマネージャー(岩のエフェクト)
+	unique_ptr<ParticleManager> rockParticle;
 private:
 	int m_Timer = 0;
 };

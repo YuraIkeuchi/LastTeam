@@ -10,6 +10,8 @@ public:
 	bool Initialize() override;//初期化
 	void Finalize() override;//開放
 	void Action()override;//更新
+	void ClearAction()override;//クリア更新
+	void GameOverAction()override;//ゲームオーバー更新
 	void ImGui_Origin()override;
 
 	void Draw(DirectXCommon* dxCommon) override;//描画
@@ -75,7 +77,6 @@ private:
 	//インターバルとか
 	vector<int>m_Limit;
 	int m_BulletNum = {};
-	float m_RotFrame = {};
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};

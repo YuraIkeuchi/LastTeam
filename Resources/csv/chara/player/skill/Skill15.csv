@@ -1,0 +1,17 @@
+ID,15
+SkillType,0
+Delay,75
+Name,yabu3
+StateName,POISON
+TOKEN,12
+Damege,3
+DistanceX,1
+DistanceY,1
+AttackArea,0 1 0 0
+AttackArea,1 1 1 0
+AttackArea,0 1 0 0
+AttackAreA,0 1 0 0
+Timer,0 1 0 0
+Timer,1 1 1 0
+Timer,0 1 0 0
+TimeR,0 1 0 0

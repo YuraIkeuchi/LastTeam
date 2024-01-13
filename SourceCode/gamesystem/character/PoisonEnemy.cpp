@@ -48,7 +48,7 @@ bool PoisonEnemy::Initialize() {
 	magic.State = {};
 
 	enemywarp.AfterScale = {};
-	enemywarp.Scale = 0.5f;
+	enemywarp.Scale = 0.7f;
 
 	m_AddDisolve = 2.0f;
 	return true;
@@ -62,7 +62,12 @@ void (PoisonEnemy::* PoisonEnemy::stateTable[])() = {
 
 //行動
 void PoisonEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	}
+	else {
+		InductionMove();
+	}
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -98,8 +103,7 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
-	if (m_SuperPoison) {poison_tex->Draw();}
-	if (m_HealDamage) { healdamage_tex->Draw(); }
+	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 
 	//障害物の削除
@@ -110,8 +114,10 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 
 		poisonarea[i]->Draw(dxCommon);
 	}
-	if (m_Color.w != 0.0f)
+	if (m_Color.w != 0.0f) {
 		Obj_Draw();
+	}
+	BaseBackDraw(dxCommon);
 }
 //ImGui描画
 void PoisonEnemy::ImGui_Origin() {
@@ -124,8 +130,10 @@ void PoisonEnemy::ImGui_Origin() {
 	//	poisonarea[i]->ImGuiDraw();
 	//}
 	ImGui::Begin("Poison");
-	ImGui::Text("Frame:%f", m_ScaleFrame);
-	ImGui::Text("Scale:%f", m_BaseScale);
+	ImGui::Text("RotationY:%f", m_Rotation.y);
+	ImGui::Text("ScaleX:%f", m_Scale.x);
+	ImGui::Text("InductionFrame:%f", m_InductionFrame);
+	ImGui::Text("InductionPos:%f", m_InductionPos);
 	ImGui::End();
 }
 //開放
@@ -163,7 +171,7 @@ void PoisonEnemy::Attack() {
 		}
 	}
 	else if (_PoisonType == Poison_THROW) {
-		l_AfterScale = 0.5f;
+		l_AfterScale = 0.7f;
 		l_AddFrame = 1 / 20.0f;
 		if (Helper::FrameCheck(m_ScaleFrame, l_AddFrame)) {
 			m_AttackCount++;
@@ -206,6 +214,10 @@ void PoisonEnemy::Teleport() {
 }
 //毒の生成
 void PoisonEnemy::BirthPoison() {
+	/// <summary>
+	///	音入れ(弾を打つ音希望(ポンッみたいなやつ))
+	/// </summary>
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	int l_RandWidth;
 	int l_RandHeight;
 	StagePanel::GetInstance()->PoisonSetPanel(l_RandWidth,l_RandHeight);
@@ -251,7 +263,7 @@ void PoisonEnemy::WarpEnemy() {
 	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
-			enemywarp.AfterScale = 0.5f;
+			enemywarp.AfterScale = 0.7f;
 			enemywarp.State = WARP_END;
 			coolTimer = {};
 			m_Position = l_RandPos;
@@ -271,4 +283,87 @@ void PoisonEnemy::WarpEnemy() {
 	}
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
+}
+//クリアシーンの更新
+void PoisonEnemy::ClearAction() {
+	const int l_TargetTimer = 130;
+	const float l_AddFrame = 1 / 200.0f;
+	if (m_ClearTimer == 0) {
+		m_Position.y = 10.0f;
+	}
+
+	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
+			m_ClearFrame = 1.0f;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
+		}
+	}
+	m_AddDisolve = {};
+	Obj_SetParam();
+}
+//ゲームオーバーシーンの更新
+void PoisonEnemy::GameOverAction() {
+	float l_AfterScale = {};
+	float l_AddFrame = {};
+	if (_GameOverState == OVER_STOP) {
+		m_Position = { -6.0f,0.0f,3.5f };
+		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
+			_PoisonType = Poison_SET;
+		}
+		else if (player->GetSelectType() == 2) {
+			_GameOverState = OVER_NO;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		if (_PoisonType == Poison_SET) {
+			l_AfterScale = 0.3f;
+			l_AddFrame = 1 / 30.0f;
+			if (Helper::FrameCheck(m_ScaleFrame, l_AddFrame)) {
+				if (Helper::CheckMin(m_OverTimer, 10, 1)) {
+					_PoisonType = Poison_THROW;
+					m_OverTimer = {};
+					m_ScaleFrame = {};
+				}
+			}
+			m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
+		}
+		else if (_PoisonType == Poison_THROW) {
+			l_AfterScale = 0.7f;
+			l_AddFrame = 1 / 10.0f;
+			if (Helper::FrameCheck(m_ScaleFrame, l_AddFrame)) {
+				if (Helper::CheckMin(m_OverTimer, 40, 1)) {
+					_PoisonType = Poison_SET;
+					m_OverTimer = {};
+					m_ScaleFrame = {};
+				}
+			}
+			m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
+			m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
+		}
+	}
+	else {
+		const float l_AddRotZ = 0.5f;
+		const float l_AddFrame2 = 0.01f;
+		float RotPower = 5.0f;
+		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
+			m_RotFrame = 1.0f;
+			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+				m_Rotation.z = 90.0f;
+			}
+		}
+		else {
+			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 10.0f);
+			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_RotFrame, m_Position.y, 0.5f);
+		}
+	}
+
+	Obj_SetParam();
 }

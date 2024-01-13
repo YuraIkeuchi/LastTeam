@@ -111,10 +111,13 @@
     <ClCompile Include="lib\imgui\include\imgui_impl_win32.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_tables.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_widgets.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\BossEnemy2.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\BossEnemy3.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\ClouserEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyRock.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\FrontEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\ThrowEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\TutorialEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
@@ -231,6 +234,7 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\Boomerang.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyBullet.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyTornade.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PoisonArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\RegeneArea.cpp" />
@@ -331,6 +335,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\BossEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\BossEnemy2.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\BossEnemy3.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CanonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\ClouserEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\CreateBombEnemy.h" />
@@ -345,6 +350,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\PoisonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\TackleEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\ThrowEnemy.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\TutorialEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\effect\Slow.h" />
     <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h" />
     <ClInclude Include="SourceCode\gamesystem\MessageWindow\MessageWindow.h" />
@@ -382,6 +388,7 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\Boomerang.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyBullet.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyTornade.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PoisonArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\RegeneArea.h" />

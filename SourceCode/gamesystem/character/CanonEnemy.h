@@ -10,6 +10,8 @@ public:
 	bool Initialize() override;//初期化
 	void Finalize() override;//開放
 	void Action()override;//更新
+	void ClearAction()override;//クリア更新
+	void GameOverAction()override;//ゲームオーバー更新
 	void ImGui_Origin()override;
 
 	void Draw(DirectXCommon* dxCommon) override;//描画
@@ -30,7 +32,7 @@ static const int BULLET_NUM = 3;
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
-	vector<unique_ptr<EnemyBullet>> bullets;//ポルターガイスト
+	unique_ptr<EnemyBullet> bullets;//敵の弾
 
 	enum CanonType {
 		CANON_SET,
@@ -75,9 +77,10 @@ private:
 	//インターバルとか
 	vector<int>m_Limit;
 	int m_BulletNum = {};
-	float m_RotFrame = {};
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};
+	float m_BaseScale = {};
+	float m_ScaleFrame = {};
 };
 

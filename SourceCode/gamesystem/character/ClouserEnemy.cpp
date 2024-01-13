@@ -10,7 +10,7 @@
 #include <StagePanel.h>
 //モデル読み込み
 ClouserEnemy::ClouserEnemy() {
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::PLAYERMODEL));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::ROCKENEMY));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
@@ -29,8 +29,7 @@ ClouserEnemy::ClouserEnemy() {
 bool ClouserEnemy::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Color = { 0.0f,0.0f,1.0f,1.0f };
-	m_Scale = { 0.4f,0.4f,0.4f };
+	m_Scale = { 0.6f,0.6f,0.6f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ClouserEnemy.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ClouserEnemy.csv", "LIMIT_NUM")));
 
@@ -60,7 +59,12 @@ void (ClouserEnemy::* ClouserEnemy::stateTable[])() = {
 
 //行動
 void ClouserEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	}
+	else {
+		InductionMove();
+	}
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -78,7 +82,7 @@ void ClouserEnemy::Action() {
 		}
 	}
 
-	//攻撃エリアの更新(実際はスキルになると思う)
+	//岩エリアの更新
 	for (auto i = 0; i < enerock.size(); i++) {
 		if (enerock[i] == nullptr)continue;
 		enerock[i]->Update();
@@ -90,9 +94,6 @@ void ClouserEnemy::Action() {
 
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
-	/*shadow_tex->SetPosition(m_ShadowPos);
-	shadow_tex->SetScale(m_ShadowScale);
-	shadow_tex->Update();*/
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
@@ -105,8 +106,7 @@ void ClouserEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
-	if (m_SuperPoison) { poison_tex->Draw(); }
-	if (m_HealDamage) { healdamage_tex->Draw(); }
+	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 	for (auto i = 0; i < enerock.size(); i++) {
 		if (enerock[i] == nullptr)continue;
@@ -115,14 +115,21 @@ void ClouserEnemy::Draw(DirectXCommon* dxCommon) {
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
+	BaseBackDraw(dxCommon);
 }
 //ImGui描画
 void ClouserEnemy::ImGui_Origin() {
-	ImGui::Begin("Area");
-	ImGui::Text("AttackCount:%d", m_AttackCount);
-	ImGui::Text("cool:%d", coolTimer);
+	/*ImGui::Begin("Area");
+	ImGui::Text("Height:%d", m_NowWidth);
+	ImGui::Text("Induction:%d", m_Induction);
+	ImGui::Text("InductionFrame:%f", m_InductionFrame);
+	ImGui::Text("InductionPos:%f", m_InductionPos);
 	ImGui::End();
-	predictarea->ImGuiDraw();
+	predictarea->ImGuiDraw();*/
+	for (auto i = 0; i < enerock.size(); i++) {
+		if (enerock[i] == nullptr)continue;
+		enerock[i]->ImGui_Origin();
+	}
 }
 //開放
 void ClouserEnemy::Finalize() {
@@ -153,14 +160,17 @@ void ClouserEnemy::Attack() {
 		Helper::Clamp(m_RandWigth, 0, 3);
 		Helper::Clamp(m_RandHeight, 0, 3);
 		BirthPredict(m_RandWigth, m_RandHeight);
+		StagePanel::GetInstance()->SetRock(m_RandWigth, m_RandHeight, true);
 	}
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-		BirthArea(m_RandWigth, m_RandHeight);
-		coolTimer = {};
-		m_AttackCount++;
+	else if (coolTimer == 30) {
 		m_Jump = true;
 		m_AddPower = 0.2f;
 		m_Rot = true;
+		BirthArea(m_RandWigth, m_RandHeight);
+	}
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+		predictarea->ResetPredict();
+		coolTimer = {};
 		StagePanel::GetInstance()->EnemyHitReset();
 		m_CheckPanel = true;
 		m_AttackCount = {};
@@ -175,7 +185,7 @@ void ClouserEnemy::Attack() {
 void ClouserEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
-	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
+	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
@@ -190,11 +200,9 @@ void ClouserEnemy::Teleport() {
 void ClouserEnemy::BirthArea(const int Width, const int Height) {
 	std::unique_ptr<EnemyRock> newarea = std::make_unique<EnemyRock>();
 	newarea->Initialize();
-	newarea->InitState(Width, Height);
+	newarea->InitState(Width, Height,{m_Position.x,m_Position.y + 2.0f,m_Position.z});
 	newarea->SetPlayer(player);
 	enerock.emplace_back(std::move(newarea));
-	predictarea->ResetPredict();
-
 }
 //予測エリア
 void ClouserEnemy::BirthPredict(const int Width, const int Height) {
@@ -271,4 +279,68 @@ void ClouserEnemy::AttackMove() {
 	}
 
 	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
+}
+//クリアシーンの更新
+void ClouserEnemy::ClearAction() {
+	const int l_TargetTimer = 10;
+	const float l_AddFrame = 1 / 200.0f;
+	if (m_ClearTimer == 0) {
+		m_Position.y = 10.0f;
+	}
+
+	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
+			m_ClearFrame = 1.0f;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
+		}
+	}
+	m_AddDisolve = {};
+	Obj_SetParam();
+}
+//ゲームオーバーシーンの更新
+void ClouserEnemy::GameOverAction() {
+	if (_GameOverState == OVER_STOP) {
+		m_Position = { -4.5f,0.0f,2.5f };
+		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
+		}
+		else if (player->GetSelectType() == 2) {
+			_GameOverState = OVER_NO;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_Position.y = 0.1f;
+			m_AddPower = {};
+			if (Helper::CheckMin(m_OverTimer, 10, 1)) {
+				m_OverTimer = {};
+				m_AddPower = 0.3f;
+			}
+		}
+	}
+	else {
+		const float l_AddRotZ = 0.5f;
+		const float l_AddFrame2 = 0.01f;
+		float RotPower = 15.0f;
+		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
+			m_RotFrame = 1.0f;
+			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+				m_Rotation.z = 90.0f;
+			}
+		}
+		else {
+			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 22.0f);
+			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_RotFrame, m_Position.y, 0.5f);
+		}
+	}
+
+	Obj_SetParam();
 }

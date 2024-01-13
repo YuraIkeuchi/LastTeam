@@ -55,7 +55,7 @@ void SkillAction::EffecttexDraw(DirectXCommon* dxCommon) {
 //ImGui
 void SkillAction::ImGui_Origin() {
 	ImGui::Begin("Skill");
-	ImGui::Text("Token:%d", m_PoisonToken);
+	ImGui::Text("Token:%d", m_SkillID);
 	ImGui::End();
 }
 //É|Å[ÉY

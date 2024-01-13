@@ -1,0 +1,14 @@
+ID,22
+SkillType,0
+Delay,50
+Name,yabu2
+StateName,NEAR
+Damege,30
+DistanceX,2
+DistanceY,1
+AttackArea,0 0 0
+AttackArea,0 0 0
+AttackAreA,1 1 1
+Timer,0 0 0
+Timer,0 0 0
+TimeR,1 1 1

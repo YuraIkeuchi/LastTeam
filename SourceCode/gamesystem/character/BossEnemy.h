@@ -11,6 +11,8 @@ public:
 	bool Initialize() override;//初期化
 	void Finalize() override;//開放
 	void Action()override;//更新
+	void ClearAction()override;//クリア更新
+	void GameOverAction()override;//ゲームオーバー更新
 	void ImGui_Origin()override;
 
 	void Draw(DirectXCommon* dxCommon) override;//描画
@@ -43,7 +45,7 @@ private:
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
-	vector<unique_ptr<EnemyBullet>> bullets;//ポルターガイスト
+	unique_ptr<EnemyBullet> bullets;//敵の弾
 
 	enum BossType {
 		Boss_SET,
@@ -103,7 +105,7 @@ private:
 	vector<int>m_AttackLimit;
 	int m_BulletNum = {};
 
-	float m_RotFrame = {};
+
 	int m_ShotDir = {};
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};

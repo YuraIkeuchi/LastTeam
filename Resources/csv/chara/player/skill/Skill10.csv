@@ -1,8 +1,8 @@
 ID,10
 SkillType,0
-Delay,10
+Delay,55
 Name,Refrain
-StateName,Refrain
+StateName,REFRAIN
 Damege,0
 DistanceX,1
 DistanceY,1

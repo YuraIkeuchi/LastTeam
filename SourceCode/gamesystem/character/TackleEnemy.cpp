@@ -40,8 +40,12 @@ bool TackleEnemy::Initialize() {
 	m_MaxHP = m_HP;
 	StagePanel::GetInstance()->EnemyHitReset();
 	m_ShadowScale = { 0.03f,0.03f,0.03f };
+	//予測
+	predictArea = std::make_unique<PredictArea>("ENEMY");
+	predictArea->Initialize();
 
-
+	m_OldWidth = m_NowWidth;
+	m_OldHeight = m_NowHeight;
 	magic.Alive = false;
 	magic.Frame = {};
 	magic.Scale = {};
@@ -60,11 +64,16 @@ void (TackleEnemy::* TackleEnemy::stateTable[])() = {
 	&TackleEnemy::Inter,//動きの合間
 	&TackleEnemy::Attack,//動きの合間
 	&TackleEnemy::Teleport,//瞬間移動
+	&TackleEnemy::StandBy
 };
 
 //行動
 void TackleEnemy::Action() {
-	(this->*stateTable[_charaState])();
+	if (!m_Induction) {
+		(this->*stateTable[_charaState])();
+	} else {
+		InductionMove();
+	}
 	Obj_SetParam();
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//当たり判
@@ -76,10 +85,13 @@ void TackleEnemy::Action() {
 	//shadow_tex->SetPosition(m_ShadowPos);
 	//shadow_tex->SetScale(m_ShadowScale);
 	//shadow_tex->Update();
+	predictArea->Update();
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+	m_OldWidth = m_NowWidth;
+	m_OldHeight = m_NowHeight;
 }
 //描画
 void TackleEnemy::Draw(DirectXCommon* dxCommon) {
@@ -87,11 +99,14 @@ void TackleEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
-	if (m_SuperPoison) {poison_tex->Draw();}
-	if (m_HealDamage) { healdamage_tex->Draw(); }
+	BaseFrontDraw(dxCommon);
+	predictArea->Draw(dxCommon);
 	IKETexture::PostDraw();
-	if (m_Color.w != 0.0f)
-	Obj_Draw();
+
+	if (m_Color.w != 0.0f) {
+		Obj_Draw();
+	}
+	BaseBackDraw(dxCommon);
 }
 //ImGui描画
 void TackleEnemy::ImGui_Origin() {
@@ -109,7 +124,7 @@ void TackleEnemy::Inter() {
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, kIntervalMax);
 	if (coolTimer == kIntervalMax) {
-		_charaState = STATE_ATTACK;
+		_charaState = STATE_STANDBY;
 		coolTimer = 0;
 	}
 }
@@ -122,6 +137,9 @@ void TackleEnemy::Attack() {
 		m_Frame = 1.0f;
 		m_Position.x -= m_Speed;
 		m_Rotation.x += l_AddRot;
+		//通り過ぎたら削除
+		predictArea->VanishPredict(m_OldWidth, m_NowHeight);
+
 		if (m_Position.x < l_TargetX) {
 			m_CheckPanel = true;
 			_charaState = STATE_SPECIAL;
@@ -154,6 +172,23 @@ void TackleEnemy::Teleport() {
 	}
 }
 
+void TackleEnemy::StandBy() {
+	int nextWidthPanel = m_NowWidth - (nextPredict + 1);
+	if (nextWidthPanel < 0) {
+		_charaState = STATE_ATTACK;
+		nextPredict = 0;
+		predictFrame = 0.f;
+		return;
+	}
+
+	if (Helper::FrameCheck(predictFrame, 1.f / 5.0f)) {
+		predictArea->VersePredict(nextWidthPanel, m_NowHeight);
+		nextPredict++;
+		predictFrame = 0.f;
+	}
+
+}
+
 //魔法陣生成
 void TackleEnemy::BirthMagic() {
 	if (!magic.Alive) { return; }
@@ -172,8 +207,7 @@ void TackleEnemy::BirthMagic() {
 			}
 		}
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
-	}
-	else {			//魔法陣を縮める
+	} else {			//魔法陣を縮める
 		if (Helper::FrameCheck(magic.Frame, addFrame)) {
 			magic.Frame = {};
 			magic.AfterScale = 0.2f;
@@ -199,8 +233,7 @@ void TackleEnemy::WarpEnemy() {
 			m_Rotation = { 0.0f,0.0f,0.0f };
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
-	}
-	else {			//キャラが大きくなっている
+	} else {			//キャラが大きくなっている
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
 			enemywarp.AfterScale = 0.0f;
@@ -221,10 +254,65 @@ bool TackleEnemy::TackleCollide() {
 		player->RecvDamage(m_Damage, "NORMAL");
 		m_Hit = true;
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 
 	return false;
+}
+//クリアシーンの更新
+void TackleEnemy::ClearAction() {
+	const int l_TargetTimer = 40;
+	const float l_AddFrame = 1 / 200.0f;
+	if (m_ClearTimer == 0) {
+		m_Position.y = 10.0f;
+	}
+
+	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
+		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
+			m_ClearFrame = 1.0f;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
+		}
+	}
+	m_AddDisolve = {};
+	Obj_SetParam();
+}
+//ゲームオーバーシーンの更新
+void TackleEnemy::GameOverAction() {
+	const float l_AddRot = 20.0f;
+	if (_GameOverState == OVER_STOP) {
+		m_Position = { 4.0f,0.0f,3.5f };
+		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_AddDisolve = 0.0f;
+		if (player->GetSelectType() == 1) {
+			_GameOverState = OVER_YES;
+		}
+		else if (player->GetSelectType() == 2) {
+			_GameOverState = OVER_NO;
+		}
+	}
+	else if (_GameOverState == OVER_YES) {
+		m_Rotation.y += l_AddRot;
+	}
+	else {
+		const float l_AddRotZ = 0.5f;
+		const float l_AddFrame2 = 0.01f;
+		float RotPower = 10.0f;
+		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
+			m_RotFrame = 1.0f;
+			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
+				m_Rotation.z = 90.0f;
+			}
+		}
+		else {
+			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 30.0f);
+			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_RotFrame, m_Position.y, 0.5f);
+		}
+	}
+
+	Obj_SetParam();
 }

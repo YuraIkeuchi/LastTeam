@@ -44,6 +44,7 @@ bool StagePanel::Initialize(const float PosY) {
 			panels[i][j].isPoison = false;
 			panels[i][j].isClose = false;
 			panels[i][j].isHeal = false;
+			panels[i][j].isRock = false;
 			panels[i][j].PoisonTimer = {};
 			panels[i][j].Frame = {};
 			panels[i][j].TargetTimer = (i * 5) + (j * 40);
@@ -150,9 +151,10 @@ void StagePanel::ImGuiDraw() {
 	}
 
 	ImGui::Begin("Panel");
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isClose);
+			//ImGui::Text("Rock[%d][%d]:%d", i, j, panels[i][j].isRock);
 		}
 	}
 	ImGui::End();
@@ -240,6 +242,7 @@ void StagePanel::RandomPanel(int num) {
 
 		while (!isSet) {
 			if (panels[width][height].type != NO_PANEL || panels[width][height].isEnemyHit ||
+				panels[width][height].isRock ||
 				(width == p_width && height == p_height)) {
 				width = Helper::GetRanNum(0, 3);
 				height = Helper::GetRanNum(0, 3);
@@ -329,8 +332,12 @@ void StagePanel::ClosePanel(IKEObject3d* obj, bool Alive) {
 					panels[i][j].isClose = true;
 				}
 				else {
+
 					panels[i][j].isClose = false;
 				}
+			}
+			else {
+				panels[i][j].isClose = false;
 			}
 		}
 	}
@@ -425,7 +432,7 @@ void StagePanel::PoisonSetPanel(int& width, int& height) {
 	//パネル探索（敵がいる場合は再検索）
 
 	while (!isSet) {
-		if (panels[l_width][l_height].isPoison) {
+		if (panels[l_width][l_height].isPoison || panels[l_width][l_height].isRock) {
 			l_width = Helper::GetRanNum(0, 3);
 			l_height = Helper::GetRanNum(0, 3);
 		}

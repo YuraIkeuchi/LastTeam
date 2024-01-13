@@ -49,12 +49,14 @@ private:
 		vector<std::vector<int>> area;	//”ÍˆÍ
 		int DisX = {};
 		int DisY = {};
+		int Delay = 0;
 		wchar_t* baseSentence[3] = { L"",L"",L""};
 		int Damage = {};
 	};
 	
 private:
 	std::unique_ptr<IKESprite> backScreen;
+	std::unique_ptr<IKESprite> top_title;
 	std::unique_ptr<IKESprite> skillCheack;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::vector<HaveUI> haveSkills;

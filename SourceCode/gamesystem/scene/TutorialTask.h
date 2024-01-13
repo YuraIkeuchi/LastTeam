@@ -1,33 +1,61 @@
 #pragma once
+#include "IKESprite.h"
+#include <memory>
 
+using namespace std;
 //チュートリアルの進行状況を示すやつ
 enum TutorialState {
 	TASK_MOVE,
-	TASK_BIRTH_BEFORE,
-	TASK_BIRTHSKIL,
+	TASK_GET,
 	TASK_ATTACK,
-	TASK_DAMAGE,
-	TASK_END,
+	TASK_COUNTER,
+	TASK_BREAK,
 };
 class TutorialTask {
+private:
+	// DirectX::を省略
+	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
+	using XMVECTOR = DirectX::XMVECTOR;
+	using XMMATRIX = DirectX::XMMATRIX;
+
 public:
 	static TutorialTask* GetInstance();
 
 	//初期化
-	//void Initialize();
+	void Initialize();
+
+	void Update();
+
+	void Draw();
 
 	void ImGuiDraw();
 public:
 	//setter getter
-	const int GetTutorialState() { return m_TutorialState; }
+	const bool GetTaskFinish(const int TaskNum) { return m_TaskFinish[TaskNum]; }
 	const bool GetChoiceSkill() { return m_ChoiceSkill; }
 	const bool GetViewSkill() { return m_ViewSkill; }
-	void SetTutorialState(const int TutorialState) { m_TutorialState = TutorialState; }
+	void SetTaskFinish(const bool TaskFinish, const int TaskNum) { m_TaskFinish[TaskNum] = TaskFinish; }
 	void SetChoiceSkill(const bool ChoiceSkill) { m_ChoiceSkill = ChoiceSkill; }
 	void SetViewSkill(const bool ViewSkill) { m_ViewSkill = ViewSkill; }
-private:
 
-	int m_TutorialState = TASK_MOVE;
+private:
+	static const int TASK_MAX = 5;
+private:
+	bool m_TaskFinish[TASK_MAX];
+
+	struct TutorialParts {
+		unique_ptr<IKESprite> text;
+		unique_ptr<IKESprite> check;
+		XMFLOAT2 pos;
+		XMFLOAT4 color = {1.0f,1.0f,1.0f,0.0f};
+		XMFLOAT2 size = {};
+		XMFLOAT2 aftersize = {50.0f,50.0f};
+		float frame = {};
+	};
+
+	TutorialParts tutorial[TASK_MAX];
 	bool m_ChoiceSkill = false;
 	bool m_ViewSkill = false;
 };

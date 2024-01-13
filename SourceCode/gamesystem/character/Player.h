@@ -27,7 +27,6 @@ public:
 	void Update() override;
 	//描画
 	void Draw(DirectXCommon *dxCommon) override;
-	void GameOverUpdate();
 	//UI用
 	void UIDraw();
 	//ImGui
@@ -36,6 +35,12 @@ public:
 	void TitleUpdate();
 
 	void SetTitleFlag(bool flag) { is_title = flag; }
+	//ゲームクリアの動き
+	void ClearUpdate();
+	//ゲームオーバーの動き
+	void DeathUpdate();
+	//ゲームオーバーの動き
+	void GameOverUpdate(const int Timer);
 private:
 	//動き
 	void Move();
@@ -53,9 +58,12 @@ private:
 	//パーティクル
 	void BirthParticle();
 	//HPの割合を求める
-	float HpPercent();
+	float OldHpPercent();
 
 public:
+	//HPの割合を求める
+	float HpPercent();
+
 	//プレイヤーの回復
 	void HealPlayer(const float power);
 	//プレイヤーのダメージ
@@ -81,8 +89,13 @@ public:
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetCharaState() { return _charaState; }
 	const bool GetDelay() { return m_Delay; }
-	const bool GetFinishGameOver() { return m_FinishGameOver; }
+	const bool GetCancel() { return m_Cancel; }
+	const float GetShieldHP() { return m_ShieldHP; }
 
+	const bool GetFinishGameOver() { return m_FinishGameOver; }
+	const bool GetSelectEnd() { return m_SelectEnd; }
+	const bool GetMove() { return m_Move; }
+	const int GetSelectType() { return m_SelectType; }
 	float GetMaxHp() { return m_MaxHP; }
 	float GetHp() { return m_HP; }
 
@@ -99,6 +112,10 @@ public:
 	void SetGrazePos(const XMFLOAT3& GrazePos) { m_GrazePos = GrazePos; }
 
 	void SetDelay(const bool Delay) { m_Delay = Delay; }
+	void SetSelectEnd(const bool SelectEnd) { m_SelectEnd = SelectEnd; }
+	void SetShieldHP(const float ShieldHP) { m_ShieldHP = ShieldHP; }
+
+	void SetCancel(const bool cancel) { m_Cancel = cancel; }
 
 	void Setname(const string name) { m_name = name; }
 
@@ -114,11 +131,18 @@ public:
 	//回復
 	void RegeneUpdate();
 
+	void ShieldUpdate();
+
+	static void HpPassive();
 private:
 	//三桁表示まで
 	static const int NUMBER_MAX = 3;
 
 	static const int DIR_MAX = 4;
+
+	static bool isHpPassive;
+	static float m_HP;
+	static float m_MaxHP;
 
 	static float startHP;
 	static const int HEAL_MAX = 3;
@@ -164,12 +188,13 @@ private:
 
 	//HPの表示
 	unique_ptr<IKESprite> hptex;
+	unique_ptr<IKESprite> hpDiftex;
 	unique_ptr<IKESprite> hptex_under;
-	float m_HP = {};
 	float m_OldHP = m_HP;
+	float hp_frame = 0.f;
+	float hp_wait = 0.f;
 	bool isDamage = false;
 	bool isHeal = false;
-	float m_MaxHP = {};
 	//数値化したHP表示のための変数
 	array<int, NUMBER_MAX> m_DigitNumber;
 	int m_InterHP = {};//整数にしたHP
@@ -190,6 +215,7 @@ private:
 	array<unique_ptr<DrawNumber>, NUMBER_MAX> _MaxHp;
 
 	bool m_Delay = false;
+	bool m_Cancel = false;
 	string m_name = "NONE";
 
 	//影の変数
@@ -238,4 +264,36 @@ private:
 
 	bool m_Bound = {};
 	int m_HealTimer = {};
+
+	float m_ShieldHP = 0.f;
+	float m_ShieldHPMAX = 45.f;
+	XMFLOAT2 m_ShieldPos = { m_HPPos.x + 200.f,5.f };
+	unique_ptr<IKESprite> shieldCover;
+	//数値化したHP表示のための変数
+	array<int, 2> m_DigitShield;
+	int m_InterShield = {};//整数にしたHP
+	array<unique_ptr<DrawNumber>, 2> _drawShield;
+	int m_ClearTimer = {};
+	float m_ClearFrame = {};
+
+	enum GameOverType {
+		OVER_STOP,
+		OVER_JUMP,
+		OVER_MOVE,
+		OVER_END
+	}_OverType = OVER_STOP;
+
+	int m_SelectType = {};
+
+	bool m_SelectEnd = false;
+	enum SelectType {
+		NONE,
+		SELECT_YES,
+		SELECT_NO,
+	};
+
+	bool m_OverMove = false;
+
+	int m_JumpCount = {};
+
 };

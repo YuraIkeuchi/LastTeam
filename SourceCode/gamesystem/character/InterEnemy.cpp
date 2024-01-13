@@ -57,6 +57,15 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 	healdamage_tex->Initialize();
 	healdamage_tex->SetRotation({ 90.0f,0.0f,0.0f });
 
+	counter_tex = std::make_unique<IKETexture>(ImageManager::COUNTER, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	counter_tex->TextureCreate();
+	counter_tex->Initialize();
+	counter_tex->SetIsBillboard(true);
+	//counter_tex->SetRotation({ 45.0f,0.0f,0.0f });
+	counter2Tex = std::make_unique<IKETexture>(ImageManager::COUNTER_TWO, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	counter2Tex->TextureCreate();
+	counter2Tex->Initialize();
+	counter2Tex->SetIsBillboard(true);
 	m_AddPoisonToken = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "ADD_TOKEN")));
 	m_PoisonTimerMax = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "TIMER_MAX")));
 }
@@ -66,6 +75,7 @@ void InterEnemy::SkipInitialize() {
 //更新
 void InterEnemy::Update() {
 	if (!GameStateManager::GetInstance()->GetGameStart()) { return; }
+	if (GameStateManager::GetInstance()->GetBossCamera()) { return; }
 	if (m_EnemyTag != "Bomb") {
 		if (m_HP != 0.0f) {
 			if(m_Alive)
@@ -134,12 +144,12 @@ void InterEnemy::Update() {
 	HPManage();
 	//UIをワールド座標に変換する
 	WorldDivision();
+	CounterUpdate();
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
 //バトル前の更新
 void InterEnemy::AwakeUpdate() {
-	if (GameStateManager::GetInstance()->GetGameStart()) { return; }
 	if (!StagePanel::GetInstance()->GetCreateFinish()) { return; }
 	const float l_AddDisolve = 0.05f;
 	//ディゾルブを解除する
@@ -187,8 +197,21 @@ void InterEnemy::SuperPoisonEffect() {
 		poison_tex->Update();
 	}
 }
+void InterEnemy::BaseFrontDraw(DirectXCommon* dxCommon) {
+	if (m_SuperPoison) { poison_tex->Draw(); }
+	if (m_HealDamage) { healdamage_tex->Draw(); }
+
+}
 //描画
 void InterEnemy::Draw(DirectXCommon* dxCommon) {
+}
+
+void InterEnemy::BaseBackDraw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	counter_tex->Draw();
+	counter2Tex->Draw();
+	IKETexture::PostDraw();
+
 }
 
 void InterEnemy::ImGuiDraw() {
@@ -227,7 +250,7 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
-	if (m_Poison) {
+	if (m_Poison && m_EnemyTag != "Bomb") {
 		poisonState->Draw();
 		//敵のポイズンテキスト
 		if (m_PoisonToken >= 0) {
@@ -248,18 +271,23 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 	if (area.empty()) { return; }
 
 	for (unique_ptr<AttackArea>& _area : area) {
-		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) &&
+		if ((_area->GetNowHeight() == m_NowHeight && _area->GetNowWidth() == m_NowWidth) && (_area->GetAttack()) &&
 			!_area->GetHit() && _area->GetName() == "Player") {
 			float damage = _area->GetDamage();
 			//固定ダメージか否か
 			if (!_area->GetIsFixed()) {
+				if (_area->GetBuff()) {
+					damage *= 2.0f;
+				}
 				if (_charaState == STATE_ATTACK &&
 					!GameStateManager::GetInstance()->GetCounter()) {
 					GameStateManager::GetInstance()->SetCounter(true);
+					isCounterEffect = true;
+					m_CounterFrame = 0.f;
+					m_CounterFinishFrame = 0.f;
+					effectPos = m_Position;
 					damage *= 1.5f;
-				}
-				if (GameStateManager::GetInstance()->GetBuff()) {
-					damage *= 2.0f;
+					TutorialTask::GetInstance()->SetTaskFinish(true, TASK_COUNTER);
 				}
 				if (GameStateManager::GetInstance()->GetIsFivePower()) {
 					damage *= 1.2f;
@@ -287,19 +315,18 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			m_Damege = true;
 			m_DamageTimer = {};
 			Helper::Clamp(damage, 0.0f, 999.0f);
+			if (m_EnemyTag == "Mob" && !TutorialTask::GetInstance()->GetTaskFinish(TASK_COUNTER)) {
+				damage = 0.0f;
+			}
 			m_HP -= damage;
 			GameStateManager::GetInstance()->DamageCheck((int)damage);
 			BirthDamage(damage);
 			std::string name = _area->GetStateName();
-
+		
 			if (name == "DRAIN") {
-				float rate = 0.5f;
-				if (m_IsDrainUp) {
-					rate += 0.2f;
-					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::DRAIN_HEALUP);
-				}
+				float rate = 0.2f;
 				player->HealPlayer(damage * rate);		//HP回復
-			} else if (name == "POISON") {
+			}else if (name == "POISON") {		//毒
 				m_Poison = true;
 				if (!m_IsVenom) {
 					m_PoisonToken += _area->GetPoisonToken();
@@ -308,9 +335,54 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					m_SuperPoison = true;
 					m_PoisonToken += _area->GetPoisonToken() * 2;
 				}
-			} else if (name == "VENOM") {
+			} else if (name == "VENOM") {		//ヴェノム効果
 				if (m_Poison) {
 					m_PoisonToken *= 3;
+				}
+			} else if (name == "PASSIVEPOISON") {		//毒
+				m_Poison = true;
+				if (!m_IsVenom) {
+					m_PoisonToken += _area->GetPoisonToken();
+				} else {
+					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::POISON_DAMAGEUP);
+					m_SuperPoison = true;
+					m_PoisonToken += _area->GetPoisonToken() * 2;
+				}
+			}else if (name == "FAR" && !m_Induction && m_NowWidth != PANEL_WIDTH - 1 && _charaState != STATE_ATTACK) {		//敵を吹き飛ばす
+				m_Induction = true;
+				m_InductionFrame = {};
+				for (int i = PANEL_WIDTH / 2; i < PANEL_WIDTH; i++) {
+					if (m_NowWidth == i) { continue; }
+					if (StagePanel::GetInstance()->GetisEnemyHit(i, m_NowHeight)) {
+						
+						m_InductionPos = StagePanel::GetInstance()->GetPosition(i - 1, m_NowHeight).x;
+						break;
+					}
+					else {
+						if (i == PANEL_WIDTH - 1) {
+
+							m_InductionPos = StagePanel::GetInstance()->GetPosition(PANEL_WIDTH - 1, m_NowHeight).x;
+							break;
+						}
+					}
+				}
+			}
+			else if (name == "NEAR" && !m_Induction && m_NowWidth != PANEL_WIDTH / 2 && _charaState != STATE_ATTACK) {		//敵を引き寄せる
+				m_Induction = true;
+				m_InductionFrame = {};
+				for(int i = PANEL_WIDTH - 1; i >= (PANEL_WIDTH / 2); i--) {
+
+					if (m_NowWidth == i) { continue; }
+					if (StagePanel::GetInstance()->GetisEnemyHit(i, m_NowHeight)) {
+						m_InductionPos = StagePanel::GetInstance()->GetPosition(i + 1, m_NowHeight).x;
+						break;
+					}
+					else {
+						if (i == PANEL_WIDTH / 2) {
+							m_InductionPos = StagePanel::GetInstance()->GetPosition(PANEL_WIDTH / 2, m_NowHeight).x;
+							break;
+						}
+					}
 				}
 			}
 
@@ -334,10 +406,6 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 
 			GameStateManager::GetInstance()->DamageEffectInit({ tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] });
 			_area->SetHit(true);
-			//チュートリアル専用
-			if (TutorialTask::GetInstance()->GetTutorialState() == TASK_ATTACK) {
-				TutorialTask::GetInstance()->SetTutorialState(TASK_DAMAGE);
-			}
 		}
 	}
 }
@@ -536,7 +604,15 @@ void InterEnemy::PoisonState() {
 		BirthPoisonParticle();
 		if (m_PoisonLong) {
 			//GameStateManager::GetInstance()->SetPassiveActive();
-			m_PoisonToken /= 4;
+			if (m_PoisonToken!=1) {
+				float poisons = (float)m_PoisonToken;
+				poisons *= 0.75f;
+				//四捨五入
+				poisons += 0.5f;
+				m_PoisonToken = (int)poisons;
+			} else {
+				m_PoisonToken /= 2;
+			}
 		} else {
 			if (m_PoisonToken % 2 == 0) {
 				m_PoisonToken /= 2;
@@ -681,9 +757,13 @@ void InterEnemy::DeathUpdate() {
 	float RotPower = 5.0f;
 	m_Color.w = 1.0f;
 
+	
 	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
 		m_OverFrame = 1.0f;
 		m_Alive = false;
+		if (m_EnemyTag == "Rock") {
+			StagePanel::GetInstance()->ClosePanel(m_Object.get(), m_Alive);
+		}
 	} else {
 		RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);
 		m_Rotation.y += RotPower;
@@ -707,4 +787,67 @@ void InterEnemy::RegeneUpdate() {
 	else {
 		m_HealTimer = {};
 	}
+}
+//誘導された動き
+void InterEnemy::InductionMove() {
+	const float l_AddFrame = 1 / 10.0f;
+
+	if (Helper::FrameCheck(m_InductionFrame, l_AddFrame)) {
+		m_Induction = false;
+		m_InductionFrame = {};
+		StagePanel::GetInstance()->EnemyHitReset();
+	}
+	else {
+		m_Position.x = Ease(In, Cubic, m_InductionFrame, m_Position.x, m_InductionPos);
+	}
+}
+
+void InterEnemy::CounterUpdate() {
+	if (!isCounterEffect) { return; }
+	if (!Helper::FrameCheck(m_CounterFrame, 1 / 40.f)) {
+		XMFLOAT3 scale = {
+			Ease(InOut,Back,m_CounterFrame,0.f,0.4f),
+			Ease(InOut,Back,m_CounterFrame,0.f,0.4f),
+			Ease(InOut,Back,m_CounterFrame,0.f,0.4f)
+		};
+		counter_tex->SetScale(scale);
+		float alpha = Ease(In, Sine, m_CounterFrame, 1.f, 0.f);
+		counter_tex->SetColor(XMFLOAT4{ 1.f,1.f,1.f,alpha });
+		counter_tex->Update();
+
+		counter_tex->SetPosition({ effectPos.x,effectPos.y + 0.5f,effectPos.z });
+		counter_tex->Update();
+
+		XMFLOAT3 scale2 = {
+		Ease(Out,Back,m_CounterFrame,0.f,-0.30f),
+		Ease(Out,Back,m_CounterFrame,0.f,-0.30f),
+		Ease(Out,Back,m_CounterFrame,0.f,-0.30f)
+		};
+		counter2Tex->SetScale(scale2);
+		float rot_ = Ease(Out, Quint, m_CounterFrame, 0.f, 180.0f);
+		counter2Tex->SetRotation({ 0.f,0.f,rot_ });
+		counter2Tex->SetPosition({ effectPos.x,effectPos.y + 0.5f,effectPos.z });
+		counter2Tex->Update();
+	}
+	if (m_CounterFrame >= 0.7f) {
+		if (Helper::FrameCheck(m_CounterFinishFrame, 1 / 20.f)) {
+			isCounterEffect = false;
+		} else {
+			float alpha = Ease(InOut, Sine, m_CounterFinishFrame, 1.f, 0.f);
+			counter2Tex->SetColor(XMFLOAT4{ 0.8f,0.8f,0.8f,alpha });
+			counter2Tex->Update();
+		}
+	}
+}
+
+//クリアシーンの更新
+void InterEnemy::ClearUpdate() {
+	m_Rotation.y = 180.0f;
+	ClearAction();
+	//Obj_SetParam();
+}
+
+//ゲームオーバーシーンの更新
+void InterEnemy::GameOverUpdate() {
+	GameOverAction();
 }

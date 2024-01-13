@@ -1,5 +1,7 @@
 #pragma once
 #include"InterEnemy.h"
+#include "PredictArea.h"
+
 using namespace std;         //  名前空間指定
 //普通の敵
 class TackleEnemy :public InterEnemy {
@@ -8,6 +10,8 @@ public:
 	bool Initialize() override;//初期化
 	void Finalize() override;//開放
 	void Action()override;//更新
+	void ClearAction()override;//クリア更新
+	void GameOverAction()override;//ゲームオーバー更新
 	void ImGui_Origin()override;
 
 	void Draw(DirectXCommon* dxCommon) override;//描画
@@ -19,6 +23,7 @@ private:
 	void Inter();//待機
 	void Attack();
 	void Teleport();//移動
+	void StandBy();//移動
 
 	void WarpEnemy();//敵のワープ処理
 	//魔法陣
@@ -62,6 +67,11 @@ private:
 
 	EnemyWarp enemywarp;
 
+	std::unique_ptr<PredictArea> predictArea;
+	float predictFrame = 0.f;
+	int nextPredict = 0;
+	int m_OldWidth = m_NowWidth;
+	int m_OldHeight = m_NowHeight;
 	//インターバルとか
 	vector<int>m_Limit;
 	float m_Speed = {};

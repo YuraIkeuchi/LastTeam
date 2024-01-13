@@ -18,6 +18,7 @@ enum CharaState {
 	STATE_INTER,
 	STATE_ATTACK,
 	STATE_SPECIAL,
+	STATE_STANDBY,
 };
 
 //敵基底
@@ -48,6 +49,8 @@ protected:
 
 	unique_ptr<IKETexture> poison_tex;
 	unique_ptr<IKETexture> healdamage_tex;
+	unique_ptr<IKETexture> counter_tex;
+	unique_ptr<IKETexture> counter2Tex;
 	unique_ptr<IKETexture> _charge;
 	//unique_ptr<IKETexture> shadow_tex;
 	static Player* player;
@@ -101,7 +104,6 @@ protected:
 	bool m_PoisonLong = false;
 	bool m_IsVenom = false;
 	int m_PoisonToken = 0;
-	bool m_IsDrainUp = false;
 	int m_PoisonTimer = {};
 	bool m_Alive = true;
 	bool m_Death = false;
@@ -129,7 +131,13 @@ protected:
 	bool m_Damege = false;
 	int m_DamageTimer = {};
 	int m_FlashCount = {};
-	
+
+	bool isCounterEffect = false;
+	float m_CounterFrame = 0.f;
+	float m_CounterFinishFrame = 0.f;
+	XMFLOAT3 effectPos = {};
+
+
 	bool m_SuperPoison = false;
 	bool m_HealDamage = false;
 	float m_HealFrame = 0.f;
@@ -139,13 +147,26 @@ protected:
 	int m_AddPoisonToken = {};
 	int m_PoisonTimerMax = {};
 	int m_HealTimer = {};
+	bool m_Induction = false;
+	float m_InductionFrame = {};
+	float m_InductionPos = {};
+
+	int m_ClearTimer = {};
+	float m_ClearFrame = {};
+
+	enum GameOverState {
+		OVER_STOP,
+		OVER_YES,
+		OVER_NO,
+	}_GameOverState = OVER_STOP;
+	int m_OverTimer = {};
+	float m_RotFrame = {};
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
 	
 	void SetPoizonLong(bool isPoison) { m_PoisonLong = isPoison; }
 	void SetPoizonVenom(bool isPoison) { m_IsVenom = isPoison; }
-	void SetDrainUp(bool IsDrainUp) { m_IsDrainUp = IsDrainUp; }
 	void SetLastEnemy(bool LastEnemy) { m_LastEnemy = LastEnemy; }
 	static void SetPlayer(Player* player) { InterEnemy::player = player; }
 	void SetHealDamage(bool HealDamage) { m_HealDamage = HealDamage; }
@@ -177,9 +198,27 @@ public:
 	virtual void Action() = 0;//敵の行動
 
 	/// <summary>
+	/// クリアシーンの動き
+	/// </summary>
+	void ClearUpdate();
+
+	virtual void ClearAction() = 0;//クリアシーンの動き
+
+	/// <summary>
+	/// ゲームオーバーシーンの動き
+	/// </summary>
+	void GameOverUpdate();
+
+	virtual void GameOverAction() = 0;//ゲームオーバーシーンの動き
+
+	/// <summary>
 	/// 描画
 	/// </summary>
+	void BaseFrontDraw(DirectXCommon* dxCommon);
+
 	virtual void Draw(DirectXCommon* dxCommon)override;
+	
+	void BaseBackDraw(DirectXCommon* dxCommon);
 
 	void ImGuiDraw();
 
@@ -195,6 +234,10 @@ public:
 	void SuperPoisonEffect();
 
 	void DeathUpdate();
+
+	void InductionMove();
+
+	void CounterUpdate();
 private:
 	void BirthParticle();
 	//HPの割合を求める
