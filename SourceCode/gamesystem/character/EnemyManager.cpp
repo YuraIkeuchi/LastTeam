@@ -148,7 +148,7 @@ void EnemyManager::PoisonRook() {
 	if (GameStateManager::GetInstance()->GetRookPoison() <= 0) { return; }
 	int poison = GameStateManager::GetInstance()->GetRookPoison();
 	poison /= 10;
-	Helper::Clamp(poison,1,999);
+	Helper::Clamp(poison, 1, 999);
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimplePosion(poison);
 	}

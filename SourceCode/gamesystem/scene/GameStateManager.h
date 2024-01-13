@@ -98,8 +98,6 @@ private:
 	void PassiveActive();
 
 	void DamageEffectUpdate();
-
-	void OpenFile();
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
