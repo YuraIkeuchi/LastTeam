@@ -16,7 +16,6 @@ void ModelManager::StartInitialize()
 	LoadModel(PLAYERMODEL, "pawn");
 	LoadModel(PANEL, "box1x1x1");
 	LoadModel(BULLET, "EnemyBullet");
-	LoadModel(ENEMYMODEL, "chr_knight");
 	LoadModel(THORN, "Thorn");
 	LoadModel(CANNON, "cannon");
 	LoadModel(SQUID, "squid");

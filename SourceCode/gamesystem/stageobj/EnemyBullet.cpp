@@ -15,10 +15,6 @@ EnemyBullet::EnemyBullet() {
 	predictArea = std::make_unique<PredictArea>("ENEMY");
 	predictArea->Initialize();
 
-	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
-	shadow_tex->TextureCreate();
-	shadow_tex->Initialize();
-	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 //初期化
 bool EnemyBullet::Initialize() {
@@ -61,16 +57,10 @@ void EnemyBullet::Update() {
 
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//当たり判定
-
-	m_ShadowPos = { m_Position.x,0.11f,m_Position.z };
-	shadow_tex->SetPosition(m_ShadowPos);
-	shadow_tex->SetScale(m_ShadowScale);
-	shadow_tex->Update();
 }
 //描画
 void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	shadow_tex->Draw();
 	predictArea->Draw(dxCommon);
 	IKETexture::PostDraw();
 	Obj_Draw();

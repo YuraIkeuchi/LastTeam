@@ -26,7 +26,6 @@ public:
 		SHINE_L,
 		SMOKE,
 		POWERUP,
-		SHIELDUP,
 		ENEMYHPUI,
 		POIZONCOVER,
 		SHIELDCOVER,
@@ -139,7 +138,6 @@ public:
 	{
 		MAGIC,
 		CHARGE,
-		SHADOW,
 		SHADOW2,
 		PANNELLINE,
 		AREA,

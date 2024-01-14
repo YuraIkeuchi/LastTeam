@@ -1,7 +1,6 @@
 #pragma once
 #include "SkillBase.h"
 #include "AttackSkill.h"
-#include "NormalSkill.h"
 #include "SpecialSkill.h"
 #include <string>
 #include <vector>

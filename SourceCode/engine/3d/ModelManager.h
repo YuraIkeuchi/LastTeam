@@ -17,7 +17,6 @@ public:
 		PLAYERMODEL,
 		PANEL,
 		BULLET,
-		ENEMYMODEL,
 		THORN,
 		CANNON,
 		SQUID,

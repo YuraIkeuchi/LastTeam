@@ -874,7 +874,7 @@ void Player::BirthHealNumber(const float heal) {
 }
 //クリアシーンの更新
 void Player::ClearUpdate() {
-	const int l_TargetTimer = 200;
+	const int l_TargetTimer = 250;
 	const float l_AddFrame = 1 / 200.0f;
 	if (m_ClearTimer == 0) {
 		m_Position.y = 10.0f;

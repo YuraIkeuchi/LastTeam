@@ -484,8 +484,9 @@ void BossEnemy3::AttackMove() {
 }
 //クリアシーンの更新
 void BossEnemy3::ClearAction() {
-	const int l_TargetTimer = 100;
+	const int l_TargetTimer = 200;
 	const float l_AddFrame = 1 / 200.0f;
+	m_Position.x = -0.75f;
 	if (m_ClearTimer == 0) {
 		m_Position.y = 10.0f;
 	}
@@ -504,7 +505,7 @@ void BossEnemy3::ClearAction() {
 //ゲームオーバーシーンの更新
 void BossEnemy3::GameOverAction() {
 	if (_GameOverState == OVER_STOP) {
-		m_Position = { -3.0f,0.0f,1.5f };
+		m_Position = { -1.0f,0.0f,4.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
 		if (player->GetSelectType() == 1) {
@@ -520,15 +521,18 @@ void BossEnemy3::GameOverAction() {
 		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
 			m_Position.y = 0.1f;
 			m_AddPower = {};
-			if (Helper::CheckMin(m_OverTimer, 25, 1)) {
+			if (Helper::CheckMin(m_OverTimer, 45, 1)) {
 				m_OverTimer = {};
 				m_AddPower = 0.3f;
 			}
 		}
 	}
 	else {
-		const float l_AddRotZ = 0.5f;
-		const float l_AddFrame2 = 0.01f;
+		float l_AddRotZ = {};
+		float l_AddFrame2 = {};
+
+		l_AddRotZ = float(Helper::GetRanNum(3, 10)) / 10;
+		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 100;
 		float RotPower = 10.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
 			m_RotFrame = 1.0f;

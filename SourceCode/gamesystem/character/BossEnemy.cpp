@@ -539,8 +539,12 @@ void BossEnemy::GameOverAction() {
 			}
 		}
 	} else {
-		const float l_AddRotZ = 0.5f;
-		const float l_AddFrame2 = 0.01f;
+		float l_AddRotZ = {};
+		float l_AddFrame2 = {};
+
+		l_AddRotZ = float(Helper::GetRanNum(3, 10)) / 10;
+		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 100;
+		
 		float RotPower = 10.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
 			m_RotFrame = 1.0f;

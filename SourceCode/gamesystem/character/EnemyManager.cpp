@@ -1,5 +1,4 @@
 ﻿#include "EnemyManager.h"
-#include "NormalEnemy.h"
 #include "CanonEnemy.h"
 #include "TackleEnemy.h"
 #include "PoisonEnemy.h"

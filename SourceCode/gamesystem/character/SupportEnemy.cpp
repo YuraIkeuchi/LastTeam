@@ -242,7 +242,7 @@ void SupportEnemy::AttackMove() {
 }
 //クリアシーンの更新
 void SupportEnemy::ClearAction() {
-	const int l_TargetTimer = 100;
+	const int l_TargetTimer = 160;
 	const float l_AddFrame = 1 / 200.0f;
 	if (m_ClearTimer == 0) {
 		m_Position.y = 10.0f;
@@ -262,7 +262,7 @@ void SupportEnemy::ClearAction() {
 //ゲームオーバーシーンの更新
 void SupportEnemy::GameOverAction() {
 	if (_GameOverState == OVER_STOP) {
-		m_Position = { -3.0f,0.0f,1.5f };
+		m_Position = { -1.0f,0.0f,2.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
 		if (player->GetSelectType() == 1) {
@@ -278,7 +278,7 @@ void SupportEnemy::GameOverAction() {
 		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
 			m_Position.y = 0.1f;
 			m_AddPower = {};
-			if (Helper::CheckMin(m_OverTimer, 25, 1)) {
+			if (Helper::CheckMin(m_OverTimer, 35, 1)) {
 				m_OverTimer = {};
 				m_AddPower = 0.3f;
 			}

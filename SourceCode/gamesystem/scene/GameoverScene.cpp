@@ -66,7 +66,7 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 	m_OverPos[0] = { 640.0f,-150.0f };
 	m_OverPos[1] = { 640.0f,-150.0f };
 
-	m_AfterOverPos[0] = { 640.0f,150.0f };
+	m_AfterOverPos[0] = { 640.0f,120.0f };
 	m_AfterOverPos[1] = { 640.0f,-150.0f };
 
 	m_SelectPos[0] = { 230.0f,900.0f };
@@ -205,7 +205,7 @@ void GameoverScene::GameOverMove() {
 				_OverType = MOVE_COUNTINUE;
 				m_Frame = {};
 				m_AfterOverPos[PARTS_OVER].y = -150.0f;
-				m_AfterOverPos[PARTS_COUNTINUE].y = 150.0f;
+				m_AfterOverPos[PARTS_COUNTINUE].y = 120.0f;
 			}
 		}
 		else {
