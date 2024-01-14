@@ -285,8 +285,11 @@ void SupportEnemy::GameOverAction() {
 		}
 	}
 	else {
-		const float l_AddRotZ = 0.5f;
-		const float l_AddFrame2 = 0.01f;
+		float l_AddRotZ = {};
+		float l_AddFrame2 = {};
+
+		l_AddRotZ = float(Helper::GetRanNum(30, 100)) / 100;
+		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 500;
 		float RotPower = 10.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
 			m_RotFrame = 1.0f;

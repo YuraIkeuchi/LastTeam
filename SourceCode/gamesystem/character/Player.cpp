@@ -985,7 +985,7 @@ void Player::GameOverUpdate(const int Timer) {
 			}
 		}
 		else {
-			const float l_AddRotZ = 0.5f;
+			const float l_AddRotZ = 0.35f;
 			const float l_AddFrame2 = 0.01f;
 			float RotPower = 2.0f;
 			if (Helper::FrameCheck(m_MoveFrame, l_AddFrame2)) {		//最初はイージングで回す

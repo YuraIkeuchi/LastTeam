@@ -542,8 +542,8 @@ void BossEnemy::GameOverAction() {
 		float l_AddRotZ = {};
 		float l_AddFrame2 = {};
 
-		l_AddRotZ = float(Helper::GetRanNum(3, 10)) / 10;
-		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 100;
+		l_AddRotZ = float(Helper::GetRanNum(30, 100)) / 100;
+		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 500;
 		
 		float RotPower = 10.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す

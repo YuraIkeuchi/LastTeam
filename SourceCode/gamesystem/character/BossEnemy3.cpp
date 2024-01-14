@@ -505,7 +505,7 @@ void BossEnemy3::ClearAction() {
 //ゲームオーバーシーンの更新
 void BossEnemy3::GameOverAction() {
 	if (_GameOverState == OVER_STOP) {
-		m_Position = { -1.0f,0.0f,4.5f };
+		m_Position = { -1.0f,0.0f,5.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
 		if (player->GetSelectType() == 1) {
@@ -531,8 +531,8 @@ void BossEnemy3::GameOverAction() {
 		float l_AddRotZ = {};
 		float l_AddFrame2 = {};
 
-		l_AddRotZ = float(Helper::GetRanNum(3, 10)) / 10;
-		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 100;
+		l_AddRotZ = float(Helper::GetRanNum(30, 100)) / 100;
+		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 500;
 		float RotPower = 10.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
 			m_RotFrame = 1.0f;
