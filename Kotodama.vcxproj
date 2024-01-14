@@ -116,6 +116,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\ClouserEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyRock.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\FrontEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\SupportEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\ThrowEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\TutorialEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp" />
@@ -347,6 +348,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\Player.h" />
     <ClInclude Include="SourceCode\gamesystem\character\MobEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\PoisonEnemy.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\SupportEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\TackleEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\ThrowEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\TutorialEnemy.h" />

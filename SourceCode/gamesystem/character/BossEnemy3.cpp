@@ -17,13 +17,10 @@ BossEnemy3::BossEnemy3() {
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
-	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
-	shadow_tex->TextureCreate();
-	shadow_tex->Initialize();
-	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });*/
 	//—\‘ª
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
+
 }
 //‰Šú‰»
 bool BossEnemy3::Initialize() {

@@ -36,6 +36,7 @@ void ModelManager::StartInitialize()
 	LoadModel(ROCKENEMY, "RockEnemy");
 	LoadModel(SECOND_BOSS, "stick");
 	LoadModel(LAST_BOSS, "LastBoss");
+	LoadModel(SUPPORT_ENEMY, "stick2");
 }
 
 //モデル読み込み(非同期処理で読み込むもの)
