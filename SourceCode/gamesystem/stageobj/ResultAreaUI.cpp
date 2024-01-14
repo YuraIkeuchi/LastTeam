@@ -13,12 +13,13 @@ ResultAreaUI::ResultAreaUI() {
 	player_panel = IKESprite::Create(ImageManager::MAP_CHARA, { 0,0 });
 	player_panel->SetAnchorPoint({ 0.5f,0.5f });
 	player_panel->SetSize({ 64.0f,64.0f });
-	for (int i = 0; i < 2;i++) {
+	for (int i = 0; i < 3;i++) {
 		_DelayTimer[i] = make_unique<DrawNumber>(0.5f);
 		_DelayTimer[i]->Initialize();
 	}
 	_DelayTimer[0]->SetPosition({ 180.0f,360.0f + 135.0f });
 	_DelayTimer[1]->SetPosition({ 155.0f,360.0f + 135.0f });
+	_DelayTimer[2]->SetPosition({ 130.0f,360.0f + 135.0f });
 
 }
 //‰Šú‰»
@@ -75,6 +76,9 @@ void ResultAreaUI::Draw() {
 	IKESprite::PreDraw();
 	panels.sprite->Draw();
 	player_panel->Draw();
+	if (m_Frame >= 100) {
+		_DelayTimer[2]->Draw();
+	}
 	if (m_Frame>=10) {
 		_DelayTimer[1]->Draw();
 	}
