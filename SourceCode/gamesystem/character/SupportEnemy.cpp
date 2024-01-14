@@ -1,4 +1,4 @@
-#include "ThrowEnemy.h"
+#include "SupportEnemy.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -8,32 +8,51 @@
 #include "ImageManager.h"
 #include <GameStateManager.h>
 #include <StagePanel.h>
-
 //ƒ‚ƒfƒ‹“Ç‚İ‚İ
-ThrowEnemy::ThrowEnemy() {
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::THROW));
+SupportEnemy::SupportEnemy(const int Num) {
+	m_SupportType = Num;
+	if (m_SupportType == SUPPORT_RED) {
+		BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SECOND_BOSS));
+	}
+	else {
+		BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SUPPORT_ENEMY));
+	}
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	shadow_tex->TextureCreate();
+	shadow_tex->Initialize();
+	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });*/
+	//—\‘ª
+	predictarea.reset(new PredictArea("ENEMY"));
+	predictarea->Initialize();
 }
 //‰Šú‰»
-bool ThrowEnemy::Initialize() {
+bool SupportEnemy::Initialize() {
 	//m_Position = randPanelPos();
-	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Scale = { 0.6f,0.4f,0.6f };
-	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ThrowEnemy.csv", "LIMIT_NUM")));
+	m_Rotation = { 0.0f,-90.0f,0.0f };
+	//m_Color = { 1.f,0.f,1.f,1.0f };
+	m_Scale = { 0.4f,0.4f,0.4f };
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "hp")));
+	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "LIMIT_NUM")));
 
 	m_Limit.resize(LimitSize);
-	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/ThrowEnemy.csv", m_Limit, "Interval");
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/SupportEnemy.csv", m_Limit, "Interval");
 
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ThrowEnemy.csv", "hp")));
+	auto AttackLimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "ATTACK_LIMIT_NUM")));
+
+	m_AttackLimit.resize(AttackLimitSize);
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/SupportEnemy.csv", m_AttackLimit, "Attack_Interval");
+
+	m_BulletNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "BULLET_NUM")));
 
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
-
 	magic.Alive = false;
 	magic.Frame = {};
 	magic.Scale = {};
@@ -42,19 +61,19 @@ bool ThrowEnemy::Initialize() {
 	magic.State = {};
 
 	enemywarp.AfterScale = {};
-	enemywarp.Scale = 0.5f;
+	enemywarp.Scale = 0.8f;
 	m_AddDisolve = 2.0f;
 	return true;
 }
-
-void (ThrowEnemy::* ThrowEnemy::stateTable[])() = {
-	&ThrowEnemy::Inter,//“®‚«‚Ì‡ŠÔ
-	&ThrowEnemy::Attack,//“®‚«‚Ì‡ŠÔ
-	&ThrowEnemy::Teleport,//uŠÔˆÚ“®
+//ó‘Ô‘JˆÚ
+void (SupportEnemy::* SupportEnemy::stateTable[])() = {
+	&SupportEnemy::Inter,//“®‚«‚Ì‡ŠÔ
+	&SupportEnemy::Attack,//“®‚«‚Ì‡ŠÔ
+	&SupportEnemy::Teleport,//uŠÔˆÚ“®
 };
 
 //s“®
-void ThrowEnemy::Action() {
+void SupportEnemy::Action() {
 	if (!m_Induction) {
 		(this->*stateTable[_charaState])();
 	}
@@ -67,105 +86,71 @@ void ThrowEnemy::Action() {
 	Collide(_AttackArea);		//“–‚½‚è”»’è
 	PoisonState();//“Å
 	BirthMagic();//–‚–@w
-	//“G‚Ì’e
-	for (unique_ptr<Boomerang>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Update();
+	AttackMove();//UŒ‚‚Ì“®‚«
+	//UŒ‚ƒWƒƒƒ“ƒv‚·‚é
+	if (m_Jump) {
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_AddPower = {};
+			m_Jump = false;
+			m_Position.y = 0.1f;
 		}
 	}
 
-	//áŠQ•¨‚Ìíœ
-	for (int i = 0; i < bullets.size(); i++) {
-		if (bullets[i] == nullptr) {
-			continue;
-		}
-
-		if (!bullets[i]->GetAlive()) {
-			bullets.erase(cbegin(bullets) + i);
-		}
-	}
+	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
-
-	if (_charaState == STATE_ATTACK) {
-		m_RotPower = Ease(In, Cubic, 0.5f, m_RotPower, 20.0f);
-	}
-	else {
-		m_RotPower = Ease(In, Cubic, 0.5f, m_RotPower, 2.0f);
-	}
-	m_Rotation.y += m_RotPower;
 }
 
 //•`‰æ
-void ThrowEnemy::Draw(DirectXCommon* dxCommon) {
+void SupportEnemy::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-	//“G‚Ì’e
-	for (unique_ptr<Boomerang>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Draw(dxCommon);
-		}
-	}
-	if (m_Color.w != 0.0f) {
+	predictarea->Draw(dxCommon);
+	if (m_Color.w != 0.0f)
 		Obj_Draw();
-	}
 	BaseBackDraw(dxCommon);
 }
 //ImGui•`‰æ
-void ThrowEnemy::ImGui_Origin() {
-	//“G‚Ì’e
-	/*for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->ImGuiDraw();
-		}
-	}*/
-	ImGui::Begin("Throw");
-	ImGui::Text("Height:%d", m_NowHeight);
-	ImGui::Text("ShotDir:%d", m_ShotDir);
-	ImGui::End();
+void SupportEnemy::ImGui_Origin() {
+	//ImGui::Begin("Boss");
+	//ImGui::Text("PosX:%f", m_Position.x);
+	//ImGui::Text("PosZ:%f", m_Position.z);
+	//ImGui::End();
+	//predictarea->ImGuiDraw();
 }
 //ŠJ•ú
-void ThrowEnemy::Finalize() {
+void SupportEnemy::Finalize() {
 
 }
 //‘Ò‹@
-void ThrowEnemy::Inter() {
+void SupportEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
-	if (coolTimer == l_TargetTimer) {
-		coolTimer = 100;
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 	}
 }
 //UŒ‚
-void ThrowEnemy::Attack() {
-	int l_TargetTimer = {};
-	l_TargetTimer = m_Limit[STATE_ATTACK];
-
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-		BirthBullet();
-		m_CheckPanel = true;
-		m_AttackCount = {};
-		coolTimer = {};
-		StagePanel::GetInstance()->EnemyHitReset();
-		_charaState = STATE_SPECIAL;
-	}
+void SupportEnemy::Attack() {
+	//(this->*attackTable[_AttackState])();
+	//PlayerCollide();
+	predictarea->Update();
+	predictarea->SetTimer(coolTimer);
 }
 
 //ƒ[ƒv
-void ThrowEnemy::Teleport() {
-	const float l_AddFrame = 1 / 30.0f;
+void SupportEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
-	l_TargetTimer = m_Limit[STATE_SPECIAL];
+	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
 
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
@@ -175,21 +160,17 @@ void ThrowEnemy::Teleport() {
 		WarpEnemy();
 	}
 }
-//’e‚Ì¶¬
-void ThrowEnemy::BirthBullet() {
-	/// <summary>
-	///	‰¹“ü‚ê(‚Ô‚ñ‰ñ‚·‰¹Šó–](ƒu[ƒƒ‰ƒ“‚ª‰ñ‚Á‚Ä‚é‰¹‚İ‚½‚¢‚È‚â‚ÂA–³—‚È‚çU‚è‰ñ‚µ‚Ä‚é‚â‚Â))
-	/// </summary>
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
-	//’e‚Ì”­¶
-	unique_ptr<Boomerang> newbullet = make_unique<Boomerang>();
-	newbullet->Initialize();
-	newbullet->SetPlayer(player);
-	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
-	bullets.emplace_back(std::move(newbullet));
+//UŒ‚ƒGƒŠƒA
+void SupportEnemy::BirthArea(const int Width, const int Height, const string& name) {
+
 }
+//—\‘ªƒGƒŠƒA
+void SupportEnemy::BirthPredict(const int Width, const int Height, const string& name) {
+	
+}
+
 //–‚–@w¶¬
-void ThrowEnemy::BirthMagic() {
+void SupportEnemy::BirthMagic() {
 	if (!magic.Alive) { return; }
 	static float addFrame = 1.f / 15.f;
 	const int l_TargetTimer = 20;
@@ -217,19 +198,19 @@ void ThrowEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 }
-void ThrowEnemy::WarpEnemy() {
+void SupportEnemy::WarpEnemy() {
 	XMFLOAT3 l_RandPos = {};
 	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy);
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//ƒLƒƒƒ‰‚ª¬‚³‚­‚È‚é
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
-			enemywarp.AfterScale = 0.5f;
+			enemywarp.AfterScale = 0.8f;
 			enemywarp.State = WARP_END;
 			coolTimer = {};
 			m_Position = l_RandPos;
 			m_RotFrame = {};
-			m_Rotation.y = 270.0f;
+			m_Rotation.y = -90.0f;
 			StagePanel::GetInstance()->EnemyHitReset();
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
@@ -247,9 +228,21 @@ void ThrowEnemy::WarpEnemy() {
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
 }
+//UŒ‚‚Ì“®‚«
+void SupportEnemy::AttackMove() {
+	if (!m_Rot) { return; }
+	const float l_AddFrame = 1 / 20.0f;
+	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
+		m_Rotation.y = -90.0f;
+		m_Rot = false;
+		m_AttackFrame = {};
+	}
+
+	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
+}
 //ƒNƒŠƒAƒV[ƒ“‚ÌXV
-void ThrowEnemy::ClearAction() {
-	const int l_TargetTimer = 10;
+void SupportEnemy::ClearAction() {
+	const int l_TargetTimer = 160;
 	const float l_AddFrame = 1 / 200.0f;
 	if (m_ClearTimer == 0) {
 		m_Position.y = 10.0f;
@@ -267,21 +260,29 @@ void ThrowEnemy::ClearAction() {
 	Obj_SetParam();
 }
 //ƒQ[ƒ€ƒI[ƒo[ƒV[ƒ“‚ÌXV
-void ThrowEnemy::GameOverAction() {
-	const float l_AddRot = 15.0f;
+void SupportEnemy::GameOverAction() {
 	if (_GameOverState == OVER_STOP) {
-		m_Position = { -3.0f,0.0f,3.5f };
+		m_Position = { -1.0f,0.0f,2.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
 		if (player->GetSelectType() == 1) {
 			_GameOverState = OVER_YES;
+			m_AddPower = 0.3f;
 		}
 		else if (player->GetSelectType() == 2) {
 			_GameOverState = OVER_NO;
 		}
 	}
 	else if (_GameOverState == OVER_YES) {
-		m_Rotation.y -= l_AddRot;
+		m_AddPower -= m_Gravity;
+		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
+			m_Position.y = 0.1f;
+			m_AddPower = {};
+			if (Helper::CheckMin(m_OverTimer, 35, 1)) {
+				m_OverTimer = {};
+				m_AddPower = 0.3f;
+			}
+		}
 	}
 	else {
 		float l_AddRotZ = {};
@@ -289,7 +290,7 @@ void ThrowEnemy::GameOverAction() {
 
 		l_AddRotZ = float(Helper::GetRanNum(30, 100)) / 100;
 		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 500;
-		float RotPower = 3.0f;
+		float RotPower = 10.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//Å‰‚ÍƒC[ƒWƒ“ƒO‚Å‰ñ‚·
 			m_RotFrame = 1.0f;
 			if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//ÅŒã‚Í“|‚ê‚é
@@ -297,7 +298,7 @@ void ThrowEnemy::GameOverAction() {
 			}
 		}
 		else {
-			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 25.0f);
+			RotPower = Ease(In, Cubic, m_RotFrame, RotPower, 20.0f);
 			m_Rotation.z = Ease(In, Cubic, m_RotFrame, m_Rotation.z, 45.0f);
 			m_Rotation.y += RotPower;
 			m_Position.y = Ease(In, Cubic, m_RotFrame, m_Position.y, 0.5f);

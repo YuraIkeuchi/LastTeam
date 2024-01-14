@@ -874,7 +874,7 @@ void Player::BirthHealNumber(const float heal) {
 }
 //クリアシーンの更新
 void Player::ClearUpdate() {
-	const int l_TargetTimer = 200;
+	const int l_TargetTimer = 250;
 	const float l_AddFrame = 1 / 200.0f;
 	if (m_ClearTimer == 0) {
 		m_Position.y = 10.0f;
@@ -985,7 +985,7 @@ void Player::GameOverUpdate(const int Timer) {
 			}
 		}
 		else {
-			const float l_AddRotZ = 0.5f;
+			const float l_AddRotZ = 0.35f;
 			const float l_AddFrame2 = 0.01f;
 			float RotPower = 2.0f;
 			if (Helper::FrameCheck(m_MoveFrame, l_AddFrame2)) {		//最初はイージングで回す
