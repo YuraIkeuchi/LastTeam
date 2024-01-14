@@ -12,7 +12,6 @@
 #include <Passive.h>
 #include "GameObject/GameObject.h"
 #include "Player.h"
-#include "BaseEnemy.h"
 #include "ResultSkill.h"
 #include "HaveResultSkill.h"
 #include <Onomatope.h>
@@ -43,12 +42,6 @@ public:
 	void AddSkill(const int SkillType, const int ID, const float damage, const int Delay,
 		vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name, int Token);
 
-	/// <summary>
-	/// エネミーのデータをコンテナに追加
-	/// </summary>
-	/// <param name="Enemy"></param>
-	/// <param name="作者">やぶなか</param>
-	void AddEnemy(std::weak_ptr<BaseEnemy> Enemy) { enemys_container_.emplace_back(Enemy); }
 	//デッキのリセット
 	void DeckReset();
 	//捨てたIDを取得する

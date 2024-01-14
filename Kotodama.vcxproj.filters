@@ -204,14 +204,8 @@
     <ClCompile Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.cpp">
       <Filter>gamesystem\particle</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\scene\EditorScene.cpp">
-      <Filter>gamesystem\scene</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\BattleScene.cpp">
       <Filter>gamesystem\scene\Play\Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\scene\LoadScene.cpp">
-      <Filter>gamesystem\scene\Load</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\GameoverScene.cpp">
       <Filter>gamesystem\scene\GameOver</Filter>
@@ -264,14 +258,8 @@
     <ClCompile Include="SourceCode\engine\audio\AudioManager.cpp">
       <Filter>engine\audio</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\scene\EndRollScene.cpp">
-      <Filter>gamesystem\scene\EndRoll</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\MessageWindow\MessageWindow.cpp">
       <Filter>gamesystem\stageobj\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\NormalEnemy.cpp">
-      <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\InterAction.cpp">
       <Filter>gamesystem\Action\ActionPanel</Filter>
@@ -284,30 +272,6 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\scene\MapScene.cpp">
       <Filter>gamesystem\scene\mapScene</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\engine\BehaviorTree\ActionNode.cpp">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\engine\BehaviorTree\BehaviorTree.cpp">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\engine\BehaviorTree\CompositeNode.cpp">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\engine\BehaviorTree\ConditionalNode.cpp">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\engine\BehaviorTree\Node.cpp">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\engine\BehaviorTree\Repeater.cpp">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\engine\BehaviorTree\Selector.cpp">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\engine\BehaviorTree\Sequencer.cpp">
-      <Filter>engine\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\engine\GameObject\GameObject.cpp">
       <Filter>engine\GameObject</Filter>
@@ -334,9 +298,6 @@
       <Filter>gamesystem\skill</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\skill\DeckUI.cpp">
-      <Filter>gamesystem\skill</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\skill\NormalSKill.cpp">
       <Filter>gamesystem\skill</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\skill\Passive.cpp">
@@ -395,9 +356,6 @@
     </ClCompile>
     <ClCompile Include="lib\imgui\include\imgui_widgets.cpp">
       <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\gamesystem\character\BaseEnemy.cpp">
-      <Filter>gamesystem\charactor\Enemy\Base</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\stageobj\ResultAreaUI.cpp">
       <Filter>gamesystem\stageobj\Area</Filter>
@@ -486,6 +444,9 @@
     </ClCompile>
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyTornade.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\character\SupportEnemy.cpp">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -651,9 +612,6 @@
     <ClInclude Include="SourceCode\gamesystem\ParticleManager\ParticleEmitter.h">
       <Filter>gamesystem\particle</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scene\LoadScene.h">
-      <Filter>gamesystem\scene\Load</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\BaseScene.h">
       <Filter>gamesystem\scene\Base</Filter>
     </ClInclude>
@@ -703,14 +661,8 @@
     <ClInclude Include="SourceCode\gamesystem\scene\GameoverScene.h">
       <Filter>gamesystem\scene\GameOver</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\scene\EndRollScene.h">
-      <Filter>gamesystem\scene\EndRoll</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\MessageWindow\MessageWindow.h">
       <Filter>gamesystem\stageobj\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\NormalEnemy.h">
-      <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h">
       <Filter>gamesystem\Action\ActionPanel</Filter>
@@ -723,30 +675,6 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\scene\MapScene.h">
       <Filter>gamesystem\scene\mapScene</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\engine\BehaviorTree\ActionNode.h">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\engine\BehaviorTree\BehaviorTree.h">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\engine\BehaviorTree\CompositeNode.h">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\engine\BehaviorTree\ConditionalNode.h">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\engine\BehaviorTree\Node.h">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\engine\BehaviorTree\Repeater.h">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\engine\BehaviorTree\Selector.h">
-      <Filter>engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\engine\BehaviorTree\Sequencer.h">
-      <Filter>engine\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\engine\Property.h">
       <Filter>engine\Property</Filter>
@@ -776,9 +704,6 @@
       <Filter>gamesystem\skill</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\skill\DeckUI.h">
-      <Filter>gamesystem\skill</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\skill\NormalSkill.h">
       <Filter>gamesystem\skill</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\skill\Passive.h">
@@ -843,9 +768,6 @@
     </ClInclude>
     <ClInclude Include="lib\imgui\include\imstb_truetype.h">
       <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\gamesystem\character\BaseEnemy.h">
-      <Filter>gamesystem\charactor\Enemy\Base</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\ResultAreaUI.h">
       <Filter>gamesystem\stageobj\Area</Filter>
@@ -940,6 +862,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyTornade.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\character\SupportEnemy.h">
+      <Filter>gamesystem\charactor\Enemy\Other</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1074,9 +999,6 @@
     <Filter Include="gamesystem\scene\Tutorial">
       <UniqueIdentifier>{40fae6cc-723f-427e-8439-66617f5c0615}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gamesystem\scene\Load">
-      <UniqueIdentifier>{47055e9e-6cba-47a1-b497-d0672c56b841}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gamesystem\scene\Base">
       <UniqueIdentifier>{9e1f5803-f387-4e10-a4d7-972a5705d5d7}</UniqueIdentifier>
     </Filter>
@@ -1088,9 +1010,6 @@
     </Filter>
     <Filter Include="gamesystem\scene\GameOver">
       <UniqueIdentifier>{8340f8aa-fee7-47d7-9c77-10fd67ad1f22}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gamesystem\scene\EndRoll">
-      <UniqueIdentifier>{cc3076ca-66ef-4952-b4dc-38fbeb169a69}</UniqueIdentifier>
     </Filter>
     <Filter Include="gamesystem\charactor\Enemy\Other">
       <UniqueIdentifier>{1ffa4f48-0455-458c-b71a-9647e9a620dc}</UniqueIdentifier>
@@ -1109,9 +1028,6 @@
     </Filter>
     <Filter Include="gamesystem\scene\mapScene">
       <UniqueIdentifier>{77f0cdcf-6c68-4f05-80b6-3919d533d6a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\BehaviorTree">
-      <UniqueIdentifier>{28ba1403-e4fe-4228-a5ca-d796a408fd2a}</UniqueIdentifier>
     </Filter>
     <Filter Include="engine\Property">
       <UniqueIdentifier>{597d592a-e640-4b0d-99bb-b366786fc161}</UniqueIdentifier>

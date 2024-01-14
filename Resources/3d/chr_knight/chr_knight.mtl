@@ -1,8 +1,0 @@
-# MagicaVoxel @ Ephtracy
-
-newmtl palette
-illum 1
-Ka 1.0000 1.0000 1.0000
-Kd 0.0000 0.0000 0.0000
-Ks 0.0000 0.0000 0.0000
-map_Kd chr_knight.png

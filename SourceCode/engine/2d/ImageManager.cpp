@@ -17,7 +17,6 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(SHINE_L, L"Resources/2d/effect/effect5.png");
 	IKESprite::LoadTexture(SMOKE, L"Resources/2d/effect/smoke.png");
 	IKESprite::LoadTexture(POWERUP, L"Resources/2d/effect/Up.png");
-	IKESprite::LoadTexture(SHIELDUP, L"Resources/2d/effect/ShieldUp.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 	IKESprite::LoadTexture(POIZONCOVER, L"Resources/2d/objicon/Numbers/PoisonFrame.png");
 	IKESprite::LoadTexture(SHIELDCOVER, L"Resources/2d/objicon/Numbers/ShieldFrame.png");
@@ -138,7 +137,6 @@ void ImageManager::StartLoadTex2D()
 {
 	IKETexture::LoadTexture(MAGIC, L"Resources/2d/objicon/magic.png");
 	IKETexture::LoadTexture(CHARGE, L"Resources/2d/objicon/impact.png");
-	IKETexture::LoadTexture(SHADOW, L"Resources/2d/objicon/shadow.png");
 	IKETexture::LoadTexture(SHADOW2, L"Resources/2d/objicon/shadow2.png");
 	IKETexture::LoadTexture(PANNELLINE, L"Resources/2d/objicon/Areas/AreaLine.png");
 	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/Areas/DamageArea.png");

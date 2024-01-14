@@ -3,7 +3,6 @@
 #include "TitleScene.h"
 #include "ClearScene.h"
 #include "GameoverScene.h"
-#include "LoadScene.h"
 #include "TutorialScene.h"
 #include "MapScene.h"
 #include "ClearScene.h"

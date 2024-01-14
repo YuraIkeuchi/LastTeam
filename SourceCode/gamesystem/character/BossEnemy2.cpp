@@ -29,7 +29,6 @@ BossEnemy2::BossEnemy2() {
 bool BossEnemy2::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,270.0f,0.0f };
-	m_Color = { 1.0f,0.0f,0.5f,1.0f };
 	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy2.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy2.csv", "LIMIT_NUM")));
@@ -671,8 +670,11 @@ void BossEnemy2::GameOverAction() {
 		}
 	}
 	else {
-		const float l_AddRotZ = 0.5f;
-		const float l_AddFrame2 = 0.01f;
+		float l_AddRotZ = {};
+		float l_AddFrame2 = {};
+
+		l_AddRotZ = float(Helper::GetRanNum(30, 100)) / 100;
+		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 500;
 		float RotPower = 10.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
 			m_RotFrame = 1.0f;
