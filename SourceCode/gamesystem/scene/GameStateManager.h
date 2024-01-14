@@ -366,12 +366,6 @@ private:
 	/// エネミー関連
 	/// 
 	/// =============================
-
-	/// <summary>
-	/// エネミー管理用のコンテナ
-	/// </summary>
-	vector<weak_ptr<BaseEnemy>> enemys_container_;
-
 	struct SaveData {
 		int m_SaveIndex = {};
 		int m_SaveHierarchy = {};

@@ -71,4 +71,25 @@ private:
 	void Verse2Onomato();
 	void CloseMagic();
 
+
+
+
+	void ShineInit(XMFLOAT2 pos);
+
+	void Shine2Init(XMFLOAT2 pos);
+
+	struct ShineEffect {
+		unique_ptr<IKESprite> tex;
+		float frame = 0.f;
+		float frameA = 0.f;
+		float kFrame = 20.f;
+		XMFLOAT2 vel = { 0.f,0.f };
+		XMFLOAT2 position = { 0.f,0.f };
+		XMFLOAT2 size = { 32.f,32.f };
+		bool isVanish = false;
+	};
+	bool isEffect = false;
+
+	list<ShineEffect> shines;
+	void ParticleUpdate();
 };
