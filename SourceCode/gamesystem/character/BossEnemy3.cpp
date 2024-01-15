@@ -61,6 +61,7 @@ bool BossEnemy3::Initialize() {
 			m_SafeArea[i][j] = false;
 		}
 	}
+	m_EnemyTag = "LASTBOSS";
 	return true;
 }
 //ó‘Ô‘JˆÚ
