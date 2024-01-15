@@ -209,7 +209,7 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 	}
 	IKESprite::PostDraw();
 
-	enemy->Draw(dxCommon);
+	//enemy->Draw(dxCommon);
 }
 //ImGui描画
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
