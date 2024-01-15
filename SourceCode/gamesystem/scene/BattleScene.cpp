@@ -30,7 +30,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
 	if (s_Countinue) {		//コンティニューをしていた場合CSVからゲームデータ引き継ぎ
-		player_->SetHp(GameStateManager::GetInstance()->GetOpenHP());
+		player_->SetHp(500.0f);
 		s_Countinue = false;
 	}
 	GameStateManager::SetPlayer(player_.get());

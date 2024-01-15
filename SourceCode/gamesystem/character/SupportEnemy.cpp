@@ -59,7 +59,7 @@ bool SupportEnemy::Initialize() {
 	magic.AfterScale = 0.2f;
 	magic.Pos = {};
 	magic.State = {};
-
+	m_EnemyTag = "SUPPORT";
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.8f;
 	m_AddDisolve = 2.0f;

@@ -106,7 +106,7 @@ void AttackArea::Draw(DirectXCommon* dxCommon) {
 //ImGui
 void AttackArea::ImGuiDraw() {
 	ImGui::Begin("Attack");
-	ImGui::Text("Sound:%d", m_Sound);
+	ImGui::Text("Sound:%d", m_Timer);
 	ImGui::End();
 }
 //パネルの位置に置く
