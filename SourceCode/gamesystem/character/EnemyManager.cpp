@@ -170,9 +170,8 @@ void EnemyManager::HealingDamage() {
 
 void EnemyManager::Heal()
 {
-	const float l_HealPower = 5.0f;
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SimpleHeal(l_HealPower);
+		enemy->SimpleHeal();
 	}
 }
 

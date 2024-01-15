@@ -424,9 +424,22 @@ void InterEnemy::SimpleDamege(float damage) {
 	BirthParticle();
 }
 
-void InterEnemy::SimpleHeal(float heal) {
+void InterEnemy::SimpleHeal(const bool Regene) {
 	if (m_HP <= 0.0f) { return; }
 
+	float heal = {};
+
+	if (Regene) {
+		heal = 20.0f;
+	}
+	else {
+		if (m_EnemyTag == "LASTBOSS") {
+			heal = 500.0f;
+		}
+		else {
+			heal = 50.0f;
+		}
+	}
 	float l_HealNum = {};
 
 	if (m_HP != m_MaxHP) {
@@ -767,6 +780,9 @@ void InterEnemy::DeathUpdate() {
 				DeathParticle();
 			}
 			if (Helper::CheckMin(m_DeathTimer, 20, 1)) {
+				if (m_EnemyTag == "SUPPORT") {
+					GameStateManager::GetInstance()->SetIsHeal(true);
+				}
 				m_Alive = false;
 			}
 		}
@@ -789,7 +805,7 @@ void InterEnemy::DeathUpdate() {
 void InterEnemy::RegeneUpdate() {
 	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
 		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
-			SimpleHeal(10.0f);
+			SimpleHeal(true);
 			m_HealTimer = {};
 		}
 	}

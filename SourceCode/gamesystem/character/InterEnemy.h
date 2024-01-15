@@ -177,7 +177,7 @@ public://getter setter
 	const bool GetLastEnemy() { return m_LastEnemy; }
 
 	void SimpleDamege(float damage = 3.f);
-	void SimpleHeal(float heal = 5.f);
+	void SimpleHeal(const bool Regene = false);
 	void SimplePosion(int poison);
 public:
 	//virtual ~InterEnemy() = default;
