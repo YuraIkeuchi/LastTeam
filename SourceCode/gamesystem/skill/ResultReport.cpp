@@ -39,6 +39,11 @@ void ResultReport::Initialize() {
 		damage_taken[i]->SetNumber(0);
 		damage_dealt[i]->SetColor({ 1.f,0.5f,0.f,1.0f });
 		damage_taken[i]->SetColor({ 1.f,0.5f,0.f,1.0f });
+		damage_dealt[i]->Update();
+		damage_taken[i]->Update();
+		damage_taken[i]->SetSize({ 0.f ,0.f });
+		damage_dealt[i]->SetSize({ 0.f ,0.f });
+
 	}
 	isFinish = false;
 	m_Feed = false;
@@ -115,7 +120,7 @@ void ResultReport::Draw(DirectXCommon* dxCommon) {
 		damage_taken[i]->Draw();
 	}
 	for (SmokeEffect& smoke : smokes) {
-		smoke.tex->Draw();
+		//smoke.tex->Draw();
 	}
 	for (ShineEffect& shine : shines) {
 		shine.tex->Draw();
@@ -130,6 +135,10 @@ void ResultReport::Draw(DirectXCommon* dxCommon) {
 }
 
 void ResultReport::InitUpdate() {
+	for (auto i = 0; i < DAMAGEMAX; i++) {
+		damage_taken[i]->SetSize({ 128.f ,128.f });
+		damage_dealt[i]->SetSize({ 128.f ,128.f });
+	}
 	if (Helper::FrameCheck(frameInit, 1 / kFrameInitMax)) {
 		for (auto i = 0; i < DAMAGEMAX; i++) {
 			int r_num = Helper::GetRanNum(0, 9);

@@ -46,7 +46,9 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	backScreen->Draw();
 	top_title->Draw();
-	skillCheack->Draw();
+	if (m_SelectCount < (int)(haveSkills.size())) {
+		skillCheack->Draw();
+	}
 	selectFrame->Draw();
 	for (HaveUI& resultUI : haveSkills) {
 		resultUI.icon->Draw();

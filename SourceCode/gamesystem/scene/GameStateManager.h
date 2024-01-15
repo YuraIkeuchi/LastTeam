@@ -40,7 +40,7 @@ public:
 	void PlayerNowPanel(const int NowWidth, const int NowHeight);
 	//スキルを入手する
 	void AddSkill(const int SkillType, const int ID, const float damage, const int Delay,
-		vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name,int Token);
+		vector<std::vector<int>> area, vector<std::vector<int>> timer, int DisX, int DisY, string name, int Token);
 
 	//デッキのリセット
 	void DeckReset();
@@ -79,7 +79,7 @@ private:
 	void DeckInitialize();
 	void DeckDiscard();
 	void GetPassive(int ID);
-	
+
 	bool AttackSubAction();
 
 	bool SkillRecycle();
@@ -91,8 +91,6 @@ private:
 	void PassiveActive();
 
 	void DamageEffectUpdate();
-
-	void OpenFile();
 public:
 	//gettersetter
 	const bool GetCounter() { return m_Counter; }
@@ -113,7 +111,7 @@ public:
 	/// 敵を倒したら最初の処理
 	/// </summary>
 	void StageClearInit();
-	void SetEnemySpawnText(string& text, bool isBattle=true) { enemySpawnText = text; isBattleFromMap = isBattle; }
+	void SetEnemySpawnText(string& text, bool isBattle = true) { enemySpawnText = text; isBattleFromMap = isBattle; }
 	string& GetEnemySpawnText() { return enemySpawnText; }
 	void SetCounter(const bool isCounter) { this->m_Counter = isCounter; }
 	void SetResetPredict(const bool ResetPredict) { this->m_ResetPredict = ResetPredict; }
@@ -130,10 +128,13 @@ public:
 	void SetIsHeal(bool flag) { m_Heal = flag; }
 	bool GetIsHeal() { return m_Heal; }
 
+	void SetIsBomSuccess(bool flag) { isBomSuccess = flag; }
+	bool GetIsBomSuccess() { return isBomSuccess; }
+
 	void SetCounterBuff(bool flag) { m_CounterBuff = flag; }
 	bool GetCounterBuff() { return m_CounterBuff; }
 
-	void SetGameStart(bool GameStart) { m_GameStart = GameStart;}
+	void SetGameStart(bool GameStart) { m_GameStart = GameStart; }
 	bool GetGameStart() { return m_GameStart; }
 
 	void SetBossCamera(bool BossCamera) { m_BossCamera = BossCamera; }
@@ -143,21 +144,21 @@ public:
 	void TakenDamageCheck(int Damage);
 	bool GetIsFivePower() { return m_FivePower && (m_HandedCount % 5 == 0); }
 	bool GetTakenDamageUp() { return m_TakenDamageUp; }
-	bool GetAttackedPoison() {	return m_AttackedPoison;}
+	bool GetAttackedPoison() { return m_AttackedPoison; }
 	bool GetHealDamage() { return m_healingDamage; }
-	void SetHealDamage(bool flag) { m_healingDamage=flag; }
+	void SetHealDamage(bool flag) { m_healingDamage = flag; }
 
-	bool GetExtendKnight() { return m_ExtendKnight&&(player->GetNowWidth()==3); }
+	bool GetExtendKnight() { return m_ExtendKnight && (player->GetNowWidth() == 3); }
 	bool GetExtendRook() { return m_ExtendRook; }
 	bool GetExtendQueen() { return m_ExtendQueen; }
-	bool GetExtendBishop() { return m_ExtendBishop;}
+	bool GetExtendBishop() { return m_ExtendBishop; }
 
 	int GetRookPoison() { return m_RookPoison; }
 	void AddRookPoison(int add) { m_RookPoison += add; }
 	void SetRookPoison(int num) { m_RookPoison = num; }
 
 	void SetPassiveActive(int id);
-	
+
 	int GetTakenDamageNum() { return m_TakenDamageNum; }
 	void SetTakenDamageNum(int num) { m_TakenDamageNum = num; }
 
@@ -178,6 +179,7 @@ private:
 	bool isFinish = false;
 	bool isChangeScene = false;
 	bool isResultFinish = false;
+	bool isBomSuccess = false;
 	struct ActState {
 		int SkillType;//スキルの種類
 		int ActID;//ID
@@ -214,7 +216,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {2 };
+	std::vector <int> m_StartPassive= { };
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -222,7 +224,7 @@ private:
 	unique_ptr<IKESprite> gaugeUI = nullptr;
 	unique_ptr<IKESprite> gaugeCover = nullptr;
 	unique_ptr<IKESprite> passiveActive = nullptr;
-	std::vector<unique_ptr<IKESprite>> passiveActs ;
+	std::vector<unique_ptr<IKESprite>> passiveActs;
 	std::vector<int> passiveActiveNum;
 
 	bool isPassive = false;
@@ -255,7 +257,7 @@ private:
 	int m_MaxTakenDamage = 0;
 	int m_TakenDamageNum = 0;
 	int m_HandedCount = 0;
-	
+
 	int m_Metronome = 0;
 	float m_MetroDamage = 8.f;
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
@@ -294,6 +296,7 @@ private:
 	int m_Delay = {};
 	string m_Name;
 	vector <int> m_StartNumber = {2,3,5,6,7};
+
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -351,7 +354,7 @@ private:
 	/// <summary>
 	/// プレイヤーのポインタ
 	/// </summary>
-	
+
 	//プレイヤーの現在パネル
 	int m_NowHeight = {};		// Yパネル座標
 	int m_NowWidth = {};		// Xパネル座標
@@ -364,7 +367,6 @@ private:
 	/// エネミー関連
 	/// 
 	/// =============================
-	
 	struct SaveData {
 		int m_SaveIndex = {};
 		int m_SaveHierarchy = {};
@@ -381,6 +383,6 @@ private:
 		std::stringstream dataPopcom;
 		std::string dataLine;
 	};
-	
+
 	SaveData savedata;
 };
