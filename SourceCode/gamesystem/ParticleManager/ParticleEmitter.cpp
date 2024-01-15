@@ -21,6 +21,7 @@ void ParticleEmitter::Initialize()
 	healParticleSecond.reset(ParticleManager::Create(ImageManager::Plus));
 	smokeParticle.reset(ParticleManager::Create(ImageManager::Smoke));
 	rockParticle.reset(ParticleManager::Create(ImageManager::Heal));
+	deathParticle.reset(ParticleManager::Create(ImageManager::Heal));
 }
 
 void ParticleEmitter::Update()
@@ -32,6 +33,7 @@ void ParticleEmitter::Update()
 	healParticleSecond->Update();
 	smokeParticle->Update();
 	rockParticle->Update();
+	deathParticle->Update();
 }
 
 void ParticleEmitter::IntroDraw() {
@@ -43,6 +45,7 @@ void ParticleEmitter::FlontDrawAll() {
 	healParticleSecond->Draw(AddBlendType);
 	smokeParticle->Draw(AlphaBlendType);
 	rockParticle->Draw(AddBlendType);
+	deathParticle->Draw(AddBlendType);
 }
 //炎のパーティクル
 void ParticleEmitter::FireEffect(const int life, const XMFLOAT3& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor)
@@ -121,6 +124,18 @@ void ParticleEmitter::SmokeEffect(const int life, const XMFLOAT3& l_pos, const f
 	vel.y = 0.0f;
 	vel.z = l_Velocity * -cosf(angle);
 	smokeParticle->Add(life, pos, vel, XMFLOAT3(), startscale, endscale, startcolor, endcolor,{});
+}
+
+void ParticleEmitter::DeathEffect(const int life, const XMFLOAT3& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const int number) {
+	const float l_Velocity = 0.05f;
+	XMFLOAT3 pos = l_pos;
+	float angle = {};
+	angle = number * 45.0f;
+	XMFLOAT3 vel{};
+	vel.x = l_Velocity * sinf(angle);
+	vel.y = 0.0f;
+	vel.z = l_Velocity * -cosf(angle);
+	deathParticle->Add(life, pos, vel, XMFLOAT3(), startscale, endscale, startcolor, endcolor, {});
 }
 
 void ParticleEmitter::AllDelete()
