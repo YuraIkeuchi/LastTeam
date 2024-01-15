@@ -78,7 +78,7 @@ void InterEnemy::Update() {
 	if (GameStateManager::GetInstance()->GetBossCamera()) { return; }
 	if (m_EnemyTag != "Bomb") {
 		if (m_HP != 0.0f) {
-			if(m_Alive)
+			if(!m_Death)
 			Action();
 		}
 	}
@@ -87,6 +87,7 @@ void InterEnemy::Update() {
 	}
 	
 	if (m_HP <= 0.0f && m_EnemyTag != "Bomb") {
+		m_Death = true;
 		DeathUpdate();
 	}
 
@@ -760,7 +761,14 @@ void InterEnemy::DeathUpdate() {
 	
 	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
 		m_OverFrame = 1.0f;
-		m_Alive = false;
+		if (m_Death) {
+			if (m_DeathTimer == 0) {
+				DeathParticle();
+			}
+			if (Helper::CheckMin(m_DeathTimer, 20, 1)) {
+				m_Alive = false;
+			}
+		}
 		if (m_EnemyTag == "Rock") {
 			StagePanel::GetInstance()->ClosePanel(m_Object.get(), m_Alive);
 		}
@@ -839,7 +847,16 @@ void InterEnemy::CounterUpdate() {
 		}
 	}
 }
-
+//死亡時パーティクル
+void InterEnemy::DeathParticle() {
+	int l_life = 20;
+	const float s_Scale = 1.5f;
+	const float e_Scale = 0.0f;
+	const XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
+	for (int i = 1; i < 7; i++) {
+		ParticleEmitter::GetInstance()->DeathEffect(l_life, m_Position, s_Scale, e_Scale, color, color, i);
+	}
+}
 //クリアシーンの更新
 void InterEnemy::ClearUpdate() {
 	m_Rotation.y = 180.0f;

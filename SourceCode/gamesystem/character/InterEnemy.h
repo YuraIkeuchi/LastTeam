@@ -107,6 +107,7 @@ protected:
 	int m_PoisonTimer = {};
 	bool m_Alive = true;
 	bool m_Death = false;
+	int m_DeathTimer = {};
 
 	bool m_CheckPanel = false;
 
@@ -240,6 +241,7 @@ public:
 	void CounterUpdate();
 private:
 	void BirthParticle();
+	void DeathParticle();
 	//HPの割合を求める
 	float HpPercent();
 	//スプライトを敵座標に出す
