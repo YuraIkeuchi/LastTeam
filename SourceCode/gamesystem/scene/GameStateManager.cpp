@@ -99,6 +99,7 @@ void GameStateManager::Initialize() {
 	m_Delay = false;
 	m_Buff = false;
 	predictarea->ResetPredict();
+	isFinish = false;
 
 	m_GameStart = false;
 	m_BossCamera = false;
@@ -779,7 +780,6 @@ bool GameStateManager::ResultUpdate() {
 			resultSkill->InDeck(m_DeckNumber);
 			resultSkill->InPassive(GotPassiveIDs);
 			isChangeScene = true;
-			isFinish = false;
 			m_Choice = true;
 			TutorialTask::GetInstance()->SetChoiceSkill(true);
 		}

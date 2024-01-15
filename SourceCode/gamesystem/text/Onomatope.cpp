@@ -91,28 +91,31 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay)
 		str.pattern = Counter;
 		break;
 	case Attack01:
-		str.Tex = IKESprite::Create(ImageManager::ONOMATO_01, basePos);
-		str.Tex->SetAnchorPoint({ 0.5f,0.5f });
-		str.Tex->SetSize({ 0.f,256.f });
-		str.kFrameMax = 45.f;
-		str.kDelayFrameMax = delay;
-		str.pattern = Attack01;
+		//str.Tex = IKESprite::Create(ImageManager::ONOMATO_01, basePos);
+		//str.Tex->SetAnchorPoint({ 0.5f,0.5f });
+		//str.Tex->SetSize({ 0.f,256.f });
+		//str.kFrameMax = 45.f;
+		//str.kDelayFrameMax = delay;
+		//str.pattern = Attack01;
+		return;
 		break;
 	case Attack02:
-		str.Tex = IKESprite::Create(ImageManager::ONOMATO_06, basePos);
-		str.Tex->SetAnchorPoint({ 0.5f,0.5f });
-		str.Tex->SetSize({ 256.f,256.f });
-		str.kFrameMax = 50.f;
-		str.kDelayFrameMax = delay;
-		str.pattern = Attack02;
+		//str.Tex = IKESprite::Create(ImageManager::ONOMATO_06, basePos);
+		//str.Tex->SetAnchorPoint({ 0.5f,0.5f });
+		//str.Tex->SetSize({ 256.f,256.f });
+		//str.kFrameMax = 50.f;
+		//str.kDelayFrameMax = delay;
+		//str.pattern = Attack02;
+		return;
 		break;
 	case Attack03:
-		str.Tex = IKESprite::Create(ImageManager::ONOMATO_07, basePos);
-		str.Tex->SetAnchorPoint({ 0.5f,0.5f });
-		str.Tex->SetSize({ 256.f,256.f });
-		str.kFrameMax = 50.f;
-		str.kDelayFrameMax = delay;
-		str.pattern = Attack03;
+		//str.Tex = IKESprite::Create(ImageManager::ONOMATO_07, basePos);
+		//str.Tex->SetAnchorPoint({ 0.5f,0.5f });
+		//str.Tex->SetSize({ 256.f,256.f });
+		//str.kFrameMax = 50.f;
+		//str.kDelayFrameMax = delay;
+		//str.pattern = Attack03;
+		return;
 		break;
 	case Refrain:
 		str.Tex = IKESprite::Create(ImageManager::ONOMATO_08, basePos);
@@ -129,7 +132,7 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay)
 		str.kFrameMax = 45.f;
 		str.kDelayFrameMax = delay;
 		str.pattern = Guard;
-
+		break;
 	default:
 		break;
 	}
