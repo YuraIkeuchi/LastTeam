@@ -97,6 +97,7 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay)
 		//str.kFrameMax = 45.f;
 		//str.kDelayFrameMax = delay;
 		//str.pattern = Attack01;
+		return;
 		break;
 	case Attack02:
 		//str.Tex = IKESprite::Create(ImageManager::ONOMATO_06, basePos);
@@ -105,6 +106,7 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay)
 		//str.kFrameMax = 50.f;
 		//str.kDelayFrameMax = delay;
 		//str.pattern = Attack02;
+		return;
 		break;
 	case Attack03:
 		//str.Tex = IKESprite::Create(ImageManager::ONOMATO_07, basePos);
@@ -113,6 +115,7 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay)
 		//str.kFrameMax = 50.f;
 		//str.kDelayFrameMax = delay;
 		//str.pattern = Attack03;
+		return;
 		break;
 	case Refrain:
 		str.Tex = IKESprite::Create(ImageManager::ONOMATO_08, basePos);
