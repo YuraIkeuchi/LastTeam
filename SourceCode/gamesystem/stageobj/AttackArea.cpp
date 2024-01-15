@@ -137,7 +137,7 @@ void AttackArea::SlashMove() {
 	}
 
 	//ある程度傾いたら攻撃判定
-	if (m_Rotation.x <= -30.0f) {
+	if (m_Rotation.x <= -20.0f) {
 		m_Attack = true;
 		/// <summary>
 		///	音入れ(斬撃音希望)
@@ -175,7 +175,7 @@ void AttackArea::StoneMove() {
 	}
 
 	//ある程度の高さになったら攻撃判定
-	if (m_Position.y <= 2.0f) {
+	if (m_Position.y <= 2.5f) {
 		m_Attack = true;
 		/// <summary>
 		///	音入れ(岩が落ちる又は欠ける音希望)
@@ -212,7 +212,7 @@ void AttackArea::PoisonMove() {
 	}
 
 	//ある程度の高さになったら攻撃判定
-	if (m_Position.y <= 2.0f) {
+	if (m_Position.y <= 2.5f) {
 		m_Attack = true;
 		/// <summary>
 		///	音入れ(ドロドロしたものが地面に落ちる音希望(ベチャッみたいなやつ)

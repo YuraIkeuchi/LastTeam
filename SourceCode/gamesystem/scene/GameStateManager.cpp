@@ -166,7 +166,7 @@ void GameStateManager::Update() {
 		attackarea[i]->Update();
 
 		if (!attackarea[i]->GetAlive()) {
-			attackarea.erase(cbegin(attackarea) + i);
+			//attackarea.erase(cbegin(attackarea) + i);
 		}
 	}
 	//回復エリアの更新(実際はスキルになると思う)

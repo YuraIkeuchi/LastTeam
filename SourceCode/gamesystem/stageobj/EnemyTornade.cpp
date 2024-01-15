@@ -84,7 +84,7 @@ void EnemyTornade::Collide() {
 
 	int l_PlayerWidth = player->GetNowWidth();
 	int l_PlayerHeight = player->GetNowHeight();
-	const float l_Damage = 10.0f;
+	const float l_Damage = 30.0f;
 	if (m_NowWidth == l_PlayerWidth && m_NowHeight == l_PlayerHeight) {
 		m_Hit = true;
 		player->RecvDamage(m_Damage);
