@@ -167,7 +167,7 @@ void GameStateManager::Update() {
 		attackarea[i]->Update();
 
 		if (!attackarea[i]->GetAlive()) {
-			attackarea.erase(cbegin(attackarea) + i);
+			//attackarea.erase(cbegin(attackarea) + i);
 		}
 	}
 	//回復エリアの更新(実際はスキルになると思う)
@@ -283,6 +283,10 @@ void GameStateManager::ImGuiDraw() {
 	ImGui::Text("Shield:%d", m_Shield);
 	ImGui::End();
 	
+	for (auto i = 0; i < attackarea.size(); i++) {
+		if (attackarea[i] == nullptr)continue;
+		attackarea[i]->ImGuiDraw();
+	}
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画

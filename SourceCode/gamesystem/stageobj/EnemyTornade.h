@@ -54,7 +54,7 @@ private:
 
 	int m_NowWidth = {};
 	int m_NowHeight = {};
-	float m_Damage = 20.0f;
+	float m_Damage = 30.0f;
 
 	enum ThornState {
 		THORN_UP,

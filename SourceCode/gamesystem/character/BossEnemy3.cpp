@@ -291,6 +291,7 @@ void BossEnemy3::RandomAttack() {
 }
 //UŒ‚ƒGƒŠƒA
 void BossEnemy3::BirthArea(const int Width, const int Height, const string& name) {
+	int l_SoundCount = {};
 	for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
 		for (int j = 0; j < PANEL_WIDTH; j++) {
 			if (!m_SafeArea[i][j]) {
@@ -298,7 +299,10 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 				newarea->Initialize();
 				newarea->InitState(i, j);
 				newarea->SetPlayer(player);
-				newarea->SetSound(true);
+				if (l_SoundCount == 0) {
+					newarea->SetSound(true);
+				}
+				l_SoundCount++;
 				enetornade.emplace_back(std::move(newarea));
 			}
 		}

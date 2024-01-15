@@ -821,7 +821,7 @@ void MapScene::CheckState() {
 				ss << BaseName + "Boss/BattleMap0" << 2 << ".csv";
 			}
 			else if (nowHierarchy == 13) {
-				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
+				ss << BaseName + "Boss/BattleMap0" << 3 << ".csv";
 				s_LastStage = true;
 			}
 			else {
@@ -834,7 +834,7 @@ void MapScene::CheckState() {
 					levelName = "Ultimate";
 				}
 				if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
-					ss << BaseName + levelName + "/BattleMap0" << num << ".csv";
+					ss << BaseName + levelName + "/BattleMap0" << 1 << ".csv";
 					isBattle = true;
 				} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
 					ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
