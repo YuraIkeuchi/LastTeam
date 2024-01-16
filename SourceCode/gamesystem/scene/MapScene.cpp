@@ -86,7 +86,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		mapKinds[4] = { PASSIVE,-1,BATTLE };
 		mapKinds[5] = { -1,BOSS,-1 };
 		mapKinds[6] = { PASSIVE,-1,BATTLE };
-		mapKinds[7] = { PASSIVE,BATTLE,PASSIVE };
+		mapKinds[7] = { PASSIVE,PASSIVE,PASSIVE };
 		mapKinds[8] = { BATTLE,-1,PASSIVE };
 		mapKinds[9] = { -1,BOSS,-1 };
 		mapKinds[10] = { PASSIVE,PASSIVE,BATTLE };
@@ -834,7 +834,7 @@ void MapScene::CheckState() {
 					levelName = "Ultimate";
 				}
 				if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
-					ss << BaseName + levelName + "/BattleMap0" << 1 << ".csv";
+					ss << BaseName + levelName + "/BattleMap0" << num << ".csv";
 					isBattle = true;
 				} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
 					ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
