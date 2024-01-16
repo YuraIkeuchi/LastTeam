@@ -106,7 +106,7 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 
-	//áŠQ•¨‚Ìíœ
+	//“ÅƒGƒŠƒA‚Ì•`‰æ
 	for (int i = 0; i < poisonarea.size(); i++) {
 		if (poisonarea[i] == nullptr) {
 			continue;

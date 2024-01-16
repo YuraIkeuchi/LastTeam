@@ -315,6 +315,10 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			}
 			m_Damege = true;
 			m_DamageTimer = {};
+			//ラスボス周りの敵はカウンターをする
+			if (m_BombCounter) {
+				m_BirthBomb = true;
+			}
 			Helper::Clamp(damage, 0.0f, 999.0f);
 			if (m_EnemyTag == "Mob" && !TutorialTask::GetInstance()->GetTaskFinish(TASK_COUNTER)) {
 				damage = 0.0f;
