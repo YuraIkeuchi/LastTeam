@@ -24,6 +24,7 @@ private:
 	void Attack();//UŒ‚
 	void Teleport();//ˆÚ“®
 	void BirthPoison();//
+	void BirthPredict(const int Width, const int Height);
 	void WarpEnemy();//“G‚Ìƒ[ƒvˆ—
 
 	//–‚–@w
@@ -80,5 +81,7 @@ private:
 
 	float m_BaseScale = {};
 	float m_ScaleFrame = {};
+	int m_RandWidth = {};
+	int m_RandHeight = {};
 };
 

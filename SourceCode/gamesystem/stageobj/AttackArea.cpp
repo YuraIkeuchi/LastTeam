@@ -128,6 +128,7 @@ void AttackArea::SlashMove() {
 		}
 	}
 	else {
+		m_Hit = true;
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 		}
@@ -159,6 +160,7 @@ void AttackArea::StoneMove() {
 		}
 	}
 	else {
+		m_Hit = true;
 		m_AddPower -= m_Gravity;
 		m_Scale = Helper::Float3AddFloat(m_Scale, 0.02f);
 		Helper::CheckMax(m_Position.y, 1.0f, m_AddPower);
@@ -199,6 +201,7 @@ void AttackArea::PoisonMove() {
 		}
 	}
 	else {
+		m_Hit = true;
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 		}

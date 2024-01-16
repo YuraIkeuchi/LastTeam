@@ -485,20 +485,24 @@ void Player::MoveCommon(float& pos, float velocity) {
 }
 //プレイヤーのHP回復
 void Player::HealPlayer(const float power) {
-	if (m_HP >= m_MaxHP) { return; }
 	float l_HealNum = {};
-	if (m_healingDamage) {
-		GameStateManager::GetInstance()->SetHealDamage(true);
-		GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::HEAL_ATTACK);
-	}
-	if (m_MaxHP - m_HP >= power) {
-		l_HealNum = power;
+	if (m_HP < m_MaxHP) {
+		if (m_healingDamage) {
+			GameStateManager::GetInstance()->SetHealDamage(true);
+			GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::HEAL_ATTACK);
+		}
+		if (m_MaxHP - m_HP >= power) {
+			l_HealNum = power;
+		}
+		else {
+			l_HealNum = m_MaxHP - m_HP;
+		}
+		if (isHeal || isDamage) {
+			hp_frame = 0.f;
+		}
 	}
 	else {
-		l_HealNum = m_MaxHP - m_HP;
-	}
-	if (isHeal || isDamage) {
-		hp_frame = 0.f;
+		l_HealNum = {};
 	}
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Heal01.wav", 0.05f);
 	BirthHealNumber(l_HealNum);

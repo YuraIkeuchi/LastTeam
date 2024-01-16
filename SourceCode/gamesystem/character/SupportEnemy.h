@@ -1,8 +1,6 @@
 #pragma once
 #include"InterEnemy.h"
-#include "EnemyRock.h"
-#include "EnemyTornade.h"
-
+#include "CounterBomb.h"
 enum SupportType {
 	SUPPORT_RED,
 	SUPPORT_BLUE
@@ -33,11 +31,14 @@ private:
 
 	void WarpEnemy();//敵のワープ処理
 	void AttackMove();//攻撃時の動き
+	void BirthCounter();//カウンターのボム作成
+
 	//魔法陣
 	void BirthMagic();
 private:
 	static const int BULLET_NUM = 5;
 private:
+	std::vector<unique_ptr<CounterBomb>> counterbomb;
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
 

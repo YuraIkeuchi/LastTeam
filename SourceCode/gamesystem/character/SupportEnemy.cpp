@@ -12,6 +12,7 @@
 SupportEnemy::SupportEnemy(const int Num) {
 	m_SupportType = Num;
 	if (m_SupportType == SUPPORT_RED) {
+		m_BombCounter = true;
 		BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SECOND_BOSS));
 	}
 	else {
@@ -87,6 +88,11 @@ void SupportEnemy::Action() {
 	PoisonState();//毒
 	BirthMagic();//魔法陣
 	AttackMove();//攻撃時の動き
+	
+	if (m_BirthBomb) {
+		BirthCounter();
+		m_BirthBomb = false;
+	}
 	//攻撃時ジャンプする
 	if (m_Jump) {
 		m_AddPower -= m_Gravity;
@@ -102,6 +108,18 @@ void SupportEnemy::Action() {
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+
+	//カウンターボムの削除
+	for (int i = 0; i < counterbomb.size(); i++) {
+		if (counterbomb[i] == nullptr) {
+			continue;
+		}
+
+		counterbomb[i]->Update();
+		if (!counterbomb[i]->GetAlive()) {
+			counterbomb.erase(cbegin(counterbomb) + i);
+		}
+	}
 }
 
 //描画
@@ -112,6 +130,14 @@ void SupportEnemy::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
+	//カウンターボムの描画
+	for (int i = 0; i < counterbomb.size(); i++) {
+		if (counterbomb[i] == nullptr) {
+			continue;
+		}
+
+		counterbomb[i]->Draw(dxCommon);
+	}
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
@@ -306,4 +332,16 @@ void SupportEnemy::GameOverAction() {
 	}
 
 	Obj_SetParam();
+}
+
+void SupportEnemy::BirthCounter() {
+	int l_PlayerWidth = {};
+	int l_PlayerHeight = {};
+	l_PlayerWidth = player->GetNowWidth();
+	l_PlayerHeight = player->GetNowHeight();
+	std::unique_ptr<CounterBomb> newbomb = std::make_unique<CounterBomb>();
+	newbomb->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+	newbomb->InitState(l_PlayerWidth, l_PlayerHeight);
+	newbomb->SetPlayer(player);
+	counterbomb.push_back(std::move(newbomb));
 }
