@@ -32,6 +32,7 @@ private:
 	void SetDeleteAfter(const int num);
 	void SetPassiveDeleteAfter(const int num);
 	void DeleteMove();
+	bool DeleteCheack();
 private:
 	static const int S_DAMAGEMAX = 2;
 private:
@@ -59,6 +60,13 @@ private:
 	std::unique_ptr<IKESprite> top_title;
 	std::unique_ptr<IKESprite> skillCheack;
 	std::unique_ptr<IKESprite> selectFrame;
+
+	std::unique_ptr<IKESprite> black;
+	std::unique_ptr<IKESprite> deleteDeck;
+	std::unique_ptr<IKESprite> deleteDeckYes[2];
+	std::unique_ptr<IKESprite> deleteDeckNo[2];
+
+
 	std::vector<HaveUI> haveSkills;
 	std::vector<HaveUI> havePassive;
 	float m_AddPosX = {};
@@ -70,5 +78,12 @@ private:
 
 	XMFLOAT2 m_SelectPos = {};
 	bool m_DeleteMove = false;
+
+
+
+	bool m_DeleteStart = false;
+	float deleteFrame = 0.f;
+	bool m_DeleteCheack = false;
+	int nowCheack = 0;
 };
 
