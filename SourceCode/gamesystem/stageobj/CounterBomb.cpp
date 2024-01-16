@@ -11,6 +11,12 @@ CounterBomb::CounterBomb() {
 	m_Object.reset(new IKEObject3d());
 	m_Object->Initialize();
 	m_Object->SetModel(m_Model);
+	panel.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,0.4f,0.4f,1.f }));
+	panel.tex->TextureCreate();
+	panel.tex->Initialize();
+	panel.tex->SetScale({ 0.15f,0.15f,0.15f });
+	panel.tex->SetRotation({ 90.0f,0.0f,0.0f });
+	panel.color = { 1.f,0.4f,0.4f,1.f };
 	Initialize();
 }
 //初期化
@@ -23,6 +29,7 @@ bool CounterBomb::Initialize() {
 void CounterBomb::InitState(const int width, const int height) {
 	m_NowWidth = width, m_NowHeight = height;
 	m_AfterPos = SetPanelPos(width, height);
+	panel.position = { m_AfterPos.x,0.012f,m_AfterPos.z };
 	//弾
 	m_Alive = true;
 	float baseScale = PANEL_SIZE * 0.1f;
@@ -35,9 +42,29 @@ void CounterBomb::Update() {
 	Obj_SetParam();
 	Collide();
 	Move();
+
+	if (panel.predict) {
+		m_AddAngle = Helper::Lerp(10.0f, 30.0f, m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
+		//sin波によって上下に動く
+		m_SinAngle += m_AddAngle;
+		m_SinAngle2 = m_SinAngle * (3.14f / 180.0f);
+		for (int i = 0; i < PREDICT_WIDTH; i++) {
+			for (int j = 0; j < PREDICT_HEIGHT; j++) {
+				panel.color.w = (sin(m_SinAngle2) * 0.5f + 0.5f);
+			}
+		}
+	}
+
+	panel.tex->SetPosition(panel.position);
+	panel.tex->SetColor(panel.color);
+	panel.tex->Update();
 }
 //描画
 void CounterBomb::Draw(DirectXCommon* dxCommon) {
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	if(panel.predict)
+	panel.tex->Draw();
+	IKETexture::PostDraw();
 	if (m_Alive)
 		Obj_Draw();
 }
@@ -60,10 +87,13 @@ void CounterBomb::Collide() {
 	}
 }
 void CounterBomb::Move() {
-	const float l_TargetPosY = 15.0f;
-	const float l_ThrowSpeed = 0.25f;
+	const float l_TargetPosY = 10.0f;
+	const float l_ThrowSpeed = 0.4f;
 
+	m_Timer++;
+	m_TargetTimer = 100;
 	if (_BombState == BOMB_THROW) {			//上に上げる
+		panel.predict = true;
 		if (Helper::CheckMin(m_Position.y, l_TargetPosY, l_ThrowSpeed)) {
 			_BombState = BOMB_DROP;
 			m_Position = { m_AfterPos.x,l_TargetPosY,m_AfterPos.z };
@@ -72,6 +102,7 @@ void CounterBomb::Move() {
 	else if (_BombState == BOMB_DROP) {		//落ちてくる
 		if (Helper::CheckMax(m_Position.y, 0.0f, -l_ThrowSpeed)) {
 			_BombState = BOMB_DELETE;
+			panel.predict = false;
 		}
 	}
 	else {

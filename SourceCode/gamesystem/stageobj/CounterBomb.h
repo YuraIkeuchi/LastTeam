@@ -54,6 +54,22 @@ private:
 	
 	float m_Damage = {};
 	int m_DeathTimer = {};
-	int m_TargetTimer = {};
 	bool m_Hit = false;
+
+	//ƒpƒlƒ‹
+	struct Panel {
+		unique_ptr<IKETexture> tex;
+		XMFLOAT3 position = { 0,0,0 };
+		XMFLOAT4 color = { 1,1,1,1 };
+		XMFLOAT3 scale = {};
+		bool predict = false;
+	};
+
+	Panel panel;
+	int m_Timer = {};
+	int m_TargetTimer = {};
+	
+	float m_SinAngle = {};
+	float m_SinAngle2 = {};
+	float m_AddAngle = {};
 };
