@@ -162,6 +162,9 @@ protected:
 	}_GameOverState = OVER_STOP;
 	int m_OverTimer = {};
 	float m_RotFrame = {};
+	//カウンター
+	bool m_BombCounter = false;
+	bool m_BirthBomb = false;
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -177,7 +180,7 @@ public://getter setter
 	const bool GetLastEnemy() { return m_LastEnemy; }
 
 	void SimpleDamege(float damage = 3.f);
-	void SimpleHeal(float heal = 5.f);
+	void SimpleHeal(const bool Regene = false);
 	void SimplePosion(int poison);
 public:
 	//virtual ~InterEnemy() = default;

@@ -18,10 +18,9 @@ PoisonEnemy::PoisonEnemy() {
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
-	//shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
-	//shadow_tex->TextureCreate();
-	//shadow_tex->Initialize();
-	//shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
+	//—\‘ª
+	predictarea.reset(new PredictArea("ENEMY"));
+	predictarea->Initialize();
 }
 //‰Šú‰»
 bool PoisonEnemy::Initialize() {
@@ -104,9 +103,10 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 	//shadow_tex->Draw();
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
+	predictarea->Draw(dxCommon);
 	IKETexture::PostDraw();
 
-	//áŠQ•¨‚Ìíœ
+	//“ÅƒGƒŠƒA‚Ì•`‰æ
 	for (int i = 0; i < poisonarea.size(); i++) {
 		if (poisonarea[i] == nullptr) {
 			continue;
@@ -121,19 +121,18 @@ void PoisonEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void PoisonEnemy::ImGui_Origin() {
-	////‚Ç‚­‚Ìíœ
-	//for (int i = 0; i < poisonarea.size(); i++) {
-	//	if (poisonarea[i] == nullptr) {
-	//		continue;
-	//	}
+	//‚Ç‚­‚Ìíœ
+	for (int i = 0; i < poisonarea.size(); i++) {
+		if (poisonarea[i] == nullptr) {
+			continue;
+		}
 
-	//	poisonarea[i]->ImGuiDraw();
-	//}
+		poisonarea[i]->ImGuiDraw();
+	}
 	ImGui::Begin("Poison");
-	ImGui::Text("RotationY:%f", m_Rotation.y);
-	ImGui::Text("ScaleX:%f", m_Scale.x);
-	ImGui::Text("InductionFrame:%f", m_InductionFrame);
-	ImGui::Text("InductionPos:%f", m_InductionPos);
+	ImGui::Text("m_RandHeight:%d", m_RandHeight);
+	ImGui::Text("m_RandWidth:%d", m_RandWidth);
+	ImGui::Text("coolT:%d", coolTimer);
 	ImGui::End();
 }
 //ŠJ•ú
@@ -142,11 +141,10 @@ void PoisonEnemy::Finalize() {
 }
 //‘Ò‹@
 void PoisonEnemy::Inter() {
+	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
-	if (coolTimer == l_TargetTimer) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		coolTimer = 100;
 		_charaState = STATE_ATTACK;
 	}
@@ -161,10 +159,13 @@ void PoisonEnemy::Attack() {
 		l_AfterScale = 0.3f;
 		l_AddFrame = 1 / 30.0f;
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+			predictarea->ResetPredict();
 			if (Helper::FrameCheck(m_ScaleFrame,l_AddFrame)) {
 				coolTimer = {};
 				_PoisonType = Poison_THROW;
 				m_ScaleFrame = {};
+				StagePanel::GetInstance()->PoisonSetPanel(m_RandWidth, m_RandHeight);
+				BirthPredict(m_RandWidth, m_RandHeight);
 			}
 
 			m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
@@ -180,6 +181,7 @@ void PoisonEnemy::Attack() {
 				_PoisonType = Poison_SET;
 			}
 			else {
+				
 				_PoisonType = Poison_END;
 			}
 			m_ScaleFrame = {};
@@ -187,15 +189,22 @@ void PoisonEnemy::Attack() {
 		m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
 	}
 	else {
-		m_CheckPanel = true;
-		m_AttackCount = {};
-		_charaState = STATE_SPECIAL;
-		coolTimer = {};
-		_PoisonType = Poison_SET;
-		StagePanel::GetInstance()->EnemyHitReset();
+		if (Helper::CheckMin(coolTimer, 130, 1)) {
+			m_CheckPanel = true;
+			m_AttackCount = {};
+			_charaState = STATE_SPECIAL;
+			coolTimer = {};
+			_PoisonType = Poison_SET;
+			StagePanel::GetInstance()->EnemyHitReset();
+			predictarea->ResetPredict();
+		}
 	}
 
 	m_Scale = { m_Scale.x,m_BaseScale,m_Scale.z };
+
+	predictarea->SetTargetTimer(l_TargetTimer);
+	predictarea->Update();
+	predictarea->SetTimer(coolTimer);
 }
 
 //ƒ[ƒv
@@ -203,8 +212,7 @@ void PoisonEnemy::Teleport() {
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL];
-
-	if (Helper::CheckMin(coolTimer, l_RandTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -218,14 +226,17 @@ void PoisonEnemy::BirthPoison() {
 	///	‰¹“ü‚ê(’e‚ğ‘Å‚Â‰¹Šó–](ƒ|ƒ“ƒb‚İ‚½‚¢‚È‚â‚Â))
 	/// </summary>
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
-	int l_RandWidth;
-	int l_RandHeight;
-	StagePanel::GetInstance()->PoisonSetPanel(l_RandWidth,l_RandHeight);
+
 	std::unique_ptr<PoisonArea> newarea = std::make_unique<PoisonArea>();
 	newarea->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
-	newarea->InitState(l_RandWidth, l_RandHeight);
+	newarea->InitState(m_RandWidth, m_RandHeight);
 	newarea->SetPlayer(player);
 	poisonarea.push_back(std::move(newarea));
+}
+//—\‘ªƒGƒŠƒA
+void PoisonEnemy::BirthPredict(const int Width, const int Height) {
+	predictarea->SetPredict(Width, Height, true);
+	predictarea->SetFlashStart(true);
 }
 //–‚–@w¶¬
 void PoisonEnemy::BirthMagic() {

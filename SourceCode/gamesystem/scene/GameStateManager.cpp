@@ -283,6 +283,10 @@ void GameStateManager::ImGuiDraw() {
 	ImGui::Text("Shield:%d", m_Shield);
 	ImGui::End();
 	
+	for (auto i = 0; i < attackarea.size(); i++) {
+		if (attackarea[i] == nullptr)continue;
+		attackarea[i]->ImGuiDraw();
+	}
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画

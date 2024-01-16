@@ -11,6 +11,6 @@ AttackArea,0 1 0 0
 AttackArea,1 1 1 0
 AttackAreA,0 1 0 0
 Timer,0 1 0 0
-Timer,0 1 0 0
-Timer,1 1 1 0
-TimeR,0 1 0 0
+Timer,7 7 0 0
+Timer,15 15 15 0
+TimeR,22 22 0 0

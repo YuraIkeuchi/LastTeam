@@ -61,6 +61,7 @@ bool BossEnemy3::Initialize() {
 			m_SafeArea[i][j] = false;
 		}
 	}
+	m_EnemyTag = "LASTBOSS";
 	return true;
 }
 //状態遷移
@@ -73,6 +74,7 @@ void (BossEnemy3::* BossEnemy3::stateTable[])() = {
 void (BossEnemy3::* BossEnemy3::attackTable[])() = {
 	&BossEnemy3::RockAttack,//弾を打つ攻撃
 	&BossEnemy3::RandomAttack,//ランダム
+	&BossEnemy3::AroundAttack,//ランダム
 };
 
 //行動
@@ -168,7 +170,13 @@ void BossEnemy3::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = 1;
+		int l_RandState = 0;
+		if (enerock.size() >= 3) {
+			l_RandState = 2;
+		}
+		else if(enerock.size() < 3 && enerock.size() != 0) {
+			l_RandState = 1;
+		}
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -228,7 +236,7 @@ void BossEnemy3::RockAttack() {
 	l_TargetTimer = m_AttackLimit[ATTACK_ROCK];
 	if (coolTimer == 0) {
 		//真ん中4マス
-		BirthPredict(m_RandWigth, m_RandHeight,"Rock");
+		BirthPredict(m_RandWidth, m_RandHeight,"Rock");
 	}
 	else if (coolTimer == l_TargetTimer - 60) {
 		if (m_RockCount != 4) {
@@ -265,18 +273,11 @@ void BossEnemy3::RandomAttack() {
 	l_TargetTimer = m_AttackLimit[ATTACK_RANDOM];
 
 	if (coolTimer == 0) {
-		//プレイヤーからの距離(-1~1)
-		int l_RandWigth = Helper::GetRanNum(-1, 1);
-		int l_RandHeight = Helper::GetRanNum(-1, 1);
-		m_RandWigth = l_PlayerWidth + l_RandWigth;
-		m_RandHeight = l_PlayerHeight + l_RandHeight;
-		Helper::Clamp(m_RandWigth, 0, 3);
-		Helper::Clamp(m_RandHeight, 0, 3);
 		SelectSafeArea();
-		BirthPredict(m_RandWigth, m_RandHeight, "Random");
+		BirthPredict(m_RandWidth, m_RandHeight, "Random");
 	}
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-		BirthArea(m_RandWigth, m_RandHeight, "Random");
+		BirthArea(m_RandWidth, m_RandHeight, "Random");
 		coolTimer = {};
 		m_Jump = true;
 		m_AddPower = 0.2f;
@@ -289,25 +290,85 @@ void BossEnemy3::RandomAttack() {
 
 	predictarea->SetTargetTimer(l_TargetTimer);
 }
+//周りを攻撃
+void BossEnemy3::AroundAttack() {
+	//プレイヤーの現在マス
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_AROUND];
+	const int l_StartWidth = 3;
+	const int l_StartHeight = {};
+	if (m_AttackCount != 10) {
+		if (coolTimer == 0) {
+			//プレイヤーからの距離(-1~1)
+			if (m_AttackCount == 0) {	//下から
+				m_RandWidth = l_StartWidth;
+				m_RandHeight = {};
+			}
+			else if (m_AttackCount <= 3) {		//徐々に左に
+				m_RandWidth = l_StartWidth - m_AttackCount;
+			}
+			else if (m_AttackCount <= 6) {		//上に上がる
+				m_RandWidth = {};
+				m_RandHeight = l_StartHeight + (m_AttackCount - 3);
+			}
+			else {		//最後は戻る
+				m_RandWidth++;
+				m_RandHeight = 3;
+			}
+
+			BirthPredict(m_RandWidth, m_RandHeight, "Around");
+		}
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 2)) {
+			BirthArea(m_RandWidth, m_RandHeight, "Around");
+			coolTimer = {};
+			m_AttackCount++;
+			m_Jump = true;
+			m_AddPower = 0.2f;
+			m_Rot = true;
+		}
+	}
+	else {
+		StagePanel::GetInstance()->EnemyHitReset();
+		m_CheckPanel = true;
+		m_AttackCount = {};
+		_charaState = STATE_SPECIAL;
+	}
+
+	predictarea->SetTargetTimer(l_TargetTimer);
+}
 //攻撃エリア
 void BossEnemy3::BirthArea(const int Width, const int Height, const string& name) {
-	for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-		for (int j = 0; j < PANEL_WIDTH; j++) {
-			if (!m_SafeArea[i][j]) {
-				std::unique_ptr<EnemyTornade> newarea = std::make_unique<EnemyTornade>();
-				newarea->Initialize();
-				newarea->InitState(i, j);
-				newarea->SetPlayer(player);
-				newarea->SetSound(true);
-				enetornade.emplace_back(std::move(newarea));
+	if (name == "Random") {
+		int l_SoundCount = {};
+		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
+			for (int j = 0; j < PANEL_WIDTH; j++) {
+				if (!m_SafeArea[i][j]) {
+					std::unique_ptr<EnemyTornade> newarea = std::make_unique<EnemyTornade>();
+					newarea->Initialize();
+					newarea->InitState(i, j);
+					newarea->SetPlayer(player);
+					if (l_SoundCount == 0) {
+						newarea->SetSound(true);
+					}
+					l_SoundCount++;
+					enetornade.emplace_back(std::move(newarea));
+				}
+			}
+		}
+
+		for (int i = 0; i < (PANEL_WIDTH / 2); i++) {
+			for (int j = 0; j < PANEL_WIDTH; j++) {
+				m_SafeArea[i][j] = false;
 			}
 		}
 	}
-
-	for (int i = 0; i < (PANEL_WIDTH / 2); i++) {
-		for (int j = 0; j < PANEL_WIDTH; j++) {
-			m_SafeArea[i][j] = false;
-		}
+	else if (name == "Around") {
+		std::unique_ptr<EnemyTornade> newarea = std::make_unique<EnemyTornade>();
+		newarea->Initialize();
+		newarea->InitState(Width, Height);
+		newarea->SetPlayer(player);
+		newarea->SetSound(true);
+		enetornade.emplace_back(std::move(newarea));
 	}
 	predictarea->ResetPredict();
 }
@@ -331,6 +392,9 @@ void BossEnemy3::BirthPredict(const int Width, const int Height, const string& n
 				}
 			}
 		}
+	}
+	else if (name == "Around") {
+		predictarea->SetPredict(Width, Height, true);
 	}
 
 	predictarea->SetFlashStart(true);
@@ -551,7 +615,7 @@ void BossEnemy3::GameOverAction() {
 	Obj_SetParam();
 }
 void BossEnemy3::SelectSafeArea() {
-	const int l_safeMax = 3;
+	const int l_safeMax = 5;
 	for (int i = 0; i < l_safeMax; i++) {
 		bool isSet = false;
 		//乱数の設定

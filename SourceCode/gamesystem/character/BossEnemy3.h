@@ -24,7 +24,8 @@ private:
 	void Attack();//UŒ‚
 	void Teleport();//ˆÚ“®
 	void RockAttack();//Šâ‚ÌUŒ‚
-	void RandomAttack();
+	void RandomAttack();//ƒ‰ƒ“ƒ_ƒ€UŒ‚
+	void AroundAttack();//ü‚è‚ÌUŒ‚
 	void BirthRock();//
 	void BirthArea(const int Width, const int Height, const string& name);//UŒ‚ƒGƒŠƒA
 	void BirthPredict(const int Width, const int Height, const string& name);//—\‘ªƒGƒŠƒA
@@ -47,21 +48,17 @@ private:
 	int _charaState = STATE_INTER;
 		// ŠâƒGƒŠƒA
 	std::vector<unique_ptr<EnemyRock>> enerock;
-	enum BossType {
-		Boss_SET,
-		Boss_THROW,
-		Boss_END,
-	}_BossType = Boss_SET;
-
+	
 	enum AttackState {
 		ATTACK_ROCK,
 		ATTACK_RANDOM,
+		ATTACK_AROUND,
 	}_AttackState = ATTACK_RANDOM;
 	std::vector<std::vector<int>> m_Area = {};
 	// UŒ‚ƒGƒŠƒA
 	std::vector<unique_ptr<EnemyTornade>> enetornade;
 	
-	int m_RandWigth = {};
+	int m_RandWidth = {};
 	int m_RandHeight = {};
 
 	//–‚–@wŒn

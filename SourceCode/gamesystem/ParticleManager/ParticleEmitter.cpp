@@ -160,6 +160,55 @@ void ParticleEmitter::RockEffect(const int life, const XMFLOAT3& l_pos, const fl
 
 	rockParticle->Add(life, pos, vel, {}, startscale, endscale, startcolor, endcolor, {});
 }
+//爆発
+void ParticleEmitter::Explosion(const int life, const XMFLOAT3& pos, const float size, const float startscale,
+	const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const int ExploType) {
+	float RandPos = {};
+	//X,Y,Z全て[-0.8f, +0.8f]でランダムに分布
+	float RandPos2 = {};
+	//X,Y,Z全て[-0.05f, +0.05f]でランダムに分布
+	float RandVel = {};
+	//爆発の規模でエフェクトも変わる
+	if (ExploType == 0) {
+		RandPos = 2.0f;
+		RandPos2 = 0.8f;
+		RandVel = 0.05f;
+	}
+	else if (ExploType == 1) {
+		RandPos = 9.0f;
+		RandPos2 = 0.8f;
+		RandVel = 0.05f;
+	}
+	else {
+		RandPos = 12.0f;
+		RandPos2 = 0.8f;
+		RandVel = 0.05f;
+	}
+	for (int j = 0; j < 3; j++) {
+		XMFLOAT3 l_pos = pos;
+		l_pos.x += ((float)rand() / RAND_MAX * RandPos - RandPos / 2.0f) * size;
+		l_pos.y += ((float)rand() / RAND_MAX * RandPos - RandPos / 2.0f) * size;
+		l_pos.z += ((float)rand() / RAND_MAX * RandPos - RandPos / 2.0f) * size;
+
+		for (int i = 0; i < 10; i++) {
+
+			l_pos.x += ((float)rand() / RAND_MAX * RandPos2 - RandPos2 / 2.0f) * size;
+			l_pos.y += ((float)rand() / RAND_MAX * RandPos2 - RandPos2 / 2.0f) * size;
+			l_pos.z += ((float)rand() / RAND_MAX * RandPos2 - RandPos2 / 2.0f) * size;
+
+
+			XMFLOAT3 vel{};
+			vel.x = ((float)rand() / RAND_MAX * RandVel - RandVel / 2.0f) * size;
+			vel.y = ((float)rand() / RAND_MAX * RandVel - RandVel / 2.0f) * size;
+			vel.z = ((float)rand() / RAND_MAX * RandVel - RandVel / 2.0f) * size;
+
+
+			//追加
+			circleParticle->Add(life, l_pos, vel, {}, startscale, endscale, startcolor, endcolor, {});
+		}
+	}
+}
+
 
 void ParticleEmitter::LoadTexture() {
 	ImageManager::GetInstance()->LoadParticle();
