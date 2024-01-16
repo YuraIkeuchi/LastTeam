@@ -771,10 +771,16 @@ bool GameStateManager::ResultUpdate() {
 	if (Input::GetInstance()->TriggerButton(Input::LB) ||
 		Input::GetInstance()->TriggerKey(DIK_LEFT)) {
 		_ResultType = GET_SKILL;
+		///
+		//　ここにスキルとデッキ切り替え音（音入れ）
+		///
 	}
 	if (Input::GetInstance()->TriggerButton(Input::RB) ||
 		Input::GetInstance()->TriggerKey(DIK_RIGHT)) {
 		_ResultType = HAVE_SKILL;
+		///
+		//　ここにスキルとデッキ切り替え音（音入れ）
+		///
 	}
 
 	if (_ResultType == GET_SKILL) {
