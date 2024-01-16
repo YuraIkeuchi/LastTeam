@@ -81,8 +81,7 @@ void InterEnemy::Update() {
 			if(!m_Death)
 			Action();
 		}
-	}
-	else {
+	}else {
 		Action();
 	}
 	
@@ -105,11 +104,6 @@ void InterEnemy::Update() {
 	if (m_HP != 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
 			_drawnumber[i]->Update();
-		}
-
-	} else {
-		if (m_EnemyTag != "Bomb") {
-			//m_Alive = false;
 		}
 	}
 
@@ -251,7 +245,7 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
-	if (m_Poison && m_EnemyTag != "Bomb") {
+	if (m_Poison) {
 		poisonState->Draw();
 		//敵のポイズンテキスト
 		if (m_PoisonToken >= 0) {

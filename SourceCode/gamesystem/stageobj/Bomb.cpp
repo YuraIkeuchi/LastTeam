@@ -56,7 +56,7 @@ void Bomb::Action() {
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
 	Collide(_AttackArea);		//当たり判定
-
+	PoisonState();
 	if (m_HP <= 0.0f && _charaState != STATE_SPECIAL) {
 		Attack();
 	}
