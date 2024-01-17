@@ -79,8 +79,16 @@ void (BossEnemy3::* BossEnemy3::attackTable[])() = {
 
 //s“®
 void BossEnemy3::Action() {
+	if (m_LastEnemy && _charaState == STATE_INTER && !m_AngerFinish) {	//ÅŒã‚Ìˆê‘Ì‚É‚È‚Á‚½‚Æ‚«“{‚èó‘Ô‚É‚È‚é
+		m_Anger = true;
+	}
 	if (!m_Induction) {
-		(this->*stateTable[_charaState])();
+		if (!m_Anger) {
+			(this->*stateTable[_charaState])();
+		}
+		else {	//“{‚è‚Ì“®‚«
+			AngerMove();
+		}
 	}
 	else {
 		InductionMove();
@@ -153,10 +161,12 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void BossEnemy3::ImGui_Origin() {
-	//ImGui::Begin("Boss");
-	//ImGui::Text("PosX:%f", m_Position.x);
-	//ImGui::Text("PosZ:%f", m_Position.z);
-	//ImGui::End();
+	ImGui::Begin("Boss");
+	ImGui::Text("m_Anger:%d", m_Anger);
+	ImGui::Text("m_AngerFinish:%d", m_AngerFinish);
+	ImGui::Text("m_AngerTimer:%d", m_AngerTimer);
+	ImGui::Text("m_AngerCount:%d", m_AngerCount);
+	ImGui::End();
 	//predictarea->ImGuiDraw();
 }
 //ŠJ•ú
@@ -635,5 +645,20 @@ void BossEnemy3::SelectSafeArea() {
 		}
 		
 		m_SafeArea[width][height] = true;
+	}
+}
+//“{‚èó‘Ô‚É‚È‚Á‚½‚Æ‚«‚Ì“®‚«
+void BossEnemy3::AngerMove() {
+	const int l_TargetTimer = 30;
+	if (Helper::CheckMin(m_AngerTimer, l_TargetTimer, 1)) {
+		m_AngerCount++;
+		m_AddPower = 0.2f;
+		m_Jump = true;
+		m_AngerTimer = {};
+		if (m_AngerCount == 3) {
+			m_Rot = true;
+			m_AngerFinish = true;
+			m_Anger = false;
+		}
 	}
 }
