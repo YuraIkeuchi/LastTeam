@@ -778,7 +778,7 @@ void InterEnemy::DeathUpdate() {
 				DeathParticle();
 			}
 			if (Helper::CheckMin(m_DeathTimer, 20, 1)) {
-				if (m_EnemyTag == "SUPPORT") {
+				if (m_EnemyTag == "SUPPORT" || m_EnemyTag == "SUPPORT2") {
 					GameStateManager::GetInstance()->SetIsHeal(true);
 				}
 				m_Alive = false;
