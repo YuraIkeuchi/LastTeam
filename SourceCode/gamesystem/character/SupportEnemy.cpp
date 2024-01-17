@@ -13,9 +13,11 @@ SupportEnemy::SupportEnemy(const int Num) {
 	m_SupportType = Num;
 	if (m_SupportType == SUPPORT_RED) {
 		m_BombCounter = true;
+		m_EnemyTag = "SUPPORT";
 		BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SECOND_BOSS));
 	}
 	else {
+		m_EnemyTag = "SUPPORT2";
 		BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SUPPORT_ENEMY));
 	}
 
@@ -44,13 +46,6 @@ bool SupportEnemy::Initialize() {
 	m_Limit.resize(LimitSize);
 	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/SupportEnemy.csv", m_Limit, "Interval");
 
-	auto AttackLimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "ATTACK_LIMIT_NUM")));
-
-	m_AttackLimit.resize(AttackLimitSize);
-	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/SupportEnemy.csv", m_AttackLimit, "Attack_Interval");
-
-	m_BulletNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "BULLET_NUM")));
-
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -60,10 +55,11 @@ bool SupportEnemy::Initialize() {
 	magic.AfterScale = 0.2f;
 	magic.Pos = {};
 	magic.State = {};
-	m_EnemyTag = "SUPPORT";
+	
 	enemywarp.AfterScale = {};
-	enemywarp.Scale = 0.8f;
+	enemywarp.Scale = 0.4f;
 	m_AddDisolve = 2.0f;
+	m_RandTimer = Helper::GetRanNum(0,20);
 	return true;
 }
 //èÛë‘ëJà⁄
@@ -159,26 +155,33 @@ void SupportEnemy::Finalize() {
 void SupportEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
+		m_RandTimer = Helper::GetRanNum(0, 20);
 	}
 }
 //çUåÇ
 void SupportEnemy::Attack() {
 	//(this->*attackTable[_AttackState])();
 	//PlayerCollide();
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_ATTACK];
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
+		coolTimer = 0;
+		_charaState = STATE_SPECIAL;
+		m_RandTimer = Helper::GetRanNum(0, 20);
+	}
 	predictarea->Update();
 	predictarea->SetTimer(coolTimer);
 }
 
 //ÉèÅ[Év
 void SupportEnemy::Teleport() {
-	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
 
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -226,12 +229,12 @@ void SupportEnemy::BirthMagic() {
 }
 void SupportEnemy::WarpEnemy() {
 	XMFLOAT3 l_RandPos = {};
-	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy);
+	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy,m_EnemyTag);
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//ÉLÉÉÉâÇ™è¨Ç≥Ç≠Ç»ÇÈ
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
-			enemywarp.AfterScale = 0.8f;
+			enemywarp.AfterScale = 0.4f;
 			enemywarp.State = WARP_END;
 			coolTimer = {};
 			m_Position = l_RandPos;
@@ -248,6 +251,7 @@ void SupportEnemy::WarpEnemy() {
 			m_Warp = false;
 			_charaState = STATE_INTER;
 			enemywarp.State = WARP_START;
+			m_RandTimer = Helper::GetRanNum(0, 20);
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}

@@ -57,6 +57,7 @@ bool TackleEnemy::Initialize() {
 	enemywarp.Scale = 0.5f;
 
 	m_AddDisolve = 2.0f;
+	m_RandTimer = Helper::GetRanNum(0, 40);
 	return true;
 }
 
@@ -121,9 +122,9 @@ void TackleEnemy::Finalize() {
 }
 
 void TackleEnemy::Inter() {
-	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, kIntervalMax);
-	if (coolTimer == kIntervalMax) {
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_INTER];
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		_charaState = STATE_STANDBY;
 		coolTimer = 0;
 	}
@@ -240,6 +241,7 @@ void TackleEnemy::WarpEnemy() {
 			m_Warp = false;
 			_charaState = STATE_INTER;
 			enemywarp.State = WARP_START;
+			m_RandTimer = Helper::GetRanNum(0, 40);
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}

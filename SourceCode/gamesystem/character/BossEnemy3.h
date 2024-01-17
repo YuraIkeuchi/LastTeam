@@ -26,6 +26,7 @@ private:
 	void RockAttack();//Šâ‚ÌUŒ‚
 	void RandomAttack();//ƒ‰ƒ“ƒ_ƒ€UŒ‚
 	void AroundAttack();//ü‚è‚ÌUŒ‚
+	void AngerMove();//“{‚è‚Ì“®‚«
 	void BirthRock();//
 	void BirthArea(const int Width, const int Height, const string& name);//UŒ‚ƒGƒŠƒA
 	void BirthPredict(const int Width, const int Height, const string& name);//—\‘ªƒGƒŠƒA
@@ -108,5 +109,9 @@ private:
 	bool m_SafeArea[4][4];
 
 	int m_RockCount = {};
+	bool m_Anger = false;
+	bool m_AngerFinish = false;
+	int m_AngerTimer = {};
+	int m_AngerCount = {};
 };
 

@@ -48,7 +48,7 @@ bool PoisonEnemy::Initialize() {
 
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.7f;
-
+	m_RandTimer = Helper::GetRanNum(0, 40);
 	m_AddDisolve = 2.0f;
 	return true;
 }
@@ -141,10 +141,9 @@ void PoisonEnemy::Finalize() {
 }
 //‘Ò‹@
 void PoisonEnemy::Inter() {
-	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		coolTimer = 100;
 		_charaState = STATE_ATTACK;
 	}
@@ -289,6 +288,7 @@ void PoisonEnemy::WarpEnemy() {
 			m_Warp = false;
 			_charaState = STATE_INTER;
 			enemywarp.State = WARP_START;
+			m_RandTimer = Helper::GetRanNum(0, 40);
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}

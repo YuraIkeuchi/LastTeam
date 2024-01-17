@@ -48,6 +48,7 @@ bool ClouserEnemy::Initialize() {
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.5f;
 	m_AddDisolve = 2.0f;
+	m_RandTimer = Helper::GetRanNum(0, 40);
 	return true;
 }
 //èÛë‘ëJà⁄
@@ -139,7 +140,7 @@ void ClouserEnemy::Finalize() {
 void ClouserEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 	}
@@ -183,11 +184,10 @@ void ClouserEnemy::Attack() {
 
 //ÉèÅ[Év
 void ClouserEnemy::Teleport() {
-	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -262,6 +262,7 @@ void ClouserEnemy::WarpEnemy() {
 			m_Warp = false;
 			_charaState = STATE_INTER;
 			enemywarp.State = WARP_START;
+			m_RandTimer = Helper::GetRanNum(0, 40);
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}

@@ -95,7 +95,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillSentence(L"最大の火力を再現！");
 			CreateSkillDamage(L"威力:バトル中の最大威力(固定)");
 			CreateSkillSentence(L"勝負には運も不可欠!");
-			CreateSkillDamage(L"回復!or自傷・・・ 威力:10");
+			CreateSkillDamage(L"回復!or自傷・・・ 威力:100");
 			CreateSkillSentence(L"自機や敵全てに回復を!");
 			CreateSkillDamage(L"回復床設置 威力:20");
 			CreateSkillSentence(L"中毒はしらぬまに");
