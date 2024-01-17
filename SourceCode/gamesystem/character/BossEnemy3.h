@@ -2,6 +2,7 @@
 #include"InterEnemy.h"
 #include "EnemyRock.h"
 #include "EnemyTornade.h"
+#include "Onomatope.h"
 using namespace std;         //  名前空間指定
 //普通の敵
 class BossEnemy3 :public InterEnemy {
@@ -49,7 +50,7 @@ private:
 	int _charaState = STATE_INTER;
 		// 岩エリア
 	std::vector<unique_ptr<EnemyRock>> enerock;
-	
+	unique_ptr<Onomatope> onomatope = nullptr;
 	enum AttackState {
 		ATTACK_ROCK,
 		ATTACK_RANDOM,

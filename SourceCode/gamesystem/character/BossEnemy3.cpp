@@ -21,6 +21,7 @@ BossEnemy3::BossEnemy3() {
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
 
+	onomatope = make_unique<Onomatope>();
 }
 //初期化
 bool BossEnemy3::Initialize() {
@@ -136,11 +137,15 @@ void BossEnemy3::Action() {
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+	onomatope->Update();
 }
 
 //描画
 void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
+	IKESprite::PreDraw();
+	onomatope->Draw();
+	IKESprite::PostDraw();
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
@@ -650,7 +655,14 @@ void BossEnemy3::SelectSafeArea() {
 //怒り状態になったときの動き
 void BossEnemy3::AngerMove() {
 	const int l_TargetTimer = 30;
-	if (Helper::CheckMin(m_AngerTimer, l_TargetTimer, 1)) {
+	if (m_AngerTimer % 10 == 0) {
+		XMFLOAT2 l_RandPos = {};
+		l_RandPos.x = (float)Helper::GetRanNum(100, 1000);
+		l_RandPos.y = (float)Helper::GetRanNum(100, 500);
+
+		onomatope->AddOnomato(BossSpawn, l_RandPos);		//オノマトペが出る
+	}
+	if (Helper::CheckMin(m_AngerTimer, l_TargetTimer, 1)) {	
 		m_AngerCount++;
 		m_AddPower = 0.2f;
 		m_Jump = true;
