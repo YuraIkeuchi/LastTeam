@@ -63,6 +63,7 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 	object->SetPosition({ -0.75f,0.0f,-1.5f });
 	object->SetColor({ 0.5f,0.3f,0.1f,1.0f });
 
+	onomatope = make_unique<Onomatope>();
 	/// <summary>
 	///	音入れ(エンドロール音希望)
 	/// </summary>
@@ -101,7 +102,6 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	}
 	else if (m_AppTimer == 550) {		//しーん遷移
 		SceneChanger::GetInstance()->SetChangeStart(true);
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameClear.wav", 0.04f);
 	}
 	
 	
@@ -120,11 +120,14 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	if (m_AppTimer >= 340.0f) {
 		m_ClearSpritePos.y = Ease(In, Cubic, 0.5f, m_ClearSpritePos.y, 0.0f);
 	}
+	//オノマトペの生成
+	BirthOnomatope();
 	sprite->SetPosition(m_ClearSpritePos);
 	StagePanel::GetInstance()->Update();
 	enemyManager->ClearUpdate();
 	player_->ClearUpdate();
 	object->Update();
+	onomatope->Update();
 	//ライト更新
 	lightGroup->Update();
 	//�e�N���X�X�V
@@ -160,6 +163,7 @@ void ClearScene::Draw(DirectXCommon* dxCommon) {
 //前面描画
 void ClearScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
+	onomatope->Draw();
 	sprite->Draw();
 	/*for (ShineEffect& shine : shines) {
 		shine.tex->Draw();
@@ -183,8 +187,6 @@ void ClearScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui描画
 void ClearScene::ImGuiDraw(DirectXCommon* dxCommon) {
 	ImGui::Begin("Clear");
-	ImGui::Text("DirX:%f",pointLightPos[0].x);
-	ImGui::Text("AttenX:%f", pointLightAtten[0].x);
 	ImGui::Text("Timer:%d", m_AppTimer);
 	ImGui::End();
 	//SceneChanger::GetInstance()->ImGuiDraw();
@@ -266,4 +268,28 @@ void ClearScene::SpotSet(XMFLOAT3& Pos, const XMFLOAT3& AfterPos, const float Ad
 		Pos.y,
 		Ease(In,Cubic,AddFrame,Pos.z,AfterPos.z),
 	};
+}
+//オノマトペ生成
+void ClearScene::BirthOnomatope() {
+	XMFLOAT2 l_BirthPos = {};
+	if (m_AppTimer == 410 || m_AppTimer == 430) {
+		if (m_AppTimer == 410) {
+			l_BirthPos.x = 200.0f;
+		}
+		else {
+			l_BirthPos.x = 1000.0f;
+		}
+		l_BirthPos.y = 600.0f;
+		onomatope->AddOnomato(Pachi, l_BirthPos);
+	}
+	else if (m_AppTimer == 470 || m_AppTimer == 490) {
+		if (m_AppTimer == 470) {
+			l_BirthPos.x = 200.0f;
+		}
+		else {
+			l_BirthPos.x = 1000.0f;
+		}
+		l_BirthPos.y = 600.0f;
+		onomatope->AddOnomato(Pafu, l_BirthPos);
+	}
 }

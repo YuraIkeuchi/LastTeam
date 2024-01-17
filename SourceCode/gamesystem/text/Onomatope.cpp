@@ -15,13 +15,14 @@ void (Onomatope::* Onomatope::updateTable[])(OnomatoStruct& onomato) = {
 	&Onomatope::StoneUpdate,
 	&Onomatope::RefrainUpdate,
 	&Onomatope::GuardUpdate,
+	&Onomatope::PachiUpdate,
+	&Onomatope::PafuUpdate
 };
 
 Onomatope::Onomatope() {
 	Huu = IKESprite::Create(ImageManager::ONOMATO_08, { 640.f,800.f });
 	Huu->SetAnchorPoint({ 0.5f,0.5f });
 	Huu->SetSize({ 256.f,256.f });
-
 }
 
 Onomatope::~Onomatope() {
@@ -132,6 +133,22 @@ void Onomatope::AddOnomato(OnomatoPattern patten, XMFLOAT2 basePos, float delay)
 		str.kFrameMax = 45.f;
 		str.kDelayFrameMax = delay;
 		str.pattern = Guard;
+		break;
+	case Pachi:
+		str.Tex = IKESprite::Create(ImageManager::ONOMATO_10, basePos);
+		str.Tex->SetAnchorPoint({ 0.5f,0.5f });
+		str.Tex->SetSize({ 256.f,0.f });
+		str.kFrameMax = 45.f;
+		str.kDelayFrameMax = delay;
+		str.pattern = Pachi;
+		break;
+	case Pafu:
+		str.Tex = IKESprite::Create(ImageManager::ONOMATO_11, basePos);
+		str.Tex->SetAnchorPoint({ 0.5f,0.5f });
+		str.Tex->SetSize({ 256.f,0.f });
+		str.kFrameMax = 45.f;
+		str.kDelayFrameMax = delay;
+		str.pattern = Pafu;
 		break;
 	default:
 		break;
@@ -364,5 +381,54 @@ void Onomatope::GuardUpdate(OnomatoStruct& onomato) {
 	else {
 		onomato.isFinish = true;
 	}
+}
 
+void Onomatope::PachiUpdate(OnomatoStruct& onomato) {
+	onomato.delayFrame += 1 / onomato.kDelayFrameMax;
+	if (onomato.delayFrame < 1.0f) {
+		return;
+	}
+	onomato.frame += 1 / onomato.kFrameMax;
+
+	if (onomato.frame <= 1.0f) {
+		float alpha = 1.0f;
+		alpha = Ease(In, Quart, onomato.frame, 1.f, 0.f);
+		onomato.Tex->SetColor({ 1.f,1.f,1.f,alpha });
+		XMFLOAT2 siz = onomato.Tex->GetSize();
+		siz.x = Ease(Out, Back, onomato.frame, 256.f, 280.f);
+		siz.y = Ease(Out, Back, onomato.frame, 256.f, 280.f);
+		onomato.Tex->SetSize(siz);
+		XMFLOAT2 pos = onomato.Tex->GetPosition();
+		pos.x = Ease(Out, Quad, onomato.frame, onomato.basePos.x, onomato.basePos.x);
+		pos.y = Ease(Out, Quad, onomato.frame, onomato.basePos.y, onomato.basePos.y - 180.0f);
+		onomato.Tex->SetPosition(pos);
+	}
+	else {
+		onomato.isFinish = true;
+	}
+}
+
+void Onomatope::PafuUpdate(OnomatoStruct& onomato) {
+	onomato.delayFrame += 1 / onomato.kDelayFrameMax;
+	if (onomato.delayFrame < 1.0f) {
+		return;
+	}
+	onomato.frame += 1 / onomato.kFrameMax;
+
+	if (onomato.frame <= 1.0f) {
+		float alpha = 1.0f;
+		alpha = Ease(In, Quart, onomato.frame, 1.f, 0.f);
+		onomato.Tex->SetColor({ 1.f,1.f,1.f,alpha });
+		XMFLOAT2 siz = onomato.Tex->GetSize();
+		siz.x = Ease(Out, Back, onomato.frame, 256.f, 280.f);
+		siz.y = Ease(Out, Back, onomato.frame, 256.f, 280.f);
+		onomato.Tex->SetSize(siz);
+		XMFLOAT2 pos = onomato.Tex->GetPosition();
+		pos.x = Ease(Out, Quad, onomato.frame, onomato.basePos.x, onomato.basePos.x);
+		pos.y = Ease(Out, Quad, onomato.frame, onomato.basePos.y, onomato.basePos.y - 180.0f);
+		onomato.Tex->SetPosition(pos);
+	}
+	else {
+		onomato.isFinish = true;
+	}
 }
