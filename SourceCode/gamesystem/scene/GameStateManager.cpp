@@ -566,9 +566,9 @@ void GameStateManager::UseSkill() {
 				int l_rand = {};
 				l_rand = Helper::GetRanNum(0, 1);
 				if (l_rand == 0) {
-					player->HealPlayer(10.0f);
+					player->HealPlayer(100.0f);
 				} else {
-					player->RecvDamage(10.0f);
+					player->RecvDamage(100.0f);
 				}
 			}
 		}

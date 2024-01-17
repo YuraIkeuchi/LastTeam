@@ -59,6 +59,7 @@ bool SupportEnemy::Initialize() {
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.4f;
 	m_AddDisolve = 2.0f;
+	m_RandTimer = Helper::GetRanNum(0,20);
 	return true;
 }
 //èÛë‘ëJà⁄
@@ -154,9 +155,10 @@ void SupportEnemy::Finalize() {
 void SupportEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
+		m_RandTimer = Helper::GetRanNum(0, 20);
 	}
 }
 //çUåÇ
@@ -165,9 +167,10 @@ void SupportEnemy::Attack() {
 	//PlayerCollide();
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_SPECIAL;
+		m_RandTimer = Helper::GetRanNum(0, 20);
 	}
 	predictarea->Update();
 	predictarea->SetTimer(coolTimer);
@@ -175,11 +178,10 @@ void SupportEnemy::Attack() {
 
 //ÉèÅ[Év
 void SupportEnemy::Teleport() {
-	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
 
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -249,6 +251,7 @@ void SupportEnemy::WarpEnemy() {
 			m_Warp = false;
 			_charaState = STATE_INTER;
 			enemywarp.State = WARP_START;
+			m_RandTimer = Helper::GetRanNum(0, 20);
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}

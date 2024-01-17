@@ -66,6 +66,7 @@ protected:
 	int _charaState = STATE_INTER;
 	//クールタイム
 	int coolTimer = 0;
+	int m_RandTimer = {};
 	//コマンド間隔
 	int kIntervalMax = 120;
 	//HP
