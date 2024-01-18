@@ -18,6 +18,11 @@ HealEnemy::HealEnemy() {
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
+	chanting.tex.reset(new IKETexture(ImageManager::CHANTING_HEAL, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	chanting.tex->TextureCreate();
+	chanting.tex->Initialize();
+	chanting.tex->SetRotation({ 90.0f,0.0f,0.0f });
+
 	//shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	//shadow_tex->TextureCreate();
 	//shadow_tex->Initialize();
@@ -44,6 +49,13 @@ bool HealEnemy::Initialize() {
 	magic.AfterScale = 0.2f;
 	magic.Pos = {};
 	magic.State = {};
+
+	chanting.Alive = false;
+	chanting.Frame = {};
+	chanting.Scale = {};
+	chanting.AfterScale = 0.2f;
+	chanting.Pos = {};
+	chanting.State = {};
 
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.5f;
@@ -72,6 +84,7 @@ void HealEnemy::Action() {
 	Collide(_AttackArea);		//“–‚½‚è”»’è
 	PoisonState();//“Å
 	BirthMagic();//–‚–@w
+	ChantingHeal();//ƒq[ƒ‹‰r¥Žž‚Éo‚é‚â‚Â
 	AttackMove();//UŒ‚Žž‚Ì“®‚«
 	//UŒ‚ŽžƒWƒƒƒ“ƒv‚·‚é
 	if (m_Jump) {
@@ -91,6 +104,11 @@ void HealEnemy::Action() {
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+
+	chanting.tex->SetPosition(chanting.Pos);
+	chanting.tex->SetScale({ chanting.Scale,chanting.Scale,chanting.Scale });
+	chanting.tex->SetRotation(chanting.Rotate);
+	chanting.tex->Update();
 }
 
 //•`‰æ
@@ -99,6 +117,9 @@ void HealEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
+	if (chanting.Alive) {
+		chanting.tex->Draw();
+	}
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 	Obj_Draw();
@@ -121,10 +142,17 @@ void HealEnemy::Finalize() {
 void HealEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
+	chanting.Alive = true;
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
+
+	if (coolTimer <= l_TargetTimer) {
+	}
+
 	if (coolTimer == l_TargetTimer) {
 		coolTimer = 0;
+		chanting.Scale = 0.2f;
+		chanting.Alive = false;
 		_charaState = STATE_ATTACK;
 	}
 }
@@ -188,6 +216,18 @@ void HealEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 }
+void HealEnemy::ChantingHeal()
+{
+	if (!chanting.Alive) { return; }
+	static float addFrame = 1.f / 15.f;
+	const int l_TargetTimer = 20;
+	{			//–‚–@w‚ðk‚ß‚é
+		chanting.Scale -= 0.00055f;
+		chanting.Rotate.y -= 5.0f;
+		//chanting.State == CHANTING_BIRTH;
+	}
+}
+
 void HealEnemy::WarpEnemy() {
 	XMFLOAT3 l_RandPos = {};
 	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy);
@@ -212,6 +252,7 @@ void HealEnemy::WarpEnemy() {
 			enemywarp.State = WARP_START;
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
+		chanting.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
 	}
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };

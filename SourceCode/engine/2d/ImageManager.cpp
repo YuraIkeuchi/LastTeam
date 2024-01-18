@@ -185,6 +185,7 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(HEAL_DAMAGE, L"Resources/2d/effect/shine2.png");
 	IKETexture::LoadTexture(COUNTER, L"Resources/2d/effect/Counter.png");
 	IKETexture::LoadTexture(COUNTER_TWO, L"Resources/2d/effect/effect6.png");
+	IKETexture::LoadTexture(CHANTING_HEAL, L"Resources/2d/objicon/ChantingHeal.png");
 
 }
 

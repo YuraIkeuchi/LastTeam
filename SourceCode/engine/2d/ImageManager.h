@@ -185,6 +185,7 @@ public:
 		HEAL_DAMAGE,
 		COUNTER,
 		COUNTER_TWO,
+		CHANTING_HEAL,
 	};
 	enum particleName
 	{

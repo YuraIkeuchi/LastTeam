@@ -187,7 +187,6 @@
     <ClCompile Include="SourceCode\gamesystem\ActionPanel\SkillAction.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\BaseEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\BossEnemy.cpp" />
-    <ClCompile Include="SourceCode\gamesystem\character\BossEnemy2.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\CanonEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\CreateBombEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyManager.cpp" />
