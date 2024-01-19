@@ -56,6 +56,7 @@ bool SupportEnemy::Initialize() {
 	enemywarp.Scale = 0.4f;
 	m_AddDisolve = 2.0f;
 	m_RandTimer = Helper::GetRanNum(0,20);
+	_BombAttackType = SET_BOMB;
 	return true;
 }
 //ó‘Ô‘JˆÚ
@@ -167,12 +168,35 @@ void SupportEnemy::Attack() {
 	//PlayerCollide();
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
+	const int l_JumpTimer = 80;
+	if (coolTimer == 1) {
 		//’e‚Ì”­¶
-		lastbomb->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+		lastbomb->InitState({ m_Position.x,m_Position.y + 1.5f,m_Position.z });
+	}
+	else if (coolTimer == l_JumpTimer) {
+		_BombAttackType = JUMP_MOVE;
+	}
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
+		m_AttackCount++;
 		coolTimer = 0;
-		_charaState = STATE_SPECIAL;
-		m_RandTimer = Helper::GetRanNum(0, 20);
+		if (m_AttackCount == 4) {
+			_charaState = STATE_SPECIAL;
+			m_RandTimer = Helper::GetRanNum(0, 20);
+			m_AttackCount = {};
+		}
+	}
+
+	if (_BombAttackType == JUMP_MOVE) {
+		if (Helper::CheckMin(m_Position.y, 10.0f, 0.3f)) {
+			m_Position.x = lastbomb->GetPosition().x;
+			_BombAttackType = FALL_MOVE;
+		}
+	}
+	else if (_BombAttackType == FALL_MOVE) {
+		if (Helper::CheckMax(m_Position.y, 0.1f, -0.3f)) {
+			_BombAttackType = SET_BOMB;
+			lastbomb->SetAlive(false);
+		}
 	}
 	predictarea->Update();
 	predictarea->SetTimer(coolTimer);

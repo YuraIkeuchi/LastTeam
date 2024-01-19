@@ -85,5 +85,11 @@ private:
 	bool m_ChangeRot = {};
 
 	int m_SupportType = {};
+
+	enum BombAttackType {
+		SET_BOMB,
+		JUMP_MOVE,
+		FALL_MOVE,
+	}_BombAttackType = SET_BOMB;
 };
 

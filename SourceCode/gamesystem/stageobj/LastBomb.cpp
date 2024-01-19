@@ -47,7 +47,7 @@ void LastBomb::Update() {
 	}
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//“–‚½‚è”»’è
-	m_Rotation.y += 20.0f;
+	//m_Rotation.y += 20.0f;
 }
 //•`‰æ
 void LastBomb::Draw(DirectXCommon* dxCommon) {
