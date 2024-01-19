@@ -180,7 +180,7 @@ public://getter setter
 	const bool GetDeath() { return m_Death; }
 	const bool GetLastEnemy() { return m_LastEnemy; }
 
-	void SimpleDamege(float damage = 3.f);
+	void SimpleDamege(float damage = 3.f, bool isLimit = false);
 	void SimpleHeal(const bool Regene = false);
 	void SimplePosion(int poison);
 public:

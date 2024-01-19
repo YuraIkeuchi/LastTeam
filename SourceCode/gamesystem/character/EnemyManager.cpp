@@ -140,7 +140,7 @@ void EnemyManager::PoizonVenom() {
 
 void EnemyManager::ReLoadDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SimpleDamege(3.f);
+		enemy->SimpleDamege(5.f, true);
 	}
 }
 
@@ -163,7 +163,7 @@ void EnemyManager::BombDamage() {
 
 void EnemyManager::HealingDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SimpleDamege(5.f);
+		enemy->SimpleDamege(5.f, true);
 		enemy->SetHealDamage(true);
 	}
 }

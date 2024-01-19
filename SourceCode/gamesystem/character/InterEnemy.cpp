@@ -409,15 +409,19 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 		}
 	}
 }
-void InterEnemy::SimpleDamege(float damage) {
+void InterEnemy::SimpleDamege(float damage, bool isLimit) {
 	if (m_HP <= 0.0f) { return; }
-	float hp = m_HP;
-	hp -= damage;
-	if (hp < 1.0f) {
-		damage -= 1.0f;
+	if (isLimit) {
+		float hp = m_HP;
+		hp -= damage;
+		if (hp < 1.0f) {
+			damage -= 1.0f;
+		}
+		Helper::Clamp(hp, 1.0f, m_HP);
+		m_HP = hp;
+	} else {
+		m_HP -= damage;
 	}
-	Helper::Clamp(hp, 1.0f, m_HP);
-	m_HP = hp;
 	BirthDamage(damage);
 	BirthParticle();
 }
