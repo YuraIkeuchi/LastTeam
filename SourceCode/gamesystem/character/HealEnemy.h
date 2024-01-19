@@ -79,7 +79,7 @@ private:
 	struct Chanting {
 		unique_ptr<IKETexture> tex;
 		float Frame = {};
-		float Scale = {};
+		float Scale = 0.2f;
 		XMFLOAT3 Rotate = {90.0f,0.0f,0.0f};
 		float AfterScale = {};
 		XMFLOAT3 Pos = {};

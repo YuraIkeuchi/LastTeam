@@ -234,7 +234,7 @@ void EnemyManager::Spawn2Map() {
 				width++;
 			}
 			else if (x == '5') {
-				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy2>();
+				unique_ptr<InterEnemy> enemy_ = std::make_unique<BossEnemy>();
 				//enemy_->SetPlayer(player);
 				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));

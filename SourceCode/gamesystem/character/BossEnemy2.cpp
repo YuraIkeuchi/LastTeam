@@ -286,6 +286,9 @@ void BossEnemy2::Stun()
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_RECOVERY];
 
+	m_Rotation.x = 15.0f;
+	m_Rotation.y += 10.0f;
+
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//é¿ç€ÇÃçUåÇ
 		int l_TargetTimer = {};
 		l_TargetTimer = m_Limit[STATE_INTER];
@@ -296,6 +299,9 @@ void BossEnemy2::Stun()
 			_AttackState = (AttackState)(l_RandState);
 			m_isStun = false;
 			m_RecoverySaveHP = false;
+
+			m_Rotation.x = 0.0f;
+			m_Rotation.y = 270.0f;
 		}
 	}
 
@@ -618,6 +624,7 @@ void BossEnemy2::WarpEnemy() {
 void BossEnemy2::AttackMove() {
 	if (!m_Rot) { return; }
 	const float l_AddFrame = 1 / 20.0f;
+
 	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
 		m_Rotation.y = 270.0f;
 		m_Rot = false;

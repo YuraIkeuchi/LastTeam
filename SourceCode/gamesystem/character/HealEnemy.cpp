@@ -105,7 +105,7 @@ void HealEnemy::Action() {
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
 
-	chanting.tex->SetPosition(chanting.Pos);
+	chanting.tex->SetPosition({ m_Position.x,m_Position.y + 0.2f,m_Position.z });
 	chanting.tex->SetScale({ chanting.Scale,chanting.Scale,chanting.Scale });
 	chanting.tex->SetRotation(chanting.Rotate);
 	chanting.tex->Update();
@@ -145,9 +145,6 @@ void HealEnemy::Inter() {
 	chanting.Alive = true;
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
-
-	if (coolTimer <= l_TargetTimer) {
-	}
 
 	if (coolTimer == l_TargetTimer) {
 		coolTimer = 0;
@@ -216,6 +213,7 @@ void HealEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 }
+
 void HealEnemy::ChantingHeal()
 {
 	if (!chanting.Alive) { return; }
@@ -252,7 +250,6 @@ void HealEnemy::WarpEnemy() {
 			enemywarp.State = WARP_START;
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
-		chanting.Pos = { m_Position.x,m_Position.y + 0.2f,m_Position.z };
 	}
 
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
