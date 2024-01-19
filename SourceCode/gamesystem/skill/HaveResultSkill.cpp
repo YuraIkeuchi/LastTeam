@@ -254,6 +254,7 @@ void HaveResultSkill::BirthArea(const int Area) {
 				std::unique_ptr<ResultAreaUI> newarea = std::make_unique<ResultAreaUI>();
 				newarea->SetPanelNumber(i, j);
 				newarea->SetDelay(haveSkills[Area].Delay);
+				newarea->SetId(haveSkills[Area].ID);
 				newarea->SetDistance(haveSkills[Area].DisX, haveSkills[Area].DisY);
 				newarea->Initialize();
 				haveSkills[Area].resultarea.push_back(std::move(newarea));

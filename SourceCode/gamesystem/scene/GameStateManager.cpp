@@ -336,9 +336,6 @@ void GameStateManager::AddSkill(const int SkillType, const int ID, const float d
 	}
 	act.ActDelay = Delay;
 	act.StateName = name;
-	if (act.StateName == "SHUFFLE") {
-
-	}
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;

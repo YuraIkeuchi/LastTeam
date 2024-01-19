@@ -43,6 +43,9 @@ public:
 	void SetDelay(int delay) {
 		m_Delay = delay;
 	}
+	void SetId(int id) {
+		m_Id = id;
+	}
 
 	void SetPanelNumber(const int Width, const int Height) {
 		m_Width = Width;
@@ -71,6 +74,7 @@ private:
 	std::array<int, 3> _Delays;
 	int m_Delay = 0;
 	int m_Frame = 0;
-
+	int m_Id = 0;
+	bool m_IsShuffle = false;
 	std::unique_ptr<IKESprite> player_panel;
 };
