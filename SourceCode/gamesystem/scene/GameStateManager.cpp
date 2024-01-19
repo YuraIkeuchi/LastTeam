@@ -29,6 +29,7 @@ void GameStateManager::Initialize() {
 	m_MaxDamage = 0;
 	m_MaxTakenDamage = 0;
 	m_MaxTakenDamage = 0;
+	m_TakenDamageNum = 0;
 	m_HandedCount = 0;
 	//終了関連
 	isFinish = false;
