@@ -8,8 +8,8 @@ RegeneArea::RegeneArea() {
 	panels.tex = std::make_unique<IKETexture>(ImageManager::HEALAREA, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
 	panels.tex->TextureCreate();
 	panels.tex->Initialize();
-	float baseScale = PANEL_SIZE * 0.1f;
-	panels.tex->SetScale({ baseScale,baseScale,baseScale });
+	m_AfterScale = PANEL_SIZE * 0.1f;
+	panels.tex->SetScale({ 0.0f,0.0f,0.0f });
 	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
 	Initialize();
@@ -39,7 +39,11 @@ void RegeneArea::Update() {
 			StagePanel::GetInstance()->SetHeal(m_NowWidth, m_NowHeight, false);
 		}
 	}
-	panels.tex->Update();
+	panels.scale = { Ease(In,Cubic,0.5f,panels.scale.x,m_AfterScale),
+	Ease(In,Cubic,0.5f,panels.scale.y,m_AfterScale),
+	Ease(In,Cubic,0.5f,panels.scale.z,m_AfterScale) };
+
+
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor(panels.color);
 	m_BirthTimer++;

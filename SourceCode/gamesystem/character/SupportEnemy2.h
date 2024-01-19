@@ -1,12 +1,13 @@
 #pragma once
+#pragma once
 #include"InterEnemy.h"
 #include "CounterBomb.h"
 
 using namespace std;         //  名前空間指定
 //ラスボスのお供の敵
-class SupportEnemy :public InterEnemy {
+class SupportEnemy2 :public InterEnemy {
 public:
-	SupportEnemy();
+	SupportEnemy2();
 	bool Initialize() override;//初期化
 	void Finalize() override;//開放
 	void Action()override;//更新
@@ -17,8 +18,8 @@ public:
 	void Draw(DirectXCommon* dxCommon) override;//描画
 private:
 	//関数ポインタ
-	static void(SupportEnemy::* stateTable[])();
-	static void(SupportEnemy::* attackTable[])();
+	static void(SupportEnemy2::* stateTable[])();
+	static void(SupportEnemy2::* attackTable[])();
 private:
 	void Inter();//待機
 	void Attack();//攻撃

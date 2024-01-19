@@ -44,8 +44,10 @@ private:
 		unique_ptr<IKETexture> tex = nullptr;
 		XMFLOAT3 position = { 0,0,0 };
 		XMFLOAT4 color = { 1,1,1,1 };
+		XMFLOAT3 scale = { 0.0f,0.0f,0.0f };
 		bool predict = false;
 	};
+	float m_AfterScale = {};
 	Panel panels;
 	//ê∂ë∂ä÷åW
 	bool m_Alive = false;
