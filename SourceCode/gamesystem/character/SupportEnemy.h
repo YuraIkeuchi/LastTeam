@@ -1,7 +1,7 @@
 #pragma once
 #include"InterEnemy.h"
 #include "CounterBomb.h"
-
+#include "LastBomb.h"
 using namespace std;         //  名前空間指定
 //ラスボスのお供の敵
 class SupportEnemy :public InterEnemy {
@@ -36,6 +36,7 @@ private:
 	static const int BULLET_NUM = 5;
 private:
 	std::vector<unique_ptr<CounterBomb>> counterbomb;
+	unique_ptr<LastBomb> lastbomb;
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
 

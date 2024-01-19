@@ -296,7 +296,7 @@ void BattleScene::ImGuiDraw() {
 	//GameStateManager::GetInstance()->ImGuiDraw();
 	//StagePanel::GetInstance()->ImGuiDraw();
 	enemyManager->ImGuiDraw();
-	camerawork->ImGuiDraw();
+	//camerawork->ImGuiDraw();
 	//player_->ImGuiDraw();
 }
 

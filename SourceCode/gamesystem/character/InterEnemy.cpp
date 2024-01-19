@@ -7,7 +7,7 @@
 #include <ParticleEmitter.h>
 #include <TutorialTask.h>
 #include "ImageManager.h"
-#include <Slow.h>
+#include <LastBossState.h>
 #include "Passive.h"
 Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
@@ -263,6 +263,7 @@ void InterEnemy::UIDraw() {
 //当たり判定
 void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 	if (m_HP <= 0.0f) { return; }
+	if (m_Scale.x <= 0.15f) { return; }
 	if (area.empty()) { return; }
 
 	for (unique_ptr<AttackArea>& _area : area) {
@@ -316,6 +317,10 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			Helper::Clamp(damage, 0.0f, 999.0f);
 			if (m_EnemyTag == "Mob" && !TutorialTask::GetInstance()->GetTaskFinish(TASK_COUNTER)) {
 				damage = 0.0f;
+			}
+			if (m_EnemyTag == "LASTBOSS" && LastBossState::GetInstance()->GetBossShield()) {
+				m_DamageCut = true;
+				damage /= 2.0f;
 			}
 			m_HP -= damage;
 			GameStateManager::GetInstance()->DamageCheck((int)damage);
@@ -802,7 +807,7 @@ void InterEnemy::DeathUpdate() {
 //リジュネ回復
 void InterEnemy::RegeneUpdate() {
 	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
-		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
+		if (Helper::CheckMin(m_HealTimer, 100, 1)) {
 			SimpleHeal(true);
 			m_HealTimer = {};
 		}

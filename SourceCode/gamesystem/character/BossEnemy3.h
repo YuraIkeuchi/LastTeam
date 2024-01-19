@@ -40,6 +40,7 @@ private:
 	void WarpEnemy();//“G‚Ìƒ[ƒvˆ—
 	void AttackMove();//UŒ‚‚Ì“®‚«
 	void SelectSafeArea();
+	void ShieldUpdate();
 //–‚–@w
 	void BirthMagic();
 private:
@@ -69,6 +70,7 @@ private:
 		MAGIC_VANISH,
 	};
 
+	//–‚–@w
 	struct Magic {
 		unique_ptr<IKETexture> tex;
 		float Frame = {};
@@ -79,6 +81,7 @@ private:
 		int State = {};
 		int Timer = {};
 	};
+
 	Magic magic;
 
 	bool m_Warp = false;
@@ -114,5 +117,18 @@ private:
 	bool m_AngerFinish = false;
 	int m_AngerTimer = {};
 	int m_AngerCount = {};
+
+
+	struct Shield {
+		unique_ptr<IKESprite> sprite;
+		float Frame = {};
+		XMFLOAT2 Pos = {};
+		bool Alive = false;
+		float Alpha = {};
+		int Timer = {};
+		int DeleteTimer = {};
+	};
+
+	Shield shield;
 };
 

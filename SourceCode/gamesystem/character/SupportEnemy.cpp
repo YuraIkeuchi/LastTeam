@@ -26,6 +26,9 @@ SupportEnemy::SupportEnemy() {
 	//—\‘ª
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
+	lastbomb = make_unique<LastBomb>();
+	lastbomb->Initialize();
+	lastbomb->SetPlayer(player);
 }
 //‰Šú‰»
 bool SupportEnemy::Initialize() {
@@ -109,6 +112,8 @@ void SupportEnemy::Action() {
 			counterbomb.erase(cbegin(counterbomb) + i);
 		}
 	}
+
+	lastbomb->Update();
 }
 
 //•`‰æ
@@ -130,6 +135,8 @@ void SupportEnemy::Draw(DirectXCommon* dxCommon) {
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
+	if(lastbomb->GetAlive())
+	   lastbomb->Draw(dxCommon);
 	BaseBackDraw(dxCommon);
 }
 //ImGui•`‰æ
@@ -161,6 +168,8 @@ void SupportEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
+		//’e‚Ì”­¶
+		lastbomb->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
 		coolTimer = 0;
 		_charaState = STATE_SPECIAL;
 		m_RandTimer = Helper::GetRanNum(0, 20);
