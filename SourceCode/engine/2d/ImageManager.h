@@ -137,6 +137,7 @@ public:
 		DECKDELETESHEET,
 		DECKDELETEOK,
 		DECKDELETENO,
+		SHIELD,
 
 	};
 	//テクスチャの名前

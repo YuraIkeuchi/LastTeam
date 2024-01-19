@@ -263,6 +263,7 @@ void InterEnemy::UIDraw() {
 //当たり判定
 void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 	if (m_HP <= 0.0f) { return; }
+	if (m_Scale.x <= 0.15f) { return; }
 	if (area.empty()) { return; }
 
 	for (unique_ptr<AttackArea>& _area : area) {

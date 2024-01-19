@@ -17,6 +17,11 @@ BossEnemy3::BossEnemy3() {
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
+	//HPII
+	shield.sprite = IKESprite::Create(ImageManager::SHIELD, { 0.0f,0.0f });
+	shield.sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+	shield.sprite->SetScale(0.5f);
+
 	//予測
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
@@ -139,6 +144,9 @@ void BossEnemy3::Action() {
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
 	onomatope->Update();
+
+	//シールドの更新
+	ShieldUpdate();
 }
 
 //描画
@@ -164,6 +172,9 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
 	BaseBackDraw(dxCommon);
+	IKESprite::PreDraw();
+	shield.sprite->Draw();
+	IKESprite::PostDraw();
 }
 //ImGui描画
 void BossEnemy3::ImGui_Origin() {
@@ -674,4 +685,16 @@ void BossEnemy3::AngerMove() {
 			m_Anger = false;
 		}
 	}
+}
+//シールドの更新
+void BossEnemy3::ShieldUpdate() {
+	//HPバー
+	XMVECTOR tex2DPos = { m_Position.x + 0.5f, m_Position.y, m_Position.z + 2.0f };
+	tex2DPos = Helper::PosDivi(tex2DPos, m_MatView, false);
+	tex2DPos = Helper::PosDivi(tex2DPos, m_MatProjection, true);
+	tex2DPos = Helper::WDivision(tex2DPos, false);
+	tex2DPos = Helper::PosDivi(tex2DPos, m_MatPort, false);
+
+	shield.Pos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
+	shield.sprite->SetPosition(shield.Pos);
 }
