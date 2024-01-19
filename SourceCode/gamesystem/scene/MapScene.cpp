@@ -38,6 +38,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	if (s_Countinue) {		//コンティニューをしていた場合CSVからゲームデータ引き継ぎ(このシーンではマップデータ)
 		GameStateManager::GetInstance()->OpenGameDate();
 		nowHierarchy = GameStateManager::GetInstance()->GetHierarchy();
+		clearHierarchy = GameStateManager::GetInstance()->GetHierarchy();
 		nowIndex = GameStateManager::GetInstance()->GetIndex();
 	}
 	const int NumberCount = 2;

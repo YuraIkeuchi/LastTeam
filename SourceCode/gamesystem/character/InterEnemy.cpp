@@ -295,7 +295,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				}
 
 				if (GameStateManager::GetInstance()->GetTakenDamageUp()) {
-					float up = (float)GameStateManager::GetInstance()->GetTakenDamageNum() * 0.5f;
+					float up = (float)GameStateManager::GetInstance()->GetTakenDamageNum() * 1.5f;
 					if (up >= 1.0f) {
 						damage += up;
 						GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::TAKENDAMAGEUP);
