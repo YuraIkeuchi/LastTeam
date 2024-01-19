@@ -20,6 +20,7 @@ BossEnemy3::BossEnemy3() {
 	LastBossState::GetInstance()->SetBossShield(false);
 	//HPII
 	shield.sprite = IKESprite::Create(ImageManager::SHIELD, { 0.0f,0.0f });
+	shield.sprite->SetPosition({ -1000.0f,0.0f });
 	shield.sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	shield.sprite->SetScale(0.5f);
 

@@ -16,4 +16,4 @@ Interval,100
 Interval,60
 *---------------------------*
 //敵の弾の撃つ数
-BULLET_NUM,4
+BULLET_DAMAGE,40
