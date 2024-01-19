@@ -49,7 +49,7 @@ void EnemyTornade::Move() {
 			_ThornState = THORN_STOP;
 			m_Frame = {};
 			/// <summary>
-			///	‰¹“ü‚ê(“Ë‚«Žh‚µ‰¹Šó–])
+			///	‰¹“ü‚ê(—³Šª‰¹Šó–])
 			/// </summary>
 			if (m_Sound) {
 				Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
@@ -84,7 +84,7 @@ void EnemyTornade::Collide() {
 
 	int l_PlayerWidth = player->GetNowWidth();
 	int l_PlayerHeight = player->GetNowHeight();
-	const float l_Damage = 10.0f;
+	const float l_Damage = 30.0f;
 	if (m_NowWidth == l_PlayerWidth && m_NowHeight == l_PlayerHeight) {
 		m_Hit = true;
 		player->RecvDamage(m_Damage);

@@ -2,6 +2,7 @@
 #include "IKESprite.h"
 #include "BaseScene.h"
 #include "EnemyManager.h"
+#include "Onomatope.h"
 /// タイトルシーン
 class ClearScene : public BaseScene {
 public:
@@ -23,11 +24,12 @@ private:
 private:
 	void MoveSpotLight();
 	void SpotSet(XMFLOAT3& Pos, const XMFLOAT3& AfterPos, const float AddFrame);
-
+	void BirthOnomatope();
 
 private:
 	static const int SPOT_NUM = 2;
 private://メンバ変数
+	unique_ptr<Onomatope> onomatope = nullptr;
 	unique_ptr<IKESprite> sprite;
 	struct ShineEffect {
 		unique_ptr<IKESprite> tex;

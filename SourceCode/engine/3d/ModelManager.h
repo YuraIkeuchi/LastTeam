@@ -17,7 +17,6 @@ public:
 		PLAYERMODEL,
 		PANEL,
 		BULLET,
-		ENEMYMODEL,
 		THORN,
 		CANNON,
 		SQUID,
@@ -35,7 +34,9 @@ public:
 		FIRST_BOSS,
 		TORNADO,
 		ROCKENEMY,
-		SECOND_BOSS
+		SECOND_BOSS,
+		LAST_BOSS,
+		SUPPORT_ENEMY,
 	};
 	//FBXの名前
 	enum FBXName {

@@ -47,6 +47,7 @@ bool FrontEnemy::Initialize() {
 	enemywarp.Scale = 0.5f;
 	m_AddDisolve = 2.0f;
 	_AttackState = ATTACK_WARP;
+	m_RandTimer = Helper::GetRanNum(0, 40);
 	return true;
 }
 //状態遷移
@@ -137,7 +138,7 @@ void FrontEnemy::Finalize() {
 void FrontEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1) && (StagePanel::GetInstance()->GetPanelType(player->GetNowWidth() + 1, player->GetNowHeight()) == 0)
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1) && (StagePanel::GetInstance()->GetPanelType(player->GetNowWidth() + 1, player->GetNowHeight()) == 0)
 		&& (!StagePanel::GetInstance()->GetisEnemyHit(player->GetNowWidth() + 1, player->GetNowHeight()))) {
 		coolTimer = 0;
 		m_AttackWidth = player->GetNowWidth();
@@ -156,7 +157,6 @@ void FrontEnemy::Attack() {
 
 //ワープ
 void FrontEnemy::Teleport() {
-	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
@@ -242,6 +242,7 @@ void FrontEnemy::WarpEnemy(bool Attack) {
 			m_Warp = false;
 			_charaState = STATE_INTER;
 			enemywarp.State = WARP_START;
+			m_RandTimer = Helper::GetRanNum(0, 40);
 			coolTimer = {};
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
@@ -342,8 +343,11 @@ void FrontEnemy::GameOverAction() {
 		}
 	}
 	else {
-		const float l_AddRotZ = 0.5f;
-		const float l_AddFrame2 = 0.01f;
+		float l_AddRotZ = {};
+		float l_AddFrame2 = {};
+
+		l_AddRotZ = float(Helper::GetRanNum(30, 100)) / 100;
+		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 500;
 		float RotPower = 10.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
 			m_RotFrame = 1.0f;

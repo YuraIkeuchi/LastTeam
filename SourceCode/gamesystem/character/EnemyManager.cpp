@@ -1,5 +1,4 @@
 ﻿#include "EnemyManager.h"
-#include "NormalEnemy.h"
 #include "CanonEnemy.h"
 #include "TackleEnemy.h"
 #include "PoisonEnemy.h"
@@ -13,6 +12,7 @@
 #include "ThrowEnemy.h"
 #include "ClouserEnemy.h"
 #include "BossEnemy2.h"
+#include "SupportEnemy.h"
 #include <StagePanel.h>
 #include <GameStateManager.h>
 #include <Helper.h>
@@ -148,7 +148,8 @@ void EnemyManager::ReLoadDamage() {
 void EnemyManager::PoisonRook() {
 	if (GameStateManager::GetInstance()->GetRookPoison() <= 0) { return; }
 	int poison = GameStateManager::GetInstance()->GetRookPoison();
-	poison /= (int)enemys.size();
+	poison /= 10;
+	Helper::Clamp(poison, 1, 999);
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimplePosion(poison);
 	}
@@ -170,9 +171,8 @@ void EnemyManager::HealingDamage() {
 
 void EnemyManager::Heal()
 {
-	const float l_HealPower = 5.0f;
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SimpleHeal(l_HealPower);
+		enemy->SimpleHeal();
 	}
 }
 
@@ -281,6 +281,22 @@ void EnemyManager::Spawn2Map() {
 				enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 				enemys.push_back(std::move(enemy_));
 				width++;
+			}
+			else if (x == 'c' || x == 'd') {
+				if (x == 'c') {
+					unique_ptr<InterEnemy> enemy_ = std::make_unique<SupportEnemy>(SUPPORT_RED);
+					//enemy_->SetPlayer(player);
+					enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
+					enemys.push_back(std::move(enemy_));
+					width++;
+				}
+				else {
+					unique_ptr<InterEnemy> enemy_ = std::make_unique<SupportEnemy>(SUPPORT_BLUE);
+					//enemy_->SetPlayer(player);
+					enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
+					enemys.push_back(std::move(enemy_));
+					width++;
+				}
 			}
 		}
 		height++;

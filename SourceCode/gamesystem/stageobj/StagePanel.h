@@ -78,7 +78,7 @@ public:
 	//今いる位置のパネル番号を検索
 	void SetPanelSearch(IKEObject3d* obj, int& width, int& height);
 	//敵の配置(かぶらないように)
-	XMFLOAT3 EnemySetPanel(const bool LastEnemy);
+	XMFLOAT3 EnemySetPanel(const bool LastEnemy, const string& name = "NONE");
 	//敵の配置(プレイヤーの前に来るやつ)
 	XMFLOAT3 FrontPlayerSetPanel();
 	void ClosePanel(IKEObject3d* obj, bool m_Alive);

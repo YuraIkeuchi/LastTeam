@@ -86,7 +86,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		mapKinds[4] = { PASSIVE,-1,BATTLE };
 		mapKinds[5] = { -1,BOSS,-1 };
 		mapKinds[6] = { PASSIVE,-1,BATTLE };
-		mapKinds[7] = { PASSIVE,BATTLE,PASSIVE };
+		mapKinds[7] = { PASSIVE,PASSIVE,PASSIVE };
 		mapKinds[8] = { BATTLE,-1,PASSIVE };
 		mapKinds[9] = { -1,BOSS,-1 };
 		mapKinds[10] = { PASSIVE,PASSIVE,BATTLE };
@@ -268,19 +268,6 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	frame->SetSize(size);
 
 	onomatope->Update();
-	switch (UIs[pickHierarchy][pickIndex].Tag) {
-	case BATTLE:
-		nowComment = 1;
-		break;
-	case PASSIVE:
-		nowComment = 2;
-		break;
-	case BOSS:
-		nowComment = 3;
-		break;
-	default:
-		break;
-	}
 	(this->*stateTable[(size_t)m_State])();
 }
 
@@ -633,6 +620,21 @@ void MapScene::Move() {
 		onomatope->AddOnomato(Foot, { 100.f,700.f }, 10.f);
 		oldScroll = scroll.x;
 		moved = true;
+
+		switch (UIs[pickHierarchy][pickIndex].Tag) {
+		case BATTLE:
+			nowComment = 1;
+			break;
+		case PASSIVE:
+			nowComment = 2;
+			break;
+		case BOSS:
+			nowComment = 3;
+			break;
+		default:
+			break;
+		}
+
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Run.wav", 0.05f);
 	}
 
@@ -819,7 +821,7 @@ void MapScene::CheckState() {
 				ss << BaseName + "Boss/BattleMap0" << 2 << ".csv";
 			}
 			else if (nowHierarchy == 13) {
-				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
+				ss << BaseName + "Boss/BattleMap0" << 3 << ".csv";
 				s_LastStage = true;
 			}
 			else {

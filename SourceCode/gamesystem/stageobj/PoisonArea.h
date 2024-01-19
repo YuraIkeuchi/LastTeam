@@ -4,7 +4,6 @@
 #include "IKETexture.h"
 #include "ObjCommon.h"
 #include "Player.h"
-#include "PredictArea.h"
 using namespace std;         //  名前空間指定
 
 //毒エリアクラス
@@ -34,7 +33,6 @@ private:
 	void Move();
 	void Collide();
 	XMFLOAT3 SetPanelPos(const int width, const int height);
-	void BirthPredict(const int Width, const int Height);//予測エリア
 public:
 	//gettersetter
 	const bool GetAlive() { return panels.Alive; }
@@ -67,14 +65,6 @@ private:
 		POISON_END,
 	}_PoisonState = POISON_THROW;
 	bool m_BulletAlive = false;
-
-	struct PredictState {
-		unique_ptr<PredictArea> area;
-		int Timer = {};
-		int Target = 200;
-	};
-
-	PredictState predict;
 
 	float m_Damage = {};
 	int m_TargetTimer = {};

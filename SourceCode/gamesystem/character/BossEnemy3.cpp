@@ -10,27 +10,25 @@
 #include <StagePanel.h>
 //モデル読み込み
 BossEnemy3::BossEnemy3() {
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::FIRST_BOSS));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::LAST_BOSS));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
-	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
-	shadow_tex->TextureCreate();
-	shadow_tex->Initialize();
-	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });*/
 	//予測
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
+
+	onomatope = make_unique<Onomatope>();
 }
 //初期化
 bool BossEnemy3::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,-90.0f,0.0f };
-	m_Color = { 1.f,0.f,1.f,1.0f };
-	m_Scale = { 0.5f,0.5f,0.5f };
+	//m_Color = { 1.f,0.f,1.f,1.0f };
+	m_Scale = { 0.8f,0.8f,0.8f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy3.csv", "hp")));
 	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy3.csv", "LIMIT_NUM")));
 
@@ -56,7 +54,7 @@ bool BossEnemy3::Initialize() {
 	magic.State = {};
 
 	enemywarp.AfterScale = {};
-	enemywarp.Scale = 0.5f;
+	enemywarp.Scale = 0.8f;
 	m_AddDisolve = 2.0f;
 
 	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
@@ -64,6 +62,7 @@ bool BossEnemy3::Initialize() {
 			m_SafeArea[i][j] = false;
 		}
 	}
+	m_EnemyTag = "LASTBOSS";
 	return true;
 }
 //状態遷移
@@ -76,12 +75,21 @@ void (BossEnemy3::* BossEnemy3::stateTable[])() = {
 void (BossEnemy3::* BossEnemy3::attackTable[])() = {
 	&BossEnemy3::RockAttack,//弾を打つ攻撃
 	&BossEnemy3::RandomAttack,//ランダム
+	&BossEnemy3::AroundAttack,//ランダム
 };
 
 //行動
 void BossEnemy3::Action() {
+	if (m_LastEnemy && _charaState == STATE_INTER && !m_AngerFinish) {	//最後の一体になったとき怒り状態になる
+		m_Anger = true;
+	}
 	if (!m_Induction) {
-		(this->*stateTable[_charaState])();
+		if (!m_Anger) {
+			(this->*stateTable[_charaState])();
+		}
+		else {	//怒りの動き
+			AngerMove();
+		}
 	}
 	else {
 		InductionMove();
@@ -129,11 +137,15 @@ void BossEnemy3::Action() {
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+	onomatope->Update();
 }
 
 //描画
 void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
+	IKESprite::PreDraw();
+	onomatope->Draw();
+	IKESprite::PostDraw();
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
@@ -154,10 +166,12 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void BossEnemy3::ImGui_Origin() {
-	//ImGui::Begin("Boss");
-	//ImGui::Text("PosX:%f", m_Position.x);
-	//ImGui::Text("PosZ:%f", m_Position.z);
-	//ImGui::End();
+	ImGui::Begin("Boss");
+	ImGui::Text("m_Anger:%d", m_Anger);
+	ImGui::Text("m_AngerFinish:%d", m_AngerFinish);
+	ImGui::Text("m_AngerTimer:%d", m_AngerTimer);
+	ImGui::Text("m_AngerCount:%d", m_AngerCount);
+	ImGui::End();
 	//predictarea->ImGuiDraw();
 }
 //開放
@@ -171,7 +185,13 @@ void BossEnemy3::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = 1;
+		int l_RandState = 0;
+		if (enerock.size() >= 3) {
+			l_RandState = 2;
+		}
+		else if(enerock.size() < 3 && enerock.size() != 0) {
+			l_RandState = 1;
+		}
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -231,7 +251,7 @@ void BossEnemy3::RockAttack() {
 	l_TargetTimer = m_AttackLimit[ATTACK_ROCK];
 	if (coolTimer == 0) {
 		//真ん中4マス
-		BirthPredict(m_RandWigth, m_RandHeight,"Rock");
+		BirthPredict(m_RandWidth, m_RandHeight,"Rock");
 	}
 	else if (coolTimer == l_TargetTimer - 60) {
 		if (m_RockCount != 4) {
@@ -268,18 +288,11 @@ void BossEnemy3::RandomAttack() {
 	l_TargetTimer = m_AttackLimit[ATTACK_RANDOM];
 
 	if (coolTimer == 0) {
-		//プレイヤーからの距離(-1~1)
-		int l_RandWigth = Helper::GetRanNum(-1, 1);
-		int l_RandHeight = Helper::GetRanNum(-1, 1);
-		m_RandWigth = l_PlayerWidth + l_RandWigth;
-		m_RandHeight = l_PlayerHeight + l_RandHeight;
-		Helper::Clamp(m_RandWigth, 0, 3);
-		Helper::Clamp(m_RandHeight, 0, 3);
 		SelectSafeArea();
-		BirthPredict(m_RandWigth, m_RandHeight, "Random");
+		BirthPredict(m_RandWidth, m_RandHeight, "Random");
 	}
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-		BirthArea(m_RandWigth, m_RandHeight, "Random");
+		BirthArea(m_RandWidth, m_RandHeight, "Random");
 		coolTimer = {};
 		m_Jump = true;
 		m_AddPower = 0.2f;
@@ -292,25 +305,85 @@ void BossEnemy3::RandomAttack() {
 
 	predictarea->SetTargetTimer(l_TargetTimer);
 }
+//周りを攻撃
+void BossEnemy3::AroundAttack() {
+	//プレイヤーの現在マス
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_AROUND];
+	const int l_StartWidth = 3;
+	const int l_StartHeight = {};
+	if (m_AttackCount != 10) {
+		if (coolTimer == 0) {
+			//プレイヤーからの距離(-1~1)
+			if (m_AttackCount == 0) {	//下から
+				m_RandWidth = l_StartWidth;
+				m_RandHeight = {};
+			}
+			else if (m_AttackCount <= 3) {		//徐々に左に
+				m_RandWidth = l_StartWidth - m_AttackCount;
+			}
+			else if (m_AttackCount <= 6) {		//上に上がる
+				m_RandWidth = {};
+				m_RandHeight = l_StartHeight + (m_AttackCount - 3);
+			}
+			else {		//最後は戻る
+				m_RandWidth++;
+				m_RandHeight = 3;
+			}
+
+			BirthPredict(m_RandWidth, m_RandHeight, "Around");
+		}
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 2)) {
+			BirthArea(m_RandWidth, m_RandHeight, "Around");
+			coolTimer = {};
+			m_AttackCount++;
+			m_Jump = true;
+			m_AddPower = 0.2f;
+			m_Rot = true;
+		}
+	}
+	else {
+		StagePanel::GetInstance()->EnemyHitReset();
+		m_CheckPanel = true;
+		m_AttackCount = {};
+		_charaState = STATE_SPECIAL;
+	}
+
+	predictarea->SetTargetTimer(l_TargetTimer);
+}
 //攻撃エリア
 void BossEnemy3::BirthArea(const int Width, const int Height, const string& name) {
-	for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-		for (int j = 0; j < PANEL_WIDTH; j++) {
-			if (!m_SafeArea[i][j]) {
-				std::unique_ptr<EnemyTornade> newarea = std::make_unique<EnemyTornade>();
-				newarea->Initialize();
-				newarea->InitState(i, j);
-				newarea->SetPlayer(player);
-				newarea->SetSound(true);
-				enetornade.emplace_back(std::move(newarea));
+	if (name == "Random") {
+		int l_SoundCount = {};
+		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
+			for (int j = 0; j < PANEL_WIDTH; j++) {
+				if (!m_SafeArea[i][j]) {
+					std::unique_ptr<EnemyTornade> newarea = std::make_unique<EnemyTornade>();
+					newarea->Initialize();
+					newarea->InitState(i, j);
+					newarea->SetPlayer(player);
+					if (l_SoundCount == 0) {
+						newarea->SetSound(true);
+					}
+					l_SoundCount++;
+					enetornade.emplace_back(std::move(newarea));
+				}
+			}
+		}
+
+		for (int i = 0; i < (PANEL_WIDTH / 2); i++) {
+			for (int j = 0; j < PANEL_WIDTH; j++) {
+				m_SafeArea[i][j] = false;
 			}
 		}
 	}
-
-	for (int i = 0; i < (PANEL_WIDTH / 2); i++) {
-		for (int j = 0; j < PANEL_WIDTH; j++) {
-			m_SafeArea[i][j] = false;
-		}
+	else if (name == "Around") {
+		std::unique_ptr<EnemyTornade> newarea = std::make_unique<EnemyTornade>();
+		newarea->Initialize();
+		newarea->InitState(Width, Height);
+		newarea->SetPlayer(player);
+		newarea->SetSound(true);
+		enetornade.emplace_back(std::move(newarea));
 	}
 	predictarea->ResetPredict();
 }
@@ -334,6 +407,9 @@ void BossEnemy3::BirthPredict(const int Width, const int Height, const string& n
 				}
 			}
 		}
+	}
+	else if (name == "Around") {
+		predictarea->SetPredict(Width, Height, true);
 	}
 
 	predictarea->SetFlashStart(true);
@@ -450,7 +526,7 @@ void BossEnemy3::WarpEnemy() {
 	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
 			enemywarp.Frame = {};
-			enemywarp.AfterScale = 0.5f;
+			enemywarp.AfterScale = 0.8f;
 			enemywarp.State = WARP_END;
 			coolTimer = {};
 			m_Position = l_RandPos;
@@ -487,8 +563,9 @@ void BossEnemy3::AttackMove() {
 }
 //クリアシーンの更新
 void BossEnemy3::ClearAction() {
-	const int l_TargetTimer = 100;
+	const int l_TargetTimer = 200;
 	const float l_AddFrame = 1 / 200.0f;
+	m_Position.x = -0.75f;
 	if (m_ClearTimer == 0) {
 		m_Position.y = 10.0f;
 	}
@@ -507,7 +584,7 @@ void BossEnemy3::ClearAction() {
 //ゲームオーバーシーンの更新
 void BossEnemy3::GameOverAction() {
 	if (_GameOverState == OVER_STOP) {
-		m_Position = { -3.0f,0.0f,1.5f };
+		m_Position = { -1.0f,0.0f,5.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
 		if (player->GetSelectType() == 1) {
@@ -523,15 +600,18 @@ void BossEnemy3::GameOverAction() {
 		if (Helper::CheckMax(m_Position.y, 0.1f, m_AddPower)) {
 			m_Position.y = 0.1f;
 			m_AddPower = {};
-			if (Helper::CheckMin(m_OverTimer, 25, 1)) {
+			if (Helper::CheckMin(m_OverTimer, 45, 1)) {
 				m_OverTimer = {};
 				m_AddPower = 0.3f;
 			}
 		}
 	}
 	else {
-		const float l_AddRotZ = 0.5f;
-		const float l_AddFrame2 = 0.01f;
+		float l_AddRotZ = {};
+		float l_AddFrame2 = {};
+
+		l_AddRotZ = float(Helper::GetRanNum(30, 100)) / 100;
+		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 500;
 		float RotPower = 10.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
 			m_RotFrame = 1.0f;
@@ -550,7 +630,7 @@ void BossEnemy3::GameOverAction() {
 	Obj_SetParam();
 }
 void BossEnemy3::SelectSafeArea() {
-	const int l_safeMax = 3;
+	const int l_safeMax = 5;
 	for (int i = 0; i < l_safeMax; i++) {
 		bool isSet = false;
 		//乱数の設定
@@ -570,5 +650,27 @@ void BossEnemy3::SelectSafeArea() {
 		}
 		
 		m_SafeArea[width][height] = true;
+	}
+}
+//怒り状態になったときの動き
+void BossEnemy3::AngerMove() {
+	const int l_TargetTimer = 30;
+	if (m_AngerTimer % 10 == 0) {
+		XMFLOAT2 l_RandPos = {};
+		l_RandPos.x = (float)Helper::GetRanNum(100, 1000);
+		l_RandPos.y = (float)Helper::GetRanNum(100, 500);
+
+		onomatope->AddOnomato(BossSpawn, l_RandPos);		//オノマトペが出る
+	}
+	if (Helper::CheckMin(m_AngerTimer, l_TargetTimer, 1)) {	
+		m_AngerCount++;
+		m_AddPower = 0.2f;
+		m_Jump = true;
+		m_AngerTimer = {};
+		if (m_AngerCount == 3) {
+			m_Rot = true;
+			m_AngerFinish = true;
+			m_Anger = false;
+		}
 	}
 }

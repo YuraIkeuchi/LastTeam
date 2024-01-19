@@ -78,15 +78,15 @@ void InterEnemy::Update() {
 	if (GameStateManager::GetInstance()->GetBossCamera()) { return; }
 	if (m_EnemyTag != "Bomb") {
 		if (m_HP != 0.0f) {
-			if(m_Alive)
+			if(!m_Death)
 			Action();
 		}
-	}
-	else {
+	}else {
 		Action();
 	}
 	
 	if (m_HP <= 0.0f && m_EnemyTag != "Bomb") {
+		m_Death = true;
 		DeathUpdate();
 	}
 
@@ -104,11 +104,6 @@ void InterEnemy::Update() {
 	if (m_HP != 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
 			_drawnumber[i]->Update();
-		}
-
-	} else {
-		if (m_EnemyTag != "Bomb") {
-			//m_Alive = false;
 		}
 	}
 
@@ -250,7 +245,7 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
-	if (m_Poison && m_EnemyTag != "Bomb") {
+	if (m_Poison) {
 		poisonState->Draw();
 		//敵のポイズンテキスト
 		if (m_PoisonToken >= 0) {
@@ -314,6 +309,10 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			}
 			m_Damege = true;
 			m_DamageTimer = {};
+			//ラスボス周りの敵はカウンターをする
+			if (m_BombCounter) {
+				m_BirthBomb = true;
+			}
 			Helper::Clamp(damage, 0.0f, 999.0f);
 			if (m_EnemyTag == "Mob" && !TutorialTask::GetInstance()->GetTaskFinish(TASK_COUNTER)) {
 				damage = 0.0f;
@@ -322,8 +321,9 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			GameStateManager::GetInstance()->DamageCheck((int)damage);
 			BirthDamage(damage);
 			std::string name = _area->GetStateName();
-		
-			if (name == "DRAIN") {
+			if (name == "BOM"&& m_HP <= 0.0f) {
+				GameStateManager::GetInstance()->SetIsBomSuccess(true);
+			}else	if (name == "DRAIN") {
 				float rate = 0.2f;
 				player->HealPlayer(damage * rate);		//HP回復
 			}else if (name == "POISON") {		//毒
@@ -422,9 +422,22 @@ void InterEnemy::SimpleDamege(float damage) {
 	BirthParticle();
 }
 
-void InterEnemy::SimpleHeal(float heal) {
+void InterEnemy::SimpleHeal(const bool Regene) {
 	if (m_HP <= 0.0f) { return; }
 
+	float heal = {};
+
+	if (Regene) {
+		heal = 20.0f;
+	}
+	else {
+		if (m_EnemyTag == "LASTBOSS") {
+			heal = 500.0f;
+		}
+		else {
+			heal = 50.0f;
+		}
+	}
 	float l_HealNum = {};
 
 	if (m_HP != m_MaxHP) {
@@ -760,7 +773,17 @@ void InterEnemy::DeathUpdate() {
 	
 	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
 		m_OverFrame = 1.0f;
-		m_Alive = false;
+		if (m_Death) {
+			if (m_DeathTimer == 0) {
+				DeathParticle();
+			}
+			if (Helper::CheckMin(m_DeathTimer, 20, 1)) {
+				if (m_EnemyTag == "SUPPORT" || m_EnemyTag == "SUPPORT2") {
+					GameStateManager::GetInstance()->SetIsHeal(true);
+				}
+				m_Alive = false;
+			}
+		}
 		if (m_EnemyTag == "Rock") {
 			StagePanel::GetInstance()->ClosePanel(m_Object.get(), m_Alive);
 		}
@@ -780,7 +803,7 @@ void InterEnemy::DeathUpdate() {
 void InterEnemy::RegeneUpdate() {
 	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
 		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
-			SimpleHeal(10.0f);
+			SimpleHeal(true);
 			m_HealTimer = {};
 		}
 	}
@@ -839,7 +862,16 @@ void InterEnemy::CounterUpdate() {
 		}
 	}
 }
-
+//死亡時パーティクル
+void InterEnemy::DeathParticle() {
+	int l_life = 20;
+	const float s_Scale = 1.5f;
+	const float e_Scale = 0.0f;
+	const XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
+	for (int i = 1; i < 7; i++) {
+		ParticleEmitter::GetInstance()->DeathEffect(l_life, m_Position, s_Scale, e_Scale, color, color, i);
+	}
+}
 //クリアシーンの更新
 void InterEnemy::ClearUpdate() {
 	m_Rotation.y = 180.0f;

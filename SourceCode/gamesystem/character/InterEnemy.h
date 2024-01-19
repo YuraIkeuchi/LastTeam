@@ -66,6 +66,7 @@ protected:
 	int _charaState = STATE_INTER;
 	//クールタイム
 	int coolTimer = 0;
+	int m_RandTimer = {};
 	//コマンド間隔
 	int kIntervalMax = 120;
 	//HP
@@ -107,6 +108,7 @@ protected:
 	int m_PoisonTimer = {};
 	bool m_Alive = true;
 	bool m_Death = false;
+	int m_DeathTimer = {};
 
 	bool m_CheckPanel = false;
 
@@ -161,6 +163,9 @@ protected:
 	}_GameOverState = OVER_STOP;
 	int m_OverTimer = {};
 	float m_RotFrame = {};
+	//カウンター
+	bool m_BombCounter = false;
+	bool m_BirthBomb = false;
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -176,7 +181,7 @@ public://getter setter
 	const bool GetLastEnemy() { return m_LastEnemy; }
 
 	void SimpleDamege(float damage = 3.f);
-	void SimpleHeal(float heal = 5.f);
+	void SimpleHeal(const bool Regene = false);
 	void SimplePosion(int poison);
 public:
 	//virtual ~InterEnemy() = default;
@@ -240,6 +245,7 @@ public:
 	void CounterUpdate();
 private:
 	void BirthParticle();
+	void DeathParticle();
 	//HPの割合を求める
 	float HpPercent();
 	//スプライトを敵座標に出す

@@ -45,7 +45,6 @@ bool CanonEnemy::Initialize() {
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
-
 	magic.Alive = false;
 	magic.Frame = {};
 	magic.Scale = {};
@@ -58,6 +57,7 @@ bool CanonEnemy::Initialize() {
 	m_BaseScale = 0.6f;
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	m_AddDisolve = 2.0f;
+	m_RandTimer = Helper::GetRanNum(0, 40);
 	return true;
 }
 
@@ -127,7 +127,7 @@ void CanonEnemy::ImGui_Origin() {
 	}*/
 	bullets->ImGuiDraw();
 	ImGui::Begin("Canon");
-	ImGui::Text("ShotDir:%d", m_ShotDir);
+	ImGui::Text("ShotDir:%d", coolTimer);
 	ImGui::End();
 }
 //開放
@@ -136,12 +136,9 @@ void CanonEnemy::Finalize() {
 }
 //待機
 void CanonEnemy::Inter() {
-	const int l_RandTimer = Helper::GetRanNum(0, 40);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, l_TargetTimer + l_RandTimer);
-	if (coolTimer == l_TargetTimer + l_RandTimer) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		coolTimer = {};
 		_charaState = STATE_ATTACK;
 	}
@@ -158,7 +155,7 @@ void CanonEnemy::Attack() {
 		l_AddScaleFrame = 1 / 20.0f;
 		l_AfterScale = 0.9f;
 		if (coolTimer == 101) {		//ここで撃つ方向を決める
-			m_ShotDir = 2;
+			m_ShotDir = Helper::GetRanNum(0,2);
 			//敵が端にいた場合反射によって回転が変に見えるから指定する
 			if (m_NowHeight == 0 && m_ShotDir == 2) {
 				m_ShotDir = 1;
@@ -216,12 +213,10 @@ void CanonEnemy::Attack() {
 
 //ワープ
 void CanonEnemy::Teleport() {
-	const float l_AddFrame = 1 / 30.0f;
-	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -289,6 +284,7 @@ void CanonEnemy::WarpEnemy() {
 			m_Warp = false;
 			_charaState = STATE_INTER;
 			enemywarp.State = WARP_START;
+			m_RandTimer = Helper::GetRanNum(0, 40);
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
@@ -361,8 +357,12 @@ void CanonEnemy::GameOverAction() {
 		m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	}
 	else {
-		const float l_AddRotZ = 0.5f;
-		const float l_AddFrame2 = 0.01f;
+		float l_AddRotZ = {};
+		float l_AddFrame2 = {};
+
+		l_AddRotZ = float(Helper::GetRanNum(30, 100)) / 100;
+		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 500;
+
 		float RotPower = 12.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
 			m_RotFrame = 1.0f;

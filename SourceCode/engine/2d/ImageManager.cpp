@@ -17,7 +17,6 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(SHINE_L, L"Resources/2d/effect/effect5.png");
 	IKESprite::LoadTexture(SMOKE, L"Resources/2d/effect/smoke.png");
 	IKESprite::LoadTexture(POWERUP, L"Resources/2d/effect/Up.png");
-	IKESprite::LoadTexture(SHIELDUP, L"Resources/2d/effect/ShieldUp.png");
 	IKESprite::LoadTexture(ENEMYHPUI, L"Resources/2d/objicon/BossHP.png");
 	IKESprite::LoadTexture(POIZONCOVER, L"Resources/2d/objicon/Numbers/PoisonFrame.png");
 	IKESprite::LoadTexture(SHIELDCOVER, L"Resources/2d/objicon/Numbers/ShieldFrame.png");
@@ -78,6 +77,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(ONOMATO_07, L"Resources/2d/objicon/Onomatope/07_Attack03.png");
 	IKESprite::LoadTexture(ONOMATO_08, L"Resources/2d/objicon/Onomatope/08_Attack04.png");
 	IKESprite::LoadTexture(ONOMATO_09, L"Resources/2d/objicon/Onomatope/09_Diffence.png");
+	IKESprite::LoadTexture(ONOMATO_10, L"Resources/2d/objicon/Onomatope/10_pachipachi.png");
+	IKESprite::LoadTexture(ONOMATO_11, L"Resources/2d/objicon/Onomatope/11_pafu.png");
 	IKESprite::LoadTexture(RESULTBACKSCREEN, L"Resources/2d/sceneback/ResultSkill_BS.png");
 	IKESprite::LoadTexture(RESULTATTACKAREA, L"Resources/2d/objicon/Areas/AttackArea.png");
 	IKESprite::LoadTexture(RESULTNOWCHECK, L"Resources/2d/objicon/SkillCheackNow.png");
@@ -126,6 +127,10 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(DECKSKILLTOP, L"Resources/2d/objicon/DeckSkillT.png");
 	IKESprite::LoadTexture(PICKSKILLTOP, L"Resources/2d/objicon/PickSkillT.png");
 
+	IKESprite::LoadTexture(DECKDELETESHEET, L"Resources/2d/objicon/DeleteCheck.png");
+	IKESprite::LoadTexture(DECKDELETEOK, L"Resources/2d/objicon/DeleteYes.png");
+	IKESprite::LoadTexture(DECKDELETENO, L"Resources/2d/objicon/DeleteNo.png");
+
 }
 
 //非同期処理で読み込むスプライト
@@ -138,7 +143,6 @@ void ImageManager::StartLoadTex2D()
 {
 	IKETexture::LoadTexture(MAGIC, L"Resources/2d/objicon/magic.png");
 	IKETexture::LoadTexture(CHARGE, L"Resources/2d/objicon/impact.png");
-	IKETexture::LoadTexture(SHADOW, L"Resources/2d/objicon/shadow.png");
 	IKETexture::LoadTexture(SHADOW2, L"Resources/2d/objicon/shadow2.png");
 	IKETexture::LoadTexture(PANNELLINE, L"Resources/2d/objicon/Areas/AreaLine.png");
 	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/Areas/DamageArea.png");

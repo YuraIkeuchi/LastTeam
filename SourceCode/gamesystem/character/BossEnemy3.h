@@ -2,7 +2,7 @@
 #include"InterEnemy.h"
 #include "EnemyRock.h"
 #include "EnemyTornade.h"
-
+#include "Onomatope.h"
 using namespace std;         //  –¼‘O‹óŠÔw’è
 //•’Ê‚Ì“G
 class BossEnemy3 :public InterEnemy {
@@ -25,7 +25,9 @@ private:
 	void Attack();//UŒ‚
 	void Teleport();//ˆÚ“®
 	void RockAttack();//Šâ‚ÌUŒ‚
-	void RandomAttack();
+	void RandomAttack();//ƒ‰ƒ“ƒ_ƒ€UŒ‚
+	void AroundAttack();//ü‚è‚ÌUŒ‚
+	void AngerMove();//“{‚è‚Ì“®‚«
 	void BirthRock();//
 	void BirthArea(const int Width, const int Height, const string& name);//UŒ‚ƒGƒŠƒA
 	void BirthPredict(const int Width, const int Height, const string& name);//—\‘ªƒGƒŠƒA
@@ -41,28 +43,24 @@ private:
 //–‚–@w
 	void BirthMagic();
 private:
+	static const int SUPPORT_NUM = 2;
 	static const int BULLET_NUM = 5;
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
 		// ŠâƒGƒŠƒA
 	std::vector<unique_ptr<EnemyRock>> enerock;
-	enum BossType {
-		Boss_SET,
-		Boss_THROW,
-		Boss_END,
-	}_BossType = Boss_SET;
-
+	unique_ptr<Onomatope> onomatope = nullptr;
 	enum AttackState {
 		ATTACK_ROCK,
 		ATTACK_RANDOM,
+		ATTACK_AROUND,
 	}_AttackState = ATTACK_RANDOM;
 	std::vector<std::vector<int>> m_Area = {};
 	// UŒ‚ƒGƒŠƒA
 	std::vector<unique_ptr<EnemyTornade>> enetornade;
-
-
-	int m_RandWigth = {};
+	
+	int m_RandWidth = {};
 	int m_RandHeight = {};
 
 	//–‚–@wŒn
@@ -112,5 +110,9 @@ private:
 	bool m_SafeArea[4][4];
 
 	int m_RockCount = {};
+	bool m_Anger = false;
+	bool m_AngerFinish = false;
+	int m_AngerTimer = {};
+	int m_AngerCount = {};
 };
 

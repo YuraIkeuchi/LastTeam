@@ -18,9 +18,6 @@ PoisonArea::PoisonArea() {
 	m_Object->Initialize();
 	m_Object->SetModel(m_Model);
 
-	//—\‘ª
-	predict.area.reset(new PredictArea("ENEMY"));
-	predict.area->Initialize();
 	Initialize();
 }
 //‰Šú‰»
@@ -65,7 +62,6 @@ void PoisonArea::Update() {
 }
 //•`‰æ
 void PoisonArea::Draw(DirectXCommon* dxCommon) {
-	predict.area->Draw(dxCommon);
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	panels.tex->Draw();
 	IKETexture::PostDraw();
@@ -75,8 +71,7 @@ void PoisonArea::Draw(DirectXCommon* dxCommon) {
 //ImGui
 void PoisonArea::ImGuiDraw() {
 	ImGui::Begin("Poison");
-	ImGui::Text("PosX:%f,PosZ:%f", panels.position.x, panels.position.z);
-	ImGui::Text("Timer:%d", panels.DamageTimer);
+	ImGui::Text("Width:%d,Height:%d", panels.Width, panels.Height);
 	ImGui::End();
 }
 //ƒpƒlƒ‹‚ÌˆÊ’u‚É’u‚­
@@ -109,7 +104,6 @@ void PoisonArea::Move() {
 	const float l_ThrowSpeed = 0.25f;
 
 	if (_PoisonState == POISON_THROW) {			//ã‚Éã‚°‚é
-		BirthPredict(panels.Width, panels.Height);
 		if (Helper::CheckMin(m_Position.y, l_TargetPosY, l_ThrowSpeed)) {
 			_PoisonState = POISON_DROP;
 			m_Position = { panels.position.x,l_TargetPosY,panels.position.z };
@@ -130,7 +124,6 @@ void PoisonArea::Move() {
 				panels.afterscale = {};
 			}
 		}
-		predict.area->ResetPredict();
 		panels.scale = Ease(In, Cubic, panels.frame, panels.scale, panels.afterscale);
 	}
 	else {		//‚È‚­‚È‚é
@@ -141,16 +134,4 @@ void PoisonArea::Move() {
 		panels.scale = Ease(In, Cubic, panels.frame, panels.scale, panels.afterscale);
 	}
 
-	if (_PoisonState == POISON_THROW || _PoisonState == POISON_DROP) {
-		predict.Timer++;
-		predict.area->SetTimer(predict.Timer);
-		predict.area->SetTargetTimer(predict.Target);
-		predict.area->Update();
-	}
-	//predictarea->SetTimer(coolTimer);
-}
-//—\‘ªƒGƒŠƒA
-void PoisonArea::BirthPredict(const int Width, const int Height) {
-	predict.area->SetPredict(Width, Height, true);
-	predict.area->SetFlashStart(true);
 }

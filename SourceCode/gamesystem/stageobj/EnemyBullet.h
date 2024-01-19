@@ -53,7 +53,6 @@ public:
 	void SetPlayer(Player* player) { this->player = player; }
 
 private:
-	unique_ptr<IKETexture> shadow_tex;
 	Player* player;
 	//現在のマス番号
 	int m_NowWidth = {};

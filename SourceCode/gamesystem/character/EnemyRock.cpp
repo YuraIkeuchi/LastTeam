@@ -87,7 +87,7 @@ void EnemyRock::Draw(DirectXCommon* dxCommon) {
 	if (_charaState == STATE_SPECIAL) {
 		UIDraw();
 	}
-	if (m_Color.w != 0.0f)
+	if (m_Color.w != 0.0f && _RockState == ROCK_BIRTH)
 	Obj_Draw();
 }
 //ImGui•`‰æ

@@ -26,6 +26,41 @@ void HaveResultSkill::Initialize(DirectXCommon* dxCommon) {
 	selectFrame->SetSize({ 128.0f,128.0f });
 	m_SelectPos = { 640.0f,250.0f };
 	selectFrame->SetPosition(m_SelectPos);
+
+
+	black = IKESprite::Create(ImageManager::FEED, { 0.f,0.f });
+	black->SetSize({1280.f,720.f});
+	black->SetColor({0.f,0.f,0.f,0.5f});
+	deleteDeck = IKESprite::Create(ImageManager::DECKDELETESHEET, { 640.f,360.f });
+	deleteDeck->SetAnchorPoint({0.5f,0.5f});
+
+	const int NumberCount = 2;
+	const float l_Width_Cut = 256.0f;
+	const float l_Height_Cut = 64.0f;
+
+	for (auto i = 0; i < NumberCount; i++) {
+		deleteDeckYes[i] = IKESprite::Create(ImageManager::DECKDELETEOK, { 640.f + 150.f,430.f});
+		deleteDeckNo[i] = IKESprite::Create(ImageManager::DECKDELETENO, { 640.f - 150.f,430.f});
+
+		int number_index_y = i / NumberCount;
+		int number_index_x = i % NumberCount;
+		deleteDeckYes[i]->SetTextureRect(
+			{ static_cast<float>(number_index_x) * l_Width_Cut, static_cast<float>(number_index_y) * l_Height_Cut },
+			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
+		deleteDeckNo[i]->SetTextureRect(
+			{ static_cast<float>(number_index_x) * l_Width_Cut, static_cast<float>(number_index_y) * l_Height_Cut },
+			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
+
+		deleteDeckYes[i]->SetSize({});
+		deleteDeckYes[i]->SetAnchorPoint({ 0.5f,0.5f });
+		//deleteDeckYes[i]->SetColor({ 1.2f,1.2f,1.2f,1 });
+
+		deleteDeckNo[i]->SetSize({});
+		deleteDeckNo[i]->SetAnchorPoint({ 0.5f,0.5f });
+		//deleteDeckNo[i]->SetColor({ 1.2f,1.2f,1.2f,1 });
+	}
+	deleteDeck->SetSize({});
+
 }
 
 void HaveResultSkill::Update() {
@@ -46,7 +81,10 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	backScreen->Draw();
 	top_title->Draw();
-	skillCheack->Draw();
+	if (m_SelectCount < (int)(haveSkills.size())&&
+		haveSkills.size() != 1) {
+		skillCheack->Draw();
+	}
 	selectFrame->Draw();
 	for (HaveUI& resultUI : haveSkills) {
 		resultUI.icon->Draw();
@@ -56,7 +94,6 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 		PassiveUI.icon->Draw();
 	}
 
-	//resulttext->TestDraw(dxCommon);
 	if (m_SelectCount < (int)(haveSkills.size())) {
 		for (auto i = 0; i < haveSkills[m_SelectCount].resultarea.size(); i++) {
 			haveSkills[m_SelectCount].resultarea[i]->Draw();
@@ -69,6 +106,13 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 		for (auto i = 0; i < havePassive.size(); i++) {
 			havePassive[m_SelectCount - (int)(haveSkills.size())].text_->Draw(dxCommon);
 		}
+	}
+	IKESprite::PreDraw();
+	if (m_DeleteCheack) {
+		black->Draw();
+		deleteDeck->Draw();
+		deleteDeckYes[nowCheack]->Draw();
+		deleteDeckNo[1 - nowCheack]->Draw();
 	}
 	IKESprite::PostDraw();
 }
@@ -140,6 +184,7 @@ void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCom
 }
 //移動
 void HaveResultSkill::Move() {
+	if (DeleteCheack()) { return; }
 	Input* input = Input::GetInstance();
 	if (m_isMove) {
 		static float frame = 0.f;
@@ -189,16 +234,15 @@ void HaveResultSkill::Move() {
 
 	//持ってるスキルの削除
 	if (m_SelectCount < (int)(haveSkills.size())) {
-		if (input->TriggerButton(input->X) && haveSkills.size() != 1) {
-			haveSkills.erase(cbegin(haveSkills) + m_SelectCount);
-			GameStateManager::GetInstance()->DeleteDeck(m_SelectCount);
-			for (int i = 0; i < haveSkills.size(); i++) {
-				SetDeleteAfter(i);
-			}
-			for (int i = 0; i < havePassive.size(); i++) {
-				SetPassiveDeleteAfter(i);
-			}
-			m_DeleteMove = true;
+		if ((input->TriggerKey(DIK_SPACE) || input->TriggerButton(input->X))&&
+			!m_isMove &&
+			haveSkills.size() != 1) {
+			m_DeleteCheack = true;
+			m_DeleteStart = true;
+			deleteFrame = 0.f;
+			///
+			//　ここに削除決定音（音入れ）
+			///
 		}
 	}
 }
@@ -269,4 +313,83 @@ void HaveResultSkill::DeleteMove() {
 			}
 		}
 	}
+}
+
+bool HaveResultSkill::DeleteCheack() {
+	if (!m_DeleteCheack) {
+		return false;
+	}
+	if (m_DeleteStart) {
+		if (Helper::FrameCheck(deleteFrame,1.f/30.0f)) {
+			m_DeleteStart = false;
+		} else {
+			XMFLOAT2 size = {
+			Ease(Out,Back,deleteFrame,0.f,256.f),
+			Ease(Out,Back,deleteFrame,0.f,64.f)
+			};
+			XMFLOAT2 size_2 = {
+			Ease(Out,Back,deleteFrame,0.f,640.f),
+			Ease(Out,Back,deleteFrame,0.f,328.f)
+			};
+			deleteDeck->SetSize(size_2);
+			for (int i = 0; i < 2; i++) {
+				deleteDeckYes[i]->SetSize(size);
+				deleteDeckNo[i]->SetSize(size);
+			}
+		}
+		return true;
+	}
+	Input* input = Input::GetInstance();
+	if (input->TiltPushStick(input->L_LEFT) ||
+		input->TiltPushStick(input->L_RIGHT) ||
+		input->TriggerKey(DIK_A) ||
+		input->TriggerKey(DIK_D) ||
+		input->PushButton(input->LEFT) ||
+		input->PushButton(input->RIGHT)) {
+
+		if (input->TiltPushStick(input->L_RIGHT) ||
+			input->TriggerKey(DIK_D) ||
+			input->PushButton(input->RIGHT)) {
+			nowCheack = 1;
+		} else {
+			nowCheack = 0;
+		}
+
+		///
+		//　ここに選択音（音入れ）
+		///
+	}
+
+
+	if ((input->TriggerButton(Input::B) ||
+		input->TriggerKey(DIK_SPACE))) {
+		if (nowCheack==1) {
+			haveSkills.erase(cbegin(haveSkills) + m_SelectCount);
+			GameStateManager::GetInstance()->DeleteDeck(m_SelectCount);
+			for (int i = 0; i < haveSkills.size(); i++) {
+				SetDeleteAfter(i);
+			}
+			for (int i = 0; i < havePassive.size(); i++) {
+				SetPassiveDeleteAfter(i);
+			}
+			m_DeleteMove = true;
+			nowCheack = 0;
+			///
+			//　ここに削除音（音入れ）
+			///
+		} else {
+			///
+			//　ここにキャンセル音（音入れ）
+			///
+		}
+		m_DeleteCheack = false;
+		deleteDeck->SetSize({});
+		for (int i = 0; i < 2; i++) {
+			deleteDeckYes[i]->SetSize({});
+			deleteDeckNo[i]->SetSize({});
+		}
+
+		return true;
+	}
+	return true;
 }

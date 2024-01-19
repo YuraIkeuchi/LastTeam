@@ -20,11 +20,6 @@ Boomerang::Boomerang() {
 	panels.tex->SetScale({ baseScale,baseScale,baseScale });
 	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
-	shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
-	shadow_tex->TextureCreate();
-	shadow_tex->Initialize();
-	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
-
 	dir_tex.reset(new IKETexture(ImageManager::BOOM_DIR, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	dir_tex->TextureCreate();
 	dir_tex->Initialize();
@@ -73,7 +68,6 @@ void Boomerang::Update() {
 void Boomerang::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	panels.tex->Draw();
-	shadow_tex->Draw();
 	dir_tex->Draw();
 	IKETexture::PostDraw();
 	Obj_Draw();

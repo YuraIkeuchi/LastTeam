@@ -299,7 +299,7 @@ void StagePanel::SetEnemyHit(IKEObject3d* obj, int& width, int& height, bool m_A
 
 	m_OBB1.SetParam_Pos(obj->GetPosition());
 	m_OBB1.SetParam_Rot(obj->GetMatrot());
-	m_OBB1.SetParam_Scl(obj->GetScale());
+	m_OBB1.SetParam_Scl({0.4f,0.4f,0.4f});
 	for (int i = 0; i < PANEL_WIDTH; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			m_OBB2.SetParam_Pos(panels[i][j].position);
@@ -389,7 +389,7 @@ void StagePanel::EnemyHitReset() {
 		}
 	}
 }
-XMFLOAT3 StagePanel::EnemySetPanel(const bool LastEnemy) {
+XMFLOAT3 StagePanel::EnemySetPanel(const bool LastEnemy, const string& name) {
 	bool isSet = false;
 	//乱数の設定
 	int width = 0;
@@ -399,7 +399,16 @@ XMFLOAT3 StagePanel::EnemySetPanel(const bool LastEnemy) {
 	else {		//最後の敵はなるべく前にワープさせる(ぐだらないように)
 		width = Helper::GetRanNum(4, 5);
 	}
-	int height = Helper::GetRanNum(0, 3);
+	int height = {};
+	if(name == "SUPPORT") {
+		height = Helper::GetRanNum(2, 3);
+	}
+	else if (name == "SUPPORT2") {
+		height = Helper::GetRanNum(0, 1);
+	}
+	else {
+		height = Helper::GetRanNum(0, 3);
+	}
 
 	//パネル探索（敵がいる場合は再検索）
 

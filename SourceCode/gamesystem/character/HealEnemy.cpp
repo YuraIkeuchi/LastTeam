@@ -61,6 +61,7 @@ bool HealEnemy::Initialize() {
 	enemywarp.Scale = 0.5f;
 
 	m_AddDisolve = 2.0f;
+	m_RandTimer = Helper::GetRanNum(0, 40);
 	return true;
 }
 
@@ -143,10 +144,7 @@ void HealEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
 	chanting.Alive = true;
-	coolTimer++;
-	coolTimer = clamp(coolTimer, 0, l_TargetTimer);
-
-	if (coolTimer == l_TargetTimer) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		coolTimer = 0;
 		chanting.Scale = 0.2f;
 		chanting.Alive = false;
@@ -248,6 +246,7 @@ void HealEnemy::WarpEnemy() {
 			m_Warp = false;
 			_charaState = STATE_INTER;
 			enemywarp.State = WARP_START;
+			m_RandTimer = Helper::GetRanNum(0, 40);
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
 	}
@@ -319,8 +318,11 @@ void HealEnemy::GameOverAction() {
 		}
 	}
 	else {
-		const float l_AddRotZ = 0.5f;
-		const float l_AddFrame2 = 0.01f;
+		float l_AddRotZ = {};
+		float l_AddFrame2 = {};
+
+		l_AddRotZ = float(Helper::GetRanNum(30, 100)) / 100;
+		l_AddFrame2 = float(Helper::GetRanNum(1, 10)) / 500;
 		float RotPower = 4.0f;
 		if (Helper::FrameCheck(m_RotFrame, l_AddFrame2)) {		//最初はイージングで回す
 			m_RotFrame = 1.0f;

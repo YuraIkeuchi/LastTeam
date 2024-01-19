@@ -72,8 +72,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreatePassiveSentence(L"ダメージをうけると回復");
 		}
 		else {
-			CreateSkillSentence(L"ドドドな近距離攻撃");
-			CreateSkillDamage(L"威力:75（大）");
+			CreateSkillSentence(L"これで敵を倒すと、敵全体にダメージ！");
+			CreateSkillDamage(L"威力:50（大）");
 			CreateSkillSentence(L"ドゴンな近中距離攻撃");
 			CreateSkillDamage(L"威力:40（中）");
 			CreateSkillSentence(L"バコン!な一列攻撃");
@@ -95,7 +95,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillSentence(L"最大の火力を再現！");
 			CreateSkillDamage(L"威力:バトル中の最大威力(固定)");
 			CreateSkillSentence(L"勝負には運も不可欠!");
-			CreateSkillDamage(L"回復!or自傷・・・ 威力:10");
+			CreateSkillDamage(L"回復!or自傷・・・ 威力:100");
 			CreateSkillSentence(L"自機や敵全てに回復を!");
 			CreateSkillDamage(L"回復床設置 威力:20");
 			CreateSkillSentence(L"中毒はしらぬまに");
@@ -130,8 +130,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillDamage(L"威力:パッシブｘ１０　ドレイン");
 			CreateSkillSentence(L"使えば使うほど強くなる！");
 			CreateSkillDamage(L"威力:8ｘ試合で使った回数");
-			CreateSkillSentence(L"ランダムでゴージャスなスキルにチェンジ！");
-			CreateSkillDamage(L"威力:50 （毒・回復・引き寄せ・飛ばすのどれか）");
+			CreateSkillSentence(L"ランダムで強いスキルにチェンジ！");
+			CreateSkillDamage(L"威力:50 （毒・回復・敵いどうのどれか）");
 		}
 	}
 

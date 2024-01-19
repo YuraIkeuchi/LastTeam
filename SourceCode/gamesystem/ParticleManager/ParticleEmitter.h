@@ -46,6 +46,10 @@ public: //メンバ関数
 	void SmokeEffect(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor,const int number);
 	//岩のエフェクト
 	void RockEffect(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor);
+	//死亡時のエフェクト
+	void DeathEffect(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const int number);
+	//爆発エフェクト
+	void Explosion(const int life, const XMFLOAT3& pos, const float size, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const int ExploType);
 	void AllDelete();
 private: //メンバ関数
 	/// <summary>
@@ -65,6 +69,8 @@ private: //メンバ変数
 	unique_ptr<ParticleManager> smokeParticle;
 	//パーティクルマネージャー(岩のエフェクト)
 	unique_ptr<ParticleManager> rockParticle;
+	//パーティクルマネージャー(死亡)
+	unique_ptr<ParticleManager> deathParticle;
 private:
 	int m_Timer = 0;
 };

@@ -106,7 +106,7 @@ void AttackArea::Draw(DirectXCommon* dxCommon) {
 //ImGui
 void AttackArea::ImGuiDraw() {
 	ImGui::Begin("Attack");
-	ImGui::Text("Sound:%d", m_Sound);
+	ImGui::Text("Sound:%d", m_Timer);
 	ImGui::End();
 }
 //パネルの位置に置く
@@ -128,6 +128,7 @@ void AttackArea::SlashMove() {
 		}
 	}
 	else {
+		m_Hit = true;
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 		}
@@ -137,7 +138,7 @@ void AttackArea::SlashMove() {
 	}
 
 	//ある程度傾いたら攻撃判定
-	if (m_Rotation.x <= -30.0f) {
+	if (m_Rotation.x <= -20.0f) {
 		m_Attack = true;
 		/// <summary>
 		///	音入れ(斬撃音希望)
@@ -159,6 +160,7 @@ void AttackArea::StoneMove() {
 		}
 	}
 	else {
+		m_Hit = true;
 		m_AddPower -= m_Gravity;
 		m_Scale = Helper::Float3AddFloat(m_Scale, 0.02f);
 		Helper::CheckMax(m_Position.y, 1.0f, m_AddPower);
@@ -175,7 +177,7 @@ void AttackArea::StoneMove() {
 	}
 
 	//ある程度の高さになったら攻撃判定
-	if (m_Position.y <= 2.0f) {
+	if (m_Position.y <= 2.5f) {
 		m_Attack = true;
 		/// <summary>
 		///	音入れ(岩が落ちる又は欠ける音希望)
@@ -199,6 +201,7 @@ void AttackArea::PoisonMove() {
 		}
 	}
 	else {
+		m_Hit = true;
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 		}
@@ -212,7 +215,7 @@ void AttackArea::PoisonMove() {
 	}
 
 	//ある程度の高さになったら攻撃判定
-	if (m_Position.y <= 2.0f) {
+	if (m_Position.y <= 2.5f) {
 		m_Attack = true;
 		/// <summary>
 		///	音入れ(ドロドロしたものが地面に落ちる音希望(ベチャッみたいなやつ)

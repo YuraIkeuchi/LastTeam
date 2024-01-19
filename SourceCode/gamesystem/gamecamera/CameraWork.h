@@ -26,6 +26,7 @@ public:
 	void SplineSet();
 	void Update(DebugCamera* camera);//更新
 	void BossUpdate(DebugCamera* camera);
+	void LastBossUpdate(DebugCamera* camera);
 	void ClearUpdate(DebugCamera* camera);
 	void GameOverUpdate(DebugCamera* camera);
 	void CameraSKip();
@@ -44,10 +45,19 @@ private:
 		CAMERA_RETURN
 	}_CameraMove = CAMERA_BOSS;
 
+	enum CameraLastMove {
+		CAMERA_LASTBOSS,
+		CAMERA_LASTSUPPORTUP,
+		CAMERA_LASTSUPPORTUP2,
+		CAMERA_LASTBOSSUP,
+		CAMERA_LASTRETURN
+	}_CameraLastMove = CAMERA_LASTBOSS;
+
 	float m_Frame = {};
 	int m_waitTimer = {};
 	bool m_ClearEnd = false;
 
 	unique_ptr<IKESprite> syuutyuu;
 	float m_AddCameraVel = 0.0f;
+	bool m_DrawLine = false;
 };

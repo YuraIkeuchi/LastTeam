@@ -100,7 +100,8 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
 	Input* input = Input::GetInstance();
-	camerawork->Update(camera);
+	camerawork->Update(camera); 
+	ParticleUpdate();
 	player_->Update();
 	//各クラス更新
 	camerawork->Update(camera);
@@ -203,9 +204,12 @@ void TitleScene::BackDraw(DirectXCommon* dxCommon) {
 		skill->Draw();
 	}
 
+	for (ShineEffect& shine : shines) {
+		shine.tex->Draw();
+	}
 	IKESprite::PostDraw();
 
-	enemy->Draw(dxCommon);
+	//enemy->Draw(dxCommon);
 }
 //ImGui描画
 void TitleScene::ImGuiDraw(DirectXCommon* dxCommon) {
@@ -243,6 +247,9 @@ void TitleScene::OpenMagic() {
 		} else {
 			state = STATE::verse2Onomato;
 		}
+
+		state = STATE::verse2Onomato;
+
 		onomatope2_->SetColor({ 1,1,1,1 });
 		onomatope2_->SetPosition({ 0.f, -200.f });
 		stateCount = 0;
@@ -261,10 +268,16 @@ void TitleScene::VerseOnomato() {
 	Ease(Out,Quad,frame,700.f,1450.f),
 	380.f
 	};
-
+	if (pos.x >= 1280.f&& !isEffect) {
+		for (int i = 0; i < 5; i++) {
+			ShineInit({ 1280.f,pos.y });
+		}
+		isEffect = true;
+	}
 	onomatope_->SetSize(size);
 	onomatope_->SetPosition(pos);
 	if (stateCount >= kVerseOnomatoCountMax) {
+		isEffect = false;
 		state = STATE::closeMagic;
 		stateCount = 0;
 	}
@@ -287,6 +300,10 @@ void TitleScene::Verse2Onomato() {
 	onomatope2_->SetSize(size);
 	onomatope2_->SetPosition(pos);
 	if (stateCount >= kVerseOnomatoCountMax) {
+			for (int i = 0; i < 5; i++) {
+				Shine2Init({ pos.x+128.f,pos.y+128.f });
+			}
+
 		state = STATE::closeMagic;
 		stateCount = 0;
 	}
@@ -303,4 +320,61 @@ void TitleScene::CloseMagic() {
 		state = STATE::wait;
 		stateCount = 0;
 	}
+}
+
+void TitleScene::ShineInit(XMFLOAT2 pos) {
+	const float marzin = 20.0f;
+	XMFLOAT2 r_vel = {
+		-5.0f,
+		(float)rand() / RAND_MAX * marzin - marzin / 2.0f
+	};
+
+	ShineEffect shine;
+	shine.tex = IKESprite::Create(ImageManager::SHINE_S, { -100.f,0.f });
+	shine.tex->SetAnchorPoint({ 0.5f,0.5f });
+	shine.vel = r_vel;
+	shine.position = pos;
+	shine.size = { 32.f,32.f };
+	shine.tex->SetSize(shine.size);
+
+	shines.push_back(std::move(shine));
+}
+
+void TitleScene::Shine2Init(XMFLOAT2 pos) {
+	const float marzin = 20.0f;
+	XMFLOAT2 r_vel = {
+		(float)rand() / RAND_MAX * marzin - marzin / 2.0f,
+		(float)rand() / RAND_MAX * marzin - marzin / 2.0f
+	};
+
+	ShineEffect shine;
+	shine.tex = IKESprite::Create(ImageManager::SMOKE, { -100.f,0.f });
+	shine.tex->SetAnchorPoint({ 0.5f,0.5f });
+	shine.vel = r_vel;
+	shine.position = pos;
+	shine.size = { 32.f,32.f };
+	shine.tex->SetSize(shine.size);
+
+	shines.push_back(std::move(shine));
+}
+
+void TitleScene::ParticleUpdate() {
+	for (ShineEffect& shine : shines) {
+		if (Helper::FrameCheck(shine.frame, 1 / shine.kFrame)) {
+			shine.isVanish = true;
+		} else {
+			shine.position.x += shine.vel.x;
+			shine.position.y += shine.vel.y;
+			shine.tex->SetPosition({shine.position});
+
+			float alpha = Ease(In, Quad, shine.frame, 1.0f, 0.f);
+			shine.tex->SetColor({ 1,1,1,alpha });
+		}
+	}
+	shines.remove_if([](ShineEffect& shine) {
+		return shine.isVanish; });
+
+
+
+
 }

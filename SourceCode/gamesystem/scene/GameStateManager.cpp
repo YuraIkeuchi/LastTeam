@@ -99,6 +99,7 @@ void GameStateManager::Initialize() {
 	m_Delay = false;
 	m_Buff = false;
 	predictarea->ResetPredict();
+	isFinish = false;
 
 	m_GameStart = false;
 	m_BossCamera = false;
@@ -238,8 +239,8 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 			damage.tex->Draw();
 		}
 		handsFrame->Draw();
-		skillUI->Draw();
-		gaugeUI->Draw();
+	
+		
 		//gaugeCover->Draw();
 		if (isPassive) {
 			for (std::unique_ptr<IKESprite>& passiveAct : passiveActs) {
@@ -249,7 +250,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		}
 		onomatope->Draw();
 		IKESprite::PostDraw();
-		SkillManager::GetInstance()->UIDraw();
+	
 		for (auto i = 0; i < attackarea.size(); i++) {
 			if (attackarea[i] == nullptr)continue;
 			attackarea[i]->Draw(dxCommon);
@@ -282,6 +283,10 @@ void GameStateManager::ImGuiDraw() {
 	ImGui::Text("Shield:%d", m_Shield);
 	ImGui::End();
 	
+	for (auto i = 0; i < attackarea.size(); i++) {
+		if (attackarea[i] == nullptr)continue;
+		attackarea[i]->ImGuiDraw();
+	}
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
@@ -297,6 +302,9 @@ void GameStateManager::ActUIDraw() {
 		passive->Draw();
 	}
 	IKESprite::PreDraw();
+	skillUI->Draw();
+	gaugeUI->Draw();
+	SkillManager::GetInstance()->UIDraw();
 	for (PowerUpEffect& power : powerup) {
 		power.tex->Draw();
 	}
@@ -558,9 +566,9 @@ void GameStateManager::UseSkill() {
 				int l_rand = {};
 				l_rand = Helper::GetRanNum(0, 1);
 				if (l_rand == 0) {
-					player->HealPlayer(10.0f);
+					player->HealPlayer(100.0f);
 				} else {
-					player->RecvDamage(10.0f);
+					player->RecvDamage(100.0f);
 				}
 			}
 		}
@@ -610,7 +618,7 @@ void GameStateManager::FinishAct(bool AllFinish) {
 void GameStateManager::GaugeUpdate() {
 	if (!m_GameStart) { return; }
 	if (m_BossCamera) { return; }
-	if (m_Act.size() != 0 && SkillManager::GetInstance()->GetDeckNum() == 0) {
+	if (m_Act.size() != 0 && SkillManager::GetInstance()->GetDeckNum() == 0 && !m_IsReload) {
 		m_GaugeCount = {};
 	}
 	if (m_Act.size() == m_DeckNumber.size()) {
@@ -763,10 +771,16 @@ bool GameStateManager::ResultUpdate() {
 	if (Input::GetInstance()->TriggerButton(Input::LB) ||
 		Input::GetInstance()->TriggerKey(DIK_LEFT)) {
 		_ResultType = GET_SKILL;
+		///
+		//　ここにスキルとデッキ切り替え音（音入れ）
+		///
 	}
 	if (Input::GetInstance()->TriggerButton(Input::RB) ||
 		Input::GetInstance()->TriggerKey(DIK_RIGHT)) {
 		_ResultType = HAVE_SKILL;
+		///
+		//　ここにスキルとデッキ切り替え音（音入れ）
+		///
 	}
 
 	if (_ResultType == GET_SKILL) {
@@ -776,7 +790,6 @@ bool GameStateManager::ResultUpdate() {
 			resultSkill->InDeck(m_DeckNumber);
 			resultSkill->InPassive(GotPassiveIDs);
 			isChangeScene = true;
-			isFinish = false;
 			m_Choice = true;
 			TutorialTask::GetInstance()->SetChoiceSkill(true);
 		}
