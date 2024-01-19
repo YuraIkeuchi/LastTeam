@@ -309,7 +309,7 @@ void BossEnemy2::Stun()
 //攻撃エリア
 void BossEnemy2::BirthArea(const int Width, const int Height, const string& name) {
 	if (m_Area[Width][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
+		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>("ICE");
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
 		newarea->SetPlayer(player);

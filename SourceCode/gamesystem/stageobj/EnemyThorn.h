@@ -18,7 +18,7 @@ protected:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	EnemyThorn();
+	EnemyThorn(const string& name);
 public:
 	//‰Šú‰»
 	bool Initialize() override;

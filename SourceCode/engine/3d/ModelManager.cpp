@@ -16,7 +16,7 @@ void ModelManager::StartInitialize()
 	LoadModel(PLAYERMODEL, "pawn");
 	LoadModel(PANEL, "box1x1x1");
 	LoadModel(BULLET, "EnemyBullet");
-	LoadModel(THORN, "Thorn");
+	LoadModel(THORN, "Ice");
 	LoadModel(CANNON, "cannon");
 	LoadModel(SQUID, "squid");
 	LoadModel(MISSILE, "missile");
@@ -37,6 +37,7 @@ void ModelManager::StartInitialize()
 	LoadModel(LAST_BOSS, "LastBoss");
 	LoadModel(SUPPORT_ENEMY, "Shield");
 	LoadModel(SUPPORT_ENEMY2, "BomBear");
+	LoadModel(BOSS_ARM, "punch");
 }
 
 //モデル読み込み(非同期処理で読み込むもの)

@@ -164,7 +164,7 @@ void BossEnemy::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = 2;
+		int l_RandState = Helper::GetRanNum(0,2);
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -319,7 +319,7 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 		int l_SoundTimer = {};
 		for (auto i = 0; i < m_Area.size(); i++) {
 			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
+				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>("ARM");
 				newarea->Initialize();
 				newarea->InitState(i, Height);
 				newarea->SetPlayer(player);
@@ -331,7 +331,7 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 			}
 		}
 	} else {		//ランダム(プレイヤーから近います)
-		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
+		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>("ARM");
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
 		newarea->SetPlayer(player);
