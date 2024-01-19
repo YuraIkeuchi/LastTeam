@@ -12,7 +12,7 @@
 SupportEnemy::SupportEnemy() {
 	m_BombCounter = true;
 	m_EnemyTag = "SUPPORT";
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SECOND_BOSS));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SUPPORT_ENEMY2));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
@@ -33,7 +33,7 @@ SupportEnemy::SupportEnemy() {
 //èâä˙âª
 bool SupportEnemy::Initialize() {
 	//m_Position = randPanelPos();
-	m_Rotation = { 0.0f,-90.0f,0.0f };
+	m_Rotation = { 0.0f,90.0f,0.0f };
 	//m_Color = { 1.f,0.f,1.f,1.0f };
 	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "hp")));
