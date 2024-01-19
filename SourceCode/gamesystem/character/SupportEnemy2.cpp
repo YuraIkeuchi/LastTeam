@@ -1,4 +1,4 @@
-#include "SupportEnemy.h"
+#include "SupportEnemy2.h"
 #include <random>
 #include "Player.h"
 #include "Collision.h"
@@ -9,11 +9,10 @@
 #include <GameStateManager.h>
 #include <StagePanel.h>
 //モデル読み込み
-SupportEnemy::SupportEnemy() {
-	m_BombCounter = true;
-	m_EnemyTag = "SUPPORT";
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SECOND_BOSS));
+SupportEnemy2::SupportEnemy2() {
 
+	m_EnemyTag = "SUPPORT2";
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SUPPORT_ENEMY));
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
@@ -28,16 +27,16 @@ SupportEnemy::SupportEnemy() {
 	predictarea->Initialize();
 }
 //初期化
-bool SupportEnemy::Initialize() {
+bool SupportEnemy2::Initialize() {
 	//m_Position = randPanelPos();
 	m_Rotation = { 0.0f,-90.0f,0.0f };
 	//m_Color = { 1.f,0.f,1.f,1.0f };
 	m_Scale = { 0.4f,0.4f,0.4f };
-	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "hp")));
-	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "LIMIT_NUM")));
+	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy2.csv", "hp")));
+	auto LimitSize = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy2.csv", "LIMIT_NUM")));
 
 	m_Limit.resize(LimitSize);
-	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/SupportEnemy.csv", m_Limit, "Interval");
+	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/SupportEnemy2.csv", m_Limit, "Interval");
 
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
@@ -48,22 +47,22 @@ bool SupportEnemy::Initialize() {
 	magic.AfterScale = 0.2f;
 	magic.Pos = {};
 	magic.State = {};
-	
+
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.4f;
 	m_AddDisolve = 2.0f;
-	m_RandTimer = Helper::GetRanNum(0,20);
+	m_RandTimer = Helper::GetRanNum(0, 20);
 	return true;
 }
 //状態遷移
-void (SupportEnemy::* SupportEnemy::stateTable[])() = {
-	&SupportEnemy::Inter,//動きの合間
-	&SupportEnemy::Attack,//動きの合間
-	&SupportEnemy::Teleport,//瞬間移動
+void (SupportEnemy2::* SupportEnemy2::stateTable[])() = {
+	&SupportEnemy2::Inter,//動きの合間
+	&SupportEnemy2::Attack,//動きの合間
+	&SupportEnemy2::Teleport,//瞬間移動
 };
 
 //行動
-void SupportEnemy::Action() {
+void SupportEnemy2::Action() {
 	if (!m_Induction) {
 		(this->*stateTable[_charaState])();
 	}
@@ -77,7 +76,7 @@ void SupportEnemy::Action() {
 	PoisonState();//毒
 	BirthMagic();//魔法陣
 	AttackMove();//攻撃時の動き
-	
+
 	if (m_BirthBomb) {
 		BirthCounter();
 		m_BirthBomb = false;
@@ -112,7 +111,7 @@ void SupportEnemy::Action() {
 }
 
 //描画
-void SupportEnemy::Draw(DirectXCommon* dxCommon) {
+void SupportEnemy2::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
@@ -133,7 +132,7 @@ void SupportEnemy::Draw(DirectXCommon* dxCommon) {
 	BaseBackDraw(dxCommon);
 }
 //ImGui描画
-void SupportEnemy::ImGui_Origin() {
+void SupportEnemy2::ImGui_Origin() {
 	//ImGui::Begin("Boss");
 	//ImGui::Text("PosX:%f", m_Position.x);
 	//ImGui::Text("PosZ:%f", m_Position.z);
@@ -141,11 +140,11 @@ void SupportEnemy::ImGui_Origin() {
 	//predictarea->ImGuiDraw();
 }
 //開放
-void SupportEnemy::Finalize() {
+void SupportEnemy2::Finalize() {
 
 }
 //待機
-void SupportEnemy::Inter() {
+void SupportEnemy2::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
@@ -155,7 +154,7 @@ void SupportEnemy::Inter() {
 	}
 }
 //攻撃
-void SupportEnemy::Attack() {
+void SupportEnemy2::Attack() {
 	//(this->*attackTable[_AttackState])();
 	//PlayerCollide();
 	int l_TargetTimer = {};
@@ -170,7 +169,7 @@ void SupportEnemy::Attack() {
 }
 
 //ワープ
-void SupportEnemy::Teleport() {
+void SupportEnemy2::Teleport() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
 
@@ -183,16 +182,16 @@ void SupportEnemy::Teleport() {
 	}
 }
 //攻撃エリア
-void SupportEnemy::BirthArea(const int Width, const int Height, const string& name) {
+void SupportEnemy2::BirthArea(const int Width, const int Height, const string& name) {
 
 }
 //予測エリア
-void SupportEnemy::BirthPredict(const int Width, const int Height, const string& name) {
-	
+void SupportEnemy2::BirthPredict(const int Width, const int Height, const string& name) {
+
 }
 
 //魔法陣生成
-void SupportEnemy::BirthMagic() {
+void SupportEnemy2::BirthMagic() {
 	if (!magic.Alive) { return; }
 	static float addFrame = 1.f / 15.f;
 	const int l_TargetTimer = 20;
@@ -220,9 +219,9 @@ void SupportEnemy::BirthMagic() {
 		magic.Scale = Ease(In, Cubic, magic.Frame, magic.Scale, magic.AfterScale);
 	}
 }
-void SupportEnemy::WarpEnemy() {
+void SupportEnemy2::WarpEnemy() {
 	XMFLOAT3 l_RandPos = {};
-	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy,m_EnemyTag);
+	l_RandPos = StagePanel::GetInstance()->EnemySetPanel(m_LastEnemy, m_EnemyTag);
 	static float addFrame = 1.f / 15.f;
 	if (enemywarp.State == WARP_START) {			//キャラが小さくなる
 		if (Helper::FrameCheck(enemywarp.Frame, addFrame)) {
@@ -252,7 +251,7 @@ void SupportEnemy::WarpEnemy() {
 	m_Scale = { enemywarp.Scale,enemywarp.Scale, enemywarp.Scale };
 }
 //攻撃時の動き
-void SupportEnemy::AttackMove() {
+void SupportEnemy2::AttackMove() {
 	if (!m_Rot) { return; }
 	const float l_AddFrame = 1 / 20.0f;
 	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
@@ -264,7 +263,7 @@ void SupportEnemy::AttackMove() {
 	m_Rotation.y = Ease(In, Cubic, m_AttackFrame, m_Rotation.y, 630.0f);
 }
 //クリアシーンの更新
-void SupportEnemy::ClearAction() {
+void SupportEnemy2::ClearAction() {
 	const int l_TargetTimer = 160;
 	const float l_AddFrame = 1 / 200.0f;
 	if (m_ClearTimer == 0) {
@@ -283,7 +282,7 @@ void SupportEnemy::ClearAction() {
 	Obj_SetParam();
 }
 //ゲームオーバーシーンの更新
-void SupportEnemy::GameOverAction() {
+void SupportEnemy2::GameOverAction() {
 	if (_GameOverState == OVER_STOP) {
 		m_Position = { -1.0f,0.0f,2.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
@@ -331,7 +330,7 @@ void SupportEnemy::GameOverAction() {
 	Obj_SetParam();
 }
 
-void SupportEnemy::BirthCounter() {
+void SupportEnemy2::BirthCounter() {
 	int l_PlayerWidth = {};
 	int l_PlayerHeight = {};
 	l_PlayerWidth = player->GetNowWidth();

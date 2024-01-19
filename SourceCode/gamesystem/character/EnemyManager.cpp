@@ -13,6 +13,7 @@
 #include "ClouserEnemy.h"
 #include "BossEnemy2.h"
 #include "SupportEnemy.h"
+#include "SupportEnemy2.h"
 #include <StagePanel.h>
 #include <GameStateManager.h>
 #include <Helper.h>
@@ -284,14 +285,14 @@ void EnemyManager::Spawn2Map() {
 			}
 			else if (x == 'c' || x == 'd') {
 				if (x == 'c') {
-					unique_ptr<InterEnemy> enemy_ = std::make_unique<SupportEnemy>(SUPPORT_RED);
+					unique_ptr<InterEnemy> enemy_ = std::make_unique<SupportEnemy>();
 					//enemy_->SetPlayer(player);
 					enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 					enemys.push_back(std::move(enemy_));
 					width++;
 				}
 				else {
-					unique_ptr<InterEnemy> enemy_ = std::make_unique<SupportEnemy>(SUPPORT_BLUE);
+					unique_ptr<InterEnemy> enemy_ = std::make_unique<SupportEnemy2>();
 					//enemy_->SetPlayer(player);
 					enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 					enemys.push_back(std::move(enemy_));
