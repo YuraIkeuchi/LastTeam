@@ -166,6 +166,7 @@ protected:
 	//カウンター
 	bool m_BombCounter = false;
 	bool m_BirthBomb = false;
+	bool m_DamageCut = false;
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };

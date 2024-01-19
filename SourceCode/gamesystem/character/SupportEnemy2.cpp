@@ -155,7 +155,8 @@ void SupportEnemy2::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
-		BirthRegene();
+		LastBossState::GetInstance()->SetBossShield(true);
+		//BirthRegene();
 		coolTimer = 0;
 		_charaState = STATE_SPECIAL;
 		m_RandTimer = Helper::GetRanNum(0, 20);

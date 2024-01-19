@@ -7,7 +7,7 @@
 #include <ParticleEmitter.h>
 #include <TutorialTask.h>
 #include "ImageManager.h"
-#include <Slow.h>
+#include <LastBossState.h>
 #include "Passive.h"
 Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
@@ -317,6 +317,10 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			Helper::Clamp(damage, 0.0f, 999.0f);
 			if (m_EnemyTag == "Mob" && !TutorialTask::GetInstance()->GetTaskFinish(TASK_COUNTER)) {
 				damage = 0.0f;
+			}
+			if (m_EnemyTag == "LASTBOSS" && LastBossState::GetInstance()->GetBossShield()) {
+				m_DamageCut = true;
+				damage /= 2.0f;
 			}
 			m_HP -= damage;
 			GameStateManager::GetInstance()->DamageCheck((int)damage);

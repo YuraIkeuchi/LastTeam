@@ -124,8 +124,9 @@ private:
 		float Frame = {};
 		XMFLOAT2 Pos = {};
 		bool Alive = false;
-		float m_Alpha = {};
+		float Alpha = {};
 		int Timer = {};
+		int DeleteTimer = {};
 	};
 
 	Shield shield;

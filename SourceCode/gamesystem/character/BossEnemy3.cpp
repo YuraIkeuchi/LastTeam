@@ -17,6 +17,7 @@ BossEnemy3::BossEnemy3() {
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
+	LastBossState::GetInstance()->SetBossShield(false);
 	//HPII
 	shield.sprite = IKESprite::Create(ImageManager::SHIELD, { 0.0f,0.0f });
 	shield.sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
@@ -60,6 +61,8 @@ bool BossEnemy3::Initialize() {
 
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.8f;
+	shield.Alpha = 1.0f;
+
 	m_AddDisolve = 2.0f;
 
 	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
@@ -173,16 +176,17 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 		Obj_Draw();
 	BaseBackDraw(dxCommon);
 	IKESprite::PreDraw();
-	shield.sprite->Draw();
+	if (LastBossState::GetInstance()->GetBossShield() && shield.Alpha != 0.0f) {
+		shield.sprite->Draw();
+	}
 	IKESprite::PostDraw();
 }
 //ImGui描画
 void BossEnemy3::ImGui_Origin() {
 	ImGui::Begin("Boss");
-	ImGui::Text("m_Anger:%d", m_Anger);
-	ImGui::Text("m_AngerFinish:%d", m_AngerFinish);
-	ImGui::Text("m_AngerTimer:%d", m_AngerTimer);
-	ImGui::Text("m_AngerCount:%d", m_AngerCount);
+	ImGui::Text("ShieldFrag:%d", LastBossState::GetInstance()->GetBossShield());
+	ImGui::Text("Shield:%f", shield.Alpha);
+	ImGui::Text("Timer:%d", shield.DeleteTimer);
 	ImGui::End();
 	//predictarea->ImGuiDraw();
 }
@@ -688,6 +692,31 @@ void BossEnemy3::AngerMove() {
 }
 //シールドの更新
 void BossEnemy3::ShieldUpdate() {
+	if (!LastBossState::GetInstance()->GetBossShield()) { return; }
+	const float l_AddFrame = 1 / 60.0f;
+	const int l_TargetTimer = 200;
+	if (m_DamageCut) {
+		shield.Alpha = 1.0f;
+		if (Helper::CheckMin(shield.Timer, 20, 1)) {
+			shield.Timer = {};
+			m_DamageCut = false;
+		}
+	}
+	else {
+		if (Helper::FrameCheck(shield.Frame, l_AddFrame)) {
+			shield.Frame = {};
+		}
+		else {
+			shield.Alpha = Ease(In, Cubic, shield.Frame, shield.Alpha, 0.0f);
+		}
+	}
+
+	if (Helper::CheckMin(shield.DeleteTimer, l_TargetTimer,1)) {
+		m_DamageCut = false;
+		shield.Timer = {};
+		shield.DeleteTimer = {};
+		LastBossState::GetInstance()->SetBossShield(false);
+	}
 	//HPバー
 	XMVECTOR tex2DPos = { m_Position.x + 0.5f, m_Position.y, m_Position.z + 2.0f };
 	tex2DPos = Helper::PosDivi(tex2DPos, m_MatView, false);
@@ -697,4 +726,5 @@ void BossEnemy3::ShieldUpdate() {
 
 	shield.Pos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 	shield.sprite->SetPosition(shield.Pos);
+	shield.sprite->SetColor({ 1.0f,1.0f,1.0f,shield.Alpha });
 }
