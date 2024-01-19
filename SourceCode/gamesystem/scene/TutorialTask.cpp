@@ -33,8 +33,12 @@ void TutorialTask::Initialize() {
 		tutorial[i].check = IKESprite::Create(ImageManager::TUTORIAL_CHECK, { 0.0f,0.0f });
 		tutorial[i].check->SetPosition({ 860.0f,200 + (80.0f * i) });
 		tutorial[i].check->SetAnchorPoint({ 0.5f,0.5f });
+		tutorial[i].color = { 1.0f,1.0f,1.0f,0.0f };
 		tutorial[i].size = { 150.0f,150.0f };
 	}
+
+	m_ChoiceSkill = false;
+	m_ViewSkill = false;
 }
 void TutorialTask::Update(){
 	const float l_AddFrame = 1.0f / 30.0f;
