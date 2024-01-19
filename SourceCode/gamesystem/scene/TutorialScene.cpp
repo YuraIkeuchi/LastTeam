@@ -35,6 +35,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 	player_->Initialize();
 	player_->SkipInitialize();
+	player_->SetHp(500.0f);
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
 	GameStateManager::SetPlayer(player_.get());
