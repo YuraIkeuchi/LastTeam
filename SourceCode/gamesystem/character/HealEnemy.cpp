@@ -52,8 +52,9 @@ bool HealEnemy::Initialize() {
 
 	chanting.Alive = false;
 	chanting.Frame = {};
-	chanting.Scale = {};
+	chanting.Scale = 0.2f;
 	chanting.AfterScale = 0.2f;
+	chanting.Rotate = { 90.0f,0.0f,0.0f };
 	chanting.Pos = {};
 	chanting.State = {};
 
