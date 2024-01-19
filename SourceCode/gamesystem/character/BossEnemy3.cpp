@@ -67,7 +67,7 @@ bool BossEnemy3::Initialize() {
 	m_AddDisolve = 2.0f;
 
 	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
-		for (int j = 0; j < PANEL_WIDTH; j++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			m_SafeArea[i][j] = false;
 		}
 	}
@@ -120,7 +120,7 @@ void BossEnemy3::Action() {
 		}
 	}
 
-	//敵の岩
+	//敵の竜巻
 	//攻撃エリアの更新(実際はスキルになると思う)
 	for (auto i = 0; i < enetornade.size(); i++) {
 		if (enetornade[i] == nullptr)continue;
@@ -373,7 +373,7 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 	if (name == "Random") {
 		int l_SoundCount = {};
 		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-			for (int j = 0; j < PANEL_WIDTH; j++) {
+			for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if (!m_SafeArea[i][j]) {
 					std::unique_ptr<EnemyTornade> newarea = std::make_unique<EnemyTornade>();
 					newarea->Initialize();
@@ -389,7 +389,7 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 		}
 
 		for (int i = 0; i < (PANEL_WIDTH / 2); i++) {
-			for (int j = 0; j < PANEL_WIDTH; j++) {
+			for (int j = 0; j < PANEL_HEIGHT; j++) {
 				m_SafeArea[i][j] = false;
 			}
 		}
@@ -409,7 +409,7 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 void BossEnemy3::BirthPredict(const int Width, const int Height, const string& name) {
 	if (name == "Random") {
 		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-			for (int j = 0; j < PANEL_WIDTH; j++) {
+			for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if (!m_SafeArea[i][j]) {
 					predictarea->SetPredict(i, j, true);
 				}
@@ -418,7 +418,7 @@ void BossEnemy3::BirthPredict(const int Width, const int Height, const string& n
 	}
 	else if (name == "Rock") {
 		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-			for (int j = 0; j < PANEL_WIDTH; j++) {
+			for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if ((i == 1 || i == 2) && (j == 1 || j == 2)) {
 					predictarea->SetPredict(i, j, true);
 				}

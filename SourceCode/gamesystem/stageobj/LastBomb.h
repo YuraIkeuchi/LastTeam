@@ -1,7 +1,7 @@
 #pragma once
 #include "ObjCommon.h"
 #include "Player.h"
-
+#include "Explosion.h"
 //爆弾の攻撃(敵)
 class LastBomb :
 	public ObjCommon {
@@ -33,7 +33,9 @@ public:
 
 	bool Collide();	//当たり判定
 
-	void InitState(const XMFLOAT3& pos);
+	void InitState(const XMFLOAT3& pos, const int width, const int height);
+
+	void BirthExplosion();
 
 private://ステート
 	static void (LastBomb::* stateTable[])();
@@ -79,4 +81,9 @@ private:
 	bool m_Jump = false;
 
 	int m_BirthCount = {};
+
+	bool m_Attack[4][4] = {false};
+
+	// 攻撃エリア
+	std::vector<unique_ptr<Explosion>> explosion;
 };

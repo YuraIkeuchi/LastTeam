@@ -3,10 +3,15 @@
 #include <StagePanel.h>
 #include <Helper.h>
 #include <Easing.h>
-EnemyThorn::EnemyThorn() {
+EnemyThorn::EnemyThorn(const string& name) {
 	m_Object = make_unique<IKEObject3d>();
 	m_Object->Initialize();
-	m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::THORN));
+	if (name == "ICE") {
+		m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::THORN));
+	}
+	else {
+		m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::BOSS_ARM));
+	}
 	Initialize();
 }
 bool EnemyThorn::Initialize() {

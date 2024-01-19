@@ -56,6 +56,7 @@ bool SupportEnemy::Initialize() {
 	enemywarp.Scale = 0.4f;
 	m_AddDisolve = 2.0f;
 	m_RandTimer = Helper::GetRanNum(0,20);
+	_BombAttackType = SET_BOMB;
 	return true;
 }
 //èÛë‘ëJà⁄
@@ -141,11 +142,6 @@ void SupportEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGuiï`âÊ
 void SupportEnemy::ImGui_Origin() {
-	//ImGui::Begin("Boss");
-	//ImGui::Text("PosX:%f", m_Position.x);
-	//ImGui::Text("PosZ:%f", m_Position.z);
-	//ImGui::End();
-	//predictarea->ImGuiDraw();
 }
 //äJï˙
 void SupportEnemy::Finalize() {
@@ -167,21 +163,46 @@ void SupportEnemy::Attack() {
 	//PlayerCollide();
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
+	const int l_JumpTimer = 80;
+	if (coolTimer == 10) {
 		//íeÇÃî≠ê∂
-		lastbomb->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+		lastbomb->InitState({ m_Position.x,m_Position.y + 1.5f,m_Position.z },m_NowWidth - 1,m_NowHeight);
+		BirthPredict(3 - m_AttackCount, m_NowHeight, "Bomb");
+	}
+	else if (coolTimer == l_JumpTimer) {
+		_BombAttackType = JUMP_MOVE;
+	}
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+		m_AttackCount++;
 		coolTimer = 0;
-		_charaState = STATE_SPECIAL;
-		m_RandTimer = Helper::GetRanNum(0, 20);
+		if (m_AttackCount == 4) {
+			_charaState = STATE_SPECIAL;
+			m_RandTimer = Helper::GetRanNum(0, 20);
+			m_AttackCount = {};
+		}
+	}
+
+	if (_BombAttackType == JUMP_MOVE) {
+		if (Helper::CheckMin(m_Position.y, 10.0f, 0.3f)) {
+			m_Position.x = lastbomb->GetPosition().x;
+			_BombAttackType = FALL_MOVE;
+		}
+	}
+	else if (_BombAttackType == FALL_MOVE) {
+		if (Helper::CheckMax(m_Position.y, 0.1f, -0.3f)) {
+			predictarea->ResetPredict();
+			_BombAttackType = SET_BOMB;
+			lastbomb->BirthExplosion();
+		}
 	}
 	predictarea->Update();
 	predictarea->SetTimer(coolTimer);
+	predictarea->SetTargetTimer(l_TargetTimer);
 }
-
 //ÉèÅ[Év
 void SupportEnemy::Teleport() {
 	int l_TargetTimer = {};
-	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
+	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		magic.Alive = true;
@@ -197,7 +218,14 @@ void SupportEnemy::BirthArea(const int Width, const int Height, const string& na
 }
 //ó\ë™ÉGÉäÉA
 void SupportEnemy::BirthPredict(const int Width, const int Height, const string& name) {
-	
+	for (int i = 0; i < (PANEL_WIDTH / 2); i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			if (Width == i || Height == j) {
+				predictarea->SetPredict(i, j, true);
+			}
+		}
+	}
+	predictarea->SetFlashStart(true);
 }
 
 //ñÇñ@êwê∂ê¨
@@ -241,7 +269,7 @@ void SupportEnemy::WarpEnemy() {
 			coolTimer = {};
 			m_Position = l_RandPos;
 			m_RotFrame = {};
-			m_Rotation.y = -90.0f;
+			m_Rotation.y = 90.0f;
 			StagePanel::GetInstance()->EnemyHitReset();
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);

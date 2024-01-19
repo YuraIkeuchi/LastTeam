@@ -224,6 +224,7 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyBullet.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyTornade.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\Explosion.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\LastBomb.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PoisonArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp" />
@@ -370,6 +371,7 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyBullet.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyTornade.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\Explosion.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\LastBomb.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PoisonArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h" />

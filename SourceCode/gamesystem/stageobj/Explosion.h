@@ -1,14 +1,12 @@
 #pragma once
 #include"DirectXCommon.h"
-#include "ObjCommon.h"
 #include <DirectXMath.h>
 #include "Player.h"
 
 using namespace std;         //  名前空間指定
 
 //トゲクラス
-class EnemyThorn :
-public ObjCommon{
+class Explosion{
 protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	// DirectX::を省略
@@ -18,22 +16,20 @@ protected:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	EnemyThorn(const string& name);
+	Explosion();
 public:
 	//初期化
-	bool Initialize() override;
+	bool Initialize();
 	//ステータス初期化
 	void InitState(const int width, const int height);
 	//更新
-	void Update() override;
-	//描画
-	void Draw(DirectXCommon* dxCommon) override;
-	//ImGui
+	void Update();
 	void ImGuiDraw();
 private:
 	XMFLOAT3 SetPanelPos(const int width, const int height);
 	void Move();
 	void Collide();
+	void BirthParticle();
 public:
 	//gettersetter
 	const bool GetAlive() { return m_Alive; }
@@ -55,13 +51,6 @@ private:
 	int m_NowWidth = {};
 	int m_NowHeight = {};
 	float m_Damage = 20.0f;
-
-	enum ThornState {
-		THORN_UP,
-		THORN_STOP,
-		THORN_END,
-	}_ThornState = THORN_UP;
-
-	float m_Frame = {};
 	bool m_Sound = false;
+	XMFLOAT3 m_Position = {};
 };
