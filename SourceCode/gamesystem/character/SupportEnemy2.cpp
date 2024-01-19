@@ -1,5 +1,5 @@
 #include "SupportEnemy2.h"
-#include <random>
+#include <LastBossState.h>
 #include "Player.h"
 #include "Collision.h"
 #include "CsvLoader.h"
@@ -77,10 +77,6 @@ void SupportEnemy2::Action() {
 	BirthMagic();//魔法陣
 	AttackMove();//攻撃時の動き
 
-	if (m_BirthBomb) {
-		BirthCounter();
-		m_BirthBomb = false;
-	}
 	//攻撃時ジャンプする
 	if (m_Jump) {
 		m_AddPower -= m_Gravity;
@@ -91,23 +87,22 @@ void SupportEnemy2::Action() {
 		}
 	}
 
+	//回復エリアの更新(実際はスキルになると思う)
+	for (auto i = 0; i < regenearea.size(); i++) {
+		if (regenearea[i] == nullptr)continue;
+		regenearea[i]->Update();
+
+		if (!regenearea[i]->GetAlive()) {
+			regenearea.erase(cbegin(regenearea) + i);
+		}
+	}
+
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
 
-	//カウンターボムの削除
-	for (int i = 0; i < counterbomb.size(); i++) {
-		if (counterbomb[i] == nullptr) {
-			continue;
-		}
-
-		counterbomb[i]->Update();
-		if (!counterbomb[i]->GetAlive()) {
-			counterbomb.erase(cbegin(counterbomb) + i);
-		}
-	}
 }
 
 //描画
@@ -118,13 +113,9 @@ void SupportEnemy2::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-	//カウンターボムの描画
-	for (int i = 0; i < counterbomb.size(); i++) {
-		if (counterbomb[i] == nullptr) {
-			continue;
-		}
-
-		counterbomb[i]->Draw(dxCommon);
+	for (auto i = 0; i < regenearea.size(); i++) {
+		if (regenearea[i] == nullptr)continue;
+		regenearea[i]->Draw(dxCommon);
 	}
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
@@ -138,6 +129,10 @@ void SupportEnemy2::ImGui_Origin() {
 	//ImGui::Text("PosZ:%f", m_Position.z);
 	//ImGui::End();
 	//predictarea->ImGuiDraw();
+	for (auto i = 0; i < regenearea.size(); i++) {
+		if (regenearea[i] == nullptr)continue;
+		regenearea[i]->ImGuiDraw();
+	}
 }
 //開放
 void SupportEnemy2::Finalize() {
@@ -160,6 +155,7 @@ void SupportEnemy2::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
+		BirthRegene();
 		coolTimer = 0;
 		_charaState = STATE_SPECIAL;
 		m_RandTimer = Helper::GetRanNum(0, 20);
@@ -330,14 +326,10 @@ void SupportEnemy2::GameOverAction() {
 	Obj_SetParam();
 }
 
-void SupportEnemy2::BirthCounter() {
-	int l_PlayerWidth = {};
-	int l_PlayerHeight = {};
-	l_PlayerWidth = player->GetNowWidth();
-	l_PlayerHeight = player->GetNowHeight();
-	std::unique_ptr<CounterBomb> newbomb = std::make_unique<CounterBomb>();
-	newbomb->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
-	newbomb->InitState(l_PlayerWidth, l_PlayerHeight);
-	newbomb->SetPlayer(player);
-	counterbomb.push_back(std::move(newbomb));
+void SupportEnemy2::BirthRegene() {
+	const int l_BossWidth = LastBossState::GetInstance()->GetLastWidth();
+	const int l_BossHeight = LastBossState::GetInstance()->GetLastHeight();
+	std::unique_ptr<RegeneArea> newarea = std::make_unique<RegeneArea>();
+	newarea->InitState(l_BossWidth, l_BossHeight);
+	regenearea.emplace_back(std::move(newarea));
 }

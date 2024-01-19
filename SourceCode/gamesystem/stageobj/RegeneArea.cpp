@@ -26,7 +26,6 @@ void RegeneArea::InitState(const int width, const int height) {
 	m_NowWidth = width, m_NowHeight = height;
 	panels.position.y = 0.03f;
 	m_Alive = true;
-	m_Timer = {};
 	StagePanel::GetInstance()->SetHeal(m_NowWidth, m_NowHeight, true);
 }
 
@@ -43,10 +42,10 @@ void RegeneArea::Update() {
 	Ease(In,Cubic,0.5f,panels.scale.y,m_AfterScale),
 	Ease(In,Cubic,0.5f,panels.scale.z,m_AfterScale) };
 
-
+	panels.tex->Update();
+	panels.tex->SetScale(panels.scale);
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor(panels.color);
-	m_BirthTimer++;
 }
 //描画
 void RegeneArea::Draw(DirectXCommon* dxCommon) {
@@ -57,7 +56,7 @@ void RegeneArea::Draw(DirectXCommon* dxCommon) {
 //ImGui
 void RegeneArea::ImGuiDraw() {
 	ImGui::Begin("Regene");
-	ImGui::Text("Timer:%d", m_Timer);
+	ImGui::Text("Timer:%d", m_BirthTimer);
 	ImGui::End();
 }
 //パネルの位置に置く

@@ -802,7 +802,7 @@ void InterEnemy::DeathUpdate() {
 //リジュネ回復
 void InterEnemy::RegeneUpdate() {
 	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
-		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
+		if (Helper::CheckMin(m_HealTimer, 100, 1)) {
 			SimpleHeal(true);
 			m_HealTimer = {};
 		}

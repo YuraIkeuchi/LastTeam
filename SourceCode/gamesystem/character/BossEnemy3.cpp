@@ -1,5 +1,5 @@
 #include "BossEnemy3.h"
-#include <random>
+#include <LastBossState.h>
 #include "Player.h"
 #include "Collision.h"
 #include "CsvLoader.h"
@@ -132,6 +132,7 @@ void BossEnemy3::Action() {
 		}
 	}
 
+	LastBossState::GetInstance()->SetBossSpace(m_NowWidth, m_NowHeight);
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 
 	magic.tex->SetPosition(magic.Pos);

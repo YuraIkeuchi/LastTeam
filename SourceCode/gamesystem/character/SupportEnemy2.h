@@ -1,8 +1,6 @@
 #pragma once
-#pragma once
 #include"InterEnemy.h"
-#include "CounterBomb.h"
-
+#include "RegeneArea.h"
 using namespace std;         //  名前空間指定
 //ラスボスのお供の敵
 class SupportEnemy2 :public InterEnemy {
@@ -29,14 +27,15 @@ private:
 
 	void WarpEnemy();//敵のワープ処理
 	void AttackMove();//攻撃時の動き
-	void BirthCounter();//カウンターのボム作成
+	void BirthRegene();//リジュネマス作成
 
 	//魔法陣
 	void BirthMagic();
 private:
 	static const int BULLET_NUM = 5;
 private:
-	std::vector<unique_ptr<CounterBomb>> counterbomb;
+	// 回復エリア
+	vector<unique_ptr<RegeneArea>> regenearea;
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
 
