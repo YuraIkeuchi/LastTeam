@@ -295,7 +295,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {2,3,5,6};
+	vector <int> m_StartNumber = {3,6,21,25,26,27};
 
 	vector<int> m_DeckNumber = m_StartNumber;
 
@@ -344,6 +344,7 @@ private:
 
 	bool m_GameStart = false;
 	bool m_BossCamera = false;
+	bool m_StartLoad = false;
 
 	///=============================
 	/// 

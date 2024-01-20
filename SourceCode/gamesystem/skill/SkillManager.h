@@ -2,15 +2,17 @@
 #include "SkillBase.h"
 #include "AttackSkill.h"
 #include "SpecialSkill.h"
+#include "TextManager.h"
 #include <string>
 #include <vector>
 #include "DeckUI.h"
+#include <DirectXCommon.h>
 class SkillManager
 {
 public:
 	static SkillManager* GetInstance();
 
-	void Initialize();
+	void Initialize(DirectXCommon* dxCommon);
 
 	void Update();
 
@@ -26,6 +28,8 @@ public:
 	void HandResultData(const int DeckID,vector<std::vector<int>>& area, int& DisX, int& DisY,int& Damage);
 	//デッキのクリア
 	void DeckClear();
+	void LoadText(const int Number);
+	void TextDraw(const int Number);
 private:
 	//スキルのCSVを読み取る
 	void LoadCsvSkill(std::string& FileName, const int id);
@@ -49,6 +53,13 @@ public:
 	const int GetDelay(int id) { return m_Delays[id]; }
 	std::vector<SkillBase*>GetSkillBase() { return skill; }
 private:
+
+	struct SkillText {
+		std::unique_ptr<TextManager> text_;
+		wchar_t* baseSentence[3] = { L"",L"",L"" };
+	};
+
+	std::vector<SkillText> skilltex;
 	std::vector<unique_ptr<DeckUI>> deckui;
 	std::vector<SkillBase*> skill;
 	std::vector<int> m_Delays = {};
@@ -57,4 +68,5 @@ private:
 	int m_DeckRemain = {};
 	int m_SKILLMAX = 0;
 	std::vector<int> m_DeckDate;
+	DirectXCommon* dxcommon = nullptr;
 };
