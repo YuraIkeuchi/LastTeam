@@ -384,6 +384,7 @@ void ResultSkill::BirthArea(ResultUI& resultUI) {
 				newarea->SetPanelNumber(i, j);
 				newarea->SetDelay(resultUI.Delay);
 				newarea->SetDistance(resultUI.DisX, resultUI.DisY);
+				newarea->SetId(resultUI.ID);
 				newarea->Initialize();
 				resultUI.resultarea.push_back(std::move(newarea));
 			}
