@@ -6,6 +6,7 @@
 #include <ImageManager.h>
 #include <SkillManager.h>
 #include <TutorialTask.h>
+#include "PassiveManager.h"
 
 Player* GameStateManager::player = nullptr;
 GameStateManager* GameStateManager::GetInstance() {
@@ -69,6 +70,8 @@ void GameStateManager::Initialize() {
 	//
 	if (!m_StartLoad) {
 		SkillManager::GetInstance()->Initialize(m_dxCommon);
+		PassiveManager::GetInstance()->Initialize(m_dxCommon);
+
 		m_StartLoad = true;
 	}
 

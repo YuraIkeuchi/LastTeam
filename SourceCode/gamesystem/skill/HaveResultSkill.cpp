@@ -6,6 +6,8 @@
 #include <SkillManager.h>
 #include <Audio.h>
 #include <GameStateManager.h>
+#include "PassiveManager.h"
+
 HaveResultSkill::HaveResultSkill() {
 
 }
@@ -105,9 +107,7 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 		//}
 	}
 	else {
-		for (auto i = 0; i < havePassive.size(); i++) {
-			//havePassive[m_SelectCount - (int)(haveSkills.size())].text_->Draw(dxCommon);
-		}
+		PassiveManager::GetInstance()->TextDraw(havePassive[m_SelectCount - (int)(haveSkills.size())].ID);
 	}
 	IKESprite::PreDraw();
 	if (m_DeleteCheack) {
@@ -170,6 +170,7 @@ void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCom
 	havePassive[num].icon->SetSize({ 64.0f,64.0f });
 	havePassive[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	havePassive[num].icon->SetPosition(havePassive[num].position);
+	PassiveManager::GetInstance()->LoadText(id);
 	//havePassive[num].text_ = make_unique<TextManager>();
 	//havePassive[num].text_->Initialize(dxCommon,LOAD_PASSIVE);
 	//havePassive[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });

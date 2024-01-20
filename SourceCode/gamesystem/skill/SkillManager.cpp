@@ -29,7 +29,7 @@ void SkillManager::Initialize(DirectXCommon* dxCommon)
 		skill[i] = new AttackSkill();
 		skilltex[i].text_ = make_unique<TextManager>();
 		skilltex[i].text_->Initialize(dxcommon, LOAD_ATTACK);
-		skilltex[i].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
+		skilltex[i].text_->SetConversation(TextManager::RESULT, { -200.0f,80.0f });
 	}
 	//スペシャルスキルはこちらに上書きしてください
 	skill[9] = new SpecialSkill();
