@@ -59,7 +59,7 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 		}
 		for (ResultUI& itr : choiceSkills) {
 			if (itr.no == 2) {
-				itr.text_->TestDraw(dxCommon);
+				//itr.text_->TestDraw(dxCommon);
 				if (!itr.isSkill) { continue; }
 				for (std::unique_ptr<ResultAreaUI>& pickAreas : itr.resultarea) {
 					pickAreas->Draw();
@@ -344,24 +344,24 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	resultUI.ID = id;
 	resultUI.position = pos;
 	resultUI.isSkill = isSkill;
-	resultUI.text_ = make_unique<TextManager>();
+	//resultUI.text_ = make_unique<TextManager>();
 	if (resultUI.isSkill) {
-		resultUI.text_->Initialize(dxcommon, LOAD_ATTACK);
+		//resultUI.text_->Initialize(dxcommon, LOAD_ATTACK);
 		resultUI.icon = IKESprite::Create(ImageManager::ATTACK_0 + resultUI.ID, { 0.0f,0.0f });
 		resultUI.icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
 		SkillManager::GetInstance()->HandResultData(resultUI.ID, resultUI.area, resultUI.DisX, resultUI.DisY, resultUI.Damage);//IDに応じた攻撃エリア、距離、ダメージを取得する
 		resultUI.Delay = SkillManager::GetInstance()->GetDelay(id);
 		//桁数によって描画する桁数が違う
 		BirthArea(resultUI);
-		resultUI.sentence[0] = L"スキル：";
+		/*resultUI.sentence[0] = L"スキル：";
 		resultUI.sentence[1] = resultUI.text_->GetSkillSentence(resultUI.ID);
-		resultUI.sentence[2] = resultUI.text_->GetSkillDamage(resultUI.ID);
+		resultUI.sentence[2] = resultUI.text_->GetSkillDamage(resultUI.ID);*/
 	} else {
-		resultUI.text_->Initialize(dxcommon, LOAD_PASSIVE);
+		//resultUI.text_->Initialize(dxcommon, LOAD_PASSIVE);
 		resultUI.icon = IKESprite::Create(ImageManager::PASSIVE_00 + resultUI.ID, { 0.0f,0.0f });
-		resultUI.sentence[0] = L"パッシブ：";
-		resultUI.sentence[1] = resultUI.text_->GetPassiveName(resultUI.ID);
-		resultUI.sentence[2] = resultUI.text_->GetPasiveSentence(resultUI.ID);
+		//resultUI.sentence[0] = L"パッシブ：";
+		//resultUI.sentence[1] = resultUI.text_->GetPassiveName(resultUI.ID);
+		//resultUI.sentence[2] = resultUI.text_->GetPasiveSentence(resultUI.ID);
 	}
 	resultUI.icon->SetAnchorPoint({ 0.5f,0.5f });
 	resultUI.icon->SetPosition(resultUI.position);
@@ -373,8 +373,8 @@ ResultSkill::ResultUI ResultSkill::CreateUI(bool isSkill, int id, XMFLOAT2 pos) 
 	}
 	resultUI.icon->SetSize(resultUI.size);
 	resultUI.oldNo = resultUI.no;
-	resultUI.text_->SetConversation(TextManager::RESULT, { -200.0f,80.0f });
-	resultUI.text_->SetCreateSentence(resultUI.sentence[0], resultUI.sentence[1], resultUI.sentence[2]);
+	//resultUI.text_->SetConversation(TextManager::RESULT, { -200.0f,80.0f });
+	//resultUI.text_->SetCreateSentence(resultUI.sentence[0], resultUI.sentence[1], resultUI.sentence[2]);
 
 	nowPos++;
 	return resultUI;

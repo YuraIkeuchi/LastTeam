@@ -65,8 +65,12 @@ void GameStateManager::Initialize() {
 	onomatope = make_unique<Onomatope>();
 
 	m_PredictTimer = {};
+	
 	//
-	SkillManager::GetInstance()->Initialize();
+	if (!m_StartLoad) {
+		SkillManager::GetInstance()->Initialize(m_dxCommon);
+		m_StartLoad = true;
+	}
 
 	//デッキの初期化
 	DeckInitialize();
