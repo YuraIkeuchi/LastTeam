@@ -121,6 +121,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\SupportEnemy2.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\ThrowEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\TutorialEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\skill\PassiveManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
@@ -359,6 +360,7 @@
     <ClInclude Include="SourceCode\gamesystem\skill\DeckUI.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\HaveResultSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\Passive.h" />
+    <ClInclude Include="SourceCode\gamesystem\skill\PassiveManager.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\ResultReport.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\ResultSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\SkillBase.h" />
