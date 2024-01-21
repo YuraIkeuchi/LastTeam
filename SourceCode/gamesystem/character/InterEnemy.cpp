@@ -275,7 +275,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				if (_area->GetBuff()) {
 					damage *= 2.0f;
 				}
-				if (_charaState == STATE_ATTACK &&
+				if (m_CanCounter &&
 					!GameStateManager::GetInstance()->GetCounter()) {
 
 					GameStateManager::GetInstance()->SetCounter(true);
@@ -303,7 +303,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					}
 				}
 			} else {
-				if (_charaState == STATE_ATTACK &&
+				if (m_CanCounter &&
 					!GameStateManager::GetInstance()->GetCounter()) {
 					GameStateManager::GetInstance()->SetCounter(true);
 				}
