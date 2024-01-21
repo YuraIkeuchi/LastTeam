@@ -138,7 +138,8 @@ public:
 		DECKDELETEOK,
 		DECKDELETENO,
 		SHIELD,
-
+		NODEATH,
+		NODAMAGE
 	};
 	//テクスチャの名前
 	enum tex2dName

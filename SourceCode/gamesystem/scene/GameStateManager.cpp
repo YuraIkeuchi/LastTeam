@@ -6,6 +6,7 @@
 #include <ImageManager.h>
 #include <SkillManager.h>
 #include <TutorialTask.h>
+#include "PassiveManager.h"
 
 Player* GameStateManager::player = nullptr;
 GameStateManager* GameStateManager::GetInstance() {
@@ -31,6 +32,27 @@ void GameStateManager::Initialize() {
 	m_MaxTakenDamage = 0;
 	m_TakenDamageNum = 0;
 	m_HandedCount = 0;
+
+	//パッシブのリセット
+	m_DiameterGauge = 1.0f;
+	m_IsReload = true;
+	m_IsReloadDamage = false;
+	m_ReloadDamage = false;
+	m_BombDamage = false;
+	m_CounterBuff = false;
+	m_Heal = false;
+	m_poizonLong = false;
+	m_IsVenom = false;
+	m_FivePower = false;
+	m_TakenDamageUp = false;
+	m_AttackedPoison = false;
+	m_healingDamage = false;
+	m_ExtendKnight = false;
+	m_ExtendRook = false;
+	m_ExtendQueen = false;
+	m_ExtendBishop = false;
+	m_RookPoison = 0;
+
 	//終了関連
 	isFinish = false;
 	isChangeScene = false;
@@ -55,6 +77,8 @@ void GameStateManager::Initialize() {
 
 	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 640.f,50.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
+	passiveActiveNum.clear();
+
 	resultReport = make_unique<ResultReport>();
 	resultSkill = make_unique<ResultSkill>();
 	resultSkill->Initialize(m_dxCommon);
@@ -69,6 +93,8 @@ void GameStateManager::Initialize() {
 	//
 	if (!m_StartLoad) {
 		SkillManager::GetInstance()->Initialize(m_dxCommon);
+		PassiveManager::GetInstance()->Initialize(m_dxCommon);
+
 		m_StartLoad = true;
 	}
 
@@ -632,7 +658,7 @@ void GameStateManager::GaugeUpdate() {
 		if (m_IsReloadDamage) {
 			int r_num = Helper::GetRanNum(0, 99);
 			if (r_num < 50) {
-				//エネミーに3ダメージ
+				//エネミーに8ダメージ
 				m_ReloadDamage = true;
 				SetPassiveActive((int)Passive::ABILITY::RELOAD_DAMAGE);
 			}

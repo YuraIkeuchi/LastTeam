@@ -137,6 +137,12 @@ public:
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart; }
 	bool GetGameStart() { return m_GameStart; }
 
+	void SetNoDeath(bool flag) { m_NoDeath = flag; }
+	bool GetNoDeath() { return m_NoDeath; }
+
+	void SetNoDamage(bool flag) { m_NoDamage = flag; }
+	bool GetNoDamage() { return m_NoDamage; }
+
 	void SetBossCamera(bool BossCamera) { m_BossCamera = BossCamera; }
 	bool GetBossCamera() { return m_BossCamera; }
 
@@ -286,16 +292,17 @@ private:
 	bool m_healingDamage = false;
 	bool m_ExtendKnight = false;
 	bool m_ExtendRook = false;
-	int m_RookPoison = 0;
 	bool m_ExtendQueen = false;
 	bool m_ExtendBishop = false;
+
+	int m_RookPoison = 0;
 
 	bool m_BirthSkill = false;
 
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {3,6,21,25,26,27};
+	vector <int> m_StartNumber = {2,3,5};
 
 	vector<int> m_DeckNumber = m_StartNumber;
 
@@ -346,6 +353,8 @@ private:
 	bool m_BossCamera = false;
 	bool m_StartLoad = false;
 
+	bool m_NoDeath = true;
+	bool m_NoDamage = true;
 	///=============================
 	/// 
 	/// プレイヤー関連

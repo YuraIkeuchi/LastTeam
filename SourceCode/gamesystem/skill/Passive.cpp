@@ -14,7 +14,6 @@ Passive::~Passive() {
 void Passive::Initialize() {
 	icon = IKESprite::Create(ImageManager::PASSIVE_00 + spriteNum, pos);
 	icon->SetSize(size);
-
 }
 
 void Passive::Draw() {
