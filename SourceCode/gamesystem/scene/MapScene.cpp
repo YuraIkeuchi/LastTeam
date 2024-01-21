@@ -96,7 +96,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		mapKinds[13] = { -1,BOSS,-1 };
 	}
 	MapCreate();
-
+	
 
 	switch (dungeons[0]) {
 	case 1:
@@ -210,20 +210,6 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	pickHierarchy = nowHierarchy + 1;
 	pickIndex = nowIndex;
 
-	switch (UIs[pickHierarchy][pickIndex].Tag) {
-	case BATTLE:
-		nowComment = 1;
-		break;
-	case PASSIVE:
-		nowComment = 2;
-		break;
-	case BOSS:
-		nowComment = 3;
-		break;
-	default:
-		break;
-	}
-
 	oldHierarchy = nowHierarchy;
 	oldIndex = nowIndex;
 
@@ -242,7 +228,19 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
-
+	switch (UIs[pickHierarchy][pickIndex].Tag) {
+	case BATTLE:
+		nowComment = 2;
+		break;
+	case PASSIVE:
+		nowComment = 1;
+		break;
+	case BOSS:
+		nowComment = 3;
+		break;
+	default:
+		break;
+	}
 	GameStateManager::GetInstance()->SetMapData(nowIndex, nowHierarchy);
 	if ((nowHierarchy == 0) || (nowHierarchy == 5 || nowHierarchy == 9) && !s_Countinue) {
 		GameStateManager::GetInstance()->SaveGame();
@@ -600,6 +598,19 @@ void MapScene::Move() {
 		if (pickNextIndex == 0) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex - 1] == -1) { return; }
 		pickNextIndex--;
+		switch (UIs[pickHierarchy][pickIndex].Tag) {
+		case BATTLE:
+			nowComment = 2;
+			break;
+		case PASSIVE:
+			nowComment = 1;
+			break;
+		case BOSS:
+			nowComment = 3;
+			break;
+		default:
+			break;
+		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 	if ((input->TiltStick(input->L_DOWN)|| input->PushButton(input->DOWN) ||input->TriggerKey(DIK_S))
@@ -607,6 +618,19 @@ void MapScene::Move() {
 		if (pickNextIndex == 2) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex + 1] == -1) { return; }
 		pickNextIndex++;
+		switch (UIs[pickHierarchy][pickIndex].Tag) {
+		case BATTLE:
+			nowComment = 2;
+			break;
+		case PASSIVE:
+			nowComment = 1;
+			break;
+		case BOSS:
+			nowComment = 3;
+			break;
+		default:
+			break;
+		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 
@@ -770,6 +794,19 @@ void MapScene::CheckState() {
 					if (nowCheack == 0) {
 						SceneChanger::GetInstance()->SetChangeStart(true);
 					} else {
+						switch (UIs[pickHierarchy][pickIndex].Tag) {
+						case BATTLE:
+							nowComment = 1;
+							break;
+						case PASSIVE:
+							nowComment = 2;
+							break;
+						case BOSS:
+							nowComment = 3;
+							break;
+						default:
+							break;
+						}
 						isClose = true;
 					}
 				}
