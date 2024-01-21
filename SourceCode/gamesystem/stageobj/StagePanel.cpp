@@ -151,12 +151,13 @@ void StagePanel::ImGuiDraw() {
 	}
 
 	ImGui::Begin("Panel");
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isClose);
-			//ImGui::Text("Rock[%d][%d]:%d", i, j, panels[i][j].isRock);
-		}
-	}
+	//for (int i = 0; i < 4; i++) {
+	//	for (int j = 0; j < PANEL_HEIGHT; j++) {
+	//		ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isClose);
+	//		//ImGui::Text("Rock[%d][%d]:%d", i, j, panels[i][j].isRock);
+	//	}
+	//}
+	ImGui::Text("AllDelete:%d", m_AllDelete);
 	ImGui::End();
 }
 //オノマトペの描画
@@ -334,9 +335,11 @@ void StagePanel::ClosePanel(IKEObject3d* obj, bool Alive) {
 				else {
 
 					panels[i][j].isClose = false;
+					panels[i][j].isRock = false;
 				}
 			}
 			else {
+				panels[i][j].isRock = false;
 				panels[i][j].isClose = false;
 			}
 		}
