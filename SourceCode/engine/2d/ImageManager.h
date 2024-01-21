@@ -192,6 +192,8 @@ public:
 		COUNTER,
 		COUNTER_TWO,
 		CHANTING_HEAL,
+		BOM,
+		BOM2
 	};
 	enum particleName
 	{

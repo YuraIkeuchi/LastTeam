@@ -158,6 +158,7 @@ void EnemyManager::PoisonRook() {
 void EnemyManager::BombDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimpleDamege(20.f);
+		enemy->BomStart();
 	}
 }
 

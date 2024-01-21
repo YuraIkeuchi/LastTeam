@@ -193,7 +193,9 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(COUNTER, L"Resources/2d/effect/Counter.png");
 	IKETexture::LoadTexture(COUNTER_TWO, L"Resources/2d/effect/effect6.png");
 	IKETexture::LoadTexture(CHANTING_HEAL, L"Resources/2d/objicon/ChantingHeal.png");
-
+	IKETexture::LoadTexture(CHANTING_HEAL, L"Resources/2d/objicon/ChantingHeal.png");
+	IKETexture::LoadTexture(BOM, L"Resources/2d/effect/effect5.png");
+	IKETexture::LoadTexture(BOM2, L"Resources/2d/effect/Bom.png");
 }
 
 //非同期処理でのテクスチャの読み込み
