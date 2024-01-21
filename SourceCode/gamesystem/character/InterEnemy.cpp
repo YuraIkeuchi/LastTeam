@@ -275,8 +275,9 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				if (_area->GetBuff()) {
 					damage *= 2.0f;
 				}
-				if (_charaState == STATE_ATTACK &&
+				if (m_CanCounter &&
 					!GameStateManager::GetInstance()->GetCounter()) {
+
 					GameStateManager::GetInstance()->SetCounter(true);
 					isCounterEffect = true;
 					m_CounterFrame = 0.f;
@@ -302,7 +303,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					}
 				}
 			} else {
-				if (_charaState == STATE_ATTACK &&
+				if (m_CanCounter &&
 					!GameStateManager::GetInstance()->GetCounter()) {
 					GameStateManager::GetInstance()->SetCounter(true);
 				}
@@ -793,7 +794,7 @@ void InterEnemy::DeathUpdate() {
 				m_Alive = false;
 			}
 		}
-		if (m_EnemyTag == "Rock") {
+		if (m_EnemyTag == "Rock" || m_EnemyTag == "LASTBOSS") {
 			StagePanel::GetInstance()->ClosePanel(m_Object.get(), m_Alive);
 		}
 	} else {

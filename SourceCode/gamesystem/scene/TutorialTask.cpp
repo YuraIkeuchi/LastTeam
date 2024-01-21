@@ -35,6 +35,7 @@ void TutorialTask::Initialize() {
 		tutorial[i].check->SetAnchorPoint({ 0.5f,0.5f });
 		tutorial[i].color = { 1.0f,1.0f,1.0f,0.0f };
 		tutorial[i].size = { 150.0f,150.0f };
+		tutorial[i].frame = {};
 	}
 
 	m_ChoiceSkill = false;

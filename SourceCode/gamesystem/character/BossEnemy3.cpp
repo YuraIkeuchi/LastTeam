@@ -222,6 +222,7 @@ void BossEnemy3::Attack() {
 
 //ワープ
 void BossEnemy3::Teleport() {
+	m_CanCounter = false;
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
@@ -271,6 +272,8 @@ void BossEnemy3::RockAttack() {
 		BirthPredict(m_RandWidth, m_RandHeight,"Rock");
 	}
 	else if (coolTimer == l_TargetTimer - 60) {
+		//カウンター判定
+		m_CanCounter = true;
 		if (m_RockCount != 4) {
 			m_Jump = true;
 			m_AddPower = 0.2f;
@@ -320,6 +323,11 @@ void BossEnemy3::RandomAttack() {
 		_charaState = STATE_SPECIAL;
 	}
 
+	//カウンター判定
+	if (coolTimer >= l_TargetTimer - 30) {
+		m_CanCounter = true;
+	}
+
 	predictarea->SetTargetTimer(l_TargetTimer);
 }
 //周りを攻撃
@@ -364,6 +372,11 @@ void BossEnemy3::AroundAttack() {
 		m_CheckPanel = true;
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;
+	}
+
+	//カウンター判定
+	if (coolTimer >= l_TargetTimer - 30) {
+		m_CanCounter = true;
 	}
 
 	predictarea->SetTargetTimer(l_TargetTimer);

@@ -219,16 +219,16 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
-	ImGui::Begin("Tutorial");
-	ImGui::Text("Timer:%d", m_Timer);
-	ImGui::Text("State:%d", _nowstate);
-	ImGui::Text("Skip:%d", m_Skip);
-	ImGui::End();
-	///*
-	TutorialTask::GetInstance()->ImGuiDraw();
+	//ImGui::Begin("Tutorial");
+	//ImGui::Text("Timer:%d", m_Timer);
+	//ImGui::Text("State:%d", _nowstate);
+	//ImGui::Text("Skip:%d", m_Skip);
+	//ImGui::End();
+	/////*
+	//TutorialTask::GetInstance()->ImGuiDraw();
 	//player_->ImGuiDraw();
 	//*/
-	//GameStateManager::GetInstance()->ImGuiDraw();
+	GameStateManager::GetInstance()->ImGuiDraw();
 }
 
 void TutorialScene::Finalize() {

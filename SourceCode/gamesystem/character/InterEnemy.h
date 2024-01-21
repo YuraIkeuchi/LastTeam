@@ -155,6 +155,7 @@ protected:
 
 	int m_ClearTimer = {};
 	float m_ClearFrame = {};
+	bool m_CanCounter = false;
 
 	enum GameOverState {
 		OVER_STOP,

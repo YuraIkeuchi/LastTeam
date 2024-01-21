@@ -309,7 +309,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("Deck");
+	/*ImGui::Begin("Deck");
 	ImGui::Text("DeleteNum:%d",m_DeleteNum);
 	ImGui::Text("Shield:%d", m_Shield);
 	ImGui::End();
@@ -317,7 +317,8 @@ void GameStateManager::ImGuiDraw() {
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
 		attackarea[i]->ImGuiDraw();
-	}
+	}*/
+	StagePanel::GetInstance()->ImGuiDraw();
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
