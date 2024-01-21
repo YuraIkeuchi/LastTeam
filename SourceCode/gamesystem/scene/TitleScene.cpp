@@ -96,6 +96,8 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 
 	GameStateManager::GetInstance()->DeckReset();
 	GameStateManager::GetInstance()->SetGameStart(true);
+	GameStateManager::GetInstance()->SetNoDeath(true);
+	GameStateManager::GetInstance()->SetNoDamage(true);
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {

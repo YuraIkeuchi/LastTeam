@@ -137,6 +137,12 @@ public:
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart; }
 	bool GetGameStart() { return m_GameStart; }
 
+	void SetNoDeath(bool flag) { m_NoDeath = flag; }
+	bool GetNoDeath() { return m_NoDeath; }
+
+	void SetNoDamage(bool flag) { m_NoDamage = flag; }
+	bool GetNoDamage() { return m_NoDamage; }
+
 	void SetBossCamera(bool BossCamera) { m_BossCamera = BossCamera; }
 	bool GetBossCamera() { return m_BossCamera; }
 
@@ -347,6 +353,8 @@ private:
 	bool m_BossCamera = false;
 	bool m_StartLoad = false;
 
+	bool m_NoDeath = true;
+	bool m_NoDamage = true;
 	///=============================
 	/// 
 	/// プレイヤー関連

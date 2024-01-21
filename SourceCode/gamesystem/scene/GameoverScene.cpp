@@ -94,6 +94,9 @@ void GameoverScene::Update(DirectXCommon* dxCommon) {
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		if (player_->GetSelectType() == 1) {		//コンティニューをしてマップに戻る
 			s_Countinue = true;
+			if (GameStateManager::GetInstance()->GetNoDeath()) {
+				GameStateManager::GetInstance()->SetNoDeath(false);
+			}
 			SceneManager::GetInstance()->ChangeScene("MAP");
 		}
 		else if(player_->GetSelectType() == 2) {		//諦めてタイトルに戻る

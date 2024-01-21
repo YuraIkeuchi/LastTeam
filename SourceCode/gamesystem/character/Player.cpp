@@ -678,6 +678,9 @@ void Player::PlayerSave() {
 void Player::DamageUpdate() {
 	const int l_TargetTimer = 80;
 	if (!m_Damege) { return; }
+	if (GameStateManager::GetInstance()->GetNoDamage()) {
+		GameStateManager::GetInstance()->SetNoDamage(false);
+	}
 	if (Helper::CheckMin(m_DamageTimer, l_TargetTimer, 1)) {
 		m_DamageTimer = {};
 		m_FlashCount = {};
