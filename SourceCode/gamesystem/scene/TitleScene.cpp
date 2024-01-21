@@ -249,9 +249,6 @@ void TitleScene::OpenMagic() {
 		} else {
 			state = STATE::verse2Onomato;
 		}
-
-		state = STATE::verse2Onomato;
-
 		onomatope2_->SetColor({ 1,1,1,1 });
 		onomatope2_->SetPosition({ 0.f, -200.f });
 		stateCount = 0;
