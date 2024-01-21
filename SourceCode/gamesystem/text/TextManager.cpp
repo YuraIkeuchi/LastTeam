@@ -80,7 +80,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillDamage(L"威力:25（小）");
 			CreateSkillSentence(L"ザクッ！と近距離攻撃");
 			CreateSkillDamage(L"威力:50（大）");
-			CreateSkillSentence(L"範囲が広い近距離攻撃");
+			CreateSkillSentence(L"エリアが広い近距離攻撃");
 			CreateSkillDamage(L"威力:45（中）");
 			CreateSkillSentence(L"パシュッ！と遠距離攻撃");
 			CreateSkillDamage(L"威力:45（中）");
