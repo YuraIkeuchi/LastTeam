@@ -142,15 +142,13 @@ void EnemyManager::PoizonVenom() {
 
 void EnemyManager::ReLoadDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SimpleDamege(5.f, true);
+		enemy->SimpleDamege(8.f, true);
 	}
 }
 
 void EnemyManager::PoisonRook() {
 	if (GameStateManager::GetInstance()->GetRookPoison() <= 0) { return; }
-	int poison = GameStateManager::GetInstance()->GetRookPoison();
-	poison /= 10;
-	Helper::Clamp(poison, 1, 999);
+	int poison = 2;
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimplePosion(poison);
 	}

@@ -102,7 +102,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillDamage(L"威力:10(敵に付与されてる毒を3倍)");
 			CreateSkillSentence(L"鉄壁の守り!");
 			CreateSkillDamage(L"ディレイキャンセルをしなくなる");
-			CreateSkillSentence(L"範囲おおめ毒マシマシ攻撃");
+			CreateSkillSentence(L"エリアおおめ毒マシマシ攻撃");
 			CreateSkillDamage(L"威力:3（小）毒：12（中）付与");
 			CreateSkillSentence(L"強くなった回復攻撃");
 			CreateSkillDamage(L"威力:30（中）ドレイン");

@@ -286,16 +286,17 @@ private:
 	bool m_healingDamage = false;
 	bool m_ExtendKnight = false;
 	bool m_ExtendRook = false;
-	int m_RookPoison = 0;
 	bool m_ExtendQueen = false;
 	bool m_ExtendBishop = false;
+
+	int m_RookPoison = 0;
 
 	bool m_BirthSkill = false;
 
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {3,6,21,25,26,27};
+	vector <int> m_StartNumber = {2,3,5};
 
 	vector<int> m_DeckNumber = m_StartNumber;
 

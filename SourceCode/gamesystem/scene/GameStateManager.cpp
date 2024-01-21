@@ -32,6 +32,27 @@ void GameStateManager::Initialize() {
 	m_MaxTakenDamage = 0;
 	m_TakenDamageNum = 0;
 	m_HandedCount = 0;
+
+	//パッシブのリセット
+	m_DiameterGauge = 1.0f;
+	m_IsReload = true;
+	m_IsReloadDamage = false;
+	m_ReloadDamage = false;
+	m_BombDamage = false;
+	m_CounterBuff = false;
+	m_Heal = false;
+	m_poizonLong = false;
+	m_IsVenom = false;
+	m_FivePower = false;
+	m_TakenDamageUp = false;
+	m_AttackedPoison = false;
+	m_healingDamage = false;
+	m_ExtendKnight = false;
+	m_ExtendRook = false;
+	m_ExtendQueen = false;
+	m_ExtendBishop = false;
+	m_RookPoison = 0;
+
 	//終了関連
 	isFinish = false;
 	isChangeScene = false;

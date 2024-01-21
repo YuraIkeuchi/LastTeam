@@ -394,7 +394,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			if (GameStateManager::GetInstance()->GetAttackedPoison()) {
 				GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::ATTACK_POISON);
 				m_Poison = true;
-				m_PoisonToken += 1;
+				m_PoisonToken += 3;
 			}
 			BirthParticle();
 
