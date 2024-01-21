@@ -81,6 +81,18 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 	bom2Tex->SetIsBillboard(true);
 
 
+	reloadTex = std::make_unique<IKETexture>(ImageManager::RELOADEFF, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,0.6f,0.f,1.f });
+	reloadTex->TextureCreate();
+	reloadTex->Initialize();
+	reloadTex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	reload2Tex = std::make_unique<IKETexture>(ImageManager::BOM2, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	reload2Tex->TextureCreate();
+	reload2Tex->Initialize();
+	reload2Tex->SetRotation({ 60.0f,0.0f,0.0f });
+	reload2Tex->SetIsBillboard(true);
+
+
 }
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;
@@ -154,6 +166,7 @@ void InterEnemy::Update() {
 	WorldDivision();
 	CounterUpdate();
 	BomUpdate();
+	ReLoadUpdate();
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
@@ -217,10 +230,15 @@ void InterEnemy::Draw(DirectXCommon* dxCommon) {
 
 void InterEnemy::BaseBackDraw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	counter_tex->Draw();
-	counter2Tex->Draw();
+	reload2Tex->Draw();
+	reloadTex->Draw();
+
 	bomTex->Draw();
 	bom2Tex->Draw();
+
+	counter_tex->Draw();
+	counter2Tex->Draw();
+
 	IKETexture::PostDraw();
 
 }
@@ -924,6 +942,42 @@ void InterEnemy::BomStart() {
 	m_BomEffect = true;
 	m_BomFrame = 0.f;
 	effect2Pos = m_Position;
+
+}
+void InterEnemy::ReLoadUpdate() {
+	if (!m_ReloadEffect) { return; }
+	if (!Helper::FrameCheck(m_ReloadFrame, 1 / 20.f)) {
+		XMFLOAT3 scale2 = {
+		(0.4f),
+		(0.4f),
+		(0.4f)
+		};
+		reload2Tex->SetScale(scale2);
+		reload2Tex->SetPosition({ effect3Pos.x,effect3Pos.y + 0.5f,effect3Pos.z });
+
+		XMFLOAT3 scale = {
+		Ease(Out,Back,m_ReloadFrame,0.f,0.25f),
+		Ease(Out,Back,m_ReloadFrame,0.f,0.25f),
+		Ease(Out,Back,m_ReloadFrame,0.f,0.25f)
+		};
+		reloadTex->SetScale(scale);
+		float alpha = Ease(In, Exp, m_ReloadFrame, 1.f, 0.0f);
+		reloadTex->SetColor({ 1.f,1.f,1.f,alpha });
+		reloadTex->SetPosition({ effect3Pos.x,effect3Pos.y + 0.5f,effect3Pos.z });
+		reloadTex->Update();
+
+		reload2Tex->SetColor({ 1,1,1,alpha });
+		reload2Tex->Update();
+	} else {
+		m_ReloadEffect = false;
+	}
+
+
+}
+void InterEnemy::ReLoadStart() {
+	m_ReloadEffect = true;
+	m_ReloadFrame = 0.f;
+	effect3Pos = m_Position;
 
 }
 //死亡時パーティクル

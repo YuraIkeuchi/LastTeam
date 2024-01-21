@@ -178,6 +178,13 @@ protected:
 	XMFLOAT3 effect2Pos = {};
 
 
+	bool m_ReloadEffect = false;
+	std::unique_ptr<IKETexture> reloadTex;
+	std::unique_ptr<IKETexture> reload2Tex;
+	float m_ReloadFrame = 0.f;
+	float m_ReloadFinishFrame = 0.f;
+	XMFLOAT3 effect3Pos = {};
+
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -258,6 +265,10 @@ public:
 
 	void BomUpdate();
 	void BomStart();
+
+	void ReLoadUpdate();
+	void ReLoadStart();
+
 private:
 	void BirthParticle();
 	void DeathParticle();
