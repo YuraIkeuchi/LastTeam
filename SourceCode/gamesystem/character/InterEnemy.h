@@ -168,6 +168,16 @@ protected:
 	bool m_BombCounter = false;
 	bool m_BirthBomb = false;
 	bool m_DamageCut = false;
+
+
+	bool m_BomEffect = false;
+	std::unique_ptr<IKETexture> bomTex;
+	std::unique_ptr<IKETexture> bom2Tex;
+	float m_BomFrame = 0.f;
+	float m_BomFinishFrame = 0.f;
+	XMFLOAT3 effect2Pos = {};
+
+
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -245,6 +255,9 @@ public:
 	void InductionMove();
 
 	void CounterUpdate();
+
+	void BomUpdate();
+	void BomStart();
 private:
 	void BirthParticle();
 	void DeathParticle();

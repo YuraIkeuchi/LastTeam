@@ -14,12 +14,6 @@ public:
 
 	void Draw(DirectXCommon* dxCommon) override;//•`‰æ
 private:
-	
-private:
-
-protected:
-
-private:
 
 };
 

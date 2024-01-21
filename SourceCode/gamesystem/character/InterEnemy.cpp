@@ -68,6 +68,19 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 	counter2Tex->SetIsBillboard(true);
 	m_AddPoisonToken = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "ADD_TOKEN")));
 	m_PoisonTimerMax = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "TIMER_MAX")));
+
+	bomTex = std::make_unique<IKETexture>(ImageManager::COUNTER_TWO, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,0.6f,0.f,1.f });
+	bomTex->TextureCreate();
+	bomTex->Initialize();
+	bomTex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	bom2Tex = std::make_unique<IKETexture>(ImageManager::BOM2, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	bom2Tex->TextureCreate();
+	bom2Tex->Initialize();
+	bom2Tex->SetRotation({ 60.0f,0.0f,0.0f });
+	bom2Tex->SetIsBillboard(true);
+
+
 }
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;
@@ -140,6 +153,7 @@ void InterEnemy::Update() {
 	//UIをワールド座標に変換する
 	WorldDivision();
 	CounterUpdate();
+	BomUpdate();
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
@@ -205,6 +219,8 @@ void InterEnemy::BaseBackDraw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	counter_tex->Draw();
 	counter2Tex->Draw();
+	bomTex->Draw();
+	bom2Tex->Draw();
 	IKETexture::PostDraw();
 
 }
@@ -871,6 +887,44 @@ void InterEnemy::CounterUpdate() {
 			counter2Tex->Update();
 		}
 	}
+}
+void InterEnemy::BomUpdate() {
+	if (!m_BomEffect) { return; }
+	if (!Helper::FrameCheck(m_BomFrame, 1 / 20.f)) {
+		XMFLOAT3 scale2 = {
+		Ease(Out,Back,m_BomFrame,0.f,0.4f),
+		Ease(Out,Back,m_BomFrame,0.f,0.4f),
+		Ease(Out,Back,m_BomFrame,0.f,0.4f)
+		};
+		bom2Tex->SetScale(scale2);
+		bom2Tex->SetPosition({ effectPos.x,effectPos.y + 0.5f,effectPos.z });
+
+		XMFLOAT3 scale = {
+		Ease(Out,Back,m_BomFrame,0.f,0.4f),
+		Ease(Out,Back,m_BomFrame,0.f,0.4f),
+		Ease(Out,Back,m_BomFrame,0.f,0.4f)
+		};
+		bomTex->SetScale(scale);
+		float rot2 = Ease(In, Back, m_BomFrame, 0.f, -45.0f);
+		bomTex->SetRotation({ 45.f,0.f,rot2 });
+		float alpha = Ease(In, Exp, m_BomFrame, 1.f, 0.0f);
+		bomTex->SetColor({ 0.f,0.f,0.f,alpha });
+		bomTex->SetPosition({ effect2Pos.x,effect2Pos.y + 0.5f,effect2Pos.z });
+		bomTex->Update();
+
+		bom2Tex->SetColor({ 1,1,1,alpha });
+		bom2Tex->Update();
+	} else {
+		m_BomEffect = false;
+	}
+}
+
+
+void InterEnemy::BomStart() {
+	m_BomEffect = true;
+	m_BomFrame = 0.f;
+	effect2Pos = m_Position;
+
 }
 //死亡時パーティクル
 void InterEnemy::DeathParticle() {
