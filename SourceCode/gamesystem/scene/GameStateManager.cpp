@@ -56,6 +56,8 @@ void GameStateManager::Initialize() {
 
 	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 640.f,50.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
+	passiveActiveNum.clear();
+
 	resultReport = make_unique<ResultReport>();
 	resultSkill = make_unique<ResultSkill>();
 	resultSkill->Initialize(m_dxCommon);
@@ -635,7 +637,7 @@ void GameStateManager::GaugeUpdate() {
 		if (m_IsReloadDamage) {
 			int r_num = Helper::GetRanNum(0, 99);
 			if (r_num < 50) {
-				//エネミーに3ダメージ
+				//エネミーに8ダメージ
 				m_ReloadDamage = true;
 				SetPassiveActive((int)Passive::ABILITY::RELOAD_DAMAGE);
 			}
