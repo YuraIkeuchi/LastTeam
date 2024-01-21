@@ -196,6 +196,8 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(CHANTING_HEAL, L"Resources/2d/objicon/ChantingHeal.png");
 	IKETexture::LoadTexture(BOM, L"Resources/2d/effect/effect5.png");
 	IKETexture::LoadTexture(BOM2, L"Resources/2d/effect/Bom.png");
+	IKETexture::LoadTexture(RELOADEFF, L"Resources/2d/effect/reload.png");
+
 }
 
 //非同期処理でのテクスチャの読み込み

@@ -193,7 +193,8 @@ public:
 		COUNTER_TWO,
 		CHANTING_HEAL,
 		BOM,
-		BOM2
+		BOM2,
+		RELOADEFF,
 	};
 	enum particleName
 	{

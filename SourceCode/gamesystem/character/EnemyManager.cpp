@@ -143,6 +143,7 @@ void EnemyManager::PoizonVenom() {
 void EnemyManager::ReLoadDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimpleDamege(8.f, true);
+		enemy->ReLoadStart();
 	}
 }
 
