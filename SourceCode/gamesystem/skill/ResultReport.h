@@ -58,6 +58,7 @@ private:
 	};
 private:
 	std::unique_ptr<IKESprite> backScreen = nullptr;
+	std::unique_ptr<IKESprite> noDamage = nullptr;
 	std::unique_ptr<IKESprite> rate = nullptr;
 	std::unique_ptr<IKESprite> skip = nullptr;
 	std::list<ShineEffect> shines;

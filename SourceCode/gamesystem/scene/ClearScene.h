@@ -31,6 +31,9 @@ private:
 private://ƒƒ“ƒo•Ï”
 	unique_ptr<Onomatope> onomatope = nullptr;
 	unique_ptr<IKESprite> sprite;
+	unique_ptr<IKESprite> noDeath;
+	unique_ptr<IKESprite> noDamage;
+
 	struct ShineEffect {
 		unique_ptr<IKESprite> tex;
 		float frame = 0.f;
@@ -66,5 +69,8 @@ private://ƒƒ“ƒo•Ï”
 	}_AppState = APP_START;
 
 	XMFLOAT2 m_ClearSpritePos = { 0.0f,-1280.0f };
+
+	XMFLOAT2 m_ClearNeoPos = { 640.0f,-200.0f };
+
 };
 

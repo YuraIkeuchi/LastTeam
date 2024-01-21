@@ -131,6 +131,9 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(DECKDELETEOK, L"Resources/2d/objicon/DeleteYes.png");
 	IKESprite::LoadTexture(DECKDELETENO, L"Resources/2d/objicon/DeleteNo.png");
 	IKESprite::LoadTexture(SHIELD, L"Resources/2d/objicon/Shield.png");
+	IKESprite::LoadTexture(NODEATH, L"Resources/2d/objicon/nocontinue.png");
+	IKESprite::LoadTexture(NODAMAGE, L"Resources/2d/objicon/nodamage.png");
+
 }
 
 //非同期処理で読み込むスプライト

@@ -9,6 +9,10 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
 	sprite = IKESprite::Create(ImageManager::GAMECLEARBACK, { 0.0f,0.0f });
+	noDeath = IKESprite::Create(ImageManager::NODEATH, { 0.0f,0.0f });
+	noDeath->SetAnchorPoint({0.5f,0.5f});
+	noDamage = IKESprite::Create(ImageManager::NODAMAGE, { 0.0f,0.0f });
+	noDamage->SetAnchorPoint({ 0.5f,0.5f });
 
 	for (int i = 0; i < 3; i++) {
 		RandShineInit();
@@ -119,10 +123,13 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	
 	if (m_AppTimer >= 340.0f) {
 		m_ClearSpritePos.y = Ease(In, Cubic, 0.5f, m_ClearSpritePos.y, 0.0f);
+		m_ClearNeoPos.y = Ease(In, Cubic, 0.5f, m_ClearNeoPos.y, 50.0f);
 	}
 	//オノマトペの生成
 	BirthOnomatope();
 	sprite->SetPosition(m_ClearSpritePos);
+	 noDeath->SetPosition(m_ClearNeoPos);
+	 noDamage->SetPosition({ m_ClearNeoPos.x,m_ClearNeoPos.y + 64.f });
 	StagePanel::GetInstance()->Update();
 	enemyManager->ClearUpdate();
 	player_->ClearUpdate();
@@ -165,6 +172,12 @@ void ClearScene::FrontDraw(DirectXCommon* dxCommon) {
 	IKESprite::PreDraw();
 	onomatope->Draw();
 	sprite->Draw();
+	if (GameStateManager::GetInstance()->GetNoDeath()) {
+		noDeath->Draw();
+	}
+	if (GameStateManager::GetInstance()->GetNoDamage()) {
+		noDamage->Draw();
+	}
 	/*for (ShineEffect& shine : shines) {
 		shine.tex->Draw();
 	}*/
