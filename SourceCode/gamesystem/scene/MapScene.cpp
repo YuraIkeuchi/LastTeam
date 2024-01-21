@@ -244,7 +244,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	}
 
 	GameStateManager::GetInstance()->SetMapData(nowIndex, nowHierarchy);
-	if ((nowHierarchy == 1) || (nowHierarchy == 5 || nowHierarchy == 9) && !s_Countinue) {
+	if ((nowHierarchy == 0) || (nowHierarchy == 5 || nowHierarchy == 9) && !s_Countinue) {
 		GameStateManager::GetInstance()->SaveGame();
 	}
 }
