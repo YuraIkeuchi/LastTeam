@@ -2,7 +2,7 @@
 #include "ObjCommon.h"
 #include "IKETexture.h"
 #include "Player.h"
-
+#include "PredictArea.h"
 //ブーメランの攻撃(敵)
 class Boomerang :
 	public ObjCommon {
@@ -34,6 +34,7 @@ public:
 
 	bool Collide();	//当たり判定
 
+	void InitState(const XMFLOAT3& pos);
 private://ステート
 	static void (Boomerang::* stateTable[])();
 private:
@@ -49,6 +50,7 @@ public:
 	void SetPlayer(Player* player) { this->player = player; }
 
 private:
+	unique_ptr<PredictArea> predictArea;
 	unique_ptr<IKETexture> dir_tex;
 	Player* player;
 	//パネル
@@ -62,7 +64,7 @@ private:
 	//現在のマス番号
 	int m_NowWidth = {};
 	int m_NowHeight = {};
-	bool m_Alive = true;//生存フラグ
+	bool m_Alive = false;//生存フラグ
 
 	int m_TargetTimer = {};//出現時間の目標
 
@@ -102,4 +104,8 @@ private:
 	float m_RotFrame = {};
 	bool m_Hit = false;
 	int m_HitTimer = {};
+	float predictFrame = 0.f;
+	int nextPredict = 0;
+	int m_OldWidth = m_NowWidth;
+	int m_OldHeight = m_NowHeight;
 };

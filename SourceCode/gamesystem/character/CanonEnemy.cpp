@@ -172,13 +172,18 @@ void CanonEnemy::Attack() {
 			}
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+			//カウンター判定
+			m_CanCounter = true;
 			if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
+				if (m_ScaleFrame == 0.0f) {
+					BirthBullet();
+				}
 				if (Helper::FrameCheck(m_ScaleFrame, l_AddFrame)) {
 					m_RotFrame = {};
 					m_ScaleFrame = {};
 					coolTimer = {};
 					_CanonType = CANON_THROW;
-					BirthBullet();
+					m_CanCounter = false;
 				}
 			}
 
@@ -200,6 +205,7 @@ void CanonEnemy::Attack() {
 		}
 		m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);
 	} else {
+		//カウンター判定
 		m_CheckPanel = true;
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;

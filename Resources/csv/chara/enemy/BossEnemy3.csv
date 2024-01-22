@@ -27,5 +27,5 @@ Attack_Interval,120
 *---------------------------*
 Attack_Interval,60
 *---------------------------*
-//敵の弾の撃つ数
-BULLET_NUM,4
+//竜巻の威力
+TORNADE_DAMAGE,30

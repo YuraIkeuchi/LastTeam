@@ -158,6 +158,7 @@ void PoisonEnemy::Attack() {
 		l_AfterScale = 0.3f;
 		l_AddFrame = 1 / 30.0f;
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+			m_CanCounter = true;
 			predictarea->ResetPredict();
 			if (Helper::FrameCheck(m_ScaleFrame,l_AddFrame)) {
 				coolTimer = {};
@@ -180,9 +181,9 @@ void PoisonEnemy::Attack() {
 				_PoisonType = Poison_SET;
 			}
 			else {
-				
 				_PoisonType = Poison_END;
 			}
+			m_CanCounter = false;
 			m_ScaleFrame = {};
 		}
 		m_BaseScale = Ease(In, Cubic, m_ScaleFrame, m_BaseScale, l_AfterScale);

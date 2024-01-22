@@ -547,20 +547,29 @@ void Player::RecvDamage(const float Damage, const string& name) {
 		DamageParticle();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 		m_Bound = true;
-		if (m_NowWidth != 0) {
-			m_AfterPos = { m_Position.x - 1.5f,m_Position.y,m_Position.z };
-			m_NowWidth--;
-		} else {
-			if (m_NowHeight == 0) {
-				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
-				m_NowHeight++;
-			} else if (m_NowHeight == 3) {
-				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z - 1.5f };
-				m_NowHeight--;
-			} else {
-				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
-				m_NowHeight++;
+		if (!StagePanel::GetInstance()->GetClose(m_NowWidth - 1, m_NowHeight)) {
+			if (m_NowWidth != 0) {
+				m_AfterPos = { m_Position.x - 1.5f,m_Position.y,m_Position.z };
+				m_NowWidth--;
 			}
+			else {
+				if (m_NowHeight == 0) {
+					m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
+					m_NowHeight++;
+				}
+				else if (m_NowHeight == 3) {
+					m_AfterPos = { m_Position.x,m_Position.y,m_Position.z - 1.5f };
+					m_NowHeight--;
+				}
+				else {
+					m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
+					m_NowHeight++;
+				}
+			}
+		}
+		else {
+			m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
+			m_NowHeight++;
 		}
 	}
 	m_Damege = true;
