@@ -2,7 +2,7 @@
 #include "ObjCommon.h"
 #include "IKETexture.h"
 #include "Player.h"
-
+#include "PredictArea.h"
 //ƒu[ƒƒ‰ƒ“‚ÌUŒ‚(“G)
 class Boomerang :
 	public ObjCommon {
@@ -50,6 +50,7 @@ public:
 	void SetPlayer(Player* player) { this->player = player; }
 
 private:
+	unique_ptr<PredictArea> predictArea;
 	unique_ptr<IKETexture> dir_tex;
 	Player* player;
 	//ƒpƒlƒ‹
@@ -103,4 +104,8 @@ private:
 	float m_RotFrame = {};
 	bool m_Hit = false;
 	int m_HitTimer = {};
+	float predictFrame = 0.f;
+	int nextPredict = 0;
+	int m_OldWidth = m_NowWidth;
+	int m_OldHeight = m_NowHeight;
 };

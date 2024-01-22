@@ -106,12 +106,7 @@ void ThrowEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void ThrowEnemy::ImGui_Origin() {
-	//“G‚Ì’e
-	/*for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->ImGuiDraw();
-		}
-	}*/
+	boomerang->ImGuiDraw();
 	ImGui::Begin("Throw");
 	ImGui::Text("Height:%d", m_NowHeight);
 	ImGui::Text("ShotDir:%d", m_ShotDir);
