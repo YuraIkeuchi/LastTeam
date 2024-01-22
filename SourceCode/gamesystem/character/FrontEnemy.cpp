@@ -275,9 +275,11 @@ void FrontEnemy::FrontAttack() {
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 	if (m_AttackCount != 1) {
 		if (coolTimer == 0) {		//—\‘ªƒGƒŠƒA
+			m_CanCounter = true;
 			BirthPredict(m_AttackWidth,m_AttackHeight);
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//ÀÛ‚ÌUŒ‚
+			m_CanCounter = false;
 			m_Jump = true;
 			m_AddPower = 0.2f;
 			m_Rot = true;

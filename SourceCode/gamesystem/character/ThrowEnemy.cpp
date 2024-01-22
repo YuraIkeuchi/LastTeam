@@ -140,8 +140,10 @@ void ThrowEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
-		coolTimer = 100;
+		coolTimer = 0;
 		_charaState = STATE_ATTACK;
+		m_CanCounter = true;
+		m_RandTimer = Helper::GetRanNum(0, 40);
 	}
 }
 //çUåÇ
@@ -149,24 +151,25 @@ void ThrowEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		BirthBullet();
+		m_CanCounter = false;
 		m_CheckPanel = true;
 		m_AttackCount = {};
 		coolTimer = {};
 		StagePanel::GetInstance()->EnemyHitReset();
 		_charaState = STATE_SPECIAL;
+		m_RandTimer = Helper::GetRanNum(0, 40);
 	}
 }
 
 //ÉèÅ[Év
 void ThrowEnemy::Teleport() {
 	const float l_AddFrame = 1 / 30.0f;
-	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 

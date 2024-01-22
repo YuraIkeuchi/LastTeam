@@ -145,6 +145,7 @@ void HealEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
 	chanting.Alive = true;
+	m_CanCounter = true;
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		coolTimer = 0;
 		chanting.Scale = 0.2f;
@@ -156,7 +157,7 @@ void HealEnemy::Inter() {
 void HealEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
-
+	m_CanCounter = false;
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Heal01.wav", 0.05f);
 	GameStateManager::GetInstance()->SetIsHeal(true);
 	m_Jump = true;
