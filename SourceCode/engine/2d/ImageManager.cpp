@@ -133,6 +133,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(SHIELD, L"Resources/2d/objicon/Shield.png");
 	IKESprite::LoadTexture(NODEATH, L"Resources/2d/objicon/nocontinue.png");
 	IKESprite::LoadTexture(NODAMAGE, L"Resources/2d/objicon/nodamage.png");
+	IKESprite::LoadTexture(HPGauge, L"Resources/2d/objicon/HPGauge.png");
+	IKESprite::LoadTexture(HPCover, L"Resources/2d/objicon/HP_Gage.png");
 
 }
 

@@ -187,6 +187,7 @@ private:
 	XMFLOAT3 m_GrazePos = {};
 
 	//HPの表示
+	unique_ptr<IKESprite> hpCover;
 	unique_ptr<IKESprite> hptex;
 	unique_ptr<IKESprite> hpDiftex;
 	unique_ptr<IKESprite> hptex_under;
@@ -201,8 +202,8 @@ private:
 	array<int, NUMBER_MAX> m_DigitNumberMax;
 	int m_InterMaxHP = {};//整数にしたHP
 
-	XMFLOAT2 m_HPPos = { 10.f,5.0f };
-	XMFLOAT2 m_HPSize = { 400.0f,40.0f };
+	XMFLOAT2 m_HPPos = { 85.0f,41.0f };
+	XMFLOAT2 m_HPSize = { 554.f * 0.6f,54.f * 0.6f } ;
 	//桁数
 	enum DightType {
 		FIRST_DIGHT,
