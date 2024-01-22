@@ -3,6 +3,7 @@
 #include <StagePanel.h>
 #include <Helper.h>
 #include <Easing.h>
+#include <CsvLoader.h>
 EnemyTornade::EnemyTornade() {
 	m_Object = make_unique<IKEObject3d>();
 	m_Object->Initialize();
@@ -14,6 +15,7 @@ bool EnemyTornade::Initialize() {
 	m_Rotation = {};
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
 	m_Scale = { 0.0f,0.0f,0.0f };
+	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy3.csv", "TORNADE_DAMAGE")));
 	return true;
 }
 //èâä˙âª

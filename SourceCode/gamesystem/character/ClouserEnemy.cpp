@@ -153,6 +153,7 @@ void ClouserEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 	if (coolTimer == 0) {
+		m_CanCounter = true;
 		//ƒvƒŒƒCƒ„[‚©‚ç‚Ì‹——£(-1~1)
 		int l_RandWigth = Helper::GetRanNum(-1, 1);
 		int l_RandHeight = Helper::GetRanNum(-1, 1);
@@ -170,6 +171,7 @@ void ClouserEnemy::Attack() {
 		BirthArea(m_RandWigth, m_RandHeight);
 	}
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+		m_CanCounter = false;
 		predictarea->ResetPredict();
 		coolTimer = {};
 		StagePanel::GetInstance()->EnemyHitReset();

@@ -32,8 +32,7 @@ private:
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
-	vector<unique_ptr<Boomerang>> bullets;//ポルターガイスト
-
+	unique_ptr<Boomerang> boomerang;//ブーメラン
 	enum ThrowType {
 		THROW_SET,
 		THROW_THROW,

@@ -146,6 +146,7 @@ void CreateBombEnemy::Attack() {
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 	
 	if (_BombType == Bomb_SET) {
+		m_CanCounter = true;
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			coolTimer = {};
 			_BombType = Bomb_THROW;
@@ -163,6 +164,7 @@ void CreateBombEnemy::Attack() {
 		}
 	}
 	else {
+		m_CanCounter = false;
 		m_CheckPanel = true;
 		m_AttackCount = {};
 		_charaState = STATE_SPECIAL;

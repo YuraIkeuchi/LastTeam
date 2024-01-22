@@ -17,6 +17,10 @@ ThrowEnemy::ThrowEnemy() {
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	boomerang = make_unique<Boomerang>();
+	boomerang->Initialize();
+	boomerang->SetPlayer(player);
 }
 //èâä˙âª
 bool ThrowEnemy::Initialize() {
@@ -69,22 +73,7 @@ void ThrowEnemy::Action() {
 	PoisonState();//ì≈
 	BirthMagic();//ñÇñ@êw
 	//ìGÇÃíe
-	for (unique_ptr<Boomerang>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Update();
-		}
-	}
-
-	//è·äQï®ÇÃçÌèú
-	for (int i = 0; i < bullets.size(); i++) {
-		if (bullets[i] == nullptr) {
-			continue;
-		}
-
-		if (!bullets[i]->GetAlive()) {
-			bullets.erase(cbegin(bullets) + i);
-		}
-	}
+	boomerang->Update();
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
@@ -108,11 +97,8 @@ void ThrowEnemy::Draw(DirectXCommon* dxCommon) {
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 	//ìGÇÃíe
-	for (unique_ptr<Boomerang>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Draw(dxCommon);
-		}
-	}
+	if(boomerang->GetAlive())
+	boomerang->Draw(dxCommon);
 	if (m_Color.w != 0.0f) {
 		Obj_Draw();
 	}
@@ -120,12 +106,7 @@ void ThrowEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGuiï`âÊ
 void ThrowEnemy::ImGui_Origin() {
-	//ìGÇÃíe
-	/*for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->ImGuiDraw();
-		}
-	}*/
+	boomerang->ImGuiDraw();
 	ImGui::Begin("Throw");
 	ImGui::Text("Height:%d", m_NowHeight);
 	ImGui::Text("ShotDir:%d", m_ShotDir);
@@ -140,8 +121,10 @@ void ThrowEnemy::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
-		coolTimer = 100;
+		coolTimer = 0;
 		_charaState = STATE_ATTACK;
+		m_CanCounter = true;
+		m_RandTimer = Helper::GetRanNum(0, 40);
 	}
 }
 //çUåÇ
@@ -149,24 +132,25 @@ void ThrowEnemy::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		BirthBullet();
+		m_CanCounter = false;
 		m_CheckPanel = true;
 		m_AttackCount = {};
 		coolTimer = {};
 		StagePanel::GetInstance()->EnemyHitReset();
 		_charaState = STATE_SPECIAL;
+		m_RandTimer = Helper::GetRanNum(0, 40);
 	}
 }
 
 //ÉèÅ[Év
 void ThrowEnemy::Teleport() {
 	const float l_AddFrame = 1 / 30.0f;
-	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -181,11 +165,7 @@ void ThrowEnemy::BirthBullet() {
 	/// </summary>
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	//íeÇÃî≠ê∂
-	unique_ptr<Boomerang> newbullet = make_unique<Boomerang>();
-	newbullet->Initialize();
-	newbullet->SetPlayer(player);
-	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
-	bullets.emplace_back(std::move(newbullet));
+	boomerang->InitState({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 }
 //ñÇñ@êwê∂ê¨
 void ThrowEnemy::BirthMagic() {
