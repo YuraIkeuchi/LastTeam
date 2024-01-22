@@ -70,8 +70,6 @@ void Boomerang::Draw(DirectXCommon* dxCommon) {
 }
 //ImGuiï`âÊ
 void Boomerang::ImGuiDraw() {
-	ImGui::Begin("Boom");
-	ImGui::Text("Width:%d,Height:%d",m_NowWidth, m_NowHeight);
 }
 
 //ìñÇΩÇËîªíË
@@ -94,6 +92,7 @@ bool Boomerang::Collide() {
 }
 //í«è]
 void Boomerang::Throw() {
+	if (!m_Alive) { return; }
 	const float l_AddFrame = 0.1f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
@@ -102,15 +101,14 @@ void Boomerang::Throw() {
 	//íeÇÃÉZÉbÉg(ÇæÇÒÇæÇÒïÇÇ©Ç—àßÇ”Ç™ÇÈÇÊÇ§Ç»ä¥Ç∂)
 	if (m_ThrowType == THROW_SET) {
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
-			m_Frame = 1.0f;
 			m_TargetPos = { -6.0f,m_Position.y,m_Position.z };
 			int nextWidthPanel = m_NowWidth - (nextPredict + 1);
 			if (nextWidthPanel < 0) {
-				m_Frame = {};
 				m_ThrowType = THROW_PLAY;
 				_MoveDir = MOVE_STRAIGHT;
 				nextPredict = 0;
 				predictFrame = 0.f;
+				m_Frame = {};
 				/// <summary>
 				/// Ç±Ç±Ç…î≠éÀâπÅiâπì¸ÇÍÅj
 				/// </summary>
@@ -118,13 +116,14 @@ void Boomerang::Throw() {
 			}
 
 			if (Helper::FrameCheck(predictFrame, 1.f / 5.0f)) {
-				//predictArea->VersePredict(nextWidthPanel, m_NowHeight);
+				predictArea->VersePredict(nextWidthPanel, m_NowHeight);
 				nextPredict++;
 				predictFrame = 0.f;
 			}
 		}
-		
-		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.3f);
+		else {
+			m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, 0.3f);
+		}
 	}
 	//é¿ç€Ç…ë_Ç¡ÇøÇ·Ç§
 	else {
