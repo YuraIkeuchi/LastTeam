@@ -34,6 +34,7 @@ public:
 
 	bool Collide();	//当たり判定
 
+	void InitState(const XMFLOAT3& pos);
 private://ステート
 	static void (Boomerang::* stateTable[])();
 private:
@@ -62,7 +63,7 @@ private:
 	//現在のマス番号
 	int m_NowWidth = {};
 	int m_NowHeight = {};
-	bool m_Alive = true;//生存フラグ
+	bool m_Alive = false;//生存フラグ
 
 	int m_TargetTimer = {};//出現時間の目標
 

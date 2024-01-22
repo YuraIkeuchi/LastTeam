@@ -17,6 +17,10 @@ ThrowEnemy::ThrowEnemy() {
 	magic.tex->TextureCreate();
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	boomerang = make_unique<Boomerang>();
+	boomerang->Initialize();
+	boomerang->SetPlayer(player);
 }
 //èâä˙âª
 bool ThrowEnemy::Initialize() {
@@ -69,22 +73,7 @@ void ThrowEnemy::Action() {
 	PoisonState();//ì≈
 	BirthMagic();//ñÇñ@êw
 	//ìGÇÃíe
-	for (unique_ptr<Boomerang>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Update();
-		}
-	}
-
-	//è·äQï®ÇÃçÌèú
-	for (int i = 0; i < bullets.size(); i++) {
-		if (bullets[i] == nullptr) {
-			continue;
-		}
-
-		if (!bullets[i]->GetAlive()) {
-			bullets.erase(cbegin(bullets) + i);
-		}
-	}
+	boomerang->Update();
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
@@ -108,11 +97,8 @@ void ThrowEnemy::Draw(DirectXCommon* dxCommon) {
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 	//ìGÇÃíe
-	for (unique_ptr<Boomerang>& newbullet : bullets) {
-		if (newbullet != nullptr) {
-			newbullet->Draw(dxCommon);
-		}
-	}
+	if(boomerang->GetAlive())
+	boomerang->Draw(dxCommon);
 	if (m_Color.w != 0.0f) {
 		Obj_Draw();
 	}
@@ -184,11 +170,7 @@ void ThrowEnemy::BirthBullet() {
 	/// </summary>
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 	//íeÇÃî≠ê∂
-	unique_ptr<Boomerang> newbullet = make_unique<Boomerang>();
-	newbullet->Initialize();
-	newbullet->SetPlayer(player);
-	newbullet->SetPosition({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
-	bullets.emplace_back(std::move(newbullet));
+	boomerang->InitState({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 }
 //ñÇñ@êwê∂ê¨
 void ThrowEnemy::BirthMagic() {

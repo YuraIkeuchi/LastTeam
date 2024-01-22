@@ -28,7 +28,12 @@ Boomerang::Boomerang() {
 }
 //èâä˙âª
 bool Boomerang::Initialize() {
-	m_Position = { 0.0f,0.0f,0.0f };
+	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ThrowEnemy.csv", "BULLET_DAMAGE")));
+	m_Speed = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ThrowEnemy.csv", "SPEED")));
+	return true;
+}
+void Boomerang::InitState(const XMFLOAT3& pos) {
+	m_Position = pos;
 	m_Rotation.y = 270.0f;
 	m_Scale = { 0.0f,0.0f,0.0f };
 	m_BaseScale = {};
@@ -38,10 +43,10 @@ bool Boomerang::Initialize() {
 	m_ThrowType = THROW_SET;
 	m_AliveTimer = {};
 	panels.position = {};
-	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ThrowEnemy.csv", "BULLET_DAMAGE")));
-	m_Speed = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/ThrowEnemy.csv", "SPEED")));
 	panels.color = { 1.f,1.f,1.f,1.f };
-	return true;
+	m_Hit = false;
+	m_HitTimer = {};
+	m_DirRot.y = 270.0f;
 }
 
 //çXêV
