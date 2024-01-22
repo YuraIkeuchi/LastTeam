@@ -34,6 +34,7 @@ void LastBomb::InitState(const XMFLOAT3& pos, const int width, const int height)
 	m_BirthCount++;
 	m_BaseScale = {};
 	m_Alive = true;
+	m_Hit = false;
 	m_Frame = {};
 	_BombState = BOMB_SET;
 	m_NowWidth = width;
@@ -87,11 +88,12 @@ void LastBomb::ImGuiDraw() {
 bool LastBomb::Collide() {
 	if (m_Hit) { return false; }
 	if (!m_Alive) { return false; }
+	if (m_Position.y >= 0.2f) { return false; }
 	XMFLOAT3 l_PlayerPos = player->GetPosition();
 	const float l_Damage = 0.5f;
 	const float l_Radius = 0.15f;
 	if (Collision::CircleCollision(m_Position.x, m_Position.z, l_Radius, l_PlayerPos.x, l_PlayerPos.z, l_Radius)) {
-		player->RecvDamage(m_Damage, "NORMAL");
+		player->RecvDamage(m_Damage, "BOUND");
 		m_Hit = true;
 		return true;
 	}
@@ -128,6 +130,7 @@ void LastBomb::Throw() {
 				m_AddPower = {};
 				m_Jump = false;
 				m_Position.y = 0.1f;
+				StagePanel::GetInstance()->SetClose(m_NowWidth, m_NowHeight, true);
 			}
 		}
 
@@ -170,5 +173,7 @@ void LastBomb::BirthExplosion() {
 		}
 	}
 
+	StagePanel::GetInstance()->SetClose(m_NowWidth, m_NowHeight, false);
+	StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
 	m_Alive = false;
 }

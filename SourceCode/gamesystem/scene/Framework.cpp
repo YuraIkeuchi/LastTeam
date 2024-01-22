@@ -5,6 +5,8 @@
 #include "Font.h"
 #include "SceneSave.h"
 #include "TextManager.h"
+#include <SkillManager.h>
+#include <PassiveManager.h>
 void Framework::Run()
 {
 	Initialize(dxcommon);
@@ -82,6 +84,8 @@ void Framework::Initialize(DirectXCommon* dxCommon)
 	SceneSave::GetInstance()->AllReset();
 	//ポストエフェクトのファイル指定
 	PostEffect::CreateGraphicsPipeline(L"Resources/Shaders/PostEffectTestVS.hlsl", L"Resources/Shaders/PostEffectTestPS.hlsl");
+	SkillManager::GetInstance()->Initialize(dxcommon);
+	PassiveManager::GetInstance()->Initialize(dxcommon);
 }
 
 void Framework::Finalize()
