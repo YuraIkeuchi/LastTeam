@@ -2,10 +2,12 @@
 #include <ParticleEmitter.h>
 #include <StagePanel.h>
 #include <Helper.h>
+#include <CsvLoader.h>
 Explosion::Explosion() {
 	Initialize();
 }
 bool Explosion::Initialize() {
+	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "EXPLO_DAMAGE")));
 	return true;
 }
 //‰Šú‰»
@@ -42,7 +44,6 @@ void Explosion::Collide() {
 
 	int l_PlayerWidth = player->GetNowWidth();
 	int l_PlayerHeight = player->GetNowHeight();
-	const float l_Damage = 10.0f;
 	if (m_NowWidth == l_PlayerWidth && m_NowHeight == l_PlayerHeight) {
 		m_Hit = true;
 		player->RecvDamage(m_Damage);

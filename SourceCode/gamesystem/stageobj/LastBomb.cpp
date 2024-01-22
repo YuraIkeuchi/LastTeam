@@ -19,7 +19,7 @@ bool LastBomb::Initialize() {
 	m_Rotation.y = 270.0f;
 	m_Scale = { 0.0f,0.0f,0.0f };
 	m_Color = { 1.0f,1.0f,1.0f,1.0f };
-	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "BULLET_DAMAGE")));
+	m_Damage = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "BOMB_DAMAGE")));
 	return true;
 }
 
