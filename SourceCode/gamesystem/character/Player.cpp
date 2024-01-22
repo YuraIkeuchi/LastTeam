@@ -12,8 +12,8 @@
 
 float Player::startHP = 0.f;
 bool Player::isHpPassive = false;
-float Player::m_HP=0.f;
-float Player::m_MaxHP=0.f;
+float Player::m_HP = 0.f;
+float Player::m_MaxHP = 0.f;
 
 //リソース読み込み
 void Player::LoadResource() {
@@ -23,22 +23,27 @@ void Player::LoadResource() {
 	m_Object->SetPosition({ 0.0f,PANEL_SIZE,0.0f });
 
 	//HPII
-	hptex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
+	hpCover = IKESprite::Create(ImageManager::HPCover, { 0.0f,0.0f });
+	hpCover->SetSize({ 726.f * 0.6f,149.f * 0.6f });
+	hptex = IKESprite::Create(ImageManager::HPGauge, m_HPPos);
 	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
-	hpDiftex = IKESprite::Create(ImageManager::ENEMYHPUI, { 0.0f,0.0f });
-	hpDiftex->SetColor({ 1.0f,1.0f,0.5f,1.0f });
-	hptex_under = IKESprite::Create(ImageManager::FEED, { 0.0f,0.0f });
+	hptex->SetSize(m_HPSize);
+	hpDiftex = IKESprite::Create(ImageManager::HPGauge, { 0.0f,0.0f });
+	hpDiftex->SetColor({ 1.0f,1.0f,0.7f,1.0f });
+	hpDiftex->SetSize(m_HPSize);
+	hptex_under = IKESprite::Create(ImageManager::HPGauge, { 0.0f,0.0f });
+	hptex_under->SetColor({ 0.3f,0.3f,0.3f,1.0f });
 	hptex_under->SetSize(m_HPSize);
 	for (auto i = 0; i < _drawnumber.size(); i++) {
-		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
+		_drawnumber[i] = make_unique<DrawNumber>(0.4f);
 		_drawnumber[i]->Initialize();
-		_MaxHp[i] = make_unique<DrawNumber>(0.5f);
+		_MaxHp[i] = make_unique<DrawNumber>(0.4f);
 		_MaxHp[i]->Initialize();
 	}
 
 	shieldCover = IKESprite::Create(ImageManager::SHIELDCOVER, { 0.0f,0.0f });
 	shieldCover->SetAnchorPoint({ 0.5f,0.5f });
-	shieldCover->SetColor({1.3f,1.3f, 1.3f, 1.f});
+	shieldCover->SetColor({ 1.3f,1.3f, 1.3f, 1.f });
 	shieldCover->SetPosition({ m_ShieldPos.x, m_ShieldPos.y + 20.0f });
 	for (auto i = 0; i < _drawShield.size(); i++) {
 		_drawShield[i] = make_unique<DrawNumber>(0.5f);
@@ -48,21 +53,16 @@ void Player::LoadResource() {
 	_drawShield[FIRST_DIGHT]->SetPosition({ m_ShieldPos.x + 60.0f,m_ShieldPos.y + 20.0f });
 	_drawShield[SECOND_DIGHT]->SetPosition({ m_ShieldPos.x + 40.0f,m_ShieldPos.y + 20.0f });
 
-	_drawnumber[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 80.0f,m_HPPos.y + 20.0f });
-	_drawnumber[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 60.0f,m_HPPos.y + 20.0f });
-	_drawnumber[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 40.f, m_HPPos.y + 20.0f });
+	_drawnumber[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 160.f + 70.0f, 20.0f });
+	_drawnumber[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 160.f + 55.0f,20.0f });
+	_drawnumber[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 160.f + 40.f,  20.0f });
 
-	slash_ = IKESprite::Create(ImageManager::SLASH, { m_HPPos.x + 100.f,m_HPPos.y + 20.0f });
+	slash_ = IKESprite::Create(ImageManager::SLASH, { m_HPPos.x + 150.f + 100.f, 20.0f });
 	slash_->SetScale(0.5f);
 	slash_->SetAnchorPoint({ 0.5f,0.5f });
-	_MaxHp[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 160.0f,m_HPPos.y + 20.0f });
-	_MaxHp[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 140.0f,m_HPPos.y + 20.0f });
-	_MaxHp[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 120.f, m_HPPos.y + 20.0f });
-	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
-	shadow_tex->TextureCreate();
-	shadow_tex->Initialize();
-	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });
-	shadow_tex->SetColor({ 1.0f,0.0f,0.0f,1.0f });*/
+	_MaxHp[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 150.f + 150.0f, 20.0f });
+	_MaxHp[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 150.f + 135.0f,20.0f });
+	_MaxHp[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 150.f + 120.f,  20.0f });
 }
 //初期化
 bool Player::Initialize() {
@@ -193,9 +193,9 @@ void Player::Update() {
 		hptex->SetPosition(m_HPPos);
 		hpDiftex->SetPosition(m_HPPos);
 		hptex_under->SetPosition(m_HPPos);
-		
+
 		if ((!isHeal && !isDamage)) {
-			if (Helper::FrameCheck(hp_wait,1.f/30.f)) {
+			if (Helper::FrameCheck(hp_wait, 1.f / 30.f)) {
 				XMFLOAT2 size_s = hpDiftex->GetSize();
 				XMFLOAT2 size_e = {
 					OldHpPercent() * m_HPSize.x,
@@ -243,8 +243,8 @@ void Player::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	IKETexture::PostDraw();
-	if(m_Color.w != 0.0f)
-	Obj_Draw();
+	if (m_Color.w != 0.0f)
+		Obj_Draw();
 }
 //UIの描画
 void Player::UIDraw() {
@@ -253,6 +253,7 @@ void Player::UIDraw() {
 	hptex_under->Draw();
 	hpDiftex->Draw();
 	hptex->Draw();
+	hpCover->Draw();
 	if (m_InterHP != 0) {
 		_drawnumber[FIRST_DIGHT]->Draw();
 	}
@@ -310,35 +311,28 @@ void Player::Move() {
 		&& !m_Move) {
 		if (UpButtonKey()) {
 			m_InputTimer[DIR_UP]++;
-		}
-		else if (DownButtonKey()) {
+		} else if (DownButtonKey()) {
 			m_InputTimer[DIR_DOWN]++;
-		}
-		else if (RightButtonKey()) {
+		} else if (RightButtonKey()) {
 			m_InputTimer[DIR_RIGHT]++;
-		}
-		else if (LeftButtonKey()) {
+		} else if (LeftButtonKey()) {
 			m_InputTimer[DIR_LEFT]++;
 		}
-	}
-	else {			//離した瞬間
+	} else {			//離した瞬間
 		if (m_LimitCount == 0 && !m_Move) {
 			if (m_InputTimer[DIR_UP] != 0 && (m_NowHeight < PANEL_HEIGHT - 1) && (!StagePanel::GetInstance()->GetClose(m_NowWidth, m_NowHeight + 1))) {
 				m_Move = true;
 				m_AfterPos.z = m_Position.z + l_AddVelocity;
 				m_InputTimer[DIR_UP] = {};
-			}
-			else if (m_InputTimer[DIR_DOWN] != 0 && (m_NowHeight > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth, m_NowHeight - 1))) {
+			} else if (m_InputTimer[DIR_DOWN] != 0 && (m_NowHeight > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth, m_NowHeight - 1))) {
 				m_AfterPos.z = m_Position.z + l_SubVelocity;
 				m_Move = true;
 				m_InputTimer[DIR_DOWN] = {};
-			}
-			else if (m_InputTimer[DIR_RIGHT] != 0 && (m_NowWidth < (PANEL_WIDTH / 2) - 1) && (!StagePanel::GetInstance()->GetClose(m_NowWidth + 1, m_NowHeight))) {
+			} else if (m_InputTimer[DIR_RIGHT] != 0 && (m_NowWidth < (PANEL_WIDTH / 2) - 1) && (!StagePanel::GetInstance()->GetClose(m_NowWidth + 1, m_NowHeight))) {
 				m_AfterPos.x = m_Position.x + l_AddVelocity;
 				m_Move = true;
 				m_InputTimer[DIR_RIGHT] = {};
-			}
-			else if (m_InputTimer[DIR_LEFT] != 0 && (m_NowWidth > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth - 1, m_NowHeight))) {
+			} else if (m_InputTimer[DIR_LEFT] != 0 && (m_NowWidth > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth - 1, m_NowHeight))) {
 				m_AfterPos.x = m_Position.x + l_SubVelocity;
 				m_Move = true;
 				m_InputTimer[DIR_LEFT] = {};
@@ -357,20 +351,17 @@ void Player::Move() {
 			m_Move = true;
 			m_LimitCount++;
 			m_InputTimer[DIR_UP] = {};
-		}
-		else if (m_InputTimer[DIR_DOWN] == l_TargetTimer && (m_NowHeight > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth, m_NowHeight - 1))) {
+		} else if (m_InputTimer[DIR_DOWN] == l_TargetTimer && (m_NowHeight > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth, m_NowHeight - 1))) {
 			m_AfterPos.z = m_Position.z + l_SubVelocity;
 			m_Move = true;
 			m_LimitCount++;
 			m_InputTimer[DIR_DOWN] = {};
-		}
-		else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer && (m_NowWidth < (PANEL_WIDTH / 2) - 1) && (!StagePanel::GetInstance()->GetClose(m_NowWidth + 1, m_NowHeight))) {
+		} else if (m_InputTimer[DIR_RIGHT] == l_TargetTimer && (m_NowWidth < (PANEL_WIDTH / 2) - 1) && (!StagePanel::GetInstance()->GetClose(m_NowWidth + 1, m_NowHeight))) {
 			m_AfterPos.x = m_Position.x + l_AddVelocity;
 			m_Move = true;
 			m_LimitCount++;
 			m_InputTimer[DIR_RIGHT] = {};
-		}
-		else if (m_InputTimer[DIR_LEFT] == l_TargetTimer && (m_NowWidth > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth - 1, m_NowHeight))) {
+		} else if (m_InputTimer[DIR_LEFT] == l_TargetTimer && (m_NowWidth > 0) && (!StagePanel::GetInstance()->GetClose(m_NowWidth - 1, m_NowHeight))) {
 			m_AfterPos.x = m_Position.x + l_SubVelocity;
 			m_Move = true;
 			m_LimitCount++;
@@ -387,8 +378,7 @@ void Player::Move() {
 		if (_AttackState == ATTACK_NONE) {
 			if (m_MoveFrame < m_FrameMax / 2) {
 				m_BaseScale -= l_AddScale;
-			}
-			else {
+			} else {
 				m_BaseScale += l_AddScale;
 			}
 		}
@@ -489,15 +479,13 @@ void Player::HealPlayer(const float power) {
 		}
 		if (m_MaxHP - m_HP >= power) {
 			l_HealNum = power;
-		}
-		else {
+		} else {
 			l_HealNum = m_MaxHP - m_HP;
 		}
 		if (isHeal || isDamage) {
 			hp_frame = 0.f;
 		}
-	}
-	else {
+	} else {
 		l_HealNum = {};
 	}
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Heal01.wav", 0.05f);
@@ -511,18 +499,16 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	if (m_ShieldHP != 0.0f) {		//シールド時食らうダメージはシールドHPが負担
 		if (l_Damage <= m_ShieldHP) {
 			m_ShieldHP -= l_Damage;
-		}
-		else {
+		} else {
 			m_HP -= l_Damage - m_ShieldHP;
 			m_ShieldHP = 0.0f;
 		}
 		l_Damage = Damage / 2;
-	}
-	else {
+	} else {
 		m_HP -= l_Damage;
 	}
 
-	Helper::Clamp(m_ShieldHP, 0.0f,m_ShieldHPMAX);
+	Helper::Clamp(m_ShieldHP, 0.0f, m_ShieldHPMAX);
 	GameStateManager::GetInstance()->TakenDamageCheck((int)Damage);
 	GameStateManager::GetInstance()->MissAttack();
 	//パッシブ効果処理
@@ -557,25 +543,21 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	} else if (name == "POISON") {
 		BirthPoisonParticle();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Fire.wav", 0.04f);
-	}
-	else if (name == "BOUND") {
+	} else if (name == "BOUND") {
 		DamageParticle();
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
 		m_Bound = true;
 		if (m_NowWidth != 0) {
 			m_AfterPos = { m_Position.x - 1.5f,m_Position.y,m_Position.z };
 			m_NowWidth--;
-		}
-		else {
+		} else {
 			if (m_NowHeight == 0) {
 				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
 				m_NowHeight++;
-			}
-			else if (m_NowHeight == 3) {
+			} else if (m_NowHeight == 3) {
 				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z - 1.5f };
 				m_NowHeight--;
-			}
-			else {
+			} else {
 				m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
 				m_NowHeight++;
 			}
@@ -623,9 +605,9 @@ bool Player::HPEffect() {
 	if (isHeal || isDamage) {
 		if (Helper::FrameCheck(hp_frame, frameMax)) {
 			XMFLOAT2 size = { 32.f,32.f };
-			_drawnumber[FIRST_DIGHT]->SetSize(size);
-			_drawnumber[SECOND_DIGHT]->SetSize(size);
-			_drawnumber[THIRD_DIGHT]->SetSize(size);
+			//_drawnumber[FIRST_DIGHT]->SetSize(size);
+			//_drawnumber[SECOND_DIGHT]->SetSize(size);
+			//_drawnumber[THIRD_DIGHT]->SetSize(size);
 			_drawnumber[FIRST_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
 			_drawnumber[SECOND_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
 			_drawnumber[THIRD_DIGHT]->SetColor({ 1.f,1.0f,1.f,1.0f });
@@ -636,12 +618,12 @@ bool Player::HPEffect() {
 			m_OldHP = m_HP;
 			return false;
 		} else {
-			XMFLOAT2 size = {64.f,64.f};
-			size.x=Ease(Out,Quad, hp_frame,64.f,32.f);
-			size.y=Ease(Out,Quad, hp_frame,64.f,32.f);
-			_drawnumber[FIRST_DIGHT]->SetSize(size);
-			_drawnumber[SECOND_DIGHT] ->SetSize(size);
-			_drawnumber[THIRD_DIGHT]->SetSize(size);
+			XMFLOAT2 size = { 64.f,64.f };
+			size.x = Ease(Out, Quad, hp_frame, 64.f, 32.f);
+			size.y = Ease(Out, Quad, hp_frame, 64.f, 32.f);
+			//_drawnumber[FIRST_DIGHT]->SetSize(size);
+			///_drawnumber[SECOND_DIGHT] ->SetSize(size);
+			//_drawnumber[THIRD_DIGHT]->SetSize(size);
 		}
 	}
 	if (m_OldHP < m_HP) {
@@ -691,8 +673,7 @@ void Player::DamageUpdate() {
 
 	if (m_FlashCount % 2 != 0) {
 		m_Color.w = 1.0f;
-	}
-	else {
+	} else {
 		m_Color.w = 0.0f;
 	}
 }
@@ -709,14 +690,13 @@ void Player::DeathUpdate() {
 		if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
 			m_FinishGameOver = true;
 		}
-	}
-	else {
+	} else {
 		RotPower = Ease(In, Cubic, m_Frame, RotPower, 20.0f);
-		m_Rotation.z =Ease(In,Cubic,m_Frame,m_Rotation.z,45.0f);
+		m_Rotation.z = Ease(In, Cubic, m_Frame, m_Rotation.z, 45.0f);
 		m_Rotation.y += RotPower;
 		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.5f);
 	}
-	
+
 	Obj_SetParam();
 }
 //プレイヤーの攻撃時瞬間取得
@@ -725,8 +705,7 @@ void Player::AttackCheck(const bool LastAttack) {
 		_AttackState = ATTACK_LAST;
 		m_Jump = true;
 		m_AddPower = 0.2f;
-	}
-	else {
+	} else {
 		_AttackState = ATTACK_NORMAL;
 	}
 }
@@ -739,8 +718,7 @@ void Player::AttackMove() {
 		_AttackState = ATTACK_NONE;
 		m_ShrinkTimer = {};
 		m_Rotation.y = 90.0f;
-	}
-	else {
+	} else {
 		m_BaseScale = Ease(In, Cubic, m_AttackFrame, m_BaseScale, m_AfterScale);
 	}
 	m_Scale = { m_BaseScale,m_BaseScale ,m_BaseScale };
@@ -755,14 +733,11 @@ void Player::ShrinkScale() {
 	m_ShrinkTimer++;
 	if (m_ShrinkTimer < 8) {
 		m_AfterScale = 0.5f;
-	}
-	else if (m_ShrinkTimer >= 8 && m_ShrinkTimer < 20) {
+	} else if (m_ShrinkTimer >= 8 && m_ShrinkTimer < 20) {
 		m_AfterScale = 0.4f;
-	}
-	else if (m_ShrinkTimer >= 20 && m_ShrinkTimer < 30) {
+	} else if (m_ShrinkTimer >= 20 && m_ShrinkTimer < 30) {
 		m_AfterScale = 0.3f;
-	}
-	else if (m_ShrinkTimer >= 31) {
+	} else if (m_ShrinkTimer >= 31) {
 		m_AfterScale = 0.2f;
 	}
 
@@ -791,8 +766,7 @@ void Player::RegeneUpdate() {
 			HealPlayer(20.0f);
 			m_HealTimer = {};
 		}
-	}
-	else {
+	} else {
 		m_HealTimer = {};
 	}
 }
@@ -833,8 +807,7 @@ void Player::BirthHealNumber(const float heal) {
 		_newnumber->Initialize();
 		_newnumber->SetNumber(l_InterHeal);
 		_healnumber.push_back(std::move(_newnumber));
-	}
-	else if(l_InterHeal >= 10 && l_InterHeal < 100) {
+	} else if (l_InterHeal >= 10 && l_InterHeal < 100) {
 
 		int l_DightDamage[HEAL_MAX - 1];
 		for (auto i = 0; i < HEAL_MAX - 1; i++) {
@@ -843,8 +816,7 @@ void Player::BirthHealNumber(const float heal) {
 			_newnumber->GetCameraData();
 			if (i == 0) {
 				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
-			}
-			else {
+			} else {
 				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
 			}
 			_newnumber->Initialize();
@@ -852,8 +824,7 @@ void Player::BirthHealNumber(const float heal) {
 			_healnumber.push_back(std::move(_newnumber));
 		}
 
-	}
-	else {
+	} else {
 
 		int l_DightDamage[HEAL_MAX];
 		for (auto i = 0; i < HEAL_MAX; i++) {
@@ -862,11 +833,9 @@ void Player::BirthHealNumber(const float heal) {
 			_newnumber->GetCameraData();
 			if (i == 0) {
 				_newnumber->SetExplain({ m_Position.x + 0.6f, m_Position.y, m_Position.z + 1.0f });
-			}
-			else if(i == 1) {
+			} else if (i == 1) {
 				_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });
-			}
-			else {
+			} else {
 				_newnumber->SetExplain({ m_Position.x - 0.6f, m_Position.y, m_Position.z + 1.0f });
 			}
 			_newnumber->Initialize();
@@ -886,8 +855,7 @@ void Player::ClearUpdate() {
 	if (Helper::CheckMin(m_ClearTimer, l_TargetTimer, 1)) {
 		if (Helper::FrameCheck(m_ClearFrame, l_AddFrame)) {
 			m_ClearFrame = 1.0f;
-		}
-		else {
+		} else {
 			m_Position.y = Ease(In, Cubic, m_ClearFrame, m_Position.y, 0.1f);
 		}
 	}
@@ -908,8 +876,7 @@ void Player::GameOverUpdate(const int Timer) {
 			_OverType = OVER_JUMP;
 			m_AddPower = 0.3f;
 		}
-	}
-	else if (_OverType == OVER_JUMP) {		//起き上がる
+	} else if (_OverType == OVER_JUMP) {		//起き上がる
 		if (Helper::CheckMin(m_Rotation.z, 0.0f, 5.0f)) {
 			m_Rotation.z = {};
 		}
@@ -919,14 +886,12 @@ void Player::GameOverUpdate(const int Timer) {
 			_OverType = OVER_MOVE;
 			m_Position.y = 0.1f;
 		}
-	}
-	else if (_OverType == OVER_MOVE) {		//動く
+	} else if (_OverType == OVER_MOVE) {		//動く
 		if ((input->TriggerButton(input->A)) || (input->TriggerButton(input->B))) {
 			m_OverMove = true;
 			if (input->TriggerButton(input->B)) {
 				m_SelectType = SELECT_YES;
-			}
-			else {
+			} else {
 				m_SelectType = SELECT_NO;
 			}
 		}
@@ -941,23 +906,20 @@ void Player::GameOverUpdate(const int Timer) {
 						m_AddPower = 0.3f;
 						m_Jump = true;
 					}
-				}
-				else {
+				} else {
 					if (Helper::CheckMin(m_Rotation.y, 180.0f, 10.0f)) {
 						m_Rotation.y = 180.0f;
 						_OverType = OVER_END;
 						m_MoveFrame = {};
 					}
 				}
-			}
-			else {
+			} else {
 				if (m_SelectType == SELECT_YES) {
 					if (Helper::CheckMin(m_Rotation.y, 270.0f, 10.0f)) {
 						m_Rotation.y = 270.0f;
 					}
 					m_Position.x = Ease(In, Cubic, m_MoveFrame, m_Position.x, -4.0f);
-				}
-				else {
+				} else {
 					if (Helper::CheckMax(m_Rotation.y, 90.0f, -10.0f)) {
 						m_Rotation.y = 90.0f;
 					}
@@ -967,8 +929,7 @@ void Player::GameOverUpdate(const int Timer) {
 
 			}
 		}
-	}
-	else {		//選択したあとの動き
+	} else {		//選択したあとの動き
 		if (m_SelectType == SELECT_YES) {
 			if (m_Jump) {
 				m_AddPower -= m_Gravity;
@@ -979,15 +940,13 @@ void Player::GameOverUpdate(const int Timer) {
 						m_SelectEnd = true;
 						m_Jump = false;
 						m_Position.y = 0.1f;
-					}
-					else {
+					} else {
 						m_AddPower = 0.3f;
 					}
-					
+
 				}
 			}
-		}
-		else {
+		} else {
 			const float l_AddRotZ = 0.35f;
 			const float l_AddFrame2 = 0.01f;
 			float RotPower = 2.0f;
@@ -996,8 +955,7 @@ void Player::GameOverUpdate(const int Timer) {
 				if (Helper::CheckMin(m_Rotation.z, 90.0f, l_AddRotZ)) {		//最後は倒れる
 					m_SelectEnd = true;
 				}
-			}
-			else {
+			} else {
 				RotPower = Ease(In, Cubic, m_MoveFrame, RotPower, 10.0f);
 				m_Rotation.z = Ease(In, Cubic, m_MoveFrame, m_Rotation.z, 45.0f);
 				m_Rotation.y += RotPower;
