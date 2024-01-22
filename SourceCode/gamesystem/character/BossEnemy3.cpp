@@ -19,11 +19,17 @@ BossEnemy3::BossEnemy3() {
 
 	LastBossState::GetInstance()->SetBossShield(false);
 	//HPII
-	shield.sprite = IKESprite::Create(ImageManager::SHIELD, { 0.0f,0.0f });
-	shield.sprite->SetPosition({ -1000.0f,0.0f });
-	shield.sprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-	shield.sprite->SetScale(0.5f);
-
+	for (int i = {}; i < shield.size(); i++) {
+		shield[i].tex.reset(new IKETexture(ImageManager::SHIELD_TEX, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+		shield[i].tex->TextureCreate();
+		shield[i].tex->Initialize();
+		shield[i].tex->SetIsBillboard(true);
+		shield[i].pos = { 0.0f,{},0.0f};
+		shield[i].CircleScale = 1.0f;
+		shield[i].color = { 1.0f,1.0f,1.0f,1.0f };
+		shield[i].scale = 0.0f;
+	}
+	
 	//予測
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
@@ -60,10 +66,14 @@ bool BossEnemy3::Initialize() {
 
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.8f;
-	shield.Alpha = 1.0f;
 
 	m_AddDisolve = 2.0f;
 
+
+	shield[0].CircleSpeed = {};
+	shield[1].CircleSpeed = 90.0f;
+	shield[2].CircleSpeed = 180.0f;
+	shield[3].CircleSpeed = 270.0f;
 	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
 		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			m_SafeArea[i][j] = false;
@@ -158,7 +168,6 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 	onomatope->Draw();
 	IKESprite::PostDraw();
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	//shadow_tex->Draw();
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
@@ -174,20 +183,21 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
 	BaseBackDraw(dxCommon);
-	IKESprite::PreDraw();
-	if (LastBossState::GetInstance()->GetBossShield() && shield.Alpha != 0.0f) {
-		shield.sprite->Draw();
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	if (LastBossState::GetInstance()->GetBossShield()) {
+		for (int i = 0; i < shield.size(); i++) {
+			shield[i].tex->Draw();
+		}
 	}
-	IKESprite::PostDraw();
+	IKETexture::PostDraw();
 }
 //ImGui描画
 void BossEnemy3::ImGui_Origin() {
-	ImGui::Begin("Boss");
-	ImGui::Text("ShieldFrag:%d", LastBossState::GetInstance()->GetBossShield());
-	ImGui::Text("Shield:%f", shield.Alpha);
-	ImGui::Text("Timer:%d", shield.DeleteTimer);
+	ImGui::Begin("Boss3");
+	for (int i = 0; i < shield.size(); i++) {
+		ImGui::Text("circle[%d].%f", i, shield[i].CircleSpeed);
+	}
 	ImGui::End();
-	//predictarea->ImGuiDraw();
 }
 //開放
 void BossEnemy3::Finalize() {
@@ -705,38 +715,48 @@ void BossEnemy3::AngerMove() {
 //シールドの更新
 void BossEnemy3::ShieldUpdate() {
 	if (!LastBossState::GetInstance()->GetBossShield()) { return; }
-	const float l_AddFrame = 1 / 60.0f;
+	const float l_AddFrame = 1 / 20.0f;
 	const int l_TargetTimer = 200;
-	if (m_DamageCut) {
-		shield.Alpha = 1.0f;
-		if (Helper::CheckMin(shield.Timer, 20, 1)) {
-			shield.Timer = {};
-			m_DamageCut = false;
-		}
-	}
-	else {
-		if (Helper::FrameCheck(shield.Frame, l_AddFrame)) {
-			shield.Frame = {};
+
+	if (_ShieldState == SHIELD_BIRTH) {		//シールドが上に上がる
+		if (Helper::FrameCheck(m_ShieldFrame, l_AddFrame)) {
+			for (int i = 0; i < shield.size(); i++) {
+				shield[i].CircleSpeed += 2.0f;
+				if (shield[i].CircleSpeed == 360.0f) {
+					shield[i].CircleSpeed = {};
+				}
+				shield[i].pos = Helper::CircleMove(m_Position, shield[i].CircleScale, shield[i].CircleSpeed);
+			}
+			if (Helper::CheckMin(m_ShieldTimer, l_TargetTimer, 1)) {
+				_ShieldState = SHIELD_DELETE;
+				m_ShieldFrame = {};
+			}
 		}
 		else {
-			shield.Alpha = Ease(In, Cubic, shield.Frame, shield.Alpha, 0.0f);
+			for (int i = 0; i < shield.size(); i++) {
+				shield[i].scale = Ease(In, Cubic, m_ShieldFrame, shield[i].scale, 0.1f);
+			}
+		}
+	}
+	else {		//シールドが下がる
+		if (Helper::FrameCheck(m_ShieldFrame, l_AddFrame)) {
+			LastBossState::GetInstance()->SetBossShield(false);
+			m_ShieldFrame = {};
+			m_ShieldTimer = {};
+			_ShieldState = SHIELD_BIRTH;
+		}
+		else {
+			for (int i = 0; i < shield.size(); i++) {
+				shield[i].scale = Ease(In, Cubic, m_ShieldFrame, shield[i].scale, 0.0f);
+			}
 		}
 	}
 
-	if (Helper::CheckMin(shield.DeleteTimer, l_TargetTimer,1)) {
-		m_DamageCut = false;
-		shield.Timer = {};
-		shield.DeleteTimer = {};
-		LastBossState::GetInstance()->SetBossShield(false);
+	for (int i = 0; i < shield.size(); i++) {
+		shield[i].pos.y = 1.0f;
+		shield[i].tex->SetPosition(shield[i].pos);
+		shield[i].tex->SetColor(shield[i].color);
+		shield[i].tex->SetScale({ shield[i].scale,shield[i].scale,shield[i].scale });
+		shield[i].tex->Update();
 	}
-	//HPバー
-	XMVECTOR tex2DPos = { m_Position.x + 0.5f, m_Position.y, m_Position.z + 2.0f };
-	tex2DPos = Helper::PosDivi(tex2DPos, m_MatView, false);
-	tex2DPos = Helper::PosDivi(tex2DPos, m_MatProjection, true);
-	tex2DPos = Helper::WDivision(tex2DPos, false);
-	tex2DPos = Helper::PosDivi(tex2DPos, m_MatPort, false);
-
-	shield.Pos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
-	shield.sprite->SetPosition(shield.Pos);
-	shield.sprite->SetColor({ 1.0f,1.0f,1.0f,shield.Alpha });
 }
