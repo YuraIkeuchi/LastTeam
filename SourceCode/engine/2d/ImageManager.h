@@ -195,6 +195,7 @@ public:
 		BOM,
 		BOM2,
 		RELOADEFF,
+		SHIELD_TEX,
 	};
 	enum particleName
 	{
