@@ -66,6 +66,12 @@ void (SupportEnemy::* SupportEnemy::stateTable[])() = {
 	&SupportEnemy::Teleport,//瞬間移動
 };
 
+//攻撃遷移
+void (SupportEnemy::* SupportEnemy::attackTable[])() = {
+	&SupportEnemy::CounterAttack,//カウンター
+	&SupportEnemy::BombAttack,//ボム攻撃
+};
+
 //行動
 void SupportEnemy::Action() {
 	if (!m_Induction) {
@@ -81,11 +87,16 @@ void SupportEnemy::Action() {
 	PoisonState();//毒
 	BirthMagic();//魔法陣
 	AttackMove();//攻撃時の動き
-	
+
+
+	//カウンターのボム
 	if (m_BirthBomb) {
-		BirthCounter();
+		if (_AttackState == ATTACK_COUNTER && _charaState == STATE_ATTACK) {
+			BirthCounter();
+		}
 		m_BirthBomb = false;
 	}
+
 	//攻撃時ジャンプする
 	if (m_Jump) {
 		m_AddPower -= m_Gravity;
@@ -114,6 +125,28 @@ void SupportEnemy::Action() {
 		}
 	}
 
+	//吸収エフェクト
+	for (int i = 0; i < abseffect.size(); i++) {
+		if (abseffect[i] == nullptr) {
+			continue;
+		}
+
+		abseffect[i]->Update();
+		if (!abseffect[i]->GetAlive()) {
+			abseffect.erase(cbegin(abseffect) + i);
+		}
+	}
+
+	//吸収エフェクト
+	for (int i = 0; i < abseffect.size(); i++) {
+		if (abseffect[i] == nullptr) {
+			continue;
+		}
+
+		if (!abseffect[i]->GetAlive()) {
+			abseffect.erase(cbegin(abseffect) + i);
+		}
+	}
 	lastbomb->Update();
 }
 
@@ -125,6 +158,14 @@ void SupportEnemy::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
+	//吸収エフェクト
+	for (int i = 0; i < abseffect.size(); i++) {
+		if (abseffect[i] == nullptr) {
+			continue;
+		}
+
+		abseffect[i]->Draw(dxCommon);
+	}
 	//カウンターボムの描画
 	for (int i = 0; i < counterbomb.size(); i++) {
 		if (counterbomb[i] == nullptr) {
@@ -155,18 +196,51 @@ void SupportEnemy::Inter() {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		m_RandTimer = Helper::GetRanNum(0, 20);
+		int l_RandState = Helper::GetRanNum(0,1);
+		_AttackState = (AttackState)l_RandState;
 	}
 }
 //攻撃
 void SupportEnemy::Attack() {
-	//(this->*attackTable[_AttackState])();
-	//PlayerCollide();
+	(this->*attackTable[_AttackState])();
+}
+//ワープ
+void SupportEnemy::Teleport() {
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_SPECIAL];
+
+	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
+		magic.Alive = true;
+	}
+
+	if (m_Warp) {
+		WarpEnemy();
+	}
+}
+//カウンター
+void SupportEnemy::CounterAttack() {
+	int l_CounterTimer = 200;
+
+	if (Helper::CheckMin(coolTimer, l_CounterTimer, 1)) {
+		_charaState = STATE_SPECIAL;
+		m_RandTimer = Helper::GetRanNum(0, 20);
+		coolTimer = 0;
+	}
+
+	if (coolTimer % 5 == 0) {
+		BirthCharge();
+	}
+}
+//爆弾攻撃
+void SupportEnemy::BombAttack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
+
 	const int l_JumpTimer = 80;
 	if (coolTimer == 10) {
+		m_CanCounter = true;
 		//弾の発生
-		lastbomb->InitState({ m_Position.x,m_Position.y + 1.5f,m_Position.z },m_NowWidth - 1,m_NowHeight);
+		lastbomb->InitState({ m_Position.x,m_Position.y + 1.5f,m_Position.z }, m_NowWidth - 1, m_NowHeight);
 		BirthPredict(3 - m_AttackCount, m_NowHeight, "Bomb");
 	}
 	else if (coolTimer == l_JumpTimer) {
@@ -190,6 +264,7 @@ void SupportEnemy::Attack() {
 	}
 	else if (_BombAttackType == FALL_MOVE) {
 		if (Helper::CheckMax(m_Position.y, 0.1f, -0.3f)) {
+			m_CanCounter = false;
 			predictarea->ResetPredict();
 			_BombAttackType = SET_BOMB;
 			lastbomb->BirthExplosion();
@@ -198,19 +273,6 @@ void SupportEnemy::Attack() {
 	predictarea->Update();
 	predictarea->SetTimer(coolTimer);
 	predictarea->SetTargetTimer(l_TargetTimer);
-}
-//ワープ
-void SupportEnemy::Teleport() {
-	int l_TargetTimer = {};
-	l_TargetTimer = m_Limit[STATE_SPECIAL];
-
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
-		magic.Alive = true;
-	}
-
-	if (m_Warp) {
-		WarpEnemy();
-	}
 }
 //攻撃エリア
 void SupportEnemy::BirthArea(const int Width, const int Height, const string& name) {
@@ -378,4 +440,14 @@ void SupportEnemy::BirthCounter() {
 	newbomb->InitState(l_PlayerWidth, l_PlayerHeight);
 	newbomb->SetPlayer(player);
 	counterbomb.push_back(std::move(newbomb));
+}
+//チャージのときのエフェクト
+void SupportEnemy::BirthCharge() {
+	//エフェクト発生
+	std::unique_ptr<AbsorptionEffect> neweffect = std::make_unique<AbsorptionEffect>();
+	neweffect->Initialize();
+	neweffect->SetBasePos(m_Position);
+	neweffect->SetColor({ 0.7f,0.2f,0.2f,1.0f });
+	neweffect->SetAddFrame(0.01f);
+	abseffect.push_back(std::move(neweffect));
 }

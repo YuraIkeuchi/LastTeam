@@ -84,5 +84,11 @@ private:
 	bool m_ChangeRot = {};
 
 	int m_SupportType = {};
+
+	enum AttackState {
+		ATTACK_REGENE,
+		ATTACK_SHIELD,
+	};
+	int m_AttackState = ATTACK_REGENE;
 };
 
