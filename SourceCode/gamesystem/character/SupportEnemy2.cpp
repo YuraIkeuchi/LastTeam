@@ -146,6 +146,7 @@ void SupportEnemy2::Inter() {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		m_RandTimer = Helper::GetRanNum(0, 20);
+		m_AttackState = Helper::GetRanNum(0, 1);
 	}
 }
 //UŒ‚
@@ -155,8 +156,15 @@ void SupportEnemy2::Attack() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
-		LastBossState::GetInstance()->SetBossShield(true);
-		//BirthRegene();
+		if (m_AttackState == ATTACK_REGENE) {
+			BirthRegene();
+		}
+		else {
+			LastBossState::GetInstance()->SetBossShield(true);
+		}
+		m_Jump = true;
+		m_AddPower = 0.2f;
+		m_Rot = true;
 		coolTimer = 0;
 		_charaState = STATE_SPECIAL;
 		m_RandTimer = Helper::GetRanNum(0, 20);

@@ -46,6 +46,7 @@ private:
 private:
 	static const int SUPPORT_NUM = 2;
 	static const int BULLET_NUM = 5;
+	static const int SHIELD_NUM = 4;
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
@@ -120,15 +121,21 @@ private:
 
 
 	struct Shield {
-		unique_ptr<IKESprite> sprite;
-		float Frame = {};
-		XMFLOAT2 Pos = {};
-		bool Alive = false;
-		float Alpha = {};
-		int Timer = {};
-		int DeleteTimer = {};
+		std::unique_ptr<IKETexture> tex = nullptr;
+		XMFLOAT3 pos = {};
+		float scale = 0.5f;
+		XMFLOAT4 color = {};
+		float CircleSpeed = {};
+		float CircleScale = {};
 	};
 
-	Shield shield;
+	std::array<Shield,SHIELD_NUM> shield;
+
+	int m_ShieldTimer = {};
+	float m_ShieldFrame = {};
+	enum ShieldState {
+		SHIELD_BIRTH,
+		SHIELD_DELETE
+	}_ShieldState = SHIELD_BIRTH;
 };
 

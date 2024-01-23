@@ -94,10 +94,13 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 		m_TextTimer++;
 	}
 
-	Helper::Clamp(m_TextTimer, 0, 200);
+	Helper::Clamp(m_TextTimer, 0, 400);
 
 	if (m_TextTimer == 150) {
 		text_->SetConversation(TextManager::TUTORIAL_TASK, m_TextPos);
+	}
+	else if (m_TextTimer == 300) {
+		text_->SetConversation(TextManager::TUTORIAL_COUNTER, m_TextPos);
 	}
 	lightGroup->Update();
 	//�e�N���X�X�V
@@ -219,16 +222,6 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
-	//ImGui::Begin("Tutorial");
-	//ImGui::Text("Timer:%d", m_Timer);
-	//ImGui::Text("State:%d", _nowstate);
-	//ImGui::Text("Skip:%d", m_Skip);
-	//ImGui::End();
-	/////*
-	//TutorialTask::GetInstance()->ImGuiDraw();
-	//player_->ImGuiDraw();
-	//*/
-	GameStateManager::GetInstance()->ImGuiDraw();
 }
 
 void TutorialScene::Finalize() {

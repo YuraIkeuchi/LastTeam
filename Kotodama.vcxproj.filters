@@ -463,6 +463,10 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\Explosion.cpp">
       <Filter>gamesystem\stageobj\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\skill\PassiveManager.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\effect\AbsorptionEffect.cpp">
+      <Filter>gamesystem\effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -895,6 +899,10 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\stageobj\Explosion.h">
       <Filter>gamesystem\stageobj\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\skill\PassiveManager.h" />
+    <ClInclude Include="SourceCode\gamesystem\effect\AbsorptionEffect.h">
+      <Filter>gamesystem\effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -135,7 +135,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(NODAMAGE, L"Resources/2d/objicon/nodamage.png");
 	IKESprite::LoadTexture(HPGauge, L"Resources/2d/objicon/HPGauge.png");
 	IKESprite::LoadTexture(HPCover, L"Resources/2d/objicon/HP_Gage.png");
-
+	IKESprite::LoadTexture(SAVE, L"Resources/2d/sceneback/Save.png");
 }
 
 //非同期処理で読み込むスプライト
@@ -199,7 +199,8 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(BOM, L"Resources/2d/effect/effect5.png");
 	IKETexture::LoadTexture(BOM2, L"Resources/2d/effect/Bom.png");
 	IKETexture::LoadTexture(RELOADEFF, L"Resources/2d/effect/reload.png");
-
+	IKETexture::LoadTexture(SHIELD_TEX, L"Resources/2d/objicon/Shield_Icon.png");
+	IKETexture::LoadTexture(ABSEFFECT, L"Resources/2d/effect/effect1.png");
 }
 
 //非同期処理でのテクスチャの読み込み
