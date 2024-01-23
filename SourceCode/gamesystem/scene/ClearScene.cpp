@@ -199,13 +199,6 @@ void ClearScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void ClearScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	ImGui::Begin("Clear");
-	ImGui::Text("Timer:%d", m_AppTimer);
-	ImGui::End();
-	//SceneChanger::GetInstance()->ImGuiDraw();
-	//camerawork->ImGuiDraw();
-	//enemyManager->ImGuiDraw();
-	player_->ImGuiDraw();
 }
 //解放
 void ClearScene::Finalize() {

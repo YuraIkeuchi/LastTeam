@@ -339,6 +339,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (isStart&& m_State != State::initState) {
 		startButton->Draw();
 	}
+	if(m_Save)
 	save_sprite[m_SaveCount]->Draw();
 	IKESprite::PostDraw();
 
@@ -562,20 +563,6 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	ImGui::Begin("Map");
-	//ImGui::Text("%f", framePos.x);
-	//ImGui::Text("%f", eFrame);
-	//ImGui::Text("HIERARCHY:%f", scroll.x);
-	//ImGui::Text("PICKHIERARCHY:%f", -UIs[nowHierarchy][nowIndex].pos.x);
-	//ImGui::Text("PICK:%d", -UIs[nowHierarchy][nowIndex].pos.x);
-	//ImGui::Text("PICKINDEX:%d", pickIndex);
-	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
-	ImGui::Text("nowindel:%d", nowIndex);
-	ImGui::Text("nowHie:%d", nowHierarchy);
-	//for (int i = 0; i < 3; i++) {
-	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
-	//}
-	ImGui::End();
 }
 
 void MapScene::BlackOut() {
@@ -888,7 +875,7 @@ void MapScene::CheckState() {
 					levelName = "Ultimate";
 				}
 				if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
-					ss << BaseName + levelName + "/BattleMap0" << 1 << ".csv";
+					ss << BaseName + levelName + "/BattleMap0" << num << ".csv";
 					isBattle = true;
 				} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
 					ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
