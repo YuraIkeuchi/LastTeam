@@ -68,7 +68,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	feed.reset(feed_);
 
 	//ボス登場演出のカメラ設定
-	if (nowHierarchy == 2 || nowHierarchy == 5 || nowHierarchy == 9 || nowHierarchy == 13) {
+	if (nowHierarchy == 5 || nowHierarchy == 9 || nowHierarchy == 13) {
 		GameStateManager::GetInstance()->SetBossCamera(true);
 	}
 }
@@ -293,11 +293,7 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	//GameStateManager::GetInstance()->ImGuiDraw();
-	//StagePanel::GetInstance()->ImGuiDraw();
-	enemyManager->ImGuiDraw();
-	//camerawork->ImGuiDraw();
-	//player_->ImGuiDraw();
+
 }
 
 void BattleScene::Finalize() {

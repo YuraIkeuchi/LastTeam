@@ -66,8 +66,11 @@ private:
 
 	void Move();
 
+	void SaveMove();
 
 	bool TutorialClosed();
+private:
+	static const int SAVE_MAX = 4;//セーブパーツの最大数
 private:
 	enum {
 		StartMAP = 0,
@@ -161,5 +164,13 @@ private:
 
 	XMFLOAT2 charaPos = { homeX ,homeY[Middle] };
 	XMFLOAT2 framePos = { homeX + interbal ,homeY[Middle] };
+
+	array<unique_ptr<IKESprite>, SAVE_MAX> save_sprite;
+	bool m_Save = false;
+	XMFLOAT2 m_SavePos = {};
+	float m_SaveFrame = {};
+	int m_SaveTimer = {};
+	int m_SaveCount = {};
+	bool m_EndSave = false;
 };
 

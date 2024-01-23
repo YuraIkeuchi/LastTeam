@@ -181,14 +181,6 @@ void GameoverScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void GameoverScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	ImGui::Begin("Gameover");
-	ImGui::Text("OverTime:%d",m_Timer);
-	ImGui::Text("AddPower:%f", m_AddPower[SELECT_YES]);
-	ImGui::Text("POSY:%f", m_SelectPos[SELECT_YES].y);
-	ImGui::End();
-	//player_->ImGuiDraw();
-	//enemyManager->ImGuiDraw();
-	//SceneChanger::GetInstance()->ImGuiDraw();
 }
 //‰ð•ú
 void GameoverScene::Finalize() {
