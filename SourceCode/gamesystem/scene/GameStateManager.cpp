@@ -267,16 +267,8 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		for (DamageEffect& damage : damages) {
 			damage.tex->Draw();
 		}
-		handsFrame->Draw();
-	
-		
+		handsFrame->Draw();	
 		//gaugeCover->Draw();
-		if (isPassive) {
-			for (std::unique_ptr<IKESprite>& passiveAct : passiveActs) {
-				passiveAct->Draw();
-			}
-			passiveActive->Draw();
-		}
 		onomatope->Draw();
 		IKESprite::PostDraw();
 	
@@ -330,6 +322,12 @@ void GameStateManager::ActUIDraw() {
 	}
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		passive->Draw();
+	}
+	if (isPassive) {
+		for (std::unique_ptr<IKESprite>& passiveAct : passiveActs) {
+			passiveAct->Draw();
+		}
+		passiveActive->Draw();
 	}
 	IKESprite::PreDraw();
 	skillUI->Draw();
@@ -691,9 +689,9 @@ void GameStateManager::GaugeUpdate() {
 
 void GameStateManager::PassiveCheck() {
 
-	for (int& id : GotPassiveIDs) {
-		GetPassive(id);
-	}
+	//for (int& id : GotPassiveIDs) {
+		GetPassive(0);
+	//}
 
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		switch (passive->GetAbility()) {
@@ -778,8 +776,18 @@ void GameStateManager::DeckInitialize() {
 }
 
 void GameStateManager::GetPassive(int ID) {
-	float posX = GotPassives.size() * 70.0f;
-	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,85.0f })));
+	for (int& id : GotPassiveIDs) {
+		unique_ptr<Passive> passive_;
+		if (GotPassiveIDs.size() > 5) {
+			float posX = 20+GotPassives.size() * 24.0f;
+			float posY = 85.0f + ( 24.f *(float)((int)GotPassives.size()%2));
+			passive_ = make_unique<Passive>(id, XMFLOAT2{ posX ,posY }, XMFLOAT2(48.f, 48.f));
+		} else {
+			float posX = GotPassives.size() * 70.0f;
+			passive_ = make_unique<Passive>(id, XMFLOAT2{ posX ,85.0f });
+		}
+		GotPassives.push_back(std::move(passive_));
+	}
 }
 
 
