@@ -289,7 +289,7 @@ void SupportEnemy2::ClearAction() {
 //ゲームオーバーシーンの更新
 void SupportEnemy2::GameOverAction() {
 	if (_GameOverState == OVER_STOP) {
-		m_Position = { -1.0f,0.0f,2.5f };
+		m_Position = { 3.0f,0.0f,5.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
 		if (player->GetSelectType() == 1) {

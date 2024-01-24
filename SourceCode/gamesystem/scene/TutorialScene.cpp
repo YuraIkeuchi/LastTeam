@@ -183,7 +183,6 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_FeedEnd) {
 		ParticleEmitter::GetInstance()->FlontDrawAll();
-
 		GameStateManager::GetInstance()->ActUIDraw();
 		enemy->UIDraw();
 		player_->UIDraw();

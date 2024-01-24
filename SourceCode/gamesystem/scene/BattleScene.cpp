@@ -80,7 +80,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	lightGroup->Update();
 	//�e�N���X�X�V
 	//カメラワーク更新
-	if (nowHierarchy == 2) {
+	if (nowHierarchy == 13) {
 		camerawork->LastBossUpdate(camera);
 	}
 	else {
@@ -257,9 +257,9 @@ void BattleScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_FeedEnd){
 		if (player_->GetHp() > 0.0f && GameStateManager::GetInstance()->GetGameStart() && !GameStateManager::GetInstance()->GetBossCamera()) {
 			ParticleEmitter::GetInstance()->FlontDrawAll();
-			player_->UIDraw();
 			enemyManager->UIDraw();
 			GameStateManager::GetInstance()->ActUIDraw();
+			player_->UIDraw();
 		}
 	}
 	StagePanel::GetInstance()->OnomatoDraw();

@@ -37,6 +37,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	cheack->SetAnchorPoint({ 0.5f,0.5f });
 	const float l_SaveWidth_Cut = 400.0f;
 	const float l_SaveHeight_Cut = 128.0f;
+	m_SavePos = { 200.0f,900.0f };
 	for (int i = 0; i < save_sprite.size(); i++) {
 		save_sprite[i] = IKESprite::Create(ImageManager::SAVE, {});
 		int savenumber_index_y = i / SAVE_MAX;
@@ -44,11 +45,12 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		save_sprite[i]->SetTextureRect(
 			{ static_cast<float>(savenumber_index_x) * l_SaveWidth_Cut, static_cast<float>(savenumber_index_y) * l_SaveHeight_Cut },
 			{ static_cast<float>(l_SaveWidth_Cut), static_cast<float>(l_SaveHeight_Cut) });
+		save_sprite[i]->SetPosition(m_SavePos);
 		save_sprite[i]->SetAnchorPoint({ 0.5f,0.5f });
 		save_sprite[i]->SetSize({ l_SaveWidth_Cut,l_SaveHeight_Cut });
 	}
 
-	m_SavePos = { 200.0f,900.0f };
+	
 	if (s_Countinue) {		//コンティニューをしていた場合CSVからゲームデータ引き継ぎ(このシーンではマップデータ)
 		GameStateManager::GetInstance()->OpenGameDate();
 		nowHierarchy = GameStateManager::GetInstance()->GetHierarchy();
@@ -944,7 +946,7 @@ void MapScene::SaveMove() {
 
 		}
 		else {
-			m_SavePos.y = Ease(In, Cubic, m_SaveFrame, m_SavePos.y, 600.0f);
+			m_SavePos.y = Ease(In, Cubic, m_SaveFrame, m_SavePos.y, 625.0f);
 		}
 	}
 	else {

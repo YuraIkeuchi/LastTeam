@@ -37,7 +37,7 @@ void CameraWork::BossUpdate(DebugCamera* camera) {
 			if (Helper::CheckMin(m_waitTimer, 50, 1)) {
 				_CameraMove = CAMERA_UP;
 				m_Frame = {};
-				m_AfterEye = { 1.0f,1.0f,3.0f };
+				m_AfterEye = { 0.5f,1.5f,3.0f };
 				m_waitTimer = {};
 			}
 		}

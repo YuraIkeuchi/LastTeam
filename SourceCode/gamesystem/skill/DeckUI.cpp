@@ -28,6 +28,12 @@ void DeckUI::InitState(const int ActCount) {
 }
 //XV
 void DeckUI::Update() {
+	if (m_Position.y >= 100.0f) {
+		m_Color.w = 1.0f;
+	}
+	else {
+		m_Color.w = 0.3f;
+	}
 	UiMove();
 	tex->SetColor(m_Color);
 	tex->SetPosition(m_Position);
