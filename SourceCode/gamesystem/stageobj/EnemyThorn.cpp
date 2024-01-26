@@ -56,7 +56,7 @@ void EnemyThorn::Move() {
 			///	‰¹“ü‚ê(“Ë‚«Žh‚µ‰¹Šó–])
 			/// </summary>
 			if (m_Sound) {
-				Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/thrust.wav", 0.02f);
 				m_Sound = false;
 			}
 		}

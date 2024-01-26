@@ -194,9 +194,9 @@ void BossEnemy::Teleport() {
 //’e‚Ì¶¬
 void BossEnemy::BirthBullet() {
 	/// <summary>
-	///	‰¹“ü‚ê(’e‚ğ‘Å‚Â‰¹Šó–](ƒ|ƒ“ƒb‚İ‚½‚¢‚È‚â‚Â)
+	///	‰¹“ü(’e‚ğ‘Å‚Â‰¹Šó–](ƒ|ƒ“ƒb‚İ‚½‚¢‚È‚â‚Â)
 	/// </summary>
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
 	//’e‚Ì”­¶
 	bullets->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z }, m_ShotDir);
 }
