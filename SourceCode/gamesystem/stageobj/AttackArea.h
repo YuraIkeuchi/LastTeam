@@ -37,6 +37,7 @@ private:
 	void SlashMove();
 	void StoneMove();
 	void PoisonMove();
+	void SpearMove();
 private:
 	XMFLOAT3 SetPanelPos(const int width, const int height);
 public:
@@ -69,6 +70,7 @@ private:
 		Slash,
 		Stone,
 		Poison,
+		Spear,
 	}_EffectState = Slash;
 	//ƒpƒlƒ‹
 	struct Panel {

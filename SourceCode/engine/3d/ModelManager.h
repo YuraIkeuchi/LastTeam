@@ -31,6 +31,7 @@ public:
 		DOGO,
 		DORO,
 		ZASHU,
+		GUSA,
 		FIRST_BOSS,
 		TORNADO,
 		ROCKENEMY,

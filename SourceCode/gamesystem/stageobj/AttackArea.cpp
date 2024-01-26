@@ -16,6 +16,10 @@ AttackArea::AttackArea(string& userName, string& stateName) {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::ZASHU);
 		_EffectState = Slash;
 	}
+	else if (StateName == "SPEAR") {
+		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::GUSA);
+		_EffectState = Spear;
+	}
 	else {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::DOGO);
 		_EffectState = Stone;
@@ -43,6 +47,7 @@ void (AttackArea::* AttackArea::stateTable[])() = {
 	&AttackArea::SlashMove,//aŒ‚
 	&AttackArea::StoneMove,//Šâ—‚Æ‚µ
 	&AttackArea::PoisonMove,//“ÅŒn
+	&AttackArea::SpearMove,//‚â‚èŒn
 };
 //‰Šú‰»
 bool AttackArea::Initialize() {
@@ -69,6 +74,12 @@ void AttackArea::InitState(const int width, const int height) {
 		m_Rotation = { 45.0f,270.0f,0.0f };
 		m_Scale = { 0.3f,0.3f,0.3f };
 		m_Position = { panels.position.x,3.0f,panels.position.z };
+		m_Object->SetBillboard(true);
+	}
+	else if (StateName == "SPEAR") {
+		m_Rotation.y = 270.0f;
+		m_Scale = { 0.4f,0.4f,0.4f };
+		m_Position = { panels.position.x,5.0f,panels.position.z };
 		m_Object->SetBillboard(true);
 	}
 	else {
@@ -222,6 +233,43 @@ void AttackArea::PoisonMove() {
 		/// </summary>
 		if (m_Sound) {
 			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.02f);
+			m_Sound = false;
+		}
+	}
+}
+void AttackArea::SpearMove() {
+	float l_AddFrame = {};
+	if (m_Timer > m_BirthTimer) { return; }
+	if (_StoneType == STONE_FALL) {
+		l_AddFrame = 1 / 20.0f;
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			m_Frame = {};
+			_StoneType = STONE_BOUND;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 0.5f);
+			m_Rotation.y = Ease(In, Cubic, m_Frame, m_Rotation.y, 990.0f);
+		}
+	}
+	else {
+		l_AddFrame = 1 / 30.0f;
+		m_Hit = true;
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			m_Alive = false;
+		}
+		else {
+			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, {});
+		}
+	}
+
+	//‚ ‚é’ö“x‚Ì‚‚³‚É‚È‚Á‚½‚çUŒ‚”»’è
+	if (m_Position.y <= 2.5f) {
+		m_Attack = true;
+		/// <summary>
+		///	‰¹“ü(Šâ‚ª—‚¿‚é–”‚ÍŒ‡‚¯‚é‰¹Šó–])
+		/// </summary>
+		if (m_Sound) {
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/heavyRockCollapse.wav", 0.02f);
 			m_Sound = false;
 		}
 	}
