@@ -101,7 +101,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillSentence(L"自分や敵、全てに回復を!");
 			CreateSkillDamage(L"回復床設置 威力:20");
 			CreateSkillSentence(L"中毒は知らぬ間に");
-			CreateSkillDamage(L"威力:10（小）(敵に付与されてる毒を3倍)");
+			CreateSkillDamage(L"威力:10（小）付与してる毒を3倍");
 			CreateSkillSentence(L"鉄壁の守り!");
 			CreateSkillDamage(L"ディレイキャンセルをしなくなる");
 			CreateSkillSentence(L"エリアおおめ毒マシマシ攻撃");
@@ -115,17 +115,17 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillSentence(L"ディレイは長いが威力が大きい");
 			CreateSkillDamage(L"威力:75（大）");
 			CreateSkillSentence(L"当てられるなら当ててみな！");
-			CreateSkillDamage(L"威力:75（大）(範囲が変わる)");
+			CreateSkillDamage(L"威力:75（大）範囲が変わる");
 			CreateSkillSentence(L"全てを犠牲に・・・！");
 			CreateSkillDamage(L"手札を全て捨てて、リロードアップ!");
 			CreateSkillSentence(L"敵を引き寄せろ!");
-			CreateSkillDamage(L"威力:30（中） 敵を前に寄せる");
+			CreateSkillDamage(L"威力:30（中）敵を前に寄せる");
 			CreateSkillSentence(L"敵を吹き飛ばせ!");
-			CreateSkillDamage(L"威力:45（中） 敵を後ろに飛ばす");
+			CreateSkillDamage(L"威力:45（中）敵を後ろに飛ばす");
 			CreateSkillSentence(L"これで「痛み分け」だぜ!");
-			CreateSkillDamage(L"威力:50（大） 自分もダメージを受ける");
+			CreateSkillDamage(L"威力:50（大）自分にもダメージ！");
 			CreateSkillSentence(L"限界バトルを叩きつけろ！");
-			CreateSkillDamage(L"威力:30（中） HPが半分なら威力２倍");
+			CreateSkillDamage(L"威力:30（中）HPが半分なら２倍");
 			CreateSkillSentence(L"パッシブに応じて毒を付与！");
 			CreateSkillDamage(L"威力:3（小） 毒：パッシブｘ２付与");
 			CreateSkillSentence(L"パッシブに応じて強くなる回復攻撃！");
@@ -133,7 +133,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillSentence(L"使えば使うほど強くなる！");
 			CreateSkillDamage(L"威力:8ｘ試合で使った回数");
 			CreateSkillSentence(L"ランダムで強いスキルにチェンジ！");
-			CreateSkillDamage(L"威力:50 （毒・回復・敵移動のどれか）");
+			CreateSkillDamage(L"威力:50（大）何かがおきる！？");
 		}
 	}
 
