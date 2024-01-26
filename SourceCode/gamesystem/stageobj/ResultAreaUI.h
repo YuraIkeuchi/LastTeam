@@ -77,4 +77,6 @@ private:
 	int m_Id = 0;
 	bool m_IsShuffle = false;
 	std::unique_ptr<IKESprite> player_panel;
+	std::unique_ptr<IKESprite> delay;
+
 };
