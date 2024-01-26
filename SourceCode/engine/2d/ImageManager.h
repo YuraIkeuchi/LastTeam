@@ -142,7 +142,8 @@ public:
 		NODAMAGE,
 		HPGauge,
 		HPCover,
-		SAVE
+		SAVE,
+		EXPRE,
 	};
 	//テクスチャの名前
 	enum tex2dName

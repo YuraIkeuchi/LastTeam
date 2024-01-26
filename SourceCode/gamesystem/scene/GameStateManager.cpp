@@ -778,7 +778,7 @@ void GameStateManager::DeckInitialize() {
 void GameStateManager::GetPassive(int ID) {
 	for (int& id : GotPassiveIDs) {
 		unique_ptr<Passive> passive_;
-		if (GotPassiveIDs.size() > 5) {
+		if (GotPassiveIDs.size() >= 5) {
 			float posX = 20+GotPassives.size() * 24.0f;
 			float posY = 85.0f + ( 24.f *(float)((int)GotPassives.size()%2));
 			passive_ = make_unique<Passive>(id, XMFLOAT2{ posX ,posY }, XMFLOAT2(48.f, 48.f));

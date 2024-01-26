@@ -26,6 +26,8 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	top_title->SetAnchorPoint({ 0.5f,0.5f });
 	feedIn = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	feedIn->SetSize({ 1280.f,720.f });
+	expra = IKESprite::Create(ImageManager::EXPRE,{1280.f-128.f-80.f,10.f});
+	
 	StarInit();
 	dxcommon = dxCommon;
 }
@@ -73,6 +75,7 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 	}
 	IKESprite::PreDraw();
 
+	expra->Draw();
 	for (ShineEffect& shine : shines) {
 		shine.tex->Draw();
 	}
