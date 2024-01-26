@@ -18,6 +18,7 @@ public:
 	void Update();
 	void Draw(DirectXCommon* dxCommon);
 	void ImGuiDraw();
+	void Move();
 	void InDeck(std::vector<int>& Deck);
 	void InPassive(std::vector<int>& Passive);
 
@@ -26,7 +27,7 @@ public:
 
 	bool GetIsVisible() { return isStart; }
 private:
-	void Move();
+
 	bool FeedOut();
 private:
 	static const int S_DAMAGEMAX = 2;
@@ -100,5 +101,6 @@ private:
 	std::vector<StarEffect> stars = {};
 	bool m_Choice = false;
 	bool isBattle = false;
+	bool m_FeedEnd = false;
 };
 

@@ -102,6 +102,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	else if (m_TextTimer == 300) {
 		text_->SetConversation(TextManager::TUTORIAL_COUNTER, m_TextPos);
 	}
+
 	lightGroup->Update();
 	//�e�N���X�X�V
 	camerawork->Update(camera);
@@ -188,7 +189,8 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 		player_->UIDraw();
 		TutorialTask::GetInstance()->Draw();
 	}
-	if (!TutorialTask::GetInstance()->GetViewSkill()) {
+	
+	if (!m_FeedEnd || GameStateManager::GetInstance()->GetEndResult() && m_Timer <= 550) {
 		window.sprite->Draw();
 		text_->TestDraw(dxCommon);
 	}
@@ -221,6 +223,7 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
+	GameStateManager::GetInstance()->ImGuiDraw();
 }
 
 void TutorialScene::Finalize() {
@@ -245,26 +248,33 @@ void TutorialScene::PlayState() {
 		}
 
 		if (m_FeedEnd) {
-			window.m_Pos = { 640.0f,550.0f };
-			Audio::GetInstance()->StopWave(AUDIO_MAIN);
-			Helper::CheckMin(m_Timer, 100, 1);
+			if (GameStateManager::GetInstance()->GetEndResult()) {
+				window.m_Pos = { 640.0f,550.0f };
+				Audio::GetInstance()->StopWave(AUDIO_MAIN);
+				Helper::CheckMin(m_Timer, 601, 1);
+				if (TutorialTask::GetInstance()->GetChoiceSkill()) {
+					TutorialTask::GetInstance()->SetViewSkill(false);
+					text_->SetConversation(TextManager::TUTORIAL_END, m_TextPos);
+					_nowstate = TUTORIAL_FINISH;
+					m_Timer = {};
+				}
+			}
 			if (m_Timer == 1) {
 				m_TextPos = { 120.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_SKILL, m_TextPos);
 			}
-			if((input->TriggerButton(input->A))) {
+			else if (m_Timer == 200) {
+				m_TextPos = { 120.0f,20.f };
+				text_->SetConversation(TextManager::TUTORIAL_DELETE, m_TextPos);
+			}
+			else if (m_Timer == 400) {
 				m_TextPos = { 10.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_CHOICE, m_TextPos);
 			}
-			if ((input->TriggerButton(input->A))) {
-				TutorialTask::GetInstance()->SetViewSkill(true);
+			else if (m_Timer == 550) {
+				GameStateManager::GetInstance()->SetEndText(true);
 			}
-			if (TutorialTask::GetInstance()->GetChoiceSkill()) {
-				TutorialTask::GetInstance()->SetViewSkill(false);
-				text_->SetConversation(TextManager::TUTORIAL_END, m_TextPos);
-				_nowstate = TUTORIAL_FINISH;
-				m_Timer = {};
-			}
+	
 			GameStateManager::GetInstance()->StageClearInit();
 		}
 	}

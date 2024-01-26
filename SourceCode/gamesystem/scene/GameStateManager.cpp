@@ -132,6 +132,8 @@ void GameStateManager::Initialize() {
 
 	m_GameStart = false;
 	m_BossCamera = false;
+	m_EndResult = false;
+	m_EndText = false;
 }
 
 //更新
@@ -299,17 +301,6 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	/*ImGui::Begin("Deck");
-	ImGui::Text("DeleteNum:%d",m_DeleteNum);
-	ImGui::Text("Shield:%d", m_Shield);
-	ImGui::End();
-
-	for (auto i = 0; i < attackarea.size(); i++) {
-		if (attackarea[i] == nullptr)continue;
-		attackarea[i]->ImGuiDraw();
-	}*/
-	StagePanel::GetInstance()->ImGuiDraw();
-	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -801,42 +792,52 @@ bool GameStateManager::AttackSubAction() {
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
-	if (!TutorialTask::GetInstance()->GetViewSkill()) { return false; }
+	
 	if (!resultReport->GetIsFinish()) {
 		resultReport->Update();
 		return false;
 	}
-	if (Input::GetInstance()->TriggerButton(Input::LB) ||
-		Input::GetInstance()->TriggerKey(DIK_LEFT)) {
-		_ResultType = GET_SKILL;
-		///
-		//　ここにスキルとデッキ切り替え音（音入）
-		///
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/switch.wav", 0.02f);
-	}
-	if (Input::GetInstance()->TriggerButton(Input::RB) ||
-		Input::GetInstance()->TriggerKey(DIK_RIGHT)) {
-		_ResultType = HAVE_SKILL;
-		///
-		//　ここにスキルとデッキ切り替え音（音入）
-		///
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/switch.wav", 0.02f);
-	}
-
-	if (_ResultType == GET_SKILL) {
+	else {
 		resultSkill->Update();
+		TutorialTask::GetInstance()->SetViewSkill(true);
+		m_EndResult = true;
 
-		if ((Input::GetInstance()->TriggerButton(Input::B) || Input::GetInstance()->TriggerKey(DIK_SPACE)) && !m_Choice) {
-			resultSkill->InDeck(m_DeckNumber);
-			resultSkill->InPassive(GotPassiveIDs);
-			isChangeScene = true;
-			m_Choice = true;
-			TutorialTask::GetInstance()->SetChoiceSkill(true);
+		if (m_EndText) {
+			if (Input::GetInstance()->TriggerButton(Input::LB) ||
+				Input::GetInstance()->TriggerKey(DIK_LEFT)) {
+				_ResultType = GET_SKILL;
+				///
+				//　ここにスキルとデッキ切り替え音（音入）
+				///
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/switch.wav", 0.02f);
+			}
+			if (Input::GetInstance()->TriggerButton(Input::RB) ||
+				Input::GetInstance()->TriggerKey(DIK_RIGHT)) {
+				_ResultType = HAVE_SKILL;
+				///
+				//　ここにスキルとデッキ切り替え音（音入）
+				///
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/switch.wav", 0.02f);
+			}
+
+			if (_ResultType == GET_SKILL) {
+				resultSkill->Move();
+
+				if ((Input::GetInstance()->TriggerButton(Input::B) || Input::GetInstance()->TriggerKey(DIK_SPACE)) && !m_Choice) {
+					resultSkill->InDeck(m_DeckNumber);
+					resultSkill->InPassive(GotPassiveIDs);
+					isChangeScene = true;
+					m_Choice = true;
+					TutorialTask::GetInstance()->SetChoiceSkill(true);
+				}
+			}
+			else {
+				haveSkill->Update();
+			}
 		}
-	} else {
-		haveSkill->Update();
-	}
 
+	}
+	
 	return true;
 }
 
