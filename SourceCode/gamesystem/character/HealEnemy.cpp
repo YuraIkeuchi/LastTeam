@@ -342,3 +342,5 @@ void HealEnemy::GameOverAction() {
 
 	Obj_SetParam();
 }
+void HealEnemy::DeathSpecial() {
+}

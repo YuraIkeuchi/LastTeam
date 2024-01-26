@@ -382,3 +382,5 @@ void PoisonEnemy::GameOverAction() {
 
 	Obj_SetParam();
 }
+void PoisonEnemy::DeathSpecial() {
+}

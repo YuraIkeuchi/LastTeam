@@ -325,3 +325,5 @@ void TackleEnemy::GameOverAction() {
 
 	Obj_SetParam();
 }
+void TackleEnemy::DeathSpecial() {
+}

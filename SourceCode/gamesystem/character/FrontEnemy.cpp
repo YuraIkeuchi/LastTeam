@@ -367,3 +367,5 @@ void FrontEnemy::GameOverAction() {
 
 	Obj_SetParam();
 }
+void FrontEnemy::DeathSpecial() {
+}

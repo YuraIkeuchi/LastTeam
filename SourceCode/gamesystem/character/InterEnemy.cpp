@@ -814,7 +814,10 @@ void InterEnemy::DeathUpdate() {
 	float RotPower = 5.0f;
 	m_Color.w = 1.0f;
 
-	
+	if (m_EnemyTag == "Rock") {
+		StagePanel::GetInstance()->SetClose(m_NowWidth, m_NowHeight, false);
+		StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
+	}
 	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
 		m_OverFrame = 1.0f;
 		if (m_Death) {
@@ -825,11 +828,11 @@ void InterEnemy::DeathUpdate() {
 				if (m_EnemyTag == "SUPPORT" || m_EnemyTag == "SUPPORT2") {
 					GameStateManager::GetInstance()->SetIsHeal(true);
 				}
+				else if (m_EnemyTag == "CLOSER" || m_EnemyTag == "LASTBOSS") {
+					DeathSpecial();
+				}
 				m_Alive = false;
 			}
-		}
-		if (m_EnemyTag == "Rock" || m_EnemyTag == "LASTBOSS") {
-			StagePanel::GetInstance()->ClosePanel(m_Object.get(), m_Alive);
 		}
 	} else {
 		RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);

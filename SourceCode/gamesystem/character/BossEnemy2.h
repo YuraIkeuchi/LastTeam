@@ -14,6 +14,7 @@ public:
 	void ClearAction()override;//クリア更新
 	void GameOverAction()override;//ゲームオーバー更新
 	void ImGui_Origin()override;
+	void DeathSpecial()override;
 
 	void Draw(DirectXCommon* dxCommon) override;//描画
 private:

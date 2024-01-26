@@ -567,3 +567,6 @@ void BossEnemy::GameOverAction() {
 
 	Obj_SetParam();
 }
+void BossEnemy::DeathSpecial() {
+
+}

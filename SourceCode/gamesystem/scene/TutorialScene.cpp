@@ -66,8 +66,11 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 
 	//敵
 	InterEnemy::SetPlayer(player_.get());
-	enemy = std::make_unique<TutorialEnemy>();
-	enemy->Initialize();
+	for (int i = 0; i < enemy.size(); i++) {
+		enemy[i] = std::make_unique<TutorialEnemy>();
+		enemy[i]->SetNumber(i);
+		enemy[i]->Initialize();
+	}
 
 	TutorialTask::GetInstance()->SetChoiceSkill(false);
 
@@ -111,7 +114,9 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 
 	StagePanel::GetInstance()->Update();
 	if (!m_Skip) {
-		enemy->Update();
+		for (int i = 0; i < enemy.size(); i++) {
+			enemy[i]->Update();
+		}
 	}
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
@@ -185,7 +190,9 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_FeedEnd) {
 		ParticleEmitter::GetInstance()->FlontDrawAll();
 		GameStateManager::GetInstance()->ActUIDraw();
-		enemy->UIDraw();
+		for (int i = 0; i < enemy.size(); i++) {
+			enemy[i]->UIDraw();
+		}
 		player_->UIDraw();
 		TutorialTask::GetInstance()->Draw();
 	}
@@ -215,15 +222,20 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->Draw(dxCommon);
 	GameStateManager::GetInstance()->Draw(dxCommon);
 	IKEObject3d::PostDraw();
-	if (enemy->GetHP() > 0.0f && !m_Skip) {
+	if (!m_EnemyDelete && !m_Skip) {
 		player_->Draw(dxCommon);
-		enemy->Draw(dxCommon);
+		for (int i = 0; i < enemy.size(); i++) {
+			enemy[i]->Draw(dxCommon);
+		}
 		StagePanel::GetInstance()->ActDraw(dxCommon);
 	}
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
+	for (int i = 0; i < enemy.size(); i++) {
+		enemy[i]->ImGuiDraw();
+	}
 }
 
 void TutorialScene::Finalize() {
@@ -232,7 +244,10 @@ void TutorialScene::Finalize() {
 
 void TutorialScene::PlayState() {
 	Input* input = Input::GetInstance();
-	if (enemy->GetHP() <= 0.0f || m_Skip) {
+	if (enemy[0]->GetHP() <= 0.0f && enemy[1]->GetHP() <= 0.0f) {
+		m_EnemyDelete = true;
+	}
+	if (m_EnemyDelete || m_Skip) {
 
 		TutorialTask::GetInstance()->SetTaskFinish(true, TASK_BREAK);
 		if (!m_FeedStart) {

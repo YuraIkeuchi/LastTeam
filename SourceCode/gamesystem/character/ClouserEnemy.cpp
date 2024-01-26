@@ -49,6 +49,7 @@ bool ClouserEnemy::Initialize() {
 	enemywarp.Scale = 0.5f;
 	m_AddDisolve = 2.0f;
 	m_RandTimer = Helper::GetRanNum(0, 40);
+	m_EnemyTag = "CLOSER";
 	return true;
 }
 //ó‘Ô‘JˆÚ
@@ -92,7 +93,6 @@ void ClouserEnemy::Action() {
 			enerock.erase(cbegin(enerock) + i);
 		}
 	}
-
 
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 
@@ -154,15 +154,8 @@ void ClouserEnemy::Attack() {
 	l_TargetTimer = m_Limit[STATE_ATTACK];
 	if (coolTimer == 0) {
 		m_CanCounter = true;
-		//ƒvƒŒƒCƒ„[‚©‚ç‚Ì‹——£(-1~1)
-		int l_RandWigth = Helper::GetRanNum(-1, 1);
-		int l_RandHeight = Helper::GetRanNum(-1, 1);
-		m_RandWigth = l_PlayerWidth + l_RandWigth;
-		m_RandHeight = l_PlayerHeight + l_RandHeight;
-		Helper::Clamp(m_RandWigth, 0, 3);
-		Helper::Clamp(m_RandHeight, 0, 3);
+		StagePanel::GetInstance()->RockSetPanel(m_RandWigth, m_RandHeight);
 		BirthPredict(m_RandWigth, m_RandHeight);
-		StagePanel::GetInstance()->SetRock(m_RandWigth, m_RandHeight, true);
 	}
 	else if (coolTimer == 30) {
 		m_Jump = true;
@@ -350,4 +343,11 @@ void ClouserEnemy::GameOverAction() {
 	}
 
 	Obj_SetParam();
+}
+void ClouserEnemy::DeathSpecial() {
+
+	for (auto i = 0; i < enerock.size(); i++) {
+		if (enerock[i] == nullptr)continue;
+		enerock[i]->DeleteRock();
+	}
 }

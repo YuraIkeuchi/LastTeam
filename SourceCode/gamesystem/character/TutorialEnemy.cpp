@@ -25,7 +25,12 @@ TutorialEnemy::TutorialEnemy() {
 }
 //初期化
 bool TutorialEnemy::Initialize() {
-	m_Position = StagePanel::GetInstance()->SetPositon(4, 1);
+	if (m_Number == 0) {
+		m_Position = StagePanel::GetInstance()->SetPositon(4, 1);
+	}
+	else {
+		m_Position = StagePanel::GetInstance()->SetPositon(7, 3);
+	}
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Scale = { 0.3f,0.3f,0.3f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/TutorialEnemy.csv", "hp")));
@@ -63,6 +68,7 @@ void (TutorialEnemy::* TutorialEnemy::stateTable[])() = {
 //行動
 void TutorialEnemy::Action() {
 	if (!m_Induction) {
+		if(m_Number == 0)
 		(this->*stateTable[_charaState])();
 	}
 	else {
@@ -241,4 +247,6 @@ void TutorialEnemy::ClearAction() {
 //ゲームオーバーシーンの更新
 void TutorialEnemy::GameOverAction() {
 
+}
+void TutorialEnemy::DeathSpecial() {
 }

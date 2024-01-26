@@ -170,7 +170,7 @@ void EnemyRock::Attack() {
 
 void EnemyRock::Close()
 {
-	const float l_AddFrame = 1 / 30.0f;
+	const float l_AddFrame = 1 / 10.0f;
 	if (Helper::CheckMin(m_Timer, kIntervalMax, 1)) {
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			StagePanel::GetInstance()->SetClose(m_NowWidth, m_NowHeight, false);
@@ -233,4 +233,11 @@ void EnemyRock::ClearAction() {
 //ゲームオーバーシーンの更新
 void EnemyRock::GameOverAction() {
 
+}
+void EnemyRock::DeleteRock() {
+	StagePanel::GetInstance()->SetClose(m_NowWidth, m_NowHeight, false);
+	StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
+	m_Alive = false;
+}
+void EnemyRock::DeathSpecial() {
 }
