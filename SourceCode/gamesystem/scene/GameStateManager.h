@@ -225,7 +225,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= { 0,1,2,3,4};
+	std::vector <int> m_StartPassive= {};
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -305,7 +305,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {2,3,5};
+	vector <int> m_StartNumber = {2,3,5,29};
 
 	vector<int> m_DeckNumber = m_StartNumber;
 

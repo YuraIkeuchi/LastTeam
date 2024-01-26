@@ -14,13 +14,14 @@ enum PredictType {
 	PREDICT_BUFF,
 	PREDICT_HATENA,
 	PREDICT_HEAL,
+	PREDICT_ATTACK_LONG,
 };
 class PredictArea {
 public:
 	PredictArea(const string& name);
 
 private:
-	static const int PREDICT_MAX = 4;
+	static const int PREDICT_MAX = 5;
 	float PANELS_SIZE = PANEL_SIZE * 0.1f;
 
 private:

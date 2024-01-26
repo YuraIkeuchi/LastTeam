@@ -89,10 +89,10 @@ void GameStateManager::Initialize() {
 	onomatope = make_unique<Onomatope>();
 
 	m_PredictTimer = {};
-	
+
 	//
 	if (!m_StartLoad) {
-		
+
 		m_StartLoad = true;
 	}
 
@@ -269,11 +269,11 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		for (DamageEffect& damage : damages) {
 			damage.tex->Draw();
 		}
-		handsFrame->Draw();	
+		handsFrame->Draw();
 		//gaugeCover->Draw();
 		onomatope->Draw();
 		IKESprite::PostDraw();
-	
+
 		for (auto i = 0; i < attackarea.size(); i++) {
 			if (attackarea[i] == nullptr)continue;
 			attackarea[i]->Draw(dxCommon);
@@ -301,10 +301,6 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("Manager");
-	ImGui::Text("EndResult:%d", m_EndResult);
-	ImGui::End();
-	TutorialTask::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -383,8 +379,8 @@ void GameStateManager::BirthArea() {
 	int l_BirthBaseX = m_NowWidth + m_Act[0].DistanceX;	//生成の初めの位置を見てる
 	int l_BirthBaseY = m_NowHeight + m_Act[0].DistanceY;
 	if (m_Act[0].StateName == "SHUFFLE") {
-		l_BirthBaseX = Helper::GetRanNum(4,7);
-		l_BirthBaseY = Helper::GetRanNum(0,3);
+		l_BirthBaseX = Helper::GetRanNum(4, 7);
+		l_BirthBaseY = Helper::GetRanNum(0, 3);
 	}
 	int Timer = {};
 	int AreaX = {};
@@ -424,7 +420,7 @@ void GameStateManager::BirthArea() {
 		m_Metronome++;
 	}
 	if (m_Act[0].StateName == "GORGEOUS") {
-		int num = Helper::GetRanNum(0,3);
+		int num = Helper::GetRanNum(0, 3);
 		switch (num) {
 		case 0:
 			m_Act[0].StateName = "DRAIN";
@@ -488,10 +484,10 @@ void GameStateManager::BirthArea() {
 bool GameStateManager::GetIsFix(const string& name) {
 
 	if (name == "REFRAIN" ||
-		name == "MOROBA"||
+		name == "MOROBA" ||
 		name == "BOOST" ||
-		name == "PASSIVEDRAIN"||
-		name == "METRONOME"||
+		name == "PASSIVEDRAIN" ||
+		name == "METRONOME" ||
 		name == "SHUFFLE") {
 		return true;
 	} else {
@@ -530,8 +526,12 @@ void GameStateManager::PredictManager() {
 			predictarea->SetDrawDype(PREDICT_HEAL);
 		} else if (m_Act[0].StateName == "SHUFFLE") {
 			predictarea->SetDrawDype(PREDICT_HATENA);
-		}else{
-			predictarea->SetDrawDype(PREDICT_ATTACK);
+		} else {
+			if (m_Act[0].ActDelay >= 50) {
+				predictarea->SetDrawDype(PREDICT_ATTACK_LONG);
+			} else {
+				predictarea->SetDrawDype(PREDICT_ATTACK);
+			}
 		}
 	} else if (m_Act[0].SkillType == 1) {
 		if (m_Act[0].StateName == "NEXT" || m_Act[0].StateName == "SHILED") {
@@ -578,8 +578,7 @@ void GameStateManager::UseSkill() {
 						RandPowerUpInit();
 					}
 					onomatope->AddOnomato(AttackCharge, { 340.f,360.f });
-				}
-				else {
+				} else {
 					onomatope->AddOnomato(Guard, { 340.0f,340.0f });
 				}
 			} else if (m_Act[0].StateName == "RANDOM") {
@@ -685,7 +684,7 @@ void GameStateManager::GaugeUpdate() {
 void GameStateManager::PassiveCheck() {
 
 	//for (int& id : GotPassiveIDs) {
-		GetPassive(0);
+	GetPassive(0);
 	//}
 
 	for (unique_ptr<Passive>& passive : GotPassives) {
@@ -773,9 +772,9 @@ void GameStateManager::DeckInitialize() {
 void GameStateManager::GetPassive(int ID) {
 	for (int& id : GotPassiveIDs) {
 		unique_ptr<Passive> passive_;
-		if (GotPassiveIDs.size() > 5) {
-			float posX = 20+GotPassives.size() * 24.0f;
-			float posY = 85.0f + ( 24.f *(float)((int)GotPassives.size()%2));
+		if (GotPassiveIDs.size() >= 5) {
+			float posX = 20 + GotPassives.size() * 24.0f;
+			float posY = 85.0f + (24.f * (float)((int)GotPassives.size() % 2));
 			passive_ = make_unique<Passive>(id, XMFLOAT2{ posX ,posY }, XMFLOAT2(48.f, 48.f));
 		} else {
 			float posX = GotPassives.size() * 70.0f;
@@ -1105,15 +1104,13 @@ void GameStateManager::SaveGame() {
 	}
 	if (savedata.m_SaveHierarchy <= 4) {
 		normalofs << "PlayerHP" << "," << 500.0f << std::endl;
-	}
-	else {
+	} else {
 		normalofs << "PlayerHP" << "," << savedata.m_SaveHP << std::endl;
 	}
 	normalofs << "Index" << "," << savedata.m_SaveIndex << std::endl;
 	if (savedata.m_SaveHierarchy <= 4) {
 		normalofs << "Hierarchy" << "," << 0 << std::endl;
-	}
-	else {
+	} else {
 		normalofs << "Hierarchy" << "," << savedata.m_SaveHierarchy << std::endl;
 	}
 }

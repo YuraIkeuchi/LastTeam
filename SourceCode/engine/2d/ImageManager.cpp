@@ -136,6 +136,9 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(HPGauge, L"Resources/2d/objicon/HPGauge.png");
 	IKESprite::LoadTexture(HPCover, L"Resources/2d/objicon/HP_Gage.png");
 	IKESprite::LoadTexture(SAVE, L"Resources/2d/sceneback/Save.png");
+	IKESprite::LoadTexture(EXPRE, L"Resources/2d/objicon/Expra.png");
+	IKESprite::LoadTexture(DELAY, L"Resources/2d/objicon/delay.png");
+
 }
 
 //非同期処理で読み込むスプライト
@@ -158,6 +161,8 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(HATENAAREA, L"Resources/2d/objicon/Areas/hatena.png");
 	IKETexture::LoadTexture(ENEMYPREDICT, L"Resources/2d/objicon/Areas/Predict.png");
 	IKETexture::LoadTexture(PLAYERPREDICT, L"Resources/2d/objicon/Areas/PlayerPredict.png");
+	IKETexture::LoadTexture(NEOPLAYERPREDICT, L"Resources/2d/objicon/Areas/NeoPlayerPredict.png");
+
 	IKETexture::LoadTexture(ATTACK_TEX_0, L"Resources/2d/objicon/AttackSKill/Skill0.png");
 	IKETexture::LoadTexture(ATTACK_TEX_1, L"Resources/2d/objicon/AttackSKill/Skill1.png");
 	IKETexture::LoadTexture(ATTACK_TEX_2, L"Resources/2d/objicon/AttackSKill/Skill2.png");
