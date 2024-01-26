@@ -51,10 +51,10 @@ void EnemyTornade::Move() {
 			_ThornState = THORN_STOP;
 			m_Frame = {};
 			/// <summary>
-			///	‰¹“ü‚ê(—³Šª‰¹Šó–])
+			///	‰¹“ü(—³Šª‰¹Šó–])
 			/// </summary>
 			if (m_Sound) {
-				Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/wind.wav", 0.02f);
 				m_Sound = false;
 			}
 		}

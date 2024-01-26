@@ -59,7 +59,7 @@ void Sickle::Move() {
 				/// <summary>
 				///	‰¹“ü‚ê(“Ë‚«Žh‚µ‰¹Šó–])
 				/// </summary>
-				Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/thrust.wav", 0.02f);
 			}
 		}
 		m_Rotation.x = Ease(In, Cubic, m_Frame, m_Rotation.x, -450.0f);

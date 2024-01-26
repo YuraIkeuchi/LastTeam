@@ -155,7 +155,7 @@ void EnemyRock::Attack() {
 				/// <summary>
 				///	音入れ(岩が落ちた重点音みたいな音(ドンッみたいな感じ))
 				/// </summary>
-				Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/heavyRockCollapse.wav", 0.01f);
 				BirthParticle();
 				_charaState = STATE_SPECIAL;
 				StagePanel::GetInstance()->SetClose(m_NowWidth, m_NowHeight, true);

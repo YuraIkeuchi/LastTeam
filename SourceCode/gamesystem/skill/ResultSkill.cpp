@@ -239,8 +239,9 @@ void ResultSkill::Move() {
 			}
 		}
 		/// <summary>
-		/// ここにスキル選択音（音入れ）
+		/// ここにスキル選択音（音入）
 		/// </summary>
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.1f);
 		isMove = true;
 	}
 	if ((input->TriggerButton(Input::B) ||

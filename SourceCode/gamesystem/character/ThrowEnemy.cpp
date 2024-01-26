@@ -161,9 +161,9 @@ void ThrowEnemy::Teleport() {
 //弾の生成
 void ThrowEnemy::BirthBullet() {
 	/// <summary>
-	///	音入れ(ぶん回す音希望(ブーメランが回ってる音みたいなやつ、無理なら振り回してるやつ))
+	///	音入(ぶん回す音希望(ブーメランが回ってる音みたいなやつ、無理なら振り回してるやつ))
 	/// </summary>
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/boomerang.wav", 0.02f);
 	//弾の発生
 	boomerang->InitState({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 }
