@@ -20,6 +20,10 @@ AttackArea::AttackArea(string& userName, string& stateName) {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::GUSA);
 		_EffectState = Spear;
 	}
+	else if (StateName == "SHUFFLE") {
+		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::HATENA);
+		_EffectState = Hatena;
+	}
 	else {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::DOGO);
 		_EffectState = Stone;
@@ -48,6 +52,7 @@ void (AttackArea::* AttackArea::stateTable[])() = {
 	&AttackArea::StoneMove,//岩落とし
 	&AttackArea::PoisonMove,//毒系
 	&AttackArea::SpearMove,//やり系
+	&AttackArea::HatenaMove,//はてな
 };
 //初期化
 bool AttackArea::Initialize() {
@@ -81,6 +86,13 @@ void AttackArea::InitState(const int width, const int height) {
 		m_Scale = { 0.4f,0.4f,0.4f };
 		m_Position = { panels.position.x,5.0f,panels.position.z };
 		m_Object->SetBillboard(true);
+	}
+	else if (StateName == "SHUFFLE") {
+		m_Rotation.y = 270.0f;
+		m_Scale = { 1.5f,1.5f,1.5f };
+		m_Position = { panels.position.x,-1.0f,panels.position.z };
+		m_Color = { 0.6f,0.9f,0.2f,1.0f };
+		//m_Object->SetBillboard(true);
 	}
 	else {
 		m_Rotation.y = 270.0f;
@@ -270,6 +282,45 @@ void AttackArea::SpearMove() {
 		/// </summary>
 		if (m_Sound) {
 			Audio::GetInstance()->PlayWave("Resources/Sound/SE/heavyRockCollapse.wav", 0.02f);
+			m_Sound = false;
+		}
+	}
+}
+void AttackArea::HatenaMove() {
+	const XMFLOAT3 l_AfterScale = { 0.0f,0.0f,0.0f };
+	const float l_AddFrame = 1 / 30.0f;
+	if (m_Timer > m_BirthTimer) { return; }
+	if (_StoneType == STONE_FALL) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			m_Frame = {};
+			_StoneType = STONE_BOUND;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 1.0f);
+		}
+	}
+	else {
+		m_Hit = true;
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			m_Alive = false;
+		}
+		else {
+			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,l_AfterScale.x),
+			Ease(In,Cubic,m_Frame,m_Scale.y,l_AfterScale.y),
+			Ease(In,Cubic,m_Frame,m_Scale.z,l_AfterScale.z), };
+		}
+	}
+
+	m_Rotation.y += 10.0f;
+
+	//ある程度の高さになったら攻撃判定
+	if (m_Position.y >= 0.0f) {
+		m_Attack = true;
+		/// <summary>
+		///	音入(ドロドロしたものが地面に落ちる音希望(ベチャッみたいなやつ)
+		/// </summary>
+		if (m_Sound) {
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.02f);
 			m_Sound = false;
 		}
 	}

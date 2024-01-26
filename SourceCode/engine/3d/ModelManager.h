@@ -32,6 +32,7 @@ public:
 		DORO,
 		ZASHU,
 		GUSA,
+		HATENA,
 		FIRST_BOSS,
 		TORNADO,
 		ROCKENEMY,
