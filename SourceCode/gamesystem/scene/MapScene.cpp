@@ -260,7 +260,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	GameStateManager::GetInstance()->SetMapData(nowIndex, nowHierarchy);
 	if ((nowHierarchy == 0) || (nowHierarchy == 5 || nowHierarchy == 9) && !s_Countinue) {
 		m_Save = true;
-		GameStateManager::GetInstance()->SaveGame();
+		//GameStateManager::GetInstance()->SaveGame();
 	}
 }
 
@@ -565,6 +565,10 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
+	ImGui::Begin("Map");
+	ImGui::Text("Hieralky:%d", nowHierarchy);
+	ImGui::Text("clear:%d", clearHierarchy);
+	ImGui::End();
 }
 
 void MapScene::BlackOut() {
