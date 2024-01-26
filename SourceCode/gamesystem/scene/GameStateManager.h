@@ -175,6 +175,9 @@ public:
 	const float GetOpenHP() { return savedata.m_OpenHP; }
 	const int GetHierarchy() { return savedata.m_OpenHierarchy; }
 	const int GetIndex() { return savedata.m_OpenIndex; }
+
+	bool GetEndResult() { return m_EndResult; }
+	void SetEndText(const bool EndText) { m_EndText = EndText; }
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
 private:
@@ -355,6 +358,8 @@ private:
 
 	bool m_NoDeath = true;
 	bool m_NoDamage = true;
+	bool m_EndResult = false;
+	bool m_EndText = false;
 	///=============================
 	/// 
 	/// プレイヤー関連

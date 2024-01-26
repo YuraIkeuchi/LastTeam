@@ -32,7 +32,6 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 
 void ResultSkill::Update() {
 	if (!FeedOut()) { return; }
-	Move();
 	ShineEffectUpdate();
 	StarEffectUpdate();
 	for (ResultUI& itr : choiceSkills) {
@@ -176,6 +175,7 @@ void ResultSkill::CreateResult(std::vector<int>& notDeck, std::vector<int>& notP
 }
 
 void ResultSkill::Move() {
+	if (!m_FeedEnd) { return; }
 	if (m_Choice) { return; }
 	if (!TutorialTask::GetInstance()->GetViewSkill()) { return; }
 	Input* input = Input::GetInstance();
@@ -262,6 +262,7 @@ void ResultSkill::Move() {
 bool ResultSkill::FeedOut() {
 	if (Helper::FrameCheck(frameA, 1 / 45.f)) {
 		feedIn->SetColor({ 1,1,1,0.f });
+		m_FeedEnd = true;
 		return true;
 	} else {
 		float alpha = Ease(In, Quad, frameA, 1.f, 0.f);

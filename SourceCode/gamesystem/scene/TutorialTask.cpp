@@ -74,5 +74,6 @@ void TutorialTask::ImGuiDraw() {
 	for (int i = 0; i < TASK_MAX; i++) {
 		ImGui::Text("Task[%d]:%d",i, m_TaskFinish[i]);
 	}
+	ImGui::Text("ViewSkill%d", m_ViewSkill);
 	ImGui::End();
 }
