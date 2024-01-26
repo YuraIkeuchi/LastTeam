@@ -144,6 +144,7 @@ public:
 		HPCover,
 		SAVE,
 		EXPRE,
+		DELAY,
 	};
 	//テクスチャの名前
 	enum tex2dName
@@ -160,6 +161,7 @@ public:
 		HATENAAREA,
 		ENEMYPREDICT,
 		PLAYERPREDICT,
+		NEOPLAYERPREDICT,
 		ATTACK_TEX_0,
 		ATTACK_TEX_1,
 		ATTACK_TEX_2,

@@ -9,6 +9,9 @@ ResultAreaUI::ResultAreaUI() {
 	panels.sprite->SetAnchorPoint({ 0.5f,0.5f });
 	panels.sprite->SetSize({ 64.0f,64.0f });
 
+	delay = IKESprite::Create(ImageManager::DELAY, { 0,0 });
+	delay->SetAnchorPoint({ 0.5f,0.5f });
+
 	//ƒvƒŒƒCƒ„[
 	player_panel = IKESprite::Create(ImageManager::MAP_CHARA, { 0,0 });
 	player_panel->SetAnchorPoint({ 0.5f,0.5f });
@@ -33,6 +36,7 @@ bool ResultAreaUI::Initialize() {
 	panels.color = { 1.0f,1.0f,1.0f,1.0f };
 	panels.sprite->SetPosition(panels.position);
 	player_panel->SetPosition(l_BasePos);
+	delay->SetPosition({ l_BasePos.x-110.f, l_BasePos.y - 32.f});
 	m_IsShuffle = false;
 	//CSV“Ç‚Ýž‚Ý
 	return true;
@@ -94,6 +98,7 @@ void ResultAreaUI::Draw() {
 			panels.sprite->Draw();
 		}
 	}
+	delay->Draw();
 	player_panel->Draw();
 	if (m_Frame >= 100) {
 		_DelayTimer[2]->Draw();

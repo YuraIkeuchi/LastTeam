@@ -43,6 +43,13 @@ PredictArea::PredictArea(const string& name) {
 			panels[i][j].tex[PREDICT_HEAL]->Initialize();
 			panels[i][j].tex[PREDICT_HEAL]->SetScale({ baseScale,baseScale,baseScale });
 			panels[i][j].tex[PREDICT_HEAL]->SetRotation({ 90.0f,0.0f,0.0f });
+
+			panels[i][j].tex[PREDICT_ATTACK_LONG].reset(new IKETexture(ImageManager::NEOPLAYERPREDICT, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+			panels[i][j].tex[PREDICT_ATTACK_LONG]->TextureCreate();
+			panels[i][j].tex[PREDICT_ATTACK_LONG]->Initialize();
+			panels[i][j].tex[PREDICT_ATTACK_LONG]->SetScale({ baseScale,baseScale,baseScale });
+			panels[i][j].tex[PREDICT_ATTACK_LONG]->SetRotation({ 90.0f,0.0f,0.0f });
+
 		}
 	}
 
