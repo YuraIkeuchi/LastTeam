@@ -144,7 +144,7 @@ void AttackArea::SlashMove() {
 		///	音入れ(斬撃音希望)
 		/// </summary>
 		if (m_Sound) {
-			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/slash.wav", 0.02f);
 			m_Sound = false;
 		}
 	}
@@ -180,10 +180,10 @@ void AttackArea::StoneMove() {
 	if (m_Position.y <= 2.5f) {
 		m_Attack = true;
 		/// <summary>
-		///	音入れ(岩が落ちる又は欠ける音希望)
+		///	音入(岩が落ちる又は欠ける音希望)
 		/// </summary>
 		if (m_Sound) {
-			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/heavyRockCollapse.wav", 0.02f);
 			m_Sound = false;
 		}
 	}
@@ -218,10 +218,10 @@ void AttackArea::PoisonMove() {
 	if (m_Position.y <= 2.5f) {
 		m_Attack = true;
 		/// <summary>
-		///	音入れ(ドロドロしたものが地面に落ちる音希望(ベチャッみたいなやつ)
+		///	音入(ドロドロしたものが地面に落ちる音希望(ベチャッみたいなやつ)
 		/// </summary>
 		if (m_Sound) {
-			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.02f);
 			m_Sound = false;
 		}
 	}

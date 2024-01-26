@@ -225,7 +225,7 @@ void PoisonEnemy::BirthPoison() {
 	/// <summary>
 	///	‰¹“ü‚ê(’e‚ð‘Å‚Â‰¹Šó–](ƒ|ƒ“ƒb‚Ý‚½‚¢‚È‚â‚Â))
 	/// </summary>
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
 
 	std::unique_ptr<PoisonArea> newarea = std::make_unique<PoisonArea>();
 	newarea->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });

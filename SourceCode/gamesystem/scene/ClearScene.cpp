@@ -69,8 +69,9 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 
 	onomatope = make_unique<Onomatope>();
 	/// <summary>
-	///	音入れ(エンドロール音希望)
+	///	音入(エンドロール音希望)
 	/// </summary>
+	Audio::GetInstance()->PlayWave("Resources/Sound/SE/drumRoll.wav", 0.04f);
 }
 //更新
 void ClearScene::Update(DirectXCommon* dxCommon) {
@@ -96,8 +97,9 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	m_AppTimer++;
 	if (m_AppTimer == 340) {		//クリアのスプライトが出る
 		/// <summary>
-		///	音入れ(ライトがあったときのバンッみたいな音)
+		///	音入(ライトがあったときのバンッみたいな音)
 		/// </summary>
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/zyan.wav", 0.04f);
 		_AppState = APP_NOTICE;
 	}
 	else if (m_AppTimer == 500) {	//カメラが引く
@@ -111,9 +113,9 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	
 	if (m_AppTimer == 400) {
 		/// <summary>
-		///	音入れ(祝い音敵なやつ(口笛とか拍手音みたいなやつ))
+		///	音入(祝い音敵なやつ(口笛とか拍手音みたいなやつ))
 		/// </summary>
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/GameClear.wav", 0.04f);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Fin.wav", 0.04f);
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる

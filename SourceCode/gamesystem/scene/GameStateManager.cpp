@@ -807,15 +807,17 @@ bool GameStateManager::ResultUpdate() {
 		Input::GetInstance()->TriggerKey(DIK_LEFT)) {
 		_ResultType = GET_SKILL;
 		///
-		//　ここにスキルとデッキ切り替え音（音入れ）
+		//　ここにスキルとデッキ切り替え音（音入）
 		///
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/switch.wav", 0.02f);
 	}
 	if (Input::GetInstance()->TriggerButton(Input::RB) ||
 		Input::GetInstance()->TriggerKey(DIK_RIGHT)) {
 		_ResultType = HAVE_SKILL;
 		///
-		//　ここにスキルとデッキ切り替え音（音入れ）
+		//　ここにスキルとデッキ切り替え音（音入）
 		///
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/switch.wav", 0.02f);
 	}
 
 	if (_ResultType == GET_SKILL) {

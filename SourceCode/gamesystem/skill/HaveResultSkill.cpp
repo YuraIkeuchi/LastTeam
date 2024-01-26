@@ -238,7 +238,8 @@ void HaveResultSkill::Move() {
 			m_DeleteStart = true;
 			deleteFrame = 0.f;
 			///
-			//　ここに削除決定音（音入れ）
+			//　ここに削除決定音（音入）
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/deletion.wav", 0.02f);
 			///
 		}
 	}
@@ -354,7 +355,8 @@ bool HaveResultSkill::DeleteCheack() {
 		}
 
 		///
-		//　ここに選択音（音入れ）
+		//　ここに選択音（音入）
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/selection.wav", 0.02f);
 		///
 	}
 
@@ -373,11 +375,13 @@ bool HaveResultSkill::DeleteCheack() {
 			m_DeleteMove = true;
 			nowCheack = 0;
 			///
-			//　ここに削除音（音入れ）
+			//　ここに削除音（音入）
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/deletionWinPop.wav", 0.02f);
 			///
 		} else {
 			///
-			//　ここにキャンセル音（音入れ）
+			//　ここにキャンセル音（音入）
+			//　一旦なし
 			///
 		}
 		m_DeleteCheack = false;

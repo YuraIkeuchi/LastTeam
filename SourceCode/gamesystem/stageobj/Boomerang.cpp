@@ -110,8 +110,9 @@ void Boomerang::Throw() {
 				predictFrame = 0.f;
 				m_Frame = {};
 				/// <summary>
-				/// ここに発射音（音入れ）
+				/// ここに発射音（音入）
 				/// </summary>
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/deletionWinPop.wav", 0.02f);
 				return;
 			}
 
@@ -147,8 +148,9 @@ void Boomerang::Throw() {
 							nextPredict = 0;
 							predictFrame = 0.f;
 							/// <summary>
-							/// ここに発射音（音入れ）
+							/// ここに発射音（音入）
 							/// </summary>
+							Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
 							return;
 						}
 
@@ -173,8 +175,9 @@ void Boomerang::Throw() {
 							nextPredict = 0;
 							predictFrame = 0.f;
 							/// <summary>
-							/// ここに発射音（音入れ）
+							/// ここに発射音（音入）
 							/// </summary>
+							Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
 							return;
 						}
 
@@ -208,8 +211,9 @@ void Boomerang::Throw() {
 						nextPredict = 0;
 						predictFrame = 0.f;
 						/// <summary>
-						/// ここに発射音（音入れ）
+						/// ここに発射音（音入）
 						/// </summary>
+						Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
 						return;
 					}
 
@@ -242,8 +246,9 @@ void Boomerang::Throw() {
 						nextPredict = 0;
 						predictFrame = 0.f;
 						/// <summary>
-						/// ここに発射音（音入れ）
+						/// ここに発射音（音入）
 						/// </summary>
+						Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
 						return;
 					}
 

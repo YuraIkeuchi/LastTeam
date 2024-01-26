@@ -164,9 +164,9 @@ void Bomb::ShockWave()
 	m_shockWaveTimer++;
 	if (m_shockWaveTimer == 1) {
 		/// <summary>
-		///	音入れ(爆発音みたいな音(ボンッみたいな音))
+		///	音入(爆発音みたいな音(ボンッみたいな音))
 		/// </summary>
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Damage.wav", 0.02f);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/explosion.wav", 0.02f);
 	}
 	m_shockWaveTimer = clamp(m_shockWaveTimer, 0, m_maxShockWaveTimer);
 	//時間切れ
