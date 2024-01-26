@@ -20,6 +20,10 @@ ResultAreaUI::ResultAreaUI() {
 	_DelayTimer[0]->SetPosition({ 180.0f,360.0f + 135.0f });
 	_DelayTimer[1]->SetPosition({ 155.0f,360.0f + 135.0f });
 	_DelayTimer[2]->SetPosition({ 130.0f,360.0f + 135.0f });
+	for (int i = 0; i < 3; i++) {
+		_DelayTimer[i]->Update();
+	}
+
 
 }
 //‰Šú‰»

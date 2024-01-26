@@ -136,6 +136,8 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(HPGauge, L"Resources/2d/objicon/HPGauge.png");
 	IKESprite::LoadTexture(HPCover, L"Resources/2d/objicon/HP_Gage.png");
 	IKESprite::LoadTexture(SAVE, L"Resources/2d/sceneback/Save.png");
+	IKESprite::LoadTexture(EXPRE, L"Resources/2d/objicon/Expra.png");
+
 }
 
 //非同期処理で読み込むスプライト
