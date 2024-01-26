@@ -35,9 +35,26 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	cheack->SetColor({1.2f,1.2f,1.2f,1});
 	cheack->SetSize({ 0.f,0.f });
 	cheack->SetAnchorPoint({ 0.5f,0.5f });
+	const float l_SaveWidth_Cut = 400.0f;
+	const float l_SaveHeight_Cut = 128.0f;
+	m_SavePos = { 200.0f,900.0f };
+	for (int i = 0; i < save_sprite.size(); i++) {
+		save_sprite[i] = IKESprite::Create(ImageManager::SAVE, {});
+		int savenumber_index_y = i / SAVE_MAX;
+		int savenumber_index_x = i % SAVE_MAX;
+		save_sprite[i]->SetTextureRect(
+			{ static_cast<float>(savenumber_index_x) * l_SaveWidth_Cut, static_cast<float>(savenumber_index_y) * l_SaveHeight_Cut },
+			{ static_cast<float>(l_SaveWidth_Cut), static_cast<float>(l_SaveHeight_Cut) });
+		save_sprite[i]->SetPosition(m_SavePos);
+		save_sprite[i]->SetAnchorPoint({ 0.5f,0.5f });
+		save_sprite[i]->SetSize({ l_SaveWidth_Cut,l_SaveHeight_Cut });
+	}
+
+	
 	if (s_Countinue) {		//コンティニューをしていた場合CSVからゲームデータ引き継ぎ(このシーンではマップデータ)
 		GameStateManager::GetInstance()->OpenGameDate();
 		nowHierarchy = GameStateManager::GetInstance()->GetHierarchy();
+		clearHierarchy = GameStateManager::GetInstance()->GetHierarchy();
 		nowIndex = GameStateManager::GetInstance()->GetIndex();
 	}
 	const int NumberCount = 2;
@@ -95,7 +112,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		mapKinds[13] = { -1,BOSS,-1 };
 	}
 	MapCreate();
-
+	
 
 	switch (dungeons[0]) {
 	case 1:
@@ -209,20 +226,6 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	pickHierarchy = nowHierarchy + 1;
 	pickIndex = nowIndex;
 
-	switch (UIs[pickHierarchy][pickIndex].Tag) {
-	case BATTLE:
-		nowComment = 1;
-		break;
-	case PASSIVE:
-		nowComment = 2;
-		break;
-	case BOSS:
-		nowComment = 3;
-		break;
-	default:
-		break;
-	}
-
 	oldHierarchy = nowHierarchy;
 	oldIndex = nowIndex;
 
@@ -241,9 +244,22 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
-
+	switch (UIs[pickHierarchy][pickIndex].Tag) {
+	case BATTLE:
+		nowComment = 2;
+		break;
+	case PASSIVE:
+		nowComment = 1;
+		break;
+	case BOSS:
+		nowComment = 3;
+		break;
+	default:
+		break;
+	}
 	GameStateManager::GetInstance()->SetMapData(nowIndex, nowHierarchy);
 	if ((nowHierarchy == 0) || (nowHierarchy == 5 || nowHierarchy == 9) && !s_Countinue) {
+		m_Save = true;
 		GameStateManager::GetInstance()->SaveGame();
 	}
 }
@@ -266,7 +282,7 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 	size.x = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
 	size.y = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
 	frame->SetSize(size);
-
+	SaveMove();
 	onomatope->Update();
 	(this->*stateTable[(size_t)m_State])();
 }
@@ -325,6 +341,8 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (isStart&& m_State != State::initState) {
 		startButton->Draw();
 	}
+	if(m_Save)
+	save_sprite[m_SaveCount]->Draw();
 	IKESprite::PostDraw();
 
 	SceneChanger::GetInstance()->Draw();
@@ -547,20 +565,6 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	ImGui::Begin("Map");
-	//ImGui::Text("%f", framePos.x);
-	//ImGui::Text("%f", eFrame);
-	//ImGui::Text("HIERARCHY:%f", scroll.x);
-	//ImGui::Text("PICKHIERARCHY:%f", -UIs[nowHierarchy][nowIndex].pos.x);
-	//ImGui::Text("PICK:%d", -UIs[nowHierarchy][nowIndex].pos.x);
-	//ImGui::Text("PICKINDEX:%d", pickIndex);
-	//ImGui::Text("PosX:%f,PosY:%f", charaPos.x, charaPos.y);
-	ImGui::Text("nowindel:%d", nowIndex);
-	ImGui::Text("nowHie:%d", nowHierarchy);
-	//for (int i = 0; i < 3; i++) {
-	//	ImGui::Text("Index[%d]%d", i, UIs[nowHierarchy][nowIndex].nextIndex[i]);
-	//}
-	ImGui::End();
 }
 
 void MapScene::BlackOut() {
@@ -599,6 +603,19 @@ void MapScene::Move() {
 		if (pickNextIndex == 0) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex - 1] == -1) { return; }
 		pickNextIndex--;
+		switch (UIs[pickHierarchy][pickIndex].Tag) {
+		case BATTLE:
+			nowComment = 2;
+			break;
+		case PASSIVE:
+			nowComment = 1;
+			break;
+		case BOSS:
+			nowComment = 3;
+			break;
+		default:
+			break;
+		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 	if ((input->TiltStick(input->L_DOWN)|| input->PushButton(input->DOWN) ||input->TriggerKey(DIK_S))
@@ -606,6 +623,19 @@ void MapScene::Move() {
 		if (pickNextIndex == 2) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex + 1] == -1) { return; }
 		pickNextIndex++;
+		switch (UIs[pickHierarchy][pickIndex].Tag) {
+		case BATTLE:
+			nowComment = 2;
+			break;
+		case PASSIVE:
+			nowComment = 1;
+			break;
+		case BOSS:
+			nowComment = 3;
+			break;
+		default:
+			break;
+		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 
@@ -769,6 +799,19 @@ void MapScene::CheckState() {
 					if (nowCheack == 0) {
 						SceneChanger::GetInstance()->SetChangeStart(true);
 					} else {
+						switch (UIs[pickHierarchy][pickIndex].Tag) {
+						case BATTLE:
+							nowComment = 1;
+							break;
+						case PASSIVE:
+							nowComment = 2;
+							break;
+						case BOSS:
+							nowComment = 3;
+							break;
+						default:
+							break;
+						}
 						isClose = true;
 					}
 				}
@@ -834,7 +877,7 @@ void MapScene::CheckState() {
 					levelName = "Ultimate";
 				}
 				if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
-					ss << BaseName + levelName + "/BattleMap0" << 1 << ".csv";
+					ss << BaseName + levelName + "/BattleMap0" << num << ".csv";
 					isBattle = true;
 				} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
 					ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
@@ -878,5 +921,46 @@ bool MapScene::TutorialClosed() {
 			cheack_NO[i]->SetSize(cheackSize);
 		}
 		return true;
+	}
+}
+
+void MapScene::SaveMove() {
+	const float l_AddFrame = 1 / 30.0f;
+	const int l_TargetTimer = 200;
+	if (!m_Save) { return; }
+
+	if (!m_EndSave) {
+		if (Helper::FrameCheck(m_SaveFrame, l_AddFrame)) {
+			if (Helper::CheckMin(m_SaveTimer, l_TargetTimer, 1)) {
+				m_SaveFrame = {};
+				m_SaveTimer = {};
+				m_EndSave = true;
+			}
+
+			if (m_SaveTimer % 20 == 0) {
+				m_SaveCount++;
+				if (m_SaveCount == 4) {
+					m_SaveCount = {};
+				}
+			}
+
+		}
+		else {
+			m_SavePos.y = Ease(In, Cubic, m_SaveFrame, m_SavePos.y, 625.0f);
+		}
+	}
+	else {
+		m_SaveCount = {};
+		if (Helper::FrameCheck(m_SaveFrame, l_AddFrame)) {
+			m_Save = false;
+			m_SaveFrame = {};
+		}
+		else {
+			m_SavePos.y = Ease(In, Cubic, m_SaveFrame, m_SavePos.y, 900.0f);
+		}
+	}
+
+	for (int i = 0; i < save_sprite.size(); i++) {
+		save_sprite[i]->SetPosition(m_SavePos);
 	}
 }

@@ -155,6 +155,7 @@ protected:
 
 	int m_ClearTimer = {};
 	float m_ClearFrame = {};
+	bool m_CanCounter = false;
 
 	enum GameOverState {
 		OVER_STOP,
@@ -166,6 +167,24 @@ protected:
 	//カウンター
 	bool m_BombCounter = false;
 	bool m_BirthBomb = false;
+	bool m_DamageCut = false;
+
+
+	bool m_BomEffect = false;
+	std::unique_ptr<IKETexture> bomTex;
+	std::unique_ptr<IKETexture> bom2Tex;
+	float m_BomFrame = 0.f;
+	float m_BomFinishFrame = 0.f;
+	XMFLOAT3 effect2Pos = {};
+
+
+	bool m_ReloadEffect = false;
+	std::unique_ptr<IKETexture> reloadTex;
+	std::unique_ptr<IKETexture> reload2Tex;
+	float m_ReloadFrame = 0.f;
+	float m_ReloadFinishFrame = 0.f;
+	XMFLOAT3 effect3Pos = {};
+
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -180,7 +199,7 @@ public://getter setter
 	const bool GetDeath() { return m_Death; }
 	const bool GetLastEnemy() { return m_LastEnemy; }
 
-	void SimpleDamege(float damage = 3.f);
+	void SimpleDamege(float damage = 3.f, bool isLimit = false);
 	void SimpleHeal(const bool Regene = false);
 	void SimplePosion(int poison);
 public:
@@ -243,6 +262,13 @@ public:
 	void InductionMove();
 
 	void CounterUpdate();
+
+	void BomUpdate();
+	void BomStart();
+
+	void ReLoadUpdate();
+	void ReLoadStart();
+
 private:
 	void BirthParticle();
 	void DeathParticle();

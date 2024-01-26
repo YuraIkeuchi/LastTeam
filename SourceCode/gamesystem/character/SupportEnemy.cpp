@@ -9,17 +9,10 @@
 #include <GameStateManager.h>
 #include <StagePanel.h>
 //モデル読み込み
-SupportEnemy::SupportEnemy(const int Num) {
-	m_SupportType = Num;
-	if (m_SupportType == SUPPORT_RED) {
-		m_BombCounter = true;
-		m_EnemyTag = "SUPPORT";
-		BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SECOND_BOSS));
-	}
-	else {
-		m_EnemyTag = "SUPPORT2";
-		BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SUPPORT_ENEMY));
-	}
+SupportEnemy::SupportEnemy() {
+	m_BombCounter = true;
+	m_EnemyTag = "SUPPORT";
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::SUPPORT_ENEMY2));
 
 	magic.tex.reset(new IKETexture(ImageManager::MAGIC, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	magic.tex->TextureCreate();
@@ -33,11 +26,14 @@ SupportEnemy::SupportEnemy(const int Num) {
 	//予測
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
+	lastbomb = make_unique<LastBomb>();
+	lastbomb->Initialize();
+	lastbomb->SetPlayer(player);
 }
 //初期化
 bool SupportEnemy::Initialize() {
 	//m_Position = randPanelPos();
-	m_Rotation = { 0.0f,-90.0f,0.0f };
+	m_Rotation = { 0.0f,90.0f,0.0f };
 	//m_Color = { 1.f,0.f,1.f,1.0f };
 	m_Scale = { 0.4f,0.4f,0.4f };
 	m_HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/SupportEnemy.csv", "hp")));
@@ -60,6 +56,7 @@ bool SupportEnemy::Initialize() {
 	enemywarp.Scale = 0.4f;
 	m_AddDisolve = 2.0f;
 	m_RandTimer = Helper::GetRanNum(0,20);
+	_BombAttackType = SET_BOMB;
 	return true;
 }
 //状態遷移
@@ -67,6 +64,12 @@ void (SupportEnemy::* SupportEnemy::stateTable[])() = {
 	&SupportEnemy::Inter,//動きの合間
 	&SupportEnemy::Attack,//動きの合間
 	&SupportEnemy::Teleport,//瞬間移動
+};
+
+//攻撃遷移
+void (SupportEnemy::* SupportEnemy::attackTable[])() = {
+	&SupportEnemy::CounterAttack,//カウンター
+	&SupportEnemy::BombAttack,//ボム攻撃
 };
 
 //行動
@@ -84,11 +87,16 @@ void SupportEnemy::Action() {
 	PoisonState();//毒
 	BirthMagic();//魔法陣
 	AttackMove();//攻撃時の動き
-	
+
+
+	//カウンターのボム
 	if (m_BirthBomb) {
-		BirthCounter();
+		if (_AttackState == ATTACK_COUNTER && _charaState == STATE_ATTACK) {
+			BirthCounter();
+		}
 		m_BirthBomb = false;
 	}
+
 	//攻撃時ジャンプする
 	if (m_Jump) {
 		m_AddPower -= m_Gravity;
@@ -116,6 +124,30 @@ void SupportEnemy::Action() {
 			counterbomb.erase(cbegin(counterbomb) + i);
 		}
 	}
+
+	//吸収エフェクト
+	for (int i = 0; i < abseffect.size(); i++) {
+		if (abseffect[i] == nullptr) {
+			continue;
+		}
+
+		abseffect[i]->Update();
+		if (!abseffect[i]->GetAlive()) {
+			abseffect.erase(cbegin(abseffect) + i);
+		}
+	}
+
+	//吸収エフェクト
+	for (int i = 0; i < abseffect.size(); i++) {
+		if (abseffect[i] == nullptr) {
+			continue;
+		}
+
+		if (!abseffect[i]->GetAlive()) {
+			abseffect.erase(cbegin(abseffect) + i);
+		}
+	}
+	lastbomb->Update();
 }
 
 //描画
@@ -126,6 +158,14 @@ void SupportEnemy::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
+	//吸収エフェクト
+	for (int i = 0; i < abseffect.size(); i++) {
+		if (abseffect[i] == nullptr) {
+			continue;
+		}
+
+		abseffect[i]->Draw(dxCommon);
+	}
 	//カウンターボムの描画
 	for (int i = 0; i < counterbomb.size(); i++) {
 		if (counterbomb[i] == nullptr) {
@@ -137,15 +177,12 @@ void SupportEnemy::Draw(DirectXCommon* dxCommon) {
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
+	if(lastbomb->GetAlive())
+	   lastbomb->Draw(dxCommon);
 	BaseBackDraw(dxCommon);
 }
 //ImGui描画
 void SupportEnemy::ImGui_Origin() {
-	//ImGui::Begin("Boss");
-	//ImGui::Text("PosX:%f", m_Position.x);
-	//ImGui::Text("PosZ:%f", m_Position.z);
-	//ImGui::End();
-	//predictarea->ImGuiDraw();
 }
 //開放
 void SupportEnemy::Finalize() {
@@ -159,27 +196,18 @@ void SupportEnemy::Inter() {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		m_RandTimer = Helper::GetRanNum(0, 20);
+		int l_RandState = Helper::GetRanNum(0,1);
+		_AttackState = (AttackState)l_RandState;
 	}
 }
 //攻撃
 void SupportEnemy::Attack() {
-	//(this->*attackTable[_AttackState])();
-	//PlayerCollide();
-	int l_TargetTimer = {};
-	l_TargetTimer = m_Limit[STATE_ATTACK];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
-		coolTimer = 0;
-		_charaState = STATE_SPECIAL;
-		m_RandTimer = Helper::GetRanNum(0, 20);
-	}
-	predictarea->Update();
-	predictarea->SetTimer(coolTimer);
+	(this->*attackTable[_AttackState])();
 }
-
 //ワープ
 void SupportEnemy::Teleport() {
 	int l_TargetTimer = {};
-	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
+	l_TargetTimer = m_Limit[STATE_SPECIAL];
 
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		magic.Alive = true;
@@ -189,13 +217,77 @@ void SupportEnemy::Teleport() {
 		WarpEnemy();
 	}
 }
+//カウンター
+void SupportEnemy::CounterAttack() {
+	int l_CounterTimer = 200;
+
+	if (Helper::CheckMin(coolTimer, l_CounterTimer, 1)) {
+		_charaState = STATE_SPECIAL;
+		m_RandTimer = Helper::GetRanNum(0, 20);
+		coolTimer = 0;
+	}
+
+	if (coolTimer % 5 == 0) {
+		BirthCharge();
+	}
+}
+//爆弾攻撃
+void SupportEnemy::BombAttack() {
+	int l_TargetTimer = {};
+	l_TargetTimer = m_Limit[STATE_ATTACK];
+
+	const int l_JumpTimer = 80;
+	if (coolTimer == 10) {
+		m_CanCounter = true;
+		//弾の発生
+		lastbomb->InitState({ m_Position.x,m_Position.y + 1.5f,m_Position.z }, m_NowWidth - 1, m_NowHeight);
+		BirthPredict(3 - m_AttackCount, m_NowHeight, "Bomb");
+	}
+	else if (coolTimer == l_JumpTimer) {
+		_BombAttackType = JUMP_MOVE;
+	}
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+		m_AttackCount++;
+		coolTimer = 0;
+		if (m_AttackCount == 4) {
+			_charaState = STATE_SPECIAL;
+			m_RandTimer = Helper::GetRanNum(0, 20);
+			m_AttackCount = {};
+		}
+	}
+
+	if (_BombAttackType == JUMP_MOVE) {
+		if (Helper::CheckMin(m_Position.y, 10.0f, 0.3f)) {
+			m_Position.x = lastbomb->GetPosition().x;
+			_BombAttackType = FALL_MOVE;
+		}
+	}
+	else if (_BombAttackType == FALL_MOVE) {
+		if (Helper::CheckMax(m_Position.y, 0.1f, -0.3f)) {
+			m_CanCounter = false;
+			predictarea->ResetPredict();
+			_BombAttackType = SET_BOMB;
+			lastbomb->BirthExplosion();
+		}
+	}
+	predictarea->Update();
+	predictarea->SetTimer(coolTimer);
+	predictarea->SetTargetTimer(l_TargetTimer);
+}
 //攻撃エリア
 void SupportEnemy::BirthArea(const int Width, const int Height, const string& name) {
 
 }
 //予測エリア
 void SupportEnemy::BirthPredict(const int Width, const int Height, const string& name) {
-	
+	for (int i = 0; i < (PANEL_WIDTH / 2); i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			if (Width == i || Height == j) {
+				predictarea->SetPredict(i, j, true);
+			}
+		}
+	}
+	predictarea->SetFlashStart(true);
 }
 
 //魔法陣生成
@@ -239,7 +331,7 @@ void SupportEnemy::WarpEnemy() {
 			coolTimer = {};
 			m_Position = l_RandPos;
 			m_RotFrame = {};
-			m_Rotation.y = -90.0f;
+			m_Rotation.y = 90.0f;
 			StagePanel::GetInstance()->EnemyHitReset();
 		}
 		enemywarp.Scale = Ease(In, Cubic, enemywarp.Frame, enemywarp.Scale, enemywarp.AfterScale);
@@ -292,7 +384,7 @@ void SupportEnemy::ClearAction() {
 //ゲームオーバーシーンの更新
 void SupportEnemy::GameOverAction() {
 	if (_GameOverState == OVER_STOP) {
-		m_Position = { -1.0f,0.0f,2.5f };
+		m_Position = { -6.5f,0.0f,5.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
 		if (player->GetSelectType() == 1) {
@@ -348,4 +440,14 @@ void SupportEnemy::BirthCounter() {
 	newbomb->InitState(l_PlayerWidth, l_PlayerHeight);
 	newbomb->SetPlayer(player);
 	counterbomb.push_back(std::move(newbomb));
+}
+//チャージのときのエフェクト
+void SupportEnemy::BirthCharge() {
+	//エフェクト発生
+	std::unique_ptr<AbsorptionEffect> neweffect = std::make_unique<AbsorptionEffect>();
+	neweffect->Initialize();
+	neweffect->SetBasePos(m_Position);
+	neweffect->SetColor({ 0.7f,0.2f,0.2f,1.0f });
+	neweffect->SetAddFrame(0.01f);
+	abseffect.push_back(std::move(neweffect));
 }

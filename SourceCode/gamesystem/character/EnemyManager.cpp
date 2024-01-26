@@ -11,7 +11,9 @@
 #include "FrontEnemy.h"
 #include "ThrowEnemy.h"
 #include "ClouserEnemy.h"
+#include "BossEnemy2.h"
 #include "SupportEnemy.h"
+#include "SupportEnemy2.h"
 #include <StagePanel.h>
 #include <GameStateManager.h>
 #include <Helper.h>
@@ -140,15 +142,14 @@ void EnemyManager::PoizonVenom() {
 
 void EnemyManager::ReLoadDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SimpleDamege(3.f);
+		enemy->SimpleDamege(8.f, true);
+		enemy->ReLoadStart();
 	}
 }
 
 void EnemyManager::PoisonRook() {
 	if (GameStateManager::GetInstance()->GetRookPoison() <= 0) { return; }
-	int poison = GameStateManager::GetInstance()->GetRookPoison();
-	poison /= 10;
-	Helper::Clamp(poison, 1, 999);
+	int poison = 2;
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimplePosion(poison);
 	}
@@ -158,12 +159,13 @@ void EnemyManager::PoisonRook() {
 void EnemyManager::BombDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->SimpleDamege(20.f);
+		enemy->BomStart();
 	}
 }
 
 void EnemyManager::HealingDamage() {
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
-		enemy->SimpleDamege(5.f);
+		enemy->SimpleDamege(8.f, true);
 		enemy->SetHealDamage(true);
 	}
 }
@@ -283,14 +285,14 @@ void EnemyManager::Spawn2Map() {
 			}
 			else if (x == 'c' || x == 'd') {
 				if (x == 'c') {
-					unique_ptr<InterEnemy> enemy_ = std::make_unique<SupportEnemy>(SUPPORT_RED);
+					unique_ptr<InterEnemy> enemy_ = std::make_unique<SupportEnemy>();
 					//enemy_->SetPlayer(player);
 					enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 					enemys.push_back(std::move(enemy_));
 					width++;
 				}
 				else {
-					unique_ptr<InterEnemy> enemy_ = std::make_unique<SupportEnemy>(SUPPORT_BLUE);
+					unique_ptr<InterEnemy> enemy_ = std::make_unique<SupportEnemy2>();
 					//enemy_->SetPlayer(player);
 					enemy_->SetPosition(enemy_->SetPannelPos(basewidth + width, 3 - height));
 					enemys.push_back(std::move(enemy_));

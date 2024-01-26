@@ -29,6 +29,7 @@ bool ResultAreaUI::Initialize() {
 	panels.color = { 1.0f,1.0f,1.0f,1.0f };
 	panels.sprite->SetPosition(panels.position);
 	player_panel->SetPosition(l_BasePos);
+	m_IsShuffle = false;
 	//CSV“Ç‚Ýž‚Ý
 	return true;
 }
@@ -52,6 +53,14 @@ void ResultAreaUI::Update() {
 			XMFLOAT2 panel = player_panel->GetPosition();
 			panel.y -= 10.f;
 			player_panel->SetPosition(panel);
+			if (m_Id == 20) {
+				m_IsShuffle = true;
+				int l_BirthBaseX = Helper::GetRanNum(1, 3);
+				int l_BirthBaseY = Helper::GetRanNum(-1, 2);
+				const XMFLOAT2 l_BasePos = { 220.0f,360.0f + 135.0f };
+				panels.position = { l_BasePos.x + (60.0f * (l_BirthBaseX)),l_BasePos.y + (60.0f * (l_BirthBaseY)) };
+				panels.sprite->SetPosition(panels.position);
+			}
 			isJump = true;
 		}
 	} else {
@@ -74,7 +83,13 @@ void ResultAreaUI::Update() {
 //•`‰æ
 void ResultAreaUI::Draw() {
 	IKESprite::PreDraw();
-	panels.sprite->Draw();
+	if (m_Id!=20) {
+		panels.sprite->Draw();
+	} else {
+		if (m_IsShuffle) {
+			panels.sprite->Draw();
+		}
+	}
 	player_panel->Draw();
 	if (m_Frame >= 100) {
 		_DelayTimer[2]->Draw();

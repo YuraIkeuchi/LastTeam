@@ -26,6 +26,8 @@ private:
 	void AttackMove();//攻撃時の動き
 	//魔法陣
 	void BirthMagic();
+
+	void ChantingHeal();
 private:
 	int _charaState = STATE_INTER;
 
@@ -68,6 +70,25 @@ private:
 	};
 
 	EnemyWarp enemywarp;
+
+	enum ChantingState {
+		CHANTING_BIRTH,
+		CHANTING_VANISH,
+	};
+
+	struct Chanting {
+		unique_ptr<IKETexture> tex;
+		float Frame = {};
+		float Scale = {};
+		XMFLOAT3 Rotate = {};
+		float AfterScale = {};
+		XMFLOAT3 Pos = {};
+		bool Alive = false;
+		int State = {};
+		int Timer = {};
+	};
+	Chanting chanting;
+
 
 	//インターバルとか
 	vector<int>m_Limit;

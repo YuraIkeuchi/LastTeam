@@ -1,5 +1,4 @@
 #include "BossEnemy2.h"
-#include <random>
 #include "Player.h"
 #include "Collision.h"
 #include "CsvLoader.h"
@@ -285,6 +284,9 @@ void BossEnemy2::Stun()
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_RECOVERY];
 
+	m_Rotation.x = 15.0f;
+	m_Rotation.y += 10.0f;
+
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//実際の攻撃
 		int l_TargetTimer = {};
 		l_TargetTimer = m_Limit[STATE_INTER];
@@ -295,6 +297,9 @@ void BossEnemy2::Stun()
 			_AttackState = (AttackState)(l_RandState);
 			m_isStun = false;
 			m_RecoverySaveHP = false;
+
+			m_Rotation.x = 0.0f;
+			m_Rotation.y = 270.0f;
 		}
 	}
 
@@ -304,7 +309,7 @@ void BossEnemy2::Stun()
 //攻撃エリア
 void BossEnemy2::BirthArea(const int Width, const int Height, const string& name) {
 	if (m_Area[Width][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
+		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>("ICE");
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
 		newarea->SetPlayer(player);
@@ -617,6 +622,7 @@ void BossEnemy2::WarpEnemy() {
 void BossEnemy2::AttackMove() {
 	if (!m_Rot) { return; }
 	const float l_AddFrame = 1 / 20.0f;
+
 	if (Helper::FrameCheck(m_AttackFrame, l_AddFrame)) {
 		m_Rotation.y = 270.0f;
 		m_Rot = false;

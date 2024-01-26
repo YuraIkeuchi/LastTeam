@@ -1,5 +1,5 @@
 #include "BossEnemy3.h"
-#include <random>
+#include <LastBossState.h>
 #include "Player.h"
 #include "Collision.h"
 #include "CsvLoader.h"
@@ -17,6 +17,19 @@ BossEnemy3::BossEnemy3() {
 	magic.tex->Initialize();
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
+	LastBossState::GetInstance()->SetBossShield(false);
+	//HPII
+	for (int i = {}; i < shield.size(); i++) {
+		shield[i].tex.reset(new IKETexture(ImageManager::SHIELD_TEX, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+		shield[i].tex->TextureCreate();
+		shield[i].tex->Initialize();
+		shield[i].tex->SetIsBillboard(true);
+		shield[i].pos = { 0.0f,{},0.0f};
+		shield[i].CircleScale = 1.0f;
+		shield[i].color = { 1.0f,1.0f,1.0f,1.0f };
+		shield[i].scale = 0.0f;
+	}
+	
 	//予測
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
@@ -40,8 +53,6 @@ bool BossEnemy3::Initialize() {
 	m_AttackLimit.resize(AttackLimitSize);
 	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/BossEnemy3.csv", m_AttackLimit, "Attack_Interval");
 
-	m_BulletNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy3.csv", "BULLET_NUM")));
-
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
@@ -55,10 +66,16 @@ bool BossEnemy3::Initialize() {
 
 	enemywarp.AfterScale = {};
 	enemywarp.Scale = 0.8f;
+
 	m_AddDisolve = 2.0f;
 
+
+	shield[0].CircleSpeed = {};
+	shield[1].CircleSpeed = 90.0f;
+	shield[2].CircleSpeed = 180.0f;
+	shield[3].CircleSpeed = 270.0f;
 	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
-		for (int j = 0; j < PANEL_WIDTH; j++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
 			m_SafeArea[i][j] = false;
 		}
 	}
@@ -111,7 +128,7 @@ void BossEnemy3::Action() {
 		}
 	}
 
-	//敵の岩
+	//敵の竜巻
 	//攻撃エリアの更新(実際はスキルになると思う)
 	for (auto i = 0; i < enetornade.size(); i++) {
 		if (enetornade[i] == nullptr)continue;
@@ -132,12 +149,16 @@ void BossEnemy3::Action() {
 		}
 	}
 
+	LastBossState::GetInstance()->SetBossSpace(m_NowWidth, m_NowHeight);
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
 	onomatope->Update();
+
+	//シールドの更新
+	ShieldUpdate();
 }
 
 //描画
@@ -147,7 +168,6 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 	onomatope->Draw();
 	IKESprite::PostDraw();
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	//shadow_tex->Draw();
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
@@ -163,16 +183,21 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
 	BaseBackDraw(dxCommon);
+	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	if (LastBossState::GetInstance()->GetBossShield()) {
+		for (int i = 0; i < shield.size(); i++) {
+			shield[i].tex->Draw();
+		}
+	}
+	IKETexture::PostDraw();
 }
 //ImGui描画
 void BossEnemy3::ImGui_Origin() {
-	ImGui::Begin("Boss");
-	ImGui::Text("m_Anger:%d", m_Anger);
-	ImGui::Text("m_AngerFinish:%d", m_AngerFinish);
-	ImGui::Text("m_AngerTimer:%d", m_AngerTimer);
-	ImGui::Text("m_AngerCount:%d", m_AngerCount);
+	ImGui::Begin("Boss3");
+	for (int i = 0; i < shield.size(); i++) {
+		ImGui::Text("circle[%d].%f", i, shield[i].CircleSpeed);
+	}
 	ImGui::End();
-	//predictarea->ImGuiDraw();
 }
 //開放
 void BossEnemy3::Finalize() {
@@ -205,6 +230,7 @@ void BossEnemy3::Attack() {
 
 //ワープ
 void BossEnemy3::Teleport() {
+	m_CanCounter = false;
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
@@ -254,6 +280,8 @@ void BossEnemy3::RockAttack() {
 		BirthPredict(m_RandWidth, m_RandHeight,"Rock");
 	}
 	else if (coolTimer == l_TargetTimer - 60) {
+		//カウンター判定
+		m_CanCounter = true;
 		if (m_RockCount != 4) {
 			m_Jump = true;
 			m_AddPower = 0.2f;
@@ -303,6 +331,11 @@ void BossEnemy3::RandomAttack() {
 		_charaState = STATE_SPECIAL;
 	}
 
+	//カウンター判定
+	if (coolTimer >= l_TargetTimer - 30) {
+		m_CanCounter = true;
+	}
+
 	predictarea->SetTargetTimer(l_TargetTimer);
 }
 //周りを攻撃
@@ -349,6 +382,11 @@ void BossEnemy3::AroundAttack() {
 		_charaState = STATE_SPECIAL;
 	}
 
+	//カウンター判定
+	if (coolTimer >= l_TargetTimer - 30) {
+		m_CanCounter = true;
+	}
+
 	predictarea->SetTargetTimer(l_TargetTimer);
 }
 //攻撃エリア
@@ -356,7 +394,7 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 	if (name == "Random") {
 		int l_SoundCount = {};
 		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-			for (int j = 0; j < PANEL_WIDTH; j++) {
+			for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if (!m_SafeArea[i][j]) {
 					std::unique_ptr<EnemyTornade> newarea = std::make_unique<EnemyTornade>();
 					newarea->Initialize();
@@ -372,7 +410,7 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 		}
 
 		for (int i = 0; i < (PANEL_WIDTH / 2); i++) {
-			for (int j = 0; j < PANEL_WIDTH; j++) {
+			for (int j = 0; j < PANEL_HEIGHT; j++) {
 				m_SafeArea[i][j] = false;
 			}
 		}
@@ -392,7 +430,7 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 void BossEnemy3::BirthPredict(const int Width, const int Height, const string& name) {
 	if (name == "Random") {
 		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-			for (int j = 0; j < PANEL_WIDTH; j++) {
+			for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if (!m_SafeArea[i][j]) {
 					predictarea->SetPredict(i, j, true);
 				}
@@ -401,7 +439,7 @@ void BossEnemy3::BirthPredict(const int Width, const int Height, const string& n
 	}
 	else if (name == "Rock") {
 		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-			for (int j = 0; j < PANEL_WIDTH; j++) {
+			for (int j = 0; j < PANEL_HEIGHT; j++) {
 				if ((i == 1 || i == 2) && (j == 1 || j == 2)) {
 					predictarea->SetPredict(i, j, true);
 				}
@@ -672,5 +710,53 @@ void BossEnemy3::AngerMove() {
 			m_AngerFinish = true;
 			m_Anger = false;
 		}
+	}
+}
+//シールドの更新
+void BossEnemy3::ShieldUpdate() {
+	if (!LastBossState::GetInstance()->GetBossShield()) { return; }
+	const float l_AddFrame = 1 / 20.0f;
+	const int l_TargetTimer = 200;
+
+	if (_ShieldState == SHIELD_BIRTH) {		//シールドが上に上がる
+		if (Helper::FrameCheck(m_ShieldFrame, l_AddFrame)) {
+			for (int i = 0; i < shield.size(); i++) {
+				shield[i].CircleSpeed += 2.0f;
+				if (shield[i].CircleSpeed == 360.0f) {
+					shield[i].CircleSpeed = {};
+				}
+				shield[i].pos = Helper::CircleMove(m_Position, shield[i].CircleScale, shield[i].CircleSpeed);
+			}
+			if (Helper::CheckMin(m_ShieldTimer, l_TargetTimer, 1)) {
+				_ShieldState = SHIELD_DELETE;
+				m_ShieldFrame = {};
+			}
+		}
+		else {
+			for (int i = 0; i < shield.size(); i++) {
+				shield[i].scale = Ease(In, Cubic, m_ShieldFrame, shield[i].scale, 0.1f);
+			}
+		}
+	}
+	else {		//シールドが下がる
+		if (Helper::FrameCheck(m_ShieldFrame, l_AddFrame)) {
+			LastBossState::GetInstance()->SetBossShield(false);
+			m_ShieldFrame = {};
+			m_ShieldTimer = {};
+			_ShieldState = SHIELD_BIRTH;
+		}
+		else {
+			for (int i = 0; i < shield.size(); i++) {
+				shield[i].scale = Ease(In, Cubic, m_ShieldFrame, shield[i].scale, 0.0f);
+			}
+		}
+	}
+
+	for (int i = 0; i < shield.size(); i++) {
+		shield[i].pos.y = 1.0f;
+		shield[i].tex->SetPosition(shield[i].pos);
+		shield[i].tex->SetColor(shield[i].color);
+		shield[i].tex->SetScale({ shield[i].scale,shield[i].scale,shield[i].scale });
+		shield[i].tex->Update();
 	}
 }

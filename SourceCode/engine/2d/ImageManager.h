@@ -137,7 +137,12 @@ public:
 		DECKDELETESHEET,
 		DECKDELETEOK,
 		DECKDELETENO,
-
+		SHIELD,
+		NODEATH,
+		NODAMAGE,
+		HPGauge,
+		HPCover,
+		SAVE
 	};
 	//テクスチャの名前
 	enum tex2dName
@@ -189,6 +194,12 @@ public:
 		HEAL_DAMAGE,
 		COUNTER,
 		COUNTER_TWO,
+		CHANTING_HEAL,
+		BOM,
+		BOM2,
+		RELOADEFF,
+		SHIELD_TEX,
+		ABSEFFECT,
 	};
 	enum particleName
 	{

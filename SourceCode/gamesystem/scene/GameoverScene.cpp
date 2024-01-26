@@ -94,6 +94,9 @@ void GameoverScene::Update(DirectXCommon* dxCommon) {
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
 		if (player_->GetSelectType() == 1) {		//コンティニューをしてマップに戻る
 			s_Countinue = true;
+			if (GameStateManager::GetInstance()->GetNoDeath()) {
+				GameStateManager::GetInstance()->SetNoDeath(false);
+			}
 			SceneManager::GetInstance()->ChangeScene("MAP");
 		}
 		else if(player_->GetSelectType() == 2) {		//諦めてタイトルに戻る
@@ -178,14 +181,6 @@ void GameoverScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui描画
 void GameoverScene::ImGuiDraw(DirectXCommon* dxCommon) {
-	ImGui::Begin("Gameover");
-	ImGui::Text("OverTime:%d",m_Timer);
-	ImGui::Text("AddPower:%f", m_AddPower[SELECT_YES]);
-	ImGui::Text("POSY:%f", m_SelectPos[SELECT_YES].y);
-	ImGui::End();
-	//player_->ImGuiDraw();
-	//enemyManager->ImGuiDraw();
-	//SceneChanger::GetInstance()->ImGuiDraw();
 }
 //解放
 void GameoverScene::Finalize() {

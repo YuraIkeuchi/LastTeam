@@ -14,17 +14,22 @@ SkillManager* SkillManager::GetInstance()
 	return &instance;
 }
 
-void SkillManager::Initialize()
+void SkillManager::Initialize(DirectXCommon* dxCommon)
 {	
+	dxcommon = dxCommon;
 	//ここをいじればGameStateManagerも変わります
 	//総スキル+1
 	m_SKILLMAX = 30;
 	//一旦3に指定(実際はCSVとかになるかな)
 	skill.resize(m_SKILLMAX);
 	m_Delays.resize(m_SKILLMAX);
+	skilltex.resize(m_SKILLMAX);
 	//ここはもう少しやりようがあるかもしれない
 	for (int i = 0; i < m_SKILLMAX; i++) {
 		skill[i] = new AttackSkill();
+		skilltex[i].text_ = make_unique<TextManager>();
+		skilltex[i].text_->Initialize(dxcommon, LOAD_ATTACK);
+		skilltex[i].text_->SetConversation(TextManager::RESULT, { -200.0f,80.0f });
 	}
 	//スペシャルスキルはこちらに上書きしてください
 	skill[9] = new SpecialSkill();
@@ -407,4 +412,16 @@ void SkillManager::HandResultData(const int DeckID, vector<std::vector<int>>& ar
 	else {
 		return;
 	}
+}
+//Text読み込み
+void SkillManager::LoadText(const int Number) {
+	skilltex[Number].baseSentence[0] = L"スキル：";
+	skilltex[Number].baseSentence[1] = skilltex[Number].text_->GetSkillSentence(Number);
+	skilltex[Number].baseSentence[2] = skilltex[Number].text_->GetSkillDamage(Number);
+	skilltex[Number].text_->SetCreateSentence(skilltex[Number].baseSentence[0], skilltex[Number].baseSentence[1], skilltex[Number].baseSentence[2]);
+
+}
+//Text描画
+void SkillManager::TextDraw(const int Number) {
+	skilltex[Number].text_->Draw(dxcommon);
 }

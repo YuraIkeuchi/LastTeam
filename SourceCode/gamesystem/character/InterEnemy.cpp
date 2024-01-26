@@ -7,7 +7,7 @@
 #include <ParticleEmitter.h>
 #include <TutorialTask.h>
 #include "ImageManager.h"
-#include <Slow.h>
+#include <LastBossState.h>
 #include "Passive.h"
 Player* InterEnemy::player = nullptr;
 XMFLOAT3 InterEnemy::randPanelPos() {
@@ -68,6 +68,31 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 	counter2Tex->SetIsBillboard(true);
 	m_AddPoisonToken = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "ADD_TOKEN")));
 	m_PoisonTimerMax = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/EnemyCommon.csv", "TIMER_MAX")));
+
+	bomTex = std::make_unique<IKETexture>(ImageManager::COUNTER_TWO, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,0.6f,0.f,1.f });
+	bomTex->TextureCreate();
+	bomTex->Initialize();
+	bomTex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	bom2Tex = std::make_unique<IKETexture>(ImageManager::BOM2, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	bom2Tex->TextureCreate();
+	bom2Tex->Initialize();
+	bom2Tex->SetRotation({ 60.0f,0.0f,0.0f });
+	bom2Tex->SetIsBillboard(true);
+
+
+	reloadTex = std::make_unique<IKETexture>(ImageManager::RELOADEFF, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,0.6f,0.f,1.f });
+	reloadTex->TextureCreate();
+	reloadTex->Initialize();
+	reloadTex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	reload2Tex = std::make_unique<IKETexture>(ImageManager::BOM2, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
+	reload2Tex->TextureCreate();
+	reload2Tex->Initialize();
+	reload2Tex->SetRotation({ 60.0f,0.0f,0.0f });
+	reload2Tex->SetIsBillboard(true);
+
+
 }
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;
@@ -140,6 +165,8 @@ void InterEnemy::Update() {
 	//UIをワールド座標に変換する
 	WorldDivision();
 	CounterUpdate();
+	BomUpdate();
+	ReLoadUpdate();
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
@@ -203,8 +230,15 @@ void InterEnemy::Draw(DirectXCommon* dxCommon) {
 
 void InterEnemy::BaseBackDraw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+	reload2Tex->Draw();
+	reloadTex->Draw();
+
+	bomTex->Draw();
+	bom2Tex->Draw();
+
 	counter_tex->Draw();
 	counter2Tex->Draw();
+
 	IKETexture::PostDraw();
 
 }
@@ -263,6 +297,7 @@ void InterEnemy::UIDraw() {
 //当たり判定
 void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 	if (m_HP <= 0.0f) { return; }
+	if (m_Scale.x <= 0.15f) { return; }
 	if (area.empty()) { return; }
 
 	for (unique_ptr<AttackArea>& _area : area) {
@@ -274,8 +309,9 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				if (_area->GetBuff()) {
 					damage *= 2.0f;
 				}
-				if (_charaState == STATE_ATTACK &&
+				if (m_CanCounter &&
 					!GameStateManager::GetInstance()->GetCounter()) {
+
 					GameStateManager::GetInstance()->SetCounter(true);
 					isCounterEffect = true;
 					m_CounterFrame = 0.f;
@@ -294,14 +330,14 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				}
 
 				if (GameStateManager::GetInstance()->GetTakenDamageUp()) {
-					float up = (float)GameStateManager::GetInstance()->GetTakenDamageNum() * 0.5f;
+					float up = (float)GameStateManager::GetInstance()->GetTakenDamageNum() * 1.5f;
 					if (up >= 1.0f) {
 						damage += up;
 						GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::TAKENDAMAGEUP);
 					}
 				}
 			} else {
-				if (_charaState == STATE_ATTACK &&
+				if (m_CanCounter &&
 					!GameStateManager::GetInstance()->GetCounter()) {
 					GameStateManager::GetInstance()->SetCounter(true);
 				}
@@ -316,6 +352,10 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			Helper::Clamp(damage, 0.0f, 999.0f);
 			if (m_EnemyTag == "Mob" && !TutorialTask::GetInstance()->GetTaskFinish(TASK_COUNTER)) {
 				damage = 0.0f;
+			}
+			if (m_EnemyTag == "LASTBOSS" && LastBossState::GetInstance()->GetBossShield()) {
+				m_DamageCut = true;
+				damage /= 2.0f;
 			}
 			m_HP -= damage;
 			GameStateManager::GetInstance()->DamageCheck((int)damage);
@@ -389,7 +429,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			if (GameStateManager::GetInstance()->GetAttackedPoison()) {
 				GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::ATTACK_POISON);
 				m_Poison = true;
-				m_PoisonToken += 1;
+				m_PoisonToken += 3;
 			}
 			BirthParticle();
 
@@ -409,15 +449,19 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 		}
 	}
 }
-void InterEnemy::SimpleDamege(float damage) {
+void InterEnemy::SimpleDamege(float damage, bool isLimit) {
 	if (m_HP <= 0.0f) { return; }
-	float hp = m_HP;
-	hp -= damage;
-	if (hp < 1.0f) {
-		damage -= 1.0f;
+	if (isLimit) {
+		float hp = m_HP;
+		hp -= damage;
+		if (hp < 1.0f) {
+			damage -= 1.0f;
+		}
+		Helper::Clamp(hp, 1.0f, m_HP);
+		m_HP = hp;
+	} else {
+		m_HP -= damage;
 	}
-	Helper::Clamp(hp, 1.0f, m_HP);
-	m_HP = hp;
 	BirthDamage(damage);
 	BirthParticle();
 }
@@ -784,7 +828,7 @@ void InterEnemy::DeathUpdate() {
 				m_Alive = false;
 			}
 		}
-		if (m_EnemyTag == "Rock") {
+		if (m_EnemyTag == "Rock" || m_EnemyTag == "LASTBOSS") {
 			StagePanel::GetInstance()->ClosePanel(m_Object.get(), m_Alive);
 		}
 	} else {
@@ -802,7 +846,7 @@ void InterEnemy::DeathUpdate() {
 //リジュネ回復
 void InterEnemy::RegeneUpdate() {
 	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
-		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
+		if (Helper::CheckMin(m_HealTimer, 100, 1)) {
 			SimpleHeal(true);
 			m_HealTimer = {};
 		}
@@ -861,6 +905,80 @@ void InterEnemy::CounterUpdate() {
 			counter2Tex->Update();
 		}
 	}
+}
+void InterEnemy::BomUpdate() {
+	if (!m_BomEffect) { return; }
+	if (!Helper::FrameCheck(m_BomFrame, 1 / 20.f)) {
+		XMFLOAT3 scale2 = {
+		Ease(Out,Back,m_BomFrame,0.f,0.4f),
+		Ease(Out,Back,m_BomFrame,0.f,0.4f),
+		Ease(Out,Back,m_BomFrame,0.f,0.4f)
+		};
+		bom2Tex->SetScale(scale2);
+		bom2Tex->SetPosition({ effectPos.x,effectPos.y + 0.5f,effectPos.z });
+
+		XMFLOAT3 scale = {
+		Ease(Out,Back,m_BomFrame,0.f,0.4f),
+		Ease(Out,Back,m_BomFrame,0.f,0.4f),
+		Ease(Out,Back,m_BomFrame,0.f,0.4f)
+		};
+		bomTex->SetScale(scale);
+		float rot2 = Ease(In, Back, m_BomFrame, 0.f, -45.0f);
+		bomTex->SetRotation({ 45.f,0.f,rot2 });
+		float alpha = Ease(In, Exp, m_BomFrame, 1.f, 0.0f);
+		bomTex->SetColor({ 0.f,0.f,0.f,alpha });
+		bomTex->SetPosition({ effect2Pos.x,effect2Pos.y + 0.5f,effect2Pos.z });
+		bomTex->Update();
+
+		bom2Tex->SetColor({ 1,1,1,alpha });
+		bom2Tex->Update();
+	} else {
+		m_BomEffect = false;
+	}
+}
+
+
+void InterEnemy::BomStart() {
+	m_BomEffect = true;
+	m_BomFrame = 0.f;
+	effect2Pos = m_Position;
+
+}
+void InterEnemy::ReLoadUpdate() {
+	if (!m_ReloadEffect) { return; }
+	if (!Helper::FrameCheck(m_ReloadFrame, 1 / 20.f)) {
+		XMFLOAT3 scale2 = {
+		(0.4f),
+		(0.4f),
+		(0.4f)
+		};
+		reload2Tex->SetScale(scale2);
+		reload2Tex->SetPosition({ effect3Pos.x,effect3Pos.y + 0.5f,effect3Pos.z });
+
+		XMFLOAT3 scale = {
+		Ease(Out,Back,m_ReloadFrame,0.f,0.25f),
+		Ease(Out,Back,m_ReloadFrame,0.f,0.25f),
+		Ease(Out,Back,m_ReloadFrame,0.f,0.25f)
+		};
+		reloadTex->SetScale(scale);
+		float alpha = Ease(In, Exp, m_ReloadFrame, 1.f, 0.0f);
+		reloadTex->SetColor({ 1.f,1.f,1.f,alpha });
+		reloadTex->SetPosition({ effect3Pos.x,effect3Pos.y + 0.5f,effect3Pos.z });
+		reloadTex->Update();
+
+		reload2Tex->SetColor({ 1,1,1,alpha });
+		reload2Tex->Update();
+	} else {
+		m_ReloadEffect = false;
+	}
+
+
+}
+void InterEnemy::ReLoadStart() {
+	m_ReloadEffect = true;
+	m_ReloadFrame = 0.f;
+	effect3Pos = m_Position;
+
 }
 //死亡時パーティクル
 void InterEnemy::DeathParticle() {

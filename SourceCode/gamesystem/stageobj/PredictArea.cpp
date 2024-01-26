@@ -138,9 +138,7 @@ void PredictArea::ImGuiDraw() {
 	ImGui::Text("Angle:%f", m_SinAngle);
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
-			if (panels[i][j].predict) {
-				ImGui::Text("Alpha[%d][%d]:%f", i, j, panels[i][j].color.w);
-			}
+			ImGui::Text("Predict[%d][%d]:%d", i, j, panels[i][j].predict);
 		}
 	}
 	ImGui::End();

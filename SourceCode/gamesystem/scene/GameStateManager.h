@@ -137,6 +137,12 @@ public:
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart; }
 	bool GetGameStart() { return m_GameStart; }
 
+	void SetNoDeath(bool flag) { m_NoDeath = flag; }
+	bool GetNoDeath() { return m_NoDeath; }
+
+	void SetNoDamage(bool flag) { m_NoDamage = flag; }
+	bool GetNoDamage() { return m_NoDamage; }
+
 	void SetBossCamera(bool BossCamera) { m_BossCamera = BossCamera; }
 	bool GetBossCamera() { return m_BossCamera; }
 
@@ -216,7 +222,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= { };
+	std::vector <int> m_StartPassive= { 0,1,2,3,4};
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -235,7 +241,7 @@ private:
 	std::unique_ptr<IKESprite> handsFrame;
 	unique_ptr<IKESprite> cancelSkill;
 
-	XMFLOAT2 basesize = { 46.f,400.f };
+	XMFLOAT2 basesize = { 46.f,350.f };
 
 	// 攻撃エリア
 	vector<unique_ptr<AttackArea>> attackarea;
@@ -286,16 +292,17 @@ private:
 	bool m_healingDamage = false;
 	bool m_ExtendKnight = false;
 	bool m_ExtendRook = false;
-	int m_RookPoison = 0;
 	bool m_ExtendQueen = false;
 	bool m_ExtendBishop = false;
+
+	int m_RookPoison = 0;
 
 	bool m_BirthSkill = false;
 
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {2,3,5,6};
+	vector <int> m_StartNumber = {2,3,5};
 
 	vector<int> m_DeckNumber = m_StartNumber;
 
@@ -344,7 +351,10 @@ private:
 
 	bool m_GameStart = false;
 	bool m_BossCamera = false;
+	bool m_StartLoad = false;
 
+	bool m_NoDeath = true;
+	bool m_NoDamage = true;
 	///=============================
 	/// 
 	/// プレイヤー関連

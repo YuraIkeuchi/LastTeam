@@ -135,6 +135,8 @@ void TackleEnemy::Attack() {
 	const float l_AddFrame = 1 / 45.0f;
 	const float l_AddRot = 20.0f;
 	if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+		//カウンター判定
+		m_CanCounter = true;
 		m_Frame = 1.0f;
 		m_Position.x -= m_Speed;
 		m_Rotation.x += l_AddRot;
@@ -142,6 +144,8 @@ void TackleEnemy::Attack() {
 		predictArea->VanishPredict(m_OldWidth, m_NowHeight);
 
 		if (m_Position.x < l_TargetX) {
+			//カウンター判定
+			m_CanCounter = false;
 			m_CheckPanel = true;
 			_charaState = STATE_SPECIAL;
 			StagePanel::GetInstance()->EnemyHitReset();

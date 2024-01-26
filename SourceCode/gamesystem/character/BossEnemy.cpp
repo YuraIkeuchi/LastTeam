@@ -1,5 +1,4 @@
 #include "BossEnemy.h"
-#include <random>
 #include "Player.h"
 #include "Collision.h"
 #include "CsvLoader.h"
@@ -165,7 +164,7 @@ void BossEnemy::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = 2;
+		int l_RandState = Helper::GetRanNum(0,2);
 		_AttackState = (AttackState)(l_RandState);
 	}
 }
@@ -179,6 +178,7 @@ void BossEnemy::Attack() {
 
 //ワープ
 void BossEnemy::Teleport() {
+	m_CanCounter = false;
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
@@ -225,6 +225,7 @@ void BossEnemy::BulletAttack() {
 			}
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+			m_CanCounter = true;
 			if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
 				m_RotFrame = {};
 				coolTimer = {};
@@ -235,6 +236,7 @@ void BossEnemy::BulletAttack() {
 			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
 		}
 	} else if (_BossType == Boss_THROW) {
+		m_CanCounter = false;
 		if (!bullets->GetAlive()) {
 			coolTimer = {};
 			m_AttackCount++;
@@ -260,6 +262,7 @@ void BossEnemy::RowAttack() {
 	l_TargetTimer = m_AttackLimit[ATTACK_ROW];
 	if (m_AttackCount != 4) {
 		if (coolTimer == 0) {		//予測エリア
+			m_CanCounter = true;
 			BirthPredict({}, m_AttackCount, "Row");
 		}
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {		//実際の攻撃
@@ -269,6 +272,7 @@ void BossEnemy::RowAttack() {
 			BirthArea({}, m_AttackCount, "Row");
 			coolTimer = {};
 			m_AttackCount++;
+			m_CanCounter = false;
 		}
 	} else {
 		StagePanel::GetInstance()->EnemyHitReset();
@@ -288,6 +292,7 @@ void BossEnemy::RandomAttack() {
 	l_TargetTimer = m_AttackLimit[ATTACK_RANDOM];
 	if (m_AttackCount != 8) {
 		if (coolTimer == 0) {
+			m_CanCounter = true;
 			//プレイヤーからの距離(-1~1)
 			int l_RandWigth = Helper::GetRanNum(-1, 1);
 			int l_RandHeight = Helper::GetRanNum(-1, 1);
@@ -304,6 +309,7 @@ void BossEnemy::RandomAttack() {
 			m_Jump = true;
 			m_AddPower = 0.2f;
 			m_Rot = true;
+			m_CanCounter = false;
 		}
 	} else {
 		StagePanel::GetInstance()->EnemyHitReset();
@@ -320,7 +326,7 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 		int l_SoundTimer = {};
 		for (auto i = 0; i < m_Area.size(); i++) {
 			if (m_Area[i][Height] == 1) {		//マップチップ番号とタイルの最大数、最小数に応じて描画する
-				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
+				std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>("ARM");
 				newarea->Initialize();
 				newarea->InitState(i, Height);
 				newarea->SetPlayer(player);
@@ -332,7 +338,7 @@ void BossEnemy::BirthArea(const int Width, const int Height, const string& name)
 			}
 		}
 	} else {		//ランダム(プレイヤーから近います)
-		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>();
+		std::unique_ptr<EnemyThorn> newarea = std::make_unique<EnemyThorn>("ARM");
 		newarea->Initialize();
 		newarea->InitState(Width, Height);
 		newarea->SetPlayer(player);

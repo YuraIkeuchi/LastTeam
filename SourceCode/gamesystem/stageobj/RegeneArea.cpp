@@ -8,8 +8,8 @@ RegeneArea::RegeneArea() {
 	panels.tex = std::make_unique<IKETexture>(ImageManager::HEALAREA, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,1.f,1.f,1.f });
 	panels.tex->TextureCreate();
 	panels.tex->Initialize();
-	float baseScale = PANEL_SIZE * 0.1f;
-	panels.tex->SetScale({ baseScale,baseScale,baseScale });
+	m_AfterScale = PANEL_SIZE * 0.1f;
+	panels.tex->SetScale({ 0.0f,0.0f,0.0f });
 	panels.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
 	Initialize();
@@ -26,7 +26,6 @@ void RegeneArea::InitState(const int width, const int height) {
 	m_NowWidth = width, m_NowHeight = height;
 	panels.position.y = 0.03f;
 	m_Alive = true;
-	m_Timer = {};
 	StagePanel::GetInstance()->SetHeal(m_NowWidth, m_NowHeight, true);
 }
 
@@ -39,10 +38,14 @@ void RegeneArea::Update() {
 			StagePanel::GetInstance()->SetHeal(m_NowWidth, m_NowHeight, false);
 		}
 	}
+	panels.scale = { Ease(In,Cubic,0.5f,panels.scale.x,m_AfterScale),
+	Ease(In,Cubic,0.5f,panels.scale.y,m_AfterScale),
+	Ease(In,Cubic,0.5f,panels.scale.z,m_AfterScale) };
+
 	panels.tex->Update();
+	panels.tex->SetScale(panels.scale);
 	panels.tex->SetPosition(panels.position);
 	panels.tex->SetColor(panels.color);
-	m_BirthTimer++;
 }
 //描画
 void RegeneArea::Draw(DirectXCommon* dxCommon) {
@@ -53,7 +56,7 @@ void RegeneArea::Draw(DirectXCommon* dxCommon) {
 //ImGui
 void RegeneArea::ImGuiDraw() {
 	ImGui::Begin("Regene");
-	ImGui::Text("Timer:%d", m_Timer);
+	ImGui::Text("Timer:%d", m_BirthTimer);
 	ImGui::End();
 }
 //パネルの位置に置く

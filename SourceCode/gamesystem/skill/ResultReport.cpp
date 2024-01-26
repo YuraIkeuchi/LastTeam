@@ -15,6 +15,9 @@ ResultReport::ResultReport() {
 	backScreen = IKESprite::Create(ImageManager::RESULTREPORTBACK, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.f });
 	rate = IKESprite::Create(ImageManager::RESULTREPORTATTACK, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
 	skip = IKESprite::Create(ImageManager::RESULTSKIP, { 10.f,10.f }, { 1.f,1.f, 1.f, 1.f });
+	noDamage= IKESprite::Create(ImageManager::NODAMAGE, { 870.0f,535.f }, { 1.f,1.f, 1.f, 1.f });
+	noDamage->SetAnchorPoint({0.5f,0.5f});
+	noDamage->SetSize({});
 	for (auto i = 0; i < DAMAGEMAX; i++) {
 		damage_dealt[i] = make_unique<DrawNumber>(2.f);
 		damage_dealt[i]->Initialize();
@@ -92,6 +95,10 @@ void ResultReport::Draw(DirectXCommon* dxCommon) {
 	if (isFinish) { return; }
 	IKESprite::PreDraw();
 	backScreen->Draw();
+	if (state >= SCORE && takenDamage == 0) {
+		noDamage->Draw();
+	}
+
 	if (state >= STAMP) {
 		rate->Draw();
 	}
@@ -175,7 +182,6 @@ void ResultReport::ScoreUpdate() {
 				rate = IKESprite::Create(ImageManager::RESULTREPORTDEFFENCE, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
 				rate->SetAnchorPoint({ 0.5f,0.5f });
 				rate->SetRotation(-2.f);
-
 			}
 			state = STAMP;
 		} else {
@@ -184,6 +190,11 @@ void ResultReport::ScoreUpdate() {
 				damage_taken[i]->SetSize({ size,size });
 				damage_taken[i]->SetNumber(takeNum[i]);
 			}
+			XMFLOAT2 size2 = {
+				Ease(Out, Elastic, numFrames[1], 0.f, 512.f),
+				Ease(Out, Elastic, numFrames[1], 0.f, 64.f)
+			};
+			noDamage->SetSize(size2);
 		}
 	} else {
 		if (Helper::FrameCheck(frameInit, 1 / kFrameInitMax)) {

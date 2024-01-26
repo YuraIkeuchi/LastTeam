@@ -40,11 +40,13 @@ private:
 	void WarpEnemy();//ìGÇÃÉèÅ[Évèàóù
 	void AttackMove();//çUåÇéûÇÃìÆÇ´
 	void SelectSafeArea();
+	void ShieldUpdate();
 //ñÇñ@êw
 	void BirthMagic();
 private:
 	static const int SUPPORT_NUM = 2;
 	static const int BULLET_NUM = 5;
+	static const int SHIELD_NUM = 4;
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
@@ -69,6 +71,7 @@ private:
 		MAGIC_VANISH,
 	};
 
+	//ñÇñ@êw
 	struct Magic {
 		unique_ptr<IKETexture> tex;
 		float Frame = {};
@@ -79,6 +82,7 @@ private:
 		int State = {};
 		int Timer = {};
 	};
+
 	Magic magic;
 
 	bool m_Warp = false;
@@ -114,5 +118,24 @@ private:
 	bool m_AngerFinish = false;
 	int m_AngerTimer = {};
 	int m_AngerCount = {};
+
+
+	struct Shield {
+		std::unique_ptr<IKETexture> tex = nullptr;
+		XMFLOAT3 pos = {};
+		float scale = 0.5f;
+		XMFLOAT4 color = {};
+		float CircleSpeed = {};
+		float CircleScale = {};
+	};
+
+	std::array<Shield,SHIELD_NUM> shield;
+
+	int m_ShieldTimer = {};
+	float m_ShieldFrame = {};
+	enum ShieldState {
+		SHIELD_BIRTH,
+		SHIELD_DELETE
+	}_ShieldState = SHIELD_BIRTH;
 };
 

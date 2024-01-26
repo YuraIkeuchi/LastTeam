@@ -35,6 +35,7 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 	player_->InitState({ -PANEL_SIZE * 2.f,0.1f,PANEL_SIZE });
 	player_->Initialize();
 	player_->SkipInitialize();
+	player_->SetHp(500.0f);
 	//ゲームステート初期化
 	GameStateManager::GetInstance()->SetDxCommon(dxCommon);
 	GameStateManager::SetPlayer(player_.get());
@@ -93,10 +94,13 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 		m_TextTimer++;
 	}
 
-	Helper::Clamp(m_TextTimer, 0, 200);
+	Helper::Clamp(m_TextTimer, 0, 400);
 
 	if (m_TextTimer == 150) {
 		text_->SetConversation(TextManager::TUTORIAL_TASK, m_TextPos);
+	}
+	else if (m_TextTimer == 300) {
+		text_->SetConversation(TextManager::TUTORIAL_COUNTER, m_TextPos);
 	}
 	lightGroup->Update();
 	//�e�N���X�X�V
@@ -179,7 +183,6 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_FeedEnd) {
 		ParticleEmitter::GetInstance()->FlontDrawAll();
-
 		GameStateManager::GetInstance()->ActUIDraw();
 		enemy->UIDraw();
 		player_->UIDraw();
@@ -218,16 +221,6 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
-	ImGui::Begin("Tutorial");
-	ImGui::Text("Timer:%d", m_Timer);
-	ImGui::Text("State:%d", _nowstate);
-	ImGui::Text("Skip:%d", m_Skip);
-	ImGui::End();
-	///*
-	TutorialTask::GetInstance()->ImGuiDraw();
-	//player_->ImGuiDraw();
-	//*/
-	//GameStateManager::GetInstance()->ImGuiDraw();
 }
 
 void TutorialScene::Finalize() {

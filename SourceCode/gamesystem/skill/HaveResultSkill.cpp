@@ -6,6 +6,8 @@
 #include <SkillManager.h>
 #include <Audio.h>
 #include <GameStateManager.h>
+#include "PassiveManager.h"
+
 HaveResultSkill::HaveResultSkill() {
 
 }
@@ -98,14 +100,14 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 		for (auto i = 0; i < haveSkills[m_SelectCount].resultarea.size(); i++) {
 			haveSkills[m_SelectCount].resultarea[i]->Draw();
 		}
-		for (auto i = 0; i < haveSkills.size(); i++) {
-			haveSkills[m_SelectCount].text_->Draw(dxCommon);
-		}
+		SkillManager::GetInstance()->TextDraw(haveSkills[m_SelectCount].ID);
+		//for (auto i = 0; i < haveSkills.size(); i++) {
+		//	
+		//	//haveSkills[m_SelectCount].text_->Draw(dxCommon);
+		//}
 	}
 	else {
-		for (auto i = 0; i < havePassive.size(); i++) {
-			havePassive[m_SelectCount - (int)(haveSkills.size())].text_->Draw(dxCommon);
-		}
+		PassiveManager::GetInstance()->TextDraw(havePassive[m_SelectCount - (int)(haveSkills.size())].ID);
 	}
 	IKESprite::PreDraw();
 	if (m_DeleteCheack) {
@@ -117,13 +119,6 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 	IKESprite::PostDraw();
 }
 void HaveResultSkill::ImGuiDraw() {
-	ImGui::Begin("Have");
-	ImGui::Text("PosX:%f", haveSkills[haveSkills.size() - 1].position.x);
-	ImGui::Text("SelectPos:%f",m_AddPosX);
-	ImGui::Text("AfterPos:%f", m_AfterAddPosX);
-	ImGui::Text("SelectCount:%d", m_SelectCount);
-	ImGui::Text("Size:%d", (int)haveSkills.size());
-	ImGui::End();
 }
 
 //持っているスキルの検索
@@ -156,13 +151,14 @@ void HaveResultSkill::CreateAttackSkill(const int num,const int id, DirectXCommo
 	haveSkills[num].icon->SetPosition(haveSkills[num].position);
 	haveSkills[num].icon->SetColor({ 1.3f,1.3f,1.3f,1.0f });
 	haveSkills[num].Delay = SkillManager::GetInstance()->GetDelay(id);
-	haveSkills[num].text_ = make_unique<TextManager>();
+	SkillManager::GetInstance()->LoadText(id);
+	/*haveSkills[num].text_ = make_unique<TextManager>();
 	haveSkills[num].text_->Initialize(dxCommon,LOAD_ATTACK);
 	haveSkills[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
 	haveSkills[num].baseSentence[0] = L"スキル：";
 	haveSkills[num].baseSentence[1] = haveSkills[num].text_->GetSkillSentence(haveSkills[num].ID);
 	haveSkills[num].baseSentence[2] = haveSkills[num].text_->GetSkillDamage(haveSkills[num].ID);
-	haveSkills[num].text_->SetCreateSentence(haveSkills[num].baseSentence[0], haveSkills[num].baseSentence[1], haveSkills[num].baseSentence[2]);
+	haveSkills[num].text_->SetCreateSentence(haveSkills[num].baseSentence[0], haveSkills[num].baseSentence[1], haveSkills[num].baseSentence[2]);*/
 	m_SelectCount = {};
 	m_AddPosX = {};
 }
@@ -174,13 +170,14 @@ void HaveResultSkill::CreatePassiveSkill(const int num, const int id, DirectXCom
 	havePassive[num].icon->SetSize({ 64.0f,64.0f });
 	havePassive[num].icon->SetAnchorPoint({ 0.5f,0.5f });
 	havePassive[num].icon->SetPosition(havePassive[num].position);
-	havePassive[num].text_ = make_unique<TextManager>();
-	havePassive[num].text_->Initialize(dxCommon,LOAD_PASSIVE);
-	havePassive[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
-	havePassive[num].baseSentence[0] = L"パッシブ：";
-	havePassive[num].baseSentence[1] = havePassive[num].text_->GetPassiveName(havePassive[num].ID);
-	havePassive[num].baseSentence[2] = havePassive[num].text_->GetPasiveSentence(havePassive[num].ID);
-	havePassive[num].text_->SetCreateSentence(havePassive[num].baseSentence[0], havePassive[num].baseSentence[1], havePassive[num].baseSentence[2]);
+	PassiveManager::GetInstance()->LoadText(id);
+	//havePassive[num].text_ = make_unique<TextManager>();
+	//havePassive[num].text_->Initialize(dxCommon,LOAD_PASSIVE);
+	//havePassive[num].text_->SetConversation(TextManager::RESULT, { -250.0f,80.0f });
+	//havePassive[num].baseSentence[0] = L"パッシブ：";
+	//havePassive[num].baseSentence[1] = havePassive[num].text_->GetPassiveName(havePassive[num].ID);
+	//havePassive[num].baseSentence[2] = havePassive[num].text_->GetPasiveSentence(havePassive[num].ID);
+	//havePassive[num].text_->SetCreateSentence(havePassive[num].baseSentence[0], havePassive[num].baseSentence[1], havePassive[num].baseSentence[2]);
 }
 //移動
 void HaveResultSkill::Move() {
@@ -255,6 +252,7 @@ void HaveResultSkill::BirthArea(const int Area) {
 				std::unique_ptr<ResultAreaUI> newarea = std::make_unique<ResultAreaUI>();
 				newarea->SetPanelNumber(i, j);
 				newarea->SetDelay(haveSkills[Area].Delay);
+				newarea->SetId(haveSkills[Area].ID);
 				newarea->SetDistance(haveSkills[Area].DisX, haveSkills[Area].DisY);
 				newarea->Initialize();
 				haveSkills[Area].resultarea.push_back(std::move(newarea));

@@ -5,7 +5,7 @@
 
 using namespace std;         //  名前空間指定
 
-//攻撃エリアクラス
+//回復エリアクラス
 class RegeneArea{
 protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -35,22 +35,20 @@ public:
 
 	const int GetNowWidth() { return m_NowWidth; }
 	const int GetNowHeight() { return m_NowHeight; }
-	const int GetTimer() { return m_Timer; }
-
-	void SetTimer(const int Timer) { m_Timer = Timer; }
 private:
 	//パネル
 	struct Panel {
 		unique_ptr<IKETexture> tex = nullptr;
 		XMFLOAT3 position = { 0,0,0 };
 		XMFLOAT4 color = { 1,1,1,1 };
+		XMFLOAT3 scale = { 0.0f,0.0f,0.0f };
 		bool predict = false;
 	};
+	float m_AfterScale = {};
 	Panel panels;
 	//生存関係
 	bool m_Alive = false;
 	int m_BirthTimer = 0;
-	int m_Timer = {};
 	int m_NowWidth = {};
 	int m_NowHeight = {};
 };

@@ -116,9 +116,13 @@
     <ClCompile Include="SourceCode\gamesystem\character\ClouserEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\EnemyRock.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\FrontEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\LastBossState.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\SupportEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\character\SupportEnemy2.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\ThrowEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\TutorialEnemy.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\effect\AbsorptionEffect.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\skill\PassiveManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
     <ClCompile Include="SourceCode\engine\2d\Feed.cpp" />
@@ -222,6 +226,8 @@
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyBullet.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyThorn.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\EnemyTornade.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\Explosion.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\stageobj\LastBomb.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PoisonArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\PredictArea.cpp" />
     <ClCompile Include="SourceCode\gamesystem\stageobj\RegeneArea.cpp" />
@@ -322,13 +328,16 @@
     <ClInclude Include="SourceCode\gamesystem\character\FrontEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\HealEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\InterEnemy.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\LastBossState.h" />
     <ClInclude Include="SourceCode\gamesystem\character\Player.h" />
     <ClInclude Include="SourceCode\gamesystem\character\MobEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\PoisonEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\SupportEnemy.h" />
+    <ClInclude Include="SourceCode\gamesystem\character\SupportEnemy2.h" />
     <ClInclude Include="SourceCode\gamesystem\character\TackleEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\ThrowEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\TutorialEnemy.h" />
+    <ClInclude Include="SourceCode\gamesystem\effect\AbsorptionEffect.h" />
     <ClInclude Include="SourceCode\gamesystem\effect\Slow.h" />
     <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h" />
     <ClInclude Include="SourceCode\gamesystem\MessageWindow\MessageWindow.h" />
@@ -353,6 +362,7 @@
     <ClInclude Include="SourceCode\gamesystem\skill\DeckUI.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\HaveResultSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\Passive.h" />
+    <ClInclude Include="SourceCode\gamesystem\skill\PassiveManager.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\ResultReport.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\ResultSkill.h" />
     <ClInclude Include="SourceCode\gamesystem\skill\SkillBase.h" />
@@ -365,6 +375,8 @@
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyBullet.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyThorn.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\EnemyTornade.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\Explosion.h" />
+    <ClInclude Include="SourceCode\gamesystem\stageobj\LastBomb.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PoisonArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\PredictArea.h" />
     <ClInclude Include="SourceCode\gamesystem\stageobj\RegeneArea.h" />

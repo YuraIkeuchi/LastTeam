@@ -96,6 +96,8 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 
 	GameStateManager::GetInstance()->DeckReset();
 	GameStateManager::GetInstance()->SetGameStart(true);
+	GameStateManager::GetInstance()->SetNoDeath(true);
+	GameStateManager::GetInstance()->SetNoDamage(true);
 }
 //更新
 void TitleScene::Update(DirectXCommon* dxCommon) {
@@ -247,9 +249,6 @@ void TitleScene::OpenMagic() {
 		} else {
 			state = STATE::verse2Onomato;
 		}
-
-		state = STATE::verse2Onomato;
-
 		onomatope2_->SetColor({ 1,1,1,1 });
 		onomatope2_->SetPosition({ 0.f, -200.f });
 		stateCount = 0;

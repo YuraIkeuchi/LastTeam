@@ -37,6 +37,8 @@ public:
 		SECOND_BOSS,
 		LAST_BOSS,
 		SUPPORT_ENEMY,
+		SUPPORT_ENEMY2,
+		BOSS_ARM
 	};
 	//FBXの名前
 	enum FBXName {

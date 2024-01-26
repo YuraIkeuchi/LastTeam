@@ -1,15 +1,13 @@
 #pragma once
 #include"InterEnemy.h"
 #include "CounterBomb.h"
-enum SupportType {
-	SUPPORT_RED,
-	SUPPORT_BLUE
-};
+#include "LastBomb.h"
+#include "AbsorptionEffect.h"
 using namespace std;         //  名前空間指定
 //ラスボスのお供の敵
 class SupportEnemy :public InterEnemy {
 public:
-	SupportEnemy(const int Number);
+	SupportEnemy();
 	bool Initialize() override;//初期化
 	void Finalize() override;//開放
 	void Action()override;//更新
@@ -31,14 +29,19 @@ private:
 
 	void WarpEnemy();//敵のワープ処理
 	void AttackMove();//攻撃時の動き
+	void CounterAttack();
+	void BombAttack();
 	void BirthCounter();//カウンターのボム作成
 
 	//魔法陣
 	void BirthMagic();
+	void BirthCharge();
 private:
 	static const int BULLET_NUM = 5;
 private:
 	std::vector<unique_ptr<CounterBomb>> counterbomb;
+	std::vector<unique_ptr<AbsorptionEffect>> abseffect;
+	unique_ptr<LastBomb> lastbomb;
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
 
@@ -87,5 +90,16 @@ private:
 	bool m_ChangeRot = {};
 
 	int m_SupportType = {};
+
+	enum BombAttackType {
+		SET_BOMB,
+		JUMP_MOVE,
+		FALL_MOVE,
+	}_BombAttackType = SET_BOMB;
+
+	enum AttackState {
+		ATTACK_COUNTER,
+		ATTACK_BOMB
+	}_AttackState = ATTACK_COUNTER;
 };
 

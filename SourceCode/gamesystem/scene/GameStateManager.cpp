@@ -6,6 +6,7 @@
 #include <ImageManager.h>
 #include <SkillManager.h>
 #include <TutorialTask.h>
+#include "PassiveManager.h"
 
 Player* GameStateManager::player = nullptr;
 GameStateManager* GameStateManager::GetInstance() {
@@ -29,7 +30,29 @@ void GameStateManager::Initialize() {
 	m_MaxDamage = 0;
 	m_MaxTakenDamage = 0;
 	m_MaxTakenDamage = 0;
+	m_TakenDamageNum = 0;
 	m_HandedCount = 0;
+
+	//パッシブのリセット
+	m_DiameterGauge = 1.0f;
+	m_IsReload = true;
+	m_IsReloadDamage = false;
+	m_ReloadDamage = false;
+	m_BombDamage = false;
+	m_CounterBuff = false;
+	m_Heal = false;
+	m_poizonLong = false;
+	m_IsVenom = false;
+	m_FivePower = false;
+	m_TakenDamageUp = false;
+	m_AttackedPoison = false;
+	m_healingDamage = false;
+	m_ExtendKnight = false;
+	m_ExtendRook = false;
+	m_ExtendQueen = false;
+	m_ExtendBishop = false;
+	m_RookPoison = 0;
+
 	//終了関連
 	isFinish = false;
 	isChangeScene = false;
@@ -54,6 +77,8 @@ void GameStateManager::Initialize() {
 
 	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 640.f,50.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
+	passiveActiveNum.clear();
+
 	resultReport = make_unique<ResultReport>();
 	resultSkill = make_unique<ResultSkill>();
 	resultSkill->Initialize(m_dxCommon);
@@ -64,8 +89,12 @@ void GameStateManager::Initialize() {
 	onomatope = make_unique<Onomatope>();
 
 	m_PredictTimer = {};
+	
 	//
-	SkillManager::GetInstance()->Initialize();
+	if (!m_StartLoad) {
+		
+		m_StartLoad = true;
+	}
 
 	//デッキの初期化
 	DeckInitialize();
@@ -238,16 +267,8 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		for (DamageEffect& damage : damages) {
 			damage.tex->Draw();
 		}
-		handsFrame->Draw();
-	
-		
+		handsFrame->Draw();	
 		//gaugeCover->Draw();
-		if (isPassive) {
-			for (std::unique_ptr<IKESprite>& passiveAct : passiveActs) {
-				passiveAct->Draw();
-			}
-			passiveActive->Draw();
-		}
 		onomatope->Draw();
 		IKESprite::PostDraw();
 	
@@ -278,7 +299,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("Deck");
+	/*ImGui::Begin("Deck");
 	ImGui::Text("DeleteNum:%d",m_DeleteNum);
 	ImGui::Text("Shield:%d", m_Shield);
 	ImGui::End();
@@ -286,7 +307,8 @@ void GameStateManager::ImGuiDraw() {
 	for (auto i = 0; i < attackarea.size(); i++) {
 		if (attackarea[i] == nullptr)continue;
 		attackarea[i]->ImGuiDraw();
-	}
+	}*/
+	StagePanel::GetInstance()->ImGuiDraw();
 	SkillManager::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
@@ -300,6 +322,12 @@ void GameStateManager::ActUIDraw() {
 	}
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		passive->Draw();
+	}
+	if (isPassive) {
+		for (std::unique_ptr<IKESprite>& passiveAct : passiveActs) {
+			passiveAct->Draw();
+		}
+		passiveActive->Draw();
 	}
 	IKESprite::PreDraw();
 	skillUI->Draw();
@@ -336,9 +364,6 @@ void GameStateManager::AddSkill(const int SkillType, const int ID, const float d
 	}
 	act.ActDelay = Delay;
 	act.StateName = name;
-	if (act.StateName == "SHUFFLE") {
-
-	}
 	m_Act.push_back(act);
 	//手に入れたスキルの総数を加算する
 	m_AllActCount++;
@@ -630,7 +655,7 @@ void GameStateManager::GaugeUpdate() {
 		if (m_IsReloadDamage) {
 			int r_num = Helper::GetRanNum(0, 99);
 			if (r_num < 50) {
-				//エネミーに3ダメージ
+				//エネミーに8ダメージ
 				m_ReloadDamage = true;
 				SetPassiveActive((int)Passive::ABILITY::RELOAD_DAMAGE);
 			}
@@ -664,9 +689,9 @@ void GameStateManager::GaugeUpdate() {
 
 void GameStateManager::PassiveCheck() {
 
-	for (int& id : GotPassiveIDs) {
-		GetPassive(id);
-	}
+	//for (int& id : GotPassiveIDs) {
+		GetPassive(0);
+	//}
 
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		switch (passive->GetAbility()) {
@@ -751,8 +776,18 @@ void GameStateManager::DeckInitialize() {
 }
 
 void GameStateManager::GetPassive(int ID) {
-	float posX = GotPassives.size() * 70.0f;
-	GotPassives.push_back(std::move(make_unique<Passive>(ID, XMFLOAT2{ posX ,50.0f })));
+	for (int& id : GotPassiveIDs) {
+		unique_ptr<Passive> passive_;
+		if (GotPassiveIDs.size() > 5) {
+			float posX = 20+GotPassives.size() * 24.0f;
+			float posY = 85.0f + ( 24.f *(float)((int)GotPassives.size()%2));
+			passive_ = make_unique<Passive>(id, XMFLOAT2{ posX ,posY }, XMFLOAT2(48.f, 48.f));
+		} else {
+			float posX = GotPassives.size() * 70.0f;
+			passive_ = make_unique<Passive>(id, XMFLOAT2{ posX ,85.0f });
+		}
+		GotPassives.push_back(std::move(passive_));
+	}
 }
 
 
