@@ -151,13 +151,13 @@ void StagePanel::ImGuiDraw() {
 	}
 
 	ImGui::Begin("Panel");
-	//for (int i = 0; i < 4; i++) {
-	//	for (int j = 0; j < PANEL_HEIGHT; j++) {
-	//		ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isClose);
-	//		//ImGui::Text("Rock[%d][%d]:%d", i, j, panels[i][j].isRock);
-	//	}
-	//}
-	ImGui::Text("AllDelete:%d", m_AllDelete);
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isClose);
+			//ImGui::Text("Rock[%d][%d]:%d", i, j, panels[i][j].isRock);
+		}
+	}
+	//ImGui::Text("AllDelete:%d", m_AllDelete);
 	ImGui::End();
 }
 //オノマトペの描画
@@ -333,7 +333,6 @@ void StagePanel::ClosePanel(IKEObject3d* obj, bool Alive) {
 					panels[i][j].isClose = true;
 				}
 				else {
-
 					panels[i][j].isClose = false;
 					panels[i][j].isRock = false;
 				}
@@ -450,6 +449,27 @@ void StagePanel::PoisonSetPanel(int& width, int& height) {
 		}
 		else {
 			panels[l_width][l_height].isPoison = true;
+			width = l_width;
+			height = l_height;
+			isSet = true;
+		}
+	}
+}
+void StagePanel::RockSetPanel(int& width, int& height) {
+	bool isSet = false;
+	//乱数の設定
+	int l_width = Helper::GetRanNum(0, 3);
+	int l_height = Helper::GetRanNum(0, 3);
+
+	//パネル探索（敵がいる場合は再検索）
+
+	while (!isSet) {
+		if (panels[l_width][l_height].isClose || panels[l_width][l_height].isRock) {
+			l_width = Helper::GetRanNum(0, 3);
+			l_height = Helper::GetRanNum(0, 3);
+		}
+		else {
+			panels[l_width][l_height].isRock = true;
 			width = l_width;
 			height = l_height;
 			isSet = true;

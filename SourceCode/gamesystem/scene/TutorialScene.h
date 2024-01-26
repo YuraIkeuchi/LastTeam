@@ -31,8 +31,10 @@ private:
 	void Skip();		//スキップ
 
 private:
+	static const int ENEMY_NUM = 2;
+private:
 	unique_ptr<TextManager> text_;
-	unique_ptr<InterEnemy> enemy = nullptr;
+	array<unique_ptr<InterEnemy>,ENEMY_NUM> enemy;
 
 	unique_ptr<IKESprite> ui = nullptr;
 	unique_ptr<IKESprite> skipUI = nullptr;
@@ -65,4 +67,5 @@ private:
 
 	Window window;
 	XMFLOAT2 m_TextPos = { -60.0f,-30.f };
+	bool m_EnemyDelete = false;
 };

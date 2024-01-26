@@ -78,3 +78,5 @@ void MobEnemy::ClearAction() {
 void MobEnemy::GameOverAction() {
 
 }
+void MobEnemy::DeathSpecial() {
+}

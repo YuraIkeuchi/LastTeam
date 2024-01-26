@@ -292,6 +292,7 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
+	ImGui::Text("Width:%d,Height:%d", m_NowWidth,m_NowHeight);
 	ImGui::Text("ShieldHP:%f", m_ShieldHP);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::End();

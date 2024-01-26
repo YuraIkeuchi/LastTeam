@@ -84,6 +84,8 @@ public:
 	void ClosePanel(IKEObject3d* obj, bool m_Alive);
 	//毒の配置(かぶらないように)
 	void PoisonSetPanel(int& width, int& height);
+	//岩の配置(かぶらないように)
+	void RockSetPanel(int& width, int& height);
 
 	//アクションの全削除
 	void DeleteAction();

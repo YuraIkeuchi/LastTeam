@@ -325,3 +325,6 @@ void CreateBombEnemy::GameOverAction() {
 
 	Obj_SetParam();
 }
+void CreateBombEnemy::DeathSpecial() {
+
+}

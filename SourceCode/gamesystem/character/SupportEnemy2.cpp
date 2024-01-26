@@ -342,3 +342,5 @@ void SupportEnemy2::BirthRegene() {
 	newarea->InitState(l_BossWidth, l_BossHeight);
 	regenearea.emplace_back(std::move(newarea));
 }
+void SupportEnemy2::DeathSpecial() {
+}

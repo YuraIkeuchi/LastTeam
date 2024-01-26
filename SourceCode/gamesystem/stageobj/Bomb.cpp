@@ -186,3 +186,5 @@ void Bomb::ClearAction() {
 void Bomb::GameOverAction() {
 
 }
+void Bomb::DeathSpecial() {
+}
