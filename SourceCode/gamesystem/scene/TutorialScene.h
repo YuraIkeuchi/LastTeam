@@ -68,4 +68,5 @@ private:
 	Window window;
 	XMFLOAT2 m_TextPos = { -60.0f,-30.f };
 	bool m_EnemyDelete = false;
+	bool m_Counter = false;
 };
