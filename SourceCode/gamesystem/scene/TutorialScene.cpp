@@ -164,7 +164,6 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 		BackDraw(dxCommon);
 		FrontDraw(dxCommon);
 		postEffect->PostDrawScene(dxCommon->GetCmdList());
-
 		dxCommon->PreDraw();
 		postEffect->Draw(dxCommon->GetCmdList());
 		ImGuiDraw();
