@@ -1103,17 +1103,18 @@ void GameStateManager::SaveGame() {
 		normalofs << "PassiveNumber" << "," << GotPassiveIDs[i]
 			<< std::endl;
 	}
-	if (savedata.m_SaveHierarchy <= 4) {
+	if (savedata.m_SaveHierarchy <= 1) {
 		normalofs << "PlayerHP" << "," << 500.0f << std::endl;
 	} else {
 		normalofs << "PlayerHP" << "," << savedata.m_SaveHP << std::endl;
 	}
 	normalofs << "Index" << "," << savedata.m_SaveIndex << std::endl;
-	if (savedata.m_SaveHierarchy <= 4) {
+	if (savedata.m_SaveHierarchy <= 1) {
 		normalofs << "Hierarchy" << "," << 0 << std::endl;
 	} else {
 		normalofs << "Hierarchy" << "," << savedata.m_SaveHierarchy << std::endl;
 	}
+
 }
 
 void GameStateManager::OpenGameDate() {

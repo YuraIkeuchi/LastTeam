@@ -286,3 +286,5 @@ void ThrowEnemy::GameOverAction() {
 
 	Obj_SetParam();
 }
+void ThrowEnemy::DeathSpecial() {
+}

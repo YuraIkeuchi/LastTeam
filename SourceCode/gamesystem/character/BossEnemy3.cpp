@@ -760,3 +760,6 @@ void BossEnemy3::ShieldUpdate() {
 		shield[i].tex->Update();
 	}
 }
+void BossEnemy3::DeathSpecial() {
+
+}

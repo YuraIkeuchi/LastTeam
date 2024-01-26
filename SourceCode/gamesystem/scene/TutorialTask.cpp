@@ -26,16 +26,18 @@ void TutorialTask::Initialize() {
 			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
 		tutorial[i].text->SetAnchorPoint({ 0.5f,0.5f });
 		tutorial[i].pos = { 1020.0f,200 + (80.0f * i) };
+		tutorial[i].Afterpos = { 1500.0f,200 + (80.0f * i) };
 		tutorial[i].text->SetSize({ l_Width_Cut,l_Height_Cut });
 		tutorial[i].text->SetPosition(tutorial[i].pos);
 		tutorial[i].text->SetScale({ 0.8f });
 
 		tutorial[i].check = IKESprite::Create(ImageManager::TUTORIAL_CHECK, { 0.0f,0.0f });
-		tutorial[i].check->SetPosition({ 860.0f,200 + (80.0f * i) });
+		tutorial[i].check->SetPosition({ tutorial[i].pos.x - 160.0f,200 + (80.0f * i)});
 		tutorial[i].check->SetAnchorPoint({ 0.5f,0.5f });
 		tutorial[i].color = { 1.0f,1.0f,1.0f,0.0f };
 		tutorial[i].size = { 150.0f,150.0f };
 		tutorial[i].frame = {};
+		tutorial[i].posframe = {};
 	}
 
 	m_ChoiceSkill = false;
@@ -47,14 +49,22 @@ void TutorialTask::Update(){
 		if (m_TaskFinish[i]) {
 			if (Helper::FrameCheck(tutorial[i].frame, l_AddFrame)) {
 				tutorial[i].frame = 1.0f;
+				if (Helper::FrameCheck(tutorial[i].posframe, l_AddFrame)) {
+					tutorial[i].posframe = 1.0f;
+				}
+				else {
+					tutorial[i].pos.x = Ease(In, Cubic, tutorial[i].posframe, tutorial[i].pos.x, tutorial[i].Afterpos.x);
+				}
 			}
 			else {
-				tutorial[i].color.w = Ease(In, Cubic, tutorial[i].frame, tutorial[i].color.w, 1.0f);
-				tutorial[i].size = { Ease(In,Cubic,tutorial[i].frame,tutorial[i].size.x,tutorial[i].aftersize.x),
-				Ease(In,Cubic,tutorial[i].frame,tutorial[i].size.y,tutorial[i].aftersize.y) };
+				tutorial[i].color.w = Ease(Out, Quad, tutorial[i].frame, tutorial[i].color.w, 1.0f);
+				tutorial[i].size = { Ease(Out,Quad,tutorial[i].frame,tutorial[i].size.x,tutorial[i].aftersize.x),
+				Ease(Out,Quad,tutorial[i].frame,tutorial[i].size.y,tutorial[i].aftersize.y) };
 			}
 		}
 
+		tutorial[i].text->SetPosition(tutorial[i].pos);
+		tutorial[i].check->SetPosition({ tutorial[i].pos.x - 125.0f,200 + (80.0f * i) });
 		tutorial[i].check->SetSize(tutorial[i].size);
 		tutorial[i].check->SetColor(tutorial[i].color);
 	}

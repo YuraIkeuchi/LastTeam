@@ -451,3 +451,5 @@ void SupportEnemy::BirthCharge() {
 	neweffect->SetAddFrame(0.01f);
 	abseffect.push_back(std::move(neweffect));
 }
+void SupportEnemy::DeathSpecial() {
+}

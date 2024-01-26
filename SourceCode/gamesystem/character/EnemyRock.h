@@ -14,10 +14,11 @@ public:
 	void GameOverAction()override;//ゲームオーバー更新
 	void ImGui_Origin()override;
 	void Draw(DirectXCommon* dxCommon) override;//描画
-
+	void DeathSpecial()override;
 		//ステータス初期化
 	void InitState(const int width, const int height,const XMFLOAT3& pos);
-
+public:
+	void DeleteRock();
 private:
 	//関数ポインタ
 	static void(EnemyRock::* stateTable[])();
@@ -31,6 +32,7 @@ private:
 	void Inter();//生成
 	void Attack();//攻撃
 	void Close();//待機
+
 private:
 	int m_NowWidth = {};
 	int m_NowHeight = {};

@@ -184,7 +184,8 @@ protected:
 	float m_ReloadFrame = 0.f;
 	float m_ReloadFinishFrame = 0.f;
 	XMFLOAT3 effect3Pos = {};
-
+	int m_Number = {};
+	bool m_DeleteRock = false;
 public://getter setter
 	void SetState(int state) { _charaState = state; }
 	int GetState() { return _charaState; };
@@ -202,6 +203,7 @@ public://getter setter
 	void SimpleDamege(float damage = 3.f, bool isLimit = false);
 	void SimpleHeal(const bool Regene = false);
 	void SimplePosion(int poison);
+	void SetNumber(const int Number) { this->m_Number = Number; }
 public:
 	//virtual ~InterEnemy() = default;
 	/// <summary>
@@ -247,6 +249,8 @@ public:
 	void ImGuiDraw();
 
 	virtual void ImGui_Origin() = 0;
+
+	virtual void DeathSpecial() = 0;
 
 	void UIDraw();
 	XMFLOAT3 SetPannelPos(int width, int height);

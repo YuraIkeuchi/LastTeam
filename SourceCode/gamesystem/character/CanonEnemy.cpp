@@ -387,3 +387,6 @@ void CanonEnemy::GameOverAction() {
 
 	Obj_SetParam();
 }
+void CanonEnemy::DeathSpecial() {
+
+}

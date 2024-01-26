@@ -49,10 +49,12 @@ private:
 		unique_ptr<IKESprite> text;
 		unique_ptr<IKESprite> check;
 		XMFLOAT2 pos;
+		XMFLOAT2 Afterpos;
 		XMFLOAT4 color = {1.0f,1.0f,1.0f,0.0f};
 		XMFLOAT2 size = {};
 		XMFLOAT2 aftersize = {50.0f,50.0f};
 		float frame = {};
+		float posframe = {};
 	};
 
 	TutorialParts tutorial[TASK_MAX];
