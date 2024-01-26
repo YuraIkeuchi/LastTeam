@@ -76,7 +76,7 @@ void ResultReport::Update() {
 			damage_dealt[i]->SetNumber(dealNum[i]);
 			damage_dealt[i]->SetSize({ 128.f ,128.f });
 		}
-		if (score >= 0) {
+		if (score >= 200) {
 			rate = IKESprite::Create(ImageManager::RESULTREPORTATTACK, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
 			rate->SetAnchorPoint({ 0.5f,0.5f });
 			rate->SetRotation(-2.f);
