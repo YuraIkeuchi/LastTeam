@@ -30,6 +30,8 @@ void ModelManager::StartInitialize()
 	LoadModel(DOGO, "dogoxo");
 	LoadModel(DORO, "doroxo");
 	LoadModel(ZASHU, "zashu");
+	LoadModel(GUSA, "gusa");
+	LoadModel(HATENA, "Hatena");
 	LoadModel(FIRST_BOSS, "Golem");
 	LoadModel(TORNADO, "Tornado");
 	LoadModel(ROCKENEMY, "RockEnemy");
