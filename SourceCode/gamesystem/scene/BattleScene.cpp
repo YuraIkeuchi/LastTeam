@@ -35,6 +35,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	}
 	GameStateManager::SetPlayer(player_.get());
 	GameStateManager::GetInstance()->Initialize();
+	GameStateManager::GetInstance()->SetEndText(true);
 	
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
