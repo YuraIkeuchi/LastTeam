@@ -106,6 +106,11 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 		text_->SetConversation(TextManager::TUTORIAL_COUNTER, m_TextPos);
 	}
 
+	if (!m_Counter && TutorialTask::GetInstance()->GetTaskFinish(TASK_COUNTER)) {
+		text_->SetConversation(TextManager::TUTORIAL_SHOT, m_TextPos);
+		m_Counter = true;
+	}
+
 	lightGroup->Update();
 	//�e�N���X�X�V
 	camerawork->Update(camera);
