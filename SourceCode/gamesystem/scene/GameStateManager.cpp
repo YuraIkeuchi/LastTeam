@@ -1,4 +1,5 @@
-﻿#include <GameStateManager.h>
+﻿
+#include <GameStateManager.h>
 #include <Helper.h>
 #include <StagePanel.h>
 #include <Input.h>
@@ -176,7 +177,7 @@ void GameStateManager::Update() {
 				BirthBuff((string)"NEXT");
 				SetPassiveActive((int)Passive::ABILITY::COUNTER_BUFF);
 			}
-			onomatope->AddOnomato(Counter, { 640.f,660.f });
+			onomatope->AddOnomato(Counter, { 1000.f,660.f });
 			m_CounterTimer = {};
 		}
 	}
