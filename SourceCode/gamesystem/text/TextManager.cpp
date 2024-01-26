@@ -61,7 +61,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreatePassiveName(L"名前：ガーディアンフォース");
 			CreatePassiveSentence(L"ダメージをうけるたび、威力+1.5");
 			CreatePassiveName(L"名前：ポイズン・ビトレイヤー");
-			CreatePassiveSentence(L"スキルがあたると毒を１付与");
+			CreatePassiveSentence(L"スキルがあたると毒を3付与");
 			CreatePassiveName(L"名前：ヒーリング・バロール");
 			CreatePassiveSentence(L"回復するたびに5ダメージ");
 			CreatePassiveName(L"名前：エクステンド・ナイト");
