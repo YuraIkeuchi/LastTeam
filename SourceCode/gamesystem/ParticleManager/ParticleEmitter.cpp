@@ -127,7 +127,7 @@ void ParticleEmitter::SmokeEffect(const int life, const XMFLOAT3& l_pos, const f
 }
 
 void ParticleEmitter::DeathEffect(const int life, const XMFLOAT3& l_pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const int number) {
-	const float l_Velocity = 0.05f;
+	const float l_Velocity = 0.08f;
 	XMFLOAT3 pos = l_pos;
 	float angle = {};
 	angle = number * 45.0f;

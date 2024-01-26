@@ -67,7 +67,7 @@ void AttackArea::InitState(const int width, const int height) {
 	}
 	else if (StateName == "SLASH") {
 		m_Rotation = { 45.0f,270.0f,0.0f };
-		m_Scale = { 0.2f,0.2f,0.2f };
+		m_Scale = { 0.3f,0.3f,0.3f };
 		m_Position = { panels.position.x,3.0f,panels.position.z };
 		m_Object->SetBillboard(true);
 	}

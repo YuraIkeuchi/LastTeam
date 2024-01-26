@@ -987,7 +987,7 @@ void InterEnemy::ReLoadStart() {
 void InterEnemy::DeathParticle() {
 	int l_life = 20;
 	const float s_Scale = 1.5f;
-	const float e_Scale = 0.0f;
+	const float e_Scale = 0.5f;
 	const XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 	for (int i = 1; i < 7; i++) {
 		ParticleEmitter::GetInstance()->DeathEffect(l_life, m_Position, s_Scale, e_Scale, color, color, i);
