@@ -45,6 +45,7 @@ void EnemyRock::InitState(const int width, const int height, const XMFLOAT3& pos
 	magic.Scale = {};
 	magic.AfterScale = 0.15f;
 	magic.State = {};
+	m_AddPower = 0.0f;
 }
 
 
@@ -94,11 +95,6 @@ void EnemyRock::Draw(DirectXCommon* dxCommon) {
 void EnemyRock::ImGui_Origin() {
 	ImGui::Begin("RockEnemy");
 	ImGui::Text("AddDisolve:%f", m_AddDisolve);
-	ImGui::Text("ScaleX:%f", m_Scale.x);
-	ImGui::Text("ShakePosX:%f", m_ShakePos.x);
-	ImGui::Text("MagPosX:%f", magic.Pos.x);
-	ImGui::Text("Scale:%f", magic.Scale);
-	ImGui::Text("RockState:%d", _RockState);
 	ImGui::End();
 }
 //ŠJ•ú

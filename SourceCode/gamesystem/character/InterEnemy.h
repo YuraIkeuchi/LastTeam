@@ -122,6 +122,7 @@ protected:
 	bool m_Jump = false;
 	//上昇度
 	float m_AddPower = 0.0f;
+	float m_RockAddPower = 0.2f;
 	//重力加速度
 	float m_Gravity = 0.02f;
 	bool m_Rot = false;
