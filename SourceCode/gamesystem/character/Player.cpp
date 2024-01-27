@@ -104,6 +104,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 	m_NowHeight = {};
 	m_NowWidth = {};
 	m_healingDamage = false;
+	healpower.clear();
 	//数値化したHP表示のための変数
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		m_DigitNumber[i] = {};
@@ -470,8 +471,21 @@ void Player::MoveCommon(float& pos, float velocity) {
 	//GameStateManager::GetInstance()->SetGrazeScore(GameStateManager::GetInstance()->GetGrazeScore() + (m_GrazeScore * 5.0f));
 	GameStateManager::GetInstance()->SetResetPredict(true);
 }
-//プレイヤーのHP回復
-void Player::HealPlayer(const float power) {
+//プレイヤーのリジュネ
+void Player::RegeneHeal(const float power) {
+	HealCommon(power);
+}
+//回復量セット
+void Player::SetHealPower(const float power) {
+	healpower.push_back(power);
+}
+//ドレイン回復
+void Player::DrainHeal() {
+	HealCommon(healpower[0]);
+	healpower.pop_back();
+}
+//回復の基本
+void Player::HealCommon(const float power) {
 	float l_HealNum = {};
 	if (m_HP < m_MaxHP) {
 		if (m_healingDamage) {
@@ -480,18 +494,21 @@ void Player::HealPlayer(const float power) {
 		}
 		if (m_MaxHP - m_HP >= power) {
 			l_HealNum = power;
-		} else {
+		}
+		else {
 			l_HealNum = m_MaxHP - m_HP;
 		}
 		if (isHeal || isDamage) {
 			hp_frame = 0.f;
 		}
-	} else {
+	}
+	else {
 		l_HealNum = {};
 	}
+
 	Audio::GetInstance()->PlayWave("Resources/Sound/SE/Heal01.wav", 0.05f);
 	BirthHealNumber(l_HealNum);
-	m_HP += power;
+	m_HP += l_HealNum;
 	HealParticle();
 }
 //プレイヤーのダメージ判定
@@ -516,7 +533,7 @@ void Player::RecvDamage(const float Damage, const string& name) {
 	if (GameStateManager::GetInstance()->GetExtendBishop()) {
 		float gain = l_Damage * 0.1f;
 		Helper::Clamp(gain, 1.f, m_HP);
-		HealPlayer(gain);
+		RegeneHeal(gain);
 		GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::EXTEND_BISHOP);
 	}
 	if (GameStateManager::GetInstance()->GetExtendRook()) {
@@ -773,7 +790,7 @@ void Player::BoundMove() {
 void Player::RegeneUpdate() {
 	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
 		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
-			HealPlayer(20.0f);
+			RegeneHeal(20.0f);
 			m_HealTimer = {};
 		}
 	} else {

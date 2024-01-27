@@ -63,14 +63,20 @@ private:
 public:
 	//HPの割合を求める
 	float HpPercent();
-
+	//回復量のセット
+	void SetHealPower(const float power);
+	//ドレイン回復
+	void DrainHeal();
 	//プレイヤーの回復
-	void HealPlayer(const float power);
+	void RegeneHeal(const float power);
+
 	//プレイヤーのダメージ
 	void RecvDamage(const float Damage,const string& name = "NORMAL");
 	//プレイヤーの情報保存
 	void PlayerSave();
 private:
+	//回復の基本
+	void HealCommon(const float power);
 	void MoveCommon(float& pos, const float velocity);
 private:
 	void LoadCSV();
@@ -297,4 +303,5 @@ private:
 
 	int m_JumpCount = {};
 
+	std::vector<float> healpower;
 };

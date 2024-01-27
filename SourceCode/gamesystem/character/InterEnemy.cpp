@@ -250,7 +250,7 @@ void InterEnemy::ImGuiDraw() {
 	ImGui::Begin("Enemy");
 	ImGui::Text("HP:%f", m_HP);
 	ImGui::End();
-	ImGui_Origin();
+	//ImGui_Origin();
 	////敵のダメージテキスト
 	//for (unique_ptr<DrawDamageNumber>& newnumber : _damagenumber) {
 	//	if (newnumber != nullptr) {
@@ -371,7 +371,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				GameStateManager::GetInstance()->SetIsBomSuccess(true);
 			}else	if (name == "DRAIN") {
 				float rate = 0.2f;
-				player->HealPlayer(damage * rate);		//HP回復
+				player->SetHealPower(damage * rate);		//HP回復
 			}else if (name == "POISON") {		//毒
 				m_Poison = true;
 				if (!m_IsVenom) {

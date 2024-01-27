@@ -96,9 +96,6 @@ void EnemyManager::SetCount() {
 }
 
 void EnemyManager::ImGuiDraw() {
-	ImGui::Begin("Enemys");
-	ImGui::Text("size:%d", m_DeathCount);
-	ImGui::End();
 	for (unique_ptr<InterEnemy>& enemy : enemys) {
 		enemy->ImGuiDraw();
 	}

@@ -457,6 +457,7 @@ void GameStateManager::BirthArea() {
 					newarea->InitState(AreaX, AreaY);
 					newarea->SetDamage(damage);
 					newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
+					newarea->SetPlayer(player);
 					newarea->SetPoisonToken(m_Act[0].PoisonToken);
 					if (l_SoundCount == 0) {
 						newarea->SetSound(true);
@@ -586,7 +587,7 @@ void GameStateManager::UseSkill() {
 				int l_rand = {};
 				l_rand = Helper::GetRanNum(0, 1);
 				if (l_rand == 0) {
-					player->HealPlayer(100.0f);
+					player->RegeneHeal(100.0f);
 				} else {
 					player->RecvDamage(100.0f);
 				}

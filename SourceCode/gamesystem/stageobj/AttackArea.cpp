@@ -24,6 +24,10 @@ AttackArea::AttackArea(string& userName, string& stateName) {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::HATENA);
 		_EffectState = Hatena;
 	}
+	else if (StateName == "DRAIN") {
+		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::HATENA);
+		_EffectState = Heal;
+	}
 	else {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::DOGO);
 		_EffectState = Stone;
@@ -53,6 +57,7 @@ void (AttackArea::* AttackArea::stateTable[])() = {
 	&AttackArea::PoisonMove,//毒系
 	&AttackArea::SpearMove,//やり系
 	&AttackArea::HatenaMove,//はてな
+	&AttackArea::HealMove,//回復の動き
 };
 //初期化
 bool AttackArea::Initialize() {
@@ -93,6 +98,12 @@ void AttackArea::InitState(const int width, const int height) {
 		m_Position = { panels.position.x,-1.0f,panels.position.z };
 		m_Color = { 0.6f,0.9f,0.2f,1.0f };
 		//m_Object->SetBillboard(true);
+	}
+	else if (StateName == "DRAIN") {
+		m_Rotation.y = 270.0f;
+		m_Scale = { 1.5f,1.5f,1.5f };
+		m_Position = { panels.position.x,-1.0f,panels.position.z };
+		m_Color = { 0.6f,0.9f,0.2f,1.0f };
 	}
 	else {
 		m_Rotation.y = 270.0f;
@@ -315,6 +326,53 @@ void AttackArea::HatenaMove() {
 
 	//ある程度の高さになったら攻撃判定
 	if (m_Position.y >= 0.0f) {
+		m_Attack = true;
+		/// <summary>
+		///	音入(ドロドロしたものが地面に落ちる音希望(ベチャッみたいなやつ)
+		/// </summary>
+		if (m_Sound) {
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.02f);
+			m_Sound = false;
+		}
+	}
+}
+//回復の動き
+void AttackArea::HealMove() {
+	XMFLOAT3 l_PlayerPos = player->GetPosition();
+	const XMFLOAT3 l_AfterScale = { 0.0f,0.0f,0.0f };
+	const float l_AddFrame = 1 / 30.0f;
+	if (m_Timer > m_BirthTimer) { return; }
+	if (_StoneType == STONE_FALL) {
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			m_Frame = {};
+			_StoneType = STONE_BOUND;
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 1.0f);
+		}
+	}
+	else {
+		
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			m_Alive = false;
+			if (m_Hit) {
+				player->DrainHeal();
+			}
+		}
+		else {
+			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,l_AfterScale.x),
+			Ease(In,Cubic,m_Frame,m_Scale.y,l_AfterScale.y),
+			Ease(In,Cubic,m_Frame,m_Scale.z,l_AfterScale.z), };
+			if (m_Hit) {
+				m_Position = { Ease(In,Cubic,m_Frame,m_Position.x,l_PlayerPos.x),
+				Ease(In,Cubic,m_Frame,m_Position.y,l_PlayerPos.y),
+				Ease(In,Cubic,m_Frame,m_Position.z,l_PlayerPos.z), };
+			}
+		}
+	}
+
+	//ある程度の高さになったら攻撃判定
+	if (m_Position.y >= 0.0f && m_Position.y < 0.7f) {
 		m_Attack = true;
 		/// <summary>
 		///	音入(ドロドロしたものが地面に落ちる音希望(ベチャッみたいなやつ)
