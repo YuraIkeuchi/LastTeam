@@ -3,7 +3,7 @@
 #include "IKETexture.h"
 #include <DirectXMath.h>
 #include <ObjCommon.h>
-
+#include "Player.h"
 using namespace std;         //  名前空間指定
 
 //攻撃エリアクラス
@@ -39,6 +39,7 @@ private:
 	void PoisonMove();
 	void SpearMove();
 	void HatenaMove();
+	void HealMove();
 private:
 	XMFLOAT3 SetPanelPos(const int width, const int height);
 public:
@@ -65,14 +66,17 @@ public:
 	void SetDamage(const float Damage) { m_Damage = Damage; }
 	void SetIsFixed(bool flag) { isFixed = flag; }
 	void SetPoisonToken(const int PoisonToken) { m_PoisonToken = PoisonToken; }
-private:
 
+	void SetPlayer(Player* player) { this->player = player; }
+private:
+	Player* player;
 	enum EffectPattern {
 		Slash,
 		Stone,
 		Poison,
 		Spear,
 		Hatena,
+		Heal,
 	}_EffectState = Slash;
 	//パネル
 	struct Panel {

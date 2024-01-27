@@ -105,8 +105,12 @@ void InterEnemy::Update() {
 		if (m_HP != 0.0f) {
 			if(!m_Death)
 			Action();
+			//だめーじ関係
+			DamageUpdate();
 		}
 	}else {
+		//だめーじ関係
+		DamageUpdate();
 		Action();
 	}
 	
@@ -158,8 +162,7 @@ void InterEnemy::Update() {
 	HealDamageEffect();
 	SuperPoisonEffect();
 	RegeneUpdate();
-	//だめーじ関係
-	DamageUpdate();
+	
 	//数値化したHP
 	HPManage();
 	//UIをワールド座標に変換する
@@ -244,7 +247,10 @@ void InterEnemy::BaseBackDraw(DirectXCommon* dxCommon) {
 }
 
 void InterEnemy::ImGuiDraw() {
-	ImGui_Origin();
+	ImGui::Begin("Enemy");
+	ImGui::Text("HP:%f", m_HP);
+	ImGui::End();
+	//ImGui_Origin();
 	////敵のダメージテキスト
 	//for (unique_ptr<DrawDamageNumber>& newnumber : _damagenumber) {
 	//	if (newnumber != nullptr) {
@@ -365,7 +371,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 				GameStateManager::GetInstance()->SetIsBomSuccess(true);
 			}else	if (name == "DRAIN") {
 				float rate = 0.2f;
-				player->HealPlayer(damage * rate);		//HP回復
+				player->SetHealPower(damage * rate);		//HP回復
 			}else if (name == "POISON") {		//毒
 				m_Poison = true;
 				if (!m_IsVenom) {
@@ -817,33 +823,41 @@ void InterEnemy::DeathUpdate() {
 	if (m_EnemyTag == "Rock") {
 		StagePanel::GetInstance()->SetClose(m_NowWidth, m_NowHeight, false);
 		StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
+		m_RockAddPower -= m_Gravity;
+		m_Scale = Helper::Float3AddFloat(m_Scale, 0.04f);
+		Helper::CheckMax(m_Position.y, 0.0f, m_RockAddPower);
+		if (Helper::CheckMin(m_AddDisolve, 2.5f, 0.1f)) {
+			m_Alive = false;
+		}
 	}
-	if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
-		m_OverFrame = 1.0f;
-		if (m_Death) {
-			if (m_DeathTimer == 0) {
-				DeathParticle();
-			}
-			if (Helper::CheckMin(m_DeathTimer, 20, 1)) {
-				if (m_EnemyTag == "SUPPORT" || m_EnemyTag == "SUPPORT2") {
-					GameStateManager::GetInstance()->SetIsHeal(true);
+	else {
+		if (Helper::FrameCheck(m_OverFrame, l_AddFrame)) {		//最初はイージングで回す
+			m_OverFrame = 1.0f;
+			if (m_Death) {
+				if (m_DeathTimer == 0) {
+					DeathParticle();
 				}
-				else if (m_EnemyTag == "CLOSER" || m_EnemyTag == "LASTBOSS") {
-					DeathSpecial();
+				if (Helper::CheckMin(m_DeathTimer, 20, 1)) {
+					if (m_EnemyTag == "SUPPORT" || m_EnemyTag == "SUPPORT2") {
+						GameStateManager::GetInstance()->SetIsHeal(true);
+					}
+					else if (m_EnemyTag == "CLOSER" || m_EnemyTag == "LASTBOSS") {
+						DeathSpecial();
+					}
+					m_Alive = false;
 				}
-				m_Alive = false;
 			}
 		}
-	} else {
-		RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);
-		m_Rotation.y += RotPower;
-		m_Position.y = Ease(In, Cubic, m_OverFrame, m_Position.y, 0.5f);
+		else {
+			RotPower = Ease(In, Cubic, m_OverFrame, RotPower, 20.0f);
+			m_Rotation.y += RotPower;
+			m_Position.y = Ease(In, Cubic, m_OverFrame, m_Position.y, 0.5f);
 
-		m_Scale = { Ease(In,Cubic,m_OverFrame,m_Scale.x,0.0f),
-			Ease(In,Cubic,m_OverFrame,m_Scale.y,0.0f),
-		Ease(In,Cubic,m_OverFrame,m_Scale.z,0.0f) };
+			m_Scale = { Ease(In,Cubic,m_OverFrame,m_Scale.x,0.0f),
+				Ease(In,Cubic,m_OverFrame,m_Scale.y,0.0f),
+			Ease(In,Cubic,m_OverFrame,m_Scale.z,0.0f) };
+		}
 	}
-
 	Obj_SetParam();
 }
 //リジュネ回復
