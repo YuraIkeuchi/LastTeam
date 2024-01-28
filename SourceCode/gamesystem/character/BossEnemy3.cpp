@@ -74,8 +74,8 @@ bool BossEnemy3::Initialize() {
 	shield[1].CircleSpeed = 90.0f;
 	shield[2].CircleSpeed = 180.0f;
 	shield[3].CircleSpeed = 270.0f;
-	for (int i = 0; i < PANEL_WIDTH / 2; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
+	for (int i = 0; i < SAFE_X; i++) {
+		for (int j = 0; j < SAFE_Y; j++) {
 			m_SafeArea[i][j] = false;
 		}
 	}
@@ -90,9 +90,10 @@ void (BossEnemy3::* BossEnemy3::stateTable[])() = {
 };
 //攻撃遷移
 void (BossEnemy3::* BossEnemy3::attackTable[])() = {
-	&BossEnemy3::RockAttack,//弾を打つ攻撃
+	&BossEnemy3::NormalAttack,//普通の攻撃
 	&BossEnemy3::RandomAttack,//ランダム
-	&BossEnemy3::AroundAttack,//ランダム
+	&BossEnemy3::RockAttack,//岩落とす攻撃
+	&BossEnemy3::AroundAttack,//周り攻撃
 };
 
 //行動
@@ -194,9 +195,7 @@ void BossEnemy3::Draw(DirectXCommon* dxCommon) {
 //ImGui描画
 void BossEnemy3::ImGui_Origin() {
 	ImGui::Begin("Boss3");
-	for (int i = 0; i < shield.size(); i++) {
-		ImGui::Text("circle[%d].%f", i, shield[i].CircleSpeed);
-	}
+	ImGui::Text("Attack:%d", m_AttackCount);
 	ImGui::End();
 }
 //開放
@@ -210,12 +209,12 @@ void BossEnemy3::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = 0;
+		int l_RandState = Helper::GetRanNum(0,2);
 		if (enerock.size() >= 3) {
-			l_RandState = 2;
+			l_RandState = 3;
 		}
 		else if(enerock.size() < 3 && enerock.size() != 0) {
-			l_RandState = 1;
+			l_RandState = Helper::GetRanNum(0, 1);
 		}
 		_AttackState = (AttackState)(l_RandState);
 	}
@@ -227,7 +226,6 @@ void BossEnemy3::Attack() {
 	predictarea->Update();
 	predictarea->SetTimer(coolTimer);
 }
-
 //ワープ
 void BossEnemy3::Teleport() {
 	m_CanCounter = false;
@@ -271,6 +269,69 @@ void BossEnemy3::BirthRock() {
 	StagePanel::GetInstance()->SetRock(l_width, l_height, true);
 }
 //攻撃遷移
+//普通の攻撃
+void BossEnemy3::NormalAttack() {
+	//プレイヤーの現在マス
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_NORMAL];
+	if (m_AttackCount != 4) {
+		if (coolTimer == 0) {
+			SelectSafeArea("Normal");
+			BirthPredict(m_RandWidth, m_RandHeight, "Random");
+		}
+		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+			BirthArea(m_RandWidth, m_RandHeight, "Random");
+			coolTimer = {};
+			m_AttackCount++;
+			m_Jump = true;
+			m_AddPower = 0.2f;
+			m_Rot = true;
+		}
+	}
+	else {
+		coolTimer = {};
+		StagePanel::GetInstance()->EnemyHitReset();
+		m_CheckPanel = true;
+		m_AttackCount = {};
+		_charaState = STATE_SPECIAL;
+	}
+
+	//カウンター判定
+	if (coolTimer >= l_TargetTimer - 30) {
+		m_CanCounter = true;
+	}
+
+	predictarea->SetTargetTimer(l_TargetTimer);
+}
+// //ランダムマス攻撃
+void BossEnemy3::RandomAttack() {
+	//プレイヤーの現在マス
+	int l_TargetTimer = {};
+	l_TargetTimer = m_AttackLimit[ATTACK_RANDOM];
+
+	if (coolTimer == 0) {
+		SelectSafeArea("Random");
+		BirthPredict(m_RandWidth, m_RandHeight, "Random");
+	}
+	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+		BirthArea(m_RandWidth, m_RandHeight, "Random");
+		coolTimer = {};
+		m_Jump = true;
+		m_AddPower = 0.2f;
+		m_Rot = true;
+		StagePanel::GetInstance()->EnemyHitReset();
+		m_CheckPanel = true;
+		m_AttackCount = {};
+		_charaState = STATE_SPECIAL;
+	}
+
+	//カウンター判定
+	if (coolTimer >= l_TargetTimer - 30) {
+		m_CanCounter = true;
+	}
+
+	predictarea->SetTargetTimer(l_TargetTimer);
+}
 //弾
 void BossEnemy3::RockAttack() {
 	int l_TargetTimer = {};
@@ -306,37 +367,6 @@ void BossEnemy3::RockAttack() {
 	predictarea->SetTargetTimer(l_TargetTimer);
 	predictarea->Update();
 	predictarea->SetTimer(coolTimer);
-}
-//ランダムマス攻撃
-void BossEnemy3::RandomAttack() {
-	//プレイヤーの現在マス
-	int l_PlayerWidth = player->GetNowWidth();
-	int l_PlayerHeight = player->GetNowHeight();
-	int l_TargetTimer = {};
-	l_TargetTimer = m_AttackLimit[ATTACK_RANDOM];
-
-	if (coolTimer == 0) {
-		SelectSafeArea();
-		BirthPredict(m_RandWidth, m_RandHeight, "Random");
-	}
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-		BirthArea(m_RandWidth, m_RandHeight, "Random");
-		coolTimer = {};
-		m_Jump = true;
-		m_AddPower = 0.2f;
-		m_Rot = true;
-		StagePanel::GetInstance()->EnemyHitReset();
-		m_CheckPanel = true;
-		m_AttackCount = {};
-		_charaState = STATE_SPECIAL;
-	}
-
-	//カウンター判定
-	if (coolTimer >= l_TargetTimer - 30) {
-		m_CanCounter = true;
-	}
-
-	predictarea->SetTargetTimer(l_TargetTimer);
 }
 //周りを攻撃
 void BossEnemy3::AroundAttack() {
@@ -393,8 +423,8 @@ void BossEnemy3::AroundAttack() {
 void BossEnemy3::BirthArea(const int Width, const int Height, const string& name) {
 	if (name == "Random") {
 		int l_SoundCount = {};
-		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-			for (int j = 0; j < PANEL_HEIGHT; j++) {
+		for (int i = 0; i < SAFE_X; i++) {
+			for (int j = 0; j < SAFE_Y; j++) {
 				if (!m_SafeArea[i][j]) {
 					std::unique_ptr<EnemyTornade> newarea = std::make_unique<EnemyTornade>();
 					newarea->Initialize();
@@ -409,8 +439,8 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 			}
 		}
 
-		for (int i = 0; i < (PANEL_WIDTH / 2); i++) {
-			for (int j = 0; j < PANEL_HEIGHT; j++) {
+		for (int i = 0; i < SAFE_X; i++) {
+			for (int j = 0; j < SAFE_Y; j++) {
 				m_SafeArea[i][j] = false;
 			}
 		}
@@ -425,12 +455,11 @@ void BossEnemy3::BirthArea(const int Width, const int Height, const string& name
 	}
 	predictarea->ResetPredict();
 }
-
 //予測エリア
 void BossEnemy3::BirthPredict(const int Width, const int Height, const string& name) {
 	if (name == "Random") {
-		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-			for (int j = 0; j < PANEL_HEIGHT; j++) {
+		for (int i = 0; i < SAFE_X; i++) {
+			for (int j = 0; j < SAFE_Y; j++) {
 				if (!m_SafeArea[i][j]) {
 					predictarea->SetPredict(i, j, true);
 				}
@@ -438,8 +467,8 @@ void BossEnemy3::BirthPredict(const int Width, const int Height, const string& n
 		}
 	}
 	else if (name == "Rock") {
-		for (int i = 0; i < (PANEL_WIDTH / 2) - 1; i++) {
-			for (int j = 0; j < PANEL_HEIGHT; j++) {
+		for (int i = 0; i < SAFE_X; i++) {
+			for (int j = 0; j < SAFE_Y; j++) {
 				if ((i == 1 || i == 2) && (j == 1 || j == 2)) {
 					predictarea->SetPredict(i, j, true);
 				}
@@ -667,27 +696,58 @@ void BossEnemy3::GameOverAction() {
 
 	Obj_SetParam();
 }
-void BossEnemy3::SelectSafeArea() {
+void BossEnemy3::SelectSafeArea(const string& name) {
 	const int l_safeMax = 5;
-	for (int i = 0; i < l_safeMax; i++) {
-		bool isSet = false;
-		//乱数の設定
-		int width = Helper::GetRanNum(0, 3);
-		int height = Helper::GetRanNum(0, 3);
+	if (name == "Random") {
+		for (int i = 0; i < l_safeMax; i++) {
+			bool isSet = false;
+			//乱数の設定
+			int width = Helper::GetRanNum(0, 3);
+			int height = Helper::GetRanNum(0, 3);
 
-		//パネル探索（開いてるのが3追加の場合書いてない）
-
-		while (!isSet) {
-			if (m_SafeArea[width][height]){
-				width = Helper::GetRanNum(0, 3);
-				height = Helper::GetRanNum(0, 3);
+			//パネル探索（開いてるのが3追加の場合書いてない）
+			while (!isSet) {
+				if (m_SafeArea[width][height]) {
+					width = Helper::GetRanNum(0, 3);
+					height = Helper::GetRanNum(0, 3);
+				}
+				else {
+					isSet = true;
+				}
 			}
-			else {
-				isSet = true;
+
+			m_SafeArea[width][height] = true;
+		}
+	}
+	else {
+		if (m_AttackCount == 0) {
+			for (int i = 0; i < SAFE_X; i++) {
+				for (int j = 0; j < SAFE_Y / 2; j++) {
+					m_SafeArea[i][j] = true;
+				}
 			}
 		}
-		
-		m_SafeArea[width][height] = true;
+		else if (m_AttackCount == 1) {
+			for (int i = 0; i < SAFE_X / 2; i++) {
+				for (int j = 0; j < SAFE_Y; j++) {
+					m_SafeArea[i][j] = true;
+				}
+			}
+		}
+		else if (m_AttackCount == 2) {
+			for (int i = 0; i < SAFE_X; i++) {
+				for (int j = 2; j < SAFE_Y; j++) {
+					m_SafeArea[i][j] = true;
+				}
+			}
+		}
+		else {
+			for (int i = 2; i < SAFE_X; i++) {
+				for (int j = 0; j < SAFE_Y; j++) {
+					m_SafeArea[i][j] = true;
+				}
+			}
+		}
 	}
 }
 //怒り状態になったときの動き

@@ -122,6 +122,7 @@
     <ClCompile Include="SourceCode\gamesystem\character\ThrowEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\TutorialEnemy.cpp" />
     <ClCompile Include="SourceCode\gamesystem\effect\AbsorptionEffect.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\effect\ConfuEffect.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\PassiveManager.cpp" />
     <ClCompile Include="SourceCode\gamesystem\skill\ResultReport.cpp" />
     <ClCompile Include="SourceCode\engine\2d\DebugText.cpp" />
@@ -338,6 +339,7 @@
     <ClInclude Include="SourceCode\gamesystem\character\ThrowEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\character\TutorialEnemy.h" />
     <ClInclude Include="SourceCode\gamesystem\effect\AbsorptionEffect.h" />
+    <ClInclude Include="SourceCode\gamesystem\effect\ConfuEffect.h" />
     <ClInclude Include="SourceCode\gamesystem\effect\Slow.h" />
     <ClInclude Include="SourceCode\gamesystem\gamecamera\CameraWork.h" />
     <ClInclude Include="SourceCode\gamesystem\MessageWindow\MessageWindow.h" />
