@@ -45,7 +45,9 @@ void DeckUI::Update() {
 //•`‰æ
 void DeckUI::Draw() {
 	IKESprite::PreDraw();
-	tex->Draw();
+	if (m_ActCount < 6) {
+		tex->Draw();
+	}
 	//_drawnumber->Draw();
 	IKESprite::PostDraw();
 }
