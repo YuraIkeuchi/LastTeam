@@ -125,6 +125,11 @@ void GameStateManager::Initialize() {
 	_charge->TextureCreate();
 	_charge->Initialize();
 	_charge->SetRotation({ 90.0f,0.0f,0.0f });
+	_charge2.reset(new IKETexture(ImageManager::CHARGE2, {}, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	_charge2->TextureCreate();
+	_charge2->Initialize();
+	_charge2->SetRotation({ 90.0f,0.0f,0.0f });
+
 	m_ChargeScale = 1.0f;
 	m_Delay = false;
 	m_Buff = false;
@@ -231,9 +236,13 @@ void GameStateManager::Update() {
 	SkillManager::GetInstance()->Update();
 	player->SetDelay(m_Delay);
 
-	_charge->SetPosition({ player->GetPosition().x,0.5f,player->GetPosition().z });
+	_charge->SetPosition({ player->GetPosition().x,0.1f,player->GetPosition().z });
 	_charge->SetScale({ m_ChargeScale,m_ChargeScale,m_ChargeScale });
+	_charge->SetRotation({ 90.0f,m_ChargeRot,0.f});
 	_charge->Update();
+	_charge2->SetPosition({ player->GetPosition().x,0.1f,player->GetPosition().z });
+	_charge2->SetScale({ m_Charge2Scale,m_Charge2Scale,m_Charge2Scale });
+	_charge2->Update();
 	onomatope->Update();
 
 	PassiveActive();
@@ -264,6 +273,7 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 		if (m_Delay && m_Act[0].ActDelay >= 30) {
 			_charge->Draw();
+			_charge2->Draw();
 		}
 		IKETexture::PostDraw();
 		IKESprite::PreDraw();
@@ -556,7 +566,11 @@ void GameStateManager::UseSkill() {
 	if (m_ExtendQueen) {
 		delay = (int)((float)delay * 0.7f);
 	}
-	m_ChargeScale = Helper::Lerp(1.0f, 0.0f, m_DelayTimer, delay);		//線形補間でチャージを表してる
+	m_ChargeScale = Helper::Lerp(0.5f, 0.0f, m_DelayTimer, delay);		//線形補間でチャージを表してる
+	float chargeSca = ((float)m_DelayTimer / (delay * 0.9f));
+	Helper::Clamp(chargeSca,0.f,1.f);
+	m_Charge2Scale = Ease(Out,Quint, chargeSca,0.75f, 0.0f);
+	m_ChargeRot = Ease(Out,Quad,(float)m_DelayTimer/delay,0.f,360.f);
 	if (Helper::CheckMin(m_DelayTimer, delay, 1)) {
 		if (m_Act[0].SkillType == 0) {
 			BirthArea();

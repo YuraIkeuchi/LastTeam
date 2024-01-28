@@ -152,6 +152,7 @@ void ImageManager::StartLoadTex2D()
 {
 	IKETexture::LoadTexture(MAGIC, L"Resources/2d/objicon/magic.png");
 	IKETexture::LoadTexture(CHARGE, L"Resources/2d/objicon/impact.png");
+	IKETexture::LoadTexture(CHARGE2, L"Resources/2d/objicon/impact2.png");
 	IKETexture::LoadTexture(SHADOW2, L"Resources/2d/objicon/shadow2.png");
 	IKETexture::LoadTexture(PANNELLINE, L"Resources/2d/objicon/Areas/AreaLine.png");
 	IKETexture::LoadTexture(AREA, L"Resources/2d/objicon/Areas/DamageArea.png");

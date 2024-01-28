@@ -185,6 +185,8 @@ private:
 	static Player* player;
 	DirectXCommon* m_dxCommon = nullptr;
 	unique_ptr<IKETexture> _charge;
+	unique_ptr<IKETexture> _charge2;
+
 	bool isFinish = false;
 	bool isChangeScene = false;
 	bool isResultFinish = false;
@@ -305,7 +307,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {2,3,5,8,11,12,20};
+	vector <int> m_StartNumber = {2,3,5,8,11,12,29};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -325,6 +327,8 @@ private:
 	std::unique_ptr<HaveResultSkill> haveSkill;
 	//ディレイ関係
 	float m_ChargeScale = {};
+	float m_Charge2Scale = {};
+	float m_ChargeRot = {};
 	int m_DelayTimer = {};
 	bool m_DelayStart = false;
 	bool m_Shield = false;
