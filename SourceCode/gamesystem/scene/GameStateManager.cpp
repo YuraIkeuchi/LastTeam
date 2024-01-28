@@ -569,7 +569,7 @@ void GameStateManager::UseSkill() {
 	m_ChargeScale = Helper::Lerp(0.5f, 0.0f, m_DelayTimer, delay);		//線形補間でチャージを表してる
 	float chargeSca = ((float)m_DelayTimer / (delay * 0.9f));
 	Helper::Clamp(chargeSca,0.f,1.f);
-	m_Charge2Scale = Ease(Out,Quint, chargeSca,0.75f, 0.0f);
+	m_Charge2Scale = Ease(Out,Circ, chargeSca,0.75f, 0.0f);
 	m_ChargeRot = Ease(Out,Quad,(float)m_DelayTimer/delay,0.f,360.f);
 	if (Helper::CheckMin(m_DelayTimer, delay, 1)) {
 		if (m_Act[0].SkillType == 0) {
