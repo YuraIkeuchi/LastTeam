@@ -237,9 +237,6 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void TutorialScene::ImGuiDraw() {
 	GameStateManager::GetInstance()->ImGuiDraw();
-	for (int i = 0; i < enemy.size(); i++) {
-		enemy[i]->ImGuiDraw();
-	}
 }
 
 void TutorialScene::Finalize() {

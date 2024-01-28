@@ -50,8 +50,10 @@ bool StagePanel::Initialize(const float PosY) {
 			panels[i][j].TargetTimer = (i * 5) + (j * 40);
 		}
 	}
-	m_SelectHeight = 0;
-	m_SelectWidth = 0;
+	m_SelectHeight = {};
+	m_SelectWidth = {};
+	m_AllDelete = false;
+	m_ActionCount = {};
 	if (!actions.empty()) {
 		actions.clear();
 	}
@@ -151,13 +153,8 @@ void StagePanel::ImGuiDraw() {
 	}
 
 	ImGui::Begin("Panel");
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < PANEL_HEIGHT; j++) {
-			ImGui::Text("Close[%d][%d]:%d",i,j ,panels[i][j].isClose);
-			//ImGui::Text("Rock[%d][%d]:%d", i, j, panels[i][j].isRock);
-		}
-	}
-	//ImGui::Text("AllDelete:%d", m_AllDelete);
+	ImGui::Text("AllDelete:%d", m_AllDelete);
+	ImGui::Text("ActionCount:%d", m_ActionCount);
 	ImGui::End();
 }
 //オノマトペの描画
