@@ -46,6 +46,9 @@ bool TutorialEnemy::Initialize() {
 	StagePanel::GetInstance()->EnemyHitReset();
 	m_ShadowScale = { 0.03f,0.03f,0.03f };
 
+	//—\‘ª
+	predictArea = std::make_unique<PredictArea>("ENEMY");
+	predictArea->Initialize();
 
 	magic.Alive = false;
 	magic.Frame = {};
@@ -64,6 +67,7 @@ void (TutorialEnemy::* TutorialEnemy::stateTable[])() = {
 	&TutorialEnemy::Inter,//“®‚«‚Ì‡ŠÔ
 	&TutorialEnemy::Attack,//“®‚«‚Ì‡ŠÔ
 	&TutorialEnemy::Teleport,//uŠÔˆÚ“®
+	&TutorialEnemy::StandBy
 };
 
 //s“®
@@ -86,17 +90,21 @@ void TutorialEnemy::Action() {
 	//shadow_tex->SetPosition(m_ShadowPos);
 	//shadow_tex->SetScale(m_ShadowScale);
 	//shadow_tex->Update();
+	predictArea->Update();
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+	m_OldWidth = m_NowWidth;
+	m_OldHeight = m_NowHeight;
 }
 //•`‰æ
 void TutorialEnemy::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	BaseFrontDraw(dxCommon);
 	magic.tex->Draw();
+	BaseFrontDraw(dxCommon);
+	predictArea->Draw(dxCommon);
 	IKETexture::PostDraw();
 	if (m_Color.w != 0.0f) {
 		Obj_Draw();
@@ -119,11 +127,27 @@ void TutorialEnemy::Inter() {
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, kIntervalMax);
 	if (coolTimer == kIntervalMax) {
-		_charaState = STATE_ATTACK;
+		_charaState = STATE_STANDBY;
 		coolTimer = 0;
 	}
 }
 
+void TutorialEnemy::StandBy() {
+	int nextWidthPanel = m_NowWidth - (nextPredict + 1);
+	if (nextWidthPanel < 0) {
+		_charaState = STATE_ATTACK;
+		nextPredict = 0;
+		predictFrame = 0.f;
+		return;
+	}
+
+	if (Helper::FrameCheck(predictFrame, 1.f / 5.0f)) {
+		predictArea->VersePredict(nextWidthPanel, m_NowHeight);
+		nextPredict++;
+		predictFrame = 0.f;
+	}
+
+}
 void TutorialEnemy::Attack() {
 	const float l_TargetX = -8.0f;
 	const float l_AddFrame = 1 / 45.0f;
@@ -133,6 +157,9 @@ void TutorialEnemy::Attack() {
 		m_Frame = 1.0f;
 		m_Position.x -= m_Speed;
 		m_Rotation.x += l_AddRot;
+		//’Ê‚è‰ß‚¬‚½‚çíœ
+		predictArea->VanishPredict(m_OldWidth, m_NowHeight);
+
 		if (m_Position.x < l_TargetX) {
 			m_CanCounter = false;
 			m_CheckPanel = true;

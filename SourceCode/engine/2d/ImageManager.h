@@ -152,6 +152,7 @@ public:
 	{
 		MAGIC,
 		CHARGE,
+		CHARGE2,
 		SHADOW2,
 		PANNELLINE,
 		AREA,
