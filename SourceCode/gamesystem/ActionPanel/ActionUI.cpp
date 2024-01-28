@@ -10,6 +10,23 @@ ActionUI::ActionUI(const int ID) {
 	tex->SetAnchorPoint({ 0.5f,0.5f });
 	tex->SetPosition({ -100.0f,800.0f });
 	tex->SetSize({ 64.0f,64.0f });
+
+	const int NumberCount = 10;
+	const float l_Width_Cut = 256.0f;
+	const float l_Height_Cut = 256.0f;
+
+	for (int i = 0; i < 10; i++) {
+		vanishTexs[i] = IKESprite::Create(ImageManager::ATTACK_BACK, { 0.0f,0.0f });
+		int number_index_y = i / NumberCount;
+		int number_index_x = i % NumberCount;
+		vanishTexs[i]->SetTextureRect(
+			{ static_cast<float>(number_index_x) * l_Width_Cut, static_cast<float>(number_index_y) * l_Height_Cut },
+			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
+		vanishTexs[i]->SetAnchorPoint({ 0.5f,0.5f });
+		vanishTexs[i]->SetSize({ 64.0f,64.0f });
+		vanishTexs[i]->SetPosition({ -100.0f,800.0f });
+	}
+
 	//ID用のスプライト
 	_drawnumber = make_unique<DrawNumber>(0.5f);
 	_drawnumber->Initialize();
@@ -34,6 +51,14 @@ void ActionUI::Update() {
 	tex->SetSize(m_Size);
 	tex->SetPosition(m_Position);
 
+	for (int i = 0; i < 10; i++) {
+		vanishTexs[i]->SetPosition(m_Position);
+		vanishTexs[i]->SetSize(m_Size);
+
+	}
+
+
+
 	_drawnumber->SetPosition(m_Position);
 	_drawnumber->SetNumber(m_ID);
 	_drawnumber->Update();
@@ -41,7 +66,12 @@ void ActionUI::Update() {
 //描画
 void ActionUI::Draw() {
 	IKESprite::PreDraw();
-	tex->Draw();
+	if (vanishCount < 1) {
+		tex->Draw();
+	}
+	if (m_Use && m_Alive) {
+		vanishTexs[vanishCount]->Draw();
+	}
 	//_drawnumber->Draw();
 	IKESprite::PostDraw();
 }
@@ -55,7 +85,7 @@ void ActionUI::ImGuiDraw() {
 }
 //UIの動き
 void ActionUI::UiMove() {
-	const float l_AddFrame = 0.1f;
+	const float l_AddFrame = 1.f / 10.f;
 	const float l_size = 128.f;
 	if (m_ActCount == 0) {
 		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (16.f + 64.f));
@@ -72,6 +102,11 @@ void ActionUI::UiMove() {
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 		}
+		vanishTiming++;
+		//if ((vanishTiming % 2) == 0) {
+			vanishCount++;
+			Helper::Clamp(vanishCount, 0, 9);
+		//}
 		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 630.0f);
 		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 	}

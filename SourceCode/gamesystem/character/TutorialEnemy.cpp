@@ -29,6 +29,7 @@ bool TutorialEnemy::Initialize() {
 		m_Position = StagePanel::GetInstance()->SetPositon(4, 1);
 	}
 	else {
+		m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::SUPPORT_ENEMY2));
 		m_Position = StagePanel::GetInstance()->SetPositon(7, 3);
 	}
 	m_Rotation = { 0.0f,0.0f,0.0f };

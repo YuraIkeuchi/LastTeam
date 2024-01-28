@@ -29,16 +29,15 @@ void InterAction::ImGuiDraw() {
 	ImGui_Origin();
 }
 //プレイヤーとパネルの当たり判定
-void InterAction::Collide()
-{
+void InterAction::Collide() {
 	if (_state == STATE_VANISH || m_Delete) { return; }
 	if (Collision::CircleCollision(
-		m_Position.x, m_Position.z, m_Radius, 
+		m_Position.x, m_Position.z, m_Radius,
 		player->GetPosition().x,
-		player->GetPosition().z, m_Radius)){
+		player->GetPosition().z, m_Radius)) {
 
 		//プレイヤーの行動数を増やしパネルを戻す
-		GameStateManager::GetInstance()->AddSkill(m_SkillType,m_SkillID,m_Damage,m_Delay,m_Area,m_Timer,m_DistanceX,m_DistanceY,StateName,m_PoisonToken);
+		GameStateManager::GetInstance()->AddSkill(m_SkillType, m_SkillID, m_Damage, m_Delay, m_Area, m_Timer, m_DistanceX, m_DistanceY, StateName, m_PoisonToken);
 		StagePanel::GetInstance()->DeletePanel();
 		TutorialTask::GetInstance()->SetTaskFinish(true, TASK_GET);
 		m_Delete = true;
@@ -67,6 +66,15 @@ void InterAction::Spawn() {
 
 void InterAction::Alive() {
 	{
+		aliveAngle += 3.f;
+		if (aliveAngle >= 360.f) {
+			aliveAngle = 0.f;
+		}
+		m_PannelScale = {
+			Ease(In,Linear,abs(sinf(aliveAngle*XM_PI/180.f)),1.f,1.3f) * 0.1f,
+			Ease(In,Linear,abs(sinf(aliveAngle*XM_PI/180.f)),1.f,1.3f) * 0.1f,
+			Ease(In,Linear,abs(sinf(aliveAngle*XM_PI/180.f)),1.f,1.3f) * 0.1f
+		};
 		//m_PannelRot.y += 0.3f;
 		m_Pannel->SetPosition({ m_Position.x,m_Position.y + 0.1f,m_Position.z });
 		m_Pannel->SetScale(m_PannelScale);
@@ -78,12 +86,12 @@ void InterAction::Alive() {
 
 void InterAction::Vanish() {
 
-	float Psca = Ease(Out,Cubic, m_VanishFrame,0.15f,0.f);
+	float Psca = Ease(Out, Cubic, m_VanishFrame, 0.1f, 0.f);
 	float sca = Ease(Out, Cubic, m_VanishFrame, 0.3f, 0.f);
-	
+
 	m_Position.y = Ease(In, Quad, m_VanishFrame, 0.0f, -3.0f);
 	m_PannelScale = { Psca,Psca,Psca };
-	m_Scale= { sca,sca,sca };
+	m_Scale = { sca,sca,sca };
 	//m_PannelRot.y += 0.6f;
 	m_Rotation.y += 3.0f;
 	m_Pannel->SetRotation(m_PannelRot);
@@ -100,12 +108,11 @@ void InterAction::Vanish() {
 void InterAction::GetSkillData() {
 	SkillManager::GetInstance()->GetSkillType(m_SkillType);
 	if (m_SkillType == (int)SkillType::damege) {
-		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area,m_Timer, m_DistanceX, m_DistanceY, StateName,m_PoisonToken);
-	}
-	else if (m_SkillType == (int)SkillType::buff) {
-		SkillManager::GetInstance()->GetSpecialSkillDate(m_Delay,StateName);
+		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area, m_Timer, m_DistanceX, m_DistanceY, StateName, m_PoisonToken);
+	} else if (m_SkillType == (int)SkillType::buff) {
+		SkillManager::GetInstance()->GetSpecialSkillDate(m_Delay, StateName);
 	} else if (m_SkillType == (int)SkillType::specialDamage) {
-		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area,m_Timer, m_DistanceX, m_DistanceY, StateName,m_PoisonToken);
+		SkillManager::GetInstance()->GetAttackSkillData(m_Damage, m_Delay, m_Area, m_Timer, m_DistanceX, m_DistanceY, StateName, m_PoisonToken);
 
 	}
 }

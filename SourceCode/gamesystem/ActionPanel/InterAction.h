@@ -89,6 +89,9 @@ protected:
 	string StateName = {};
 	int m_PoisonToken = {};
 
+
+	float aliveAngle = 0.f;
+
 	struct Shadow {
 		unique_ptr<IKETexture> tex;
 		//‰e‚Ì•Ï”
