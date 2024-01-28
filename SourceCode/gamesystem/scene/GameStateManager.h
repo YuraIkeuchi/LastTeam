@@ -357,7 +357,6 @@ private:
 
 	bool m_GameStart = false;
 	bool m_BossCamera = false;
-	bool m_StartLoad = false;
 
 	bool m_NoDeath = true;
 	bool m_NoDamage = true;

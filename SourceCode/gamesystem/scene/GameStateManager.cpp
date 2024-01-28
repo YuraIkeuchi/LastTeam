@@ -91,12 +91,6 @@ void GameStateManager::Initialize() {
 
 	m_PredictTimer = {};
 
-	//
-	if (!m_StartLoad) {
-
-		m_StartLoad = true;
-	}
-
 	//デッキの初期化
 	DeckInitialize();
 
@@ -312,6 +306,11 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
+	ImGui::Begin("Base");
+	ImGui::Text("Discard:%d", (int)m_DiscardNumber.size());
+	ImGui::End();
+	SkillManager::GetInstance()->ImGuiDraw();
+	StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -653,6 +652,7 @@ void GameStateManager::FinishAct(bool AllFinish) {
 void GameStateManager::GaugeUpdate() {
 	if (!m_GameStart) { return; }
 	if (m_BossCamera) { return; }
+	if (isFinish) { return; }
 	if (m_Act.size() != 0 && SkillManager::GetInstance()->GetDeckNum() == 0 && !m_IsReload) {
 		m_GaugeCount = {};
 	}
