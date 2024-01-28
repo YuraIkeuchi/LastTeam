@@ -25,6 +25,7 @@ private:
 	void Inter();//‘Ò‹@
 	void Attack();//UŒ‚
 	void Teleport();//ˆÚ“®
+	void NormalAttack();//•’Ê‚ÌUŒ‚
 	void RockAttack();//Šâ‚ÌUŒ‚
 	void RandomAttack();//ƒ‰ƒ“ƒ_ƒ€UŒ‚
 	void AroundAttack();//ü‚è‚ÌUŒ‚
@@ -40,7 +41,7 @@ private:
 	void PlayerCollide();
 	void WarpEnemy();//“G‚Ìƒ[ƒvˆ—
 	void AttackMove();//UŒ‚‚Ì“®‚«
-	void SelectSafeArea();
+	void SelectSafeArea(const string& name);
 	void ShieldUpdate();
 //–‚–@w
 	void BirthMagic();
@@ -48,6 +49,8 @@ private:
 	static const int SUPPORT_NUM = 2;
 	static const int BULLET_NUM = 5;
 	static const int SHIELD_NUM = 4;
+	static const int SAFE_X = 4;
+	static const int SAFE_Y = 4;
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
@@ -55,10 +58,11 @@ private:
 	std::vector<unique_ptr<EnemyRock>> enerock;
 	unique_ptr<Onomatope> onomatope = nullptr;
 	enum AttackState {
-		ATTACK_ROCK,
+		ATTACK_NORMAL,
 		ATTACK_RANDOM,
+		ATTACK_ROCK,
 		ATTACK_AROUND,
-	}_AttackState = ATTACK_RANDOM;
+	}_AttackState = ATTACK_NORMAL;
 	std::vector<std::vector<int>> m_Area = {};
 	// UŒ‚ƒGƒŠƒA
 	std::vector<unique_ptr<EnemyTornade>> enetornade;
@@ -112,7 +116,7 @@ private:
 	float m_AfterRotY = {};
 	bool m_ChangeRot = {};
 
-	bool m_SafeArea[4][4];
+	bool m_SafeArea[SAFE_X][SAFE_Y];
 
 	int m_RockCount = {};
 	bool m_Anger = false;

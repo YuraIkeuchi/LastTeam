@@ -250,7 +250,7 @@ void InterEnemy::ImGuiDraw() {
 	ImGui::Begin("Enemy");
 	ImGui::Text("HP:%f", m_HP);
 	ImGui::End();
-	//ImGui_Origin();
+	ImGui_Origin();
 	////敵のダメージテキスト
 	//for (unique_ptr<DrawDamageNumber>& newnumber : _damagenumber) {
 	//	if (newnumber != nullptr) {
