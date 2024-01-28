@@ -19,6 +19,7 @@ private:
 
 private:
 	void Inter();//‘Ò‹@
+	void StandBy();
 	void Attack();
 	void Teleport();//ˆÚ“®
 
@@ -72,5 +73,12 @@ private:
 	float m_Damage = {};
 	bool m_Hit = false;
 	float m_Frame = {};
+
+	std::unique_ptr<PredictArea> predictArea;
+	float predictFrame = 0.f;
+	int nextPredict = 0;
+	int m_OldWidth = m_NowWidth;
+	int m_OldHeight = m_NowHeight;
+
 };
 

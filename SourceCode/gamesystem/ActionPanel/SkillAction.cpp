@@ -36,7 +36,7 @@ void SkillAction::Action() {
 
 	shadow.Position = { m_Position.x + 0.2f,m_Position.y + 0.11f,m_Position.z + 0.15f };
 	shadow.tex->SetPosition(shadow.Position);
-	shadow.tex->SetScale(shadow.Scale);
+	shadow.tex->SetScale(m_PannelScale);
 	shadow.tex->Update();
 
 }
