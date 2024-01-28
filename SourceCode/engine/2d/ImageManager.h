@@ -203,6 +203,7 @@ public:
 		RELOADEFF,
 		SHIELD_TEX,
 		ABSEFFECT,
+		STUN,
 	};
 	enum particleName
 	{

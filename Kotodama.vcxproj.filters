@@ -467,6 +467,9 @@
     <ClCompile Include="SourceCode\gamesystem\effect\AbsorptionEffect.cpp">
       <Filter>gamesystem\effect</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\gamesystem\effect\ConfuEffect.cpp">
+      <Filter>gamesystem\effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\engine\camera\DebugCamera.h">
@@ -902,6 +905,9 @@
     </ClInclude>
     <ClInclude Include="SourceCode\gamesystem\skill\PassiveManager.h" />
     <ClInclude Include="SourceCode\gamesystem\effect\AbsorptionEffect.h">
+      <Filter>gamesystem\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\gamesystem\effect\ConfuEffect.h">
       <Filter>gamesystem\effect</Filter>
     </ClInclude>
   </ItemGroup>

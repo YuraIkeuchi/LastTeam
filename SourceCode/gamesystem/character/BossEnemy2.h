@@ -2,7 +2,7 @@
 #include"InterEnemy.h"
 #include "EnemyBullet.h"
 #include "EnemyThorn.h"
-
+#include "ConfuEffect.h"
 using namespace std;         //  –¼‘O‹óŠÔw’è
 //•’Ê‚Ì“G
 class BossEnemy2 :public InterEnemy {
@@ -50,6 +50,7 @@ private:
 private:
 	static const int BULLET_NUM = 5;
 private:
+	unique_ptr<ConfuEffect> confueffect;
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
 

@@ -23,6 +23,9 @@ BossEnemy2::BossEnemy2() {
 	//ó\ë™
 	predictarea.reset(new PredictArea("ENEMY"));
 	predictarea->Initialize();
+
+	confueffect = make_unique<ConfuEffect>();
+	confueffect->Initialize();
 }
 //èâä˙âª
 bool BossEnemy2::Initialize() {
@@ -109,6 +112,9 @@ void BossEnemy2::Action() {
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
 	magic.tex->Update();
+
+	confueffect->SetBasePos(m_Position);
+	confueffect->Update();
 }
 
 //ï`âÊ
@@ -118,7 +124,7 @@ void BossEnemy2::Draw(DirectXCommon* dxCommon) {
 	//shadow_tex->Draw();
 	magic.tex->Draw();
 	IKETexture::PostDraw();
-
+	confueffect->Draw(dxCommon);
 	for (auto i = 0; i < enethorn.size(); i++) {
 		if (enethorn[i] == nullptr)continue;
 		enethorn[i]->Draw(dxCommon);
@@ -147,9 +153,22 @@ void BossEnemy2::Inter() {
 		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 			coolTimer = 0;
 			_charaState = STATE_ATTACK;
-			int l_RandState = Helper::GetRanNum(0, 2);
-			_AttackState = (AttackState)(l_RandState);
-			//_AttackState = ATTACK_RECOVERY;
+			int l_RandState = Helper::GetRanNum(0,100);	//Ç«ÇÃçsìÆÇéÊÇÈÇ©
+			if (l_RandState <= 40) {
+				_AttackState = ATTACK_SPINNING;
+			}
+			else if (l_RandState > 40 && l_RandState <= 80) {
+				_AttackState = ATTACK_SHOCKWAVE;
+			}
+			else {
+				if (m_HP != m_MaxHP) {
+					_AttackState = ATTACK_RECOVERY;
+				}
+				else {//ç≈ëÂHPÇæÇ¡ÇΩèÍçáÇÃèàóù
+					l_RandState = Helper::GetRanNum(0, 1);
+					_AttackState = (AttackState)(l_RandState);
+				}
+			}
 		}
 	}
 	else {
@@ -251,7 +270,9 @@ void BossEnemy2::Recovery() {
 	}
 
 	if (m_TmpHP - 4.0f > m_HP) {
+		confueffect->SetAlive(true);
 		_charaState = STATE_INTER;
+		coolTimer = {};
 		m_isStun = true;
 		m_TmpHP = 0.0f;
 	}
@@ -280,7 +301,6 @@ void BossEnemy2::Recovery() {
 
 void BossEnemy2::Stun()
 {
-
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_RECOVERY];
 
@@ -297,12 +317,12 @@ void BossEnemy2::Stun()
 			_AttackState = (AttackState)(l_RandState);
 			m_isStun = false;
 			m_RecoverySaveHP = false;
-
+			confueffect->SetAlive(false);
 			m_Rotation.x = 0.0f;
 			m_Rotation.y = 270.0f;
 		}
 	}
-
+	
 	predictarea->SetTargetTimer(l_TargetTimer);
 }
 
