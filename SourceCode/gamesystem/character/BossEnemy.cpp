@@ -146,12 +146,6 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui•`‰æ
 void BossEnemy::ImGui_Origin() {
-	//ImGui::Begin("Boss");
-	//ImGui::Text("PosX:%f", m_Position.x);
-	//ImGui::Text("PosZ:%f", m_Position.z);
-	//ImGui::End();
-	//predictarea->ImGuiDraw();
-	bullets->ImGuiDraw();
 }
 //ŠJ•ú
 void BossEnemy::Finalize() {
@@ -164,8 +158,16 @@ void BossEnemy::Inter() {
 	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
-		int l_RandState = Helper::GetRanNum(0,2);
-		_AttackState = (AttackState)(l_RandState);
+		int l_RandState = Helper::GetRanNum(0, 100);	//‚Ç‚Ìs“®‚ğæ‚é‚©
+		if (l_RandState <= 40) {
+			_AttackState = ATTACK_RANDOM;
+		}
+		else if (l_RandState > 40 && l_RandState <= 80) {
+			_AttackState = ATTACK_ROW;
+		}
+		else {
+			_AttackState = ATTACK_BULLET;
+		}
 	}
 }
 //UŒ‚
@@ -193,10 +195,6 @@ void BossEnemy::Teleport() {
 }
 //’e‚Ì¶¬
 void BossEnemy::BirthBullet() {
-	/// <summary>
-	///	‰¹“ü(’e‚ğ‘Å‚Â‰¹Šó–](ƒ|ƒ“ƒb‚İ‚½‚¢‚È‚â‚Â)
-	/// </summary>
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
 	//’e‚Ì”­¶
 	bullets->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z }, m_ShotDir);
 }

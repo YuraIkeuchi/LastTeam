@@ -2,7 +2,7 @@ ID,6
 SkillType,0
 Delay,35
 Name,sasara
-StateName,NONE
+StateName,ARROW
 Damege,50
 DistanceX,1
 AttackArea,0 0 0 0
