@@ -146,6 +146,7 @@ public:
 		SAVE,
 		EXPRE,
 		DELAY,
+		STICK,
 	};
 	//テクスチャの名前
 	enum tex2dName

@@ -344,7 +344,7 @@ bool SkillManager::CreateSkill(int id) {
 
 //デッキチェック
 void SkillManager::DeckCheck(const int DeckNumber, const int DeckCount) {
-	
+
 	//デッキに入るようにする
 	skill[DeckNumber]->SetDeckIn(true);
 	m_DeckDate.push_back(DeckNumber);
@@ -355,6 +355,7 @@ void SkillManager::DeckCheck(const int DeckNumber, const int DeckCount) {
 	std::shuffle(m_DeckDate.begin(), m_DeckDate.end(), std::default_random_engine(seed));
 	//デッキのUIを作成
 	BirthDeckUI(DeckNumber, DeckCount);
+
 }
 void SkillManager::PushOnce2Deck(const int DeckNumber) {
 	DeckUI* newdeckUi = nullptr;
@@ -364,7 +365,6 @@ void SkillManager::PushOnce2Deck(const int DeckNumber) {
 	newdeckUi->SetType((int)skill[DeckNumber]->GetSkillType());
 	deckui.emplace_back(newdeckUi);
 	m_DeckNum = (int)deckui.size();
-
 }
 //デッキのクリア
 void SkillManager::DeckClear() {

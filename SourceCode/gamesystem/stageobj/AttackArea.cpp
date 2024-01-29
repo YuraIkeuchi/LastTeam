@@ -8,7 +8,7 @@
 AttackArea::AttackArea(string& userName, string& stateName) {
 	this->m_Name = userName;
 	this->StateName = stateName;
-	if (StateName == "POISON" || StateName == "VENOM") {
+	if (StateName == "POISON" || StateName == "VENOM" || StateName == "PASSIVEPOISON") {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::DORO);
 		_EffectState = Poison;
 	}
@@ -16,7 +16,7 @@ AttackArea::AttackArea(string& userName, string& stateName) {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::ZASHU);
 		_EffectState = Slash;
 	}
-	else if (StateName == "SPEAR") {
+	else if (StateName == "SPEAR" || StateName == "ARROW") {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::GUSA);
 		_EffectState = Spear;
 	}
@@ -74,32 +74,32 @@ void AttackArea::InitState(const int width, const int height) {
 	m_Hit = false;
 	m_Timer = false;
 	m_Rotation = { 0.0f,0.0f,0.0f };
-	if (StateName == "POISON" || StateName == "VENOM") {
+	if (_EffectState == Poison) {
 		m_Rotation.y = 270.0f;
 		m_Scale = { 0.2f,0.2f,0.2f };
 		m_Position = { panels.position.x,3.0f,panels.position.z };
 		m_Object->SetBillboard(true);
 	}
-	else if (StateName == "SLASH") {
+	else if (_EffectState == Slash) {
 		m_Rotation = { 45.0f,270.0f,0.0f };
 		m_Scale = { 0.3f,0.3f,0.3f };
 		m_Position = { panels.position.x,3.0f,panels.position.z };
 		m_Object->SetBillboard(true);
 	}
-	else if (StateName == "SPEAR") {
+	else if (_EffectState == Spear) {
 		m_Rotation.y = 270.0f;
-		m_Scale = { 0.4f,0.4f,0.4f };
+		m_Scale = { 0.7f,0.7f,0.7f };
 		m_Position = { panels.position.x,5.0f,panels.position.z };
-		m_Object->SetBillboard(true);
+		//m_Object->SetBillboard(true);
 	}
-	else if (StateName == "SHUFFLE") {
+	else if (_EffectState == Hatena) {
 		m_Rotation.y = 270.0f;
 		m_Scale = { 1.5f,1.5f,1.5f };
 		m_Position = { panels.position.x,-1.0f,panels.position.z };
-		m_Color = { 0.6f,0.9f,0.2f,1.0f };
+		m_Color = { 0.8f,0.3f,0.2f,1.0f };
 		//m_Object->SetBillboard(true);
 	}
-	else if (StateName == "DRAIN") {
+	else if (_EffectState == Heal) {
 		m_Rotation.y = 270.0f;
 		m_Scale = { 1.5f,1.5f,1.5f };
 		m_Position = { panels.position.x,-1.0f,panels.position.z };

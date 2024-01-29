@@ -227,7 +227,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {};
+	std::vector <int> m_StartPassive= {0,1,2,3};
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -246,7 +246,7 @@ private:
 	std::unique_ptr<IKESprite> handsFrame;
 	unique_ptr<IKESprite> cancelSkill;
 
-	XMFLOAT2 basesize = { 46.f,350.f };
+	XMFLOAT2 basesize = { 22.f,282.f };
 
 	// 攻撃エリア
 	vector<unique_ptr<AttackArea>> attackarea;
@@ -307,7 +307,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {2,3,5};
+	vector <int> m_StartNumber = {2,3,5,14,20,26};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
@@ -357,7 +357,6 @@ private:
 
 	bool m_GameStart = false;
 	bool m_BossCamera = false;
-	bool m_StartLoad = false;
 
 	bool m_NoDeath = true;
 	bool m_NoDamage = true;
