@@ -227,7 +227,7 @@ private:
 	std::list<DamageEffect> damages;
 
 	std::list<std::unique_ptr<Passive>> GotPassives;
-	std::vector <int> m_StartPassive= {};
+	std::vector <int> m_StartPassive= {0,1,2,3};
 	std::vector<int> GotPassiveIDs = m_StartPassive;
 	std::vector<int> NotPassiveIDs;
 
@@ -246,7 +246,7 @@ private:
 	std::unique_ptr<IKESprite> handsFrame;
 	unique_ptr<IKESprite> cancelSkill;
 
-	XMFLOAT2 basesize = { 46.f,350.f };
+	XMFLOAT2 basesize = { 22.f,282.f };
 
 	// 攻撃エリア
 	vector<unique_ptr<AttackArea>> attackarea;

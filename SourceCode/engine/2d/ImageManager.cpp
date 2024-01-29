@@ -139,7 +139,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(SAVE, L"Resources/2d/sceneback/Save.png");
 	IKESprite::LoadTexture(EXPRE, L"Resources/2d/objicon/Expra.png");
 	IKESprite::LoadTexture(DELAY, L"Resources/2d/objicon/delay.png");
-
+	IKESprite::LoadTexture(STICK, L"Resources/2d/objicon/SkillGauge2.png");
 }
 
 //非同期処理で読み込むスプライト

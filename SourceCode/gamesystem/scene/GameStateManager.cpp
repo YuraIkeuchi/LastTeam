@@ -68,11 +68,12 @@ void GameStateManager::Initialize() {
 	//一旦クリア方式で
 	GotPassives.clear();
 	PassiveCheck();
-	skillUI = IKESprite::Create(ImageManager::FEED, { 45.f,550.f }, { 0.9f,0.9f,0.9f,1.f }, { 0.5f,1.f });
-	skillUI->SetSize(basesize);
-	gaugeUI = IKESprite::Create(ImageManager::FEED, { 45.f,550.f }, { 0.6f,0.6f,1.f,1.f }, { 0.5f,1.f });
+	skillUI = IKESprite::Create(ImageManager::STICK, { 45.f,540.f-20.f }, { 0.9f,0.9f,0.9f,1.f }, { 0.5f,1.f });
+	skillUI->SetSize({ basesize.x,basesize.y });
+	gaugeUI = IKESprite::Create(ImageManager::FEED, { 45.f,540.f-30.f }, { 0.6f,0.6f,1.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
-	gaugeCover = IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f + 32.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	gaugeCover = IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f}, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	gaugeCover->SetSize({ 90.f,400.f });
 	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 	cancelSkill = IKESprite::Create(ImageManager::SKILLCANCEL, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
@@ -333,6 +334,7 @@ void GameStateManager::ActUIDraw() {
 	IKESprite::PreDraw();
 	skillUI->Draw();
 	gaugeUI->Draw();
+	gaugeCover->Draw();
 	SkillManager::GetInstance()->UIDraw();
 	for (PowerUpEffect& power : powerup) {
 		power.tex->Draw();
