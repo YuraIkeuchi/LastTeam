@@ -79,7 +79,7 @@ void AttackArea::InitState(const int width, const int height) {
 		m_Rotation.y = 270.0f;
 		m_Scale = { 0.2f,0.2f,0.2f };
 		m_Position = { panels.position.x,3.0f,panels.position.z };
-		m_Object->SetBillboard(true);
+		//m_Object->SetBillboard(true);
 	}
 	else if (_EffectState == Slash) {
 		m_Rotation = { 45.0f,270.0f,0.0f };
@@ -107,6 +107,7 @@ void AttackArea::InitState(const int width, const int height) {
 		m_Color = { 0.6f,0.9f,0.2f,1.0f };
 	}
 	else {
+		m_AddDisolve = 0.5f;
 		m_Rotation.y = 270.0f;
 		m_Scale = { 0.2f,0.2f,0.2f };
 		m_Position = { panels.position.x,3.0f,panels.position.z };
@@ -186,24 +187,32 @@ void AttackArea::SlashMove() {
 			m_Alive = false;
 		}
 		else {
-			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, {});
+			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,0.0f),
+			Ease(In,Cubic,m_Frame,m_Scale.y,0.0f),
+			Ease(In,Cubic,m_Frame,m_Scale.z,0.0f), };
 		}
 	}
 	else {
 		l_AddFrame = 1 / 40.0f;
 		m_Attack = false;
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
-			m_Alive = false;
-			m_Frame = {};
+			m_Frame = 1.0f;
 		}
 		else {
-			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 2.0f);
+			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 3.0f);
 			m_Rotation.x = Ease(In, Cubic, m_Frame, m_Rotation.x, 0.0f);
-			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
+			//m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 
 			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,0.5f),
 			Ease(In,Cubic,m_Frame,m_Scale.y,0.5f),
 			Ease(In,Cubic,m_Frame,m_Scale.z,0.5f), };
+		}
+
+		if (m_Frame > 0.5f) {
+			if (Helper::CheckMax(m_Color.w, 0.0f, -0.1f)) {
+				m_Alive = false;
+				m_Frame = {};
+			}
 		}
 	}
 }
@@ -244,7 +253,7 @@ void AttackArea::StoneMove() {
 		}
 	}
 	else {
-		l_AddFrame = 1 / 40.0f;
+		l_AddFrame = 1 / 60.0f;
 		m_Attack = false;
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_AddPower = {};
@@ -302,14 +311,14 @@ void AttackArea::PoisonMove() {
 		}
 	}
 	else {
-		l_AddFrame = 1 / 40.0f;
+		l_AddFrame = 1 / 60.0f;
 		m_Attack = false;
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 			m_Frame = {};
 		}
 		else {
-			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 2.0f);
+			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 3.0f);
 			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 
 			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,0.5f),
@@ -356,18 +365,20 @@ void AttackArea::SpearMove() {
 			m_Alive = false;
 		}
 		else {
-			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, {});
+			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,0.0f),
+		Ease(In,Cubic,m_Frame,m_Scale.y,0.0f),
+		Ease(In,Cubic,m_Frame,m_Scale.z,0.0f), };
 		}
 	}
 	else {
-		l_AddFrame = 1 / 40.0f;
+		l_AddFrame = 1 / 60.0f;
 		m_Attack = false;
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 			m_Frame = {};
 		}
 		else {
-			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 2.0f);
+			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 3.0f);
 			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 
 			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,1.5f),
@@ -421,14 +432,14 @@ void AttackArea::HatenaMove() {
 		}
 	}
 	else {
-		l_AddFrame = 1 / 40.0f;
+		l_AddFrame = 1 / 60.0f;
 		m_Attack = false;
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Alive = false;
 			m_Frame = {};
 		}
 		else {
-			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 2.0f);
+			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 3.0f);
 			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 
 			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,1.7f),

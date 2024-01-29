@@ -798,7 +798,9 @@ void MapScene::CheckState() {
 				}
 
 				if (input->TriggerButton(input->B)|| input->TriggerKey(DIK_SPACE)) {
-					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+					if (moved) {
+						Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+					}
 					moved = false;
 					if (nowCheack == 0) {
 						SceneChanger::GetInstance()->SetChangeStart(true);

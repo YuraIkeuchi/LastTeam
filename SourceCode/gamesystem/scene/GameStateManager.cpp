@@ -623,7 +623,6 @@ void GameStateManager::UseSkill() {
 			player->AttackCheck(false);
 		}
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/SkillUse.wav", 0.1f);
-		m_ResetPredict = true;
 		m_Delay = false;
 		m_DelayTimer = {};
 		m_ChargeScale = 5.0f;
@@ -645,6 +644,7 @@ void GameStateManager::FinishAct(bool AllFinish) {
 		m_AllActCount = {};
 		m_Act.clear();
 	}
+	PredictManager();
 	//デッキがない且つ手札を使い切ってたらまた再配布
 	if (m_AllActCount == 0 && StagePanel::GetInstance()->GetAllDelete()) {
 		//デッキの初期化
