@@ -235,7 +235,7 @@ void CanonEnemy::BirthBullet() {
 	/// <summary>
 	///	音入(弾を打つ音希望(ポンッみたいなやつ))
 	/// </summary>
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.03f);
+	//Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.03f);
 	//弾の発生
 	bullets->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z }, m_ShotDir);
 }
