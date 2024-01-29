@@ -25,7 +25,7 @@ AttackArea::AttackArea(string& userName, string& stateName) {
 		_EffectState = Hatena;
 	}
 	else if (StateName == "DRAIN") {
-		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::HATENA);
+		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::KIRA);
 		_EffectState = Heal;
 	}
 	else {
@@ -101,7 +101,7 @@ void AttackArea::InitState(const int width, const int height) {
 	}
 	else if (_EffectState == Heal) {
 		m_Rotation.y = 270.0f;
-		m_Scale = { 1.5f,1.5f,1.5f };
+		m_Scale = { 0.75f,0.75f,0.75f };
 		m_Position = { panels.position.x,-1.0f,panels.position.z };
 		m_Color = { 0.6f,0.9f,0.2f,1.0f };
 	}

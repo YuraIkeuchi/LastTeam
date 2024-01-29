@@ -33,6 +33,7 @@ public:
 		ZASHU,
 		GUSA,
 		HATENA,
+		KIRA,
 		FIRST_BOSS,
 		TORNADO,
 		ROCKENEMY,
