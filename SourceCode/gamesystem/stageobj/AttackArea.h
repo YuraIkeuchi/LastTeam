@@ -114,10 +114,11 @@ private:
 
 	float m_Frame = {};
 
-	enum StoneType {
-		STONE_FALL,
-		STONE_BOUND,
-	}_StoneType = STONE_FALL;
+	enum EffectType {
+		EFFECT_FALL,
+		EFFECT_BOUND,
+		EFFECT_HIT,
+	}_EffectType = EFFECT_FALL;
 
 	bool m_Sound = false;
 };

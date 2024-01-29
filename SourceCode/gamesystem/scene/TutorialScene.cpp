@@ -198,7 +198,7 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 			enemy[i]->UIDraw();
 		}
 		player_->UIDraw();
-		TutorialTask::GetInstance()->Draw();
+		//TutorialTask::GetInstance()->Draw();
 	}
 	
 	if (!m_FeedEnd || GameStateManager::GetInstance()->GetEndResult() && m_Timer <= 550) {
@@ -236,7 +236,7 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
-	GameStateManager::GetInstance()->ImGuiDraw();
+	//GameStateManager::GetInstance()->ImGuiDraw();
 }
 
 void TutorialScene::Finalize() {
