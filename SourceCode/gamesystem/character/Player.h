@@ -122,6 +122,7 @@ public:
 	void SetShieldHP(const float ShieldHP) { m_ShieldHP = ShieldHP; }
 
 	void SetCancel(const bool cancel) { m_Cancel = cancel; }
+	void SetDrawShield(const bool DrawShield) { m_DrawShield = DrawShield; }
 
 	void Setname(const string name) { m_name = name; }
 
@@ -139,6 +140,8 @@ public:
 
 	void ShieldUpdate();
 
+	void ShieldTexUpdate();
+
 	static void HpPassive();
 private:
 	//三桁表示まで
@@ -152,6 +155,7 @@ private:
 
 	static float startHP;
 	static const int HEAL_MAX = 3;
+	static const int SHIELD_NUM = 4;
 public:
 	//キャラの状態
 	enum CharaState {
@@ -304,4 +308,22 @@ private:
 	int m_JumpCount = {};
 
 	std::vector<float> healpower;
+	struct Shield {
+		std::unique_ptr<IKETexture> tex = nullptr;
+		XMFLOAT3 pos = {};
+		float scale = 0.5f;
+		XMFLOAT4 color = {};
+		float CircleSpeed = {};
+		float CircleScale = {};
+	};
+
+	std::array<Shield, SHIELD_NUM> shield;
+
+	int m_ShieldTimer = {};
+	float m_ShieldFrame = {};
+	enum ShieldState {
+		SHIELD_BIRTH,
+		SHIELD_DELETE
+	}_ShieldState = SHIELD_BIRTH;
+	bool m_DrawShield = false;
 };

@@ -63,6 +63,18 @@ void Player::LoadResource() {
 	_MaxHp[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 150.f + 150.0f, 20.0f });
 	_MaxHp[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 150.f + 135.0f,20.0f });
 	_MaxHp[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 150.f + 120.f,  20.0f });
+	for (int i = {}; i < shield.size(); i++) {
+		shield[i].tex.reset(new IKETexture(ImageManager::SHIELD_TEX, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+		shield[i].tex->TextureCreate();
+		shield[i].tex->Initialize();
+		shield[i].tex->SetIsBillboard(true);
+		shield[i].pos = { 0.0f,{},0.0f };
+		shield[i].CircleScale = 1.0f;
+		shield[i].CircleSpeed = i * 90.0f;
+		shield[i].color = { 1.0f,1.0f,1.0f,1.0f };
+		shield[i].scale = 0.0f;
+	}
+
 }
 //初期化
 bool Player::Initialize() {
@@ -71,6 +83,7 @@ bool Player::Initialize() {
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	m_AddDisolve = 2.0f;
 	m_ShieldHP = 0.f;
+
 	//CSV読み込み
 	return true;
 }
@@ -171,6 +184,7 @@ void Player::Update() {
 		BoundMove();
 		RegeneUpdate();
 		ShieldUpdate();
+		ShieldTexUpdate();
 		//表示用のHP
 		m_InterHP = (int)(m_HP);
 		m_InterMaxHP = (int)m_MaxHP;
@@ -234,15 +248,15 @@ void Player::Update() {
 	}
 	//影
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
-	//shadow_tex->SetPosition(m_ShadowPos);
-	//shadow_tex->SetScale(m_ShadowScale);
-	//shadow_tex->Update();
-
 }
 //描画
 void Player::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	//shadow_tex->Draw();
+	if (m_DrawShield) {
+		for (int i = 0; i < shield.size(); i++) {
+			shield[i].tex->Draw();
+		}
+	}
 	IKETexture::PostDraw();
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
@@ -992,4 +1006,52 @@ void Player::GameOverUpdate(const int Timer) {
 	}
 
 	Obj_SetParam();
+}
+
+void Player::ShieldTexUpdate() {
+	if (!m_DrawShield) { return; }
+	const float l_AddFrame = 1 / 20.0f;
+	const int l_TargetTimer = 300;
+
+	if (_ShieldState == SHIELD_BIRTH) {		//シールドが上に上がる
+		if (Helper::FrameCheck(m_ShieldFrame, l_AddFrame)) {
+			for (int i = 0; i < shield.size(); i++) {
+				shield[i].CircleSpeed += 2.0f;
+				if (shield[i].CircleSpeed == 360.0f) {
+					shield[i].CircleSpeed = {};
+				}
+				shield[i].pos = Helper::CircleMove(m_Position, shield[i].CircleScale, shield[i].CircleSpeed);
+			}
+			if (Helper::CheckMin(m_ShieldTimer, l_TargetTimer, 1)) {
+				_ShieldState = SHIELD_DELETE;
+				m_ShieldFrame = {};
+			}
+		}
+		else {
+			for (int i = 0; i < shield.size(); i++) {
+				shield[i].scale = Ease(In, Cubic, m_ShieldFrame, shield[i].scale, 0.1f);
+			}
+		}
+	}
+	else {		//シールドが下がる
+		if (Helper::FrameCheck(m_ShieldFrame, l_AddFrame)) {
+			m_ShieldFrame = {};
+			m_ShieldTimer = {};
+			_ShieldState = SHIELD_BIRTH;
+			m_DrawShield = false;
+		}
+		else {
+			for (int i = 0; i < shield.size(); i++) {
+				shield[i].scale = Ease(In, Cubic, m_ShieldFrame, shield[i].scale, 0.0f);
+			}
+		}
+	}
+
+	for (int i = 0; i < shield.size(); i++) {
+		shield[i].pos.y = 1.0f;
+		shield[i].tex->SetPosition(shield[i].pos);
+		shield[i].tex->SetColor(shield[i].color);
+		shield[i].tex->SetScale({ shield[i].scale,shield[i].scale,shield[i].scale });
+		shield[i].tex->Update();
+	}
 }

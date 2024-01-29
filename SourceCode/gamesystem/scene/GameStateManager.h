@@ -177,6 +177,7 @@ public:
 	const int GetIndex() { return savedata.m_OpenIndex; }
 
 	bool GetEndResult() { return m_EndResult; }
+	bool GetShield() { return m_Shield; }
 	void SetEndText(const bool EndText) { m_EndText = EndText; }
 public:
 	static void SetPlayer(Player* player) { GameStateManager::player = player; }
@@ -307,7 +308,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = {2,3,5,8,14,20,26};
+	vector <int> m_StartNumber = {2,3,5,14};
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};

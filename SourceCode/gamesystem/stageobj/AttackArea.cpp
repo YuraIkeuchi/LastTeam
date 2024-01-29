@@ -8,6 +8,7 @@
 AttackArea::AttackArea(string& userName, string& stateName) {
 	this->m_Name = userName;
 	this->StateName = stateName;
+
 	if (StateName == "POISON" || StateName == "VENOM" || StateName == "PASSIVEPOISON") {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::DORO);
 		_EffectState = Poison;
@@ -24,7 +25,7 @@ AttackArea::AttackArea(string& userName, string& stateName) {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::HATENA);
 		_EffectState = Hatena;
 	}
-	else if (StateName == "DRAIN") {
+	else if (StateName == "DRAIN" || StateName == "PASSIVEDRAIN") {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::KIRA);
 		_EffectState = Heal;
 	}
