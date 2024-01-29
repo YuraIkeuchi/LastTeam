@@ -30,7 +30,7 @@ bool TutorialEnemy::Initialize() {
 	}
 	else {
 		m_Object->SetModel(ModelManager::GetInstance()->GetModel(ModelManager::SUPPORT_ENEMY2));
-		m_Position = StagePanel::GetInstance()->SetPositon(5, 1);
+		m_Position = StagePanel::GetInstance()->SetPositon(7, 3);
 	}
 	m_Rotation = { 0.0f,0.0f,0.0f };
 	m_Scale = { 0.3f,0.3f,0.3f };
@@ -73,8 +73,8 @@ void (TutorialEnemy::* TutorialEnemy::stateTable[])() = {
 //s“®
 void TutorialEnemy::Action() {
 	if (!m_Induction) {
-		//if(m_Number == 0)
-		//(this->*stateTable[_charaState])();
+		if(m_Number == 0)
+		(this->*stateTable[_charaState])();
 	}
 	else {
 		InductionMove();
