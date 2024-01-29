@@ -269,7 +269,7 @@ void BossEnemy2::Recovery() {
 		m_RecoverySaveHP = true;
 	}
 
-	if (m_TmpHP - 4.0f > m_HP) {
+	if (m_TmpHP - 50.0f > m_HP) {
 		confueffect->SetAlive(true);
 		_charaState = STATE_INTER;
 		coolTimer = {};
@@ -301,8 +301,7 @@ void BossEnemy2::Recovery() {
 
 void BossEnemy2::Stun()
 {
-	int l_TargetTimer = {};
-	l_TargetTimer = m_AttackLimit[ATTACK_RECOVERY];
+	int l_TargetTimer = 150;
 
 	m_Rotation.x = 15.0f;
 	m_Rotation.y += 10.0f;

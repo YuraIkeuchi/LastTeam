@@ -73,7 +73,6 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 		}
 	}
 	IKESprite::PreDraw();
-
 	expra->Draw();
 	for (ShineEffect& shine : shines) {
 		shine.tex->Draw();

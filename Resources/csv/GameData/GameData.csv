@@ -1,7 +1,10 @@
-DeckSize,3
+DeckSize,6
 DeckNumber,2
 DeckNumber,3
 DeckNumber,5
+DeckNumber,14
+DeckNumber,20
+DeckNumber,26
 PassiveSize,0
 PlayerHP,500
 Index,1
