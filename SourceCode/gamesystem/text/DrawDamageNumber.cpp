@@ -19,6 +19,7 @@ DrawDamageNumber::DrawDamageNumber(const float scale, const bool move) {
 		_Number[i]->SetAnchorPoint({ 0.5f,0.5f });
 		_Number[i]->SetSize({ l_Width_Cut,l_Height_Cut });
 		_Number[i]->SetScale(scale);
+		_Number[i]->SetPosition({ -1000.0f,0.0f });
 	}
 
 	m_Move = move;

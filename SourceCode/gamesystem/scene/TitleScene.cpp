@@ -21,6 +21,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
 
+	Audio::GetInstance()->LoopWave(AUDIO_MAIN, 0.02f);
 	if (!s_GameLoop) {
 		SceneChanger::GetInstance()->Initialize();
 		s_GameLoop = true;
