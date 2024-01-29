@@ -55,9 +55,6 @@ void RegeneArea::Draw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void RegeneArea::ImGuiDraw() {
-	ImGui::Begin("Regene");
-	ImGui::Text("Timer:%d", m_BirthTimer);
-	ImGui::End();
 }
 //パネルの位置に置く
 XMFLOAT3 RegeneArea::SetPanelPos(const int width, const int height) {

@@ -465,6 +465,7 @@ void GameStateManager::BirthArea() {
 					regenearea.emplace_back(std::move(newarea));
 				} else {
 					std::unique_ptr<AttackArea> newarea = std::make_unique<AttackArea>((string)"Player", m_Act[0].StateName);
+
 					newarea->InitState(AreaX, AreaY);
 					newarea->SetDamage(damage);
 					newarea->SetTimer(m_Act[0].AttackTimer[i][j]);
@@ -909,6 +910,7 @@ void GameStateManager::BirthBuff(string& stateName) {
 		m_Buff = true;		//一旦中身はこれだけ
 	} else {
 		m_Shield = true;
+		player->SetDrawShield(true);
 		//player->SetShieldHP(45.0f);
 	}
 }

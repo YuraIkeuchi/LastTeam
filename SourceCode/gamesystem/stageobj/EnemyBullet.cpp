@@ -95,6 +95,7 @@ void EnemyBullet::Throw() {
 	const float l_AddFrame = 0.5f;
 	const int l_BaseTimer = 40;
 	const float l_AddCircle = 2.0f;
+
 	//弾のマスを取得する
 	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
 	//弾のセット(だんだん浮かび逢ふがるような感じ)
@@ -138,6 +139,8 @@ void EnemyBullet::Throw() {
 			/// <summary>
 			/// ここに発射音（音入）
 			/// </summary>
+			//
+			if(m_Alive)
 			Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
 			return;
 		}
