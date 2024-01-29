@@ -54,10 +54,8 @@ void ActionUI::Update() {
 	for (int i = 0; i < 10; i++) {
 		vanishTexs[i]->SetPosition(m_Position);
 		vanishTexs[i]->SetSize(m_Size);
-
+		vanishTexs[i]->SetColor(m_Color);
 	}
-
-
 
 	_drawnumber->SetPosition(m_Position);
 	_drawnumber->SetNumber(m_ID);
@@ -85,7 +83,7 @@ void ActionUI::ImGuiDraw() {
 }
 //UI‚Ì“®‚«
 void ActionUI::UiMove() {
-	const float l_AddFrame = 1.f / 10.f;
+	const float l_AddFrame = 1.f / 30.f;
 	const float l_size = 128.f;
 	if (m_ActCount == 0) {
 		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, (16.f + 64.f));
@@ -103,10 +101,10 @@ void ActionUI::UiMove() {
 			m_Alive = false;
 		}
 		vanishTiming++;
-		//if ((vanishTiming % 2) == 0) {
+		if ((vanishTiming % 3) == 0) {
 			vanishCount++;
 			Helper::Clamp(vanishCount, 0, 9);
-		//}
+		}
 		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 630.0f);
 		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 	}
