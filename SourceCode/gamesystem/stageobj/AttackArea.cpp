@@ -88,9 +88,9 @@ void AttackArea::InitState(const int width, const int height) {
 	}
 	else if (StateName == "SPEAR") {
 		m_Rotation.y = 270.0f;
-		m_Scale = { 0.4f,0.4f,0.4f };
+		m_Scale = { 0.7f,0.7f,0.7f };
 		m_Position = { panels.position.x,5.0f,panels.position.z };
-		m_Object->SetBillboard(true);
+		//m_Object->SetBillboard(true);
 	}
 	else if (StateName == "SHUFFLE") {
 		m_Rotation.y = 270.0f;
