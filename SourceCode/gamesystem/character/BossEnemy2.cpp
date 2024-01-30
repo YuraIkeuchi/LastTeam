@@ -123,6 +123,7 @@ void BossEnemy2::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	//shadow_tex->Draw();
 	magic.tex->Draw();
+	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
 	confueffect->Draw(dxCommon);
 	for (auto i = 0; i < enethorn.size(); i++) {
