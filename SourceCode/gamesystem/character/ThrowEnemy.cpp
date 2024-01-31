@@ -160,10 +160,6 @@ void ThrowEnemy::Teleport() {
 }
 //’e‚Ì¶¬
 void ThrowEnemy::BirthBullet() {
-	/// <summary>
-	///	‰¹“ü(‚Ô‚ñ‰ñ‚·‰¹Šó–](ƒu[ƒƒ‰ƒ“‚ª‰ñ‚Á‚Ä‚é‰¹‚İ‚½‚¢‚È‚â‚ÂA–³—‚È‚çU‚è‰ñ‚µ‚Ä‚é‚â‚Â))
-	/// </summary>
-	Audio::GetInstance()->PlayWave("Resources/Sound/SE/boomerang.wav", 0.02f);
 	//’e‚Ì”­¶
 	boomerang->InitState({ m_Position.x,m_Position.y + 1.0f,m_Position.z });
 }
