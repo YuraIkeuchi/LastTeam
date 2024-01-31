@@ -94,7 +94,8 @@ public:
 	static bool s_LastStage;
 	//コンティニューしたかどうか
 	static bool s_Countinue;
-
+	//BGMを流すかどうか
+	static bool s_PlayBGM;
 	//マップの位置
 	static int nowIndex;
 	static int nowHierarchy;

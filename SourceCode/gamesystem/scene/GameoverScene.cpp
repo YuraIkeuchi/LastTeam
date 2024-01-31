@@ -10,6 +10,7 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 	//‹¤’Ê‚Ì‰Šú‰»
 	BaseInitialize(dxCommon);
 	Audio::GetInstance()->StopWave(AUDIO_MAIN);
+	Audio::GetInstance()->LoopWave(AUDIO_OVER, 0.02f);
 	std::string BaseName = "Resources/csv/EnemySpawn/Clear/ClearMap.csv";
 	GameStateManager::GetInstance()->SetEnemySpawnText(BaseName);
 
@@ -97,12 +98,15 @@ void GameoverScene::Update(DirectXCommon* dxCommon) {
 			if (GameStateManager::GetInstance()->GetNoDeath()) {
 				GameStateManager::GetInstance()->SetNoDeath(false);
 			}
+			s_PlayBGM = true;
 			SceneManager::GetInstance()->ChangeScene("MAP");
 		}
 		else if(player_->GetSelectType() == 2) {		//’ú‚ß‚Äƒ^ƒCƒgƒ‹‚É–ß‚é
 			s_Countinue = false;
+			s_PlayBGM = true;
 			SceneManager::GetInstance()->ChangeScene("TITLE");
 		}
+		Audio::GetInstance()->StopWave(AUDIO_OVER);
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 

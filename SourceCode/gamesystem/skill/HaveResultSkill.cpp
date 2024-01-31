@@ -236,6 +236,7 @@ void HaveResultSkill::Move() {
 			haveSkills.size() != 1) {
 			m_DeleteCheack = true;
 			m_DeleteStart = true;
+			m_Open = true;
 			deleteFrame = 0.f;
 			///
 			//　ここに削除決定音（音入）
@@ -321,19 +322,39 @@ bool HaveResultSkill::DeleteCheack() {
 	if (m_DeleteStart) {
 		if (Helper::FrameCheck(deleteFrame,1.f/30.0f)) {
 			m_DeleteStart = false;
+			if (!m_Open) {
+				m_DeleteCheack = false;
+			}
 		} else {
-			XMFLOAT2 size = {
-			Ease(Out,Back,deleteFrame,0.f,256.f),
-			Ease(Out,Back,deleteFrame,0.f,64.f)
-			};
-			XMFLOAT2 size_2 = {
-			Ease(Out,Back,deleteFrame,0.f,640.f),
-			Ease(Out,Back,deleteFrame,0.f,328.f)
-			};
-			deleteDeck->SetSize(size_2);
-			for (int i = 0; i < 2; i++) {
-				deleteDeckYes[i]->SetSize(size);
-				deleteDeckNo[i]->SetSize(size);
+			if (m_Open) {
+				XMFLOAT2 size = {
+				Ease(Out,Back,deleteFrame,0.f,256.f),
+				Ease(Out,Back,deleteFrame,0.f,64.f)
+				};
+				XMFLOAT2 size_2 = {
+				Ease(Out,Back,deleteFrame,0.f,640.f),
+				Ease(Out,Back,deleteFrame,0.f,328.f)
+				};
+				deleteDeck->SetSize(size_2);
+				for (int i = 0; i < 2; i++) {
+					deleteDeckYes[i]->SetSize(size);
+					deleteDeckNo[i]->SetSize(size);
+				}
+			}
+			else {
+				XMFLOAT2 size = {
+			Ease(Out,Back,deleteFrame,256.f,0.f),
+			Ease(Out,Back,deleteFrame,64.f,0.f)
+				};
+				XMFLOAT2 size_2 = {
+				Ease(Out,Back,deleteFrame,640.f,0.f),
+				Ease(Out,Back,deleteFrame,328.f,0.f)
+				};
+				deleteDeck->SetSize(size_2);
+				for (int i = 0; i < 2; i++) {
+					deleteDeckYes[i]->SetSize(size);
+					deleteDeckNo[i]->SetSize(size);
+				}
 			}
 		}
 		return true;
@@ -377,14 +398,17 @@ bool HaveResultSkill::DeleteCheack() {
 			///
 			//　ここに削除音（音入）
 			Audio::GetInstance()->PlayWave("Resources/Sound/SE/deletionWinPop.wav", 0.02f);
+			m_DeleteCheack = false;
 			///
 		} else {
+			deleteFrame = {};
+			m_DeleteStart = true;
+			m_Open = false;
 			///
 			//　ここにキャンセル音（音入）
 			//　一旦なし
 			///
 		}
-		m_DeleteCheack = false;
 		deleteDeck->SetSize({});
 		for (int i = 0; i < 2; i++) {
 			deleteDeckYes[i]->SetSize({});

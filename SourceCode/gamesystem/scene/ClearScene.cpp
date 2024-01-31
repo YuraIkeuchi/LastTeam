@@ -13,7 +13,7 @@ void ClearScene::Initialize(DirectXCommon* dxCommon) {
 	noDeath->SetAnchorPoint({0.5f,0.5f});
 	noDamage = IKESprite::Create(ImageManager::NODAMAGE, { 0.0f,0.0f });
 	noDamage->SetAnchorPoint({ 0.5f,0.5f });
-
+	Audio::GetInstance()->StopWave(AUDIO_MAIN);
 	for (int i = 0; i < 3; i++) {
 		RandShineInit();
 	}
@@ -99,7 +99,7 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 		/// <summary>
 		///	音入(ライトがあったときのバンッみたいな音)
 		/// </summary>
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/zyan.wav", 0.04f);
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Dodon.wav", 0.04f);
 		_AppState = APP_NOTICE;
 	}
 	else if (m_AppTimer == 500) {	//カメラが引く
@@ -119,6 +119,7 @@ void ClearScene::Update(DirectXCommon* dxCommon) {
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {			//真っ暗になったら変わる
+		s_PlayBGM = true;
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 		SceneChanger::GetInstance()->SetChange(false);
 	}
@@ -288,6 +289,7 @@ void ClearScene::BirthOnomatope() {
 			l_BirthPos.x = 1000.0f;
 		}
 		l_BirthPos.y = 600.0f;
+		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Clap.wav", 0.04f);
 		onomatope->AddOnomato(Pachi, l_BirthPos);
 	}
 	else if (m_AppTimer == 470 || m_AppTimer == 490) {

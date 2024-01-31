@@ -8,6 +8,7 @@
 //オーディオの種類
 enum AudioLoad {
 	AUDIO_MAIN,
+	AUDIO_OVER,
 };
 //オーディオのコールバック
 class XAudio2VoiceCallBack : public IXAudio2VoiceCallback {

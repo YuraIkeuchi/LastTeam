@@ -205,6 +205,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	SceneChanger::GetInstance()->Update();
 	//シーン切り替え処理
 	if (SceneChanger::GetInstance()->GetChange()) {
+		s_PlayBGM = true;
 		GameStateManager::GetInstance()->SetSaveHP(player_->GetHp());
 		//ゲームクリア
 		if (_ChangeType == CHANGE_MAP) {
