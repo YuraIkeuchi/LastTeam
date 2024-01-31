@@ -144,6 +144,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	}
 
 	if (SceneChanger::GetInstance()->GetChange()) {
+		s_PlayBGM = true;
 		TutorialTask::GetInstance()->SetViewSkill(true);
 		player_->PlayerSave();
 		SceneManager::GetInstance()->ChangeScene("MAP");

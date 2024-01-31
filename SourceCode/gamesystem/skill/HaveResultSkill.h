@@ -85,5 +85,6 @@ private:
 	float deleteFrame = 0.f;
 	bool m_DeleteCheack = false;
 	int nowCheack = 0;
+	bool m_Open = false;
 };
 

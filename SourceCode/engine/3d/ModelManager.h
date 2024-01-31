@@ -34,6 +34,7 @@ public:
 		GUSA,
 		HATENA,
 		KIRA,
+		BYUNN,
 		FIRST_BOSS,
 		TORNADO,
 		ROCKENEMY,

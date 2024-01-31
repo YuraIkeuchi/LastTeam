@@ -12,6 +12,7 @@ AudioManager* AudioManager::GetInstance()
 //”ñ“¯Šú‘O‚É“Ç‚Ýž‚Þ‚à‚Ì
 void AudioManager::StartLoadAudio() {
 	Audio::GetInstance()->LoadSound(AUDIO_MAIN, "Resources/Sound/BGM/mainBGM.wav");
+	Audio::GetInstance()->LoadSound(AUDIO_OVER, "Resources/Sound/BGM/overBGM.wav");
 
 }
 
