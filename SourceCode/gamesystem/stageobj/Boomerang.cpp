@@ -104,15 +104,15 @@ void Boomerang::Throw() {
 			m_TargetPos = { -6.0f,m_Position.y,m_Position.z };
 			int nextWidthPanel = m_NowWidth - (nextPredict + 1);
 			if (nextWidthPanel < 0) {
+				/// <summary>
+				///	音入(ぶん回す音希望(ブーメランが回ってる音みたいなやつ、無理なら振り回してるやつ))
+				/// </summary>
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/boomerang.wav", 0.05f);
 				m_ThrowType = THROW_PLAY;
 				_MoveDir = MOVE_STRAIGHT;
 				nextPredict = 0;
 				predictFrame = 0.f;
 				m_Frame = {};
-				/// <summary>
-				/// ここに発射音（音入）
-				/// </summary>
-				Audio::GetInstance()->PlayWave("Resources/Sound/SE/deletionWinPop.wav", 0.02f);
 				return;
 			}
 
@@ -148,9 +148,9 @@ void Boomerang::Throw() {
 							nextPredict = 0;
 							predictFrame = 0.f;
 							/// <summary>
-							/// ここに発射音（音入）
+							///	音入(ぶん回す音希望(ブーメランが回ってる音みたいなやつ、無理なら振り回してるやつ))
 							/// </summary>
-							Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
+							Audio::GetInstance()->PlayWave("Resources/Sound/SE/boomerang.wav", 0.05f);
 							return;
 						}
 
@@ -175,9 +175,9 @@ void Boomerang::Throw() {
 							nextPredict = 0;
 							predictFrame = 0.f;
 							/// <summary>
-							/// ここに発射音（音入）
+							///	音入(ぶん回す音希望(ブーメランが回ってる音みたいなやつ、無理なら振り回してるやつ))
 							/// </summary>
-							Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
+							Audio::GetInstance()->PlayWave("Resources/Sound/SE/boomerang.wav", 0.05f);
 							return;
 						}
 
@@ -211,9 +211,9 @@ void Boomerang::Throw() {
 						nextPredict = 0;
 						predictFrame = 0.f;
 						/// <summary>
-						/// ここに発射音（音入）
+						///	音入(ぶん回す音希望(ブーメランが回ってる音みたいなやつ、無理なら振り回してるやつ))
 						/// </summary>
-						Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
+						Audio::GetInstance()->PlayWave("Resources/Sound/SE/boomerang.wav", 0.05f);
 						return;
 					}
 
@@ -246,9 +246,9 @@ void Boomerang::Throw() {
 						nextPredict = 0;
 						predictFrame = 0.f;
 						/// <summary>
-						/// ここに発射音（音入）
+						///	音入(ぶん回す音希望(ブーメランが回ってる音みたいなやつ、無理なら振り回してるやつ))
 						/// </summary>
-						Audio::GetInstance()->PlayWave("Resources/Sound/SE/shot.wav", 0.02f);
+						Audio::GetInstance()->PlayWave("Resources/Sound/SE/boomerang.wav", 0.05f);
 						return;
 					}
 

@@ -83,6 +83,8 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 	EnemyManager::SetPlayer(player_.get());
 	enemyManager = std::make_unique<EnemyManager>();
 	enemyManager->Initialize();
+
+	s_LastStage = false;
 }
 //çXêV
 void GameoverScene::Update(DirectXCommon* dxCommon) {

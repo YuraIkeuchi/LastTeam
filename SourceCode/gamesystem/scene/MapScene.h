@@ -161,7 +161,7 @@ private:
 	XMFLOAT2 charaSize = {};
 	float eFrame = 0;
 	float eAdd = 0.01f;
-
+	int m_BeforeSelect = {};
 	XMFLOAT2 charaPos = { homeX ,homeY[Middle] };
 	XMFLOAT2 framePos = { homeX + interbal ,homeY[Middle] };
 
@@ -172,5 +172,7 @@ private:
 	int m_SaveTimer = {};
 	int m_SaveCount = {};
 	bool m_EndSave = false;
+	bool m_Select = false;
+	int m_SelectNum = {};
 };
 

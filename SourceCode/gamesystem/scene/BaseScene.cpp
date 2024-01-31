@@ -13,6 +13,7 @@ bool BaseScene::s_Countinue = false;
 bool BaseScene::s_PlayBGM = true;
 int BaseScene::nowHierarchy = 0;
 int BaseScene::nowIndex = 1;
+int BaseScene::s_selectnum = 0;
 int BaseScene::clearHierarchy=1;
 
 BaseScene::BaseScene()

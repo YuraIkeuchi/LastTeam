@@ -100,7 +100,7 @@ public:
 	static int nowIndex;
 	static int nowHierarchy;
 	static int clearHierarchy;
-
+	static int s_selectnum;
 	unique_ptr<Player> player_;
 	unique_ptr<Feed> feed;
 	bool m_Feed = false;

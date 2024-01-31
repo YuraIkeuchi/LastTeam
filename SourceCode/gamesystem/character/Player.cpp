@@ -928,7 +928,7 @@ void Player::GameOverUpdate(const int Timer) {
 			m_Position.y = 0.1f;
 		}
 	} else if (_OverType == OVER_MOVE) {		//動く
-		if ((input->TriggerButton(input->A)) || (input->TriggerButton(input->B))) {
+		if ((input->TriggerButton(input->A)) || (input->TriggerButton(input->B)) && !m_OverMove) {
 			m_OverMove = true;
 			if (input->TriggerButton(input->B)) {
 				m_SelectType = SELECT_YES;
