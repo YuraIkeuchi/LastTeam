@@ -40,6 +40,7 @@ private:
 	void SpearMove();
 	void HatenaMove();
 	void HealMove();
+	void AeroMove();
 private:
 	XMFLOAT3 SetPanelPos(const int width, const int height);
 public:
@@ -77,6 +78,7 @@ private:
 		Spear,
 		Hatena,
 		Heal,
+		Aero,
 	}_EffectState = Slash;
 	//ƒpƒlƒ‹
 	struct Panel {

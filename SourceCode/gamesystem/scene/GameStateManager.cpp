@@ -319,7 +319,7 @@ void GameStateManager::ActUIDraw() {
 		if (actui[i] == nullptr)continue;
 		actui[i]->Draw();
 	}
-	if (player->GetCancel()) {
+	if (player->GetCancel() && !m_Shield) {
 		cancelSkill->Draw();
 	}
 	for (unique_ptr<Passive>& passive : GotPassives) {

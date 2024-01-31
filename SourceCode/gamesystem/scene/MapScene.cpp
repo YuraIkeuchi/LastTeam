@@ -23,8 +23,10 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
-
-	Audio::GetInstance()->LoopWave(AUDIO_MAIN, 0.02f);
+	if (s_PlayBGM) {
+		Audio::GetInstance()->LoopWave(AUDIO_MAIN, 0.02f);
+		s_PlayBGM = false;
+	}
 	//ポストエフェクト
 	PlayPostEffect = false;
 

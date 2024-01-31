@@ -240,10 +240,6 @@ void ResultSkill::Move() {
 				pickAreas->ResetTimer();
 			}
 		}
-		/// <summary>
-		/// ここにスキル選択音（音入）
-		/// </summary>
-		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.1f);
 		isMove = true;
 	}
 	if ((input->TriggerButton(Input::B) ||

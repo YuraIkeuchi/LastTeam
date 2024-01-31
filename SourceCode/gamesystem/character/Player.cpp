@@ -1020,7 +1020,6 @@ void Player::ShieldTexUpdate() {
 				if (shield[i].CircleSpeed == 360.0f) {
 					shield[i].CircleSpeed = {};
 				}
-				shield[i].pos = Helper::CircleMove(m_Position, shield[i].CircleScale, shield[i].CircleSpeed);
 			}
 			if (Helper::CheckMin(m_ShieldTimer, l_TargetTimer, 1)) {
 				_ShieldState = SHIELD_DELETE;
@@ -1048,6 +1047,7 @@ void Player::ShieldTexUpdate() {
 	}
 
 	for (int i = 0; i < shield.size(); i++) {
+		shield[i].pos = Helper::CircleMove(m_Position, shield[i].CircleScale, shield[i].CircleSpeed);
 		shield[i].pos.y = 1.0f;
 		shield[i].tex->SetPosition(shield[i].pos);
 		shield[i].tex->SetColor(shield[i].color);

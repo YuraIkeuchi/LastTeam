@@ -20,7 +20,10 @@ void TitleScene::Initialize(DirectXCommon* dxCommon) {
 	//共通の初期化
 	BaseInitialize(dxCommon);
 	dxCommon->SetFullScreen(true);
-
+	if (s_PlayBGM) {
+		Audio::GetInstance()->LoopWave(AUDIO_MAIN, 0.02f);
+		s_PlayBGM = false;
+	}
 	if (!s_GameLoop) {
 		SceneChanger::GetInstance()->Initialize();
 		s_GameLoop = true;
