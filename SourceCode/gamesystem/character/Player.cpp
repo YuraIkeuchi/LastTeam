@@ -1020,7 +1020,6 @@ void Player::ShieldTexUpdate() {
 				if (shield[i].CircleSpeed == 360.0f) {
 					shield[i].CircleSpeed = {};
 				}
-				
 			}
 			if (Helper::CheckMin(m_ShieldTimer, l_TargetTimer, 1)) {
 				_ShieldState = SHIELD_DELETE;

@@ -29,6 +29,10 @@ AttackArea::AttackArea(string& userName, string& stateName) {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::KIRA);
 		_EffectState = Heal;
 	}
+	else if (StateName == "FAR" || StateName == "NEAR") {
+		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BYUNN);
+		_EffectState = Aero;
+	}
 	else {
 		m_Model = ModelManager::GetInstance()->GetModel(ModelManager::DOGO);
 		_EffectState = Stone;
@@ -59,6 +63,7 @@ void (AttackArea::* AttackArea::stateTable[])() = {
 	&AttackArea::SpearMove,//Ç‚ÇËån
 	&AttackArea::HatenaMove,//ÇÕÇƒÇ»
 	&AttackArea::HealMove,//âÒïúÇÃìÆÇ´
+	&AttackArea::AeroMove,//à¯Ç´äÒÇπÇ∆Ç©
 };
 //èâä˙âª
 bool AttackArea::Initialize() {
@@ -106,6 +111,17 @@ void AttackArea::InitState(const int width, const int height) {
 		m_Position = { panels.position.x,-1.0f,panels.position.z };
 		m_Color = { 0.6f,0.9f,0.2f,1.0f };
 	}
+	else if (_EffectState == Aero) {
+		m_Rotation.y = 270.0f;
+		m_Scale = { 0.7f,0.7f,0.7f };
+		if (StateName == "FAR") {
+			m_Position = { panels.position.x - 0.7f,-1.0f,panels.position.z };
+		}
+		else {
+			m_Position = { panels.position.x + 0.7f,-1.0f,panels.position.z };
+		}
+		m_Object->SetBillboard(true);
+	}
 	else {
 		m_AddDisolve = 0.5f;
 		m_Rotation.y = 270.0f;
@@ -114,7 +130,6 @@ void AttackArea::InitState(const int width, const int height) {
 		m_Object->SetBillboard(true);
 	}
 }
-
 //çXêV
 void AttackArea::Update() {
 	const int l_TargetTimer = 10;
@@ -496,5 +511,72 @@ void AttackArea::HealMove() {
 			}
 		}
 	}
+}
+//à¯Ç´äÒÇπêÅÇ´îÚÇŒÇµçUåÇ
+void AttackArea::AeroMove() {
+	float l_AddFrame = {};
+	if (m_Timer > m_BirthTimer) { return; }
+	if (_EffectType == EFFECT_FALL) {
+		l_AddFrame = 1 / 20.0f;
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			if (!m_Hit) {
+				_EffectType = EFFECT_BOUND;
+			}
+			else {
+				_EffectType = EFFECT_HIT;
+			}
+			m_Frame = {};
+		}
+		else {
+			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 1.0f);
+			if (StateName == "FAR") {
+				m_Rotation.x = Ease(In, Cubic, m_Frame, m_Rotation.x, 45.0f);
+				m_Position.x = Ease(In, Cubic, m_Frame, m_Position.x, panels.position.x + 0.7f);
+			}
+			else {
+				m_Rotation.x = Ease(In, Cubic, m_Frame, m_Rotation.x, -45.0f);
+				m_Position.x = Ease(In, Cubic, m_Frame, m_Position.x, panels.position.x - 0.7f);
+			}
+		}
+		//Ç†ÇÈíˆìxÇÃçÇÇ≥Ç…Ç»Ç¡ÇΩÇÁçUåÇîªíË
+		if (m_Position.y <= 1.5f && m_Position.y >= 0.5f) {
+			m_Attack = true;
+			/// <summary>
+			///	âπì¸(éhÇ∑âπ)
+			/// </summary>
+			if (m_Sound) {
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/gusa.wav", 0.02f);
+				m_Sound = false;
+			}
+		}
+	}
+	else if (_EffectType == EFFECT_BOUND) {
+		l_AddFrame = 1 / 30.0f;
+		m_Attack = false;
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			m_Alive = false;
+		}
+		else {
+			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,0.0f),
+		Ease(In,Cubic,m_Frame,m_Scale.y,0.0f),
+		Ease(In,Cubic,m_Frame,m_Scale.z,0.0f), };
+		}
+	}
+	else {
+		l_AddFrame = 1 / 60.0f;
+		m_Attack = false;
+		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+			m_Alive = false;
+			m_Frame = {};
+		}
+		else {
+			m_Rotation.x = Ease(In, Cubic, m_Frame, m_Rotation.x, 0.0f);
+			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 3.0f);
+			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 
+			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,1.5f),
+			Ease(In,Cubic,m_Frame,m_Scale.y,0.9f),
+			Ease(In,Cubic,m_Frame,m_Scale.z,1.5f), };
+		}
+	}
 }
