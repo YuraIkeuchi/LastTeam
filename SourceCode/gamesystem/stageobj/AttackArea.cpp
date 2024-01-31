@@ -350,10 +350,10 @@ void AttackArea::SpearMove() {
 		if (m_Position.y <= 2.5f) {
 			m_Attack = true;
 			/// <summary>
-			///	音入(岩が落ちる又は欠ける音希望)
+			///	音入(刺す音)
 			/// </summary>
 			if (m_Sound) {
-				Audio::GetInstance()->PlayWave("Resources/Sound/SE/heavyRockCollapse.wav", 0.02f);
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/gusa.wav", 0.02f);
 				m_Sound = false;
 			}
 		}
@@ -472,7 +472,7 @@ void AttackArea::HealMove() {
 			///	音入(ドロドロしたものが地面に落ちる音希望(ベチャッみたいなやつ)
 			/// </summary>
 			if (m_Sound) {
-				Audio::GetInstance()->PlayWave("Resources/Sound/SE/Poison.wav", 0.02f);
+				Audio::GetInstance()->PlayWave("Resources/Sound/SE/HealAttack.wav", 0.02f);
 				m_Sound = false;
 			}
 		}
