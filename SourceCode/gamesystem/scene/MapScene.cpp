@@ -569,10 +569,10 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	ImGui::Begin("Map");
+	/*ImGui::Begin("Map");
 	ImGui::Text("selectnum:%d", s_selectnum);
 	ImGui::Text("Before:%d", m_BeforeSelect);
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void MapScene::BlackOut() {
