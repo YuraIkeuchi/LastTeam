@@ -101,7 +101,9 @@ void TackleEnemy::Draw(DirectXCommon* dxCommon) {
 	//shadow_tex->Draw();
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
-	predictArea->Draw(dxCommon);
+	if (!m_Death) {
+		predictArea->Draw(dxCommon);
+	}
 	IKETexture::PostDraw();
 
 	if (m_Color.w != 0.0f) {
