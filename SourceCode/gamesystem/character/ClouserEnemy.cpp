@@ -109,11 +109,13 @@ void ClouserEnemy::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-	for (auto i = 0; i < enerock.size(); i++) {
-		if (enerock[i] == nullptr)continue;
-		enerock[i]->Draw(dxCommon);
+	if (!m_Death) {
+		for (auto i = 0; i < enerock.size(); i++) {
+			if (enerock[i] == nullptr)continue;
+			enerock[i]->Draw(dxCommon);
+		}
+		predictarea->Draw(dxCommon);
 	}
-	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
 	BaseBackDraw(dxCommon);

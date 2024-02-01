@@ -85,9 +85,6 @@ void CanonEnemy::Action() {
 	bullets->Update();
 	
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
-	//shadow_tex->SetPosition(m_ShadowPos);
-	//shadow_tex->SetScale(m_ShadowScale);
-	//shadow_tex->Update();
 
 	magic.tex->SetPosition(magic.Pos);
 	magic.tex->SetScale({ magic.Scale,magic.Scale,magic.Scale });
@@ -102,18 +99,15 @@ void CanonEnemy::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-
-	if (bullets->GetAlive()) {
-		bullets->Draw(dxCommon);
-	}
 	////敵の弾
-	//for (unique_ptr<EnemyBullet>& newbullet : bullets) {
-	//	if (newbullet != nullptr) {
-	//		newbullet->Draw(dxCommon);
-	//	}
-	//}
-	if (m_Color.w != 0.0f)
+	if (!m_Death) {
+		if (bullets->GetAlive()) {
+			bullets->Draw(dxCommon);
+		}
+	}
+	if (m_Color.w != 0.0f) {
 		Obj_Draw();
+	}
 	BaseBackDraw(dxCommon);
 
 }

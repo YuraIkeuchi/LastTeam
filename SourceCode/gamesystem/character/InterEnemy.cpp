@@ -941,7 +941,7 @@ void InterEnemy::BomUpdate() {
 		};
 		bomTex->SetScale(scale);
 		float rot2 = Ease(In, Back, m_BomFrame, 0.f, -45.0f);
-		bomTex->SetRotation({ 45.f,0.f,rot2 });
+		bomTex->SetRotation({ 60.f,0.f,rot2 });
 		float alpha = Ease(In, Exp, m_BomFrame, 1.f, 0.0f);
 		bomTex->SetColor({ 0.f,0.f,0.f,alpha });
 		bomTex->SetPosition({ effect2Pos.x,effect2Pos.y + 0.5f,effect2Pos.z });

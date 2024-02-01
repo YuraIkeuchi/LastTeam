@@ -101,14 +101,14 @@ void CreateBombEnemy::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-
-	//áŠQ•¨‚Ìíœ
-	for (int i = 0; i < bomb.size(); i++) {
-		if (bomb[i] == nullptr) {
-			continue;
+	if (!m_Death) {
+		//áŠQ•¨‚Ìíœ
+		for (int i = 0; i < bomb.size(); i++) {
+			if (bomb[i] == nullptr) {
+				continue;
+			}
+			bomb[i]->Draw(dxCommon);
 		}
-
-		bomb[i]->Draw(dxCommon);
 	}
 	if (m_Color.w != 0.0f) {
 		Obj_Draw();
