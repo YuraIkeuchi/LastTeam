@@ -25,6 +25,9 @@ ResultReport::ResultReport() {
 		damage_taken[i]->Initialize();
 	}
 	feed = make_unique<Feed>();
+
+	nextStage = IKESprite::Create(ImageManager::RESULTNEXT, {1275.f,715.f }, { 1.f,1.f, 1.f, 1.f });
+	nextStage->SetAnchorPoint({1.f,1.f});
 	Initialize();
 }
 
@@ -134,6 +137,8 @@ void ResultReport::Draw(DirectXCommon* dxCommon) {
 	}
 	if (state < FINISH) {
 		skip->Draw();
+	} else {
+		nextStage->Draw();
 	}
 	if (m_Feed) {
 		feed->Draw();
