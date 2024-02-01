@@ -267,6 +267,8 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		m_Save = true;
 		GameStateManager::GetInstance()->SaveGame();
 	}
+
+	m_BeforeSelect = s_selectnum;
 }
 
 void MapScene::Update(DirectXCommon* dxCommon) {
@@ -572,10 +574,10 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	ImGui::Begin("Map");
-	ImGui::Text("Hieralky:%d", nowHierarchy);
-	ImGui::Text("clear:%d", clearHierarchy);
-	ImGui::End();
+	/*ImGui::Begin("Map");
+	ImGui::Text("selectnum:%d", s_selectnum);
+	ImGui::Text("Before:%d", m_BeforeSelect);
+	ImGui::End();*/
 }
 
 void MapScene::BlackOut() {
@@ -865,7 +867,15 @@ void MapScene::CheckState() {
 	} else {
 		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
 			SceneChanger::GetInstance()->SetChangeStart(true);
-			int num = Helper::GetRanNum(1, 3);
+			if (!m_Select) {
+				m_SelectNum = Helper::GetRanNum(1, 4);
+				if (m_SelectNum == m_BeforeSelect) {
+					m_SelectNum = Helper::GetRanNum(1, 4);
+				}
+				else {
+					m_Select = true;
+				}
+			}
 			std::stringstream ss;
 			const std::string BaseName = "Resources/csv/EnemySpawn/";
 			string levelName = "None";
@@ -890,10 +900,10 @@ void MapScene::CheckState() {
 					levelName = "Ultimate";
 				}
 				if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
-					ss << BaseName + levelName + "/BattleMap0" << num << ".csv";
+					ss << BaseName + levelName + "/BattleMap0" << m_SelectNum << ".csv";
 					isBattle = true;
 				} else if (UIs[nowHierarchy][nowIndex].Tag == PASSIVE) {
-					ss << BaseName + levelName + "/PassiveMap0" << num << ".csv";
+					ss << BaseName + levelName + "/PassiveMap0" << m_SelectNum << ".csv";
 					isBattle = false;
 				} else if (UIs[nowHierarchy][nowIndex].Tag == BOSS) {
 					ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
@@ -903,6 +913,7 @@ void MapScene::CheckState() {
 			std::string r_map = ss.str();
 			GameStateManager::GetInstance()->SetEnemySpawnText(r_map, isBattle);
 			delayFrame = 0.f;
+			s_selectnum = m_SelectNum;
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
 			TutorialTask::GetInstance()->SetViewSkill(true);

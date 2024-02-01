@@ -308,10 +308,10 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 //描画
 void GameStateManager::ImGuiDraw() {
 	ImGui::Begin("Base");
-	ImGui::Text("Discard:%d", (int)m_DiscardNumber.size());
+	ImGui::Text("Discard:%d", m_Choice);
 	ImGui::End();
-	SkillManager::GetInstance()->ImGuiDraw();
-	StagePanel::GetInstance()->ImGuiDraw();
+	//SkillManager::GetInstance()->ImGuiDraw();
+	//StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
@@ -811,7 +811,6 @@ bool GameStateManager::AttackSubAction() {
 
 bool GameStateManager::ResultUpdate() {
 	if (!isFinish) { return false; }
-	
 	if (!resultReport->GetIsFinish()) {
 		resultReport->Update();
 		return false;
@@ -824,21 +823,28 @@ bool GameStateManager::ResultUpdate() {
 		if (m_EndText) {
 			if (Input::GetInstance()->TriggerButton(Input::LB) ||
 				Input::GetInstance()->TriggerKey(DIK_LEFT)) {
-				_ResultType = GET_SKILL;
-				///
-				//　ここにスキルとデッキ切り替え音（音入）
-				///
-				Audio::GetInstance()->PlayWave("Resources/Sound/SE/switch.wav", 0.02f);
+				if (!m_Choice) {
+					///
+					//　ここにスキルとデッキ切り替え音（音入）
+					///
+					if (_ResultType == HAVE_SKILL) {
+						Audio::GetInstance()->PlayWave("Resources/Sound/SE/switch.wav", 0.02f);
+					}
+					_ResultType = GET_SKILL;
+				}
 			}
 			if (Input::GetInstance()->TriggerButton(Input::RB) ||
 				Input::GetInstance()->TriggerKey(DIK_RIGHT)) {
-				_ResultType = HAVE_SKILL;
-				///
-				//　ここにスキルとデッキ切り替え音（音入）
-				///
-				Audio::GetInstance()->PlayWave("Resources/Sound/SE/switch.wav", 0.02f);
+				if (!m_Choice) {
+					///
+					//　ここにスキルとデッキ切り替え音（音入）
+					///
+					if (_ResultType == GET_SKILL) {
+						Audio::GetInstance()->PlayWave("Resources/Sound/SE/switch.wav", 0.02f);
+					}
+					_ResultType = HAVE_SKILL;
+				}
 			}
-
 			if (_ResultType == GET_SKILL) {
 				resultSkill->Move();
 
