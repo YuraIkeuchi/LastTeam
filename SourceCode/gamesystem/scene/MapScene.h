@@ -103,6 +103,8 @@ private:
 	unique_ptr<IKESprite> screen = nullptr;
 	unique_ptr<IKESprite> startButton = nullptr;
 	unique_ptr<IKESprite> cheack= nullptr;
+	unique_ptr<IKESprite> select = nullptr;
+
 	XMFLOAT2 size_c = {};
 	float s_frame = 0.0f;
 	XMFLOAT2 cheackSize = {};
