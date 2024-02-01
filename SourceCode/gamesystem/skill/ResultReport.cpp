@@ -79,7 +79,7 @@ void ResultReport::Update() {
 			damage_dealt[i]->SetNumber(dealNum[i]);
 			damage_dealt[i]->SetSize({ 128.f ,128.f });
 		}
-		if (score >= 200) {
+		if (score >= 0) {
 			rate = IKESprite::Create(ImageManager::RESULTREPORTATTACK, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
 			rate->SetAnchorPoint({ 0.5f,0.5f });
 			rate->SetRotation(-2.f);
@@ -179,7 +179,7 @@ void ResultReport::ScoreUpdate() {
 		}
 		isSecondNum = true;
 		if (Helper::FrameCheck(numFrames[1], 1 / kFrameScoreMax)) {
-			if (score >= 200) {
+			if (score >= 0) {
 				rate = IKESprite::Create(ImageManager::RESULTREPORTATTACK, { 630.f,650.f }, { 1.f,1.f, 1.f, 1.f });
 				rate->SetAnchorPoint({ 0.5f,0.5f });
 				rate->SetRotation(-2.f);
