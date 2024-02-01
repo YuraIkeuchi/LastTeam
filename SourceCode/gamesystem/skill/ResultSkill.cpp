@@ -36,6 +36,11 @@ void ResultSkill::Update() {
 	if (!FeedOut()) { return; }
 	ShineEffectUpdate();
 	StarEffectUpdate();
+
+	ecpraSin += 0.08f;
+	float posY = 10.f + (abs(sinf(ecpraSin)) * 15.f);
+	expra->SetPosition({ 1280.f - 210.f,posY });
+
 	for (ResultUI& itr : choiceSkills) {
 		if (!itr.isSkill) { continue; }
 		if (itr.no == 2) {
