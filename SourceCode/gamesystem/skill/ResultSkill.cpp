@@ -38,7 +38,7 @@ void ResultSkill::Update() {
 	StarEffectUpdate();
 
 	ecpraSin += 0.08f;
-	float posY = 10.f + (abs(sinf(ecpraSin)) * 15.f);
+	float posY = 10.f + (sinf(ecpraSin) * 5.f);
 	expra->SetPosition({ 1280.f - 210.f,posY });
 
 	for (ResultUI& itr : choiceSkills) {
