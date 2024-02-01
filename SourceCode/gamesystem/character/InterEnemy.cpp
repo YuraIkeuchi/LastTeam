@@ -126,6 +126,7 @@ void InterEnemy::Update() {
 	Helper::Clamp(m_HP, 0.0f, m_MaxHP);
 
 	m_InterHP = (int)(m_HP);
+	Helper::Clamp(m_InterHP, 1, (int)m_MaxHP);
 
 	////敵のマスを取得する
 	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight, m_Alive);
@@ -262,12 +263,11 @@ void InterEnemy::ImGuiDraw() {
 void InterEnemy::UIDraw() {
 	//if (!GameStateManager::GetInstance()->GetGameStart() && m_EnemyTag != "Mob") { return; }
 	IKESprite::PreDraw();
-	if (m_HP != 0.0f) {
+	if (!m_Death) {
 		//HPバー
 		hptex->Draw();
 		//HP(数字)
-		if (m_InterHP != 0)
-			_drawnumber[FIRST_DIGHT]->Draw();
+		_drawnumber[FIRST_DIGHT]->Draw();
 		if (m_InterHP >= 10)
 			_drawnumber[SECOND_DIGHT]->Draw();
 		if (m_InterHP >= 100)
