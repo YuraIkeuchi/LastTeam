@@ -39,6 +39,10 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(MAP_BOSS, L"Resources/2d/objicon/Map/map_02.png");
 	IKESprite::LoadTexture(MAP_HEAL, L"Resources/2d/objicon/Map/map_03.png");
 	IKESprite::LoadTexture(MAP_TUTORIAL, L"Resources/2d/objicon/Map/map_04.png");
+	IKESprite::LoadTexture(MAP_SKILL_CLOSE, L"Resources/2d/objicon/Map/close_01.png");
+	IKESprite::LoadTexture(MAP_BOSS_CLOSE, L"Resources/2d/objicon/Map/close_02.png");
+	IKESprite::LoadTexture(MAP_PASSIVE_CLOSE, L"Resources/2d/objicon/Map/close_03.png");
+	IKESprite::LoadTexture(MAP_TUTORIAL_CLOSE, L"Resources/2d/objicon/Map/close_04.png");
 	IKESprite::LoadTexture(MAP_CHEACK, L"Resources/2d/objicon/Map/map_cheack.png");
 	IKESprite::LoadTexture(MAP_CHEACK_OK, L"Resources/2d/objicon/Map/T_OK.png");
 	IKESprite::LoadTexture(MAP_CHEACK_NO, L"Resources/2d/objicon/Map/T_Cancel.png");

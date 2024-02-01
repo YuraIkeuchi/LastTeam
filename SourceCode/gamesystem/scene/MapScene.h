@@ -38,8 +38,10 @@ private:
 
 	struct UI {
 		unique_ptr<IKESprite> sprite = nullptr;
+		unique_ptr<IKESprite> sprite_close = nullptr;
 		int nextIndex[3] = {};
 		int hierarchy = -1;
+		bool isOpened = false;
 		XMFLOAT2 pos = { 0,0 };
 		XMFLOAT2 size = { 0,0 };
 		XMFLOAT4 color = { 1.f,1.f,1.f,1.f };

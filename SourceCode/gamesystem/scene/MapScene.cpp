@@ -91,11 +91,13 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	nowComment = 0;
 
 	UIs[0][Middle].sprite = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
+	UIs[0][Middle].sprite_close = IKESprite::Create(ImageManager::MAP_START, { 0,0 });
 	UIs[0][Middle].pos = { homeX ,homeY[Middle] };
 	UIs[0][Middle].open = true;
 	UIs[0][Middle].hierarchy = 0;
 	UIs[0][Middle].size = { 186.f,186.f };
 	UIs[0][Middle].sprite->SetAnchorPoint({ 0.5f,0.5f });
+	UIs[0][Middle].sprite_close->SetAnchorPoint({ 0.5f,0.5f });
 	homeX += interbal;
 
 	if (nowHierarchy == 0) {
@@ -202,6 +204,9 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 			ui[i].sprite->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
 			ui[i].sprite->SetColor(ui[i].color);
 			ui[i].sprite->SetSize(ui[i].size);
+			ui[i].sprite_close->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
+			ui[i].sprite_close->SetColor(ui[i].color);
+			ui[i].sprite_close->SetSize(ui[i].size);
 		}
 	}
 
@@ -244,8 +249,12 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 			ui[i].sprite->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
 			ui[i].sprite->SetColor(ui[i].color);
 			ui[i].sprite->SetSize(ui[i].size);
+			ui[i].sprite_close->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
+			ui[i].sprite_close->SetColor(ui[i].color);
+			ui[i].sprite_close->SetSize(ui[i].size);
 		}
 	}
+	UIs[nowHierarchy][nowIndex].isOpened = true;
 	for (int i = 0; i < roads.size(); i++) {
 		roads[i]->SetPosition({ roadsPos[i].x + scroll.x,roadsPos[i].y + scroll.y });
 	}
@@ -332,13 +341,17 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
-			ui[i].sprite->Draw();
+			if (ui[i].isOpened) {
+				ui[i].sprite->Draw();
+			} else {
+				ui[i].sprite_close->Draw();
+			}
 		}
 	}
 	
 	chara->Draw();
 	if (!end) {
-		frame->Draw();
+		//frame->Draw();
 	}
 	onomatope->Draw();
 	IKESprite::PostDraw();
@@ -386,19 +399,21 @@ MapScene::UI MapScene::RandPannel() {
 MapScene::UI MapScene::TestPannel(int Index, int Hierarchy) {
 	//[nowHierarchy] [nowIndex]
 	int r = mapKinds[Hierarchy][Index];
-
 	UI itr;
 	switch (r) {
 	case BATTLE:
 		itr.sprite = IKESprite::Create(ImageManager::MAP_NORMAL, { 0,0 });
+		itr.sprite_close = IKESprite::Create(ImageManager::MAP_SKILL_CLOSE, { 0,0 });
 		itr.Tag = BATTLE;
 		break;
 	case PASSIVE:
 		itr.sprite = IKESprite::Create(ImageManager::MAP_HEAL, { 0,0 });
+		itr.sprite_close = IKESprite::Create(ImageManager::MAP_PASSIVE_CLOSE, { 0,0 });
 		itr.Tag = PASSIVE;
 		break;
 	case BOSS:
 		itr.sprite = IKESprite::Create(ImageManager::MAP_BOSS, { 0,0 });
+		itr.sprite_close = IKESprite::Create(ImageManager::MAP_BOSS_CLOSE, { 0,0 });
 		itr.Tag = BOSS;
 		break;
 	default:
@@ -408,6 +423,7 @@ MapScene::UI MapScene::TestPannel(int Index, int Hierarchy) {
 
 	itr.size = { 186.f,186.f };
 	itr.sprite->SetAnchorPoint({ 0.5f,0.5f });
+	itr.sprite_close->SetAnchorPoint({ 0.5f,0.5f });
 	return itr;
 }
 
@@ -568,7 +584,10 @@ void MapScene::MapCreate() {
 	}
 	//チュートリアル(後で変える)
 	UIs[1][Middle].sprite = IKESprite::Create(ImageManager::MAP_TUTORIAL, { 0,0 });
+	UIs[1][Middle].sprite_close = IKESprite::Create(ImageManager::MAP_TUTORIAL_CLOSE, { 0,0 });
 	UIs[1][Middle].Tag = TUTORIAL;
+	UIs[1][Middle].sprite_close->SetPosition(UIs[1][Middle].pos);
+	UIs[1][Middle].sprite_close->SetAnchorPoint({ 0.5f,0.5f });
 	UIs[1][Middle].sprite->SetPosition(UIs[1][Middle].pos);
 	UIs[1][Middle].sprite->SetAnchorPoint({ 0.5f,0.5f });
 }
@@ -588,14 +607,13 @@ void MapScene::BlackOut() {
 		}
 	}
 
-
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
 			if (ui[i].open) {
 				ui[i].color = { 1.0f,1.0f,1.0f,1.f };
 			} else {
-				ui[i].color = { 0.5f,0.5f,0.5f,1.f };
+				ui[i].color = { 0.75f,0.75f,0.75f,1.f };
 			}
 		}
 	}
@@ -605,11 +623,13 @@ void MapScene::BlackOut() {
 void MapScene::Move() {
 	Input* input = Input::GetInstance();
 	if (end) { return; }
-	if (input->PushButton(input->RB)) {
-		scroll.x+=10;
-	}
-	if (input->PushButton(input->LB)) {
-		scroll.x-=10;
+	if (input->Pushkey(DIK_D)) {
+		if (input->PushButton(input->RB)) {
+			scroll.x += 10;
+		}
+		if (input->PushButton(input->LB)) {
+			scroll.x -= 10;
+		}
 	}
 	if ((input->TiltStick(input->L_UP) || input->PushButton(input->UP) ||input->TriggerKey(DIK_W))
 		&& !moved) {
@@ -684,7 +704,10 @@ void MapScene::Move() {
 	if (!end) {
 		pickIndex = UIs[oldHierarchy][oldIndex].nextIndex[pickNextIndex];
 		framePos = UIs[pickHierarchy][pickIndex].pos;
-
+		for (int i = 0; i < 3;i++) {
+			UIs[pickHierarchy][i].isOpened = false;
+		}
+		UIs[pickHierarchy][pickIndex].isOpened = true;
 		if (oldPickInd != pickIndex) {
 			oldPickHis = pickHierarchy;
 			oldPickInd = pickIndex;
@@ -725,7 +748,7 @@ void MapScene::Finalize() {
 
 void MapScene::InitState() {
 	const float addFrame = 1.0f / 45.f;
-	const float addFrameS = 1.0f / 180.f;
+	const float addFrameS = 1.0f / 240.f;
 	static float scrollFrame = 0.0f;
 	static float s_frame = 0.0f;
 	if (Helper::FrameCheck(scrollFrame, addFrameS)) {
@@ -747,6 +770,9 @@ void MapScene::InitState() {
 			ui[i].sprite->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
 			ui[i].sprite->SetColor(ui[i].color);
 			ui[i].sprite->SetSize(ui[i].size);
+			ui[i].sprite_close->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
+			ui[i].sprite_close->SetColor(ui[i].color);
+			ui[i].sprite_close->SetSize(ui[i].size);
 		}
 	}
 	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
@@ -769,6 +795,9 @@ void MapScene::MainState() {
 			ui[i].sprite->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
 			ui[i].sprite->SetColor(ui[i].color);
 			ui[i].sprite->SetSize(ui[i].size);
+			ui[i].sprite_close->SetPosition({ ui[i].pos.x + scroll.x, ui[i].pos.y + scroll.y });
+			ui[i].sprite_close->SetColor(ui[i].color);
+			ui[i].sprite_close->SetSize(ui[i].size);
 		}
 	}
 	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
@@ -787,6 +816,7 @@ void MapScene::CheckState() {
 
 	if (UIs[nowHierarchy][nowIndex].Tag == TUTORIAL) {
 		if (TutorialClosed()) { return; }
+		UIs[pickHierarchy][pickIndex].isOpened = true;
 		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
 			if (Helper::FrameCheck(s_frame, addFrame)) {
 				Input* input = Input::GetInstance();
