@@ -42,6 +42,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(MAP_CHEACK, L"Resources/2d/objicon/Map/map_cheack.png");
 	IKESprite::LoadTexture(MAP_CHEACK_OK, L"Resources/2d/objicon/Map/T_OK.png");
 	IKESprite::LoadTexture(MAP_CHEACK_NO, L"Resources/2d/objicon/Map/T_Cancel.png");
+	IKESprite::LoadTexture(MAP_SELECT, L"Resources/2d/objicon/Map/Map_Select.png");
 	IKESprite::LoadTexture(TUTORIAL_SKIPUI, L"Resources/2d/objicon/SKIP.png");
 	IKESprite::LoadTexture(PASSIVE_ACTIVE, L"Resources/2d/objicon/Passive/Passive_Active.png");
 	IKESprite::LoadTexture(PASSIVE_00, L"Resources/2d/objicon/Passive/Passive_00.png");
@@ -87,6 +88,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(RESULTREPORTATTACK, L"Resources/2d/objicon/AttackResult.png");
 	IKESprite::LoadTexture(RESULTREPORTDEFFENCE, L"Resources/2d/objicon/DeffenceResult.png");
 	IKESprite::LoadTexture(RESULTSKIP, L"Resources/2d/objicon/Skip_A.png");
+	IKESprite::LoadTexture(RESULTNEXT, L"Resources/2d/objicon/Next.png");
 	IKESprite::LoadTexture(STAGEBACK, L"Resources/2d/sceneback/1.png");
 	IKESprite::LoadTexture(ATTACK_0, L"Resources/2d/objicon/AttackSKill/Skill0.png");
 	IKESprite::LoadTexture(ATTACK_1, L"Resources/2d/objicon/AttackSKill/Skill1.png");

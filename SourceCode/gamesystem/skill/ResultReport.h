@@ -61,6 +61,7 @@ private:
 	std::unique_ptr<IKESprite> noDamage = nullptr;
 	std::unique_ptr<IKESprite> rate = nullptr;
 	std::unique_ptr<IKESprite> skip = nullptr;
+	std::unique_ptr<IKESprite> nextStage = nullptr;
 	std::list<ShineEffect> shines;
 	
 	int score = 0;

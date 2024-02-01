@@ -140,7 +140,10 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	chara->SetPosition(charaPos);
 	chara->SetSize({ 0.f,0.f });
 	chara->SetAnchorPoint({ 0.5f,1.0f });
-
+	
+	select = IKESprite::Create(ImageManager::MAP_SELECT, { 0,0 });
+	select->SetPosition({ 1280.f,720.f });
+	select->SetAnchorPoint({ 1.0f,1.0f });
 
 	frame = IKESprite::Create(ImageManager::MAP_FRAME, { 0,0 });
 	frame->SetPosition(framePos);
@@ -325,12 +328,14 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 			road->Draw();
 		}
 	}
+	select->Draw();
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
 			ui[i].sprite->Draw();
 		}
 	}
+	
 	chara->Draw();
 	if (!end) {
 		frame->Draw();

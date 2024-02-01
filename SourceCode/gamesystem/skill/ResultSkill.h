@@ -86,6 +86,7 @@ private:
 	Player* player_=nullptr;
 	std::unique_ptr<IKESprite> backScreen;
 	std::unique_ptr<IKESprite> expra;
+	float ecpraSin = XM_PI / 2.f;
 	std::unique_ptr<IKESprite> top_title;
 	std::unique_ptr<IKESprite> skillCheack;
 	std::unique_ptr<IKESprite> selectFrame;

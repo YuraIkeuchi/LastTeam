@@ -105,9 +105,6 @@ void ActionUI::UiMove() {
 			vanishCount++;
 			Helper::Clamp(vanishCount, 0, 9);
 		}
-		float size_ = Ease(Out, Quad, 0.5f, m_Size.x, 0.f);
-		m_Size = { size_,size_ };
-
 		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 630.0f);
 		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 	}
