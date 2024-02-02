@@ -101,6 +101,7 @@ void BossEnemy::Action() {
 	}
 
 	//敵の弾
+	bullets->SetAlpha(m_Color.w);
 	bullets->Update();
 	//攻撃エリアの更新(実際はスキルになると思う)
 	for (auto i = 0; i < enethorn.size(); i++) {

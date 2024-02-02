@@ -50,6 +50,12 @@ void EnemyBullet::InitState(const XMFLOAT3& pos, const int ShotDir) {
 
 //更新
 void EnemyBullet::Update() {
+	if (m_ThrowType == THROW_PLAY) {
+		m_Color.w = 1.0f;
+	}
+	else {
+		m_Color.w = m_Alpha;
+	}
 	Throw();
 	//タイプによって色を一旦変えてる
 	Obj_SetParam();

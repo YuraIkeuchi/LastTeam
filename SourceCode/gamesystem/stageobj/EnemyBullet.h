@@ -47,6 +47,7 @@ public:
 	const bool& GetAlive() { return m_Alive; }
 
 	void SetAlive(const bool Alive) { m_Alive = Alive; }
+	void SetAlpha(const bool Alpha) { m_Alpha = Alpha; }
 
 	void SetTargetTimer(const int TargetTimer) { m_TargetTimer = TargetTimer; }
 	void SetShotDir(const int ShotDir) { m_ShotDir = ShotDir; }
@@ -98,4 +99,6 @@ private:
 	XMFLOAT3 m_ShadowPos = {};
 	XMFLOAT3 m_ShadowScale = {};
 	int m_ShotDir = {};
+
+	float m_Alpha = {};
 };
