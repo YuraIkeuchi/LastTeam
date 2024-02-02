@@ -107,10 +107,17 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	}
 
 	if (!m_Counter && TutorialTask::GetInstance()->GetTaskFinish(TASK_COUNTER)) {
+		m_CounterEffect = true;
 		text_->SetConversation(TextManager::TUTORIAL_SHOT, m_TextPos);
 		m_Counter = true;
 	}
 
+	//最初の一回はカウンターエフェクトを見せるためテキストを消す
+	if (m_CounterEffect) {
+		if (Helper::CheckMin(m_CounterTimer, 60, 1)) {
+			m_CounterEffect = false;
+		}
+	}
 	lightGroup->Update();
 	//�e�N���X�X�V
 	camerawork->Update(camera);
@@ -202,9 +209,11 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 		TutorialTask::GetInstance()->Draw();
 	}
 	
-	if (!m_FeedEnd || GameStateManager::GetInstance()->GetEndResult() && m_Timer <= 550) {
-		window.sprite->Draw();
-		text_->TestDraw(dxCommon);
+	if (!m_FeedEnd || GameStateManager::GetInstance()->GetEndResult() && m_Timer <= 55) {
+		if (!m_CounterEffect) {
+			window.sprite->Draw();
+			text_->TestDraw(dxCommon);
+		}
 	}
 	if (!m_FeedEnd) {
 		IKESprite::PreDraw();
@@ -238,6 +247,10 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 //ImGui
 void TutorialScene::ImGuiDraw() {
 	//GameStateManager::GetInstance()->ImGuiDraw();
+	/*ImGui::Begin("Tutorial");
+	ImGui::Text("COunte:%d", m_CounterEffect);
+	ImGui::Text("Timer:%d", m_CounterTimer);
+	ImGui::End();*/
 }
 
 void TutorialScene::Finalize() {
@@ -265,6 +278,7 @@ void TutorialScene::PlayState() {
 		}
 
 		if (m_FeedEnd) {
+			m_CounterEffect = false;
 			if (GameStateManager::GetInstance()->GetEndResult()) {
 				window.m_Pos = { 740.0f,550.0f };
 				Audio::GetInstance()->StopWave(AUDIO_MAIN);
