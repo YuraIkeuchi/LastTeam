@@ -40,7 +40,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	//ステージパネルの初期化
 	StagePanel::GetInstance()->LoadResource();
 	StagePanel::GetInstance()->SetPlayer(player_.get());
-	StagePanel::GetInstance()->Initialize(6.0f);
+	StagePanel::GetInstance()->Initialize(8.0f);
 	//ビヘイビア試しました！
 	{
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
@@ -104,7 +104,6 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 				SceneChanger::GetInstance()->SetChangeStart(true);
 
 			}
-
 		}
 	}
 	else {		//ゲームオーバー以外
@@ -283,19 +282,19 @@ void BattleScene::BackDraw(DirectXCommon* dxCommon) {
 	StagePanel::GetInstance()->Draw(dxCommon);
 	player_->Draw(dxCommon);
 	if (player_->GetHp() > 0.0f) {
+		enemyManager->Draw(dxCommon);
 		if (GameStateManager::GetInstance()->GetGameStart()) {
 			GameStateManager::GetInstance()->Draw(dxCommon);
 			if (!enemyManager->BossDestroy()) {
 				StagePanel::GetInstance()->ActDraw(dxCommon);
 			}
 		}
-		enemyManager->Draw(dxCommon);
 	}
 	IKEObject3d::PostDraw();
 }
 //ImGui
 void BattleScene::ImGuiDraw() {
-	player_->ImGuiDraw();
+	//player_->ImGuiDraw();
 	//enemyManager->ImGuiDraw();
 	//GameStateManager::GetInstance()->ImGuiDraw();
 }

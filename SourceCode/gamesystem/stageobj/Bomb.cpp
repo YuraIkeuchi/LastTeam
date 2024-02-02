@@ -38,6 +38,7 @@ bool Bomb::Initialize() {
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	m_BaseScale = {};
 	_BombState = BOMB_SET;
+	m_Draw = true;
 	return true;
 }
 
@@ -70,19 +71,20 @@ void Bomb::Action() {
 
 //描画
 void Bomb::Draw(DirectXCommon* dxCommon) {
-	if (!m_Alive) { return; }
-	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	//shadow_tex->Draw();
-	if (m_HealDamage) { healdamage_tex->Draw(); }
-	if (_charaState == STATE_SPECIAL) {
-		//衝撃波の描画
-		shockWaveTex->Draw();
+	if (m_Alive) {
+		IKETexture::PreDraw2(dxCommon, AlphaBlendType);
+		//shadow_tex->Draw();
+		if (m_HealDamage) { healdamage_tex->Draw(); }
+		if (_charaState == STATE_SPECIAL) {
+			//衝撃波の描画
+			shockWaveTex->Draw();
+		}
+		IKETexture::PostDraw();
+		UIDraw();
+		if(m_Draw)
+		Obj_Draw();
+		BaseBackDraw(dxCommon);
 	}
-	IKETexture::PostDraw();
-	UIDraw();
-	Obj_Draw();
-	BaseBackDraw(dxCommon);
-
 }
 //ImGui描画
 void Bomb::ImGui_Origin() {
@@ -137,11 +139,13 @@ void Bomb::Inter() {
 //攻撃
 void Bomb::Attack() {
 	if (m_HP <= 0) {
+		m_Draw = false;
 		//敵全体にダメージ
 		GameStateManager::GetInstance()->SetIsBombDamage(true);
 		m_shockWaveColor = { 0.0f,0.0f,1.0f,1.0f };
 	}
 	else {
+		m_Draw = false;
 		//プレイヤーにダメージ
 		player->RecvDamage(m_Damage, "NORMAL");
 		m_shockWaveColor = { 1.0f,0.0f,0.0f,1.0f };

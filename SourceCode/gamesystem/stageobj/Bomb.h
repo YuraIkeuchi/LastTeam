@@ -47,4 +47,5 @@ private:
 		BOMB_THROW,
 	}_BombState = BOMB_SET;
 	float m_Frame = {};
+	bool m_Draw = true;
 };
