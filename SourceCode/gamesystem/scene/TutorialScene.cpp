@@ -266,7 +266,7 @@ void TutorialScene::PlayState() {
 
 		if (m_FeedEnd) {
 			if (GameStateManager::GetInstance()->GetEndResult()) {
-				window.m_Pos = { 640.0f,550.0f };
+				window.m_Pos = { 740.0f,550.0f };
 				Audio::GetInstance()->StopWave(AUDIO_MAIN);
 				Helper::CheckMin(m_Timer, 601, 1);
 				if (TutorialTask::GetInstance()->GetChoiceSkill()) {
@@ -277,15 +277,15 @@ void TutorialScene::PlayState() {
 				}
 			}
 			if (m_Timer == 1) {
-				m_TextPos = { 120.0f,20.f };
+				m_TextPos = { 20.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_SKILL, m_TextPos);
 			}
 			else if (m_Timer == 200) {
-				m_TextPos = { 120.0f,20.f };
+				m_TextPos = { 20.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_DELETE, m_TextPos);
 			}
 			else if (m_Timer == 400) {
-				m_TextPos = { 10.0f,20.f };
+				m_TextPos = { 20.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_CHOICE, m_TextPos);
 			}
 			else if (m_Timer == 550) {

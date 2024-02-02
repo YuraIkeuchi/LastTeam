@@ -69,7 +69,6 @@ void (AttackArea::* AttackArea::stateTable[])() = {
 bool AttackArea::Initialize() {
 	return true;
 }
-
 //ステータス初期化
 void AttackArea::InitState(const int width, const int height) {
 	panels.position = SetPanelPos(width, height);
@@ -333,6 +332,7 @@ void AttackArea::PoisonMove() {
 			m_Frame = {};
 		}
 		else {
+			m_Rotation.z = Ease(In, Cubic, m_Frame, m_Rotation.z, -45.0f);
 			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 3.0f);
 			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 
@@ -395,6 +395,7 @@ void AttackArea::SpearMove() {
 		else {
 			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 3.0f);
 			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
+			m_Rotation.z = Ease(In, Cubic, m_Frame, m_Rotation.z, -45.0f);
 
 			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,1.5f),
 			Ease(In,Cubic,m_Frame,m_Scale.y,0.9f),
@@ -456,7 +457,6 @@ void AttackArea::HatenaMove() {
 		else {
 			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 3.0f);
 			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
-
 			m_Scale = { Ease(In,Cubic,m_Frame,m_Scale.x,1.7f),
 			Ease(In,Cubic,m_Frame,m_Scale.y,1.7f),
 			Ease(In,Cubic,m_Frame,m_Scale.z,1.7f), };
@@ -468,7 +468,7 @@ void AttackArea::HatenaMove() {
 //回復の動き
 void AttackArea::HealMove() {
 	XMFLOAT3 l_PlayerPos = player->GetPosition();
-	const XMFLOAT3 l_AfterScale = { 0.0f,0.0f,0.0f };
+	const XMFLOAT3 l_AfterScale = { 0.1f,0.1f,0.1f };
 	const float l_AddFrame = 1 / 30.0f;
 	if (m_Timer > m_BirthTimer) { return; }
 	if (_EffectType == EFFECT_FALL) {
@@ -509,6 +509,7 @@ void AttackArea::HealMove() {
 				Ease(In,Cubic,m_Frame,m_Position.y,l_PlayerPos.y),
 				Ease(In,Cubic,m_Frame,m_Position.z,l_PlayerPos.z), };
 			}
+			m_Rotation.z = Ease(In, Cubic, m_Frame, m_Rotation.z, -45.0f);
 		}
 	}
 }
