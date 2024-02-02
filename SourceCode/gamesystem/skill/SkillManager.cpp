@@ -75,10 +75,10 @@ void SkillManager::ImGuiDraw() {
 	ImGui::Begin("Mana");
 	ImGui::Text("m_DeckNum:%d", m_DeckNum);
 	ImGui::End();
-	//for (auto i = 0; i < deckui.size(); i++) {
-	//	if (deckui[i] == nullptr)continue;
-	//	deckui[i]->ImGuiDraw();
-	//}
+	for (auto i = 0; i < deckui.size(); i++) {
+		if (deckui[i] == nullptr)continue;
+		deckui[i]->ImGuiDraw();
+	}
 }
 
 int SkillManager::IDSearch(const int BirthNum) {

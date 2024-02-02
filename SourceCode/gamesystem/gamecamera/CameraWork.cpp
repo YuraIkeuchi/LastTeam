@@ -59,7 +59,7 @@ void CameraWork::BossUpdate(DebugCamera* camera) {
 				m_DrawLine = false;
 				_CameraMove = CAMERA_RETURN;
 				m_Frame = {};
-				m_AfterEye = { -1.5f,7.f,-3.f };
+				m_AfterEye = { -1.5f,7.5f,-3.0f };
 				m_AfterTarget = { -1.5f,2.5f,0.f };
 			}
 		}
@@ -185,7 +185,7 @@ void CameraWork::LastBossUpdate(DebugCamera* camera) {
 				m_DrawLine = false;
 				_CameraLastMove = CAMERA_LASTRETURN;
 				m_Frame = {};
-				m_AfterEye = { -1.5f,7.f,-3.f };
+				m_AfterEye = { -1.5f,7.5f,-3.0f };
 				m_AfterTarget = { -1.5f,2.5f,0.f };
 			}
 		}

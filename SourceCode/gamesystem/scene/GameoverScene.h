@@ -43,6 +43,7 @@ private://ƒƒ“ƒo•Ï”
 
 	unique_ptr<IKESprite> gameover[OVER_MAX];
 	unique_ptr<IKESprite> select[OVER_MAX];
+	unique_ptr<IKESprite> stick;
 
 	array<XMFLOAT2,OVER_MAX> m_OverPos;
 	array<XMFLOAT2,OVER_MAX> m_SelectPos;
@@ -50,7 +51,7 @@ private://ƒƒ“ƒo•Ï”
 	array<XMFLOAT2,OVER_MAX> m_OverSize;
 	array<float, OVER_MAX> m_AddPower;
 	array<GameOverAttach,ATTACH_MAX> attach;
-
+	XMFLOAT2 m_StickPos = { 640.0f,900.0f };
 
 	array<XMFLOAT2, OVER_MAX> m_AfterOverPos;
 	array<XMFLOAT2, OVER_MAX> m_AfterSelectPos;

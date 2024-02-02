@@ -71,7 +71,7 @@ void (TackleEnemy::* TackleEnemy::stateTable[])() = {
 //行動
 void TackleEnemy::Action() {
 	if (!m_Induction) {
-		//(this->*stateTable[_charaState])();
+		(this->*stateTable[_charaState])();
 	} else {
 		InductionMove();
 	}
