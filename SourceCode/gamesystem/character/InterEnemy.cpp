@@ -397,7 +397,8 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			}else if (name == "FAR" && !m_Induction && m_NowWidth != PANEL_WIDTH - 1 && _charaState != STATE_ATTACK) {		//敵を吹き飛ばす
 				m_Induction = true;
 				m_InductionFrame = {};
-				for (int i = PANEL_WIDTH / 2; i < PANEL_WIDTH; i++) {
+				const int l_NowWidth = m_NowWidth;
+				for (int i = l_NowWidth; i < PANEL_WIDTH; i++) {
 					if (m_NowWidth == i) { continue; }
 					if (StagePanel::GetInstance()->GetisEnemyHit(i, m_NowHeight)) {
 						
@@ -416,7 +417,8 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 			else if (name == "NEAR" && !m_Induction && m_NowWidth != PANEL_WIDTH / 2 && _charaState != STATE_ATTACK) {		//敵を引き寄せる
 				m_Induction = true;
 				m_InductionFrame = {};
-				for(int i = PANEL_WIDTH - 1; i >= (PANEL_WIDTH / 2); i--) {
+				const int l_NowWidth = m_NowWidth;
+				for(int i = l_NowWidth; i >= (PANEL_WIDTH / 2); i--) {
 
 					if (m_NowWidth == i) { continue; }
 					if (StagePanel::GetInstance()->GetisEnemyHit(i, m_NowHeight)) {
