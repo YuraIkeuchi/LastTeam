@@ -67,6 +67,11 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 	stick = IKESprite::Create(ImageManager::GAMEOVER_STICK, { 0.0f,0.0f });
 	stick->SetAnchorPoint({ 0.5f,0.5f });
 	stick->SetScale(1.5f);
+
+	check = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 0.0f,0.0f });
+	check->SetAnchorPoint({ 0.5f,0.5f });
+	check->SetScale(1.5f);
+	check->SetPosition({ 1200.0f,680.0f });
 	//stick->SetPosition({ 640.0f,500.0f });
 
 	select[SELECT_NO]->SetColor({ 1.0f,0.15f,0.15f,1.0f });
@@ -173,6 +178,7 @@ void GameoverScene::FrontDraw(DirectXCommon* dxCommon) {
 		gameover[i]->Draw();
 		select[i]->Draw();
 	}
+	check->Draw();
 	stick->Draw();
 	IKESprite::PostDraw();
 	SceneChanger::GetInstance()->Draw();
@@ -249,21 +255,23 @@ void GameoverScene::GameOverMove() {
 		}
 		for (int i = 0; i < ATTACH_MAX; i++) {
 			if (Helper::FrameCheck(attach[i].frame, l_AddFrame)) {
-				if (player_->GetSelectType() == 1) {
-					_OverType = MOVE_YES_SELECT;
-					m_Frame[i] = {};
-					attach[i].frame = {};
-					m_Timer = {};
-					m_AddPower[SELECT_YES] = 35.0f;
-					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
-				}
-				else if (player_->GetSelectType() == 2) {
-					_OverType = MOVE_NO_SELECT;
-					m_Frame[i] = {};
-					attach[i].frame = {};
-					m_Timer = {};
-					m_AddPower[SELECT_NO] = 35.0f;
-					Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+				if (player_->GetOverType() == 3) {
+					if (player_->GetSelectType() == 1) {
+						_OverType = MOVE_YES_SELECT;
+						m_Frame[i] = {};
+						attach[i].frame = {};
+						m_Timer = {};
+						m_AddPower[SELECT_YES] = 35.0f;
+						Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+					}
+					else if (player_->GetSelectType() == 2) {
+						_OverType = MOVE_NO_SELECT;
+						m_Frame[i] = {};
+						attach[i].frame = {};
+						m_Timer = {};
+						m_AddPower[SELECT_NO] = 35.0f;
+						Audio::GetInstance()->PlayWave("Resources/Sound/SE/Button.wav", 0.15f);
+					}
 				}
 			}
 			else {

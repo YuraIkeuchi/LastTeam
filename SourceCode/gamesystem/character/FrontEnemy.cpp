@@ -319,13 +319,15 @@ void FrontEnemy::GameOverAction() {
 		m_Position = { -2.0f,0.0f,2.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
-		if (player->GetSelectType() == 1) {
-			_GameOverState = OVER_YES;
-			m_AddPower = 0.3f;
-			m_Rot = true;
-		}
-		else if (player->GetSelectType() == 2) {
-			_GameOverState = OVER_NO;
+		if (player->GetOverType() == 3) {
+			if (player->GetSelectType() == 1) {
+				_GameOverState = OVER_YES;
+				m_AddPower = 0.3f;
+				m_Rot = true;
+			}
+			else if (player->GetSelectType() == 2) {
+				_GameOverState = OVER_NO;
+			}
 		}
 	}
 	else if (_GameOverState == OVER_YES) {
