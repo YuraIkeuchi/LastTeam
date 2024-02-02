@@ -95,7 +95,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	UIs[0][Middle].pos = { homeX ,homeY[Middle] };
 	UIs[0][Middle].open = true;
 	UIs[0][Middle].hierarchy = 0;
-	UIs[0][Middle].size = { 186.f,186.f };
+	UIs[0][Middle].size = { 256.f,256.f };
 	UIs[0][Middle].sprite->SetAnchorPoint({ 0.5f,0.5f });
 	UIs[0][Middle].sprite_close->SetAnchorPoint({ 0.5f,0.5f });
 	homeX += interbal;
@@ -227,7 +227,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	} else {
 		m_State = State::mainState;
 		scroll.x = -UIs[nowHierarchy][nowIndex].pos.x + 128.f;
-		charaSize = { 128.f,128.f };
+		charaSize = { 200.f,200.f };
 		chara->SetSize(charaSize);
 	}
 
@@ -238,7 +238,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	oldHierarchy = nowHierarchy;
 	oldIndex = nowIndex;
 
-	charaPos = { UIs[nowHierarchy][nowIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.y + 30.f};
+	charaPos = { UIs[nowHierarchy][nowIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.y + 50.f};
 	framePos = UIs[pickHierarchy][pickIndex].pos;
 	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
@@ -275,7 +275,6 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		m_Save = true;
 		GameStateManager::GetInstance()->SaveGame();
 	}
-
 	m_BeforeSelect = s_selectnum;
 }
 
@@ -285,18 +284,6 @@ void MapScene::Update(DirectXCommon* dxCommon) {
 		SceneChanger::GetInstance()->GetChangeState() == 1) {
 		return;
 	}
-
-	if (Helper::FrameCheck(eFrame, eAdd)) {
-		eAdd *= -1.0f;
-		eFrame = 0.99f;
-	}
-	if (eFrame == 0.0f) {
-		eAdd *= -1.0f;
-	}
-	XMFLOAT2 size = frame->GetSize();
-	size.x = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
-	size.y = Ease(InOut, Quad, eFrame, 128.f, 128.f * 1.3f);
-	frame->SetSize(size);
 	SaveMove();
 	onomatope->Update();
 	(this->*stateTable[(size_t)m_State])();
@@ -420,7 +407,7 @@ MapScene::UI MapScene::TestPannel(int Index, int Hierarchy) {
 		break;
 	}
 
-	itr.size = { 186.f,186.f };
+	itr.size = { 256.f,256.f };
 	itr.sprite->SetAnchorPoint({ 0.5f,0.5f });
 	itr.sprite_close->SetAnchorPoint({ 0.5f,0.5f });
 	return itr;
@@ -734,7 +721,7 @@ void MapScene::Move() {
 		}
 
 		charaPos.x = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.x, UIs[nowHierarchy][nowIndex].pos.x);
-		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y + 30.f, UIs[nowHierarchy][nowIndex].pos.y+30.f);
+		charaPos.y = Ease(In, Quad, mov_frame, UIs[oldHierarchy][oldIndex].pos.y + 50.f, UIs[nowHierarchy][nowIndex].pos.y+ 50.f);
 		scroll.x = Ease(In, Quad, mov_frame, oldScroll, -UIs[nowHierarchy][nowIndex].pos.x + 128.f);
 	}
 	scroll.x = clamp(scroll.x, -lastScroll, 340.f);
@@ -755,8 +742,8 @@ void MapScene::InitState() {
 			scrollFrame = 0.0f;
 			s_frame = 0.0f;
 		} else {
-			charaSize.x = Ease(In, Elastic, s_frame, 0.f, 186.f);
-			charaSize.y = Ease(In, Linear, s_frame, 0.f, 186.f);
+			charaSize.x = Ease(In, Elastic, s_frame, 0.f, 200.f);
+			charaSize.y = Ease(In, Linear, s_frame, 0.f, 200.f);
 		}
 	} else {
 		scroll.x = Ease(In, Linear, scrollFrame, -lastScroll, 0.f);
@@ -798,6 +785,21 @@ void MapScene::MainState() {
 			ui[i].sprite_close->SetSize(ui[i].size);
 		}
 	}
+	if (Helper::FrameCheck(eFrame, eAdd)) {
+		eAdd *= -1.0f;
+		eFrame = 0.99f;
+	}
+	if (eFrame == 0.0f) {
+		eAdd *= -1.0f;
+	}
+
+	UIs[pickHierarchy][pickIndex].size = {
+	Ease(InOut, Quad, eFrame, 256.f, 256.f * 1.25f),
+	Ease(InOut, Quad, eFrame, 256.f, 256.f * 1.25f)
+	};
+	UIs[nowHierarchy][nowIndex].size = {
+		256.f,256.f
+	};
 	chara->SetPosition({ charaPos.x + scroll.x, charaPos.y + scroll.y });
 	frame->SetPosition({ framePos.x + scroll.x, framePos.y + scroll.y });
 	for (int i = 0; i < roads.size(); i++) {
@@ -814,7 +816,6 @@ void MapScene::CheckState() {
 
 	if (UIs[nowHierarchy][nowIndex].Tag == TUTORIAL) {
 		if (TutorialClosed()) { return; }
-		UIs[pickHierarchy][pickIndex].isOpened = true;
 		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
 			if (Helper::FrameCheck(s_frame, addFrame)) {
 				Input* input = Input::GetInstance();
@@ -855,6 +856,7 @@ void MapScene::CheckState() {
 						default:
 							break;
 						}
+						UIs[pickHierarchy][pickIndex].isOpened = true;
 						isClose = true;
 					}
 				}
@@ -974,6 +976,21 @@ bool MapScene::TutorialClosed() {
 			cheack_OK[i]->SetSize(cheackSize);
 			cheack_NO[i]->SetSize(cheackSize);
 		}
+		if (Helper::FrameCheck(eFrame, eAdd)) {
+			eAdd *= -1.0f;
+			eFrame = 0.99f;
+		}
+		if (eFrame == 0.0f) {
+			eAdd *= -1.0f;
+		}
+
+		UIs[pickHierarchy][pickIndex].size = {
+		Ease(InOut, Quad, eFrame, 256.f, 256.f * 1.25f),
+		Ease(InOut, Quad, eFrame, 256.f, 256.f * 1.25f)
+		};
+		UIs[nowHierarchy][nowIndex].size = {
+			256.f,256.f
+		};
 		return true;
 	}
 }
