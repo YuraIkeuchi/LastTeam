@@ -271,7 +271,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		break;
 	}
 	GameStateManager::GetInstance()->SetMapData(nowIndex, nowHierarchy);
-	if ((nowHierarchy == 0) || (nowHierarchy == 3) || (nowHierarchy == 5) || (nowHierarchy == 7) || (nowHierarchy == 9) || (nowHierarchy == 11) && !s_Countinue) {
+	if ((nowHierarchy == 0) || (nowHierarchy == 2) || (nowHierarchy == 4) || (nowHierarchy == 6) || (nowHierarchy == 8) || (nowHierarchy == 10) && !s_Countinue) {
 		m_Save = true;
 		GameStateManager::GetInstance()->SaveGame();
 	}
@@ -901,23 +901,23 @@ void MapScene::CheckState() {
 			const std::string BaseName = "Resources/csv/EnemySpawn/";
 			string levelName = "None";
 			bool isBattle = true;
-			if (nowHierarchy == 5) {
+			if (nowHierarchy == 4) {
 				ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
 			}
-			else if (nowHierarchy == 9) {
+			else if (nowHierarchy == 8) {
 				ss << BaseName + "Boss/BattleMap0" << 2 << ".csv";
 			}
-			else if (nowHierarchy == 13) {
+			else if (nowHierarchy == 12) {
 				ss << BaseName + "Boss/BattleMap0" << 3 << ".csv";
 				s_LastStage = true;
 			}
 			else {
-				if (nowHierarchy < 5) {	//なんマス目に居るかで難易度が変わる
+				if (nowHierarchy < 4) {	//なんマス目に居るかで難易度が変わる
 					levelName = "Weak";
-				} else if(nowHierarchy >= 6 && nowHierarchy < 9) {
+				} else if(nowHierarchy >= 5 && nowHierarchy < 8) {
 					levelName = "Strong";
 				}
-				else if (nowHierarchy >= 10) {
+				else if (nowHierarchy >= 9) {
 					levelName = "Ultimate";
 				}
 				if (UIs[nowHierarchy][nowIndex].Tag == BATTLE) {
