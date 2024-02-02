@@ -271,7 +271,7 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		break;
 	}
 	GameStateManager::GetInstance()->SetMapData(nowIndex, nowHierarchy);
-	if ((nowHierarchy == 0) || (nowHierarchy == 2) || (nowHierarchy == 4) || (nowHierarchy == 6) || (nowHierarchy == 8) || (nowHierarchy == 10) && !s_Countinue) {
+	if ((nowHierarchy == 0) || (nowHierarchy == 3) || (nowHierarchy == 4) || (nowHierarchy == 6) || (nowHierarchy == 8) || (nowHierarchy == 10) && !s_Countinue) {
 		m_Save = true;
 		GameStateManager::GetInstance()->SaveGame();
 	}
@@ -441,16 +441,15 @@ void MapScene::RoadUpdate() {
 
 void MapScene::MapCreate() {
 	string csv_ = "Resources/csv/map.csv";
-	int r_num = Helper::GetRanNum(0, 3);
-	//テストプレイ用
-	r_num = 4;
+	//プレイ用
+	int r_num = 4;
 	//mapのあとに数字をくっつける
 	std::stringstream ss;
 	ss << "map" << r_num;
 	std::string r_map = ss.str();
 	//指定してゲットする
 	LoadCSV::LoadCsvParam_String(csv_, dungeon, r_map);
-	//けたすうしゅとくする
+	//	桁数を取得する
 	int Len = (int)dungeon.length();
 	MaxLength = Len;
 	dungeons.resize(Len);
@@ -912,7 +911,7 @@ void MapScene::CheckState() {
 				s_LastStage = true;
 			}
 			else {
-				if (nowHierarchy < 4) {	//なんマス目に居るかで難易度が変わる
+				if (nowHierarchy <= 4) {	//なんマス目に居るかで難易度が変わる
 					levelName = "Weak";
 				} else if(nowHierarchy >= 5 && nowHierarchy < 8) {
 					levelName = "Strong";
@@ -927,8 +926,7 @@ void MapScene::CheckState() {
 					ss << BaseName + levelName + "/PassiveMap0" << m_SelectNum << ".csv";
 					isBattle = false;
 				} else if (UIs[nowHierarchy][nowIndex].Tag == BOSS) {
-					ss << BaseName + "Boss/BattleMap0" << 1 << ".csv";
-					isBattle = true;
+					assert(0);
 				}
 			}
 			std::string r_map = ss.str();
