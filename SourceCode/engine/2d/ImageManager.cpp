@@ -72,7 +72,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(GAMEOVERBACK, L"Resources/2d/sceneback/Gameover.png");
 	IKESprite::LoadTexture(GAMEOVER_SELECT, L"Resources/2d/sceneback/OverSelect.png");
 	IKESprite::LoadTexture(GAMEOVER_STICK, L"Resources/2d/objicon/Select.png");
-	IKESprite::LoadTexture(GAMECLEARBACK, L"Resources/2d/sceneback/Select.png");
+	IKESprite::LoadTexture(GAMECLEARBACK, L"Resources/2d/sceneback/GameClear.png");
 	IKESprite::LoadTexture(ONOMATO_00, L"Resources/2d/objicon/Onomatope/00_Foot.png");
 	IKESprite::LoadTexture(ONOMATO_01, L"Resources/2d/objicon/Onomatope/01_Attack01.png");
 	IKESprite::LoadTexture(ONOMATO_02, L"Resources/2d/objicon/Onomatope/02_BOSSSPAWN.png");
@@ -142,6 +142,7 @@ void ImageManager::StartLoad2D()
 	IKESprite::LoadTexture(NODEATH, L"Resources/2d/objicon/nocontinue.png");
 	IKESprite::LoadTexture(NODAMAGE, L"Resources/2d/objicon/nodamage.png");
 	IKESprite::LoadTexture(HPGauge, L"Resources/2d/objicon/HPGauge.png");
+	IKESprite::LoadTexture(HPGauge_W, L"Resources/2d/objicon/HPGauge_W.png");
 	IKESprite::LoadTexture(HPCover, L"Resources/2d/objicon/HP_Gage.png");
 	IKESprite::LoadTexture(SAVE, L"Resources/2d/sceneback/Save.png");
 	IKESprite::LoadTexture(EXPRE, L"Resources/2d/objicon/Expra.png");

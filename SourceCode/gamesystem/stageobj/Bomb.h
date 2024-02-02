@@ -26,6 +26,8 @@ public:
 	void SetTargetPos(const XMFLOAT3& TargetPos) { m_TargetPos = TargetPos; }
 private:
 	unique_ptr<IKETexture> shockWaveTex = nullptr;
+	unique_ptr<IKETexture> AttentionTex = nullptr;
+	XMFLOAT4 colAttention = {1,1,1,1};
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
 	bool _isPlayerDamage = false;
@@ -38,6 +40,8 @@ private:
 	float m_BaseScale = {};
 	float m_Damage = 0.0f;
 	float m_SinAngle = {};
+	float m_Sin2Angle = {};
+
 	float m_SinAngle2 = {};
 	bool m_FlashStart = false;
 	float m_AddAngle = {};

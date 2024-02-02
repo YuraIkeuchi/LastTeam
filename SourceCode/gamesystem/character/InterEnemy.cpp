@@ -938,7 +938,7 @@ void InterEnemy::BomUpdate() {
 		Ease(Out,Back,m_BomFrame,0.f,0.4f)
 		};
 		bom2Tex->SetScale(scale2);
-		bom2Tex->SetPosition({ effectPos.x,effectPos.y + 0.5f,effectPos.z });
+		bom2Tex->SetPosition({ effect2Pos.x,effect2Pos.y + 0.5f,effect2Pos.z });
 
 		XMFLOAT3 scale = {
 		Ease(Out,Back,m_BomFrame,0.f,0.4f),

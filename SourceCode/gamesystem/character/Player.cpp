@@ -28,7 +28,7 @@ void Player::LoadResource() {
 	hptex = IKESprite::Create(ImageManager::HPGauge, m_HPPos);
 	hptex->SetColor({ 0.5f,1.0f,0.5f,1.0f });
 	hptex->SetSize(m_HPSize);
-	hpDiftex = IKESprite::Create(ImageManager::HPGauge, { 0.0f,0.0f });
+	hpDiftex = IKESprite::Create(ImageManager::HPGauge_W, { 0.0f,0.0f });
 	hpDiftex->SetColor({ 0.85f,0.85f,0.85f,1.0f });
 	hpDiftex->SetSize(m_HPSize);
 	hptex_under = IKESprite::Create(ImageManager::HPGauge, { 0.0f,0.0f });
@@ -205,6 +205,7 @@ void Player::Update() {
 				}
 			}
 		}
+
 		XMFLOAT4 T_Color = { 0.3f,1.0f,0.3f,1.0f };
 		if (HpPercent() > 0.5f) {
 			T_Color = { 0.3f,1.0f,0.3f,1.0f };
