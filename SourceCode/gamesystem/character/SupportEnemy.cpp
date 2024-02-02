@@ -452,4 +452,5 @@ void SupportEnemy::BirthCharge() {
 	abseffect.push_back(std::move(neweffect));
 }
 void SupportEnemy::DeathSpecial() {
+	lastbomb->DeleteBomb();
 }
