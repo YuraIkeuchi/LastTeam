@@ -136,7 +136,8 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	if ((input->TriggerButton(input->BACK)||
 		input->TriggerKey(DIK_BACK)) &&
 		!m_IsBackKey &&
-		!m_Skip) {
+		!m_Skip &&
+		!m_EnemyDelete) {
 		m_IsBackKey = true;
 		m_Timer = {};
 	}

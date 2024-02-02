@@ -39,6 +39,7 @@ bool Bomb::Initialize() {
 	m_BaseScale = {};
 	_BombState = BOMB_SET;
 	m_Draw = true;
+	m_TargetPos = StagePanel::GetInstance()->EnemySetPanel(true);
 	return true;
 }
 
