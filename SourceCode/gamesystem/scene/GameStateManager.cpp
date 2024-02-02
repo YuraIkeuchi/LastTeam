@@ -135,6 +135,9 @@ void GameStateManager::Initialize() {
 	m_BossCamera = false;
 	m_EndResult = false;
 	m_EndText = false;
+
+	actionVanish = std::make_unique<ActionVanish>();
+	actionVanish->Initialize();
 }
 
 //更新
@@ -240,6 +243,7 @@ void GameStateManager::Update() {
 	_charge2->Update();
 	onomatope->Update();
 
+	actionVanish->Update();
 	PassiveActive();
 	PowerUpEffectUpdate();
 	DamageEffectUpdate();
@@ -319,6 +323,7 @@ void GameStateManager::ActUIDraw() {
 		if (actui[i] == nullptr)continue;
 		actui[i]->Draw();
 	}
+	actionVanish->Draw();
 	if (player->GetCancel() && !m_Shield) {
 		cancelSkill->Draw();
 	}
@@ -635,10 +640,10 @@ void GameStateManager::FinishAct(bool AllFinish) {
 		m_Act.erase(m_Act.begin());
 		m_AllActCount--;
 		actui[0]->SetUse(true);
+		actionVanish->InitState();
 	} else {
 		for (int i = 0; i < m_Act.size(); i++) {
 			m_DiscardNumber.push_back(m_Act[i].ActID);
-
 			actui[i]->SetUse(true);
 		}
 		m_AllActCount = {};
@@ -805,7 +810,6 @@ void GameStateManager::GetPassive(int ID) {
 
 
 bool GameStateManager::AttackSubAction() {
-	SkillRecycle();
 	return true;
 }
 
@@ -869,18 +873,6 @@ bool GameStateManager::ResultUpdate() {
 void GameStateManager::InDeck() {
 	m_DeckNumber.push_back(m_NotDeckNumber[m_NotCount]);
 	m_NotDeckNumber.erase(cbegin(m_NotDeckNumber) + m_NotCount);
-}
-
-bool GameStateManager::SkillRecycle() {
-	//if (!m_IsRecycle) { return false; }
-	//if (Helper::GetRanNum(0, 100) > 20) {
-	//	return false;
-	//}
-
-	//SkillManager::GetInstance()->PushOnce2Deck(actui[0]->GetID());
-	////デッキの最大数確認
-	//SkillManager::GetInstance()->SetDeckState((int)(SkillManager::GetInstance()->GetDeckUISize()));
-	return true;
 }
 
 void GameStateManager::DamageEffectInit(XMFLOAT2 pos) {

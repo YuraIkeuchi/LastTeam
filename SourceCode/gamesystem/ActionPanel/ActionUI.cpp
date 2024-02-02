@@ -97,15 +97,15 @@ void ActionUI::UiMove() {
 	if (!m_Use) {
 		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 640.0f);
 	} else {
-		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
-			m_Alive = false;
-		}
-		vanishTiming++;
-		if ((vanishTiming % 3) == 0) {
-			vanishCount++;
-			Helper::Clamp(vanishCount, 0, 9);
-		}
-		m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 630.0f);
-		m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
+		//if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+		m_Alive = false;
+		//}
+		//vanishTiming++;
+		//if ((vanishTiming % 3) == 0) {
+		//	vanishCount++;
+		//	Helper::Clamp(vanishCount, 0, 9);
+		//}
+		//m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 630.0f);
+		//m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 	}
 }
