@@ -126,8 +126,11 @@ void InterEnemy::Update() {
 	Helper::Clamp(m_HP, 0.0f, m_MaxHP);
 
 	m_InterHP = (int)(m_HP);
-	Helper::Clamp(m_InterHP, 1, (int)m_MaxHP);
-
+	if (m_EnemyTag != "Bomb") {
+		Helper::Clamp(m_InterHP, 1, (int)m_MaxHP);
+	} else {
+		Helper::Clamp(m_InterHP, 0, (int)m_MaxHP);
+	}
 	////敵のマスを取得する
 	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight, m_Alive);
 

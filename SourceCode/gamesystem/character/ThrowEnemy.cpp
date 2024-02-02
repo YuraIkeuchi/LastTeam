@@ -96,9 +96,12 @@ void ThrowEnemy::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-	//“G‚Ì’e
-	if(boomerang->GetAlive())
-	boomerang->Draw(dxCommon);
+	if (!m_Death) {
+		//“G‚Ì’e
+		if (boomerang->GetAlive()) {
+			boomerang->Draw(dxCommon);
+		}
+	}
 	if (m_Color.w != 0.0f) {
 		Obj_Draw();
 	}
