@@ -393,7 +393,7 @@ void AttackArea::SpearMove() {
 			m_Frame = {};
 		}
 		else {
-			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 3.0f);
+			m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 1.5f);
 			m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 			m_Rotation.z = Ease(In, Cubic, m_Frame, m_Rotation.z, -45.0f);
 

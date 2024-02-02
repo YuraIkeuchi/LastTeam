@@ -178,6 +178,7 @@ void GameoverScene::FrontDraw(DirectXCommon* dxCommon) {
 		gameover[i]->Draw();
 		select[i]->Draw();
 	}
+	if(!player_->GetSelectMove() && player_->GetSelectType() != 0)
 	check->Draw();
 	stick->Draw();
 	IKESprite::PostDraw();
@@ -307,7 +308,7 @@ void GameoverScene::GameOverMove() {
 		m_SelectRot[SELECT_YES] += 10.0f;
 	}
 
-	if (player_->GetSelectType() == 0) {
+	if (!player_->GetSelectEnd()) {
 		for (int i = 0; i < OVER_MAX; i++) {
 			m_Angle[i] += 2.0f;
 			m_Angle2[i] = m_Angle[i] * (3.14f / 180.0f);

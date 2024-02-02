@@ -179,8 +179,8 @@ void BossEnemy2::Inter() {
 }
 //UŒ‚
 void BossEnemy2::Attack() {
-	//(this->*attackTable[_AttackState])();
-	(this->*attackTable[ATTACK_RECOVERY])();
+	(this->*attackTable[_AttackState])();
+	//(this->*attackTable[ATTACK_RECOVERY])();
 	PlayerCollide();
 	predictarea->Update();
 	predictarea->SetTimer(coolTimer);

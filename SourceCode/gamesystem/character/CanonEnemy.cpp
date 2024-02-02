@@ -82,6 +82,7 @@ void CanonEnemy::Action() {
 	PoisonState();//毒
 	BirthMagic();//魔法陣
 
+	bullets->SetAlpha(m_Color.w);
 	bullets->Update();
 	
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };

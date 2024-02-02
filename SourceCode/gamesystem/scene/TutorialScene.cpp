@@ -136,7 +136,8 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	if ((input->TriggerButton(input->BACK)||
 		input->TriggerKey(DIK_BACK)) &&
 		!m_IsBackKey &&
-		!m_Skip) {
+		!m_Skip &&
+		!m_EnemyDelete) {
 		m_IsBackKey = true;
 		m_Timer = {};
 	}
@@ -248,12 +249,12 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
-	GameStateManager::GetInstance()->ImGuiDraw();
+	/*GameStateManager::GetInstance()->ImGuiDraw();
 	ImGui::Begin("Tutorial");
 	ImGui::Text("COunte:%d", m_CounterEffect);
 	ImGui::Text("Timer:%d", m_CounterTimer);
 	ImGui::Text("Counter:%d", m_Timer);
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void TutorialScene::Finalize() {

@@ -195,7 +195,7 @@ void CreateBombEnemy::BirthBomb() {
 	std::unique_ptr<Bomb> newBomb = std::make_unique<Bomb>();
 	newBomb->Initialize();
 	newBomb->SetPosition({ m_Position.x,m_Position.y + 1.2f,m_Position.z });
-	newBomb->SetTargetPos(StagePanel::GetInstance()->EnemySetPanel(true));
+	//newBomb->SetTargetPos(StagePanel::GetInstance()->EnemySetPanel(true));
 	newBomb->SetPlayer(player);
 	bomb.push_back(std::move(newBomb));
 }
