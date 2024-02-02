@@ -36,6 +36,7 @@ public:
 	void InitState(const XMFLOAT3& pos, const int width, const int height);
 
 	void BirthExplosion();
+	void DeleteBomb();
 
 private://ステート
 	static void (LastBomb::* stateTable[])();

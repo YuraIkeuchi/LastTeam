@@ -476,7 +476,7 @@ void InterEnemy::SimpleDamege(float damage, bool isLimit) {
 
 void InterEnemy::SimpleHeal(const bool Regene) {
 	if (m_HP <= 0.0f) { return; }
-
+	if (m_EnemyTag == "SUPPORT2") { return; }
 	float heal = {};
 
 	if (Regene) {
@@ -842,6 +842,7 @@ void InterEnemy::DeathUpdate() {
 				if (Helper::CheckMin(m_DeathTimer, 20, 1)) {
 					if (m_EnemyTag == "SUPPORT" || m_EnemyTag == "SUPPORT2") {
 						GameStateManager::GetInstance()->SetIsHeal(true);
+						DeathSpecial();
 					}
 					else if (m_EnemyTag == "CLOSER" || m_EnemyTag == "LASTBOSS") {
 						DeathSpecial();

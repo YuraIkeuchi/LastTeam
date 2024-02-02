@@ -158,6 +158,14 @@ void BossEnemy3::Action() {
 	magic.tex->Update();
 	onomatope->Update();
 
+
+	for (int i = 0; i < shield.size(); i++) {
+		shield[i].pos.y = 1.0f;
+		shield[i].tex->SetPosition(shield[i].pos);
+		shield[i].tex->SetColor(shield[i].color);
+		shield[i].tex->SetScale({ shield[i].scale,shield[i].scale,shield[i].scale });
+		shield[i].tex->Update();
+	}
 	//シールドの更新
 	ShieldUpdate();
 }
@@ -810,14 +818,6 @@ void BossEnemy3::ShieldUpdate() {
 				shield[i].scale = Ease(In, Cubic, m_ShieldFrame, shield[i].scale, 0.0f);
 			}
 		}
-	}
-
-	for (int i = 0; i < shield.size(); i++) {
-		shield[i].pos.y = 1.0f;
-		shield[i].tex->SetPosition(shield[i].pos);
-		shield[i].tex->SetColor(shield[i].color);
-		shield[i].tex->SetScale({ shield[i].scale,shield[i].scale,shield[i].scale });
-		shield[i].tex->Update();
 	}
 }
 void BossEnemy3::DeathSpecial() {

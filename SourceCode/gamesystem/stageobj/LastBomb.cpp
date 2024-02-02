@@ -177,3 +177,8 @@ void LastBomb::BirthExplosion() {
 	StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
 	m_Alive = false;
 }
+void LastBomb::DeleteBomb() {
+	StagePanel::GetInstance()->SetClose(m_NowWidth, m_NowHeight, false);
+	StagePanel::GetInstance()->SetRock(m_NowWidth, m_NowHeight, false);
+	m_Alive = false;
+}

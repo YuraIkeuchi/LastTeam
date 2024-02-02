@@ -69,7 +69,7 @@ void BattleScene::Initialize(DirectXCommon* dxCommon)
 	feed.reset(feed_);
 
 	//ボス登場演出のカメラ設定
-	if (nowHierarchy == 5 || nowHierarchy == 9 || nowHierarchy == 13) {
+	if (nowHierarchy == 4 || nowHierarchy == 8 || nowHierarchy == 12) {
 		GameStateManager::GetInstance()->SetBossCamera(true);
 	}
 }
@@ -81,7 +81,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 	lightGroup->Update();
 	//�e�N���X�X�V
 	//カメラワーク更新
-	if (nowHierarchy == 13) {
+	if (nowHierarchy == 12) {
 		camerawork->LastBossUpdate(camera);
 	}
 	else {
