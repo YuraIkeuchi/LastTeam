@@ -32,6 +32,7 @@ private:
 
 	void BirthArea(const int Width,const int Height,const string& name);//攻撃エリア
 	void BirthPredict(const int Width,const int Height,const string& name);//予測エリア
+	void BirthChantingHealParticle();
 
 	void SpinningAttackBirthPredict(int AttackCount);
 	void SpinningAttackBirthArea(int AttackCount);

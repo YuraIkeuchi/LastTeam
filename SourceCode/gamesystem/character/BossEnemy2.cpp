@@ -5,6 +5,7 @@
 #include "Helper.h"
 #include "Easing.h"
 #include "ImageManager.h"
+#include "ParticleEmitter.h"
 #include <GameStateManager.h>
 #include <StagePanel.h>
 //ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
@@ -178,7 +179,8 @@ void BossEnemy2::Inter() {
 }
 //UŒ‚
 void BossEnemy2::Attack() {
-	(this->*attackTable[_AttackState])();
+	//(this->*attackTable[_AttackState])();
+	(this->*attackTable[ATTACK_RECOVERY])();
 	PlayerCollide();
 	predictarea->Update();
 	predictarea->SetTimer(coolTimer);
@@ -265,6 +267,7 @@ void BossEnemy2::Recovery() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_RECOVERY];
 	m_Rot = true;
+	BirthChantingHealParticle();
 	if (!m_RecoverySaveHP) {
 		m_TmpHP = m_HP;
 		m_RecoverySaveHP = true;
@@ -298,6 +301,18 @@ void BossEnemy2::Recovery() {
 	}
 
 	predictarea->SetTargetTimer(l_TargetTimer);
+}
+
+void BossEnemy2::BirthChantingHealParticle() {
+	const XMFLOAT4 s_color = { 0.5f,1.0f,0.1f,1.0f };
+	const XMFLOAT4 e_color = { 0.5f,1.0f,0.1f,1.0f };
+	const float s_scale = 1.0f;
+	const float e_scale = 1.0f;
+	int l_Life = 20;
+
+	for (int i = 0; i < 3; i++) {
+		ParticleEmitter::GetInstance()->ChantingHealEffect(l_Life, { m_Position.x,m_Position.y+0.2f,m_Position.z }, s_scale, e_scale, s_color, e_color);
+	}
 }
 
 void BossEnemy2::Stun()

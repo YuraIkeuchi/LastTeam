@@ -50,6 +50,8 @@ public: //メンバ関数
 	void DeathEffect(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const int number);
 	//爆発エフェクト
 	void Explosion(const int life, const XMFLOAT3& pos, const float size, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor, const int ExploType);
+	//ボス用ヒール詠唱エフェクト
+	void ChantingHealEffect(const int life, const XMFLOAT3& pos, const float startscale, const float endscale, const XMFLOAT4& startcolor, const XMFLOAT4& endcolor);
 	void AllDelete();
 private: //メンバ関数
 	/// <summary>
@@ -71,6 +73,8 @@ private: //メンバ変数
 	unique_ptr<ParticleManager> rockParticle;
 	//パーティクルマネージャー(死亡)
 	unique_ptr<ParticleManager> deathParticle;
+	//パーティクルマネージャー(ボスの詠唱ヒール)
+	unique_ptr<ParticleManager> chantingHealParticle;
 private:
 	int m_Timer = 0;
 };
