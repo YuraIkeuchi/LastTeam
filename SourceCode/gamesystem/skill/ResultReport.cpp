@@ -69,7 +69,7 @@ void ResultReport::Update() {
 		damage_dealt[i]->Update();
 		damage_taken[i]->Update();
 	}
-	if (Input::GetInstance()->TriggerButton(Input::A)) {
+	if (Input::GetInstance()->TriggerButton(Input::BACK)) {
 		if (state == FINISH) { return; }
 		DamageIntNum(dealtDamage, dealNum);
 		DamageIntNum(takenDamage, takeNum);
@@ -88,6 +88,7 @@ void ResultReport::Update() {
 			rate->SetAnchorPoint({ 0.5f,0.5f });
 			rate->SetRotation(-2.f);
 		}
+		noDamage->SetSize({ 512.f ,64.f});
 		rate->SetSize({ 1024.f,128.f });
 		state = FINISH;
 	}

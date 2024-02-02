@@ -52,14 +52,9 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 		//auto test_enemy_1 = GameObject::CreateObject<TestEnemy>();
 	}
 
-	skipUI = IKESprite::Create(ImageManager::TUTORIAL_SKIPUI, { 940.f ,5.f });
-	skipUnder = IKESprite::Create(ImageManager::FEED, { 940.f + (128.f* scale_skip) ,5.f });
-	skipBack = IKESprite::Create(ImageManager::FEED, { 940.f +  (128.f * scale_skip),5.f });
-	skipUI->SetSize({ 472.f * scale_skip ,96.f * scale_skip });
-	skipUnder->SetSize({ 0.f,96.f * scale_skip });
-	skipUnder->SetColor({ 0,1,1,1 });
-	skipBack->SetSize({ 344.f * scale_skip,96.f * scale_skip });
-
+	skipUI = IKESprite::Create(ImageManager::RESULTSKIP, { 1250.f -102.4f ,5.f });
+	skipUI->SetSize({ 512.f * 0.4f,128.f * 0.4f });
+	skipUI->SetAnchorPoint({0.5f,0.f});
 	window.sprite = IKESprite::Create(ImageManager::TUTORIAL_WINDOW, { 0.0f,0.0f });
 	window.sprite->SetAnchorPoint({ 0.5f,0.5f });
 	window.m_Pos = { 750.0f,630.0f };
@@ -80,15 +75,14 @@ void TutorialScene::Initialize(DirectXCommon* dxCommon) {
 //�X�V
 void TutorialScene::Update(DirectXCommon* dxCommon) {
 	if (m_IsBackKey) {
-		const float frameMax = 5.f;
+		const float frameMax = 10.f;
 		if (Helper::FrameCheck(frame, 1 / frameMax)) {
 			m_Skip = true;
 			TutorialTask::GetInstance()->AllFinish();
 			m_IsBackKey = false;
 		} else {
-			float siz = 0.f;
-			siz = Ease(In, Quad, frame, 0.f, 344.f);
-			skipUnder->SetSize({ siz * scale_skip,96.f * scale_skip });
+			float siz = Ease(In, Back, frame, 512.f * 0.4f, 0.f);
+			skipUI->SetSize({ siz , 128.f * 0.4f });
 		}
 		return;
 	}
@@ -133,7 +127,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 	}
 	ParticleEmitter::GetInstance()->Update();
 	SceneChanger::GetInstance()->Update();
-	if ((input->TriggerButton(input->BACK)||
+	if ((input->TriggerButton(Input::BACK)||
 		input->TriggerKey(DIK_BACK)) &&
 		!m_IsBackKey &&
 		!m_Skip &&
@@ -220,8 +214,6 @@ void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	}
 	if (!m_FeedEnd) {
 		IKESprite::PreDraw();
-		skipBack->Draw();
-		skipUnder->Draw();
 		skipUI->Draw();
 		IKESprite::PostDraw();
 	}

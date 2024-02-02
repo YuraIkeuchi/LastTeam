@@ -573,7 +573,7 @@ void GameStateManager::UseSkill() {
 	if (!m_Delay) { return; }
 	int delay = m_Act[0].ActDelay;
 	if (m_ExtendQueen) {
-		delay = (int)((float)delay * 0.7f);
+		delay = (int)((float)delay * 0.65f);
 	}
 	m_ChargeScale = Helper::Lerp(0.5f, 0.0f, m_DelayTimer, delay);		//線形補間でチャージを表してる
 	float chargeSca = ((float)m_DelayTimer / (delay * 0.9f));

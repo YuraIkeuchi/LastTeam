@@ -147,6 +147,8 @@ private:
 	int oldPickHis = pickHierarchy;
 	int oldPickInd = pickIndex;
 
+	float rota = 0.f;
+
 	XMFLOAT2 scroll = { 0,0 };
 	float oldScroll = 0.f;
 	std::vector<unique_ptr<IKESprite>> roads;
@@ -166,7 +168,7 @@ private:
 	float eFrame = 0;
 	float eAdd = 0.01f;
 	int m_BeforeSelect = {};
-	XMFLOAT2 charaPos = { homeX ,homeY[Middle] };
+	XMFLOAT2 charaPos = { homeX ,homeY[Middle] + 30.f };
 	XMFLOAT2 framePos = { homeX + interbal ,homeY[Middle] };
 
 	array<unique_ptr<IKESprite>, SAVE_MAX> save_sprite;

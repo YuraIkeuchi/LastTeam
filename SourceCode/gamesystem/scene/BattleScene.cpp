@@ -114,7 +114,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 			return;
 		}
 
-		if ((input->TriggerButton(input->A) ||
+		if ((input->TriggerButton(Input::BACK) ||
 			input->TriggerKey(DIK_BACK)) &&
 			!m_IsBackKey &&
 			!m_Skip) {
