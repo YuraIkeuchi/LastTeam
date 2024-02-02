@@ -804,7 +804,7 @@ void Player::BoundMove() {
 void Player::RegeneUpdate() {
 	if (StagePanel::GetInstance()->GetHeal(m_NowWidth, m_NowHeight)) {
 		if (Helper::CheckMin(m_HealTimer, 50, 1)) {
-			RegeneHeal(20.0f);
+			RegeneHeal(10.0f);
 			m_HealTimer = {};
 		}
 	} else {

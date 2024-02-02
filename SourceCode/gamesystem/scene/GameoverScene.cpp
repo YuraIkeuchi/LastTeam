@@ -64,6 +64,9 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 		m_OverSize[i] = { SelectWidth_Cut, SelectHeight_Cut };
 	}
 
+	select[SELECT_YES]->SetColor({ 1.0f,0.15f,0.15f,1.0f });
+	select[SELECT_NO]->SetColor({ 0.15f,1.0f,0.15f,1.0f });
+
 	m_OverPos[0] = { 640.0f,-150.0f };
 	m_OverPos[1] = { 640.0f,-150.0f };
 

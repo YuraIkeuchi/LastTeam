@@ -385,7 +385,7 @@ void SupportEnemy::ClearAction() {
 void SupportEnemy::GameOverAction() {
 	if (_GameOverState == OVER_STOP) {
 		m_Position = { -6.5f,0.0f,5.5f };
-		m_Rotation = { 0.0f,180.0f,0.0f };
+		m_Rotation = { 0.0f,0.0f,0.0f };
 		m_AddDisolve = 0.0f;
 		if (player->GetSelectType() == 1) {
 			_GameOverState = OVER_YES;
