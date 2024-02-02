@@ -41,13 +41,20 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 		_drawnumber[i] = make_unique<DrawNumber>(0.5f);
 		_drawnumber[i]->Initialize();
 	}
+	//描画する数字と座標をここでセットする
+	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.35f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.35f, m_Position.y, m_Position.z - 0.55f });
+
 	poisonState = IKESprite::Create(ImageManager::POIZONCOVER, { 0.0f,0.0f });
 	poisonState->SetSize({ 32.f,32.f });
 	poisonState->SetAnchorPoint({ 0.5f,0.5f });
 	for (auto i = 0; i < _drawPoisonnumber.size(); i++) {
 		_drawPoisonnumber[i] = make_unique<DrawPoisonNumber>(0.5f);
 		_drawPoisonnumber[i]->Initialize();
+		_drawPoisonnumber[i]->SetPosition({-100.f,0.f});
 	}
+
 	poison_tex = std::make_unique<IKETexture>(ImageManager::POISON_EFFECT, XMFLOAT3{}, XMFLOAT3{ 1.f,1.f,1.f }, XMFLOAT4{ 1.f,0.5f,1.f,1.f });
 	poison_tex->TextureCreate();
 	poison_tex->Initialize();
