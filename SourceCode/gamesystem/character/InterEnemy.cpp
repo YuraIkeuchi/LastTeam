@@ -99,7 +99,10 @@ void InterEnemy::BaseInitialize(IKEModel* _model) {
 	reload2Tex->SetRotation({ 60.0f,0.0f,0.0f });
 	reload2Tex->SetIsBillboard(true);
 
-
+	CanCounterTex.reset(new IKETexture(ImageManager::CHARGE, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+	CanCounterTex->TextureCreate();
+	CanCounterTex->Initialize();
+	CanCounterTex->SetRotation({ 90.0f,0.0f,0.0f });
 }
 void InterEnemy::SkipInitialize() {
 	m_AddDisolve = 0.0f;

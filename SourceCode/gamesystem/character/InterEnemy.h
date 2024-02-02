@@ -182,6 +182,8 @@ protected:
 	bool m_ReloadEffect = false;
 	std::unique_ptr<IKETexture> reloadTex;
 	std::unique_ptr<IKETexture> reload2Tex;
+	std::unique_ptr<IKETexture> CanCounterTex;
+
 	float m_ReloadFrame = 0.f;
 	float m_ReloadFinishFrame = 0.f;
 	XMFLOAT3 effect3Pos = {};
