@@ -323,7 +323,6 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 			road->Draw();
 		}
 	}
-	select->Draw();
 	for (array<UI, INDEX>& ui : UIs) {
 		for (int i = 0; i < INDEX; i++) {
 			if (!ui[i].sprite) { continue; }
@@ -334,7 +333,7 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 			}
 		}
 	}
-	
+	select->Draw();
 	chara->Draw();
 	if (!end) {
 		//frame->Draw();
@@ -349,8 +348,9 @@ void MapScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (isStart&& m_State != State::initState) {
 		startButton->Draw();
 	}
-	if(m_Save)
-	save_sprite[m_SaveCount]->Draw();
+	if (m_Save) {
+		save_sprite[m_SaveCount]->Draw();
+	}
 	IKESprite::PostDraw();
 
 	SceneChanger::GetInstance()->Draw();

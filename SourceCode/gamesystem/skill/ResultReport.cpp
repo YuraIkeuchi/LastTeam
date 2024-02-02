@@ -88,6 +88,7 @@ void ResultReport::Update() {
 			rate->SetAnchorPoint({ 0.5f,0.5f });
 			rate->SetRotation(-2.f);
 		}
+		noDamage->SetSize({ 512.f ,64.f});
 		rate->SetSize({ 1024.f,128.f });
 		state = FINISH;
 	}

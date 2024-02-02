@@ -38,8 +38,6 @@ private:
 
 	unique_ptr<IKESprite> ui = nullptr;
 	unique_ptr<IKESprite> skipUI = nullptr;
-	unique_ptr<IKESprite> skipUnder = nullptr;
-	unique_ptr<IKESprite> skipBack = nullptr;
 	float scale_skip = 0.7f;
 	float frame = 0.f;
 	enum ChangeType {
