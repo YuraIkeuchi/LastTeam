@@ -149,6 +149,7 @@ public:
 		NODEATH,
 		NODAMAGE,
 		HPGauge,
+		HPGauge_W,
 		HPCover,
 		SAVE,
 		EXPRE,

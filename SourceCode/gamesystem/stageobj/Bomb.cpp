@@ -12,12 +12,19 @@
 //モデル読み込み
 Bomb::Bomb() {
 
-	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::BULLET));
+	BaseInitialize(ModelManager::GetInstance()->GetModel(ModelManager::BOM));
 
 	shockWaveTex.reset(new IKETexture(ImageManager::CHARGE, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shockWaveTex->TextureCreate();
 	shockWaveTex->Initialize();
 	shockWaveTex->SetRotation({ 90.0f,0.0f,0.0f });
+
+	float baseScale = PANEL_SIZE * 0.1f;
+	AttentionTex.reset(new IKETexture(ImageManager::AREA, { m_Position.x,0.01f ,m_Position.z }, { baseScale,baseScale,baseScale }, { 1.f,1.f,1.f,1.f }));
+	AttentionTex->TextureCreate();
+	AttentionTex->Initialize();
+	AttentionTex->SetRotation({ 90.0f,0.0f,0.0f });
+
 
 	/*shadow_tex.reset(new IKETexture(ImageManager::SHADOW, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
 	shadow_tex->TextureCreate();
@@ -51,7 +58,7 @@ void (Bomb::* Bomb::stateTable[])() = {
 void Bomb::Action() {
 
 	(this->*stateTable[_charaState])();
-	m_Rotation.y += 2.0f;
+	//m_Rotation.y += 2.0f;
 	Obj_SetParam();
 	//当たり判定
 	vector<unique_ptr<AttackArea>>& _AttackArea = GameStateManager::GetInstance()->GetAttackArea();
@@ -60,11 +67,12 @@ void Bomb::Action() {
 	if (m_HP <= 0.0f && _charaState != STATE_SPECIAL) {
 		Attack();
 	}
-
-	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
+	m_ShadowPos = { m_Position.x,m_Position.y + 0.06f,m_Position.z };
 	//shadow_tex->SetPosition(m_ShadowPos);
 	//shadow_tex->SetScale(m_ShadowScale);
-	//shadow_tex->Update();
+	AttentionTex->SetColor(colAttention);
+	AttentionTex->SetPosition(m_ShadowPos);
+	AttentionTex->Update();
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 }
 
@@ -77,6 +85,9 @@ void Bomb::Draw(DirectXCommon* dxCommon) {
 	if (_charaState == STATE_SPECIAL) {
 		//衝撃波の描画
 		shockWaveTex->Draw();
+	}
+	if (coolTimer >= kIntervalMax/2) {
+		AttentionTex->Draw();
 	}
 	IKETexture::PostDraw();
 	UIDraw();
@@ -99,12 +110,13 @@ void Bomb::Finalize() {
 //待機
 void Bomb::Inter() {
 	const float l_AddFrame = 1 / 30.0f;
-	const float l_AfterScale = 0.2f;
+	const float l_AfterScale = 0.4f;
 
 	if (_BombState == BOMB_SET) {
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Frame = {};
 			_BombState = BOMB_THROW;
+			m_OldPosition = m_Position;
 		}
 		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, l_AfterScale);
 	}
@@ -121,17 +133,23 @@ void Bomb::Inter() {
 				_charaState = STATE_ATTACK;
 			}
 
-			m_AddAngle = Helper::Lerp(10.0f, 30.0f, coolTimer, kIntervalMax);		//線形補間でチャージを表してる
+			m_AddAngle = Helper::Lerp(1.0f, 6.0f, coolTimer, kIntervalMax);		//線形補間でチャージを表してる
 				//sin波によって上下に動く
 			m_SinAngle += m_AddAngle;
 			m_SinAngle2 = m_SinAngle * (3.14f / 180.0f);
-			m_Color.y = (sin(m_SinAngle2) * 0.5f + 0.5f);
-			m_Color.z = (sin(m_SinAngle2) * 0.5f + 0.5f);
+
+			m_BaseScale = abs(sinf(m_SinAngle2)) * 0.15f + l_AfterScale;
+
+			float m_AdAngle = Helper::Lerp(10.0f, 30.0f, coolTimer, kIntervalMax);		//線形補間でチャージを表してる
+			m_Sin2Angle += m_AdAngle;
+			colAttention.y = (sinf(m_Sin2Angle * (XM_PI / 180.0f)) * 0.5f + 0.25f);
+			colAttention.z = (sinf(m_Sin2Angle * (XM_PI / 180.0f)) * 0.5f + 0.25f);
 		}
 
-		m_Position = { Ease(In,Cubic,m_Frame,m_Position.x,m_TargetPos.x),
-		Ease(In,Cubic,m_Frame,m_Position.y,0.0f),
-		Ease(In,Cubic,m_Frame,m_Position.z,m_TargetPos.z), };
+		m_Position = { 
+		Ease(In,Cubic,m_Frame,m_OldPosition.x,m_TargetPos.x),
+		Ease(In,Cubic,m_Frame,m_OldPosition.y,0.0f),
+		Ease(In,Cubic,m_Frame,m_OldPosition.z,m_TargetPos.z)};
 	}
 }
 //攻撃

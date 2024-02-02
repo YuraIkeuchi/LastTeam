@@ -42,6 +42,8 @@ void ModelManager::StartInitialize()
 	LoadModel(SUPPORT_ENEMY, "Shield");
 	LoadModel(SUPPORT_ENEMY2, "BomBear");
 	LoadModel(BOSS_ARM, "punch");
+	LoadModel(BOM, "Bom");
+
 }
 
 //モデル読み込み(非同期処理で読み込むもの)
