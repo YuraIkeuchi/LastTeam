@@ -83,6 +83,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 		const float frameMax = 5.f;
 		if (Helper::FrameCheck(frame, 1 / frameMax)) {
 			m_Skip = true;
+			TutorialTask::GetInstance()->AllFinish();
 			m_IsBackKey = false;
 		} else {
 			float siz = 0.f;

@@ -40,12 +40,14 @@ void TutorialTask::Initialize() {
 		tutorial[i].posframe = {};
 	}
 
+	m_Frame = {};
+	tutorial[TASK_BREAK].pos.x = 1500.0f;
 	m_ChoiceSkill = false;
 	m_ViewSkill = false;
 }
 void TutorialTask::Update(){
 	const float l_AddFrame = 1.0f / 30.0f;
-	for (int i = 0; i < TASK_MAX; i++) {
+	for (int i = 0; i < TASK_MAX - 1; i++) {
 		if (m_TaskFinish[i]) {
 			if (Helper::FrameCheck(tutorial[i].frame, l_AddFrame)) {
 				tutorial[i].frame = 1.0f;
@@ -68,6 +70,39 @@ void TutorialTask::Update(){
 		tutorial[i].check->SetSize(tutorial[i].size);
 		tutorial[i].check->SetColor(tutorial[i].color);
 	}
+
+	if (m_TaskFinish[TASK_COUNTER]) {
+		if (m_TaskFinish[TASK_BREAK]) {
+			if (Helper::FrameCheck(tutorial[TASK_BREAK].frame, l_AddFrame)) {
+				tutorial[TASK_BREAK].frame = 1.0f;
+				if (Helper::FrameCheck(tutorial[TASK_BREAK].posframe, l_AddFrame)) {
+					tutorial[TASK_BREAK].posframe = 1.0f;
+				}
+				else {
+					tutorial[TASK_BREAK].pos.x = Ease(In, Cubic, tutorial[TASK_BREAK].posframe, tutorial[TASK_BREAK].pos.x, tutorial[TASK_BREAK].Afterpos.x);
+				}
+			}
+			else {
+				tutorial[TASK_BREAK].pos.x = Ease(In, Cubic, tutorial[TASK_BREAK].frame, tutorial[TASK_BREAK].pos.x, tutorial[TASK_BREAK].Afterpos.x);
+				tutorial[TASK_BREAK].color.w = Ease(Out, Quad, tutorial[TASK_BREAK].frame, tutorial[TASK_BREAK].color.w, 1.0f);
+				tutorial[TASK_BREAK].size = { Ease(Out,Quad,tutorial[TASK_BREAK].frame,tutorial[TASK_BREAK].size.x,tutorial[TASK_BREAK].aftersize.x),
+				Ease(Out,Quad,tutorial[TASK_BREAK].frame,tutorial[TASK_BREAK].size.y,tutorial[TASK_BREAK].aftersize.y) };
+			}
+		}
+		else {
+			if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
+				m_Frame = 1.0f;
+			}
+			else {
+				tutorial[TASK_BREAK].pos.x = Ease(In, Cubic, m_Frame, tutorial[TASK_BREAK].pos.x,1020.0f);
+			}
+		}
+	}
+
+	tutorial[TASK_BREAK].text->SetPosition(tutorial[TASK_BREAK].pos);
+	tutorial[TASK_BREAK].check->SetPosition({ tutorial[TASK_BREAK].pos.x - 125.0f,520.0f });
+	tutorial[TASK_BREAK].check->SetSize(tutorial[TASK_BREAK].size);
+	tutorial[TASK_BREAK].check->SetColor(tutorial[TASK_BREAK].color);
 }
 
 void TutorialTask::Draw() {
@@ -86,4 +121,9 @@ void TutorialTask::ImGuiDraw() {
 	}
 	ImGui::Text("ViewSkill%d", m_ViewSkill);
 	ImGui::End();
+}
+void TutorialTask::AllFinish() {
+	for (int i = 0; i < TASK_MAX; i++) {
+		m_TaskFinish[i] = true;
+	}
 }
