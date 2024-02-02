@@ -281,7 +281,9 @@ void InterEnemy::UIDraw() {
 		//HPバー
 		hptex->Draw();
 		//HP(数字)
-		_drawnumber[FIRST_DIGHT]->Draw();
+		if (m_InterHP > 0) {
+			_drawnumber[FIRST_DIGHT]->Draw();
+		}
 		if (m_InterHP >= 10)
 			_drawnumber[SECOND_DIGHT]->Draw();
 		if (m_InterHP >= 100)
