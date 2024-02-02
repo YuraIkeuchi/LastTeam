@@ -592,10 +592,10 @@ void MapScene::MapCreate() {
 }
 
 void MapScene::ImGuiDraw() {
-	/*ImGui::Begin("Map");
+	ImGui::Begin("Map");
 	ImGui::Text("selectnum:%d", s_selectnum);
 	ImGui::Text("Before:%d", m_BeforeSelect);
-	ImGui::End();*/
+	ImGui::End();
 }
 
 void MapScene::BlackOut() {
@@ -896,15 +896,7 @@ void MapScene::CheckState() {
 	} else {
 		if (Helper::FrameCheck(delayFrame, 1 / 20.f)) {
 			SceneChanger::GetInstance()->SetChangeStart(true);
-			if (!m_Select) {
-				m_SelectNum = Helper::GetRanNum(1, 4);
-				if (m_SelectNum == m_BeforeSelect) {
-					m_SelectNum = Helper::GetRanNum(1, 4);
-				}
-				else {
-					m_Select = true;
-				}
-			}
+			
 			std::stringstream ss;
 			const std::string BaseName = "Resources/csv/EnemySpawn/";
 			string levelName = "None";
@@ -943,6 +935,17 @@ void MapScene::CheckState() {
 			GameStateManager::GetInstance()->SetEnemySpawnText(r_map, isBattle);
 			delayFrame = 0.f;
 			s_selectnum = m_SelectNum;
+		}
+		else {
+			if (!m_Select) {
+				m_SelectNum = Helper::GetRanNum(1, 4);
+				if (m_SelectNum == m_BeforeSelect) {
+					m_SelectNum = Helper::GetRanNum(1, 4);
+				}
+				else {
+					m_Select = true;
+				}
+			}
 		}
 		if (SceneChanger::GetInstance()->GetChange()) {
 			TutorialTask::GetInstance()->SetViewSkill(true);
