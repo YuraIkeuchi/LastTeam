@@ -153,8 +153,11 @@ void StagePanel::ImGuiDraw() {
 	}
 
 	ImGui::Begin("Panel");
-	ImGui::Text("AllDelete:%d", m_AllDelete);
-	ImGui::Text("ActionCount:%d", m_ActionCount);
+	for (int i = 4; i < PANEL_WIDTH; i++) {
+		for (int j = 0; j < PANEL_HEIGHT; j++) {
+			ImGui::Text("Hit[%d][%d]:%d", i, j, panels[i][j].isEnemyHit);
+		}
+	}
 	ImGui::End();
 }
 //オノマトペの描画

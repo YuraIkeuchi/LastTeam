@@ -54,16 +54,16 @@ void Boomerang::Update() {
 	m_Scale = { m_BaseScale,m_BaseScale,m_BaseScale };
 	Collide();		//“–‚½‚è”»’è
 
-	dir_tex->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
-	dir_tex->SetRotation(m_DirRot);
-	dir_tex->Update();
+	//dir_tex->SetPosition({ m_Position.x,m_Position.y + 0.5f,m_Position.z });
+	//dir_tex->SetRotation(m_DirRot);
+	//dir_tex->Update();
 	predictArea->Update();
 	m_Rotation.y += 20.0f;
 }
 //•`‰æ
 void Boomerang::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	dir_tex->Draw();
+	//dir_tex->Draw();
 	IKETexture::PostDraw();
 	predictArea->Draw(dxCommon);
 	Obj_Draw();

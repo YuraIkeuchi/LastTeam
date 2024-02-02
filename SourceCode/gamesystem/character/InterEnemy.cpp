@@ -132,8 +132,9 @@ void InterEnemy::Update() {
 		Helper::Clamp(m_InterHP, 0, (int)m_MaxHP);
 	}
 	////敵のマスを取得する
-	StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight, m_Alive);
-
+	if (m_Position.y <= 0.3f) {
+		StagePanel::GetInstance()->SetEnemyHit(m_Object.get(), m_NowWidth, m_NowHeight, m_Alive);
+	}
 	if (m_HP != 0.0f) {
 		for (auto i = 0; i < _drawnumber.size(); i++) {
 			_drawnumber[i]->Update();
@@ -252,7 +253,7 @@ void InterEnemy::BaseBackDraw(DirectXCommon* dxCommon) {
 
 void InterEnemy::ImGuiDraw() {
 	ImGui::Begin("Enemy");
-	ImGui::Text("HP:%f", m_HP);
+	ImGui::Text("HP:%f", m_Position.y);
 	ImGui::End();
 	ImGui_Origin();
 	////敵のダメージテキスト

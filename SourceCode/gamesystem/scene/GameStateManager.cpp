@@ -311,12 +311,12 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 }
 //描画
 void GameStateManager::ImGuiDraw() {
-	ImGui::Begin("Base");
-	ImGui::Text("Choice:%d", m_Choice);
-	ImGui::Text("EndResult:%d", m_EndResult);
-	ImGui::Text("EndText:%d", m_EndText);
-	ImGui::End();
-	SkillManager::GetInstance()->ImGuiDraw();
+	//ImGui::Begin("Base");
+	//ImGui::Text("Choice:%d", m_Choice);
+	//ImGui::Text("EndResult:%d", m_EndResult);
+	//ImGui::Text("EndText:%d", m_EndText);
+	//ImGui::End();
+	//SkillManager::GetInstance()->ImGuiDraw();
 	//StagePanel::GetInstance()->ImGuiDraw();
 }
 //手に入れたUIの描画

@@ -101,9 +101,7 @@ void Bomb::Draw(DirectXCommon* dxCommon) {
 //ImGui描画
 void Bomb::ImGui_Origin() {
 	ImGui::Begin("Bomb");
-	ImGui::Text("Scale.x:%f", m_Scale.x);
 	ImGui::Text("PosY:%f", m_Position.y);
-	ImGui::Text("Frame:%f", m_Frame);
 	ImGui::End();
 }
 //開放
