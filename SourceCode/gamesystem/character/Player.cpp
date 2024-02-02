@@ -835,6 +835,7 @@ void Player::HpPassive() {
 	float gain_hp = afterMaxhp / 2.0f;
 	m_MaxHP = afterMaxhp;
 	m_HP += gain_hp;
+	m_HP = clamp(m_HP,0.f, m_MaxHP);
 	Player::isHpPassive = true;
 }
 void Player::BirthHealNumber(const float heal) {

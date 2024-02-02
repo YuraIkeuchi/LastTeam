@@ -106,6 +106,12 @@ public:
 	float GetHp() { return m_HP; }
 
 	void SetHp(float hp) { m_HP = hp; }
+	void ResetHp() {
+		m_HP = 500.f;
+		m_MaxHP = 500.f;
+		isHpPassive = false;
+	}
+
 
 	void SetHealingDamage(bool flag) { m_healingDamage = flag; }
 
