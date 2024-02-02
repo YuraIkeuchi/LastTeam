@@ -69,7 +69,7 @@ void ResultReport::Update() {
 		damage_dealt[i]->Update();
 		damage_taken[i]->Update();
 	}
-	if (Input::GetInstance()->TriggerButton(Input::A)) {
+	if (Input::GetInstance()->TriggerButton(Input::BACK)) {
 		if (state == FINISH) { return; }
 		DamageIntNum(dealtDamage, dealNum);
 		DamageIntNum(takenDamage, takeNum);
