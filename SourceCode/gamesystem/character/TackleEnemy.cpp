@@ -71,7 +71,7 @@ void (TackleEnemy::* TackleEnemy::stateTable[])() = {
 //行動
 void TackleEnemy::Action() {
 	if (!m_Induction) {
-		//(this->*stateTable[_charaState])();
+		(this->*stateTable[_charaState])();
 	} else {
 		InductionMove();
 	}
@@ -294,11 +294,13 @@ void TackleEnemy::GameOverAction() {
 		m_Position = { 4.0f,0.0f,3.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
-		if (player->GetSelectType() == 1) {
-			_GameOverState = OVER_YES;
-		}
-		else if (player->GetSelectType() == 2) {
-			_GameOverState = OVER_NO;
+		if (player->GetOverType() == 3) {
+			if (player->GetSelectType() == 1) {
+				_GameOverState = OVER_YES;
+			}
+			else if (player->GetSelectType() == 2) {
+				_GameOverState = OVER_NO;
+			}
 		}
 	}
 	else if (_GameOverState == OVER_YES) {

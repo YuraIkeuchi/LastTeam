@@ -102,6 +102,7 @@ public:
 	const bool GetSelectEnd() { return m_SelectEnd; }
 	const bool GetMove() { return m_Move; }
 	const int GetSelectType() { return m_SelectType; }
+	const int GetOverType() { return _OverType; }
 	float GetMaxHp() { return m_MaxHP; }
 	float GetHp() { return m_HP; }
 
@@ -275,6 +276,7 @@ private:
 
 	bool m_Bound = {};
 	int m_HealTimer = {};
+	bool m_MoveEnd = false;
 
 	float m_ShieldHP = 0.f;
 	float m_ShieldHPMAX = 45.f;

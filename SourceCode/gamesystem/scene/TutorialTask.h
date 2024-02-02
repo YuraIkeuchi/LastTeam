@@ -31,6 +31,8 @@ public:
 	void Draw();
 
 	void ImGuiDraw();
+
+	void AllFinish();
 public:
 	//setter getter
 	const bool GetTaskFinish(const int TaskNum) { return m_TaskFinish[TaskNum]; }
@@ -60,4 +62,6 @@ private:
 	TutorialParts tutorial[TASK_MAX];
 	bool m_ChoiceSkill = false;
 	bool m_ViewSkill = false;
+
+	float m_Frame = {};
 };

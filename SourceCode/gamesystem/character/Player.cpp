@@ -938,12 +938,17 @@ void Player::GameOverUpdate(const int Timer) {
 			m_Position.y = 0.1f;
 		}
 	} else if (_OverType == OVER_MOVE) {		//動く
-		if ((input->TriggerButton(input->A)) || (input->TriggerButton(input->B)) && !m_OverMove) {
-			m_OverMove = true;
-			if (input->TriggerButton(input->B)) {
+		if((input->TiltPushStick(input->L_LEFT)) || (input->TiltPushStick(input->L_RIGHT)) && !m_MoveEnd) {
+			if (input->TiltPushStick(input->L_LEFT) && m_SelectType != SELECT_YES) {
 				m_SelectType = SELECT_YES;
-			} else {
+				m_MoveEnd = true;
+				m_OverMove = true;
+				m_MoveFrame = {};
+			} else if(input->TiltPushStick(input->L_RIGHT) && m_SelectType != SELECT_NO) {
 				m_SelectType = SELECT_NO;
+				m_MoveEnd = true;
+				m_OverMove = true;
+				m_MoveFrame = {};
 			}
 		}
 
@@ -952,19 +957,25 @@ void Player::GameOverUpdate(const int Timer) {
 				if (m_SelectType == SELECT_YES) {
 					if (Helper::CheckMax(m_Rotation.y, 180.0f, -10.0f)) {
 						m_Rotation.y = 180.0f;
-						_OverType = OVER_END;
-						m_MoveFrame = {};
-						m_AddPower = 0.3f;
-						m_Jump = true;
-					}
-				} else {
-					if (Helper::CheckMin(m_Rotation.y, 180.0f, 10.0f)) {
-						m_Rotation.y = 180.0f;
-						_OverType = OVER_END;
-						m_MoveFrame = {};
+						m_MoveEnd = false;
+						if (input->TriggerButton(input->B)) {
+							_OverType = OVER_END;
+							m_MoveFrame = {};
+							m_AddPower = 0.3f;
+							m_Jump = true;
+						}
 					}
 				}
-			} else {
+				else {
+					if (Helper::CheckMin(m_Rotation.y, 180.0f, 10.0f)) {
+						m_Rotation.y = 180.0f;
+						if (input->TriggerButton(input->B)) {
+							_OverType = OVER_END;
+						}
+					}
+				}
+			}
+			else {
 				if (m_SelectType == SELECT_YES) {
 					if (Helper::CheckMin(m_Rotation.y, 270.0f, 10.0f)) {
 						m_Rotation.y = 270.0f;

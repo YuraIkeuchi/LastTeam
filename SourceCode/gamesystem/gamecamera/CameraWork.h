@@ -18,7 +18,7 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 private:
-	XMFLOAT3 eye_ = { -1.5f,7.f,-3.f };
+	XMFLOAT3 eye_ = { -1.5f,7.5f,-3.0f };
 
 	XMFLOAT3 target_ = { -1.5f,2.5f,0.f };
 public:

@@ -252,11 +252,13 @@ void ThrowEnemy::GameOverAction() {
 		m_Position = { -3.0f,0.0f,3.5f };
 		m_Rotation = { 0.0f,180.0f,0.0f };
 		m_AddDisolve = 0.0f;
-		if (player->GetSelectType() == 1) {
-			_GameOverState = OVER_YES;
-		}
-		else if (player->GetSelectType() == 2) {
-			_GameOverState = OVER_NO;
+		if (player->GetOverType() == 3) {
+			if (player->GetSelectType() == 1) {
+				_GameOverState = OVER_YES;
+			}
+			else if (player->GetSelectType() == 2) {
+				_GameOverState = OVER_NO;
+			}
 		}
 	}
 	else if (_GameOverState == OVER_YES) {

@@ -83,6 +83,7 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 		const float frameMax = 5.f;
 		if (Helper::FrameCheck(frame, 1 / frameMax)) {
 			m_Skip = true;
+			TutorialTask::GetInstance()->AllFinish();
 			m_IsBackKey = false;
 		} else {
 			float siz = 0.f;
@@ -201,15 +202,16 @@ void TutorialScene::Draw(DirectXCommon* dxCommon) {
 void TutorialScene::FrontDraw(DirectXCommon* dxCommon) {
 	if (!m_FeedEnd) {
 		ParticleEmitter::GetInstance()->FlontDrawAll();
-		GameStateManager::GetInstance()->ActUIDraw();
 		for (int i = 0; i < enemy.size(); i++) {
 			enemy[i]->UIDraw();
 		}
+		GameStateManager::GetInstance()->ActUIDraw();
+		
 		player_->UIDraw();
 		TutorialTask::GetInstance()->Draw();
 	}
 	
-	if (!m_FeedEnd || GameStateManager::GetInstance()->GetEndResult() && m_Timer <= 55) {
+	if (!m_FeedEnd || GameStateManager::GetInstance()->GetEndResult() && m_Timer <= 500) {
 		if (!m_CounterEffect) {
 			window.sprite->Draw();
 			text_->TestDraw(dxCommon);
@@ -246,11 +248,12 @@ void TutorialScene::BackDraw(DirectXCommon* dxCommon) {
 }
 //ImGui
 void TutorialScene::ImGuiDraw() {
-	//GameStateManager::GetInstance()->ImGuiDraw();
-	/*ImGui::Begin("Tutorial");
+	GameStateManager::GetInstance()->ImGuiDraw();
+	ImGui::Begin("Tutorial");
 	ImGui::Text("COunte:%d", m_CounterEffect);
 	ImGui::Text("Timer:%d", m_CounterTimer);
-	ImGui::End();*/
+	ImGui::Text("Counter:%d", m_Timer);
+	ImGui::End();
 }
 
 void TutorialScene::Finalize() {
@@ -278,7 +281,6 @@ void TutorialScene::PlayState() {
 		}
 
 		if (m_FeedEnd) {
-			m_CounterEffect = false;
 			if (GameStateManager::GetInstance()->GetEndResult()) {
 				window.m_Pos = { 740.0f,550.0f };
 				Audio::GetInstance()->StopWave(AUDIO_MAIN);
@@ -294,15 +296,15 @@ void TutorialScene::PlayState() {
 				m_TextPos = { 20.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_SKILL, m_TextPos);
 			}
-			else if (m_Timer == 200) {
+			else if (m_Timer == 170) {
 				m_TextPos = { 20.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_DELETE, m_TextPos);
 			}
-			else if (m_Timer == 400) {
+			else if (m_Timer == 340) {
 				m_TextPos = { 20.0f,20.f };
 				text_->SetConversation(TextManager::TUTORIAL_CHOICE, m_TextPos);
 			}
-			else if (m_Timer == 550) {
+			else if (m_Timer == 500) {
 				GameStateManager::GetInstance()->SetEndText(true);
 			}
 	

@@ -54,7 +54,7 @@ void DeckUI::Draw() {
 //ImGui
 void DeckUI::ImGuiDraw() {
 	ImGui::Begin("DeckUI");
-	ImGui::Text("ID:%d", m_ID);
+	ImGui::Text("PosX:%f", m_Position.x);
 	ImGui::End();
 }
 //UI‚Ì“®‚«
@@ -62,7 +62,7 @@ void DeckUI::UiMove() {
 	const float l_AddFrame = 0.1f;
 	m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y,(455.0f - ((m_ActCount - 1) * 64.0f)));
 	if (!m_Use) {
-		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, 110.0f);
+		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, 140.0f);
 	}
 	else {
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
