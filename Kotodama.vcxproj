@@ -111,6 +111,7 @@
     <ClCompile Include="lib\imgui\include\imgui_impl_win32.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_tables.cpp" />
     <ClCompile Include="lib\imgui\include\imgui_widgets.cpp" />
+    <ClCompile Include="SourceCode\gamesystem\ActionPanel\ActionVanish.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\BossEnemy2.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\BossEnemy3.cpp" />
     <ClCompile Include="SourceCode\gamesystem\character\ClouserEnemy.cpp" />
@@ -316,6 +317,7 @@
     <ClInclude Include="SourceCode\engine\Property.h" />
     <ClInclude Include="SourceCode\engine\shake\Shake.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionUI.h" />
+    <ClInclude Include="SourceCode\gamesystem\ActionPanel\ActionVanish.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\InterAction.h" />
     <ClInclude Include="SourceCode\gamesystem\ActionPanel\SkillAction.h" />
     <ClInclude Include="SourceCode\gamesystem\character\BossEnemy.h" />

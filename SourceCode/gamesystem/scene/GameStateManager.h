@@ -16,6 +16,7 @@
 #include "HaveResultSkill.h"
 #include <Onomatope.h>
 #include "ResultReport.h"
+#include <ActionVanish.h>
 
 using namespace DirectX;
 using namespace std;
@@ -81,8 +82,6 @@ private:
 	void GetPassive(int ID);
 
 	bool AttackSubAction();
-
-	bool SkillRecycle();
 
 	bool ResultUpdate();
 	void InDeck();//デッキに組み込む
@@ -218,7 +217,7 @@ private:
 	};
 
 	vector<ActState> m_Act;
-
+	unique_ptr<ActionVanish> actionVanish;
 	//全行動回数
 	int m_AllActCount = {};
 
