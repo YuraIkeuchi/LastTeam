@@ -30,8 +30,8 @@ private:
 	void Recovery();
 	void Stun();
 
-	void BirthArea(const int Width,const int Height,const string& name);//攻撃エリア
-	void BirthPredict(const int Width,const int Height,const string& name);//予測エリア
+	void BirthArea(const int Width, const int Height, const string& name);//攻撃エリア
+	void BirthPredict(const int Width, const int Height, const string& name);//予測エリア
 	void BirthChantingHealParticle();
 
 	void SpinningAttackBirthPredict(int AttackCount);
@@ -46,7 +46,7 @@ private:
 	void PlayerCollide();
 	void WarpEnemy();//敵のワープ処理
 	void AttackMove();//攻撃時の動き
-//魔法陣
+	//魔法陣
 	void BirthMagic();
 private:
 	static const int BULLET_NUM = 5;
@@ -70,7 +70,7 @@ private:
 	std::vector<std::vector<int>> m_Area = {};
 	// 攻撃エリア
 	std::vector<unique_ptr<EnemyThorn>> enethorn;
-	
+
 
 	int m_RandWigth = {};
 	int m_RandHeight = {};
@@ -119,6 +119,7 @@ private:
 	bool m_ChangeRot = {};
 	bool m_RecoverySaveHP = {};
 	float m_TmpHP = {};
-	bool m_isStun = { };
+	bool m_isStun = {};
+	int m_ChantingCount = {};
 };
 

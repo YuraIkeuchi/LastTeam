@@ -267,7 +267,13 @@ void BossEnemy2::Recovery() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_RECOVERY];
 	m_Rot = true;
-	BirthChantingHealParticle();
+	m_ChantingCount++;
+	if (m_ChantingCount >= 5) {
+		BirthChantingHealParticle();
+		m_ChantingCount = 0;
+	}
+
+
 	if (!m_RecoverySaveHP) {
 		m_TmpHP = m_HP;
 		m_RecoverySaveHP = true;
@@ -310,7 +316,7 @@ void BossEnemy2::BirthChantingHealParticle() {
 	const float e_scale = 1.0f;
 	int l_Life = 20;
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		ParticleEmitter::GetInstance()->ChantingHealEffect(l_Life, { m_Position.x,m_Position.y+0.2f,m_Position.z }, s_scale, e_scale, s_color, e_color);
 	}
 }
