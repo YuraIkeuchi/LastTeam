@@ -832,7 +832,7 @@ void Player::ShieldUpdate() {
 void Player::HpPassive() {
 	if (isHpPassive) { return; }
 	float afterMaxhp = m_MaxHP * 1.3f;
-	float gain_hp = afterMaxhp - m_MaxHP;
+	float gain_hp = afterMaxhp / 2.0f;
 	m_MaxHP = afterMaxhp;
 	m_HP += gain_hp;
 	Player::isHpPassive = true;
@@ -841,7 +841,6 @@ void Player::BirthHealNumber(const float heal) {
 	int l_InterHeal = {};//int変換したダメージ
 	l_InterHeal = (int)heal;
 	if (l_InterHeal < 10) {
-
 		unique_ptr<DrawHealNumber> _newnumber = make_unique<DrawHealNumber>();
 		_newnumber->GetCameraData();
 		_newnumber->SetExplain({ m_Position.x, m_Position.y, m_Position.z + 1.0f });

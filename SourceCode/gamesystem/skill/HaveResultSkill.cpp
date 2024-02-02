@@ -320,7 +320,11 @@ bool HaveResultSkill::DeleteCheack() {
 		return false;
 	}
 	if (m_DeleteStart) {
-		if (Helper::FrameCheck(deleteFrame,1.f/30.0f)) {
+		float kEndFrame = 1 / 30.f;
+		if (!m_Open) {
+			kEndFrame = 1 / 15.f;
+		}
+		if (Helper::FrameCheck(deleteFrame, kEndFrame)) {
 			m_DeleteStart = false;
 			if (!m_Open) {
 				m_DeleteCheack = false;
@@ -343,12 +347,12 @@ bool HaveResultSkill::DeleteCheack() {
 			}
 			else {
 				XMFLOAT2 size = {
-			Ease(Out,Back,deleteFrame,256.f,0.f),
-			Ease(Out,Back,deleteFrame,64.f,0.f)
+			Ease(Out,Exp,deleteFrame,256.f,0.f),
+			Ease(Out,Exp,deleteFrame,64.f,0.f)
 				};
 				XMFLOAT2 size_2 = {
-				Ease(Out,Back,deleteFrame,640.f,0.f),
-				Ease(Out,Back,deleteFrame,328.f,0.f)
+				Ease(Out,Exp,deleteFrame,640.f,0.f),
+				Ease(Out,Exp,deleteFrame,328.f,0.f)
 				};
 				deleteDeck->SetSize(size_2);
 				for (int i = 0; i < 2; i++) {

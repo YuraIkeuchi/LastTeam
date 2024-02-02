@@ -105,12 +105,6 @@ public:
 	float GetMaxHp() { return m_MaxHP; }
 	float GetHp() { return m_HP; }
 
-	void SetHpUper(float maxhp) {
-		float gain_hp = maxhp - m_MaxHP;
-		m_MaxHP = maxhp;
-		m_HP += gain_hp;
-	}
-
 	void SetHp(float hp) { m_HP = hp; }
 
 	void SetHealingDamage(bool flag) { m_healingDamage = flag; }
