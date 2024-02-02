@@ -104,7 +104,9 @@ void TutorialEnemy::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
-	predictArea->Draw(dxCommon);
+	if (!m_Death) {
+		predictArea->Draw(dxCommon);
+	}
 	IKETexture::PostDraw();
 	if (m_Color.w != 0.0f) {
 		Obj_Draw();

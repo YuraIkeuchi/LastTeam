@@ -36,7 +36,7 @@ private:
 	int vanishCount = 0;
 	int vanishTiming = 0;
 	XMFLOAT2 m_Position = {};
-	XMFLOAT4 m_Color = { 1.3f,1.3f,1.3f,1.0f };
+	XMFLOAT4 m_Color = { 1.7f,1.7f,1.7f,1.0f };
 	XMFLOAT2 m_Size = { 64.f,64.f };
 
 	bool m_Alive = true;

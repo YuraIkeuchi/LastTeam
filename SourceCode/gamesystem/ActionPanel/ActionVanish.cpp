@@ -66,5 +66,5 @@ void ActionVanish::UiMove() {
 		Helper::Clamp(vanishCount, 0, 9);
 	}
 	m_Position.y = Ease(In, Cubic, l_frame, 640.0f, 500.0f);
-	m_Color.w = Ease(In, Cubic, l_frame, 1.f, 0.0f);
+	//m_Color.w = Ease(In, Cubic, l_frame, 1.f, 0.0f);
 }
