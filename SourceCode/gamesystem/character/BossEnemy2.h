@@ -30,8 +30,9 @@ private:
 	void Recovery();
 	void Stun();
 
-	void BirthArea(const int Width,const int Height,const string& name);//UŒ‚ƒGƒŠƒA
-	void BirthPredict(const int Width,const int Height,const string& name);//—\‘ªƒGƒŠƒA
+	void BirthArea(const int Width, const int Height, const string& name);//UŒ‚ƒGƒŠƒA
+	void BirthPredict(const int Width, const int Height, const string& name);//—\‘ªƒGƒŠƒA
+	void BirthChantingHealParticle();
 
 	void SpinningAttackBirthPredict(int AttackCount);
 	void SpinningAttackBirthArea(int AttackCount);
@@ -45,7 +46,7 @@ private:
 	void PlayerCollide();
 	void WarpEnemy();//“G‚Ìƒ[ƒvˆ—
 	void AttackMove();//UŒ‚‚Ì“®‚«
-//–‚–@w
+	//–‚–@w
 	void BirthMagic();
 private:
 	static const int BULLET_NUM = 5;
@@ -69,7 +70,7 @@ private:
 	std::vector<std::vector<int>> m_Area = {};
 	// UŒ‚ƒGƒŠƒA
 	std::vector<unique_ptr<EnemyThorn>> enethorn;
-	
+
 
 	int m_RandWigth = {};
 	int m_RandHeight = {};
@@ -118,6 +119,7 @@ private:
 	bool m_ChangeRot = {};
 	bool m_RecoverySaveHP = {};
 	float m_TmpHP = {};
-	bool m_isStun = { };
+	bool m_isStun = {};
+	int m_ChantingCount = {};
 };
 
