@@ -128,6 +128,7 @@ void TackleEnemy::Inter() {
 	l_TargetTimer = m_Limit[STATE_INTER];
 	if (Helper::CheckMin(coolTimer, l_TargetTimer + m_RandTimer, 1)) {
 		_charaState = STATE_STANDBY;
+		m_CanCounter = true;
 		coolTimer = 0;
 	}
 }
@@ -138,7 +139,6 @@ void TackleEnemy::Attack() {
 	const float l_AddRot = 20.0f;
 	if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 		//カウンター判定
-		m_CanCounter = true;
 		m_Frame = 1.0f;
 		m_Position.x -= m_Speed;
 		m_Rotation.x += l_AddRot;

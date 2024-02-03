@@ -122,7 +122,6 @@ void BossEnemy2::Action() {
 void BossEnemy2::Draw(DirectXCommon* dxCommon) {
 	if (!m_Alive) { return; }
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	//shadow_tex->Draw();
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
@@ -134,6 +133,7 @@ void BossEnemy2::Draw(DirectXCommon* dxCommon) {
 	predictarea->Draw(dxCommon);
 	if (m_Color.w != 0.0f)
 		Obj_Draw();
+	BaseBackDraw(dxCommon);
 }
 //ImGui•`‰æ
 void BossEnemy2::ImGui_Origin() {
@@ -188,6 +188,7 @@ void BossEnemy2::Attack() {
 
 //ƒ[ƒv
 void BossEnemy2::Teleport() {
+	m_CanCounter = false;
 	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
@@ -204,7 +205,7 @@ void BossEnemy2::Teleport() {
 //‰ñ“]UŒ‚
 void BossEnemy2::SpinningAttack()
 {
-
+	m_CanCounter = true;
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_SPINNING];
 
@@ -233,11 +234,9 @@ void BossEnemy2::SpinningAttack()
 
 //ÕŒ‚”gUŒ‚
 void BossEnemy2::ShockWaveAttack() {
-
+	m_CanCounter = true;
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_SHOCKWAVE];
-
-
 	if (m_AttackCount != 3) {
 		if (coolTimer == 0) {		//—\‘ªƒGƒŠƒA
 			ShockWaveAttackBirthPredict(m_AttackCount);

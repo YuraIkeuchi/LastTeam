@@ -257,6 +257,7 @@ void SupportEnemy::BombAttack() {
 	}
 
 	if (_BombAttackType == JUMP_MOVE) {
+		m_CanCounter = false;
 		if (Helper::CheckMin(m_Position.y, 10.0f, 0.3f)) {
 			m_Position.x = lastbomb->GetPosition().x;
 			_BombAttackType = FALL_MOVE;
@@ -264,7 +265,6 @@ void SupportEnemy::BombAttack() {
 	}
 	else if (_BombAttackType == FALL_MOVE) {
 		if (Helper::CheckMax(m_Position.y, 0.1f, -0.3f)) {
-			m_CanCounter = false;
 			predictarea->ResetPredict();
 			_BombAttackType = SET_BOMB;
 			lastbomb->BirthExplosion();
