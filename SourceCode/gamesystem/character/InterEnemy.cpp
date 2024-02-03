@@ -185,6 +185,7 @@ void InterEnemy::Update() {
 	CounterUpdate();
 	BomUpdate();
 	ReLoadUpdate();
+	CanCounterTex->Update();
 	hptex->SetPosition(m_HPPos);
 	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
@@ -257,15 +258,16 @@ void InterEnemy::BaseBackDraw(DirectXCommon* dxCommon) {
 	counter_tex->Draw();
 	counter2Tex->Draw();
 
+	CanCounterTex->Draw();
 	IKETexture::PostDraw();
 
 }
 
 void InterEnemy::ImGuiDraw() {
-	ImGui::Begin("Enemy");
-	ImGui::Text("HP:%f", m_Position.y);
-	ImGui::End();
-	ImGui_Origin();
+	//ImGui::Begin("Enemy");
+	//ImGui::Text("HP:%f", m_Position.y);
+	//ImGui::End();
+	//ImGui_Origin();
 	////敵のダメージテキスト
 	//for (unique_ptr<DrawDamageNumber>& newnumber : _damagenumber) {
 	//	if (newnumber != nullptr) {
