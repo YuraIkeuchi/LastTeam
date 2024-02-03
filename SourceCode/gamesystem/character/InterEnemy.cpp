@@ -507,7 +507,7 @@ void InterEnemy::SimpleHeal(const bool Regene) {
 		heal = 20.0f;
 	} else {
 		if (m_EnemyTag == "LASTBOSS") {
-			heal = 500.0f;
+			heal = 150.0f;
 		} else {
 			heal = 50.0f;
 		}
