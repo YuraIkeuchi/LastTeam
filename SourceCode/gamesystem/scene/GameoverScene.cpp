@@ -71,7 +71,7 @@ void GameoverScene::Initialize(DirectXCommon* dxCommon) {
 	check = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 0.0f,0.0f });
 	check->SetAnchorPoint({ 0.5f,0.5f });
 	check->SetScale(1.5f);
-	check->SetPosition({ 1200.0f,680.0f });
+	check->SetPosition({ 1150.0f,680.0f });
 	//stick->SetPosition({ 640.0f,500.0f });
 
 	select[SELECT_NO]->SetColor({ 1.0f,0.15f,0.15f,1.0f });
