@@ -237,8 +237,6 @@ void BossEnemy2::ShockWaveAttack() {
 	m_CanCounter = true;
 	int l_TargetTimer = {};
 	l_TargetTimer = m_AttackLimit[ATTACK_SHOCKWAVE];
-
-
 	if (m_AttackCount != 3) {
 		if (coolTimer == 0) {		//—\‘ªƒGƒŠƒA
 			ShockWaveAttackBirthPredict(m_AttackCount);
