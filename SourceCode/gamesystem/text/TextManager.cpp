@@ -91,7 +91,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillSentence(L"シンプルな遠距離攻撃");
 			CreateSkillDamage(L"威力:55(大)");
 			CreateSkillSentence(L"ドロォ！と毒攻撃");
-			CreateSkillDamage(L"威力:5(小)毒：8(小)付与");
+			CreateSkillDamage(L"威力:10(小)毒：8(小)付与");
 			CreateSkillSentence(L"回復もできるクロス攻撃");
 			CreateSkillDamage(L"威力:50(大) ドレイン");
 			CreateSkillSentence(L"次の攻撃を強くする!");
@@ -103,11 +103,11 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillSentence(L"自分や敵、全てに回復を!");
 			CreateSkillDamage(L"回復床設置 威力:20");
 			CreateSkillSentence(L"中毒は知らぬ間に");
-			CreateSkillDamage(L"威力:10(小)付与してる毒を3倍");
+			CreateSkillDamage(L"威力:20(小) 付与してる毒を3倍");
 			CreateSkillSentence(L"鉄壁の守り!");
 			CreateSkillDamage(L"ディレイキャンセルをしなくなる");
 			CreateSkillSentence(L"エリアおおめ毒マシマシ攻撃");
-			CreateSkillDamage(L"威力:3(小) 毒:12(中)付与");
+			CreateSkillDamage(L"威力:15(小) 毒:12(中)付与");
 			CreateSkillSentence(L"強くなった回復攻撃");
 			CreateSkillDamage(L"威力:30(中) ドレイン");
 			CreateSkillSentence(L"前の俺より強くなる！");
@@ -129,7 +129,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillSentence(L"限界バトルを叩きつけろ！");
 			CreateSkillDamage(L"威力:30(中) HPが半分なら２倍");
 			CreateSkillSentence(L"パッシブに応じて毒を付与！");
-			CreateSkillDamage(L"威力:3(小) 毒：パッシブｘ2付与");
+			CreateSkillDamage(L"威力:25(小) 毒:パッシブｘ2付与");
 			CreateSkillSentence(L"パッシブに応じて強くなる回復攻撃！");
 			CreateSkillDamage(L"威力:パッシブｘ10(固定) ドレイン");
 			CreateSkillSentence(L"使えば使うほど強くなる！");
