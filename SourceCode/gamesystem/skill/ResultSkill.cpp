@@ -22,12 +22,14 @@ void ResultSkill::Initialize(DirectXCommon* dxCommon) {
 	skillCheack = IKESprite::Create(ImageManager::RESULTNOWCHECK, { 1280.f,720.f });
 	skillCheack->SetAnchorPoint({ 1.f,1.f });
 	top_title = IKESprite::Create(ImageManager::PICKSKILLTOP, { 640.f,70.f }, { 1.f,1.f, 1.f, 1.f });
-	top_title->SetSize({1280.f* 0.7f,128.f*0.7f});
+	top_title->SetSize({ 1280.f * 0.7f,128.f * 0.7f });
 	top_title->SetAnchorPoint({ 0.5f,0.5f });
 	feedIn = IKESprite::Create(ImageManager::FEED, { 0.f,0.f }, { 1.f,1.f, 1.f, 1.0f });
 	feedIn->SetSize({ 1280.f,720.f });
-	expra = IKESprite::Create(ImageManager::EXPRE,{1280.f-210.f,10.f});
-	
+	expra = IKESprite::Create(ImageManager::EXPRE, { 1280.f - 210.f,10.f });
+	skillSelect = IKESprite::Create(ImageManager::GAMEOVER_STICK, { 1130.f,720.f });
+	skillSelect->SetAnchorPoint({ 1.f,1.f });
+	skillSelect->SetSize({128.f*0.7f, 64.f*0.7f});
 	StarInit();
 	dxcommon = dxCommon;
 }
@@ -59,6 +61,7 @@ void ResultSkill::Draw(DirectXCommon* dxCommon) {
 	backScreen->Draw();
 	top_title->Draw();
 	skillCheack->Draw();
+	skillSelect->Draw();
 	if (TutorialTask::GetInstance()->GetViewSkill()) {
 		selectFrame->Draw();
 		for (ResultUI& resultUI : choiceSkills) {
