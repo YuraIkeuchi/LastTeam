@@ -3,7 +3,7 @@ SkillType,0
 Delay,35
 Name,yabu2
 StateName,PASSIVEPOISON
-Damege,3
+Damege,25
 DistanceX,1
 DistanceY,1
 AttackArea,0 1 0 0

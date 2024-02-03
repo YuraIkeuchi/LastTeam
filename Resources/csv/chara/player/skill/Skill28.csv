@@ -3,7 +3,7 @@ SkillType,0
 Delay,40
 Name,yabu2
 StateName,METRONOME
-Damege,5
+Damege,10
 DistanceX,1
 DistanceY,1
 AttackArea,0 0 0 0
