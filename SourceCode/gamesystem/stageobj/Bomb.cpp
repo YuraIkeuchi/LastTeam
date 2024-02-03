@@ -46,7 +46,6 @@ bool Bomb::Initialize() {
 	m_BaseScale = {};
 	_BombState = BOMB_SET;
 	m_Draw = true;
-	m_TargetPos = StagePanel::GetInstance()->EnemySetPanel(true);
 	return true;
 }
 
@@ -117,6 +116,7 @@ void Bomb::Inter() {
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Frame = {};
 			_BombState = BOMB_THROW;
+			m_TargetPos = StagePanel::GetInstance()->EnemySetPanel(true);
 			m_OldPosition = m_Position;
 		}
 		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, l_AfterScale);
