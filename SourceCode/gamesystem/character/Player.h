@@ -280,6 +280,7 @@ private:
 	int m_ClearTimer = {};
 	float m_ClearFrame = {};
 
+	float u_colorRad = 0.f;
 	enum GameOverType {
 		OVER_STOP,
 		OVER_JUMP,

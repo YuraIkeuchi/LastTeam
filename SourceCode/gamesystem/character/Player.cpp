@@ -31,7 +31,7 @@ void Player::LoadResource() {
 	hpDiftex = IKESprite::Create(ImageManager::HPGauge_W, { 0.0f,0.0f });
 	hpDiftex->SetColor({ 0.85f,0.85f,0.85f,1.0f });
 	hpDiftex->SetSize(m_HPSize);
-	hptex_under = IKESprite::Create(ImageManager::HPGauge, { 0.0f,0.0f });
+	hptex_under = IKESprite::Create(ImageManager::HPGauge_W, { 0.0f,0.0f });
 	hptex_under->SetColor({ 0.3f,0.3f,0.3f,1.0f });
 	hptex_under->SetSize(m_HPSize);
 	for (auto i = 0; i < _drawnumber.size(); i++) {
@@ -112,7 +112,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 	}
 	m_InterMaxHP = {};//整数にしたHP
 	m_InterHP = {};//整数にしたHP
-
+	u_colorRad = 0.f;
 	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 }
 //状態遷移
@@ -195,13 +195,24 @@ void Player::Update() {
 		XMFLOAT4 T_Color = { 0.3f,1.0f,0.3f,1.0f };
 		if (HpPercent() > 0.5f) {
 			T_Color = { 0.3f,1.0f,0.3f,1.0f };
-		} else if( HpPercent() >= 0.25f){
+			hptex_under->SetColor({ 0.3f,0.3f,0.3f,1.0f });
+		} else if( HpPercent() > 0.25f){
 			T_Color = { 0.9f,0.9f,0.0f,1.0f };
+			hptex_under->SetColor({ 0.3f,0.3f,0.3f,1.0f });
 		} else {
-			T_Color = { 1.f,0.3f,0.3f,1.0f };
+			T_Color = { 0.9f,0.9f,0.0f,1.0f };
+			u_colorRad += 3.f;
+			if (u_colorRad>=360.f) {
+				u_colorRad = 0.f;
+			}
+			XMFLOAT4 u_color= {
+				Ease(InOut,Linear,abs(sinf(u_colorRad*(XM_PI/180.f))),0.3f,0.8f),
+				Ease(InOut,Linear,abs(sinf(u_colorRad*(XM_PI/180.f))),0.3f,0.4f),
+				Ease(InOut,Linear,abs(sinf(u_colorRad*(XM_PI/180.f))),0.3f,0.4f),
+				1.0f };
+			hptex_under->SetColor(u_color);
 		}
 		hptex->SetColor(T_Color);
-
 		hptex->SetPosition(m_HPPos);
 		hpDiftex->SetPosition(m_HPPos);
 		hptex_under->SetPosition(m_HPPos);
