@@ -96,7 +96,6 @@ public:
 	const int GetCharaState() { return _charaState; }
 	const bool GetDelay() { return m_Delay; }
 	const bool GetCancel() { return m_Cancel; }
-	const float GetShieldHP() { return m_ShieldHP; }
 
 	const bool GetFinishGameOver() { return m_FinishGameOver; }
 	const bool GetSelectEnd() { return m_SelectEnd; }
@@ -121,7 +120,6 @@ public:
 
 	void SetDelay(const bool Delay) { m_Delay = Delay; }
 	void SetSelectEnd(const bool SelectEnd) { m_SelectEnd = SelectEnd; }
-	void SetShieldHP(const float ShieldHP) { m_ShieldHP = ShieldHP; }
 
 	void SetCancel(const bool cancel) { m_Cancel = cancel; }
 	void SetDrawShield(const bool DrawShield) { m_DrawShield = DrawShield; }
@@ -279,17 +277,10 @@ private:
 	int m_HealTimer = {};
 	bool m_SelectMove = false;
 
-	float m_ShieldHP = 0.f;
-	float m_ShieldHPMAX = 45.f;
-	XMFLOAT2 m_ShieldPos = { m_HPPos.x + 200.f,5.f };
-	unique_ptr<IKESprite> shieldCover;
-	//数値化したHP表示のための変数
-	array<int, 2> m_DigitShield;
-	int m_InterShield = {};//整数にしたHP
-	array<unique_ptr<DrawNumber>, 2> _drawShield;
 	int m_ClearTimer = {};
 	float m_ClearFrame = {};
 
+	float u_colorRad = 0.f;
 	enum GameOverType {
 		OVER_STOP,
 		OVER_JUMP,

@@ -31,7 +31,7 @@ void Player::LoadResource() {
 	hpDiftex = IKESprite::Create(ImageManager::HPGauge_W, { 0.0f,0.0f });
 	hpDiftex->SetColor({ 0.85f,0.85f,0.85f,1.0f });
 	hpDiftex->SetSize(m_HPSize);
-	hptex_under = IKESprite::Create(ImageManager::HPGauge, { 0.0f,0.0f });
+	hptex_under = IKESprite::Create(ImageManager::HPGauge_W, { 0.0f,0.0f });
 	hptex_under->SetColor({ 0.3f,0.3f,0.3f,1.0f });
 	hptex_under->SetSize(m_HPSize);
 	for (auto i = 0; i < _drawnumber.size(); i++) {
@@ -40,19 +40,6 @@ void Player::LoadResource() {
 		_MaxHp[i] = make_unique<DrawNumber>(0.4f);
 		_MaxHp[i]->Initialize();
 	}
-
-	shieldCover = IKESprite::Create(ImageManager::SHIELDCOVER, { 0.0f,0.0f });
-	shieldCover->SetAnchorPoint({ 0.5f,0.5f });
-	shieldCover->SetColor({ 1.3f,1.3f, 1.3f, 1.f });
-	shieldCover->SetPosition({ m_ShieldPos.x, m_ShieldPos.y + 20.0f });
-	for (auto i = 0; i < _drawShield.size(); i++) {
-		_drawShield[i] = make_unique<DrawNumber>(0.5f);
-		_drawShield[i]->Initialize();
-		_drawShield[i]->SetColor({ 0.7f,0.7f,1.f,1.0f });
-	}
-	_drawShield[FIRST_DIGHT]->SetPosition({ m_ShieldPos.x + 60.0f,m_ShieldPos.y + 20.0f });
-	_drawShield[SECOND_DIGHT]->SetPosition({ m_ShieldPos.x + 40.0f,m_ShieldPos.y + 20.0f });
-
 	_drawnumber[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 160.f + 70.0f, 20.0f });
 	_drawnumber[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 160.f + 55.0f,20.0f });
 	_drawnumber[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 160.f + 40.f,  20.0f });
@@ -60,6 +47,7 @@ void Player::LoadResource() {
 	slash_ = IKESprite::Create(ImageManager::SLASH, { m_HPPos.x + 150.f + 100.f, 20.0f });
 	slash_->SetScale(0.5f);
 	slash_->SetAnchorPoint({ 0.5f,0.5f });
+
 	_MaxHp[FIRST_DIGHT]->SetPosition({ m_HPPos.x + 150.f + 150.0f, 20.0f });
 	_MaxHp[SECOND_DIGHT]->SetPosition({ m_HPPos.x + 150.f + 135.0f,20.0f });
 	_MaxHp[THIRD_DIGHT]->SetPosition({ m_HPPos.x + 150.f + 120.f,  20.0f });
@@ -82,7 +70,6 @@ bool Player::Initialize() {
 	LoadCSV();
 	m_ShadowScale = { 0.05f,0.05f,0.05f };
 	m_AddDisolve = 2.0f;
-	m_ShieldHP = 0.f;
 
 	//CSV読み込み
 	return true;
@@ -125,7 +112,7 @@ void Player::InitState(const XMFLOAT3& pos) {
 	}
 	m_InterMaxHP = {};//整数にしたHP
 	m_InterHP = {};//整数にしたHP
-
+	u_colorRad = 0.f;
 	GameStateManager::GetInstance()->PlayerNowPanel(m_NowWidth, m_NowHeight);
 }
 //状態遷移
@@ -183,7 +170,6 @@ void Player::Update() {
 		ShrinkScale();
 		BoundMove();
 		RegeneUpdate();
-		ShieldUpdate();
 		ShieldTexUpdate();
 		//表示用のHP
 		m_InterHP = (int)(m_HP);
@@ -209,13 +195,24 @@ void Player::Update() {
 		XMFLOAT4 T_Color = { 0.3f,1.0f,0.3f,1.0f };
 		if (HpPercent() > 0.5f) {
 			T_Color = { 0.3f,1.0f,0.3f,1.0f };
-		} else if( HpPercent() >= 0.25f){
+			hptex_under->SetColor({ 0.3f,0.3f,0.3f,1.0f });
+		} else if( HpPercent() > 0.25f){
 			T_Color = { 0.9f,0.9f,0.0f,1.0f };
+			hptex_under->SetColor({ 0.3f,0.3f,0.3f,1.0f });
 		} else {
-			T_Color = { 1.f,0.3f,0.3f,1.0f };
+			T_Color = { 0.9f,0.9f,0.0f,1.0f };
+			u_colorRad += 3.f;
+			if (u_colorRad>=360.f) {
+				u_colorRad = 0.f;
+			}
+			XMFLOAT4 u_color= {
+				Ease(InOut,Linear,abs(sinf(u_colorRad*(XM_PI/180.f))),0.3f,0.8f),
+				Ease(InOut,Linear,abs(sinf(u_colorRad*(XM_PI/180.f))),0.3f,0.4f),
+				Ease(InOut,Linear,abs(sinf(u_colorRad*(XM_PI/180.f))),0.3f,0.4f),
+				1.0f };
+			hptex_under->SetColor(u_color);
 		}
 		hptex->SetColor(T_Color);
-
 		hptex->SetPosition(m_HPPos);
 		hpDiftex->SetPosition(m_HPPos);
 		hptex_under->SetPosition(m_HPPos);
@@ -299,13 +296,6 @@ void Player::UIDraw() {
 	if (m_InterMaxHP >= 100) {
 		_MaxHp[THIRD_DIGHT]->Draw();
 	}
-	if (m_InterShield != 0) {
-		shieldCover->Draw();
-		_drawShield[FIRST_DIGHT]->Draw();
-	}
-	if (m_InterShield >= 10) {
-		_drawShield[SECOND_DIGHT]->Draw();
-	}
 
 	//敵のヒールテキスト
 	for (unique_ptr<DrawHealNumber>& newnumber : _healnumber) {
@@ -319,7 +309,6 @@ void Player::UIDraw() {
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
 	ImGui::Text("Width:%d,Height:%d", m_NowWidth,m_NowHeight);
-	ImGui::Text("ShieldHP:%f", m_ShieldHP);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::End();
 }
@@ -538,31 +527,19 @@ void Player::HealCommon(const float power) {
 }
 //プレイヤーのダメージ判定
 void Player::RecvDamage(const float Damage, const string& name) {
-	float l_Damage = Damage;
-	if (m_ShieldHP != 0.0f) {		//シールド時食らうダメージはシールドHPが負担
-		if (l_Damage <= m_ShieldHP) {
-			m_ShieldHP -= l_Damage;
-		} else {
-			m_HP -= l_Damage - m_ShieldHP;
-			m_ShieldHP = 0.0f;
-		}
-		l_Damage = Damage / 2;
-	} else {
-		m_HP -= l_Damage;
-	}
 
-	Helper::Clamp(m_ShieldHP, 0.0f, m_ShieldHPMAX);
+	m_HP -= Damage;
 	GameStateManager::GetInstance()->TakenDamageCheck((int)Damage);
 	GameStateManager::GetInstance()->MissAttack();
 	//パッシブ効果処理
 	if (GameStateManager::GetInstance()->GetExtendBishop()) {
-		float gain = l_Damage * 0.1f;
+		float gain = Damage * 0.1f;
 		Helper::Clamp(gain, 1.f, m_HP);
 		RegeneHeal(gain);
 		GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::EXTEND_BISHOP);
 	}
 	if (GameStateManager::GetInstance()->GetExtendRook()) {
-		float poison = l_Damage * 0.5f;
+		float poison = Damage * 0.5f;
 		Helper::Clamp(poison, 1.f, m_HP);
 		GameStateManager::GetInstance()->AddRookPoison((int)poison);
 		GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::EXTEND_ROOK);
@@ -821,24 +798,6 @@ void Player::RegeneUpdate() {
 	} else {
 		m_HealTimer = {};
 	}
-}
-void Player::ShieldUpdate() {
-	m_InterShield = (int)(m_ShieldHP);
-
-	if (m_ShieldHP > 0.0f) {
-		for (auto i = 0; i < _drawShield.size(); i++) {
-			//HPの限界値を決める
-			Helper::Clamp(m_ShieldHP, 0.0f, m_ShieldHPMAX);
-			// 表示用のHP
-			m_InterShield = (int)(m_ShieldHP);
-			for (auto i = 0; i < _drawShield.size(); i++) {
-				_drawShield[i]->SetNumber(m_DigitShield[i]);
-				_drawShield[i]->Update();
-				m_DigitShield[i] = Helper::getDigits((int)m_ShieldHP, i, i);
-			}
-		}
-	}
-
 }
 void Player::HpPassive() {
 	if (isHpPassive) { return; }
