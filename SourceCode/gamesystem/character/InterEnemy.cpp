@@ -186,10 +186,11 @@ void InterEnemy::Update() {
 	CounterUpdate();
 	BomUpdate();
 	ReLoadUpdate();
-	rotCounter.y+=2.0f;
+	rotCounter.y+=6.0f;
 	if (rotCounter.y >= 360.f) {
 		rotCounter.y = 0.f;
 	}
+	canCounterTex->SetColor({ 1.f,1.f,0.55f,1.f});
 	canCounterTex->SetRotation(rotCounter);
 	canCounterTex->SetScale(scaleCounter);
 	canCounterTex->SetPosition({ m_Position.x,0.02f,m_Position.z });
