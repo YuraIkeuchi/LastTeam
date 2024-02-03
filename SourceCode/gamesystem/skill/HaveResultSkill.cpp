@@ -379,8 +379,6 @@ bool HaveResultSkill::DeleteCheack() {
 		} else {
 			nowCheack = 0;
 		}
-
-		///
 		//　ここに選択音（音入）
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/selection.wav", 0.02f);
 		///
