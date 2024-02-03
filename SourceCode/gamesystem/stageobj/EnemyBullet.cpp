@@ -69,6 +69,7 @@ void EnemyBullet::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	predictArea->Draw(dxCommon);
 	IKETexture::PostDraw();
+	if(m_Color.w == 1.0f)
 	Obj_Draw();
 }
 //ImGui描画

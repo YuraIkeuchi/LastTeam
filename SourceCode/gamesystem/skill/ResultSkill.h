@@ -89,6 +89,7 @@ private:
 	float ecpraSin = XM_PI / 2.f;
 	std::unique_ptr<IKESprite> top_title;
 	std::unique_ptr<IKESprite> skillCheack;
+	std::unique_ptr<IKESprite> skillSelect;
 	std::unique_ptr<IKESprite> selectFrame;
 	std::unique_ptr<IKESprite> feedIn;
 	std::list<ResultUI> choiceSkills;

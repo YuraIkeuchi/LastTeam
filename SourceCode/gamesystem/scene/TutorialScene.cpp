@@ -92,13 +92,16 @@ void TutorialScene::Update(DirectXCommon* dxCommon) {
 		m_TextTimer++;
 	}
 
-	Helper::Clamp(m_TextTimer, 0, 400);
+	Helper::Clamp(m_TextTimer, 0, 600);
 
 	if (m_TextTimer == 150) {
 		text_->SetConversation(TextManager::TUTORIAL_TASK, m_TextPos);
 	}
-	else if (m_TextTimer == 300) {
+	else if (m_TextTimer == 350) {
 		text_->SetConversation(TextManager::TUTORIAL_COUNTER, m_TextPos);
+	}
+	else if (m_TextTimer == 550) {
+		text_->SetConversation(TextManager::TUTORIAL_COUNTER2, m_TextPos);
 	}
 
 	if (!m_Counter && TutorialTask::GetInstance()->GetTaskFinish(TASK_COUNTER)) {

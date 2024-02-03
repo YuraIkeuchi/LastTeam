@@ -33,7 +33,8 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 		CreateWord(TITLE, L"Bボタン:ゲーム");
 		CreateWord(TUTORIAL_START, L"ここでは戦い方を教える");
 		CreateWord(TUTORIAL_TASK, L"右の課題をクリアすれば自ずと", L"戦い方を理解するだろう");
-		CreateWord(TUTORIAL_COUNTER, L"敵の攻撃に合わせて自分が攻撃すると", L"カウンターをすることができるぞ");
+		CreateWord(TUTORIAL_COUNTER, L"敵の攻撃に合わせて自分が攻撃すると", L"自分の攻撃の威力が上がるぞ");
+		CreateWord(TUTORIAL_COUNTER2, L"敵の周りにサークルが出てる間が", L"カウンターのタイミングだ");
 		CreateWord(TUTORIAL_SHOT, L"敵に攻撃が届かない場合は", L"空打ちも一つの手だ!");
 		CreateWord(TUTORIAL_SKILL, L"敵を倒すとスキルが手に入るぞ", L"スキルは攻撃やパッシブなどがあるぞ");
 		CreateWord(TUTORIAL_DELETE, L"上のデッキ確認から", L"カードを削除することもできるぞ");
