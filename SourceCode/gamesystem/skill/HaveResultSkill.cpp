@@ -107,6 +107,7 @@ void HaveResultSkill::Draw(DirectXCommon* dxCommon) {
 		//}
 	}
 	else {
+		if(havePassive.size() != 0)
 		PassiveManager::GetInstance()->TextDraw(havePassive[m_SelectCount - (int)(haveSkills.size())].ID);
 	}
 	IKESprite::PreDraw();
