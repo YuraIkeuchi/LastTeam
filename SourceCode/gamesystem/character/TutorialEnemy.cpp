@@ -129,6 +129,7 @@ void TutorialEnemy::Inter() {
 	coolTimer++;
 	coolTimer = clamp(coolTimer, 0, kIntervalMax);
 	if (coolTimer == kIntervalMax) {
+		m_CanCounter = true;
 		_charaState = STATE_STANDBY;
 		coolTimer = 0;
 	}
@@ -155,7 +156,6 @@ void TutorialEnemy::Attack() {
 	const float l_AddFrame = 1 / 45.0f;
 	const float l_AddRot = 20.0f;
 	if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
-		m_CanCounter = true;
 		m_Frame = 1.0f;
 		m_Position.x -= m_Speed;
 		m_Rotation.x += l_AddRot;

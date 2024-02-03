@@ -182,8 +182,9 @@ protected:
 	bool m_ReloadEffect = false;
 	std::unique_ptr<IKETexture> reloadTex;
 	std::unique_ptr<IKETexture> reload2Tex;
-	std::unique_ptr<IKETexture> CanCounterTex;
-
+	std::unique_ptr<IKETexture> canCounterTex;
+	XMFLOAT3 scaleCounter = { 0.15f ,0.15f,0.15f };
+	XMFLOAT3 rotCounter = { 90.0f ,0.f,0.f};
 	float m_ReloadFrame = 0.f;
 	float m_ReloadFinishFrame = 0.f;
 	XMFLOAT3 effect3Pos = {};
