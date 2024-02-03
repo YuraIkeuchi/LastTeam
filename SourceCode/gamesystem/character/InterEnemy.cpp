@@ -313,7 +313,7 @@ void InterEnemy::UIDraw() {
 			newnumber->Draw();
 		}
 	}
-	if (m_Poison) {
+	if (m_Poison && m_EnemyTag != "Rock") {
 		poisonState->Draw();
 		//敵のポイズンテキスト
 		if (m_PoisonToken >= 0) {
@@ -691,12 +691,9 @@ void InterEnemy::PoisonState() {
 		BirthDamage((float)m_PoisonToken);
 		BirthPoisonParticle();
 		if (m_PoisonLong) {
-			//GameStateManager::GetInstance()->SetPassiveActive();
 			if (m_PoisonToken != 1) {
 				float poisons = (float)m_PoisonToken;
 				poisons *= 0.75f;
-				//四捨五入
-				poisons += 0.5f;
 				m_PoisonToken = (int)poisons;
 			} else {
 				m_PoisonToken /= 2;
