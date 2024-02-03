@@ -133,7 +133,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillSentence(L"パッシブに応じて強くなる回復攻撃！");
 			CreateSkillDamage(L"威力:パッシブｘ10(固定) ドレイン");
 			CreateSkillSentence(L"使えば使うほど強くなる！");
-			CreateSkillDamage(L"威力:8ｘ試合で使った回数(固定)");
+			CreateSkillDamage(L"威力:10ｘ試合で使った回数(固定)");
 			CreateSkillSentence(L"ランダムで強いスキルにチェンジ！");
 			CreateSkillDamage(L"威力:50(大) 何かがおきる！？");
 		}

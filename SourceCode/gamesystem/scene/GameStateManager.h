@@ -270,7 +270,7 @@ private:
 	int m_HandedCount = 0;
 
 	int m_Metronome = 0;
-	float m_MetroDamage = 8.f;
+	float m_MetroDamage = 10.f;
 	string enemySpawnText = "Resources/csv/EnemySpawn/BattleMap01.csv";
 	bool isBattleFromMap = true;
 	enum SkillType {

@@ -26,7 +26,7 @@ void GameStateManager::Initialize() {
 	//全体スコア
 	m_AllScore = {};
 	m_Metronome = 0;
-	m_MetroDamage = 8.f;
+	m_MetroDamage = 10.f;
 	m_OldDamage = 0;
 	m_MaxDamage = 0;
 	m_MaxTakenDamage = 0;
