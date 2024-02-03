@@ -365,16 +365,16 @@ bool HaveResultSkill::DeleteCheack() {
 		return true;
 	}
 	Input* input = Input::GetInstance();
-	if (input->TiltPushStick(input->L_LEFT) ||
-		input->TiltPushStick(input->L_RIGHT) ||
+	if (input->TiltStick(input->L_LEFT) ||
+		input->TiltStick(input->L_RIGHT) ||
 		input->TriggerKey(DIK_A) ||
 		input->TriggerKey(DIK_D) ||
-		input->PushButton(input->LEFT) ||
-		input->PushButton(input->RIGHT)) {
+		input->TriggerButton(input->LEFT) ||
+		input->TriggerButton(input->RIGHT)) {
 
-		if (input->TiltPushStick(input->L_RIGHT) ||
+		if (input->TiltStick(input->L_RIGHT) ||
 			input->TriggerKey(DIK_D) ||
-			input->PushButton(input->RIGHT)) {
+			input->TriggerButton(input->RIGHT)) {
 			nowCheack = 1;
 		} else {
 			nowCheack = 0;

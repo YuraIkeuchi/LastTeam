@@ -259,16 +259,22 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	}
 	switch (UIs[pickHierarchy][pickIndex].Tag) {
 	case BATTLE:
-		nowComment = 2;
+		nowComment = 1;
 		break;
 	case PASSIVE:
-		nowComment = 1;
+		nowComment = 2;
 		break;
 	case BOSS:
 		nowComment = 3;
 		break;
 	default:
 		break;
+	}
+
+	for (int i = 0; i < nowHierarchy; i++) {
+		for (int j = 0; j < INDEX; j++) {
+			UIs[i][j].isOpened = true;
+		}
 	}
 	GameStateManager::GetInstance()->SetMapData(nowIndex, nowHierarchy);
 	if ((nowHierarchy == 0) || (nowHierarchy == 3) || (nowHierarchy == 4) || (nowHierarchy == 6) || (nowHierarchy == 8) || (nowHierarchy == 10) && !s_Countinue) {
@@ -621,12 +627,13 @@ void MapScene::Move() {
 		if (pickNextIndex == 0) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex - 1] == -1) { return; }
 		pickNextIndex--;
+		eFrame = 0.f;
 		switch (UIs[pickHierarchy][pickIndex].Tag) {
 		case BATTLE:
-			nowComment = 2;
+			nowComment = 1;
 			break;
 		case PASSIVE:
-			nowComment = 1;
+			nowComment = 2;
 			break;
 		case BOSS:
 			nowComment = 3;
@@ -634,6 +641,7 @@ void MapScene::Move() {
 		default:
 			break;
 		}
+
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 	if ((input->TiltStick(input->L_DOWN)|| input->PushButton(input->DOWN) ||input->TriggerKey(DIK_S))
@@ -641,12 +649,13 @@ void MapScene::Move() {
 		if (pickNextIndex == 2) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex + 1] == -1) { return; }
 		pickNextIndex++;
+		eFrame = 0.f;
 		switch (UIs[pickHierarchy][pickIndex].Tag) {
 		case BATTLE:
-			nowComment = 2;
+			nowComment = 1;
 			break;
 		case PASSIVE:
-			nowComment = 1;
+			nowComment = 2;
 			break;
 		case BOSS:
 			nowComment = 3;
@@ -654,6 +663,7 @@ void MapScene::Move() {
 		default:
 			break;
 		}
+
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 
@@ -852,7 +862,7 @@ void MapScene::CheckState() {
 							break;
 						case BOSS:
 							nowComment = 3;
-							break;
+							break; 
 						default:
 							break;
 						}
