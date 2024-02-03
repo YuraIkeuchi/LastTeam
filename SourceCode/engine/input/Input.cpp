@@ -234,10 +234,9 @@ bool Input::TiltStick(STICK Stick)
 		vec.x = xinputState.Gamepad.sThumbRX;
 		vec.y = xinputState.Gamepad.sThumbRY;
 	}
-	//if (!StickInDeadZone(oldVec))
-	//{
-	//	return false;
-	//}
+	if (!StickInDeadZone(oldVec)) {
+		return false;
+	}
 	if (StickInDeadZone(vec))
 	{
 		return false;

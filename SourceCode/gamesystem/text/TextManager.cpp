@@ -53,7 +53,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreatePassiveName(L"名前：エンドレス・ポイズン");
 			CreatePassiveSentence(L"毒の時間が長くなるぞ");
 			CreatePassiveName(L"名前：ポイズン・クリティカル");
-			CreatePassiveSentence(L"毒のカウント付与率が2倍");
+			CreatePassiveSentence(L"スキルの毒付与率が2倍");
 			CreatePassiveName(L"名前：カウンターブロー");
 			CreatePassiveSentence(L"カウンターしたら次のスキル2倍！");
 			CreatePassiveName(L"名前：オートマティックアサシン");
