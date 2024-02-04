@@ -146,7 +146,7 @@ void PredictArea::ImGuiDraw() {
 }
 //リセット
 void PredictArea::ResetPredict() {
-	m_Scale = {};
+	m_Scale = (PANEL_SIZE * 0.1f) * 0.5f;
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
 			panels[i][j].predict = false;
@@ -174,7 +174,7 @@ void PredictArea::FlashArea() {
 			}
 		}
 		else if (name == "LASTENEMY") {
-			m_Scale = Helper::Lerp(0.0f, PANEL_SIZE * 0.1f, m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
+			m_Scale = Helper::Lerp((PANEL_SIZE * 0.1f) * 0.5f, PANEL_SIZE * 0.1f, m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
 			for (int i = 0; i < PREDICT_WIDTH; i++) {
 				for (int j = 0; j < PREDICT_HEIGHT; j++) {
 					panels[i][j].tex[m_DrawDype]->SetScale({ m_Scale,m_Scale,m_Scale });
@@ -183,7 +183,7 @@ void PredictArea::FlashArea() {
 		}
 	}
 	else {
-		m_Scale = {};
+		m_Scale = (PANEL_SIZE * 0.1f) * 0.5f;
 		m_SinAngle = 0.0f;
 	}
 }

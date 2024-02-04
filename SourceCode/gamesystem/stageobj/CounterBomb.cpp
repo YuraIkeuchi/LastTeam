@@ -44,7 +44,7 @@ void CounterBomb::Update() {
 	Move();
 
 	if (panel.predict) {
-		panel.scale = Helper::Lerp(0.0f, PANEL_SIZE * 0.2f, m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
+		panel.scale = Helper::Lerp((PANEL_SIZE * 0.1f) * 0.4f, PANEL_SIZE * 0.15f, m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
 	}
 	panel.tex->SetScale({ panel.scale,panel.scale,panel.scale });
 	panel.tex->SetPosition(panel.position);
@@ -93,7 +93,7 @@ void CounterBomb::Move() {
 	}
 	else if (_BombState == BOMB_DROP) {		//落ちてくる
 		if (Helper::CheckMax(m_Position.y, 0.0f, -l_ThrowSpeed)) {
-			panel.scale = {};
+			panel.scale = (PANEL_SIZE * 0.1f) * 0.4f;
 			_BombState = BOMB_DELETE;
 			panel.predict = false;
 		}

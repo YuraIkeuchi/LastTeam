@@ -1,6 +1,5 @@
 #pragma once
 #include"InterEnemy.h"
-#include "EnemyBullet.h"
 #include "EnemyThorn.h"
 
 using namespace std;         //  –¼‘O‹óŠÔw’è
@@ -25,10 +24,8 @@ private:
 	void Inter();//‘Ò‹@
 	void Attack();//UŒ‚
 	void Teleport();//ˆÚ“®
-	void BulletAttack();//’e‚ÌUŒ‚
 	void RowAttack();
 	void RandomAttack();
-	void BirthBullet();//
 	void BirthArea(const int Width,const int Height,const string& name);//UŒ‚ƒGƒŠƒA
 	void BirthPredict(const int Width,const int Height,const string& name);//—\‘ªƒGƒŠƒA
 
@@ -42,11 +39,9 @@ private:
 //–‚–@w
 	void BirthMagic();
 private:
-	static const int BULLET_NUM = 5;
 private:
 	int m_AttackCount = {};
 	int _charaState = STATE_INTER;
-	unique_ptr<EnemyBullet> bullets;//“G‚Ì’e
 
 	enum BossType {
 		Boss_SET,
@@ -55,7 +50,6 @@ private:
 	}_BossType = Boss_SET;
 
 	enum AttackState {
-		ATTACK_BULLET,
 		ATTACK_ROW,
 		ATTACK_RANDOM,
 	}_AttackState = ATTACK_RANDOM;
@@ -104,8 +98,6 @@ private:
 	vector<int>m_Limit;
 	//UŒ‚‚ÌƒCƒ“ƒ^[ƒoƒ‹‚Æ‚©
 	vector<int>m_AttackLimit;
-	int m_BulletNum = {};
-
 
 	int m_ShotDir = {};
 	float m_AfterRotY = {};

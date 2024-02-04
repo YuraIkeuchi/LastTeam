@@ -21,12 +21,9 @@ BossEnemy::BossEnemy() {
 	shadow_tex->Initialize();
 	shadow_tex->SetRotation({ 90.0f,0.0f,0.0f });*/
 	//—\‘ª
-	predictarea.reset(new PredictArea("ENEMY"));
+	predictarea.reset(new PredictArea("LASTENEMY"));
 	predictarea->Initialize();
 
-	bullets = make_unique<EnemyBullet>();
-	bullets->Initialize();
-	bullets->SetPlayer(player);
 }
 //‰Šú‰»
 bool BossEnemy::Initialize() {
@@ -44,8 +41,6 @@ bool BossEnemy::Initialize() {
 
 	m_AttackLimit.resize(AttackLimitSize);
 	LoadCSV::LoadCsvParam_Int("Resources/csv/chara/enemy/BossEnemy.csv", m_AttackLimit, "Attack_Interval");
-
-	m_BulletNum = static_cast<int>(std::any_cast<double>(LoadCSV::LoadCsvParam("Resources/csv/chara/enemy/BossEnemy.csv", "BULLET_NUM")));
 
 	m_MaxHP = m_HP;
 	m_CheckPanel = true;
@@ -71,7 +66,6 @@ void (BossEnemy::* BossEnemy::stateTable[])() = {
 };
 //UŒ‚‘JˆÚ
 void (BossEnemy::* BossEnemy::attackTable[])() = {
-	&BossEnemy::BulletAttack,//’e‚ğ‘Å‚ÂUŒ‚
 	&BossEnemy::RowAttack,//—ñUŒ‚
 	&BossEnemy::RandomAttack,//ƒ‰ƒ“ƒ_ƒ€
 };
@@ -100,9 +94,6 @@ void BossEnemy::Action() {
 		}
 	}
 
-	//“G‚Ì’e
-	bullets->SetAlpha(m_Color.w);
-	bullets->Update();
 	//UŒ‚ƒGƒŠƒA‚ÌXV(ÀÛ‚ÍƒXƒLƒ‹‚É‚È‚é‚Æv‚¤)
 	for (auto i = 0; i < enethorn.size(); i++) {
 		if (enethorn[i] == nullptr)continue;
@@ -131,10 +122,6 @@ void BossEnemy::Draw(DirectXCommon* dxCommon) {
 	magic.tex->Draw();
 	BaseFrontDraw(dxCommon);
 	IKETexture::PostDraw();
-	//“G‚Ì’e
-	if (bullets->GetAlive()) {
-		bullets->Draw(dxCommon);
-	}
 	for (auto i = 0; i < enethorn.size(); i++) {
 		if (enethorn[i] == nullptr)continue;
 		enethorn[i]->Draw(dxCommon);
@@ -159,14 +146,11 @@ void BossEnemy::Inter() {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		int l_RandState = Helper::GetRanNum(0, 100);	//‚Ç‚Ìs“®‚ğæ‚é‚©
-		if (l_RandState <= 40) {
+		if (l_RandState <= 50) {
 			_AttackState = ATTACK_RANDOM;
 		}
-		else if (l_RandState > 40 && l_RandState <= 80) {
+		else{
 			_AttackState = ATTACK_ROW;
-		}
-		else {
-			_AttackState = ATTACK_BULLET;
 		}
 	}
 }
@@ -193,67 +177,7 @@ void BossEnemy::Teleport() {
 		WarpEnemy();
 	}
 }
-//’e‚Ì¶¬
-void BossEnemy::BirthBullet() {
-	//’e‚Ì”­¶
-	bullets->InitState({ m_Position.x,m_Position.y + 0.5f,m_Position.z }, m_ShotDir);
-}
 //UŒ‚‘JˆÚ
-//’e
-void BossEnemy::BulletAttack() {
-	int l_TargetTimer = {};
-	l_TargetTimer = m_AttackLimit[ATTACK_BULLET];
-	const float l_AddFrame = 1 / 30.0f;
-	if (_BossType == Boss_SET) {
-		if (coolTimer == 10) {		//‚±‚±‚ÅŒ‚‚Â•ûŒü‚ğŒˆ‚ß‚é
-			m_ShotDir = Helper::GetRanNum(0, 2);
-			//“G‚ª’[‚É‚¢‚½ê‡”½Ë‚É‚æ‚Á‚Ä‰ñ“]‚ª•Ï‚ÉŒ©‚¦‚é‚©‚çw’è‚·‚é
-			if (m_NowHeight == 0 && m_ShotDir == 2) {
-				m_ShotDir = 1;
-			} else if (m_NowHeight == 3 && m_ShotDir == 1) {
-				m_ShotDir = 2;
-			}
-			//’e‚ğŒ‚‚Â•ûŒü‚ÅŒü‚«‚ª•Ï‚í‚é
-			if (m_ShotDir == 0) {
-				m_AfterRotY = -90.0f;
-			} else if (m_ShotDir == 1) {
-				m_AfterRotY = -90.0f + 45.f;
-			} else {
-				m_AfterRotY = -90.0f - 45.f;
-			}
-		}
-		if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
-			m_CanCounter = true;
-			if (Helper::FrameCheck(m_RotFrame, l_AddFrame)) {
-				m_RotFrame = {};
-				coolTimer = {};
-				_BossType = Boss_THROW;
-				BirthBullet();
-			}
-
-			m_Rotation.y = Ease(In, Cubic, m_RotFrame, m_Rotation.y, m_AfterRotY);
-		}
-	} else if (_BossType == Boss_THROW) {
-		m_CanCounter = false;
-		if (!bullets->GetAlive()) {
-			coolTimer = {};
-			m_AttackCount++;
-			if (m_AttackCount != m_BulletNum) {
-				_BossType = Boss_SET;
-			}
-			else {
-				_BossType = Boss_END;
-			}
-		}
-	} else {
-		m_CheckPanel = true;
-		m_AttackCount = {};
-		_charaState = STATE_SPECIAL;
-		coolTimer = {};
-		_BossType = Boss_SET;
-		StagePanel::GetInstance()->EnemyHitReset();
-	}
-}
 //‰¡ˆê—ñ
 void BossEnemy::RowAttack() {
 	int l_TargetTimer = {};
