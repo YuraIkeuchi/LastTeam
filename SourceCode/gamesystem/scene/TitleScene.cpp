@@ -151,13 +151,13 @@ void TitleScene::Update(DirectXCommon* dxCommon) {
 		SceneChanger::GetInstance()->SetChange(false);
 	}
 
-	if (input->TriggerButton(input->X)) {
-		SceneManager::GetInstance()->ChangeScene("CLEAR");
-	}
+	//if (input->TriggerButton(input->X)) {
+	//	SceneManager::GetInstance()->ChangeScene("CLEAR");
+	//}
 
-	if (input->TriggerButton(input->Y)) {
-		SceneManager::GetInstance()->ChangeScene("GAMEOVER");
-	}
+	//if (input->TriggerButton(input->Y)) {
+	//	SceneManager::GetInstance()->ChangeScene("GAMEOVER");
+	//}
 }
 //描画
 void TitleScene::Draw(DirectXCommon* dxCommon) {
