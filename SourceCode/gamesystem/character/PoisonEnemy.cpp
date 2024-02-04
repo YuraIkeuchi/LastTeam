@@ -19,7 +19,7 @@ PoisonEnemy::PoisonEnemy() {
 	magic.tex->SetRotation({ 90.0f,0.0f,0.0f });
 
 	//—\‘ª
-	predictarea.reset(new PredictArea("ENEMY"));
+	predictarea.reset(new PredictArea("LASTENEMY"));
 	predictarea->Initialize();
 }
 //‰Šú‰»

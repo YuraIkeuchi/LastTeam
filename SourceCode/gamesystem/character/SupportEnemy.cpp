@@ -197,8 +197,13 @@ void SupportEnemy::Inter() {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		m_RandTimer = Helper::GetRanNum(0, 20);
-		int l_RandState = Helper::GetRanNum(0,1);
-		_AttackState = (AttackState)l_RandState;
+		int l_RandState = Helper::GetRanNum(0,100);
+		if (l_RandState <= 70) {
+			_AttackState = ATTACK_BOMB;
+		}
+		else {
+			_AttackState = ATTACK_COUNTER;
+		}
 	}
 }
 //UŒ‚
@@ -367,6 +372,7 @@ void SupportEnemy::AttackMove() {
 void SupportEnemy::ClearAction() {
 	const int l_TargetTimer = 160;
 	const float l_AddFrame = 1 / 200.0f;
+	m_Rotation.y = {};
 	if (m_ClearTimer == 0) {
 		m_Position.y = 10.0f;
 	}
