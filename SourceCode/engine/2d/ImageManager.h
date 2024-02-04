@@ -213,6 +213,7 @@ public:
 		BOM2,
 		RELOADEFF,
 		SHIELD_TEX,
+		POWER_TEX,
 		ABSEFFECT,
 		STUN,
 	};

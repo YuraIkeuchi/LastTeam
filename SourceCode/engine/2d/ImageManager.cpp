@@ -215,6 +215,7 @@ void ImageManager::StartLoadTex2D()
 	IKETexture::LoadTexture(BOM2, L"Resources/2d/effect/Bom.png");
 	IKETexture::LoadTexture(RELOADEFF, L"Resources/2d/effect/reload.png");
 	IKETexture::LoadTexture(SHIELD_TEX, L"Resources/2d/objicon/Shield_Icon.png");
+	IKETexture::LoadTexture(POWER_TEX, L"Resources/2d/effect/Up.png");
 	IKETexture::LoadTexture(ABSEFFECT, L"Resources/2d/effect/effect1.png");
 	IKETexture::LoadTexture(STUN, L"Resources/2d/effect/stun.png");
 }

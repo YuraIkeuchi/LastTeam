@@ -63,6 +63,17 @@ void Player::LoadResource() {
 		shield[i].scale = 0.0f;
 	}
 
+	for (int i = {}; i < power.size(); i++) {
+		power[i].tex.reset(new IKETexture(ImageManager::POWER_TEX, m_Position, { 1.f,1.f,1.f }, { 1.f,1.f,1.f,1.f }));
+		power[i].tex->TextureCreate();
+		power[i].tex->Initialize();
+		power[i].tex->SetIsBillboard(true);
+		power[i].pos = { 0.0f,{},0.0f };
+		power[i].CircleScale = 1.0f;
+		power[i].CircleSpeed = i * 90.0f;
+		power[i].color = { 1.0f,1.0f,1.0f,1.0f };
+		power[i].scale = 0.0f;
+	}
 }
 //初期化
 bool Player::Initialize() {
@@ -171,6 +182,10 @@ void Player::Update() {
 		BoundMove();
 		RegeneUpdate();
 		ShieldTexUpdate();
+		PowerTexUpdate();
+		if (GameStateManager::GetInstance()->GetBuff()) {
+			m_DrawPower = true;
+		}
 		//表示用のHP
 		m_InterHP = (int)(m_HP);
 		m_InterMaxHP = (int)m_MaxHP;
@@ -254,20 +269,59 @@ void Player::Update() {
 
 		Helper::Clamp(m_BaseScale, 0.0f, 0.5f);
 	}
-	//影
-	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
+
+	for (int i = 0; i < shield.size(); i++) {
+		shield[i].CircleSpeed += 2.0f;
+		if (shield[i].CircleSpeed == 360.0f) {
+			shield[i].CircleSpeed = {};
+		}
+		shield[i].pos = Helper::CircleMove(m_Position, shield[i].CircleScale, shield[i].CircleSpeed);
+		shield[i].pos.y = 1.0f;
+		shield[i].tex->SetPosition(shield[i].pos);
+		shield[i].tex->SetColor(shield[i].color);
+		shield[i].tex->SetScale({ shield[i].scale,shield[i].scale,shield[i].scale });
+		shield[i].tex->Update();
+	}
+
+	for (int i = 0; i < power.size(); i++) {
+		power[i].CircleSpeed += 2.0f;
+		if (power[i].CircleSpeed == 360.0f) {
+			power[i].CircleSpeed = {};
+		}
+		power[i].pos = Helper::CircleMove(m_Position, power[i].CircleScale, power[i].CircleSpeed);
+		power[i].pos.y = 1.0f;
+		power[i].tex->SetPosition(power[i].pos);
+		power[i].tex->SetColor(power[i].color);
+		power[i].tex->SetScale({ power[i].scale,power[i].scale,power[i].scale });
+		power[i].tex->Update();
+	}
 }
 //描画
 void Player::Draw(DirectXCommon* dxCommon) {
+	if (m_Color.w != 0.0f)
+		Obj_Draw();
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
-	if (m_DrawShield) {
+	if (m_DrawPower && m_DrawShield) {
+		for (int i = 0; i < shield.size(); i++) {
+			if (i == 0 || i == 2) {
+				shield[i].tex->Draw();
+			}
+			else {
+				power[i].tex->Draw();
+			}
+		}
+	}
+	if (m_DrawShield && !m_DrawPower) {
 		for (int i = 0; i < shield.size(); i++) {
 			shield[i].tex->Draw();
 		}
 	}
+	else if (!m_DrawShield && m_DrawPower) {
+		for (int i = 0; i < power.size(); i++) {
+			power[i].tex->Draw();
+		}
+	}
 	IKETexture::PostDraw();
-	if (m_Color.w != 0.0f)
-		Obj_Draw();
 }
 //UIの描画
 void Player::UIDraw() {
@@ -308,6 +362,7 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
+	ImGui::Text("Shield:%d,Power:%d", m_DrawShield, m_DrawPower);
 	ImGui::Text("Width:%d,Height:%d", m_NowWidth,m_NowHeight);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::End();
@@ -997,12 +1052,6 @@ void Player::ShieldTexUpdate() {
 
 	if (_ShieldState == SHIELD_BIRTH) {		//シールドが上に上がる
 		if (Helper::FrameCheck(m_ShieldFrame, l_AddFrame)) {
-			for (int i = 0; i < shield.size(); i++) {
-				shield[i].CircleSpeed += 2.0f;
-				if (shield[i].CircleSpeed == 360.0f) {
-					shield[i].CircleSpeed = {};
-				}
-			}
 			if (Helper::CheckMin(m_ShieldTimer, l_TargetTimer, 1)) {
 				_ShieldState = SHIELD_DELETE;
 				m_ShieldFrame = {};
@@ -1028,12 +1077,36 @@ void Player::ShieldTexUpdate() {
 		}
 	}
 
-	for (int i = 0; i < shield.size(); i++) {
-		shield[i].pos = Helper::CircleMove(m_Position, shield[i].CircleScale, shield[i].CircleSpeed);
-		shield[i].pos.y = 1.0f;
-		shield[i].tex->SetPosition(shield[i].pos);
-		shield[i].tex->SetColor(shield[i].color);
-		shield[i].tex->SetScale({ shield[i].scale,shield[i].scale,shield[i].scale });
-		shield[i].tex->Update();
+
+}
+void Player::PowerTexUpdate() {
+	if (!m_DrawPower) { return; }
+	const float l_AddFrame = 1 / 20.0f;
+	const int l_TargetTimer = 300;
+
+	if (_PowerState == POWER_BIRTH) {		//シールドが上に上がる
+		if (Helper::FrameCheck(m_PowerFrame, l_AddFrame)) {
+			if (!GameStateManager::GetInstance()->GetBuff()) {
+				_PowerState = POWER_DELETE;
+				m_PowerFrame = {};
+			}
+		}
+		else {
+			for (int i = 0; i < power.size(); i++) {
+				power[i].scale = Ease(In, Cubic, m_PowerFrame, power[i].scale, 0.08f);
+			}
+		}
+	}
+	else {		//シールドが下がる
+		if (Helper::FrameCheck(m_PowerFrame, l_AddFrame)) {
+			m_PowerFrame = {};
+			_PowerState = POWER_BIRTH;
+			m_DrawPower = false;
+		}
+		else {
+			for (int i = 0; i < power.size(); i++) {
+				power[i].scale = Ease(In, Cubic, m_PowerFrame, power[i].scale, 0.0f);
+			}
+		}
 	}
 }

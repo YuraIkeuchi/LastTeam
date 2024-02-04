@@ -31,7 +31,7 @@ BossEnemy3::BossEnemy3() {
 	}
 	
 	//—\‘ª
-	predictarea.reset(new PredictArea("ENEMY"));
+	predictarea.reset(new PredictArea("LASTENEMY"));
 	predictarea->Initialize();
 
 	onomatope = make_unique<Onomatope>();
@@ -214,7 +214,14 @@ void BossEnemy3::Finalize() {
 void BossEnemy3::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	int l_AddTimer = {};
+	if (m_AngerFinish) {
+		l_AddTimer = 30;
+	}
+	else {
+		l_AddTimer = {};
+	}
+	if (Helper::CheckMin(coolTimer, l_TargetTimer - l_AddTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		int l_RandState = Helper::GetRanNum(0,2);
@@ -237,11 +244,16 @@ void BossEnemy3::Attack() {
 //ƒ[ƒv
 void BossEnemy3::Teleport() {
 	m_CanCounter = false;
-	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
-
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
+	int l_AddTimer = {};
+	if (m_AngerFinish) {
+		l_AddTimer = 30;
+	}
+	else {
+		l_AddTimer = {};
+	}
+	if (Helper::CheckMin(coolTimer, l_TargetTimer - l_AddTimer, 1)) {
 		magic.Alive = true;
 	}
 
@@ -360,7 +372,7 @@ void BossEnemy3::RockAttack() {
 			BirthRock();
 		}
 
-		if (m_RockCount == 2) {
+		if (m_RockCount == 1) {
 			predictarea->ResetPredict();
 		}
 	}
@@ -707,8 +719,14 @@ void BossEnemy3::GameOverAction() {
 	Obj_SetParam();
 }
 void BossEnemy3::SelectSafeArea(const string& name) {
-	const int l_safeMax = 5;
+	int l_safeMax = {};
 	if (name == "Random") {
+		if (m_AngerFinish) {
+			l_safeMax = 4;
+		}
+		else {
+			l_safeMax = 8;
+		}
 		for (int i = 0; i < l_safeMax; i++) {
 			bool isSet = false;
 			//—”‚ÌÝ’è

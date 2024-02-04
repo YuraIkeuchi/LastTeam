@@ -9,9 +9,12 @@ PredictArea::PredictArea(const string& name) {
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
 			//普通の
-			if (name == "ENEMY") {
+			if (name == "ENEMY" || name == "LASTENEMY") {
 				panels[i][j].tex[PREDICT_ATTACK].reset(new IKETexture(ImageManager::AREA, {}, {1.f,1.f,1.f}, {1.f,0.4f,0.4f,1.f}));
 				panels[i][j].color = { 1.f,0.4f,0.4f,1.f };
+				if (name == "LASTENEMY") {
+					panels[i][j].tex[PREDICT_ATTACK]->SetScale({ 0.0f,0.0f,0.0f });
+				}
 				
 			}
 			else if(name == "PLAYER") {
@@ -80,7 +83,7 @@ void PredictArea::Update() {
 	}
 
 	//敵の予測エリアのみ処理
-	if (name == "ENEMY") {
+	if (name == "ENEMY" || name == "LASTENEMY") {
 		FlashArea();
 		for (int i = 0; i < PREDICT_WIDTH; i++) {
 			for (int j = 0; j < PREDICT_HEIGHT; j++) {
@@ -143,28 +146,44 @@ void PredictArea::ImGuiDraw() {
 }
 //リセット
 void PredictArea::ResetPredict() {
+	m_Scale = {};
 	for (int i = 0; i < PREDICT_WIDTH; i++) {
 		for (int j = 0; j < PREDICT_HEIGHT; j++) {
 			panels[i][j].predict = false;
+			if (name == "LASTENEMY") {
+				panels[i][j].tex[m_DrawDype]->SetScale({ m_Scale,m_Scale,m_Scale });
+			}
 		}
 	}
+
 	m_FlashStart = false;
 }
 
 //予測エリアのフラッシュ
 void PredictArea::FlashArea() {
 	if (m_FlashStart) {
-		m_AddAngle = Helper::Lerp(10.0f, 30.0f,m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
-		//sin波によって上下に動く
-		m_SinAngle += m_AddAngle;
-		m_SinAngle2 = m_SinAngle * (3.14f / 180.0f);
-		for (int i = 0; i < PREDICT_WIDTH; i++) {
-			for (int j = 0; j < PREDICT_HEIGHT; j++) {
-				panels[i][j].color.w = (sin(m_SinAngle2) * 0.5f + 0.5f);
+		if (name == "ENEMY") {
+			m_AddAngle = Helper::Lerp(10.0f, 30.0f, m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
+			//sin波によって上下に動く
+			m_SinAngle += m_AddAngle;
+			m_SinAngle2 = m_SinAngle * (3.14f / 180.0f);
+			for (int i = 0; i < PREDICT_WIDTH; i++) {
+				for (int j = 0; j < PREDICT_HEIGHT; j++) {
+					panels[i][j].color.w = (sin(m_SinAngle2) * 0.5f + 0.5f);
+				}
+			}
+		}
+		else if (name == "LASTENEMY") {
+			m_Scale = Helper::Lerp(0.0f, PANEL_SIZE * 0.1f, m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
+			for (int i = 0; i < PREDICT_WIDTH; i++) {
+				for (int j = 0; j < PREDICT_HEIGHT; j++) {
+					panels[i][j].tex[m_DrawDype]->SetScale({ m_Scale,m_Scale,m_Scale });
+				}
 			}
 		}
 	}
 	else {
+		m_Scale = {};
 		m_SinAngle = 0.0f;
 	}
 }

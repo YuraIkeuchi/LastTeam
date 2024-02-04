@@ -141,6 +141,7 @@ public:
 	void ShieldUpdate();
 
 	void ShieldTexUpdate();
+	void PowerTexUpdate();
 
 	static void HpPassive();
 private:
@@ -310,8 +311,17 @@ private:
 		float CircleSpeed = {};
 		float CircleScale = {};
 	};
+	struct Power {
+		std::unique_ptr<IKETexture> tex = nullptr;
+		XMFLOAT3 pos = {};
+		float scale = 0.5f;
+		XMFLOAT4 color = {};
+		float CircleSpeed = {};
+		float CircleScale = {};
+	};
 
 	std::array<Shield, SHIELD_NUM> shield;
+	std::array<Power, SHIELD_NUM> power;
 
 	int m_ShieldTimer = {};
 	float m_ShieldFrame = {};
@@ -320,4 +330,11 @@ private:
 		SHIELD_DELETE
 	}_ShieldState = SHIELD_BIRTH;
 	bool m_DrawShield = false;
+
+	float m_PowerFrame = {};
+	enum PowerState {
+		POWER_BIRTH,
+		POWER_DELETE
+	}_PowerState = POWER_BIRTH;
+	bool m_DrawPower = false;
 };

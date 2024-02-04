@@ -133,6 +133,8 @@ public:
 	void SetCounterBuff(bool flag) { m_CounterBuff = flag; }
 	bool GetCounterBuff() { return m_CounterBuff; }
 
+	bool GetBuff() { return m_Buff; }
+
 	void SetGameStart(bool GameStart) { m_GameStart = GameStart; }
 	bool GetGameStart() { return m_GameStart; }
 
@@ -307,7 +309,7 @@ private:
 	int m_ID = {};
 	int m_Delay = {};
 	string m_Name;
-	vector <int> m_StartNumber = { 2,3,5};
+	vector <int> m_StartNumber = { 2,3,5 };
 	vector<int> m_DeckNumber = m_StartNumber;
 
 	vector<int> m_NotDeckNumber = {};
