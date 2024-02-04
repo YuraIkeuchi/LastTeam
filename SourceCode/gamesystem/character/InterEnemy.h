@@ -277,13 +277,14 @@ public:
 	void ReLoadUpdate();
 	void ReLoadStart();
 
+protected:
+	//スプライトを敵座標に出す
+	void WorldDivision(XMVECTOR tex2DPos);
+	//HPの割合を求める
+	float HpPercent();
 private:
 	void BirthParticle();
 	void DeathParticle();
-	//HPの割合を求める
-	float HpPercent();
-	//スプライトを敵座標に出す
-	void WorldDivision();
 	//UIのためのHPの管理
 	void HPManage();
 	void BirthPoisonParticle();

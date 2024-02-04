@@ -182,7 +182,11 @@ void InterEnemy::Update() {
 	//数値化したHP
 	HPManage();
 	//UIをワールド座標に変換する
-	WorldDivision();
+	if (m_EnemyTag != "Rock") {
+		WorldDivision({ m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.25f });
+		hptex->SetPosition(m_HPPos);
+		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
+	}
 	CounterUpdate();
 	BomUpdate();
 	ReLoadUpdate();
@@ -195,8 +199,6 @@ void InterEnemy::Update() {
 	canCounterTex->SetScale(scaleCounter);
 	canCounterTex->SetPosition({ m_Position.x,0.02f,m_Position.z });
 	canCounterTex->Update();
-	hptex->SetPosition(m_HPPos);
-	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 }
 //バトル前の更新
 void InterEnemy::AwakeUpdate() {
@@ -615,13 +617,13 @@ float InterEnemy::HpPercent() {
 	return temp;
 }
 //スプライトを敵の市に出す
-void InterEnemy::WorldDivision() {
+void InterEnemy::WorldDivision(XMVECTOR tex2DPos) {
 	Camera* camera = Helper::GetCamera();
 	m_MatView = camera->GetViewMatrix();
 	m_MatProjection = camera->GetProjectionMatrix();
 	m_MatPort = camera->GetViewPort();
 	//HPバー
-	XMVECTOR tex2DPos = { m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.25f };
+	
 	tex2DPos = Helper::PosDivi(tex2DPos, m_MatView, false);
 	tex2DPos = Helper::PosDivi(tex2DPos, m_MatProjection, true);
 	tex2DPos = Helper::WDivision(tex2DPos, false);
@@ -630,9 +632,9 @@ void InterEnemy::WorldDivision() {
 	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 
 	//描画する数字と座標をここでセットする
-	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.35f, m_Position.y, m_Position.z - 0.55f });
-	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x, m_Position.y, m_Position.z - 0.55f });
-	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.35f, m_Position.y, m_Position.z - 0.55f });
+	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.35f, m_Position.y, m_Position.z - 0.65f });
+	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x, m_Position.y, m_Position.z - 0.65f });
+	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.35f, m_Position.y, m_Position.z - 0.65f });
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i]->GetCameraData();
 		_drawnumber[i]->SetNumber(m_DigitNumber[i]);

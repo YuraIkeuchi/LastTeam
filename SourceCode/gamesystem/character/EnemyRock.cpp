@@ -69,6 +69,10 @@ void EnemyRock::Action() {
 		Attack();
 	}
 
+	WorldDivision({ m_Position.x-0.5f, m_Position.y, m_Position.z - 0.5f });
+	hptex->SetPosition(m_HPPos);
+	hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
+
 	m_ShadowPos = { m_Position.x,m_Position.y + 0.11f,m_Position.z };
 	//shadow_tex->SetPosition(m_ShadowPos);
 	//shadow_tex->SetScale(m_ShadowScale);
