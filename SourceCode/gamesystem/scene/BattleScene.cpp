@@ -138,20 +138,23 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 
 		if (GameStateManager::GetInstance()->GetHealDamage()) {
 			enemyManager->HealingDamage();
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Shine.wav", 0.05f);
 			GameStateManager::GetInstance()->SetHealDamage(false);
 		}
 		if (GameStateManager::GetInstance()->GetIsBomSuccess()) {
 			enemyManager->BombDamage();
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Bom.wav", 0.05f);
 			GameStateManager::GetInstance()->SetIsBomSuccess(false);
 		}
-
 		if (GameStateManager::GetInstance()->GetIsBombDamage()) {
 			enemyManager->BombDamage();
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Bom.wav", 0.05f);
 			GameStateManager::GetInstance()->SetIsBombDamage(false);
 		}
 
 		if (GameStateManager::GetInstance()->GetIsHeal()) {
 			enemyManager->Heal();
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/Heal01.wav", 0.05f);
 			GameStateManager::GetInstance()->SetIsHeal(false);
 		}
 
