@@ -61,7 +61,7 @@ private:
 		unique_ptr<IKETexture> tex;
 		XMFLOAT3 position = { 0,0,0 };
 		XMFLOAT4 color = { 1,1,1,1 };
-		XMFLOAT3 scale = {};
+		float scale = {};
 		bool predict = false;
 	};
 

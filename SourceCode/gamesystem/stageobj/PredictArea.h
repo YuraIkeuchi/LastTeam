@@ -84,6 +84,6 @@ private:
 	float m_SinAngle2 = {};
 	bool m_FlashStart = false;
 	float m_AddAngle = {};
-
+	float m_Scale = {};
 
 };

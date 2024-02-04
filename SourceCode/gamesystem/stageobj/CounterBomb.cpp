@@ -14,7 +14,7 @@ CounterBomb::CounterBomb() {
 	panel.tex.reset(new IKETexture(ImageManager::AREA, {}, { 1.f,1.f,1.f }, { 1.f,0.4f,0.4f,1.f }));
 	panel.tex->TextureCreate();
 	panel.tex->Initialize();
-	panel.tex->SetScale({ 0.15f,0.15f,0.15f });
+	panel.tex->SetScale({ 0.0f,0.0f,0.0f });
 	panel.tex->SetRotation({ 90.0f,0.0f,0.0f });
 	panel.color = { 1.f,0.4f,0.4f,1.f };
 	Initialize();
@@ -44,17 +44,9 @@ void CounterBomb::Update() {
 	Move();
 
 	if (panel.predict) {
-		m_AddAngle = Helper::Lerp(10.0f, 30.0f, m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
-		//sin波によって上下に動く
-		m_SinAngle += m_AddAngle;
-		m_SinAngle2 = m_SinAngle * (3.14f / 180.0f);
-		for (int i = 0; i < PREDICT_WIDTH; i++) {
-			for (int j = 0; j < PREDICT_HEIGHT; j++) {
-				panel.color.w = (sin(m_SinAngle2) * 0.5f + 0.5f);
-			}
-		}
+		panel.scale = Helper::Lerp(0.0f, PANEL_SIZE * 0.2f, m_Timer, m_TargetTimer);		//線形補間でチャージを表してる
 	}
-
+	panel.tex->SetScale({ panel.scale,panel.scale,panel.scale });
 	panel.tex->SetPosition(panel.position);
 	panel.tex->SetColor(panel.color);
 	panel.tex->Update();
@@ -101,6 +93,7 @@ void CounterBomb::Move() {
 	}
 	else if (_BombState == BOMB_DROP) {		//落ちてくる
 		if (Helper::CheckMax(m_Position.y, 0.0f, -l_ThrowSpeed)) {
+			panel.scale = {};
 			_BombState = BOMB_DELETE;
 			panel.predict = false;
 		}

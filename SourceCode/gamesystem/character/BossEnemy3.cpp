@@ -31,7 +31,7 @@ BossEnemy3::BossEnemy3() {
 	}
 	
 	//—\‘ª
-	predictarea.reset(new PredictArea("ENEMY"));
+	predictarea.reset(new PredictArea("LASTENEMY"));
 	predictarea->Initialize();
 
 	onomatope = make_unique<Onomatope>();
@@ -360,7 +360,7 @@ void BossEnemy3::RockAttack() {
 			BirthRock();
 		}
 
-		if (m_RockCount == 2) {
+		if (m_RockCount == 1) {
 			predictarea->ResetPredict();
 		}
 	}
@@ -707,8 +707,14 @@ void BossEnemy3::GameOverAction() {
 	Obj_SetParam();
 }
 void BossEnemy3::SelectSafeArea(const string& name) {
-	const int l_safeMax = 5;
+	int l_safeMax = {};
 	if (name == "Random") {
+		if (m_AngerFinish) {
+			l_safeMax = 4;
+		}
+		else {
+			l_safeMax = 8;
+		}
 		for (int i = 0; i < l_safeMax; i++) {
 			bool isSet = false;
 			//—”‚ÌÝ’è
