@@ -60,6 +60,8 @@ private:
 	int m_NowHeight = {};
 	bool m_Alive = true;//生存フラグ
 
+	float m_SinAngle = 0.f;
+
 	int m_TargetTimer = {};//出現時間の目標
 
 	int m_ThrowTimer = {};

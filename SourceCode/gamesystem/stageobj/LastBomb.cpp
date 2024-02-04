@@ -120,7 +120,7 @@ void LastBomb::Throw() {
 			m_Jump = true;
 			m_AddPower = 0.3f;
 		}
-		m_BaseScale = Ease(In, Cubic, m_Frame, m_BaseScale, l_AfterScale);
+		m_BaseScale = Ease(In, Cubic, m_Frame, 0.f, l_AfterScale);
 	}
 	//ŽÀÛ‚É‘_‚Á‚¿‚á‚¤
 	else {
@@ -136,6 +136,11 @@ void LastBomb::Throw() {
 
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 			m_Frame = 1.0f;
+			m_SinAngle += 4.f;
+			if (m_SinAngle>=360.f) {
+				m_SinAngle = 0.f;
+			}
+			m_BaseScale = abs(sinf(m_SinAngle * (XM_PI/ 180.0f))) * 0.15f + l_AfterScale;
 		}
 		else {
 			m_Position.x = Ease(In, Cubic, m_Frame, m_Position.x, m_AfterPos.x);
