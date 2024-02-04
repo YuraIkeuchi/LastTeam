@@ -132,6 +132,7 @@ void BattleScene::Update(DirectXCommon* dxCommon)
 		GameStateManager::GetInstance()->Update();
 		if (GameStateManager::GetInstance()->GetIsReloadDamage()) {
 			enemyManager->ReLoadDamage();
+			Audio::GetInstance()->PlayWave("Resources/Sound/SE/shuffle.wav", 0.09f);
 			GameStateManager::GetInstance()->SetIsReloadDamage(false);
 		}
 

@@ -1,6 +1,6 @@
 # Blender 3.3.1
 # www.blender.org
-mtllib BomBears.mtl
+mtllib BomBear.mtl
 o 立方体
 v -0.663875 1.143337 0.399024
 v -0.474213 2.190870 0.285976
