@@ -108,7 +108,7 @@ void LastBomb::Throw() {
 	if (!m_Alive) { return; }
 	const int l_BaseTimer = 40;
 	const float l_AddFrame = 1 / 30.0f;
-	const float l_AfterScale = 0.2f;
+	const float l_AfterScale = 0.4f;
 
 	//’e‚Ìƒ}ƒX‚ðŽæ“¾‚·‚é
 	StagePanel::GetInstance()->SetPanelSearch(m_Object.get(), m_NowWidth, m_NowHeight);
