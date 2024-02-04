@@ -8,7 +8,7 @@
 #include "GameStateManager.h"
 
 LastBomb::LastBomb() {
-	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BULLET);
+	m_Model = ModelManager::GetInstance()->GetModel(ModelManager::BOM);
 	m_Object = make_unique<IKEObject3d>();
 	m_Object->Initialize();
 	m_Object->SetModel(m_Model);
