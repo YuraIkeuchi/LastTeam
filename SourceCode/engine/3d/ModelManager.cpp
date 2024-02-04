@@ -40,7 +40,7 @@ void ModelManager::StartInitialize()
 	LoadModel(SECOND_BOSS, "stick");
 	LoadModel(LAST_BOSS, "LastBoss");
 	LoadModel(SUPPORT_ENEMY, "Shield");
-	LoadModel(SUPPORT_ENEMY2, "BomBear");
+	LoadModel(SUPPORT_ENEMY2, "BomBears");
 	LoadModel(BOSS_ARM, "punch");
 	LoadModel(BOM, "Bom");
 
