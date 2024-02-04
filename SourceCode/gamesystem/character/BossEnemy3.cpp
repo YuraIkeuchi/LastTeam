@@ -214,7 +214,14 @@ void BossEnemy3::Finalize() {
 void BossEnemy3::Inter() {
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_INTER];
-	if (Helper::CheckMin(coolTimer, l_TargetTimer, 1)) {
+	int l_AddTimer = {};
+	if (m_AngerFinish) {
+		l_AddTimer = 30;
+	}
+	else {
+		l_AddTimer = {};
+	}
+	if (Helper::CheckMin(coolTimer, l_TargetTimer - l_AddTimer, 1)) {
 		coolTimer = 0;
 		_charaState = STATE_ATTACK;
 		int l_RandState = Helper::GetRanNum(0,2);
@@ -237,11 +244,16 @@ void BossEnemy3::Attack() {
 //ÉèÅ[Év
 void BossEnemy3::Teleport() {
 	m_CanCounter = false;
-	const int l_RandTimer = Helper::GetRanNum(0, 30);
 	int l_TargetTimer = {};
 	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
-
-	if (Helper::CheckMin(coolTimer, l_TargetTimer + l_RandTimer, 1)) {
+	int l_AddTimer = {};
+	if (m_AngerFinish) {
+		l_AddTimer = 30;
+	}
+	else {
+		l_AddTimer = {};
+	}
+	if (Helper::CheckMin(coolTimer, l_TargetTimer - l_AddTimer, 1)) {
 		magic.Alive = true;
 	}
 
