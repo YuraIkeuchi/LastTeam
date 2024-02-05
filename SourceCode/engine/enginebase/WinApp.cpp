@@ -26,7 +26,7 @@ void WinApp::Initialize()
 	//WNDCLASSEX w{};
 	w.cbSize = sizeof(WNDCLASSEX);
 	w.lpfnWndProc = (WNDPROC)WindowProc;
-	w.lpszClassName = L"オノマトペディション";
+	w.lpszClassName = L"4206_オノマトペディション";
 	w.hInstance = GetModuleHandle(nullptr);
 	w.hCursor = LoadCursor(NULL, IDC_ARROW);
 	w.hIcon = LoadIcon(w.hInstance, MAKEINTRESOURCE(IDI_ICON2));	//ウィンドウクラスをOSに登録
@@ -36,7 +36,7 @@ void WinApp::Initialize()
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
 	hwnd = CreateWindow(w.lpszClassName,
-		L"オノマトペディション",
+		L"4206_オノマトペディション",
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
