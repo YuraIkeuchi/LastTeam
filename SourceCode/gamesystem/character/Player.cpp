@@ -558,8 +558,10 @@ void Player::HealCommon(const float power) {
 	float l_HealNum = {};
 	if (m_HP < m_MaxHP) {
 		if (m_healingDamage) {
-			GameStateManager::GetInstance()->SetHealDamage(true);
-			GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::HEAL_ATTACK);
+			if (!GameStateManager::GetInstance()->GetHealDamage()) {
+				GameStateManager::GetInstance()->SetHealDamage(true);
+				GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::HEAL_ATTACK);
+			}
 		}
 		if (m_MaxHP - m_HP >= power) {
 			l_HealNum = power;
