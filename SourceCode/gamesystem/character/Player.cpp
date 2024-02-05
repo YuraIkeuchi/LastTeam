@@ -362,7 +362,7 @@ void Player::UIDraw() {
 //ImGui
 void Player::ImGuiDraw() {
 	ImGui::Begin("Player");
-	ImGui::Text("Shield:%d,Power:%d", m_DrawShield, m_DrawPower);
+	//ImGui::Text("Shield:%d,Power:%d", m_DrawShield, m_DrawPower);
 	ImGui::Text("Width:%d,Height:%d", m_NowWidth,m_NowHeight);
 	ImGui::SliderFloat("HP", &m_HP, 0, m_MaxHP);
 	ImGui::End();
@@ -645,8 +645,8 @@ void Player::RecvDamage(const float Damage, const string& name) {
 			}
 		}
 		else {
-			m_AfterPos = { m_Position.x,m_Position.y,m_Position.z + 1.5f };
-			m_NowHeight++;
+			m_AfterPos = { m_Position.x + 1.5f,m_Position.y,m_Position.z };
+			m_NowWidth++;
 		}
 	}
 	m_Damege = true;
