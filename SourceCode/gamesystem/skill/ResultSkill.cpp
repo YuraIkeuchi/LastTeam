@@ -191,7 +191,7 @@ void ResultSkill::Move() {
 	Input* input = Input::GetInstance();
 	if (isMove) {
 		static float frame = 0.f;
-		static float addFrame = 1.f / 15.f;
+		const float addFrame = 1.f / 10.f;
 
 		if (Helper::FrameCheck(frame, addFrame)) {
 			isMove = false;
@@ -200,6 +200,7 @@ void ResultSkill::Move() {
 				itr.oldNo = itr.no;
 			}
 			StarInit();
+			return;
 		} else {
 			for (ResultUI& itr : choiceSkills) {
 				if ((itr.no == 2 && itr.oldNo == 1) || (itr.no == 2 && itr.oldNo == 3)) {
@@ -218,14 +219,14 @@ void ResultSkill::Move() {
 		}
 	}
 
-	if (input->TiltPushStick(input->L_LEFT) ||
-		input->TiltPushStick(input->L_RIGHT) ||
+	if (input->TiltStick(input->L_LEFT) ||
+		input->TiltStick(input->L_RIGHT) ||
 		input->TriggerKey(DIK_A) ||
 		input->TriggerKey(DIK_D) ||
-		input->PushButton(input->LEFT) ||
-		input->PushButton(input->RIGHT)) {
+		input->TriggerButton(input->LEFT) ||
+		input->TriggerButton(input->RIGHT)) {
 		if (isMove) { return; }
-		if (input->TiltPushStick(input->L_RIGHT) ||
+		if (input->TiltStick(input->L_RIGHT) ||
 			input->TriggerKey(DIK_D) ||
 			input->PushButton(input->RIGHT)) {
 			for (ResultUI& itr : choiceSkills) {
