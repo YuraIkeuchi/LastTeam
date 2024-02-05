@@ -614,15 +614,13 @@ void MapScene::BlackOut() {
 void MapScene::Move() {
 	Input* input = Input::GetInstance();
 	if (end) { return; }
-	if (input->Pushkey(DIK_D)) {
-		if (input->PushButton(input->RB)) {
-			scroll.x += 10;
-		}
-		if (input->PushButton(input->LB)) {
-			scroll.x -= 10;
-		}
+	if (input->PushButton(input->RB)) {
+		scroll.x -= 10;
 	}
-	if ((input->TiltStick(input->L_UP) || input->PushButton(input->UP) ||input->TriggerKey(DIK_W))
+	if (input->PushButton(input->LB)) {
+		scroll.x += 10;
+	}
+	if ((input->TiltStick(input->L_UP) || input->TriggerButton(input->UP) ||input->TriggerKey(DIK_W))
 		&& !moved) {
 		if (pickNextIndex == 0) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex - 1] == -1) { return; }
@@ -644,7 +642,7 @@ void MapScene::Move() {
 
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
-	if ((input->TiltStick(input->L_DOWN)|| input->PushButton(input->DOWN) ||input->TriggerKey(DIK_S))
+	if ((input->TiltStick(input->L_DOWN)|| input->TriggerButton(input->DOWN) ||input->TriggerKey(DIK_S))
 		&& !moved) {
 		if (pickNextIndex == 2) { return; }
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex + 1] == -1) { return; }

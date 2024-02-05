@@ -230,16 +230,16 @@ void ResultSkill::Move() {
 			input->TriggerKey(DIK_D) ||
 			input->PushButton(input->RIGHT)) {
 			for (ResultUI& itr : choiceSkills) {
-				itr.no++;
-				if (itr.no == 5) {
-					itr.no = 0;
+				itr.no--;
+				if (itr.no == -1) {
+					itr.no = 4;
 				}
 			}
 		} else {
 			for (ResultUI& itr : choiceSkills) {
-				itr.no--;
-				if (itr.no == -1) {
-					itr.no = 4;
+				itr.no++;
+				if (itr.no == 5) {
+					itr.no = 0;
 				}
 			}
 		}
