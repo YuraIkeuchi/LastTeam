@@ -232,7 +232,7 @@ void CameraWork::ImGuiDraw() {
 	ImGui::End();
 }
 void CameraWork::CameraSKip() {
-	eye_ = { -1.5f,7.f,-3.f };
+	eye_ = { -1.5f,7.5f,-3.0f };
 	target_ = { -1.5f,2.5f,0.f };
 	_CameraMove = CAMERA_BOSS;
 	_CameraLastMove = CAMERA_LASTBOSS;
