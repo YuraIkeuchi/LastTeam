@@ -484,6 +484,9 @@ void GameStateManager::BirthArea() {
 						//固定ダメージ
 						newarea->SetIsFixed(true);
 					} else {
+						if (GameStateManager::GetInstance()->GetExtendKnight()) {
+							newarea->SetIsKnight(true);
+						}
 						if (m_Buff) {
 							newarea->SetBuff(true);
 							isBuffed = true;
