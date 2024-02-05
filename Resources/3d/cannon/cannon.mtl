@@ -9,7 +9,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:/K020G1233/4年制/卒業/Resources/3d/pawn/stand_tex.png
+map_Kd stand_tex.png
 
 newmtl body
 Ns 250.000000
