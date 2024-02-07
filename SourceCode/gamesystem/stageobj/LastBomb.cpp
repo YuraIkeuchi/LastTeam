@@ -115,10 +115,13 @@ void LastBomb::Throw() {
 	//’e‚ÌƒZƒbƒg(‚¾‚ñ‚¾‚ñ•‚‚©‚Ñˆ§‚Ó‚ª‚é‚æ‚¤‚ÈŠ´‚¶)
 	if (_BombState == BOMB_SET) {
 		if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
-			m_Frame = {};
-			_BombState = BOMB_THROW;
-			m_Jump = true;
-			m_AddPower = 0.3f;
+			m_Frame = 1.0f;
+			if (Helper::CheckMin(m_Position.y, 5.0f, 0.25f)) {
+				_BombState = BOMB_THROW;
+				m_Jump = true;
+				m_AddPower = 0.3f;
+				m_Frame = {};
+			}
 		}
 		m_BaseScale = Ease(In, Cubic, m_Frame, 0.f, l_AfterScale);
 	}

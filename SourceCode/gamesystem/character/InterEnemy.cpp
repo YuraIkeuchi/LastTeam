@@ -618,6 +618,20 @@ float InterEnemy::HpPercent() {
 }
 //スプライトを敵の市に出す
 void InterEnemy::WorldDivision(XMVECTOR tex2DPos) {
+	float l_AddPosX = {};
+
+	if (m_NowHeight == 3) {
+		l_AddPosX = 0.35f;
+	}
+	else if (m_NowHeight == 2) {
+		l_AddPosX = 0.32f;
+	}
+	else if (m_NowHeight == 1) {
+		l_AddPosX = 0.3f;
+	}
+	else {
+		l_AddPosX = 0.28f;
+	}
 	Camera* camera = Helper::GetCamera();
 	m_MatView = camera->GetViewMatrix();
 	m_MatProjection = camera->GetProjectionMatrix();
@@ -632,9 +646,9 @@ void InterEnemy::WorldDivision(XMVECTOR tex2DPos) {
 	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 
 	//描画する数字と座標をここでセットする
-	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + 0.35f, m_Position.y, m_Position.z - 0.65f });
+	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + l_AddPosX, m_Position.y, m_Position.z - 0.65f });
 	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x, m_Position.y, m_Position.z - 0.65f });
-	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - 0.35f, m_Position.y, m_Position.z - 0.65f });
+	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - l_AddPosX, m_Position.y, m_Position.z - 0.65f });
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i]->GetCameraData();
 		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
