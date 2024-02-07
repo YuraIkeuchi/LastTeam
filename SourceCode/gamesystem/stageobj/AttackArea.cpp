@@ -149,7 +149,7 @@ void AttackArea::Draw(DirectXCommon* dxCommon) {
 	IKETexture::PreDraw2(dxCommon, AlphaBlendType);
 	panels.tex->Draw();
 	IKETexture::PostDraw();
-	if (m_Timer <= m_BirthTimer) {
+	if (m_Timer <= m_BirthTimer && m_Color.w >= 0.1f) {
 		Obj_Draw();
 	}
 }

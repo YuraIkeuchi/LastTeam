@@ -119,7 +119,7 @@ void TextManager::Initialize(DirectXCommon* dxcomon,const int LoadType)
 			CreateSkillSentence(L"当てられるなら当ててみな！");
 			CreateSkillDamage(L"威力:75(大)(固定) 範囲が変わる");
 			CreateSkillSentence(L"全てを犠牲に・・・！");
-			CreateSkillDamage(L"手札を全て捨てて、リロードアップ!");
+			CreateSkillDamage(L"手札を全消去、一回だけリロードアップ!");
 			CreateSkillSentence(L"敵を引き寄せろ!");
 			CreateSkillDamage(L"威力:30(中) 敵を前に寄せる");
 			CreateSkillSentence(L"敵を吹き飛ばせ!");
