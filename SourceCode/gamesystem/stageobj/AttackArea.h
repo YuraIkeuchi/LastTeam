@@ -50,6 +50,7 @@ public:
 	const bool GetAlive() { return m_Alive; }
 	const bool GetIsFixed() { return isFixed; }
 	const bool GetAttack() { return m_Attack; }
+	const bool GetIsKnight() {return isKnight;}
 	const string GetName() { return m_Name; }
 
 	const int GetNowWidth() { return m_NowWidth; }
@@ -60,6 +61,8 @@ public:
 	const int GetPoisonToken() { return m_PoisonToken; }
 
 	void SetHit(const bool Hit) { m_Hit = Hit; }
+	void SetIsKnight(const bool Knight) { isKnight = Knight; }
+	
 	void SetSound(const bool Sound) { m_Sound = Sound; }
 	void SetBuff(const bool Buff) { m_Buff=Buff; }
 	void SetTimer(const int Timer) { m_Timer = Timer; }
@@ -99,6 +102,7 @@ private:
 	bool m_Hit = false;
 	//ëºÇÃï‚ê≥ÇÇ©ÇØÇ»Ç¢
 	bool isFixed = false;
+	bool isKnight = false;
 	int m_NowWidth = {};
 	int m_NowHeight = {};
 	int m_PoisonToken = {};

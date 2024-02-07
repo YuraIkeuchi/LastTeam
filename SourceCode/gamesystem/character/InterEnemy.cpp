@@ -360,7 +360,7 @@ void InterEnemy::Collide(vector<unique_ptr<AttackArea>>& area) {
 					damage *= 1.2f;
 					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::FIVE_POWER);
 				}
-				if (GameStateManager::GetInstance()->GetExtendKnight()) {
+				if (_area->GetIsKnight()) {
 					damage *= 1.25f;
 					GameStateManager::GetInstance()->SetPassiveActive((int)Passive::ABILITY::EXTEND_KNIGHT);
 				}
