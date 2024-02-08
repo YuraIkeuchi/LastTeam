@@ -216,7 +216,7 @@ void BossEnemy3::Inter() {
 	l_TargetTimer = m_Limit[STATE_INTER];
 	int l_AddTimer = {};
 	if (m_AngerFinish) {
-		l_AddTimer = 30;
+		l_AddTimer = 15;
 	}
 	else {
 		l_AddTimer = {};
@@ -248,7 +248,7 @@ void BossEnemy3::Teleport() {
 	l_TargetTimer = m_Limit[STATE_SPECIAL - 1];
 	int l_AddTimer = {};
 	if (m_AngerFinish) {
-		l_AddTimer = 30;
+		l_AddTimer = 15;
 	}
 	else {
 		l_AddTimer = {};

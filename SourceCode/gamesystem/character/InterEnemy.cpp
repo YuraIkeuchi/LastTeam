@@ -183,7 +183,7 @@ void InterEnemy::Update() {
 	HPManage();
 	//UIをワールド座標に変換する
 	if (m_EnemyTag != "Rock") {
-		WorldDivision({ m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.25f });
+		WorldDivision({ m_Position.x, m_Position.y, m_Position.z - 0.25f });
 		hptex->SetPosition(m_HPPos);
 		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 	}
@@ -618,18 +618,24 @@ float InterEnemy::HpPercent() {
 }
 //スプライトを敵の市に出す
 void InterEnemy::WorldDivision(XMVECTOR tex2DPos) {
+	const float l_BasePos = 0.1f;
 	float l_AddPosX = {};
+	float l_AddPosZ = {};
 
 	if (m_NowHeight == 3) {
+		l_AddPosZ = 0.71f;
 		l_AddPosX = 0.35f;
 	}
 	else if (m_NowHeight == 2) {
+		l_AddPosZ = 0.65f;
 		l_AddPosX = 0.32f;
 	}
 	else if (m_NowHeight == 1) {
+		l_AddPosZ = 0.62f;
 		l_AddPosX = 0.3f;
 	}
 	else {
+		l_AddPosZ = 0.55f;
 		l_AddPosX = 0.28f;
 	}
 	Camera* camera = Helper::GetCamera();
@@ -646,9 +652,9 @@ void InterEnemy::WorldDivision(XMVECTOR tex2DPos) {
 	m_HPPos = { tex2DPos.m128_f32[0],tex2DPos.m128_f32[1] };
 
 	//描画する数字と座標をここでセットする
-	_drawnumber[FIRST_DIGHT]->SetExplain({ m_Position.x + l_AddPosX, m_Position.y, m_Position.z - 0.65f });
-	_drawnumber[SECOND_DIGHT]->SetExplain({ m_Position.x, m_Position.y, m_Position.z - 0.65f });
-	_drawnumber[THIRD_DIGHT]->SetExplain({ m_Position.x - l_AddPosX, m_Position.y, m_Position.z - 0.65f });
+	_drawnumber[FIRST_DIGHT]->SetExplain({ (m_Position.x - l_BasePos) + l_AddPosX, m_Position.y, m_Position.z- l_AddPosZ });
+	_drawnumber[SECOND_DIGHT]->SetExplain({ (m_Position.x - l_BasePos), m_Position.y, m_Position.z- l_AddPosZ });
+	_drawnumber[THIRD_DIGHT]->SetExplain({ (m_Position.x - l_BasePos) - l_AddPosX, m_Position.y, m_Position.z- l_AddPosZ });
 	for (auto i = 0; i < _drawnumber.size(); i++) {
 		_drawnumber[i]->GetCameraData();
 		_drawnumber[i]->SetNumber(m_DigitNumber[i]);
