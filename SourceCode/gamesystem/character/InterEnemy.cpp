@@ -183,7 +183,7 @@ void InterEnemy::Update() {
 	HPManage();
 	//UIをワールド座標に変換する
 	if (m_EnemyTag != "Rock") {
-		WorldDivision({ m_Position.x - 0.2f, m_Position.y, m_Position.z - 0.25f });
+		WorldDivision({ m_Position.x - 0.45f, m_Position.y, m_Position.z - 0.25f });
 		hptex->SetPosition(m_HPPos);
 		hptex->SetSize({ HpPercent() * m_HPSize.x,m_HPSize.y });
 	}
