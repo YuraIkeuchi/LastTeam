@@ -158,7 +158,13 @@ void BossEnemy3::Action() {
 	magic.tex->Update();
 	onomatope->Update();
 
-
+	for (int i = 0; i < shield.size(); i++) {
+		shield[i].CircleSpeed += 2.0f;
+		if (shield[i].CircleSpeed == 360.0f) {
+			shield[i].CircleSpeed = {};
+		}
+		shield[i].pos = Helper::CircleMove(m_Position, shield[i].CircleScale, shield[i].CircleSpeed);
+	}
 	for (int i = 0; i < shield.size(); i++) {
 		shield[i].pos.y = 1.0f;
 		shield[i].tex->SetPosition(shield[i].pos);
@@ -808,13 +814,6 @@ void BossEnemy3::ShieldUpdate() {
 
 	if (_ShieldState == SHIELD_BIRTH) {		//ƒV[ƒ‹ƒh‚ªã‚Éã‚ª‚é
 		if (Helper::FrameCheck(m_ShieldFrame, l_AddFrame)) {
-			for (int i = 0; i < shield.size(); i++) {
-				shield[i].CircleSpeed += 2.0f;
-				if (shield[i].CircleSpeed == 360.0f) {
-					shield[i].CircleSpeed = {};
-				}
-				shield[i].pos = Helper::CircleMove(m_Position, shield[i].CircleScale, shield[i].CircleSpeed);
-			}
 			if (Helper::CheckMin(m_ShieldTimer, l_TargetTimer, 1)) {
 				_ShieldState = SHIELD_DELETE;
 				m_ShieldFrame = {};
