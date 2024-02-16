@@ -74,9 +74,10 @@ void GameStateManager::Initialize() {
 	gaugeUI->SetSize({ basesize.x,0.f });
 	gaugeCover = IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f}, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	gaugeCover->SetSize({ 90.f,400.f });
-	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
-	cancelSkill = IKESprite::Create(ImageManager::SKILLCANCEL, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
-
+	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 450.f + (8.f + 48.f),80.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
+	handsFrame->SetSize({160.f*0.75f,160.f * 0.75f });
+	cancelSkill = IKESprite::Create(ImageManager::SKILLCANCEL, { 450.f + (8.f + 48.f),80.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
+	cancelSkill->SetSize({ 160.f * 0.75f,160.f * 0.75f });
 	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 640.f,50.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
 	passiveActiveNum.clear();
@@ -280,6 +281,14 @@ void GameStateManager::Draw(DirectXCommon* dxCommon) {
 			damage.tex->Draw();
 		}
 		handsFrame->Draw();
+		for (auto i = 0; i < actui.size(); i++) {
+			if (actui[i] == nullptr)continue;
+			actui[i]->Draw();
+		}
+		actionVanish->Draw();
+		if (player->GetCancel() && !m_Shield) {
+			cancelSkill->Draw();
+		}
 		//gaugeCover->Draw();
 		onomatope->Draw();
 		IKESprite::PostDraw();
@@ -319,14 +328,6 @@ void GameStateManager::ImGuiDraw() {
 }
 //手に入れたUIの描画
 void GameStateManager::ActUIDraw() {
-	for (auto i = 0; i < actui.size(); i++) {
-		if (actui[i] == nullptr)continue;
-		actui[i]->Draw();
-	}
-	actionVanish->Draw();
-	if (player->GetCancel() && !m_Shield) {
-		cancelSkill->Draw();
-	}
 	for (unique_ptr<Passive>& passive : GotPassives) {
 		passive->Draw();
 	}
@@ -344,7 +345,6 @@ void GameStateManager::ActUIDraw() {
 	for (PowerUpEffect& power : powerup) {
 		power.tex->Draw();
 	}
-
 	IKESprite::PostDraw();
 }
 //スキルを入手(InterActionCPPで使ってます)
@@ -924,8 +924,9 @@ void GameStateManager::DeckReset() {
 }
 //パワーアップのエフェクトの初期化
 void GameStateManager::RandPowerUpInit() {
-	float posX = (float)Helper::GetRanNum(25, 200);
-	float posY = (float)Helper::GetRanNum(550, 700);
+	const XMFLOAT2 basePos = {506.f,80.f};
+	float posX = (float)Helper::GetRanNum((int)basePos.x - 48, (int)basePos.x + 48);
+	float posY = (float)Helper::GetRanNum((int)basePos.y + 20, (int)basePos.y+48);
 	float frame = (float)Helper::GetRanNum(30, 45);
 	PowerUpEffect itr;
 	itr.tex = IKESprite::Create(ImageManager::POWERUP, {});

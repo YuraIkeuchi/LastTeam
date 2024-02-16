@@ -20,7 +20,7 @@ private:
 private:
 	XMFLOAT3 eye_ = { -1.5f,7.5f,-3.0f };
 
-	XMFLOAT3 target_ = { -1.5f,2.5f,0.f };
+	XMFLOAT3 target_ = { -1.5f,3.2f,0.f };
 public:
 	CameraWork(XMFLOAT3 eye = { 2.0f, 30.0f, 2.0f }, XMFLOAT3 target = { 2.0f, 0.0f, 3.0f });
 	void SplineSet();

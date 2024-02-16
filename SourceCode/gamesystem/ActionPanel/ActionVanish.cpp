@@ -7,6 +7,7 @@ ActionVanish::ActionVanish() {
 	const int NumberCount = 10;
 	const float l_Width_Cut = 256.0f;
 	const float l_Height_Cut = 256.0f;
+	const float l_size = 128.f * 0.75f;
 
 	for (int i = 0; i < 10; i++) {
 		vanishTexs[i] = IKESprite::Create(ImageManager::ATTACK_BACK, { 0.0f,0.0f });
@@ -16,20 +17,20 @@ ActionVanish::ActionVanish() {
 			{ static_cast<float>(number_index_x) * l_Width_Cut, static_cast<float>(number_index_y) * l_Height_Cut },
 			{ static_cast<float>(l_Width_Cut), static_cast<float>(l_Height_Cut) });
 		vanishTexs[i]->SetAnchorPoint({ 0.5f,0.5f });
-		m_Size = { 128.0f,128.0f };
+		m_Size = { l_size,l_size };
 		vanishTexs[i]->SetSize({ 128.0f,128.0f });
 		vanishTexs[i]->SetPosition({ -100.0f,640.0f });
 	}
 }
 //初期化
 void ActionVanish::Initialize() {
-	m_Position = { (16.f + 64.f),640.0f };
+	m_Position = { 506.f,80.0f };
 
 }
 //ステータス初期化
 void ActionVanish::InitState() {
 	m_Alive = true;
-	m_Position = { (16.f + 64.f),640.0f };
+	m_Position = { 506.f,80.0f };
 	vanishTiming = 0;
 	vanishCount = 0;
 }
@@ -65,6 +66,6 @@ void ActionVanish::UiMove() {
 		vanishCount++;
 		Helper::Clamp(vanishCount, 0, 9);
 	}
-	m_Position.y = Ease(In, Cubic, l_frame, 640.0f, 500.0f);
+	m_Position.y = Ease(In, Cubic, l_frame, 80.0f, -30.0f);
 	//m_Color.w = Ease(In, Cubic, l_frame, 1.f, 0.0f);
 }
