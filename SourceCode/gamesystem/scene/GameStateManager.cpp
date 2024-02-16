@@ -74,7 +74,7 @@ void GameStateManager::Initialize() {
 	gaugeUI->SetSize({ basesize.x,0.f });
 	gaugeCover = IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f}, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	gaugeCover->SetSize({ 90.f,400.f });
-	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
+	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 250.f + (16.f + 64.f),160.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 	cancelSkill = IKESprite::Create(ImageManager::SKILLCANCEL, { 80.f,640.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
 	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 640.f,50.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
@@ -344,7 +344,6 @@ void GameStateManager::ActUIDraw() {
 	for (PowerUpEffect& power : powerup) {
 		power.tex->Draw();
 	}
-
 	IKESprite::PostDraw();
 }
 //スキルを入手(InterActionCPPで使ってます)
