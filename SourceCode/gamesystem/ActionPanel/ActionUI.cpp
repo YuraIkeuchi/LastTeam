@@ -33,7 +33,7 @@ ActionUI::ActionUI(const int ID) {
 }
 //èâä˙âª
 void ActionUI::Initialize() {
-	m_Position = { (32.0f + ((m_ActCount - 1) * 64.0f)),800.0f };
+	m_Position = { 450.f + (8.f + 48.f),0.0f };
 	m_Use = false;
 	m_Frame = {};
 	m_Alive = true;
@@ -84,28 +84,23 @@ void ActionUI::ImGuiDraw() {
 //UIÇÃìÆÇ´
 void ActionUI::UiMove() {
 	const float l_AddFrame = 1.f / 30.f;
-	const float l_size = 128.f;
+	const float l_size = 128.f * 0.75f;
 	if (m_ActCount == 0) {
-		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, 250.f+(16.f + 64.f));
+		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, 506.f);
 		float size_ = Ease(Out, Quad, 0.5f, m_Size.x, l_size);
 		m_Size = { size_,size_ };
+	} else if(m_ActCount == 1){
+		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, 516.f + ((m_ActCount) * 90.0f));
+		float size_ = Ease(Out, Quad, 0.5f, m_Size.x, l_size * 0.75f);
+		m_Size = { size_,size_ };
 	} else {
-		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, 250.f + (44.f + 64.f + ((m_ActCount) * 100.0f)));
+		m_Position.x = Ease(In, Cubic, 0.5f, m_Position.x, 516.f + ((m_ActCount) * 80.0f));
 		float size_ = Ease(Out, Quad, 0.5f, m_Size.x, l_size * 0.75f);
 		m_Size = { size_,size_ };
 	}
 	if (!m_Use) {
-		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 160.0f);
+		m_Position.y = Ease(In, Cubic, 0.5f, m_Position.y, 80.0f);
 	} else {
-		//if (Helper::FrameCheck(m_Frame, l_AddFrame)) {
 		m_Alive = false;
-		//}
-		//vanishTiming++;
-		//if ((vanishTiming % 3) == 0) {
-		//	vanishCount++;
-		//	Helper::Clamp(vanishCount, 0, 9);
-		//}
-		//m_Position.y = Ease(In, Cubic, m_Frame, m_Position.y, 630.0f);
-		//m_Color.w = Ease(In, Cubic, m_Frame, m_Color.w, 0.0f);
 	}
 }

@@ -754,9 +754,9 @@ void InterEnemy::BirthDamage(const float Damage) {
 			unique_ptr<DrawDamageNumber> _newnumber = make_unique<DrawDamageNumber>();
 			_newnumber->GetCameraData();
 			if (i == 0) {
-				_newnumber->SetExplain({ m_Position.x + 0.3f, m_Position.y, m_Position.z + 1.0f });
+				_newnumber->SetExplain({ m_Position.x + 0.4f, m_Position.y, m_Position.z + 1.0f });
 			} else {
-				_newnumber->SetExplain({ m_Position.x - 0.3f, m_Position.y, m_Position.z + 1.0f });
+				_newnumber->SetExplain({ m_Position.x - 0.4f, m_Position.y, m_Position.z + 1.0f });
 			}
 			_newnumber->Initialize();
 			_newnumber->SetNumber(l_DightDamage[i]);
