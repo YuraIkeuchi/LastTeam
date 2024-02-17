@@ -78,7 +78,7 @@ void GameStateManager::Initialize() {
 	handsFrame->SetSize({160.f*0.75f,160.f * 0.75f });
 	cancelSkill = IKESprite::Create(ImageManager::SKILLCANCEL, { 450.f + (8.f + 48.f),80.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 	cancelSkill->SetSize({ 160.f * 0.75f,160.f * 0.75f });
-	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 640.f,50.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
+	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 220.f,720.f - 40.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
 	passiveActiveNum.clear();
 
@@ -970,29 +970,29 @@ void GameStateManager::PassiveActive() {
 		float dif_twice = dif * 2.0f;
 		switch (passiveActs.size()) {
 		case 1:
-			passiveActs[0]->SetPosition({ 640.f, 120.f });
+			passiveActs[0]->SetPosition({ 200.f, 620.f });
 			break;
 		case 2:
-			passiveActs[0]->SetPosition({ 640.f - dif, 120.f });
-			passiveActs[1]->SetPosition({ 640.f + dif, 120.f });
+			passiveActs[0]->SetPosition({ 200.f - dif, 620.f });
+			passiveActs[1]->SetPosition({ 200.f + dif, 620.f });
 			break;
 		case 3:
-			passiveActs[0]->SetPosition({ 640.f - dif_twice, 120.f });
-			passiveActs[1]->SetPosition({ 640.f, 120.f });
-			passiveActs[2]->SetPosition({ 640.f + dif_twice, 120.f });
+			passiveActs[0]->SetPosition({ 200.f - dif_twice, 620.f });
+			passiveActs[1]->SetPosition({ 200.f, 620.f });
+			passiveActs[2]->SetPosition({ 200.f + dif_twice, 620.f });
 			break;
 		case 4:
-			passiveActs[0]->SetPosition({ 640.f - dif - dif_twice, 120.f });
-			passiveActs[1]->SetPosition({ 640.f - dif, 120.f });
-			passiveActs[2]->SetPosition({ 640.f + dif, 120.f });
-			passiveActs[3]->SetPosition({ 640.f + dif + dif_twice, 120.f });
+			passiveActs[0]->SetPosition({ 200.f - dif - dif_twice, 620.f });
+			passiveActs[1]->SetPosition({ 200.f - dif, 620.f });
+			passiveActs[2]->SetPosition({ 200.f + dif, 620.f });
+			passiveActs[3]->SetPosition({ 200.f + dif + dif_twice, 620.f });
 			break;
 		case 5:
-			passiveActs[0]->SetPosition({ 640.f - dif_twice - dif_twice, 120.f });
-			passiveActs[1]->SetPosition({ 640.f - dif_twice, 120.f });
-			passiveActs[2]->SetPosition({ 640.f, 120.f });
-			passiveActs[3]->SetPosition({ 640.f + dif_twice, 120.f });
-			passiveActs[4]->SetPosition({ 640.f + dif_twice + dif_twice, 120.f });
+			passiveActs[0]->SetPosition({ 200.f - dif_twice - dif_twice, 620.f });
+			passiveActs[1]->SetPosition({ 200.f - dif_twice, 620.f });
+			passiveActs[2]->SetPosition({ 200.f, 620.f });
+			passiveActs[3]->SetPosition({ 200.f + dif_twice, 620.f });
+			passiveActs[4]->SetPosition({ 200.f + dif_twice + dif_twice, 620.f });
 			break;
 		default:
 			assert(0);
