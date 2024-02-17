@@ -84,9 +84,9 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 		cheack_NO[i]->SetColor({ 1.2f,1.2f,1.2f,1 });
 	}
 	comment[0] = IKESprite::Create(ImageManager::MAPCOMMENT00, { 1260.f-512.f,600.f });
-	comment[1] = IKESprite::Create(ImageManager::MAPCOMMENT01, { 1260.f-512.f,600.f });
-	comment[2] = IKESprite::Create(ImageManager::MAPCOMMENT02, { 1260.f-512.f,600.f });
-	comment[3] = IKESprite::Create(ImageManager::MAPCOMMENT03, { 1260.f-512.f,600.f });
+	comment[BATTLE] = IKESprite::Create(ImageManager::MAPCOMMENT01, { 1260.f-512.f,600.f });
+	comment[PASSIVE] = IKESprite::Create(ImageManager::MAPCOMMENT02, { 1260.f-512.f,600.f });
+	comment[BOSS] = IKESprite::Create(ImageManager::MAPCOMMENT03, { 1260.f-512.f,600.f });
 
 	nowComment = 0;
 
@@ -259,13 +259,13 @@ void MapScene::Initialize(DirectXCommon* dxCommon) {
 	}
 	switch (UIs[pickHierarchy][pickIndex].Tag) {
 	case BATTLE:
-		nowComment = 1;
+		nowComment = BATTLE;
 		break;
 	case PASSIVE:
-		nowComment = 2;
+		nowComment = PASSIVE;
 		break;
 	case BOSS:
-		nowComment = 3;
+		nowComment = BOSS;
 		break;
 	default:
 		break;
@@ -626,20 +626,6 @@ void MapScene::Move() {
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex - 1] == -1) { return; }
 		pickNextIndex--;
 		eFrame = 0.f;
-		switch (UIs[pickHierarchy][pickIndex].Tag) {
-		case BATTLE:
-			nowComment = 1;
-			break;
-		case PASSIVE:
-			nowComment = 2;
-			break;
-		case BOSS:
-			nowComment = 3;
-			break;
-		default:
-			break;
-		}
-
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 	if ((input->TiltStick(input->L_DOWN)|| input->TriggerButton(input->DOWN) ||input->TriggerKey(DIK_S))
@@ -648,20 +634,6 @@ void MapScene::Move() {
 		if (UIs[nowHierarchy][nowIndex].nextIndex[pickNextIndex + 1] == -1) { return; }
 		pickNextIndex++;
 		eFrame = 0.f;
-		switch (UIs[pickHierarchy][pickIndex].Tag) {
-		case BATTLE:
-			nowComment = 1;
-			break;
-		case PASSIVE:
-			nowComment = 2;
-			break;
-		case BOSS:
-			nowComment = 3;
-			break;
-		default:
-			break;
-		}
-
 		Audio::GetInstance()->PlayWave("Resources/Sound/SE/Cursor.wav", 0.1f);
 	}
 
@@ -679,13 +651,13 @@ void MapScene::Move() {
 
 		switch (UIs[pickHierarchy][pickIndex].Tag) {
 		case BATTLE:
-			nowComment = 1;
+			nowComment = BATTLE;
 			break;
 		case PASSIVE:
-			nowComment = 2;
+			nowComment = PASSIVE;
 			break;
 		case BOSS:
-			nowComment = 3;
+			nowComment = BOSS;
 			break;
 		default:
 			break;
@@ -705,7 +677,19 @@ void MapScene::Move() {
 			oldPickHis = pickHierarchy;
 			oldPickInd = pickIndex;
 		}
-
+		switch (UIs[pickHierarchy][pickIndex].Tag) {
+		case BATTLE:
+			nowComment = BATTLE;
+			break;
+		case PASSIVE:
+			nowComment = PASSIVE;
+			break;
+		case BOSS:
+			nowComment = BOSS;
+			break;
+		default:
+			break;
+		}
 	}
 	if (moved) {
 		if (Helper::FrameCheck(mov_frame, 1 / kMoveFrame)) {
@@ -853,14 +837,14 @@ void MapScene::CheckState() {
 					} else {
 						switch (UIs[pickHierarchy][pickIndex].Tag) {
 						case BATTLE:
-							nowComment = 1;
+							nowComment = BATTLE;
 							break;
 						case PASSIVE:
-							nowComment = 2;
+							nowComment = PASSIVE;
 							break;
 						case BOSS:
-							nowComment = 3;
-							break; 
+							nowComment = BOSS;
+							break;
 						default:
 							break;
 						}
