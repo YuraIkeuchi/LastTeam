@@ -68,17 +68,17 @@ void GameStateManager::Initialize() {
 	//一旦クリア方式で
 	GotPassives.clear();
 	PassiveCheck();
-	skillUI = IKESprite::Create(ImageManager::STICK, { 45.f,540.f-20.f }, { 0.9f,0.9f,0.9f,1.f }, { 0.5f,1.f });
+	skillUI = IKESprite::Create(ImageManager::STICK, { 45.f,540.f - 20.f }, { 0.9f,0.9f,0.9f,1.f }, { 0.5f,1.f });
 	skillUI->SetSize({ basesize.x,basesize.y });
-	gaugeUI = IKESprite::Create(ImageManager::FEED, { 45.f,540.f-30.f }, { 0.6f,0.6f,1.f,1.f }, { 0.5f,1.f });
+	gaugeUI = IKESprite::Create(ImageManager::FEED, { 45.f,540.f - 30.f }, { 0.6f,0.6f,1.f,1.f }, { 0.5f,1.f });
 	gaugeUI->SetSize({ basesize.x,0.f });
-	gaugeCover = IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f}, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
+	gaugeCover = IKESprite::Create(ImageManager::GAUGECOVER, { 45.f,550.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,1.f });
 	gaugeCover->SetSize({ 90.f,400.f });
 	handsFrame = IKESprite::Create(ImageManager::HANDSCOVER, { 450.f + (8.f + 48.f),80.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
-	handsFrame->SetSize({160.f*0.75f,160.f * 0.75f });
+	handsFrame->SetSize({ 160.f * 0.75f,160.f * 0.75f });
 	cancelSkill = IKESprite::Create(ImageManager::SKILLCANCEL, { 450.f + (8.f + 48.f),80.0f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 	cancelSkill->SetSize({ 160.f * 0.75f,160.f * 0.75f });
-	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 220.f,720.f - 40.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
+	passiveActive = IKESprite::Create(ImageManager::PASSIVE_ACTIVE, { 640.f,720.f - 40.f }, { 1.f,1.f,1.f,1.f }, { 0.5f,0.5f });
 
 	passiveActiveNum.clear();
 
@@ -237,7 +237,7 @@ void GameStateManager::Update() {
 
 	_charge->SetPosition({ player->GetPosition().x,0.1f,player->GetPosition().z });
 	_charge->SetScale({ m_ChargeScale,m_ChargeScale,m_ChargeScale });
-	_charge->SetRotation({ 90.0f,m_ChargeRot,0.f});
+	_charge->SetRotation({ 90.0f,m_ChargeRot,0.f });
 	_charge->Update();
 	_charge2->SetPosition({ player->GetPosition().x,0.1f,player->GetPosition().z });
 	_charge2->SetScale({ m_Charge2Scale,m_Charge2Scale,m_Charge2Scale });
@@ -578,9 +578,9 @@ void GameStateManager::UseSkill() {
 	}
 	m_ChargeScale = Helper::Lerp(0.5f, 0.0f, m_DelayTimer, delay);		//線形補間でチャージを表してる
 	float chargeSca = ((float)m_DelayTimer / (delay * 0.9f));
-	Helper::Clamp(chargeSca,0.f,1.f);
-	m_Charge2Scale = Ease(Out,Circ, chargeSca,0.75f, 0.0f);
-	m_ChargeRot = Ease(Out,Quad,(float)m_DelayTimer/delay,0.f,360.f);
+	Helper::Clamp(chargeSca, 0.f, 1.f);
+	m_Charge2Scale = Ease(Out, Circ, chargeSca, 0.75f, 0.0f);
+	m_ChargeRot = Ease(Out, Quad, (float)m_DelayTimer / delay, 0.f, 360.f);
 	if (Helper::CheckMin(m_DelayTimer, delay, 1)) {
 		if (m_Act[0].SkillType == 0) {
 			BirthArea();
@@ -821,8 +821,7 @@ bool GameStateManager::ResultUpdate() {
 	if (!resultReport->GetIsFinish()) {
 		resultReport->Update();
 		return false;
-	}
-	else {
+	} else {
 		resultSkill->Update();
 		TutorialTask::GetInstance()->SetViewSkill(true);
 		m_EndResult = true;
@@ -862,14 +861,13 @@ bool GameStateManager::ResultUpdate() {
 					m_Choice = true;
 					TutorialTask::GetInstance()->SetChoiceSkill(true);
 				}
-			}
-			else {
+			} else {
 				haveSkill->Update();
 			}
 		}
 
 	}
-	
+
 	return true;
 }
 
@@ -924,9 +922,9 @@ void GameStateManager::DeckReset() {
 }
 //パワーアップのエフェクトの初期化
 void GameStateManager::RandPowerUpInit() {
-	const XMFLOAT2 basePos = {506.f,80.f};
+	const XMFLOAT2 basePos = { 506.f,80.f };
 	float posX = (float)Helper::GetRanNum((int)basePos.x - 48, (int)basePos.x + 48);
-	float posY = (float)Helper::GetRanNum((int)basePos.y + 20, (int)basePos.y+48);
+	float posY = (float)Helper::GetRanNum((int)basePos.y + 20, (int)basePos.y + 48);
 	float frame = (float)Helper::GetRanNum(30, 45);
 	PowerUpEffect itr;
 	itr.tex = IKESprite::Create(ImageManager::POWERUP, {});
@@ -966,33 +964,34 @@ void GameStateManager::PassiveActive() {
 			passiveActs[i]->SetSize({ 0.f, 0.f });
 			passiveActs[i]->SetAnchorPoint({ 0.5f,0.5f });
 		}
-		float dif = 40.f;
-		float dif_twice = dif * 2.0f;
+		const float dif = 40.f;
+		const float dif_twice = dif * 2.0f;
+		const XMFLOAT2 base_position = { 640.0f,620.f };
 		switch (passiveActs.size()) {
 		case 1:
-			passiveActs[0]->SetPosition({ 200.f, 620.f });
+			passiveActs[0]->SetPosition({ base_position.x, base_position.y });
 			break;
 		case 2:
-			passiveActs[0]->SetPosition({ 200.f - dif, 620.f });
-			passiveActs[1]->SetPosition({ 200.f + dif, 620.f });
+			passiveActs[0]->SetPosition({ base_position.x - dif, base_position.y });
+			passiveActs[1]->SetPosition({ base_position.x + dif, base_position.y });
 			break;
 		case 3:
-			passiveActs[0]->SetPosition({ 200.f - dif_twice, 620.f });
-			passiveActs[1]->SetPosition({ 200.f, 620.f });
-			passiveActs[2]->SetPosition({ 200.f + dif_twice, 620.f });
+			passiveActs[0]->SetPosition({ base_position.x - dif_twice, base_position.y });
+			passiveActs[1]->SetPosition({ base_position.x, base_position.y });
+			passiveActs[2]->SetPosition({ base_position.x + dif_twice, base_position.y });
 			break;
 		case 4:
-			passiveActs[0]->SetPosition({ 200.f - dif - dif_twice, 620.f });
-			passiveActs[1]->SetPosition({ 200.f - dif, 620.f });
-			passiveActs[2]->SetPosition({ 200.f + dif, 620.f });
-			passiveActs[3]->SetPosition({ 200.f + dif + dif_twice, 620.f });
+			passiveActs[0]->SetPosition({ base_position.x - dif - dif_twice, base_position.y });
+			passiveActs[1]->SetPosition({ base_position.x - dif, base_position.y });
+			passiveActs[2]->SetPosition({ base_position.x + dif,base_position.y });
+			passiveActs[3]->SetPosition({ base_position.x + dif + dif_twice, base_position.y });
 			break;
 		case 5:
-			passiveActs[0]->SetPosition({ 200.f - dif_twice - dif_twice, 620.f });
-			passiveActs[1]->SetPosition({ 200.f - dif_twice, 620.f });
-			passiveActs[2]->SetPosition({ 200.f, 620.f });
-			passiveActs[3]->SetPosition({ 200.f + dif_twice, 620.f });
-			passiveActs[4]->SetPosition({ 200.f + dif_twice + dif_twice, 620.f });
+			passiveActs[0]->SetPosition({ base_position.x - dif_twice - dif_twice, base_position.y });
+			passiveActs[1]->SetPosition({ base_position.x - dif_twice, base_position.y });
+			passiveActs[2]->SetPosition({ base_position.x, base_position.y });
+			passiveActs[3]->SetPosition({ base_position.x + dif_twice, base_position.y });
+			passiveActs[4]->SetPosition({ base_position.x + dif_twice + dif_twice, base_position.y });
 			break;
 		default:
 			assert(0);
