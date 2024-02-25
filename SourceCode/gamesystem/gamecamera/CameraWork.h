@@ -22,7 +22,7 @@ private:
 
 	XMFLOAT3 target_ = { -1.5f,3.2f,0.f };
 public:
-	CameraWork(XMFLOAT3 eye = { 2.0f, 30.0f, 2.0f }, XMFLOAT3 target = { 2.0f, 0.0f, 3.0f });
+	CameraWork(XMFLOAT3 eye = { -1.5f,7.5f,-3.0f }, XMFLOAT3 target = { -1.5f,3.2f,0.f });
 	void SplineSet();
 	void Update(DebugCamera* camera);//更新
 	void BossUpdate(DebugCamera* camera);
